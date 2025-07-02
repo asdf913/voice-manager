@@ -25,6 +25,7 @@ import org.apache.bcel.generic.IFNE;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.LDC;
+import org.apache.bcel.generic.LDCUtil;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.commons.lang3.ObjectUtils;
@@ -136,7 +137,8 @@ public interface ProtocolUtil {
 						//
 						|| (i < length - 7 && is[i + 7] instanceof ATHROW)
 				//
-				) && !contains(list = ObjectUtils.getIfNull(list, ArrayList::new), value = ldc.getValue(cpg))) {
+				) && !contains(list = ObjectUtils.getIfNull(list, ArrayList::new),
+						value = LDCUtil.getValue(ldc, cpg))) {
 					//
 					add(list, value);
 					//

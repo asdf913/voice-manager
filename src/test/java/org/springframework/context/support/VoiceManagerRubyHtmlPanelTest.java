@@ -41,6 +41,7 @@ import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.LDC;
+import org.apache.bcel.generic.LDCUtil;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.ReturnInstruction;
@@ -454,7 +455,8 @@ class VoiceManagerRubyHtmlPanelTest {
 				if (length(
 						ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(new MethodGen(method,
 								null, cpg = new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(method)))))) == 2
-						&& (ldc = Util.cast(LDC.class, ArrayUtils.get(ins, 0))) != null && ldc.getValue(cpg) != null
+						&& (ldc = Util.cast(LDC.class, ArrayUtils.get(ins, 0))) != null
+						&& LDCUtil.getValue(ldc, cpg) != null
 						&& (Util.cast(ReturnInstruction.class, ArrayUtils.get(ins, 1))) != null) {
 					//
 					Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), m);

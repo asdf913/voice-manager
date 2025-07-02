@@ -41,6 +41,7 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.InvokeInstructionUtil;
 import org.apache.bcel.generic.LDC;
+import org.apache.bcel.generic.LDCUtil;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.commons.lang3.ArrayUtils;
@@ -760,7 +761,7 @@ class VoiceManagerOjadAccentPanelTest {
 						if (ArrayUtils.get(instructions, j) instanceof LDC ldc && ldc != null) {
 							//
 							Assertions.assertNull(toTextAndImages2(null, null, words,
-									Collections.singleton(Util.toString(ldc.getValue(cpg)))));
+									Collections.singleton(Util.toString(LDCUtil.getValue(ldc, cpg)))));
 							//
 						} else if (ArrayUtils.get(instructions, j) instanceof ANEWARRAY) {
 							//

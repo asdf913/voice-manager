@@ -95,6 +95,7 @@ import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.LDC;
+import org.apache.bcel.generic.LDCUtil;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.NEWARRAY;
@@ -2180,8 +2181,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 				if ((instruction = instructions[i]) instanceof LDC ldc) {
 					//
-					key = Util.toString(
-							getValue(ldc, testAndApply(Objects::nonNull, constantPool, ConstantPoolGen::new, null)));
+					key = Util.toString(LDCUtil.getValue(ldc,
+							testAndApply(Objects::nonNull, constantPool, ConstantPoolGen::new, null)));
 					//
 				} else if (instruction instanceof BIPUSH biPush) {
 					//
@@ -2198,12 +2199,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 			return result;
 			//
-		}
-
-		@Nullable
-		private static Object getValue(@Nullable final LDC instance, @Nullable final ConstantPoolGen cpg) {
-			return instance != null && cpg != null && cpg.getConstantPool() != null
-					&& cpg.getConstantPool().getConstant(instance.getIndex()) != null ? instance.getValue(cpg) : null;
 		}
 
 		@Nullable

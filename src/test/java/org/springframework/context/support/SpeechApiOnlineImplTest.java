@@ -36,6 +36,7 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.InvokeInstructionUtil;
 import org.apache.bcel.generic.LDC;
+import org.apache.bcel.generic.LDCUtil;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.commons.collections.MapUtils;
@@ -385,7 +386,7 @@ class SpeechApiOnlineImplTest {
 						&& ArrayUtils.get(instructions, i - 1) instanceof LDC ldc) {
 					//
 					Util.add(attributes = ObjectUtils.getIfNull(attributes, ArrayList::new),
-							Util.toString(ldc.getValue(cpg)));
+							Util.toString(LDCUtil.getValue(ldc, cpg)));
 					//
 				} // for
 					//
@@ -811,8 +812,8 @@ class SpeechApiOnlineImplTest {
 								&& Objects.equals(InvokeInstructionUtil.getMethodName(invokeStatic, cpg),
 										"containsKey"))) {
 					//
-					Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Util.toString(ldc.getValue(cpg)),
-							null);
+					Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
+							Util.toString(LDCUtil.getValue(ldc, cpg)), null);
 					//
 				} // if
 					//

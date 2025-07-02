@@ -52,6 +52,7 @@ import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.LDC;
+import org.apache.bcel.generic.LDCUtil;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -487,7 +488,8 @@ class VoiceManagerOnlineTtsPanelTest {
 					if ((instructions = InstructionListUtil
 							.getInstructions(new MethodGen(cfMethod, null, cpg).getInstructionList())) != null
 							&& instructions.length == 2 && ArrayUtils.get(instructions, 0) instanceof LDC ldc
-							&& ldc.getValue(cpg) != null && ArrayUtils.get(instructions, 1) instanceof ARETURN) {
+							&& LDCUtil.getValue(ldc, cpg) != null
+							&& ArrayUtils.get(instructions, 1) instanceof ARETURN) {
 						//
 						Assertions.assertNotNull(invoke, toString);
 						//

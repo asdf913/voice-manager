@@ -2576,23 +2576,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(invoke(createQualityMap, instance, null, new Instruction[] { null }));
 		//
-		// getValue(org.apache.bcel.generic.LDC,org.apache.bcel.generic.ConstantPoolGen)
-		//
-		final Method getValue = clz != null ? clz.getDeclaredMethod("getValue", LDC.class, ConstantPoolGen.class)
-				: null;
-		//
-		Assertions.assertNull(invoke(getValue, instance, null, null));
-		//
-		final LDC ldc = new LDC(0);
-		//
-		Assertions.assertNull(invoke(getValue, instance, ldc, null));
-		//
-		if (Util.forName("org.apache.bcel.classfile.InvalidMethodSignatureException") == null) {
-			//
-			Assertions.assertNull(invoke(getValue, instance, ldc, new ConstantPoolGen()));
-			//
-		} // if
-			//
 	}
 
 	@Test

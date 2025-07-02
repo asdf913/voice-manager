@@ -23,6 +23,7 @@ import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.LDC;
+import org.apache.bcel.generic.LDCUtil;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.commons.collections4.IterableUtils;
@@ -144,7 +145,7 @@ public abstract class XlsUtil {
 						//
 					} // if
 						//
-					add(entryNames = ObjectUtils.getIfNull(entryNames, ArrayList::new), ldc.getValue(cpg));
+					add(entryNames = ObjectUtils.getIfNull(entryNames, ArrayList::new), LDCUtil.getValue(ldc, cpg));
 					//
 				} // if
 					//

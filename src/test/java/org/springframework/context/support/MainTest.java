@@ -37,6 +37,7 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.InvokeInstructionUtil;
 import org.apache.bcel.generic.LDC;
+import org.apache.bcel.generic.LDCUtil;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.commons.collections.MapUtils;
@@ -626,7 +627,7 @@ class MainTest {
 								//
 							} // if
 								//
-							argument = ldc.getValue(cpg);
+							argument = LDCUtil.getValue(ldc, cpg);
 							//
 							break;
 							//
@@ -763,7 +764,7 @@ class MainTest {
 							//
 						className = invokespecial.getClassName(cpg);
 						//
-						argument = ldc.getValue(cpg);
+						argument = LDCUtil.getValue(ldc, cpg);
 						//
 						break;
 						//
