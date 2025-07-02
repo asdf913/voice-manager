@@ -386,7 +386,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.kanji : null;
 	}
 
-	private static String getHiragana(final TextAndImage instance) {
+	private static String getHiragana(@Nullable final TextAndImage instance) {
 		return instance != null ? instance.hiragana : null;
 	}
 
