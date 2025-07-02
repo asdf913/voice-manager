@@ -82,6 +82,7 @@ import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
@@ -437,11 +438,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final List<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
 			//
+			final Iterable<String> partOfSpeeches = Util.toList(Util.map(
+					Util.filter(Util.stream(querySelectorAll(page, ".midashi")),
+							x -> IterableUtils.isEmpty(x != null ? x.querySelectorAll("div") : null)),
+					x -> StringUtils.trim(textContent(x))));
+			//
 			final String textInput = Util.getText(tfTextInput);
 			//
 			final Collection<TextAndImage> textAndImages = getIfNull(toTextAndImages(ehs, words),
 					Arrays.asList(() -> toTextAndImages1(ehs, textInput, words),
-							() -> toTextAndImages2(ehs, textInput, words), () -> toTextAndImages3(words)));
+							() -> toTextAndImages2(ehs, textInput, words, partOfSpeeches),
+							() -> toTextAndImages3(words)));
 			//
 			Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
 			//
@@ -609,7 +616,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	@Nullable
 	private static Collection<TextAndImage> toTextAndImages2(final Iterable<ElementHandle> ehs, final String textInput,
-			final Iterable<ElementHandle> words) {
+			final Iterable<ElementHandle> words, final Iterable<String> partOfSpeeches) {
 		//
 		if (IterableUtils.size(words) != 1) {
 			//
@@ -626,6 +633,18 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		final String[] ws = StringUtils
 				.split(StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))), '・');
 		//
+		int size = IterableUtils.size(ehs);
+		//
+		if (Util.iterator(partOfSpeeches) != null) {
+			//
+			if (Iterables.elementsEqual(partOfSpeeches, Collections.singleton("2グループの動詞"))) {
+				//
+				size = 2;
+				//
+			} // if
+				//
+		} // if
+			//
 		for (int i = 0; i < length(ws); i++) {
 			//
 			if (!Boolean.logicalAnd(Objects.equals(textInput, ArrayUtils.get(ws, i)), length(ws) == 2)) {
@@ -634,7 +653,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // if
 				//
-			for (int j = 0; j < IterableUtils.size(ehs); j++) {
+			for (int j = 0; j < size; j++) {
 				//
 				if (!StringUtils.isNotBlank(Strings.commonSuffix(ArrayUtils.get(ws, i),
 						StringUtils.trim(textContent(eh = IterableUtils.get(ehs, j)))))) {

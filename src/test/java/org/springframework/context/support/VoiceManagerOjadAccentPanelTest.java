@@ -106,7 +106,7 @@ class VoiceManagerOjadAccentPanelTest {
 				Iterable.class)).setAccessible(true);
 		//
 		(METHOD_TO_TEXT_AND_IMAGES2 = clz.getDeclaredMethod("toTextAndImages2", Iterable.class, String.class,
-				Iterable.class)).setAccessible(true);
+				Iterable.class, Iterable.class)).setAccessible(true);
 		//
 		(METHOD_TO_BYTE_ARRAY = clz.getDeclaredMethod("toByteArray", RenderedImage.class, String.class))
 				.setAccessible(true);
@@ -708,16 +708,22 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testToTextAndImages2() throws Throwable {
 		//
-		Assertions.assertNull(toTextAndImages2(null, null, Collections.nCopies(1, null)));
+		final Iterable<ElementHandle> words = Collections.nCopies(1, null);
 		//
-		Assertions.assertNull(toTextAndImages2(null, null, Collections.nCopies(2, null)));
+		Assertions.assertNull(toTextAndImages2(null, null, words, null));
+		//
+		Assertions.assertNull(toTextAndImages2(null, null, words, Collections.emptySet()));
+		//
+		Assertions.assertNull(toTextAndImages2(null, null, words, Collections.singleton("2グループの動詞")));
+		//
+		Assertions.assertNull(toTextAndImages2(null, null, Collections.nCopies(2, null), null));
 		//
 	}
 
 	private static Collection<?> toTextAndImages2(final Iterable<ElementHandle> ehs, final String textInput,
-			final Iterable<ElementHandle> words) throws Throwable {
+			final Iterable<ElementHandle> words, final Iterable<String> partOfSpeeches) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_TEXT_AND_IMAGES2.invoke(null, ehs, textInput, words);
+			final Object obj = METHOD_TO_TEXT_AND_IMAGES2.invoke(null, ehs, textInput, words, partOfSpeeches);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Collection) {
