@@ -69,10 +69,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.bcel.classfile.ConstantPool;
-import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.ConstantPushInstruction;
 import org.apache.bcel.generic.Instruction;
-import org.apache.bcel.generic.LDC;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
