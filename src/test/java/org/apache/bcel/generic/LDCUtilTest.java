@@ -52,7 +52,7 @@ class LDCUtilTest {
 	}
 
 	@Test
-	void testGetValue() throws ClassNotFoundException, IOException, ReflectiveOperationException {
+	void testGetValue() throws IOException, ReflectiveOperationException {
 		//
 		final LDC ldc = new LDC(0);
 		//
