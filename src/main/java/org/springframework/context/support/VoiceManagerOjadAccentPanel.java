@@ -210,21 +210,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final ListCellRenderer<? super Entry<String, String>> lcr = jcbCurve.getRenderer();
 			//
-			jcbCurve.setRenderer(new ListCellRenderer<>() {
-
-				@Override
-				public Component getListCellRendererComponent(final JList<? extends Entry<String, String>> list,
-						final Entry<String, String> value, final int index, final boolean isSelected,
-						final boolean cellHasFocus) {
-					//
-					final Component component = Util.getListCellRendererComponent(lcr, list, value, index, isSelected,
-							cellHasFocus);
-					//
-					Util.setText(Util.cast(JLabel.class, component), Util.getValue(value));
-					//
-					return component;
-					//
-				}
+			jcbCurve.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
+				//
+				final Component component = Util.getListCellRendererComponent(lcr, list, value, index, isSelected,
+						cellHasFocus);
+				//
+				Util.setText(Util.cast(JLabel.class, component), Util.getValue(value));
+				//
+				return component;
+				//
 			});
 			//
 			add(jcbCurve, wrap);// TODO
@@ -277,58 +271,51 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	private static ListCellRenderer<? super TextAndImage> createTextAndImageListCellRenderer(
 			final Component component) {
 		//
-		return new ListCellRenderer<>() {
-
-			@Override
-			public Component getListCellRendererComponent(final JList<? extends TextAndImage> list,
-					@Nullable final TextAndImage value, final int index, final boolean isSelected,
-					final boolean cellHasFocus) {
+		return (list, value, index, isSelected, cellHasFocus) -> {
+			//
+			final JPanel panel = new JPanel();
+			//
+			final ListModel<? extends TextAndImage> model = Util.getModel(list);
+			//
+			final int maxKanjiLength = Util.orElse(Util.max(Util.map(IntStream.range(0, Util.getSize(model)),
+					i -> StringUtils.length(getKanji(Util.getElementAt(model, i))))), 0);
+			//
+			panel.setLayout(new MigLayout());
+			//
+			final Dimension2D preferredSize = Util.getPreferredSize(panel);
+			//
+			if (preferredSize != null) {
 				//
-				final JPanel panel = new JPanel();
-				//
-				final ListModel<? extends TextAndImage> model = Util.getModel(list);
-				//
-				final int maxKanjiLength = Util.orElse(Util.max(Util.map(IntStream.range(0, Util.getSize(model)),
-						i -> StringUtils.length(getKanji(Util.getElementAt(model, i))))), 0);
-				//
-				panel.setLayout(new MigLayout());
-				//
-				final Dimension2D preferredSize = Util.getPreferredSize(panel);
-				//
-				if (preferredSize != null) {
+				if (Util.getSize(Util.getModel(list)) == 1) {
 					//
-					if (Util.getSize(Util.getModel(list)) == 1) {
+					panel.setPreferredSize(new Dimension((int) preferredSize.getWidth(),
+							(int) getHeight(Util.getPreferredSize(component))));
+					//
+				} else {
+					//
+					// TODO
+					//
+					if (value == null) {
 						//
 						panel.setPreferredSize(new Dimension((int) preferredSize.getWidth(),
-								(int) getHeight(Util.getPreferredSize(component))));
+								Math.max((int) getHeight(Util.getPreferredSize(component)), 26)));
 						//
-					} else {
-						//
-						// TODO
-						//
-						if (value == null) {
-							//
-							panel.setPreferredSize(new Dimension((int) preferredSize.getWidth(),
-									Math.max((int) getHeight(Util.getPreferredSize(component)), 26)));
-							//
-						} // if
-							//
 					} // if
 						//
 				} // if
 					//
-				panel.add(new JLabel(StringUtils.rightPad(getKanji(value), maxKanjiLength, '\u3000')), "left");
+			} // if
 				//
-				final JLabel label = new JLabel();
-				//
-				label.setIcon(testAndApply(Objects::nonNull, getImage(value), ImageIcon::new, x -> new ImageIcon()));
-				//
-				panel.add(label, "right");
-				//
-				return panel;
-				//
-			}
-
+			panel.add(new JLabel(StringUtils.rightPad(getKanji(value), maxKanjiLength, '\u3000')), "left");
+			//
+			final JLabel label = new JLabel();
+			//
+			label.setIcon(testAndApply(Objects::nonNull, getImage(value), ImageIcon::new, x -> new ImageIcon()));
+			//
+			panel.add(label, "right");
+			//
+			return panel;
+			//
 		};
 		//
 	}
