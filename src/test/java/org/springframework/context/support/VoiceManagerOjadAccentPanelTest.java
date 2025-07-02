@@ -35,6 +35,7 @@ import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.generic.ANEWARRAY;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.Instruction;
@@ -752,14 +753,24 @@ class VoiceManagerOjadAccentPanelTest {
 			for (int i = 0; i < length(instructions); i++) {
 				//
 				if (ArrayUtils.get(instructions, i) instanceof INVOKESTATIC invokestatic
-						&& Objects.equals(InvokeInstructionUtil.getClassName(invokestatic, cpg),
-								"java.util.Collections")
-						&& Objects.equals(InvokeInstructionUtil.getMethodName(invokestatic, cpg), "singleton") && i > 0
-						&& ArrayUtils.get(instructions, i - 1) instanceof LDC ldc && ldc != null) {
+						&& Objects.equals(InvokeInstructionUtil.getClassName(invokestatic, cpg), "java.util.Arrays")
+						&& Objects.equals(InvokeInstructionUtil.getMethodName(invokestatic, cpg), "asList")) {
 					//
-					Assertions.assertNull(toTextAndImages2(null, null, words,
-							Collections.singleton(Util.toString(ldc.getValue(cpg)))));
-					//
+					for (int j = i - 1; j >= 0; j--) {
+						//
+						if (ArrayUtils.get(instructions, j) instanceof LDC ldc && ldc != null) {
+							//
+							Assertions.assertNull(toTextAndImages2(null, null, words,
+									Collections.singleton(Util.toString(ldc.getValue(cpg)))));
+							//
+						} else if (ArrayUtils.get(instructions, j) instanceof ANEWARRAY) {
+							//
+							break;
+							//
+						} // if
+							//
+					} // for
+						//
 				} // if
 					//
 			} // for

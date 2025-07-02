@@ -635,16 +635,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		int size = IterableUtils.size(ehs);
 		//
-		if (Util.iterator(partOfSpeeches) != null) {
+		if (Util.contains(Arrays.asList("1グループの動詞", "2グループの動詞", "い形容詞"),
+				testAndApply(x -> IterableUtils.size(x) == 1, partOfSpeeches, x -> IterableUtils.get(x, 0), null))) {
 			//
-			if (Iterables.elementsEqual(partOfSpeeches, Collections.singleton("1グループの動詞"))
-					|| Iterables.elementsEqual(partOfSpeeches, Collections.singleton("2グループの動詞"))
-					|| Iterables.elementsEqual(partOfSpeeches, Collections.singleton("い形容詞"))) {
-				//
-				size = 2;
-				//
-			} // if
-				//
+			size = 2;
+			//
 		} // if
 			//
 		for (int i = 0; i < length(ws); i++) {
