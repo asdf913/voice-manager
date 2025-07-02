@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -48,6 +49,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -142,6 +144,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private Window window = null;
 
+	private ComboBoxModel<Entry<String, String>> cbmCurve = null;
+
 	private static class TextAndImage {
 
 		@Note("Kanji")
@@ -206,6 +210,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // for
 				//
+			this.cbmCurve = dcbm;
+			//
 			final JComboBox<Entry<String, String>> jcbCurve = new JComboBox<>(dcbm);
 			//
 			final ListCellRenderer<? super Entry<String, String>> lcr = jcbCurve.getRenderer();
@@ -221,7 +227,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			});
 			//
-			add(jcbCurve, wrap);// TODO
+			add(jcbCurve, wrap);
 			//
 			add(new JLabel());
 			//
@@ -483,20 +489,56 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		Playwright playwright = null;
 		//
 		try {
+			//
+			final StringBuilder url = new StringBuilder("https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index");
+			//
+			final List<Method> ms = Util.toList(Util.filter(
+					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class), Arrays::stream, null),
+					m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getKey"),
+							Arrays.equals(Util.getParameterTypes(m), new Class<?>[] {}))));
+			//
+			testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			final String curve = Util
+					.toString(testAndApply((a, b) -> a instanceof Entry, Util.getSelectedItem(cbmCurve),
+							testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null),
+							(a, b) -> Narcissus.invokeMethod(a, b), null));
+			//
+			if (StringUtils.isNotBlank(curve)) {
+				//
+				if (!StringUtils.endsWith(url, "/")) {
+					//
+					url.append('/');
+					//
+				} // if
+					//
+				url.append(String.join(":", "curve", curve));
+				//
+			} // if
+				//
+			if (!StringUtils.endsWith(url, "/")) {
+				//
+				url.append('/');
+				//
+			} // if
+				//
+			url.append(String.join(":", "word", testAndApply(Objects::nonNull, Util.getText(tfTextInput),
+					x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
+			//
 			if (!isTestMode()) {
 				//
 				PageUtil.navigate(page = newPage(BrowserTypeUtil.launch(chromium(playwright = Playwright.create()))),
-						StringUtils.join("https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index/word:",
-								testAndApply(Objects::nonNull, Util.getText(tfTextInput),
-										x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
+						Util.toString(url));
 				//
 			} // if
 				//
 			Util.forEach(
 					Util.map(sorted(Util.map(IntStream.range(1, Util.getSize(mcbmTextAndImage)), i -> -i)), i -> -i),
 					i -> Util.removeElementAt(mcbmTextAndImage, i));
-			//
-			// TODO
 			//
 			final List<ElementHandle> ehs = querySelectorAll(page, ".katsuyo_accent");
 			//
@@ -531,6 +573,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // try
 			//
+	}
+
+	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) {
+		return Util.test(predicate, t, u) ? Util.apply(functionTrue, t, u) : Util.apply(functionFalse, t, u);
 	}
 
 	@Nullable

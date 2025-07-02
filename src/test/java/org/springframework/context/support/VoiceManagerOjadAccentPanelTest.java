@@ -374,7 +374,7 @@ class VoiceManagerOjadAccentPanelTest {
 	}
 
 	@Test
-	void testActionPerformed() throws IllegalAccessException {
+	void testActionPerformed() throws Exception {
 		//
 		if (instance == null) {
 			//
@@ -384,7 +384,14 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(null));
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(EMPTY, 0, null)));
+		final ActionEvent actionEvent = new ActionEvent(EMPTY, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
+		instance.afterPropertiesSet();
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
 		//
 		// jcbTextAndImage
 		//
