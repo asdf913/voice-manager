@@ -385,6 +385,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.kanji : null;
 	}
 
+	private static String getHiragana(final TextAndImage instance) {
+		return instance != null ? instance.hiragana : null;
+	}
+
 	@Nullable
 	private static BufferedImage getAccentImage(@Nullable final TextAndImage instance) {
 		return instance != null ? instance.accentImage : null;
@@ -472,11 +476,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.setText(tfKanji, kanji);
 			//
-			final String hiragana = textAndImage != null ? textAndImage.hiragana : null;
+			Util.setEnabled(btnCopyKanji, StringUtils.isNotBlank(kanji));
+			//
+			final String hiragana = getHiragana(textAndImage);
 			//
 			Util.setText(tfHiragana, hiragana);
-			//
-			Util.setEnabled(btnCopyKanji, StringUtils.isNotBlank(kanji));
 			//
 			Util.setEnabled(btnCopyHiragana, StringUtils.isNotBlank(hiragana));
 			//
