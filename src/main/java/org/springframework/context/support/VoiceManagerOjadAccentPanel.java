@@ -78,6 +78,7 @@ import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
@@ -198,13 +199,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			for (int i = 0; i < IterableUtils.size(es); i++) {
 				//
-				if ((e = IterableUtils.get(es, i)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				dcbm.addElement(Pair.of(Util.getValue(e.attribute("value")), ElementUtil.text(e)));
+				dcbm.addElement(Pair.of(Util.getValue(attribute(e, "value")), ElementUtil.text(e)));
 				//
 			} // for
 				//
@@ -327,6 +322,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static Attribute attribute(final Element instance, final String key) {
+		return instance != null ? instance.attribute(key) : null;
 	}
 
 	private static Element previousElementSibling(final Element instance) {

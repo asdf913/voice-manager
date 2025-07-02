@@ -49,6 +49,8 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.jsoup.nodes.Attribute;
+import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -81,7 +83,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_KANJI, METHOD_GET_HEIGHT,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES,
 			METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY, METHOD_TO_BYTE_ARRAY,
-			METHOD_GET_IF_NULL = null;
+			METHOD_GET_IF_NULL, METHOD_ATTRIBUTE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -133,6 +135,8 @@ class VoiceManagerOjadAccentPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_IF_NULL = clz.getDeclaredMethod("getIfNull", Object.class, Iterable.class)).setAccessible(true);
+		//
+		(METHOD_ATTRIBUTE = clz.getDeclaredMethod("attribute", Element.class, String.class)).setAccessible(true);
 		//
 	}
 
@@ -843,6 +847,27 @@ class VoiceManagerOjadAccentPanelTest {
 	private static <T> T getIfNull(final T object, final Iterable<Supplier<T>> suppliers) throws Throwable {
 		try {
 			return (T) METHOD_GET_IF_NULL.invoke(null, object, suppliers);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAttribute() throws Throwable {
+		//
+		Assertions.assertNull(attribute(Util.cast(Element.class, Narcissus.allocateInstance(Element.class)), null));
+		//
+	}
+
+	private static Attribute attribute(final Element instance, final String key) throws Throwable {
+		try {
+			final Object obj = METHOD_ATTRIBUTE.invoke(null, instance, key);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Attribute) {
+				return (Attribute) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
