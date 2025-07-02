@@ -137,7 +137,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Copy Hiragana")
 	private AbstractButton btnCopyHiragana = null;
 
-	private AbstractButton btnCopyAccentImage, btnCopyCurveImage = null;
+	@Note("Copy Accent Image")
+	private AbstractButton btnCopyAccentImage = null;
+
+	@Note("Copy Curve Image")
+	private AbstractButton btnCopyCurveImage = null;
 
 	@Note("Accent")
 	private JLabel lblAccent = null;
