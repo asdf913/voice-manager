@@ -18,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
@@ -55,6 +56,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -144,6 +146,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	@Note("Copy Curve Image")
 	private AbstractButton btnCopyCurveImage = null;
+
+	private AbstractButton btnSaveAccentImage, btnSaveCurveImage = null;
 
 	@Note("Accent")
 	private JLabel lblAccent = null;
@@ -274,7 +278,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(new JLabel());
 			//
-			add(btnCopyAccentImage = new JButton("Copy"), wrap);
+			JPanel panel = new JPanel();
+			//
+			panel.add(btnCopyAccentImage = new JButton("Copy"));
+			//
+			panel.add(btnSaveAccentImage = new JButton("Save"));
+			//
+			add(panel, wrap);
 			//
 			add(new JLabel("Image (Curve)"));
 			//
@@ -282,13 +292,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(new JLabel());
 			//
-			add(btnCopyCurveImage = new JButton("Copy"));
+			(panel = new JPanel()).add(btnCopyCurveImage = new JButton("Copy"));
 			//
-			Util.forEach(Stream.of(btnExecute, btnCopyKanji, btnCopyHiragana, btnCopyAccentImage, btnCopyCurveImage),
-					x -> Util.addActionListener(x, this));
+			panel.add(btnSaveCurveImage = new JButton("Save"));
 			//
-			Util.forEach(Stream.of(btnCopyKanji, btnCopyHiragana, btnCopyAccentImage, btnCopyCurveImage),
-					x -> Util.setEnabled(x, false));
+			add(panel, wrap);
+			//
+			Util.forEach(Stream.of(btnExecute, btnCopyKanji, btnCopyHiragana, btnCopyAccentImage, btnCopyCurveImage,
+					btnSaveAccentImage, btnSaveCurveImage), x -> Util.addActionListener(x, this));
+			//
+			Util.forEach(Stream.of(btnCopyKanji, btnCopyHiragana, btnCopyAccentImage, btnCopyCurveImage,
+					btnSaveAccentImage, btnSaveCurveImage), x -> Util.setEnabled(x, false));
 			//
 			Util.forEach(Stream.of(tfKanji, tfHiragana), x -> Util.setEditable(x, false));
 			//
@@ -460,17 +474,18 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			// image
 			//
-			Image image = getAccentImage(textAndImage);
+			final Image accentImage = getAccentImage(textAndImage);
 			//
-			setIcon(lblAccent, testAndApply(Objects::nonNull, image, ImageIcon::new, x -> new ImageIcon()));
+			setIcon(lblAccent, testAndApply(Objects::nonNull, accentImage, ImageIcon::new, x -> new ImageIcon()));
 			//
-			Util.setEnabled(btnCopyAccentImage, image != null);
+			Util.forEach(Stream.of(btnCopyAccentImage, btnSaveAccentImage),
+					x -> Util.setEnabled(x, accentImage != null));
 			//
-			setIcon(lblCurve,
-					testAndApply(Objects::nonNull, image = textAndImage != null ? textAndImage.curveImage : null,
-							ImageIcon::new, x -> new ImageIcon()));
+			final Image curveImage = textAndImage != null ? textAndImage.curveImage : null;
 			//
-			Util.setEnabled(btnCopyCurveImage, image != null);
+			setIcon(lblCurve, testAndApply(Objects::nonNull, curveImage, ImageIcon::new, x -> new ImageIcon()));
+			//
+			Util.forEach(Stream.of(btnCopyCurveImage, btnSaveCurveImage), x -> Util.setEnabled(x, curveImage != null));
 			//
 			pack(window);
 			//
@@ -516,6 +531,60 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							() -> Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class))),
 					new StringSelection(Util.getText(tfHiragana)), null);
 			//
+		} else if (Objects.equals(source, btnSaveAccentImage)) {
+			//
+			final RenderedImage image = getAccentImage(Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage)));
+			//
+			if (image != null) {
+				//
+				final JFileChooser jfc = new JFileChooser(".");
+				//
+				jfc.setSelectedFile(new File(String.format("%1$s(%2$s).%3$s", Util.getText(tfKanji), "Accent", "png")));
+				//
+				if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+					//
+					try {
+						//
+						ImageIO.write(image, "png", jfc.getSelectedFile());// TODO
+						//
+					} catch (final IOException e) {
+						//
+						LoggerUtil.error(LOG, e.getMessage(), e);
+						//
+					} // try
+						//
+				} // if
+					//
+			} // if
+				//
+		} else if (Objects.equals(source, btnSaveCurveImage)) {
+			//
+			final TextAndImage textAndImage = Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage));
+			//
+			final RenderedImage image = textAndImage != null ? textAndImage.curveImage : null;
+			//
+			if (image != null) {
+				//
+				final JFileChooser jfc = new JFileChooser(".");
+				//
+				jfc.setSelectedFile(new File(String.format("%1$s(%2$s).%3$s", Util.getText(tfKanji), "Curve", "png")));
+				//
+				if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+					//
+					try {
+						//
+						ImageIO.write(image, "png", jfc.getSelectedFile());// TODO
+						//
+					} catch (final IOException e) {
+						//
+						LoggerUtil.error(LOG, e.getMessage(), e);
+						//
+					} // try
+						//
+				} // if
+					//
+			} // if
+				//
 		} // if
 			//
 	}

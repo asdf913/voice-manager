@@ -440,6 +440,22 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyHiragana, 0, null)));
 		//
+		// btnSaveAccentImage
+		//
+		final AbstractButton btnSaveAccentImage = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnSaveAccentImage", btnSaveAccentImage, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnSaveAccentImage, 0, null)));
+		//
+		// btnSaveCurveImage
+		//
+		final AbstractButton btnSaveCurveImage = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnSaveCurveImage", btnSaveCurveImage, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnSaveCurveImage, 0, null)));
+		//
 	}
 
 	@Test
