@@ -31,6 +31,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -539,7 +540,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				final JFileChooser jfc = new JFileChooser(".");
 				//
-				jfc.setSelectedFile(new File(String.format("%1$s(%2$s).%3$s", Util.getText(tfKanji), "Accent", "png")));
+				jfc.setSelectedFile(Util
+						.toFile(Paths.get(String.format("%1$s(%2$s).%3$s", Util.getText(tfKanji), "Accent", "png"))));
 				//
 				if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 					//
@@ -567,7 +569,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				final JFileChooser jfc = new JFileChooser(".");
 				//
-				jfc.setSelectedFile(new File(String.format("%1$s(%2$s).%3$s", Util.getText(tfKanji), "Curve", "png")));
+				jfc.setSelectedFile(Util
+						.toFile(Paths.get(String.format("%1$s(%2$s).%3$s", Util.getText(tfKanji), "Curve", "png"))));
 				//
 				if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 					//
