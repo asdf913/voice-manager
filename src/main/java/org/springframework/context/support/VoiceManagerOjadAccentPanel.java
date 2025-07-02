@@ -557,7 +557,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static void saveImage(final RenderedImage image, final Supplier<File> supplier) {
+	private static void saveImage(@Nullable final RenderedImage image, final Supplier<File> supplier) {
 		//
 		if (image != null) {
 			//
