@@ -147,7 +147,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Copy Curve Image")
 	private AbstractButton btnCopyCurveImage = null;
 
-	private AbstractButton btnSaveAccentImage, btnSaveCurveImage = null;
+	@Note("Save Accent Image")
+	private AbstractButton btnSaveAccentImage = null;
+
+	@Note("Save Curve Image")
+	private AbstractButton btnSaveCurveImage = null;
 
 	@Note("Accent")
 	private JLabel lblAccent = null;
