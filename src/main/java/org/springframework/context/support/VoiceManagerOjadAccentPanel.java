@@ -635,7 +635,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		int size = IterableUtils.size(ehs);
 		//
-		if (Util.contains(Arrays.asList("1グループの動詞", "2グループの動詞", "い形容詞"),
+		if (Util.contains(Arrays.asList("1グループの動詞", "2グループの動詞", "3グループの動詞", "い形容詞"),
 				testAndApply(x -> IterableUtils.size(x) == 1, partOfSpeeches, x -> IterableUtils.get(x, 0), null))) {
 			//
 			size = 2;
