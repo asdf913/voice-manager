@@ -113,6 +113,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static final String CSS_SELECTOR_MIDASHI = ".midashi";
 
+	private static final String CANVAS = "canvas";
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -668,7 +670,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					e -> LoggerUtil.error(LOG, e.getMessage(), e));
 			//
 			textAndImage.curveImage = toBufferedImage(
-					screenshot(querySelector(querySelector(querySelector(eh, ".."), ".."), "canvas")),
+					screenshot(querySelector(querySelector(querySelector(eh, ".."), ".."), CANVAS)),
 					e -> LoggerUtil.error(LOG, e.getMessage(), e));
 			//
 			textAndImage.hiragana = StringUtils.trim(textContent(eh));
@@ -737,7 +739,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					e -> LoggerUtil.error(LOG, e.getMessage(), e));
 			//
 			textAndImage.curveImage = toBufferedImage(
-					screenshot(querySelector(querySelector(querySelector(eh, ".."), ".."), "canvas")),
+					screenshot(querySelector(querySelector(querySelector(eh, ".."), ".."), CANVAS)),
 					e -> LoggerUtil.error(LOG, e.getMessage(), e));
 			//
 			textAndImage.hiragana = StringUtils.trim(textContent(eh));
@@ -823,7 +825,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
 				textAndImage.curveImage = toBufferedImage(
-						screenshot(querySelector(querySelector(querySelector(eh, ".."), ".."), "canvas")),
+						screenshot(querySelector(querySelector(querySelector(eh, ".."), ".."), CANVAS)),
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
 				textAndImage.kanji = ArrayUtils.get(ws, i);
