@@ -238,60 +238,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			jcbTextAndImage.addActionListener(this);
 			//
-			jcbTextAndImage.setRenderer(new ListCellRenderer<>() {
-
-				@Override
-				public Component getListCellRendererComponent(@Nullable final JList<? extends TextAndImage> list,
-						@Nullable final TextAndImage value, final int index, final boolean isSelected,
-						final boolean cellHasFocus) {
-					//
-					final JPanel panel = new JPanel();
-					//
-					final ListModel<? extends TextAndImage> model = Util.getModel(list);
-					//
-					final int maxKanjiLength = Util.orElse(Util.max(Util.map(IntStream.range(0, Util.getSize(model)),
-							i -> StringUtils.length(getKanji(Util.getElementAt(model, i))))), 0);
-					//
-					panel.setLayout(new MigLayout());
-					//
-					final Dimension2D preferredSize = Util.getPreferredSize(panel);
-					//
-					if (preferredSize != null) {
-						//
-						if (Util.getSize(Util.getModel(list)) == 1) {
-							//
-							panel.setPreferredSize(new Dimension((int) preferredSize.getWidth(),
-									(int) getHeight(Util.getPreferredSize(tfTextInput))));
-							//
-						} else {
-							//
-							// TODO
-							//
-							if (value == null) {
-								//
-								panel.setPreferredSize(new Dimension((int) preferredSize.getWidth(),
-										Math.max((int) getHeight(Util.getPreferredSize(tfTextInput)), 26)));
-								//
-							} // if
-								//
-						} // if
-							//
-					} // if
-						//
-					panel.add(new JLabel(StringUtils.rightPad(getKanji(value), maxKanjiLength, '\u3000')), "left");
-					//
-					final JLabel label = new JLabel();
-					//
-					label.setIcon(
-							testAndApply(Objects::nonNull, getImage(value), ImageIcon::new, x -> new ImageIcon()));
-					//
-					panel.add(label, "right");
-					//
-					return panel;
-					//
-				}
-
-			});
+			jcbTextAndImage.setRenderer(createTextAndImageListCellRenderer(tfTextInput));
 			//
 			add(new JLabel("Kanji"));
 			//
@@ -322,6 +269,64 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static ListCellRenderer<? super TextAndImage> createTextAndImageListCellRenderer(
+			final Component component) {
+		//
+		return new ListCellRenderer<>() {
+
+			@Override
+			public Component getListCellRendererComponent(final JList<? extends TextAndImage> list,
+					final TextAndImage value, final int index, final boolean isSelected, final boolean cellHasFocus) {
+				//
+				final JPanel panel = new JPanel();
+				//
+				final ListModel<? extends TextAndImage> model = Util.getModel(list);
+				//
+				final int maxKanjiLength = Util.orElse(Util.max(Util.map(IntStream.range(0, Util.getSize(model)),
+						i -> StringUtils.length(getKanji(Util.getElementAt(model, i))))), 0);
+				//
+				panel.setLayout(new MigLayout());
+				//
+				final Dimension2D preferredSize = Util.getPreferredSize(panel);
+				//
+				if (preferredSize != null) {
+					//
+					if (Util.getSize(Util.getModel(list)) == 1) {
+						//
+						panel.setPreferredSize(new Dimension((int) preferredSize.getWidth(),
+								(int) getHeight(Util.getPreferredSize(component))));
+						//
+					} else {
+						//
+						// TODO
+						//
+						if (value == null) {
+							//
+							panel.setPreferredSize(new Dimension((int) preferredSize.getWidth(),
+									Math.max((int) getHeight(Util.getPreferredSize(component)), 26)));
+							//
+						} // if
+							//
+					} // if
+						//
+				} // if
+					//
+				panel.add(new JLabel(StringUtils.rightPad(getKanji(value), maxKanjiLength, '\u3000')), "left");
+				//
+				final JLabel label = new JLabel();
+				//
+				label.setIcon(testAndApply(Objects::nonNull, getImage(value), ImageIcon::new, x -> new ImageIcon()));
+				//
+				panel.add(label, "right");
+				//
+				return panel;
+				//
+			}
+
+		};
+		//
 	}
 
 	@Nullable

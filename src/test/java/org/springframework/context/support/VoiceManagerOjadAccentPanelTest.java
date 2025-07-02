@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
@@ -28,6 +29,7 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.ListCellRenderer;
 import javax.swing.MutableComboBoxModel;
 
 import org.apache.bcel.classfile.ClassParser;
@@ -83,7 +85,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_KANJI, METHOD_GET_HEIGHT,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES,
 			METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY, METHOD_TO_BYTE_ARRAY,
-			METHOD_GET_IF_NULL, METHOD_ATTRIBUTE = null;
+			METHOD_GET_IF_NULL, METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -137,6 +139,9 @@ class VoiceManagerOjadAccentPanelTest {
 		(METHOD_GET_IF_NULL = clz.getDeclaredMethod("getIfNull", Object.class, Iterable.class)).setAccessible(true);
 		//
 		(METHOD_ATTRIBUTE = clz.getDeclaredMethod("attribute", Element.class, String.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER = clz.getDeclaredMethod("createTextAndImageListCellRenderer",
+				Component.class)).setAccessible(true);
 		//
 	}
 
@@ -306,7 +311,9 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 			toString = Util.toString(m);
 			//
-			if (Util.contains(Arrays.asList(Double.TYPE, Boolean.TYPE, Integer.TYPE), Util.getReturnType(m))) {
+			if (Util.contains(Arrays.asList(Double.TYPE, Boolean.TYPE, Integer.TYPE), Util.getReturnType(m))
+					|| Boolean.logicalAnd(Objects.equals(Util.getName(m), "createTextAndImageListCellRenderer"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Component.class }))) {
 				//
 				Assertions.assertNotNull(invoke, toString);
 				//
@@ -866,6 +873,28 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof Attribute) {
 				return (Attribute) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateTextAndImageListCellRenderer() throws Throwable {
+		//
+		Assertions.assertNotNull(Util.getListCellRendererComponent(createTextAndImageListCellRenderer(null), null, null,
+				0, false, false));
+		//
+	}
+
+	private static ListCellRenderer<?> createTextAndImageListCellRenderer(final Component component) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER.invoke(null, component);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ListCellRenderer) {
+				return (ListCellRenderer) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
