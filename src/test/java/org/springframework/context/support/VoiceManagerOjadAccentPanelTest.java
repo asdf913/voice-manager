@@ -689,11 +689,11 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals("[{\"kanji\":null,\"hiragana\":null,\"image\":null}]",
+		Assertions.assertEquals("[{\"kanji\":null,\"hiragana\":null,\"accentImage\":null}]",
 				ObjectMapperUtil.writeValueAsString(objectMapper, toTextAndImages(Collections.singleton(null), null)));
 		//
 		Assertions.assertEquals(
-				"[{\"kanji\":null,\"hiragana\":null,\"image\":null},{\"kanji\":null,\"hiragana\":null,\"image\":null}]",
+				"[{\"kanji\":null,\"hiragana\":null,\"accentImage\":null},{\"kanji\":null,\"hiragana\":null,\"accentImage\":null}]",
 				ObjectMapperUtil.writeValueAsString(objectMapper,
 						toTextAndImages(Collections.nCopies(2, null), Collections.nCopies(2, null))));
 		//
@@ -723,7 +723,7 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals("[{\"kanji\":null,\"hiragana\":null,\"image\":null}]",
+		Assertions.assertEquals("[{\"kanji\":null,\"hiragana\":null,\"accentImage\":null}]",
 				ObjectMapperUtil.writeValueAsString(objectMapper,
 						toTextAndImages1(Collections.nCopies(2, null), null, Collections.nCopies(1, null))));
 		//
