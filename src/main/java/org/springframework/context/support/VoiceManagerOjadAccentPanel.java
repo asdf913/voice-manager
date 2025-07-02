@@ -137,7 +137,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Copy Hiragana")
 	private AbstractButton btnCopyHiragana = null;
 
-	private AbstractButton btnCopyImage = null;
+	private AbstractButton btnCopyAccentImage = null;
 
 	private JLabel lblAccent, lblCurve = null;
 
@@ -260,16 +260,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(new JLabel());
 			//
-			add(btnCopyImage = new JButton("Copy"), wrap);
+			add(btnCopyAccentImage = new JButton("Copy"), wrap);
 			//
 			add(new JLabel("Image (Curve)"));
 			//
 			add(lblCurve = new JLabel(), String.format("%1$s,span %2$s", wrap, span));
 			//
-			Util.forEach(Stream.of(btnExecute, btnCopyKanji, btnCopyHiragana, btnCopyImage),
+			Util.forEach(Stream.of(btnExecute, btnCopyKanji, btnCopyHiragana, btnCopyAccentImage),
 					x -> Util.addActionListener(x, this));
 			//
-			Util.forEach(Stream.of(btnCopyKanji, btnCopyHiragana, btnCopyImage), x -> Util.setEnabled(x, false));
+			Util.forEach(Stream.of(btnCopyKanji, btnCopyHiragana, btnCopyAccentImage), x -> Util.setEnabled(x, false));
 			//
 			Util.forEach(Stream.of(tfKanji, tfHiragana), x -> Util.setEditable(x, false));
 			//
@@ -448,11 +448,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			setIcon(lblCurve, testAndApply(Objects::nonNull, textAndImage != null ? textAndImage.curveImage : null,
 					ImageIcon::new, x -> new ImageIcon()));
 			//
-			Util.setEnabled(btnCopyImage, image != null);
+			Util.setEnabled(btnCopyAccentImage, image != null);
 			//
 			pack(window);
 			//
-		} else if (Objects.equals(source, btnCopyImage)) {
+		} else if (Objects.equals(source, btnCopyAccentImage)) {
 			//
 			final IH ih = new IH();
 			//
