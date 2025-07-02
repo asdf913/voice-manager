@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
+import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -86,7 +87,8 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_KANJI, METHOD_GET_HEIGHT,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES,
 			METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY, METHOD_TO_BYTE_ARRAY,
-			METHOD_GET_IF_NULL, METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER = null;
+			METHOD_GET_IF_NULL, METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER,
+			METHOD_SAVE_IMAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -143,6 +145,9 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER = clz.getDeclaredMethod("createTextAndImageListCellRenderer",
 				Component.class)).setAccessible(true);
+		//
+		(METHOD_SAVE_IMAGE = clz.getDeclaredMethod("saveImage", RenderedImage.class, Supplier.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -930,6 +935,21 @@ class VoiceManagerOjadAccentPanelTest {
 				return (ListCellRenderer) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSaveImage() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> saveImage(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), null));
+		//
+	}
+
+	private static void saveImage(final RenderedImage image, final Supplier<File> supplier) throws Throwable {
+		try {
+			METHOD_SAVE_IMAGE.invoke(null, image, supplier);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

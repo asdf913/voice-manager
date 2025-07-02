@@ -18,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
@@ -543,55 +544,38 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} else if (Objects.equals(source, btnSaveAccentImage)) {
 			//
-			final RenderedImage image = getAccentImage(Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage)));
+			saveImage(getAccentImage(Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage))), () -> Util
+					.toFile(Path.of(String.format("%1$s(%2$s).%3$s", Util.getText(tfKanji), "Accent", "png"))));
 			//
-			if (image != null) {
-				//
-				final JFileChooser jfc = new JFileChooser(".");
-				//
-				jfc.setSelectedFile(
-						Util.toFile(Path.of(String.format("%1$s(%2$s).%3$s", Util.getText(tfKanji), "Accent", "png"))));
-				//
-				if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-					//
-					try {
-						//
-						ImageIO.write(image, "png", jfc.getSelectedFile());// TODO
-						//
-					} catch (final IOException e) {
-						//
-						LoggerUtil.error(LOG, e.getMessage(), e);
-						//
-					} // try
-						//
-				} // if
-					//
-			} // if
-				//
 		} else if (Objects.equals(source, btnSaveCurveImage)) {
 			//
-			final RenderedImage image = getCurveImage(Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage)));
+			saveImage(getCurveImage(Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage))), () -> Util
+					.toFile(Path.of(String.format("%1$s(%2$s).%3$s", Util.getText(tfKanji), "Curve", "png"))));
 			//
-			if (image != null) {
+		} // if
+			//
+	}
+
+	private static void saveImage(final RenderedImage image, final Supplier<File> supplier) {
+		//
+		if (image != null) {
+			//
+			final JFileChooser jfc = new JFileChooser(".");
+			//
+			jfc.setSelectedFile(Util.get(supplier));
+			//
+			if (!GraphicsEnvironment.isHeadless() && !isTestMode()
+					&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
-				final JFileChooser jfc = new JFileChooser(".");
-				//
-				jfc.setSelectedFile(
-						Util.toFile(Path.of(String.format("%1$s(%2$s).%3$s", Util.getText(tfKanji), "Curve", "png"))));
-				//
-				if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				try {
 					//
-					try {
-						//
-						ImageIO.write(image, "png", jfc.getSelectedFile());// TODO
-						//
-					} catch (final IOException e) {
-						//
-						LoggerUtil.error(LOG, e.getMessage(), e);
-						//
-					} // try
-						//
-				} // if
+					ImageIO.write(image, "png", jfc.getSelectedFile());// TODO
+					//
+				} catch (final IOException e) {
+					//
+					LoggerUtil.error(LOG, e.getMessage(), e);
+					//
+				} // try
 					//
 			} // if
 				//
