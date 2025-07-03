@@ -180,8 +180,40 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		@Note("Accent Image")
 		private BufferedImage accentImage = null;
 
+		private Integer accentImageWidth = null;
+
 		@Note("Curve Image")
 		private BufferedImage curveImage = null;
+
+		private Integer getAccentImageWidth() {
+			//
+			if (accentImageWidth == null && accentImage != null) {
+				//
+				final List<Field> fs = Util
+						.toList(Util.filter(
+								Util.stream(testAndApply(Objects::nonNull, Util.getClass(accentImage),
+										FieldUtils::getAllFieldsList, null)),
+								f -> Objects.equals(Util.getName(f), "raster")));
+				//
+				testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+					//
+					throw new IllegalStateException();
+					//
+				});
+				//
+				final Field f = testAndApply(x -> IterableUtils.size(fs) == 1, fs, x -> IterableUtils.get(fs, 0), null);
+				//
+				if (f == null || Narcissus.getField(accentImage, f) != null) {
+					//
+					accentImageWidth = Integer.valueOf(accentImage.getWidth());
+					//
+				} // if
+					//
+			} // if
+				//
+			return accentImageWidth;
+			//
+		}
 
 	}
 
@@ -431,14 +463,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			label.setIcon(testAndApply(Objects::nonNull, getAccentImage(value), ImageIcon::new, x -> new ImageIcon()));
 			//
-			// TODO
-			//
 			panel.add(label, String.format("right,wmin %1$s",
 					Util.orElse(Util.max(Util.map(IntStream.range(0, Util.getSize(model)), i -> {
 						//
-						final RenderedImage image = getAccentImage(Util.getElementAt(model, i));
+						final TextAndImage textAndImage = Util.getElementAt(model, i);
 						//
-						return image != null ? image.getWidth() : 0;
+						return Util.intValue(textAndImage != null ? textAndImage.getAccentImageWidth() : null, 0);
 						//
 					})), 0)));
 			//

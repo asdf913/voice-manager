@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -47,6 +48,7 @@ import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.LDCUtil;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -58,6 +60,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.meeuw.functional.ThrowingRunnable;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -87,8 +90,8 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_KANJI, METHOD_GET_HEIGHT,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES,
 			METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY, METHOD_TO_BYTE_ARRAY,
-			METHOD_GET_IF_NULL, METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER,
-			METHOD_SAVE_IMAGE = null;
+			METHOD_GET_IF_NULL, METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER, METHOD_SAVE_IMAGE,
+			METHOD_TEST_AND_RUN_THROWS = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -147,6 +150,9 @@ class VoiceManagerOjadAccentPanelTest {
 				Component.class)).setAccessible(true);
 		//
 		(METHOD_SAVE_IMAGE = clz.getDeclaredMethod("saveImage", RenderedImage.class, Supplier.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_TEST_AND_RUN_THROWS = clz.getDeclaredMethod("testAndRunThrows", Boolean.TYPE, ThrowingRunnable.class))
 				.setAccessible(true);
 		//
 	}
@@ -951,6 +957,57 @@ class VoiceManagerOjadAccentPanelTest {
 			throws Throwable {
 		try {
 			METHOD_SAVE_IMAGE.invoke(null, image, supplier, format);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTextAndImage() throws Throwable {
+		//
+		final Class<?> clz = Util.getClass(textAndImage);
+		//
+		final List<Field> fs = Util.toList(
+				Util.filter(Util.stream(testAndApply(Objects::nonNull, clz, FieldUtils::getAllFieldsList, null)),
+						f -> Objects.equals(Util.getName(f), "accentImage")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field accentImage = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		Narcissus.setField(textAndImage, accentImage, Narcissus.allocateInstance(BufferedImage.class));
+		//
+		final List<Method> ms = Util
+				.toList(Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredMethods(clz), Arrays::stream, null),
+						m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getAccentImageWidth"),
+								Arrays.equals(Util.getParameterTypes(m), new Class<?>[] {}))));
+		//
+		testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
+		//
+		Assertions.assertNull(Narcissus.invokeMethod(textAndImage, m));
+		//
+		final int width = 1;
+		//
+		Narcissus.setField(textAndImage, accentImage, new BufferedImage(width, 2, BufferedImage.TYPE_INT_RGB));
+		//
+		Assertions.assertEquals(Integer.valueOf(width), Narcissus.invokeMethod(textAndImage, m));
+		//
+	}
+
+	private static <E extends Throwable> void testAndRunThrows(final boolean condition,
+			final ThrowingRunnable<E> throwingRunnable) throws Throwable {
+		try {
+			METHOD_TEST_AND_RUN_THROWS.invoke(null, condition, throwingRunnable);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
