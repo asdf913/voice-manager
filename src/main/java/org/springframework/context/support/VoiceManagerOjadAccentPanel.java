@@ -170,6 +170,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private transient ComboBoxModel<Entry<String, String>> cbmCurve = null;
 
+	private ComboBoxModel<String> cbmImageFormat = null;
+
 	private static class TextAndImage {
 
 		@Note("Kanji")
@@ -316,7 +318,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // if
 				//
-			panelImage.add(new JComboBox<>(Util.toArray(list, new String[] {})), wrap);
+			panelImage.add(
+					new JComboBox<>(cbmImageFormat = new DefaultComboBoxModel<>(Util.toArray(list, new String[] {}))),
+					wrap);
 			//
 			panelImage.add(new JLabel("Accent"));
 			//
@@ -589,19 +593,28 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} else if (Objects.equals(source, btnSaveAccentImage)) {
 			//
-			saveImage(getAccentImage(Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage))), () -> Util
-					.toFile(Path.of(String.format("%1$s(%2$s).%3$s", Util.getText(tfKanji), "Accent", "png"))));
+			final String format = Util.toString(Util.getSelectedItem(cbmImageFormat));
+			//
+			saveImage(getAccentImage(Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage))),
+					() -> Util
+							.toFile(Path.of(String.format("%1$s(%2$s).%3$s", Util.getText(tfKanji), "Accent", format))),
+					format);
 			//
 		} else if (Objects.equals(source, btnSaveCurveImage)) {
 			//
-			saveImage(getCurveImage(Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage))), () -> Util
-					.toFile(Path.of(String.format("%1$s(%2$s).%3$s", Util.getText(tfKanji), "Curve", "png"))));
+			final String format = Util.toString(Util.getSelectedItem(cbmImageFormat));
+			//
+			saveImage(getCurveImage(Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage))),
+					() -> Util
+							.toFile(Path.of(String.format("%1$s(%2$s).%3$s", Util.getText(tfKanji), "Curve", format))),
+					format);
 			//
 		} // if
 			//
 	}
 
-	private static void saveImage(@Nullable final RenderedImage image, final Supplier<File> supplier) {
+	private static void saveImage(@Nullable final RenderedImage image, final Supplier<File> supplier,
+			final String format) {
 		//
 		if (image != null) {
 			//
@@ -614,7 +627,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				try {
 					//
-					ImageIO.write(image, "png", jfc.getSelectedFile());// TODO
+					ImageIO.write(image, StringUtils.defaultIfBlank(format, "png"), jfc.getSelectedFile());
 					//
 				} catch (final IOException e) {
 					//

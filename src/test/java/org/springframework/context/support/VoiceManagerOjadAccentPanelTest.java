@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -146,7 +147,7 @@ class VoiceManagerOjadAccentPanelTest {
 		(METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER = clz.getDeclaredMethod("createTextAndImageListCellRenderer",
 				Component.class)).setAccessible(true);
 		//
-		(METHOD_SAVE_IMAGE = clz.getDeclaredMethod("saveImage", RenderedImage.class, Supplier.class))
+		(METHOD_SAVE_IMAGE = clz.getDeclaredMethod("saveImage", RenderedImage.class, Supplier.class, String.class))
 				.setAccessible(true);
 		//
 	}
@@ -943,13 +944,14 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testSaveImage() throws Throwable {
 		//
-		Assertions.assertDoesNotThrow(() -> saveImage(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), null));
+		Assertions.assertDoesNotThrow(() -> saveImage(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), null, null));
 		//
 	}
 
-	private static void saveImage(final RenderedImage image, final Supplier<File> supplier) throws Throwable {
+	private static void saveImage(final RenderedImage image, final Supplier<File> supplier, final String format)
+			throws Throwable {
 		try {
-			METHOD_SAVE_IMAGE.invoke(null, image, supplier);
+			METHOD_SAVE_IMAGE.invoke(null, image, supplier, format);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
