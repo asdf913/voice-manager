@@ -349,7 +349,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static <E> void sort(final List<E> instance, final Comparator<? super E> comparator) {
+	private static <E> void sort(@Nullable final List<E> instance, @Nullable final Comparator<? super E> comparator) {
 		//
 		if (instance != null
 				&& (Proxy.isProxyClass(Util.getClass(instance)) || (instance.size() > 1 && comparator != null))) {
