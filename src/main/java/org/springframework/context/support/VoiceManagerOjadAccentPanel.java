@@ -303,15 +303,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				final List<String> order = Arrays.asList("png", "jpeg", "gif");// TODO
 				//
-				list.sort(new Comparator<>() {
-
-					@Override
-					public int compare(final String a, final String b) {
-						//
-						return Integer.compare(order != null ? order.indexOf(a) : -1,
-								order != null ? order.indexOf(b) : -1);
-						//
-					}
+				list.sort((a, b) -> {
+					//
+					return Integer.compare(order != null ? order.indexOf(a) : -1,
+							order != null ? order.indexOf(b) : -1);
+					//
 				});
 				//
 			} // if
