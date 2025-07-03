@@ -377,9 +377,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final ListModel<? extends TextAndImage> model = Util.getModel(list);
 			//
-			final int maxKanjiLength = Util.orElse(Util.max(Util.map(IntStream.range(0, Util.getSize(model)),
-					i -> StringUtils.length(getKanji(Util.getElementAt(model, i))))), 0);
-			//
 			panel.setLayout(new MigLayout());
 			//
 			final Dimension2D preferredSize = Util.getPreferredSize(panel);
@@ -406,7 +403,29 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 			} // if
 				//
-			panel.add(new JLabel(StringUtils.rightPad(getKanji(value), maxKanjiLength, '\u3000')), "left");
+			panel.add(
+					new JLabel(
+							StringUtils
+									.rightPad(getKanji(value),
+											Util.orElse(
+													Util.max(Util.map(IntStream.range(0, Util.getSize(model)),
+															i -> StringUtils
+																	.length(getKanji(Util.getElementAt(model, i))))),
+													0),
+											'\u3000')),
+					"left");
+			//
+			panel.add(
+					new JLabel(
+							StringUtils
+									.rightPad(getHiragana(value),
+											Util.orElse(
+													Util.max(Util.map(IntStream.range(0, Util.getSize(model)),
+															i -> StringUtils
+																	.length(getHiragana(Util.getElementAt(model, i))))),
+													0),
+											'\u3000')),
+					"left");
 			//
 			JLabel label = new JLabel();
 			//
