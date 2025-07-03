@@ -2174,7 +2174,7 @@ public abstract class Util {
 		return instance != null ? instance.getModel() : null;
 	}
 
-	static <E> void sort(final List<E> instance, final Comparator<? super E> comparator) {
+	static <E> void sort(@Nullable final List<E> instance, @Nullable final Comparator<? super E> comparator) {
 		//
 		if (instance != null
 				&& (Proxy.isProxyClass(Util.getClass(instance)) || (instance.size() > 1 && comparator != null))) {
