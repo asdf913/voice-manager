@@ -302,17 +302,27 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			jcbTextAndImage.setRenderer(createTextAndImageListCellRenderer(tfTextInput));
 			//
-			add(new JLabel("Kanji"));
+			// Text
 			//
-			add(tfKanji = new JTextField(), growx);
+			final JPanel panalText = new JPanel();
 			//
-			add(btnCopyKanji = new JButton("Copy"), wrap);
+			panalText.setLayout(new MigLayout());
 			//
-			add(new JLabel("Hiragana"));
+			panalText.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Text"));
 			//
-			add(tfHiragana = new JTextField(), growx);
+			panalText.add(new JLabel("Kanji"));
 			//
-			add(btnCopyHiragana = new JButton("Copy"), wrap);
+			panalText.add(tfKanji = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
+			//
+			panalText.add(btnCopyKanji = new JButton("Copy"), wrap);
+			//
+			panalText.add(new JLabel("Hiragana"));
+			//
+			panalText.add(tfHiragana = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
+			//
+			panalText.add(btnCopyHiragana = new JButton("Copy"), wrap);
+			//
+			add(panalText, String.format("span %1$s,%2$s,%3$s", 3, growx, wrap));
 			//
 			// Image
 			//
