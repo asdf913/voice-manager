@@ -25,7 +25,6 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.Icon;
 import javax.swing.JButton;
