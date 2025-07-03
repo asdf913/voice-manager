@@ -51,6 +51,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
@@ -277,11 +278,19 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(btnCopyHiragana = new JButton("Copy"), wrap);
 			//
-			add(new JLabel("Image (Accent)"));
+			// Image
 			//
-			add(lblAccent = new JLabel(), String.format("%1$s,span %2$s", wrap, span));
+			final JPanel panelImage = new JPanel();
 			//
-			add(new JLabel());
+			panelImage.setLayout(new MigLayout());
+			//
+			panelImage.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Image"));
+			//
+			panelImage.add(new JLabel("Accent"));
+			//
+			panelImage.add(lblAccent = new JLabel(), String.format("%1$s,span %2$s", wrap, span));
+			//
+			panelImage.add(new JLabel());
 			//
 			JPanel panel = new JPanel();
 			//
@@ -289,19 +298,21 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			panel.add(btnSaveAccentImage = new JButton("Save"));
 			//
-			add(panel, wrap);
+			panelImage.add(panel, wrap);
 			//
-			add(new JLabel("Image (Curve)"));
+			panelImage.add(new JLabel("Curve"));
 			//
-			add(lblCurve = new JLabel(), String.format("%1$s,span %2$s", wrap, span));
+			panelImage.add(lblCurve = new JLabel(), String.format("%1$s,span %2$s", wrap, span));
 			//
-			add(new JLabel());
+			panelImage.add(new JLabel());
 			//
 			(panel = new JPanel()).add(btnCopyCurveImage = new JButton("Copy"));
 			//
 			panel.add(btnSaveCurveImage = new JButton("Save"));
 			//
-			add(panel, wrap);
+			panelImage.add(panel, wrap);
+			//
+			add(panelImage, String.format("span %1$s,%2$s", 3, growx));
 			//
 			Util.forEach(Stream.of(btnExecute, btnCopyKanji, btnCopyHiragana, btnCopyAccentImage, btnCopyCurveImage,
 					btnSaveAccentImage, btnSaveCurveImage), x -> Util.addActionListener(x, this));
