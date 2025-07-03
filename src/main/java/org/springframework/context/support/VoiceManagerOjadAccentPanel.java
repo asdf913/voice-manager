@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -69,7 +70,9 @@ import javax.swing.MutableComboBoxModel;
 import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -92,6 +95,8 @@ import org.meeuw.functional.ThrowingRunnableUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
+import org.springframework.beans.factory.FactoryBeanUtil;
+import org.springframework.beans.factory.ImageWriterSpiFormatIterableFactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.google.common.base.Strings;
@@ -285,6 +290,33 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			panelImage.setLayout(new MigLayout());
 			//
 			panelImage.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Image"));
+			//
+			panelImage.add(new JLabel("Format"));
+			//
+			final List<String> list = testAndApply(Objects::nonNull, FactoryBeanUtil.getObject(
+					//
+					new ImageWriterSpiFormatIterableFactoryBean()// TODO
+			//
+			), IterableUtils::toList, null);
+			//
+			if (list != null) {
+				//
+				final List<String> order = Arrays.asList("png", "jpeg", "gif");// TODO
+				//
+				list.sort(new Comparator<>() {
+
+					@Override
+					public int compare(final String a, final String b) {
+						//
+						return Integer.compare(order != null ? order.indexOf(a) : -1,
+								order != null ? order.indexOf(b) : -1);
+						//
+					}
+				});
+				//
+			} // if
+				//
+			panelImage.add(new JComboBox<>(Util.toArray(list, new String[] {})), wrap);
 			//
 			panelImage.add(new JLabel("Accent"));
 			//
