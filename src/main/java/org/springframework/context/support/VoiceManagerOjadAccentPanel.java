@@ -401,12 +401,27 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			panel.add(new JLabel(StringUtils.rightPad(getKanji(value), maxKanjiLength, '\u3000')), "left");
 			//
-			final JLabel label = new JLabel();
+			JLabel label = new JLabel();
 			//
 			label.setIcon(testAndApply(Objects::nonNull, getAccentImage(value), ImageIcon::new, x -> new ImageIcon()));
 			//
+			// TODO
+			//
+			panel.add(label, String.format("right,wmin %1$s",
+					Util.orElse(Util.max(Util.map(IntStream.range(0, Util.getSize(model)), i -> {
+						//
+						final RenderedImage image = getAccentImage(Util.getElementAt(model, i));
+						//
+						return image != null ? image.getWidth() : 0;
+						//
+					})), 0)));
+			//
+			(label = new JLabel()).setIcon(
+					testAndApply(Objects::nonNull, getCurveImage(value), ImageIcon::new, x -> new ImageIcon()));
+			//
 			panel.add(label, "right");
 			//
+
 			return panel;
 			//
 		};
