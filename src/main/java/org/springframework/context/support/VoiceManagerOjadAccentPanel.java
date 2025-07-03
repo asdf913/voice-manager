@@ -168,7 +168,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private transient ComboBoxModel<Entry<String, String>> cbmCurve = null;
 
-	private ComboBoxModel<String> cbmImageFormat = null;
+	private transient ComboBoxModel<String> cbmImageFormat = null;
 
 	private static class TextAndImage {
 
