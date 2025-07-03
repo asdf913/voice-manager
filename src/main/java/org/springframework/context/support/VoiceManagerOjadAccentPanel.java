@@ -302,22 +302,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.sort(list, (a, b) -> {
 				//
-				final int ia = order != null ? order.indexOf(a) : -1;
-				//
-				final int ib = order != null ? order.indexOf(b) : -1;
-				//
-				if (list != null) {
+				if (Boolean.logicalAnd(Util.contains(order, a), Util.contains(order, b))) {
 					//
-					if (Util.contains(order, a) && Util.contains(order, b)) {
-						//
-						return Integer.compare(ia, ib);
-						//
-					} else if (Util.contains(order, a)) {
-						//
-						return -1;
-						//
-					} // if
-						//
+					return Integer.compare(order != null ? order.indexOf(a) : -1,
+							order != null ? order.indexOf(b) : -1);
+					//
+				} else if (Util.contains(order, a)) {
+					//
+					return -1;
+					//
 				} // if
 					//
 				return 0;
