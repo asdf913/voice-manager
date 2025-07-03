@@ -447,7 +447,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			panel.add(label, "right");
 			//
-
 			return panel;
 			//
 		};
