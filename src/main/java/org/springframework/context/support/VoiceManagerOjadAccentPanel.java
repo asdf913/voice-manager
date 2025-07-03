@@ -302,12 +302,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.sort(list, (a, b) -> {
 				//
-				if (Boolean.logicalAnd(Util.contains(order, a), Util.contains(order, b))) {
+				final int ia = indexOf(order, a);
+				//
+				final int ib = indexOf(order, b);
+				//
+				if (ia >= 0 && ib >= 0) {
 					//
-					return Integer.compare(order != null ? order.indexOf(a) : -1,
-							order != null ? order.indexOf(b) : -1);
+					return Integer.compare(ia, ib);
 					//
-				} else if (Util.contains(order, a)) {
+				} else if (ia >= 0) {
 					//
 					return -1;
 					//
@@ -359,6 +362,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static int indexOf(final List<?> instance, final Object item) {
+		return instance != null ? instance.indexOf(item) : -1;
 	}
 
 	private static ListCellRenderer<? super TextAndImage> createTextAndImageListCellRenderer(
