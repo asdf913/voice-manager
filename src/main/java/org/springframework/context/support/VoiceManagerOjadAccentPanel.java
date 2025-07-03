@@ -300,8 +300,29 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final List<String> order = Arrays.asList("png", "jpeg", "gif");// TODO
 			//
-			Util.sort(list, (a, b) -> Integer.compare(order != null ? order.indexOf(a) : -1,
-					order != null ? order.indexOf(b) : -1));
+			Util.sort(list, (a, b) -> {
+				//
+				final int ia = order != null ? order.indexOf(a) : -1;
+				//
+				final int ib = order != null ? order.indexOf(b) : -1;
+				//
+				if (list != null) {
+					//
+					if (Util.contains(order, a) && Util.contains(order, b)) {
+						//
+						return Integer.compare(ia, ib);
+						//
+					} else if (Util.contains(order, a)) {
+						//
+						return -1;
+						//
+					} // if
+						//
+				} // if
+					//
+				return 0;
+				//
+			});
 			//
 			panelImage.add(
 					new JComboBox<>(cbmImageFormat = new DefaultComboBoxModel<>(Util.toArray(list, new String[] {}))),
