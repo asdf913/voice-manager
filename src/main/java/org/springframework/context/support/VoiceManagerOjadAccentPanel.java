@@ -364,7 +364,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static int indexOf(final List<?> instance, final Object item) {
+	private static int indexOf(@Nullable final List<?> instance, final Object item) {
 		return instance != null ? instance.indexOf(item) : -1;
 	}
 
