@@ -28,6 +28,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -298,15 +300,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			), IterableUtils::toList, null);
 			//
-			if (list != null) {
-				//
-				final List<String> order = Arrays.asList("png", "jpeg", "gif");// TODO
-				//
-				list.sort((a, b) -> Integer.compare(order != null ? order.indexOf(a) : -1,
-						order != null ? order.indexOf(b) : -1));
-				//
-			} // if
-				//
+			final List<String> order = Arrays.asList("png", "jpeg", "gif");// TODO
+			//
+			sort(list, (a, b) -> Integer.compare(order != null ? order.indexOf(a) : -1,
+					order != null ? order.indexOf(b) : -1));
+			//
 			panelImage.add(
 					new JComboBox<>(cbmImageFormat = new DefaultComboBoxModel<>(Util.toArray(list, new String[] {}))),
 					wrap);
@@ -346,6 +344,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					btnSaveAccentImage, btnSaveCurveImage), x -> Util.setEnabled(x, false));
 			//
 			Util.forEach(Stream.of(tfKanji, tfHiragana), x -> Util.setEditable(x, false));
+			//
+		} // if
+			//
+	}
+
+	private static <E> void sort(final List<E> instance, final Comparator<? super E> comparator) {
+		//
+		if (instance != null
+				&& (Proxy.isProxyClass(Util.getClass(instance)) || (instance.size() > 1 && comparator != null))) {
+			//
+			instance.sort(comparator);
 			//
 		} // if
 			//

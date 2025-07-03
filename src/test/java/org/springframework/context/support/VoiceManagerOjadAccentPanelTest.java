@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -87,8 +88,8 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_KANJI, METHOD_GET_HEIGHT,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES,
 			METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY, METHOD_TO_BYTE_ARRAY,
-			METHOD_GET_IF_NULL, METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER,
-			METHOD_SAVE_IMAGE = null;
+			METHOD_GET_IF_NULL, METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER, METHOD_SAVE_IMAGE,
+			METHOD_SORT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -148,6 +149,8 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_SAVE_IMAGE = clz.getDeclaredMethod("saveImage", RenderedImage.class, Supplier.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_SORT = clz.getDeclaredMethod("sort", List.class, Comparator.class)).setAccessible(true);
 		//
 	}
 
@@ -951,6 +954,25 @@ class VoiceManagerOjadAccentPanelTest {
 			throws Throwable {
 		try {
 			METHOD_SAVE_IMAGE.invoke(null, image, supplier, format);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSort() {
+		//
+		Assertions.assertNull(Narcissus.invokeStaticMethod(METHOD_SORT, Reflection.newProxy(List.class, ih), null));
+		//
+		Assertions.assertDoesNotThrow(() -> sort(Collections.singletonList(null), null));
+		//
+		Assertions.assertDoesNotThrow(() -> sort(Collections.nCopies(2, null), null));
+		//
+	}
+
+	private static <E> void sort(final List<E> instance, final Comparator<? super E> comparator) throws Throwable {
+		try {
+			METHOD_SORT.invoke(null, instance, comparator);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
