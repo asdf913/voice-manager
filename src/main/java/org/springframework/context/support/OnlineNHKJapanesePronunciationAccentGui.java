@@ -406,7 +406,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		// Image Format
 		//
-		sort(imageWriterSpiFormats, createImageFormatComparator(imageFormatOrders));
+		Util.sort(imageWriterSpiFormats, createImageFormatComparator(imageFormatOrders));
 		//
 		// Filter out unsupported image format in "Image Format" drop down list (i.e.
 		// "javax.imageio.ImageIO.write(java.awt.image.RenderedImage,java.lang.String,java.io.OutputStream)"
@@ -569,17 +569,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		};
 		//
-	}
-
-	private static <E> void sort(@Nullable final List<E> instance, @Nullable final Comparator<? super E> comparator) {
-		//
-		if (instance != null
-				&& (Proxy.isProxyClass(Util.getClass(instance)) || (instance.size() > 1 && comparator != null))) {
-			//
-			instance.sort(comparator);
-			//
-		} // if
-			//
 	}
 
 	private static class IH implements InvocationHandler {

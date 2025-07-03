@@ -71,7 +71,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS,
 			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_SAVE_PITCH_ACCENT_IMAGE,
 			METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_GET_FIELD, METHOD_SAVE_FILE,
-			METHOD_IIF, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_SET_PREFERRED_SIZE, METHOD_MAX,
+			METHOD_IIF, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_SET_PREFERRED_SIZE, METHOD_MAX,
 			METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
 
 	@BeforeAll
@@ -109,8 +109,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_SAVE_FILE = clz.getDeclaredMethod("saveFile", File.class, String.class)).setAccessible(true);
 		//
 		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_SORT = clz.getDeclaredMethod("sort", List.class, Comparator.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_IMAGE_FORMAT_COMPARATOR = clz.getDeclaredMethod("createImageFormatComparator", List.class))
 				.setAccessible(true);
@@ -853,38 +851,11 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	}
 
 	@Test
-	void testSort() {
-		//
-		Assertions.assertDoesNotThrow(() -> sort(null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> sort(Collections.emptyList(), null));
-		//
-		Assertions.assertDoesNotThrow(() -> sort(new ArrayList<>(Collections.nCopies(2, null)), null));
-		//
-		if (ih != null) {
-			//
-			ih.size = Integer.valueOf(0);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> sort(Reflection.newProxy(List.class, ih), null));
-		//
-	}
-
-	private static <E> void sort(final List<E> instance, final Comparator<? super E> comparator) throws Throwable {
-		try {
-			METHOD_SORT.invoke(null, instance, comparator);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testCreateImageFormatComparator() throws Throwable {
 		//
 		final List<String> list = Arrays.asList("bmp", "jpeg", "tiff", "png", "wbmp", "gif");
 		//
-		sort(list, createImageFormatComparator(Arrays.asList("png", "jpeg", "gif")));
+		Util.sort(list, createImageFormatComparator(Arrays.asList("png", "jpeg", "gif")));
 		//
 		Assertions.assertEquals("png,jpeg,gif,bmp,tiff,wbmp", collect(Util.stream(list), Collectors.joining(",")));
 		//
@@ -1029,7 +1000,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	}
 
 	@Test
-	void testemove() {
+	void testRemove() {
 		//
 		Assertions.assertDoesNotThrow(() -> remove(null, 0));
 		//

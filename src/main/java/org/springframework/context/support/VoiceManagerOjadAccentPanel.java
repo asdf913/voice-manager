@@ -302,7 +302,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final List<String> order = Arrays.asList("png", "jpeg", "gif");// TODO
 			//
-			sort(list, (a, b) -> Integer.compare(order != null ? order.indexOf(a) : -1,
+			Util.sort(list, (a, b) -> Integer.compare(order != null ? order.indexOf(a) : -1,
 					order != null ? order.indexOf(b) : -1));
 			//
 			panelImage.add(
@@ -344,17 +344,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					btnSaveAccentImage, btnSaveCurveImage), x -> Util.setEnabled(x, false));
 			//
 			Util.forEach(Stream.of(tfKanji, tfHiragana), x -> Util.setEditable(x, false));
-			//
-		} // if
-			//
-	}
-
-	private static <E> void sort(@Nullable final List<E> instance, @Nullable final Comparator<? super E> comparator) {
-		//
-		if (instance != null
-				&& (Proxy.isProxyClass(Util.getClass(instance)) || (instance.size() > 1 && comparator != null))) {
-			//
-			instance.sort(comparator);
 			//
 		} // if
 			//

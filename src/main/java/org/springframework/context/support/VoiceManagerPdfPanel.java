@@ -1414,7 +1414,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			panel.add(new JComboBox<>(mcbm));
 			//
-			sort(instance.imageWriterSpiFormats, createImageFormatComparator(instance.imageFormatOrders));
+			Util.sort(instance.imageWriterSpiFormats, createImageFormatComparator(instance.imageFormatOrders));
 			//
 			Util.forEach(instance.imageWriterSpiFormats, x -> Util.addElement(mcbm, x));
 			//
@@ -1523,17 +1523,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private static <T, E extends Throwable> T getIfNull(@Nullable final T object,
 			final FailableSupplier<T, E> defaultSupplier) throws E {
 		return object != null ? object : FailableSupplierUtil.get(defaultSupplier);
-	}
-
-	private static <E> void sort(@Nullable final List<E> instance, @Nullable final Comparator<? super E> comparator) {
-		//
-		if (instance != null
-				&& (Proxy.isProxyClass(Util.getClass(instance)) || (instance.size() > 1 && comparator != null))) {
-			//
-			instance.sort(comparator);
-			//
-		} // if
-			//
 	}
 
 	private static Comparator<String> createImageFormatComparator(final List<?> imageFormatOrders) {

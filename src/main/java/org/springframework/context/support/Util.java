@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -2171,6 +2172,17 @@ public abstract class Util {
 	@Nullable
 	static <E> ListModel<E> getModel(@Nullable final JList<E> instance) {
 		return instance != null ? instance.getModel() : null;
+	}
+
+	static <E> void sort(final List<E> instance, final Comparator<? super E> comparator) {
+		//
+		if (instance != null
+				&& (Proxy.isProxyClass(Util.getClass(instance)) || (instance.size() > 1 && comparator != null))) {
+			//
+			instance.sort(comparator);
+			//
+		} // if
+			//
 	}
 
 }
