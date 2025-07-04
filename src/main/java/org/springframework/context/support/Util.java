@@ -159,6 +159,7 @@ public abstract class Util {
 				: instance;
 	}
 
+	@Nullable
 	static IntStream sorted(@Nullable final IntStream instance) {
 		return instance != null ? instance.sorted() : instance;
 	}
