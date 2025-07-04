@@ -955,6 +955,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				textAndImage.accentImage = toBufferedImage(screenshot(eh = IterableUtils.get(ehs, i)),
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
+				textAndImage.curveImage = toBufferedImage(
+						screenshot(querySelector(querySelector(querySelector(eh, ".."), ".."), CANVAS)),
+						e -> LoggerUtil.error(LOG, e.getMessage(), e));
+				//
 				textAndImage.hiragana = StringUtils.trim(textContent(eh));
 				//
 				Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
