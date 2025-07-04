@@ -282,7 +282,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		Element element = testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null);
 		//
-		final UnaryOperator<Element> parentPreviousElementSibling = x -> previousElementSibling(ElementUtil.parent(x));
+		final UnaryOperator<Element> parentPreviousElementSibling = x -> ElementUtil
+				.previousElementSibling(ElementUtil.parent(x));
 		//
 		add(new JLabel(StringUtils.defaultIfBlank(Util.collect(
 				Util.map(Util.stream(NodeUtil.childNodes(Util.apply(parentPreviousElementSibling, element))), x -> {
@@ -581,8 +582,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	private static Iterable<Element> getParentPreviousElementSiblingByLabel(final Element element, final String label) {
 		//
-		return Util.toList(Util.filter(selectStream(element, "input[type=\"text\"]"),
-				x -> StringUtils.equals(ElementUtil.text(previousElementSibling(ElementUtil.parent(x))), label)));
+		return Util.toList(Util.filter(selectStream(element, "input[type=\"text\"]"), x -> StringUtils
+				.equals(ElementUtil.text(ElementUtil.previousElementSibling(ElementUtil.parent(x))), label)));
 		//
 	}
 
@@ -596,11 +597,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		if (b) {
 			ThrowingRunnableUtil.runThrows(throwingRunnable);
 		}
-	}
-
-	@Nullable
-	private static Element previousElementSibling(@Nullable final Element instance) {
-		return instance != null ? instance.previousElementSibling() : null;
 	}
 
 	private static void setLayout(@Nullable final Container instance, final LayoutManager layoutManager) {

@@ -191,6 +191,10 @@ public final class ElementUtil {
 		return instnace != null ? instnace.nextElementSiblings() : null;
 	}
 
+	public static Element previousElementSibling(final Element instance) {
+		return instance != null ? instance.previousElementSibling() : null;
+	}
+
 	@Nullable
 	public static String html(@Nullable final Element instance) {
 		//

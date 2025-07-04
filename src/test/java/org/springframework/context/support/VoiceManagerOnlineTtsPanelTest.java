@@ -95,9 +95,9 @@ import javassist.util.proxy.ProxyUtil;
 class VoiceManagerOnlineTtsPanelTest {
 
 	private static Method METHOD_GET_LAYOUT_MANAGER, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
-			METHOD_TEST_AND_APPLY6, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_PREVIOUS_ELEMENT_SIBLING,
-			METHOD_TEST_AND_RUN_THROWS, METHOD_SELECT_STREAM, METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD,
-			METHOD_IIF, METHOD_GET_VOICE, METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_SHA512HEX,
+			METHOD_TEST_AND_APPLY6, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_RUN_THROWS,
+			METHOD_SELECT_STREAM, METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_IIF, METHOD_GET_VOICE,
+			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_SHA512HEX,
 			METHOD_CREATE_INPUT_STREAM_SOURCE, METHOD_CAN_READ, METHOD_ADD_LIST_DATA_LISTENER,
 			METHOD_GET_ANNOTATED_ELEMENT_OBJECT_ENTRY, METHOD_GET_STRING_OBJECT_ENTRY = null;
 
@@ -123,9 +123,6 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_TEST_AND_ACCEPT4 = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
 				FailableBiConsumer.class)).setAccessible(true);
-		//
-		(METHOD_PREVIOUS_ELEMENT_SIBLING = clz.getDeclaredMethod("previousElementSibling", Element.class))
-				.setAccessible(true);
 		//
 		(METHOD_TEST_AND_RUN_THROWS = clz.getDeclaredMethod("testAndRunThrows", Boolean.TYPE, ThrowingRunnable.class))
 				.setAccessible(true);
@@ -618,27 +615,6 @@ class VoiceManagerOnlineTtsPanelTest {
 			final U u, final FailableBiConsumer<T, U, E> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT4.invoke(null, instance, t, u, consumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testPreviousElementSibling() throws Throwable {
-		//
-		Assertions.assertNull(previousElementSibling(element));
-		//
-	}
-
-	private static Element previousElementSibling(final Element instance) throws Throwable {
-		try {
-			final Object obj = METHOD_PREVIOUS_ELEMENT_SIBLING.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Element) {
-				return (Element) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -273,7 +273,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final Element element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0),
 					null);
 			//
-			add(new JLabel(ElementUtil.text(previousElementSibling(element))));
+			add(new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(element))));
 			//
 			es = ElementUtil.select(element, "option");
 			//
@@ -524,11 +524,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Nullable
 	private static Attribute attribute(@Nullable final Element instance, final String key) {
 		return instance != null ? instance.attribute(key) : null;
-	}
-
-	@Nullable
-	private static Element previousElementSibling(@Nullable final Element instance) {
-		return instance != null ? instance.previousElementSibling() : null;
 	}
 
 	private static double getHeight(@Nullable final Dimension2D instance) {

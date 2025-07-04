@@ -208,6 +208,13 @@ class ElementUtilTest {
 	}
 
 	@Test
+	void testPreviousElementSibling() {
+		//
+		Assertions.assertNull(ElementUtil.previousElementSibling(element));
+		//
+	}
+
+	@Test
 	void testHtml() {
 		//
 		Assertions.assertNull(ElementUtil.html(element));
