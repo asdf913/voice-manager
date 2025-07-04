@@ -30,7 +30,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.channels.IllegalSelectorException;
 import java.nio.charset.StandardCharsets;
