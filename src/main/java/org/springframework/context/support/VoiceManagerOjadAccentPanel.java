@@ -428,11 +428,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static URI build(final URIBuilder instance) throws URISyntaxException {
+	private static URI build(@Nullable final URIBuilder instance) throws URISyntaxException {
 		return instance != null ? instance.build() : null;
 	}
 
-	private static URL toURL(final URI instance) throws MalformedURLException {
+	private static URL toURL(@Nullable final URI instance) throws MalformedURLException {
 		return instance != null ? instance.toURL() : null;
 	}
 
