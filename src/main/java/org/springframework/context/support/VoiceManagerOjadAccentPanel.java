@@ -85,6 +85,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.TextStringBuilder;
 import org.apache.commons.text.TextStringBuilderUtil;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.client.utils.URIBuilderUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -254,8 +255,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			String html = null;
 			//
-			try (final InputStream is = Util.openStream(toURL(
-					build(new URIBuilder("https://www.gavo.t.u-tokyo.ac.jp").setPath("ojad/search/index/word:"))))) {
+			try (final InputStream is = Util.openStream(toURL(URIBuilderUtil
+					.build(new URIBuilder("https://www.gavo.t.u-tokyo.ac.jp").setPath("ojad/search/index/word:"))))) {
 				//
 				html = IOUtils.toString(is, StandardCharsets.UTF_8);
 				//
@@ -426,10 +427,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
-	}
-
-	private static URI build(@Nullable final URIBuilder instance) throws URISyntaxException {
-		return instance != null ? instance.build() : null;
 	}
 
 	private static URL toURL(@Nullable final URI instance) throws MalformedURLException {

@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.client.utils.URIBuilderUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
@@ -39,18 +40,22 @@ public class FuriganaJcinfoFailableFunction implements FailableFunction<String, 
 	@Override
 	public String apply(final String input) throws Exception {
 		//
-		return collect(map(stream(ElementUtil.children(testAndApply(x -> IterableUtils.size(x) == 1,
-				ElementUtil.children(testAndApply(
-						x -> IterableUtils
-								.size(x) == 1,
-						getElementsByClass(
-								testAndApply(Objects::nonNull,
-										toURL(build(addParameter(
-												testAndApply(StringUtils::isNotBlank, url, URIBuilder::new, null),
-												"text", input))),
-										x -> Jsoup.parse(x, 0), null),
-								"_result-ruby"),
-						x -> IterableUtils.get(x, 0), null)),
+		return collect(map(stream(ElementUtil.children(testAndApply(
+				x -> IterableUtils
+						.size(x) == 1,
+				ElementUtil
+						.children(
+								testAndApply(x -> IterableUtils.size(x) == 1,
+										getElementsByClass(
+												testAndApply(Objects::nonNull,
+														toURL(URIBuilderUtil
+																.build(addParameter(
+																		testAndApply(StringUtils::isNotBlank, url,
+																				URIBuilder::new, null),
+																		"text", input))),
+														x -> Jsoup.parse(x, 0), null),
+												"_result-ruby"),
+										x -> IterableUtils.get(x, 0), null)),
 				x -> IterableUtils.get(x, 0), null))), ElementUtil::html), Collectors.joining());
 		//
 	}
@@ -86,10 +91,6 @@ public class FuriganaJcinfoFailableFunction implements FailableFunction<String, 
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
 				: null;
 		//
-	}
-
-	private static URI build(final URIBuilder instance) throws URISyntaxException {
-		return instance != null ? instance.build() : null;
 	}
 
 	private static URL toURL(final URI instance) throws MalformedURLException {

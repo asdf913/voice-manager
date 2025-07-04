@@ -37,7 +37,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class FuriganaJcinfoFailableFunctionTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_ADD_PARAMTER, METHOD_GET_CLASS, METHOD_COLLECT, METHOD_FILTER,
-			METHOD_MAP, METHOD_BUILD, METHOD_TO_URL, METHOD_GET_ELEMENTS_BY_CLASS, METHOD_STREAM = null;
+			METHOD_MAP, METHOD_TO_URL, METHOD_GET_ELEMENTS_BY_CLASS, METHOD_STREAM = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -57,8 +57,6 @@ class FuriganaJcinfoFailableFunctionTest {
 		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
 		(METHOD_MAP = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
-		//
-		(METHOD_BUILD = clz.getDeclaredMethod("build", URIBuilder.class)).setAccessible(true);
 		//
 		(METHOD_TO_URL = clz.getDeclaredMethod("toURL", URI.class)).setAccessible(true);
 		//
@@ -359,27 +357,6 @@ class FuriganaJcinfoFailableFunctionTest {
 				return null;
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
-			}
-			throw new Throwable(Objects.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testBuild() throws Throwable {
-		//
-		Assertions.assertNotNull(build(cast(URIBuilder.class, Narcissus.allocateInstance(URIBuilder.class))));
-		//
-	}
-
-	private static URI build(final URIBuilder instance) throws Throwable {
-		try {
-			final Object obj = METHOD_BUILD.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof URI) {
-				return (URI) obj;
 			}
 			throw new Throwable(Objects.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
