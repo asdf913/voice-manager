@@ -429,6 +429,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
+	@Nullable
 	private static URL toURL(@Nullable final URI instance) throws MalformedURLException {
 		return instance != null ? instance.toURL() : null;
 	}
