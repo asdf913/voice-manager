@@ -5,7 +5,6 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
