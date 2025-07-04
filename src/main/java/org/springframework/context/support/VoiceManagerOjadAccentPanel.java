@@ -28,8 +28,10 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.channels.IllegalSelectorException;
 import java.nio.charset.StandardCharsets;
@@ -82,6 +84,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.TextStringBuilder;
 import org.apache.commons.text.TextStringBuilderUtil;
+import org.apache.http.client.utils.URIBuilder;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -251,8 +254,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			String html = null;
 			//
-			try (final InputStream is = Util
-					.openStream(new URI("https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index/word:").toURL())) {
+			try (final InputStream is = Util.openStream(toURL(
+					build(new URIBuilder("https://www.gavo.t.u-tokyo.ac.jp").setPath("ojad/search/index/word:"))))) {
 				//
 				html = IOUtils.toString(is, StandardCharsets.UTF_8);
 				//
@@ -423,6 +426,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static URI build(final URIBuilder instance) throws URISyntaxException {
+		return instance != null ? instance.build() : null;
+	}
+
+	private static URL toURL(final URI instance) throws MalformedURLException {
+		return instance != null ? instance.toURL() : null;
 	}
 
 	private static int indexOf(@Nullable final List<?> instance, final Object item) {
@@ -820,7 +831,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			String html = null;
 			//
-			try (final InputStream is = Util.openStream(new URI(Util.toString(url)).toURL())) {
+			try (final InputStream is = Util.openStream(toURL(new URI(Util.toString(url))))) {
 				//
 				html = IOUtils.toString(is, StandardCharsets.UTF_8);
 				//
