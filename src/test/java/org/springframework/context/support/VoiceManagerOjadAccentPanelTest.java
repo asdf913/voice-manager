@@ -442,6 +442,14 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyCurveImage, 0, null)));
 		//
+		// btnCopyPartOfSpeech
+		//
+		final AbstractButton btnCopyPartOfSpeech = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnCopyPartOfSpeech", btnCopyPartOfSpeech, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyPartOfSpeech, 0, null)));
+		//
 		// btnCopyKanji
 		//
 		final AbstractButton btnCopyKanji = new JButton();

@@ -150,6 +150,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
+	@Note("Copy Part Of Speech")
+	private AbstractButton btnCopyPartOfSpeech = null;
+
 	@Note("Copy Text")
 	private AbstractButton btnCopyKanji = null;
 
@@ -239,7 +242,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		setLayout(new MigLayout());// TODO
 		//
-		final Field f = getFieldByName(Util.getClass(this), "component");
+		Field f = getFieldByName(Util.getClass(this), "component");
 		//
 		if (f == null || Narcissus.getField(this, f) != null) {
 			//
@@ -331,7 +334,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			panalText.add(new JLabel("Part of Speech"));
 			//
-			panalText.add(tfPartOfSpeech = new JTextField(), String.format("%1$s,%2$s,wmin %3$s", growx, wrap, 59));
+			panalText.add(tfPartOfSpeech = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
+			//
+			panalText.add(btnCopyPartOfSpeech = new JButton("Copy"), wrap);
 			//
 			panalText.add(new JLabel("Kanji"));
 			//
@@ -417,11 +422,26 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(panelImage, String.format("span %1$s,%2$s", 3, growx));
 			//
-			Util.forEach(Stream.of(btnExecute, btnCopyKanji, btnCopyHiragana, btnCopyAccentImage, btnCopyCurveImage,
-					btnSaveAccentImage, btnSaveCurveImage), x -> Util.addActionListener(x, this));
+			final List<Field> fs = Util
+					.toList(Util.filter(
+							testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManagerOjadAccentPanel.class),
+									Arrays::stream, null),
+							x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))));
 			//
-			Util.forEach(Stream.of(btnCopyKanji, btnCopyHiragana, btnCopyAccentImage, btnCopyCurveImage,
-					btnSaveAccentImage, btnSaveCurveImage), x -> Util.setEnabled(x, false));
+			for (int i = 0; i < IterableUtils.size(fs); i++) {
+				//
+				if ((f = IterableUtils.get(fs, i)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, f)), this);
+				//
+			} // for
+				//
+			Util.forEach(Stream.of(btnCopyPartOfSpeech, btnCopyKanji, btnCopyHiragana, btnCopyAccentImage,
+					btnCopyCurveImage, btnSaveAccentImage, btnSaveCurveImage), x -> Util.setEnabled(x, false));
 			//
 			Util.forEach(Stream.of(tfPartOfSpeech, tfKanji, tfHiragana), x -> Util.setEditable(x, false));
 			//
@@ -622,25 +642,35 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final TextAndImage textAndImage = Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage));
 			//
-			// text
-			//
-			final String kanji = getKanji(textAndImage);
-			//
-			Util.setText(tfKanji, kanji);
-			//
-			Util.setEnabled(btnCopyKanji, StringUtils.isNotBlank(kanji));
-			//
 			// Part Of Speech
 			//
-			Util.setText(tfPartOfSpeech, textAndImage != null ? textAndImage.partOfSpeech : null);
+			Util.accept(x -> {
+				//
+				Util.setText(tfPartOfSpeech, x);
+				//
+				Util.setEnabled(btnCopyPartOfSpeech, StringUtils.isNotBlank(x));
+				//
+			}, textAndImage != null ? textAndImage.partOfSpeech : null);
+			//
+			// Kanji
+			//
+			Util.accept(x -> {
+				//
+				Util.setText(tfKanji, x);
+				//
+				Util.setEnabled(btnCopyKanji, StringUtils.isNotBlank(x));
+				//
+			}, getKanji(textAndImage));
 			//
 			// Hiragana
 			//
-			final String hiragana = getHiragana(textAndImage);
-			//
-			Util.setText(tfHiragana, hiragana);
-			//
-			Util.setEnabled(btnCopyHiragana, StringUtils.isNotBlank(hiragana));
+			Util.accept(x -> {
+				//
+				Util.setText(tfHiragana, x);
+				//
+				Util.setEnabled(btnCopyHiragana, StringUtils.isNotBlank(x));
+				//
+			}, getHiragana(textAndImage));
 			//
 			// image
 			//
@@ -682,6 +712,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							() -> getSystemClipboard(Toolkit.getDefaultToolkit()),
 							() -> Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class))),
 					Reflection.newProxy(Transferable.class, ih), null);
+			//
+		} else if (Objects.equals(source, btnCopyPartOfSpeech)) {
+			//
+			setContents(
+					testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
+							() -> getSystemClipboard(Toolkit.getDefaultToolkit()),
+							() -> Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class))),
+					new StringSelection(Util.getText(tfPartOfSpeech)), null);
 			//
 		} else if (Objects.equals(source, btnCopyKanji)) {
 			//
