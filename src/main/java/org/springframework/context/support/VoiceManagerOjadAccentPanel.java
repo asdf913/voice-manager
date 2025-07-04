@@ -136,6 +136,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Hiragana")
 	private JTextComponent tfHiragana = null;
 
+	private JTextComponent tfPartOfSpeech = null;
+
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
@@ -176,6 +178,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 		@Note("Hiragana")
 		private String hiragana = null;
+
+		private String partOfSpeech = null;
 
 		@Note("Accent Image")
 		private BufferedImage accentImage = null;
@@ -310,6 +314,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			panalText.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Text"));
 			//
+			panalText.add(new JLabel("Part of Speech"));
+			//
+			panalText.add(tfPartOfSpeech = new JTextField(), String.format("%1$s,%2$s,wmin %3$s", growx, wrap, 59));
+			//
 			panalText.add(new JLabel("Kanji"));
 			//
 			panalText.add(tfKanji = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
@@ -400,7 +408,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			Util.forEach(Stream.of(btnCopyKanji, btnCopyHiragana, btnCopyAccentImage, btnCopyCurveImage,
 					btnSaveAccentImage, btnSaveCurveImage), x -> Util.setEnabled(x, false));
 			//
-			Util.forEach(Stream.of(tfKanji, tfHiragana), x -> Util.setEditable(x, false));
+			Util.forEach(Stream.of(tfPartOfSpeech, tfKanji, tfHiragana), x -> Util.setEditable(x, false));
 			//
 		} // if
 			//
@@ -607,6 +615,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.setEnabled(btnCopyKanji, StringUtils.isNotBlank(kanji));
 			//
+			// Part Of Speech
+			//
+			Util.setText(tfPartOfSpeech, textAndImage != null ? textAndImage.partOfSpeech : null);
+			//
+			// Hiragana
+			//
 			final String hiragana = getHiragana(textAndImage);
 			//
 			Util.setText(tfHiragana, hiragana);
@@ -800,6 +814,20 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
 			//
+			if (IterableUtils.size(partOfSpeeches) == 1) {
+				//
+				Util.forEach(Util.stream(textAndImages), x -> {
+					//
+					if (x != null) {
+						//
+						x.partOfSpeech = IterableUtils.get(partOfSpeeches, 0);
+						//
+					} // if
+						//
+				});
+				//
+			} // if
+				//
 			if (IterableUtils.size(textAndImages) == 1
 					|| (IterableUtils.size(words) == 1 && IterableUtils.size(textAndImages) == 1)) {
 				//
