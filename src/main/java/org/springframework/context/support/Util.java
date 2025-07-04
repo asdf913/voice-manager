@@ -159,6 +159,10 @@ public abstract class Util {
 				: instance;
 	}
 
+	static IntStream sorted(final IntStream instance) {
+		return instance != null ? instance.sorted() : instance;
+	}
+
 	@Nullable
 	static <T> Stream<T> filter(@Nullable final Stream<T> instance, @Nullable final Predicate<? super T> predicate) {
 		//

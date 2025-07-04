@@ -845,9 +845,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // if
 				//
-			Util.forEach(
-					Util.map(sorted(Util.map(IntStream.range(1, Util.getSize(mcbmTextAndImage)), i -> -i)), i -> -i),
-					i -> Util.removeElementAt(mcbmTextAndImage, i));
+			Util.forEach(Util.map(Util.sorted(Util.map(IntStream.range(1, Util.getSize(mcbmTextAndImage)), i -> -i)),
+					i -> -i), i -> Util.removeElementAt(mcbmTextAndImage, i));
 			//
 			final List<ElementHandle> ehs = querySelectorAll(page, ".katsuyo_accent");
 			//
@@ -1437,11 +1436,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Nullable
 	private static ElementHandle querySelector(@Nullable final ElementHandle instance, final String selector) {
 		return instance != null ? instance.querySelector(selector) : null;
-	}
-
-	@Nullable
-	private static IntStream sorted(@Nullable final IntStream instance) {
-		return instance != null ? instance.sorted() : instance;
 	}
 
 	private static void setIcon(@Nullable final JLabel instance, final Icon icon) {

@@ -673,7 +673,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 		lastImageHeight = null;
 		//
-		Util.forEach(Util.map(sorted(Util.map(IntStream.range(1, Util.getSize(cbmSheet)), i -> -i)), i -> -i),
+		Util.forEach(Util.map(Util.sorted(Util.map(IntStream.range(1, Util.getSize(cbmSheet)), i -> -i)), i -> -i),
 				i -> Util.removeElementAt(cbmSheet, i));
 		//
 		try {
@@ -729,11 +729,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		} // try
 			//
-	}
-
-	@Nullable
-	private static IntStream sorted(@Nullable final IntStream instance) {
-		return instance != null ? instance.sorted() : instance;
 	}
 
 	@Nullable
@@ -1007,7 +1002,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			if (WorkbookUtil.getNumberOfSheets(wb) == 1) {
 				//
-				Util.forEach(Util.map(sorted(Util.map(IntStream.range(1, Util.getSize(cbmSheet)), i -> -i)), i -> -i),
+				Util.forEach(
+						Util.map(Util.sorted(Util.map(IntStream.range(1, Util.getSize(cbmSheet)), i -> -i)), i -> -i),
 						i -> Util.removeElementAt(cbmSheet, i));
 				//
 				cbmSheet.addElement(SheetUtil.getSheetName(WorkbookUtil.getSheetAt(wb, 0)));

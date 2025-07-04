@@ -99,8 +99,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_OR, METHOD_SET_ICON,
 			METHOD_TEST_AND_APPLY, METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY,
 			METHOD_TO_DATA, METHOD_GET_LAYOUT_MANAGER, METHOD_SET_PREFERRED_SIZE, METHOD_WRITE_VOICE_TO_FILE,
-			METHOD_FOR_EACH_REMAINING, METHOD_GET_HEIGHT, METHOD_GET_SCALED_INSTANCE, METHOD_SORTED,
-			METHOD_GET_SELECTED_INDEX, METHOD_IS_ALL_FIELDS_NULL_OR_BLANK = null;
+			METHOD_FOR_EACH_REMAINING, METHOD_GET_HEIGHT, METHOD_GET_SCALED_INSTANCE, METHOD_GET_SELECTED_INDEX,
+			METHOD_IS_ALL_FIELDS_NULL_OR_BLANK = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -174,8 +174,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_GET_SCALED_INSTANCE = clz.getDeclaredMethod("getScaledInstance", Image.class, Integer.TYPE,
 				Integer.TYPE, Integer.TYPE)).setAccessible(true);
-		//
-		(METHOD_SORTED = clz.getDeclaredMethod("sorted", IntStream.class)).setAccessible(true);
 		//
 		(METHOD_GET_SELECTED_INDEX = clz.getDeclaredMethod("getSelectedIndex", JComboBox.class)).setAccessible(true);
 		//
@@ -1186,29 +1184,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				return null;
 			} else if (obj instanceof Image) {
 				return (Image) obj;
-			}
-			throw new Throwable(Util.getName(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSorted() throws Throwable {
-		//
-		final IntStream intStream = Reflection.newProxy(IntStream.class, ih);
-		//
-		Assertions.assertSame(intStream, sorted(intStream));
-		//
-	}
-
-	private static IntStream sorted(final IntStream instance) throws Throwable {
-		try {
-			final Object obj = METHOD_SORTED.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof IntStream) {
-				return (IntStream) obj;
 			}
 			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
