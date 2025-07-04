@@ -1214,7 +1214,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 				if (!NodeUtil.hasAttr(previousElementSibling, "id")) {
 					//
-					return ElementUtil.text(previousElementSibling.selectFirst(".midashi"));
+					return ElementUtil.text(previousElementSibling.selectFirst(CSS_SELECTOR_MIDASHI));
 					//
 				} // if
 					//
