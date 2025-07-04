@@ -250,10 +250,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(tfTextInput = new JTextField(), String.format("%1$s,%2$s,span %3$s", wrap, growx, span));
 			//
-			final Document document = Jsoup.parse(new URL("https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index/word:"),
-					0);
+			String html = null;
 			//
-			Iterable<Element> es = ElementUtil.select(document, "[id=\"search_curve\"]");
+			try (final InputStream is = Util
+					.openStream(new URI("https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index/word:").toURL())) {
+				//
+				html = IOUtils.toString(is, StandardCharsets.UTF_8);
+				//
+			} // try
+				//
+			Iterable<Element> es = ElementUtil.select(Jsoup.parse(html), "[id=\"search_curve\"]");
 			//
 			testAndRunThrows(IterableUtils.size(es) > 1, () -> {
 				//
