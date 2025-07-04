@@ -1130,10 +1130,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				textAndImage.hiragana = StringUtils.trim(textContent(eh));
 				//
-				if (Objects.equals(textContent, "格")) {
-					System.out.println();
-				}
-				//
 				textAndImage.partOfSpeech = getPartOfSpeech(document, id);
 				//
 				Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
