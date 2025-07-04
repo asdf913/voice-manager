@@ -292,7 +292,7 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Object invoke = null;
 		//
-		String toString = null;
+		String toString, name = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
@@ -331,8 +331,14 @@ class VoiceManagerOjadAccentPanelTest {
 			toString = Util.toString(m);
 			//
 			if (Util.contains(Arrays.asList(Double.TYPE, Boolean.TYPE, Integer.TYPE), Util.getReturnType(m))
-					|| Boolean.logicalAnd(Objects.equals(Util.getName(m), "createTextAndImageListCellRenderer"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Component.class }))) {
+					|| Boolean
+							.logicalOr(
+									Boolean.logicalAnd(
+											Objects.equals(name = Util.getName(m),
+													"createTextAndImageListCellRenderer"),
+											Arrays.equals(parameterTypes, new Class<?>[] { Component.class })),
+									Boolean.logicalAnd(Objects.equals(name, "getClipboard"),
+											Arrays.equals(parameterTypes, new Class<?>[] {})))) {
 				//
 				Assertions.assertNotNull(invoke, toString);
 				//

@@ -695,11 +695,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			ih.image = getAccentImage(Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage)));
 			//
-			setContents(
-					testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
-							() -> getSystemClipboard(Toolkit.getDefaultToolkit()),
-							() -> Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class))),
-					Reflection.newProxy(Transferable.class, ih), null);
+			setContents(getClipboard(), Reflection.newProxy(Transferable.class, ih), null);
 			//
 		} else if (Objects.equals(source, btnCopyCurveImage)) {
 			//
@@ -707,35 +703,19 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			ih.image = getCurveImage(Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage)));
 			//
-			setContents(
-					testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
-							() -> getSystemClipboard(Toolkit.getDefaultToolkit()),
-							() -> Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class))),
-					Reflection.newProxy(Transferable.class, ih), null);
+			setContents(getClipboard(), Reflection.newProxy(Transferable.class, ih), null);
 			//
 		} else if (Objects.equals(source, btnCopyPartOfSpeech)) {
 			//
-			setContents(
-					testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
-							() -> getSystemClipboard(Toolkit.getDefaultToolkit()),
-							() -> Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class))),
-					new StringSelection(Util.getText(tfPartOfSpeech)), null);
+			setContents(getClipboard(), new StringSelection(Util.getText(tfPartOfSpeech)), null);
 			//
 		} else if (Objects.equals(source, btnCopyKanji)) {
 			//
-			setContents(
-					testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
-							() -> getSystemClipboard(Toolkit.getDefaultToolkit()),
-							() -> Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class))),
-					new StringSelection(Util.getText(tfKanji)), null);
+			setContents(getClipboard(), new StringSelection(Util.getText(tfKanji)), null);
 			//
 		} else if (Objects.equals(source, btnCopyHiragana)) {
 			//
-			setContents(
-					testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
-							() -> getSystemClipboard(Toolkit.getDefaultToolkit()),
-							() -> Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class))),
-					new StringSelection(Util.getText(tfHiragana)), null);
+			setContents(getClipboard(), new StringSelection(Util.getText(tfHiragana)), null);
 			//
 		} else if (Objects.equals(source, btnSaveAccentImage)) {
 			//
@@ -757,6 +737,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static Clipboard getClipboard() {
+		//
+		return testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
+				() -> getSystemClipboard(Toolkit.getDefaultToolkit()),
+				() -> Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class)));
+		//
 	}
 
 	private static void saveImage(@Nullable final RenderedImage image, final Supplier<File> supplier,
