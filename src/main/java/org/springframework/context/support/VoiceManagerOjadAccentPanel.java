@@ -1227,7 +1227,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static Elements previousElementSiblings(final Element instance) {
+	private static Elements previousElementSiblings(@Nullable final Element instance) {
 		return instance != null ? instance.previousElementSiblings() : null;
 	}
 
