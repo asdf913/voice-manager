@@ -56,6 +56,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -91,7 +92,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES,
 			METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY, METHOD_TO_BYTE_ARRAY,
 			METHOD_GET_IF_NULL, METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER, METHOD_SAVE_IMAGE,
-			METHOD_TEST_AND_RUN_THROWS = null;
+			METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -153,6 +154,12 @@ class VoiceManagerOjadAccentPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_TEST_AND_RUN_THROWS = clz.getDeclaredMethod("testAndRunThrows", Boolean.TYPE, ThrowingRunnable.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_PART_OF_SPEECH = clz.getDeclaredMethod("getPartOfSpeech", Element.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_PREVIOUS_ELEMENT_SIBLINGS = clz.getDeclaredMethod("previousElementSiblings", Element.class))
 				.setAccessible(true);
 		//
 	}
@@ -1008,6 +1015,50 @@ class VoiceManagerOjadAccentPanelTest {
 			final ThrowingRunnable<E> throwingRunnable) throws Throwable {
 		try {
 			METHOD_TEST_AND_RUN_THROWS.invoke(null, condition, throwingRunnable);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetPartOfSpeech() throws Throwable {
+		//
+		Assertions
+				.assertNull(getPartOfSpeech(Util.cast(Element.class, Narcissus.allocateInstance(Element.class)), " "));
+		//
+	}
+
+	private static String getPartOfSpeech(final Element element, final String id) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PART_OF_SPEECH.invoke(null, element, id);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPreviousElementSiblings() throws Throwable {
+		//
+		Assertions.assertNotNull(
+				previousElementSiblings(Util.cast(Element.class, Narcissus.allocateInstance(Element.class))));
+		//
+	}
+
+	static Elements previousElementSiblings(final Element instance) throws Throwable {
+		try {
+			final Object obj = METHOD_PREVIOUS_ELEMENT_SIBLINGS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Elements) {
+				return (Elements) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

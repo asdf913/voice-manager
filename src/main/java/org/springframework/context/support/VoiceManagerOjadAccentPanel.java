@@ -28,8 +28,12 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.channels.IllegalSelectorException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -70,6 +74,7 @@ import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -79,6 +84,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.TextStringBuilder;
 import org.apache.commons.text.TextStringBuilderUtil;
+import org.apache.xmlbeans.impl.common.IOUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -87,6 +93,8 @@ import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.jsoup.nodes.NodeUtil;
+import org.jsoup.select.Elements;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.ThrowingRunnableUtil;
 import org.slf4j.Logger;
@@ -98,6 +106,7 @@ import org.springframework.beans.factory.InitializingBean;
 
 import com.google.common.base.Strings;
 import com.google.common.reflect.Reflection;
+import com.healthmarketscience.jackcess.RuntimeIOException;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Browser;
@@ -807,10 +816,20 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final String textInput = Util.getText(tfTextInput);
 			//
+			String html = null;
+			//
+			try (final InputStream is = Util.openStream(new URI(Util.toString(url)).toURL())) {
+				//
+				html = IOUtils.toString(is, StandardCharsets.UTF_8);
+				//
+			} // try
+				//
+			final Document document = Jsoup.parse(html);
+			//
 			final Collection<TextAndImage> textAndImages = getIfNull(toTextAndImages(ehs, words),
 					Arrays.asList(() -> toTextAndImages1(ehs, textInput, words),
 							() -> toTextAndImages2(ehs, textInput, words, partOfSpeeches),
-							() -> toTextAndImages3(words)));
+							() -> toTextAndImages3(words, document)));
 			//
 			Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
 			//
@@ -836,6 +855,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			} // if
 				//
 			pack(window);
+			//
+		} catch (final IOException | URISyntaxException e) {
+			//
+			throw new RuntimeException(e);
 			//
 		} finally {
 			//
@@ -1071,7 +1094,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	@Nullable
-	private static Collection<TextAndImage> toTextAndImages3(final Iterable<ElementHandle> words) {
+	private static Collection<TextAndImage> toTextAndImages3(final Iterable<ElementHandle> words,
+			final Document document) {
 		//
 		Collection<TextAndImage> textAndImages = null;
 		//
@@ -1085,11 +1109,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		String[] ss = null;
 		//
+		String id = null;
+		//
 		for (int i = 0; i < IterableUtils.size(words); i++) {
 			//
+			id = (word = IterableUtils.get(words, i)) != null ? word.getAttribute("id") : null;
+			//
 			if (Boolean.logicalAnd(
-					StringUtils.isNotBlank(textContent = StringUtils
-							.trim(textContent(querySelector(word = IterableUtils.get(words, i), "td:nth-child(2)")))),
+					StringUtils.isNotBlank(
+							textContent = StringUtils.trim(textContent(querySelector(word, "td:nth-child(2)")))),
 					!StringUtils.contains(textContent, '・'))) {
 				//
 				(textAndImage = new TextAndImage()).accentImage = toBufferedImage(
@@ -1104,6 +1132,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				textAndImage.kanji = textContent;
 				//
 				textAndImage.hiragana = StringUtils.trim(textContent(eh));
+				//
+				if (Objects.equals(textContent, "格")) {
+					System.out.println();
+				}
+				//
+				textAndImage.partOfSpeech = getPartOfSpeech(document, id);
 				//
 				Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 				//
@@ -1122,6 +1156,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					textAndImage.hiragana = StringUtils.trim(textContent(eh));
 					//
+					textAndImage.partOfSpeech = getPartOfSpeech(document, id);
+					//
 					Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 					//
 					if (StringUtils.endsWith(textAndImage.kanji = ArrayUtils.get(ss, j), "[な]")) {
@@ -1138,6 +1174,61 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		return textAndImages;
 		//
+	}
+
+	private static String getPartOfSpeech(final Element element, final String id) {
+		//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(testAndApply(Objects::nonNull, Util.getClass(element), FieldUtils::getAllFieldsList, null)),
+				f -> Objects.equals(Util.getName(f), "childNodes")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalSelectorException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		Iterable<Element> previousElementSiblings = previousElementSiblings(
+				(f == null || Narcissus.getField(element, f) != null) && StringUtils.isNotEmpty(id)
+						? element.getElementById(id)
+						: null);
+		//
+		if (IterableUtils.isEmpty(previousElementSiblings)) {
+			//
+			return ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+					ElementUtil.select(element, "thead * .midashi"), x -> IterableUtils.get(x, 0), null));
+			//
+		} else {
+			//
+			Element previousElementSibling = null;
+			//
+			for (int i = 0; i < IterableUtils.size(previousElementSiblings); i++) {
+				//
+				if ((previousElementSibling = IterableUtils.get(previousElementSiblings, i)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (!NodeUtil.hasAttr(previousElementSibling, "id")) {
+					//
+					return ElementUtil.text(previousElementSibling.selectFirst(".midashi"));
+					//
+				} // if
+					//
+			} // for
+				//
+			return ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+					ElementUtil.select(element, "thead * .midashi"), x -> IterableUtils.get(x, 0), null));
+			//
+		} // if
+			//
+	}
+
+	private static Elements previousElementSiblings(final Element instance) {
+		return instance != null ? instance.previousElementSiblings() : null;
 	}
 
 	@Nullable
