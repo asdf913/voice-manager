@@ -2095,9 +2095,11 @@ public abstract class Util {
 			//
 		} // if
 			//
+		final Stream<Field> stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)),
+				Arrays::stream, null);
+		//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
-				Util.toList(Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)),
-						Arrays::stream, null), x -> Objects.equals(Util.getName(x), "dataModel"))),
+				Util.toList(Util.filter(stream, x -> Objects.equals(Util.getName(x), "dataModel"))),
 				x -> IterableUtils.get(x, 0), null);
 		//
 		return f == null || Narcissus.getField(instance, f) != null ? instance.getSelectedItem() : null;
