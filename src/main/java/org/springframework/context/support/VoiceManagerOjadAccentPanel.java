@@ -909,10 +909,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
+	@Nullable
 	private static Object jsonValue(@Nullable final JSHandle instnace) {
 		return instnace != null ? instnace.jsonValue() : null;
 	}
 
+	@Nullable
 	private static JSHandle getProperty(@Nullable final JSHandle instance, final String propertyName) {
 		return instance != null ? instance.getProperty(propertyName) : instance;
 	}
