@@ -666,16 +666,6 @@ class VoiceManagerRubyHtmlPanelTest {
 		}
 	}
 
-	
-
-	private static Object getSelectedItem(final JComboBox<?> instance) throws Throwable {
-		try {
-			return METHOD_GET_SELECTED_ITEM.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
 	@Test
 	void testTestAndRunThrows() {
 		//
