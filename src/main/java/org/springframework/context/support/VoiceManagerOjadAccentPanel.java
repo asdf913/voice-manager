@@ -1194,7 +1194,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 								textAndImage.voiceUrlImages = ObjectUtils.getIfNull(textAndImage.voiceUrlImages,
 										LinkedHashMap::new),
 								Util.toString(page.evaluate(String.format("get_pronounce_url(\"%1$s\",\"%2$s\")",
-										pronunciation.getAttribute("id"),
+										getAttribute(pronunciation, "id"),
 										//
 										"mp3"// TODO
 								//
@@ -1212,6 +1212,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		return textAndImages;
 		//
+	}
+
+	private static String getAttribute(final ElementHandle instance, final String name) {
+		return instance != null ? instance.getAttribute(name) : null;
 	}
 
 	@Nullable
@@ -1234,7 +1238,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		for (int i = 0; i < IterableUtils.size(words); i++) {
 			//
-			id = (word = IterableUtils.get(words, i)) != null ? word.getAttribute("id") : null;
+			id = getAttribute(word = IterableUtils.get(words, i), "id");
 			//
 			if (Boolean.logicalAnd(
 					StringUtils.isNotBlank(

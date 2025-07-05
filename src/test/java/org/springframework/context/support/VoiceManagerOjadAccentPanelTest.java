@@ -95,7 +95,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY, METHOD_TO_BYTE_ARRAY, METHOD_GET_IF_NULL,
 			METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER, METHOD_SAVE_IMAGE,
 			METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS,
-			METHOD_GET_PROPERTY = null;
+			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -165,6 +165,9 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_GET_PROPERTY = clz.getDeclaredMethod("getProperty", JSHandle.class, String.class)).setAccessible(true);
 		//
+		(METHOD_GET_ATTRIBUTE = clz.getDeclaredMethod("getAttribute", ElementHandle.class, String.class))
+				.setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -189,7 +192,8 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 			if (proxy instanceof ElementHandle) {
 				//
-				if (Util.contains(Arrays.asList("screenshot", "textContent", "querySelector"), methodName)) {
+				if (Util.contains(Arrays.asList("screenshot", "textContent", "querySelector", "getAttribute"),
+						methodName)) {
 					//
 					return null;
 					//
@@ -260,6 +264,8 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private IH ih = null;
 
+	private ElementHandle elementHandle = null;
+
 	private VoiceManagerOjadAccentPanel instance = null;
 
 	private Object textAndImage = null;
@@ -271,7 +277,7 @@ class VoiceManagerOjadAccentPanelTest {
 	@BeforeEach
 	void beforeEach() {
 		//
-		ih = new IH();
+		elementHandle = Reflection.newProxy(ElementHandle.class, ih = new IH());
 		//
 		instance = new VoiceManagerOjadAccentPanel();
 		//
@@ -591,7 +597,7 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testQuerySelector() throws Throwable {
 		//
-		Assertions.assertNull(querySelector(Reflection.newProxy(ElementHandle.class, ih), null));
+		Assertions.assertNull(querySelector(elementHandle, null));
 		//
 	}
 
@@ -1108,6 +1114,27 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof JSHandle) {
 				return (JSHandle) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetAttribute() throws Throwable {
+		//
+		Assertions.assertNull(getAttribute(elementHandle, null));
+		//
+	}
+
+	private static String getAttribute(final ElementHandle instance, final String name) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ATTRIBUTE.invoke(null, instance, name);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
