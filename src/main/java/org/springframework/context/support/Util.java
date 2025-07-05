@@ -2191,6 +2191,7 @@ public abstract class Util {
 			//
 	}
 
+	@Nullable
 	static URL toURL(@Nullable final URI instance) throws MalformedURLException {
 		return instance != null ? instance.toURL() : null;
 	}
