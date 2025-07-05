@@ -155,14 +155,10 @@ class UtilTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof ComboBoxModel) {
+			} else if (proxy instanceof ComboBoxModel && Objects.equals(methodName, "getSelectedItem")) {
 				//
-				if (Objects.equals(methodName, "getSelectedItem")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
