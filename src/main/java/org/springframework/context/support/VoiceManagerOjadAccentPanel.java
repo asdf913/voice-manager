@@ -1188,17 +1188,18 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 					} // if
 						//
-					if (Objects.equals("function", page != null ? page.evaluate("typeof get_pronounce_url") : null)) {
+					if (Objects.equals("function", evaluate(page, "typeof get_pronounce_url"))) {
 						//
 						Util.put(
 								textAndImage.voiceUrlImages = ObjectUtils.getIfNull(textAndImage.voiceUrlImages,
 										LinkedHashMap::new),
-								Util.toString(page.evaluate(String.format("get_pronounce_url(\"%1$s\",\"%2$s\")",
-										getAttribute(pronunciation, "id"),
+								Util.toString(evaluate(page,
+										String.format("get_pronounce_url(\"%1$s\",\"%2$s\")",
+												getAttribute(pronunciation, "id"),
+												//
+												"mp3"// TODO
 										//
-										"mp3"// TODO
-								//
-								))), screenshot(pronunciation));
+										))), screenshot(pronunciation));
 						//
 					} // if
 						//
@@ -1212,6 +1213,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		return textAndImages;
 		//
+	}
+
+	private static Object evaluate(final Page instance, final String expression) {
+		return instance != null ? instance.evaluate(expression) : null;
 	}
 
 	private static String getAttribute(final ElementHandle instance, final String name) {
