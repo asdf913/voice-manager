@@ -382,7 +382,9 @@ class VoiceManagerOjadAccentPanelTest {
 					Boolean.logicalAnd(Objects.equals(name, "getClipboard"),
 							Arrays.equals(parameterTypes, new Class<?>[] {})),
 					Boolean.logicalAnd(Objects.equals(name, "createUrl"),
-							Arrays.equals(parameterTypes, new Class<?>[] { String.class, Map.class })))) {
+							Arrays.equals(parameterTypes, new Class<?>[] { String.class, Map.class })),
+					Boolean.logicalAnd(Objects.equals(Util.getName(m), "createComparatorByOrder"),
+							Arrays.equals(parameterTypes, new Class<?>[] { List.class })))) {
 				//
 				Assertions.assertNotNull(invoke, toString);
 				//
@@ -451,8 +453,10 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 			toString = Util.toString(m);
 			//
-			if (Objects.equals(Util.getReturnType(m), Boolean.TYPE)
-					|| Objects.equals(Util.getReturnType(m), parameterType)) {
+			if (or(Objects.equals(Util.getReturnType(m), Boolean.TYPE),
+					Objects.equals(Util.getReturnType(m), parameterType),
+					Boolean.logicalAnd(Objects.equals(Util.getName(m), "createComparatorByOrder"),
+							Arrays.equals(parameterTypes, new Class<?>[] { List.class })))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//

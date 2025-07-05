@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -380,27 +381,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			), IterableUtils::toList, null);
 			//
-			final List<String> order = Arrays.asList("png", "jpeg", "gif");// TODO
+			Util.sort(list, createComparatorByOrder(
+					//
+					Arrays.asList("png", "jpeg", "gif")// TODO
 			//
-			Util.sort(list, (a, b) -> {
-				//
-				final int ia = indexOf(order, a);
-				//
-				final int ib = indexOf(order, b);
-				//
-				if (ia >= 0 && ib >= 0) {
-					//
-					return Integer.compare(ia, ib);
-					//
-				} else if (ia >= 0) {
-					//
-					return -1;
-					//
-				} // if
-					//
-				return 0;
-				//
-			});
+			));
 			//
 			panelImage.add(
 					new JComboBox<>(cbmImageFormat = new DefaultComboBoxModel<>(Util.toArray(list, new String[] {}))),
@@ -509,7 +494,30 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
 
+	private static <E> Comparator<E> createComparatorByOrder(final List<?> order) {
+		//
+		return (a, b) -> {
+			//
+			final int ia = indexOf(order, a);
+			//
+			final int ib = indexOf(order, b);
+			//
+			if (ia >= 0 && ib >= 0) {
+				//
+				return Integer.compare(ia, ib);
+				//
+			} else if (ia >= 0) {
+				//
+				return -1;
+				//
+			} // if
+				//
+			return 0;
+			//
+		};
+		//
 	}
 
 	private static void setMaxWidth(@Nullable final TableColumn instance, final int maxWidth) {
