@@ -858,7 +858,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 			} // if
 				//
-			final Document document = testAndApply(Objects::nonNull, html, x -> Jsoup.parse(x), null);
+			final Document document = testAndApply(Objects::nonNull, html, Jsoup::parse, null);
 			//
 			final Collection<TextAndImage> textAndImages = getIfNull(toTextAndImages(ehs, words),
 					Arrays.asList(() -> toTextAndImages1(ehs, textInput, words),
