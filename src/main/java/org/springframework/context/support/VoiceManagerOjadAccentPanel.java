@@ -75,7 +75,6 @@ import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.text.JTextComponent;
 
