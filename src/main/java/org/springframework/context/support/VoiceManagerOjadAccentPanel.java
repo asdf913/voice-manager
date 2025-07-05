@@ -791,13 +791,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					Collections.singletonMap("word", testAndApply(Objects::nonNull, Util.getText(tfTextInput),
 							x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
 			//
-			map.put("curve", Util.toString(testAndApply((a, b) -> a instanceof Entry, Util.getSelectedItem(cbmCurve),
-					testAndApply(x -> IterableUtils.size(x) == 1, Util.toList(Util.filter(
-							testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class), Arrays::stream, null),
-							m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getKey"),
-									Arrays.equals(Util.getParameterTypes(m), new Class<?>[] {})))),
-							x -> IterableUtils.get(x, 0), null),
-					Narcissus::invokeMethod, null)));
+			final Stream<Method> ms = testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class),
+					Arrays::stream, null);
+			//
+			map.put("curve",
+					Util.toString(testAndApply((a, b) -> a instanceof Entry, Util.getSelectedItem(cbmCurve),
+							testAndApply(x -> IterableUtils.size(x) == 1,
+									Util.toList(Util.filter(ms,
+											m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getKey"),
+													Arrays.equals(Util.getParameterTypes(m), new Class<?>[] {})))),
+									x -> IterableUtils.get(x, 0), null),
+							Narcissus::invokeMethod, null)));
 			//
 			final String url = createUrl("https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index", map);
 			//
