@@ -1103,7 +1103,7 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testGetProperty() throws Throwable {
 		//
-		Assertions.assertNotNull(getProperty(Reflection.newProxy(JSHandle.class, ih), null));
+		Assertions.assertNull(getProperty(Reflection.newProxy(JSHandle.class, ih), null));
 		//
 	}
 
