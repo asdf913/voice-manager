@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -95,7 +96,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY, METHOD_TO_BYTE_ARRAY,
 			METHOD_GET_IF_NULL, METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER, METHOD_SAVE_IMAGE,
 			METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS,
-			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE = null;
+			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -173,9 +174,14 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_EVALUATE = clz.getDeclaredMethod("evaluate", Page.class, String.class)).setAccessible(true);
 		//
+		(METHOD_GET_VOICE_URL_IMAGES = clz.getDeclaredMethod("getVoiceUrlImages", Iterable.class, Page.class,
+				String.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
+
+		private Map<Object, Object> evaluate = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -221,11 +227,26 @@ class VoiceManagerOjadAccentPanelTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Page
-					&& Util.contains(Arrays.asList("querySelectorAll", "evaluate"), methodName)) {
+			} else if (proxy instanceof Page) {
 				//
-				return null;
-				//
+				if (Objects.equals(methodName, "querySelectorAll")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "evaluate") && args != null && args.length > 0) {
+					//
+					final Object arg = args[0];
+					//
+					if (!Util.containsKey(evaluate = ObjectUtils.getIfNull(evaluate, LinkedHashMap::new), arg)) {
+						//
+						throw new IllegalStateException(Util.toString(arg));
+						//
+					} // if
+						//
+					return Util.get(evaluate, arg);
+					//
+				} // if
+					//
 			} else if (proxy instanceof Iterable && Objects.equals(methodName, "iterator")) {
 				//
 				return null;
@@ -1173,6 +1194,12 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testEvaluate() throws Throwable {
 		//
+		if (ih != null) {
+			//
+			ih.evaluate = Collections.singletonMap(null, null);
+			//
+		} // if
+			//
 		Assertions.assertNull(evaluate(page, null));
 		//
 	}
@@ -1180,6 +1207,48 @@ class VoiceManagerOjadAccentPanelTest {
 	private static Object evaluate(final Page instance, final String expression) throws Throwable {
 		try {
 			return METHOD_EVALUATE.invoke(null, instance, expression);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetVoiceUrlImages() throws Throwable {
+		//
+		Assertions.assertNull(getVoiceUrlImages(Collections.singleton(null), page, null));
+		//
+		if (ih != null) {
+			//
+			Util.put(
+					ih.evaluate = new LinkedHashMap<>(Collections.singletonMap("typeof get_pronounce_url", "function")),
+					"get_pronounce_url(\"null\",\"mp3\")", null);
+			//
+		} // if
+			//
+		final Iterable<ElementHandle> ehs = Collections.singleton(elementHandle);
+		//
+		Assertions.assertEquals(Collections.singletonMap(null, null), getVoiceUrlImages(ehs, page, null));
+		//
+		if (ih != null) {
+			//
+			Util.put(ih.evaluate, "typeof get_pronounce_url", null);
+			//
+		} // if
+			//
+		Assertions.assertNull(getVoiceUrlImages(ehs, page, null));
+		//
+	}
+
+	private static Map<String, byte[]> getVoiceUrlImages(final Iterable<ElementHandle> ehs, final Page page,
+			final String format) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_VOICE_URL_IMAGES.invoke(null, ehs, page, format);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map) {
+				return (Map) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

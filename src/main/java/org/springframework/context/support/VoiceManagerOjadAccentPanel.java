@@ -1131,8 +1131,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		Collection<TextAndImage> textAndImages = null;
 		//
-		Iterable<ElementHandle> pronunciations = null;
-		//
 		ElementHandle eh = null;
 		//
 		final String[] ws = StringUtils.split(
@@ -1147,8 +1145,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
-		ElementHandle pronunciation = null;
-		//
 		for (int i = 0; i < length(ws); i++) {
 			//
 			if (!Boolean.logicalAnd(Objects.equals(textInput, ArrayUtils.get(ws, i)), length(ws) == 2)) {
@@ -1177,34 +1173,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				textAndImage.hiragana = StringUtils.trim(textContent(eh));
 				//
-				pronunciations = querySelectorAll(querySelector(querySelector(eh, ".."), ".."),
-						".katsuyo_proc_button a");
+				textAndImage.voiceUrlImages = getVoiceUrlImages(
+						querySelectorAll(querySelector(querySelector(eh, ".."), ".."), ".katsuyo_proc_button a"), page,
+						"mp3");
 				//
-				for (int k = 0; k < IterableUtils.size(pronunciations); k++) {
-					//
-					if ((pronunciation = IterableUtils.get(pronunciations, k)) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (Objects.equals("function", evaluate(page, "typeof get_pronounce_url"))) {
-						//
-						Util.put(
-								textAndImage.voiceUrlImages = ObjectUtils.getIfNull(textAndImage.voiceUrlImages,
-										LinkedHashMap::new),
-								Util.toString(evaluate(page,
-										String.format("get_pronounce_url(\"%1$s\",\"%2$s\")",
-												getAttribute(pronunciation, "id"),
-												//
-												"mp3"// TODO
-										//
-										))), screenshot(pronunciation));
-						//
-					} // if
-						//
-				} // for
-					//
 				Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 				//
 			} // for
@@ -1212,6 +1184,36 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		} // for
 			//
 		return textAndImages;
+		//
+	}
+
+	private static Map<String, byte[]> getVoiceUrlImages(final Iterable<ElementHandle> ehs, final Page page,
+			final String format) {
+		//
+		ElementHandle eh = null;
+		//
+		Map<String, byte[]> map = null;
+		//
+		for (int k = 0; k < IterableUtils.size(ehs); k++) {
+			//
+			if ((eh = IterableUtils.get(ehs, k)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Objects.equals("function", evaluate(page, "typeof get_pronounce_url"))) {
+				//
+				Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
+						Util.toString(evaluate(page, String.format("get_pronounce_url(\"%1$s\",\"%2$s\")",
+								getAttribute(eh, "id"), StringUtils.defaultIfBlank(format, "mp3")))),
+						screenshot(eh));
+				//
+			} // if
+				//
+		} // for
+			//
+		return map;
 		//
 	}
 
