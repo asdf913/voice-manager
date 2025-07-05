@@ -1215,10 +1215,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
+	@Nullable
 	private static Object evaluate(@Nullable final Page instance, final String expression) {
 		return instance != null ? instance.evaluate(expression) : null;
 	}
 
+	@Nullable
 	private static String getAttribute(@Nullable final ElementHandle instance, final String name) {
 		return instance != null ? instance.getAttribute(name) : null;
 	}
@@ -1603,6 +1605,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.querySelectorAll(selector) : null;
 	}
 
+	@Nullable
 	private static List<ElementHandle> querySelectorAll(@Nullable final ElementHandle instance, final String selector) {
 		return instance != null ? instance.querySelectorAll(selector) : null;
 	}
