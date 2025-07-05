@@ -1383,7 +1383,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					textAndImage.partOfSpeech = getPartOfSpeech(document, id);
 					//
 					textAndImage.voiceUrlImages = getVoiceUrlImages(
-							querySelectorAll(querySelector(querySelector(eh, ".."), ".."), ".katsuyo_proc_button a"),
+							querySelectorAll(querySelector(querySelector(querySelector(eh, ".."), ".."), ".."),
+									".katsuyo_proc_button a"),
 							page, "mp3");
 					//
 					Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
