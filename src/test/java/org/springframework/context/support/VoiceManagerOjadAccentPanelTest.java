@@ -137,7 +137,7 @@ class VoiceManagerOjadAccentPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_TO_TEXT_AND_IMAGES1 = clz.getDeclaredMethod("toTextAndImages1", Iterable.class, String.class,
-				Iterable.class)).setAccessible(true);
+				Iterable.class, Page.class)).setAccessible(true);
 		//
 		(METHOD_TO_TEXT_AND_IMAGES2 = clz.getDeclaredMethod("toTextAndImages2", Iterable.class, String.class,
 				Iterable.class, Iterable.class, Page.class)).setAccessible(true);
@@ -853,14 +853,14 @@ class VoiceManagerOjadAccentPanelTest {
 		} // if
 			//
 		Assertions.assertEquals("[{}]", ObjectMapperUtil.writeValueAsString(objectMapper,
-				toTextAndImages1(Collections.nCopies(2, null), null, Collections.nCopies(1, null))));
+				toTextAndImages1(Collections.nCopies(2, null), null, Collections.nCopies(1, null), null)));
 		//
 	}
 
 	private static Collection<?> toTextAndImages1(final Iterable<ElementHandle> ehs, final String textInput,
-			final Iterable<ElementHandle> words) throws Throwable {
+			final Iterable<ElementHandle> words, final Page page) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_TEXT_AND_IMAGES1.invoke(null, ehs, textInput, words);
+			final Object obj = METHOD_TO_TEXT_AND_IMAGES1.invoke(null, ehs, textInput, words, page);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Collection) {

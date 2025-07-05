@@ -948,7 +948,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final Page p = page;
 			//
 			final Collection<TextAndImage> textAndImages = getIfNull(toTextAndImages(ehs, words),
-					Arrays.asList(() -> toTextAndImages1(ehs, textInput, words),
+					Arrays.asList(() -> toTextAndImages1(ehs, textInput, words, p),
 							() -> toTextAndImages2(ehs, textInput, words, partOfSpeeches, p),
 							() -> toTextAndImages3(words, document)));
 			//
@@ -1132,7 +1132,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	@Nullable
 	private static Collection<TextAndImage> toTextAndImages1(final Iterable<ElementHandle> ehs, final String textInput,
-			final Iterable<ElementHandle> words) {
+			final Iterable<ElementHandle> words, final Page page) {
 		//
 		if (IterableUtils.size(words) != 1) {
 			//
@@ -1189,6 +1189,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				} // if
 					//
 				textAndImage.kanji = Util.toString(tsb);
+				//
+				textAndImage.voiceUrlImages = getVoiceUrlImages(
+						querySelectorAll(querySelector(querySelector(eh, ".."), ".."), ".katsuyo_proc_button a"), page,
+						"mp3");
 				//
 			} // if
 				//
