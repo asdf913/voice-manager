@@ -779,10 +779,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private void actionPerformedBtnExecute() {
 		//
-		Util.forEach(Stream.of(tfKanji, tfHiragana), x -> Util.setText(x, null));
-		//
-		setIcon(lblAccent, new ImageIcon());
-		//
 		Page page = null;
 		//
 		Playwright playwright = null;
