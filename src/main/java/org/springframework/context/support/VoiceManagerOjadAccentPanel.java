@@ -66,11 +66,16 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.WindowConstants;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
@@ -87,6 +92,7 @@ import org.apache.commons.text.TextStringBuilder;
 import org.apache.commons.text.TextStringBuilderUtil;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URIBuilderUtil;
+import org.apache.jena.atlas.RuntimeIOException;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -184,6 +190,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	private transient ComboBoxModel<Entry<String, String>> cbmCurve = null;
 
 	private transient ComboBoxModel<String> cbmImageFormat = null;
+
+	private DefaultTableModel dtmVoice = null;
 
 	private static class TextAndImage {
 
@@ -424,7 +432,62 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			panelImage.add(panel, wrap);
 			//
-			add(panelImage, String.format("span %1$s,%2$s", 3, growx));
+			add(panelImage, String.format("span %1$s,%2$s,%3$s", 3, growx, wrap));
+			//
+			// Voice
+			//
+			final JPanel panelVoice = new JPanel();
+			//
+			panelVoice.setLayout(new MigLayout());
+			//
+			panelVoice.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Voice"));
+			//
+			final String gender = "Gender";
+			//
+			final JTable table = new JTable(dtmVoice = new DefaultTableModel(new Object[] { gender, "URL" }, 0) {
+
+				private static final long serialVersionUID = -3821080690688708407L;
+
+				public Class<?> getColumnClass(final int columnIndex) {
+					//
+					if (Objects.equals(getColumnName(columnIndex), gender)) {
+						//
+						return byte[].class;
+						//
+					} // if
+						//
+					return super.getColumnClass(columnIndex);
+					//
+				}
+
+			});
+			//
+			setMaxWidth(table.getColumn(gender), 44);
+			//
+			table.setDefaultRenderer(byte[].class, new TableCellRenderer() {
+
+				@Override
+				public Component getTableCellRendererComponent(final JTable table, final Object value,
+						final boolean isSelected, final boolean hasFocus, final int row, final int column) {
+					//
+					final byte[] bs = Util.cast(byte[].class, value);
+					//
+					try (final InputStream is = new ByteArrayInputStream(bs)) {
+						//
+						return new JLabel(new ImageIcon(ImageIO.read(is)));
+						//
+					} catch (final IOException e) {
+						//
+						throw new RuntimeIOException(e);
+						//
+					} // try
+						//
+				}
+			});
+			//
+			panelVoice.add(new JScrollPane(table), String.format("hmax %1$s", 56));
+			//
+			add(panelVoice, String.format("span %1$s,%2$s", 3, growx));
 			//
 			final List<Field> fs = Util
 					.toList(Util.filter(
@@ -451,6 +514,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static void setMaxWidth(final TableColumn instance, final int maxWidth) {
+		if (instance != null) {
+			instance.setMaxWidth(maxWidth);
+		}
 	}
 
 	private static int indexOf(@Nullable final List<?> instance, final Object item) {
@@ -691,6 +760,21 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			}, getCurveImage(textAndImage));
 			//
+			// Voice
+			//
+			Util.forEach(Util.map(Util.sorted(Util.map(IntStream.rangeClosed(0, Util.getRowCount(dtmVoice)), i -> -i)),
+					i -> -i), i -> Util.removeRow(dtmVoice, i));
+			//
+			if (textAndImage != null) {
+				//
+				Util.forEach(Util.entrySet(textAndImage.voiceUrlImages), en -> {
+					//
+					Util.addRow(dtmVoice, new Object[] { Util.getValue(en), Util.getKey(en) });
+					//
+				});
+				//
+			} // if
+				//
 			pack(window);
 			//
 		} else if (Objects.equals(source, btnCopyAccentImage)) {
