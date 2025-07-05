@@ -516,7 +516,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static void setMaxWidth(final TableColumn instance, final int maxWidth) {
+	private static void setMaxWidth(@Nullable final TableColumn instance, final int maxWidth) {
 		if (instance != null) {
 			instance.setMaxWidth(maxWidth);
 		}
