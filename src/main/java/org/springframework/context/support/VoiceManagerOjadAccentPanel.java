@@ -866,6 +866,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private void actionPerformedBtnExecute() {
 		//
+		final String textInput = Util.getText(tfTextInput);
+		//
+		if (StringUtils.isEmpty(textInput)) {
+			//
+			return;
+			//
+		} // if
+			//
 		Page page = null;
 		//
 		Playwright playwright = null;
@@ -874,9 +882,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		try {
 			//
-			final Map<Object, Object> map = new LinkedHashMap<>(
-					Collections.singletonMap("word", testAndApply(Objects::nonNull, Util.getText(tfTextInput),
-							x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
+			final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("word", testAndApply(
+					Objects::nonNull, textInput, x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
 			//
 			final Stream<Method> ms = testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class),
 					Arrays::stream, null);
@@ -929,8 +936,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					Util.filter(Util.stream(querySelectorAll(page, CSS_SELECTOR_MIDASHI)),
 							x -> IterableUtils.isEmpty(querySelectorAll(x, "div"))),
 					x -> StringUtils.trim(textContent(x))));
-			//
-			final String textInput = Util.getText(tfTextInput);
 			//
 			String html = null;
 			//

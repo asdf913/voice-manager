@@ -33,6 +33,7 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.MutableComboBoxModel;
 
@@ -481,6 +482,10 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(null));
 		//
+		FieldUtils.writeDeclaredField(instance, "tfTextInput", new JTextField(" "), true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(null));
+		//
 		final ActionEvent actionEvent = new ActionEvent(EMPTY, 0, null);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
@@ -488,7 +493,6 @@ class VoiceManagerOjadAccentPanelTest {
 		instance.afterPropertiesSet();
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
-		//
 		//
 		// jcbTextAndImage
 		//
