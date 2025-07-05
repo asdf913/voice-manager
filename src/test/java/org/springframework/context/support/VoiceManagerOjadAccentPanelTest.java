@@ -221,11 +221,7 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 			} else if (proxy instanceof JSHandle) {
 				//
-				if (Objects.equals(methodName, "getProperty")) {
-					//
-					return null;
-					//
-				} else if (Objects.equals(methodName, "jsonValue")) {
+				if (Util.contains(Arrays.asList("getProperty", "jsonValue"), methodName)) {
 					//
 					return null;
 					//
