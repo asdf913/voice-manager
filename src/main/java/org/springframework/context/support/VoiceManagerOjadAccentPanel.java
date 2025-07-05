@@ -432,6 +432,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 				private static final long serialVersionUID = -3821080690688708407L;
 
+				@Override
 				public Class<?> getColumnClass(final int columnIndex) {
 					//
 					if (Objects.equals(getColumnName(columnIndex), gender)) {
