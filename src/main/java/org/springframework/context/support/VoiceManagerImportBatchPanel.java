@@ -2246,7 +2246,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			} // if
 				//
 			try (final InputStream is = Util
-					.openStream(testAndApply(StringUtils::isNotBlank, audioUrl, x -> new URI(x).toURL(), null))) {
+					.openStream(testAndApply(StringUtils::isNotBlank, audioUrl, x -> Util.toURL(new URI(x)), null))) {
 				//
 				if (is != null && it != null
 						&& (it.file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH),

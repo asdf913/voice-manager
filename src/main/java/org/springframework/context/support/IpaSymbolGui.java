@@ -243,7 +243,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			String hex2 = null;
 			//
 			try (final InputStream is = Util
-					.openStream(testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null))) {
+					.openStream(testAndApply(StringUtils::isNotBlank, url, x -> Util.toURL(new URI(x)), null))) {
 				//
 				length2 = (bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null)) != null
 						? Integer.valueOf(bs.length)

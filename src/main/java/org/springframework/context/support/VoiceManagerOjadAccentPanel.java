@@ -258,7 +258,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			String html = null;
 			//
-			try (final InputStream is = Util.openStream(toURL(URIBuilderUtil
+			try (final InputStream is = Util.openStream(Util.toURL(URIBuilderUtil
 					.build(new URIBuilder("https://www.gavo.t.u-tokyo.ac.jp").setPath("ojad/search/index/word:"))))) {
 				//
 				html = IOUtils.toString(is, StandardCharsets.UTF_8);
@@ -447,11 +447,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static URL toURL(@Nullable final URI instance) throws MalformedURLException {
-		return instance != null ? instance.toURL() : null;
 	}
 
 	private static int indexOf(@Nullable final List<?> instance, final Object item) {
@@ -854,7 +849,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			String html = null;
 			//
-			try (final InputStream is = Util.openStream(toURL(new URI(Util.toString(url))))) {
+			try (final InputStream is = Util.openStream(Util.toURL(new URI(Util.toString(url))))) {
 				//
 				html = IOUtils.toString(is, StandardCharsets.UTF_8);
 				//

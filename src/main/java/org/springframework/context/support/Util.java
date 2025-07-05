@@ -17,6 +17,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
@@ -2188,6 +2189,10 @@ public abstract class Util {
 			//
 		} // if
 			//
+	}
+
+	static URL toURL(final URI instance) throws MalformedURLException {
+		return instance != null ? instance.toURL() : null;
 	}
 
 }

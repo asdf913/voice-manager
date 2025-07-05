@@ -1605,8 +1605,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 							.text(testAndApply(x -> IterableUtils.size(x) == 1,
 									ElementUtil.getElementsByTag(
 											testAndApply(Objects::nonNull,
-													testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(),
-															null),
+													testAndApply(StringUtils::isNotBlank, url,
+															x -> Util.toURL(new URI(x)), null),
 													x -> Jsoup.parse(x, Util.intValue(toMillis(timeout), 0)), null),
 											"title"),
 									x -> get(x, 0), null)));

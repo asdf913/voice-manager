@@ -669,7 +669,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	private static void saveFile(@Nullable final File file, final String url) throws Exception {
 		//
 		try (final InputStream is = Util
-				.openStream(testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null))) {
+				.openStream(testAndApply(Objects::nonNull, url, x -> Util.toURL(new URI(x)), null))) {
 			//
 			if (file != null) {
 				//
@@ -719,7 +719,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		} // if
 			//
 		try (final InputStream is = Util
-				.openStream(testAndApply(Objects::nonNull, value, x -> new URI(x).toURL(), null))) {
+				.openStream(testAndApply(Objects::nonNull, value, x -> Util.toURL(new URI(x)), null))) {
 			//
 			PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
 			//

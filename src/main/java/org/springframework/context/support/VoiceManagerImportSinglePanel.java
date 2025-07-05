@@ -1889,7 +1889,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 	private static Object playAudio(final String value) throws Exception {
 		//
 		try (final InputStream is = Util
-				.openStream(testAndApply(Objects::nonNull, value, x -> new URI(x).toURL(), null))) {
+				.openStream(testAndApply(Objects::nonNull, value, x -> Util.toURL(new URI(x)), null))) {
 			//
 			PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
 			//
@@ -1954,7 +1954,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			try {
 				//
 				final Integer responseCode = getResponseCode(
-						Util.cast(HttpURLConnection.class, Util.openConnection(new URI(urlString).toURL())));
+						Util.cast(HttpURLConnection.class, Util.openConnection(Util.toURL(new URI(urlString)))));
 				//
 				Util.setText(tfPronunciationPageStatusCode, Integer.toString(responseCode));
 				//
@@ -3725,7 +3725,8 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		try {
 			//
 			url = testAndApply(StringUtils::isNotBlank,
-					Util.get(getAudioUrls(pronunciation), pronounicationAudioFormat), x -> new URI(x).toURL(), null);
+					Util.get(getAudioUrls(pronunciation), pronounicationAudioFormat), x -> Util.toURL(new URI(x)),
+					null);
 			//
 		} catch (final Exception e) {
 			//

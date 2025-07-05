@@ -1450,7 +1450,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 										Util.filter(flatMap(
 												Util.map(
 														Util.filter(Util.stream(ElementUtil.select(
-																testAndApply(Objects::nonNull, toURL(testAndApply(
+																testAndApply(Objects::nonNull, Util.toURL(testAndApply(
 																		Objects::nonNull,
 																		StringUtils.defaultIfBlank(cssSpecificationUrl,
 																				"https://www.w3.org/TR/css-text-4/"),
@@ -4040,7 +4040,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			final Page page = newPage(
 					newContext(BrowserTypeUtil.launch(FailableFunctionUtil.apply(function, playwright))));
 			//
-			testAndAccept(Objects::nonNull, Util.toString(toURL(Util.toURI(Util.toFile(pathHtml)))),
+			testAndAccept(Objects::nonNull, Util.toString(Util.toURL(Util.toURI(Util.toFile(pathHtml)))),
 					x -> PageUtil.navigate(page, x));
 			//
 			return page != null ? page.pdf() : null;
@@ -4059,7 +4059,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			final Page page = newPage(
 					newContext(BrowserTypeUtil.launch(FailableFunctionUtil.apply(function, playwright))));
 			//
-			testAndAccept(Objects::nonNull, Util.toString(toURL(Util.toURI(Util.toFile(pathHtml)))),
+			testAndAccept(Objects::nonNull, Util.toString(Util.toURL(Util.toURI(Util.toFile(pathHtml)))),
 					x -> PageUtil.navigate(page, x));
 			//
 			return page != null ? page.screenshot() : null;
@@ -4092,11 +4092,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		} else {
 			FailableConsumerUtil.accept(consumerFalse, value);
 		}
-	}
-
-	@Nullable
-	private static URL toURL(@Nullable final URI instance) throws MalformedURLException {
-		return instance != null ? instance.toURL() : null;
 	}
 
 	private static void sortInts(@Nullable final IntList instance) {
