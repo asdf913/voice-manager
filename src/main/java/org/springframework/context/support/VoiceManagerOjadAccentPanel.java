@@ -828,13 +828,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			String html = null;
 			//
-			try (final InputStream is = Util.openStream(Util.toURL(new URI(Util.toString(url))))) {
+			if (!isTestMode()) {
 				//
-				html = IOUtils.toString(is, StandardCharsets.UTF_8);
+				try (final InputStream is = Util.openStream(Util.toURL(new URI(Util.toString(url))))) {
+					//
+					html = IOUtils.toString(is, StandardCharsets.UTF_8);
+					//
+				} // try
+					//
+			} // if
 				//
-			} // try
-				//
-			final Document document = Jsoup.parse(html);
+			final Document document = testAndApply(Objects::nonNull, html, x -> Jsoup.parse(x), null);
 			//
 			final Collection<TextAndImage> textAndImages = getIfNull(toTextAndImages(ehs, words),
 					Arrays.asList(() -> toTextAndImages1(ehs, textInput, words),
