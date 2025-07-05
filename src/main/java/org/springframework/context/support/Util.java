@@ -2087,6 +2087,23 @@ public abstract class Util {
 		//
 	}
 
+	static Object getSelectedItem(final JComboBox<?> instance) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
+				Util.toList(Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)),
+						Arrays::stream, null), x -> Objects.equals(Util.getName(x), "dataModel"))),
+				x -> IterableUtils.get(x, 0), null);
+		//
+		return f == null || Narcissus.getField(instance, f) != null ? instance.getSelectedItem() : null;
+		//
+	}
+
 	static void addActionListener(@Nullable final AbstractButton instance, final ActionListener actionListener) {
 		if (instance != null) {
 			instance.addActionListener(actionListener);

@@ -26,7 +26,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.MutableComboBoxModel;
@@ -44,6 +46,7 @@ import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.ReferenceType;
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailablePredicate;
@@ -149,6 +152,14 @@ class UtilTest {
 				} else if (Objects.equals(methodName, "getAnnotation")) {
 					//
 					return annotation;
+					//
+				} // if
+					//
+			} else if (proxy instanceof ComboBoxModel) {
+				//
+				if (Objects.equals(methodName, "getSelectedItem")) {
+					//
+					return null;
 					//
 				} // if
 					//
@@ -1040,6 +1051,39 @@ class UtilTest {
 			//
 		} // for
 			//
+	}
+
+	@Test
+	void testGetSelectedItem() {
+		//
+		Assertions.assertNull(Util.getSelectedItem((JComboBox<?>) null));
+		//
+		final JComboBox<?> jcb = new JComboBox<>();
+		//
+		Assertions.assertNull(Util.getSelectedItem(jcb));
+		//
+		final List<Field> fs = Util
+				.toList(Util.filter(Arrays.stream(Util.getDeclaredFields(Util.getClass(JComboBox.class))),
+						f -> Objects.equals(Util.getName(f), "dataModel")));
+		//
+		final int size = IterableUtils.size(fs);
+		//
+		if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = size == 1 ? IterableUtils.get(fs, 0) : null;
+		//
+		if (f != null) {
+			//
+			Narcissus.setField(jcb, f, Reflection.newProxy(ComboBoxModel.class, ih));
+			//
+		} // if
+			//
+		Assertions.assertNull(Util.getSelectedItem(jcb));
+		//
 	}
 
 }

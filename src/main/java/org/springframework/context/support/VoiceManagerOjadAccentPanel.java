@@ -633,7 +633,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} else if (Objects.equals(source, jcbTextAndImage)) {
 			//
-			final TextAndImage textAndImage = Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage));
+			final TextAndImage textAndImage = Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage));
 			//
 			// Part Of Speech
 			//
@@ -691,7 +691,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final IH ih = new IH();
 			//
-			ih.image = getAccentImage(Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage)));
+			ih.image = getAccentImage(Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage)));
 			//
 			setContents(getClipboard(), Reflection.newProxy(Transferable.class, ih), null);
 			//
@@ -699,7 +699,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final IH ih = new IH();
 			//
-			ih.image = getCurveImage(Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage)));
+			ih.image = getCurveImage(Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage)));
 			//
 			setContents(getClipboard(), Reflection.newProxy(Transferable.class, ih), null);
 			//
@@ -719,7 +719,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final String format = Util.toString(Util.getSelectedItem(cbmImageFormat));
 			//
-			saveImage(getAccentImage(Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage))),
+			saveImage(getAccentImage(Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage))),
 					() -> Util
 							.toFile(Path.of(String.format("%1$s(%2$s).%3$s", Util.getText(tfKanji), "Accent", format))),
 					format);
@@ -728,7 +728,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final String format = Util.toString(Util.getSelectedItem(cbmImageFormat));
 			//
-			saveImage(getCurveImage(Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage))),
+			saveImage(getCurveImage(Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage))),
 					() -> Util
 							.toFile(Path.of(String.format("%1$s(%2$s).%3$s", Util.getText(tfKanji), "Curve", format))),
 					format);
@@ -1365,15 +1365,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static int length(@Nullable final Object[] instance) {
 		return instance != null ? instance.length : 0;
-	}
-
-	@Nullable
-	private static Object getSelectedItem(final JComboBox<?> instance) {
-		//
-		final Field field = getFieldByName(Util.getClass(instance), "dataModel");
-		//
-		return field != null && Narcissus.getField(instance, field) != null ? instance.getSelectedItem() : null;
-		//
 	}
 
 	private static <T> T testAndGet(final boolean condition, final Supplier<T> supplierTrue,

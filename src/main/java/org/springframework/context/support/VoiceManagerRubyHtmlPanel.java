@@ -588,7 +588,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		if (Objects.equals(Util.getSource(evt), jcbImplementation) && evt != null
 				&& evt.getStateChange() == ItemEvent.SELECTED) {
 			//
-			final Object instance = TableUtil.get(table, getSelectedItem(jcbImplementation), "instance");
+			final Object instance = TableUtil.get(table, Util.getSelectedItem(jcbImplementation), "instance");
 			//
 			final Field[] fs = Util.getDeclaredFields(getClass());
 			//
@@ -609,33 +609,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static Object getSelectedItem(@Nullable final JComboBox<?> instance) {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		final Class<?> clz = Util.getClass(instance);
-		//
-		final Stream<Field> stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(clz), Arrays::stream, null);
-		//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
-				Util.toList(Util.filter(stream, x -> Objects.equals(Util.getName(x), "dataModel"))),
-				x -> IterableUtils.get(x, 0), null);
-		//
-		if (f != null && Narcissus.getField(instance, f) == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		return instance.getSelectedItem();
-		//
 	}
 
 	private static boolean isTestMode() {

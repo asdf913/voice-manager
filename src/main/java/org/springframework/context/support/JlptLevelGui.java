@@ -524,8 +524,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		if (Objects.equals(Util.getSource(evt), jcbJlptVocabulary)) {
 			//
-			setJlptLevel(getLevel(Util.cast(JlptVocabulary.class,
-					jcbJlptVocabulary != null ? jcbJlptVocabulary.getSelectedItem() : null)));
+			setJlptLevel(getLevel(Util.cast(JlptVocabulary.class, Util.getSelectedItem(jcbJlptVocabulary))));
 			//
 		} // if
 			//

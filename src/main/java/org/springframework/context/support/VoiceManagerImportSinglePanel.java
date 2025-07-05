@@ -1464,8 +1464,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 		} else if (Objects.equals(source, jcbJlptVocabulary)) {
 			//
-			final JlptVocabulary jv = Util.cast(JlptVocabulary.class,
-					jcbJlptVocabulary != null ? jcbJlptVocabulary.getSelectedItem() : null);
+			final JlptVocabulary jv = Util.cast(JlptVocabulary.class, Util.getSelectedItem(jcbJlptVocabulary));
 			//
 			if (jv != null) {
 				//

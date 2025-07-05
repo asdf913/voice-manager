@@ -89,9 +89,9 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL,
 			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_KANJI, METHOD_GET_HEIGHT,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES,
-			METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY, METHOD_TO_BYTE_ARRAY,
-			METHOD_GET_IF_NULL, METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER, METHOD_SAVE_IMAGE,
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES, METHOD_TO_TEXT_AND_IMAGES1,
+			METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY, METHOD_TO_BYTE_ARRAY, METHOD_GET_IF_NULL,
+			METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER, METHOD_SAVE_IMAGE,
 			METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS = null;
 
 	@BeforeAll
@@ -123,8 +123,6 @@ class VoiceManagerOjadAccentPanelTest {
 		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", Dimension2D.class)).setAccessible(true);
 		//
 		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
-		//
-		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", JComboBox.class)).setAccessible(true);
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
@@ -698,21 +696,6 @@ class VoiceManagerOjadAccentPanelTest {
 				return (Clipboard) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetSelectedItem() throws Throwable {
-		//
-		Assertions.assertNull(getSelectedItem(Util.cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class))));
-		//
-	}
-
-	private static Object getSelectedItem(final JComboBox<?> instance) throws Throwable {
-		try {
-			return METHOD_GET_SELECTED_ITEM.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

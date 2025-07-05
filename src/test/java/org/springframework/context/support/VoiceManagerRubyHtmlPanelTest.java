@@ -107,8 +107,6 @@ class VoiceManagerRubyHtmlPanelTest {
 		//
 		(METHOD_GET_DESCRIPTION = clz.getDeclaredMethod("getDescription", String.class)).setAccessible(true);
 		//
-		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", JComboBox.class)).setAccessible(true);
-		//
 		(METHOD_TEST_AND_RUN_THROWS = clz.getDeclaredMethod("testAndRunThrows", Boolean.TYPE, ThrowingRunnable.class))
 				.setAccessible(true);
 		//
@@ -668,21 +666,7 @@ class VoiceManagerRubyHtmlPanelTest {
 		}
 	}
 
-	@Test
-	void testGetSelectedItem() throws Throwable {
-		//
-		Assertions.assertNull(getSelectedItem(jcbImplementation));
-		//
-		if (jcbImplementation != null) {
-			//
-			Narcissus.setField(jcbImplementation, Narcissus.findField(JComboBox.class, "dataModel"),
-					Reflection.newProxy(ComboBoxModel.class, ih));
-			//
-		} // if
-			//
-		Assertions.assertNull(getSelectedItem(jcbImplementation));
-		//
-	}
+	
 
 	private static Object getSelectedItem(final JComboBox<?> instance) throws Throwable {
 		try {
