@@ -136,7 +136,7 @@ class VoiceManagerOjadAccentPanelTest {
 				Iterable.class)).setAccessible(true);
 		//
 		(METHOD_TO_TEXT_AND_IMAGES2 = clz.getDeclaredMethod("toTextAndImages2", Iterable.class, String.class,
-				Iterable.class, Iterable.class)).setAccessible(true);
+				Iterable.class, Iterable.class, Page.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -822,9 +822,9 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		final Iterable<ElementHandle> words = Collections.nCopies(1, null);
 		//
-		Assertions.assertNull(toTextAndImages2(null, null, words, null));
+		Assertions.assertNull(toTextAndImages2(null, null, words, null, null));
 		//
-		Assertions.assertNull(toTextAndImages2(null, null, words, Collections.emptySet()));
+		Assertions.assertNull(toTextAndImages2(null, null, words, Collections.emptySet(), null));
 		//
 		final Class<?> clz = Util.getClass(instance);
 		//
@@ -852,7 +852,7 @@ class VoiceManagerOjadAccentPanelTest {
 						if (ArrayUtils.get(instructions, j) instanceof LDC ldc && ldc != null) {
 							//
 							Assertions.assertNull(toTextAndImages2(null, null, words,
-									Collections.singleton(Util.toString(LDCUtil.getValue(ldc, cpg)))));
+									Collections.singleton(Util.toString(LDCUtil.getValue(ldc, cpg))), null));
 							//
 						} else if (ArrayUtils.get(instructions, j) instanceof ANEWARRAY) {
 							//
@@ -868,7 +868,7 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 		} // try
 			//
-		Assertions.assertNull(toTextAndImages2(null, null, Collections.nCopies(2, null), null));
+		Assertions.assertNull(toTextAndImages2(null, null, Collections.nCopies(2, null), null, null));
 		//
 	}
 
@@ -883,9 +883,10 @@ class VoiceManagerOjadAccentPanelTest {
 	}
 
 	private static Collection<?> toTextAndImages2(final Iterable<ElementHandle> ehs, final String textInput,
-			final Iterable<ElementHandle> words, final Iterable<String> partOfSpeeches) throws Throwable {
+			final Iterable<ElementHandle> words, final Iterable<String> partOfSpeeches, final Page page)
+			throws Throwable {
 		try {
-			final Object obj = METHOD_TO_TEXT_AND_IMAGES2.invoke(null, ehs, textInput, words, partOfSpeeches);
+			final Object obj = METHOD_TO_TEXT_AND_IMAGES2.invoke(null, ehs, textInput, words, partOfSpeeches, page);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Collection) {

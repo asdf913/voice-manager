@@ -203,6 +203,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		@Note("Curve Image")
 		private BufferedImage curveImage = null;
 
+		private Map<String, byte[]> voiceUrlImages = null;
+
 		private Integer getAccentImageWidth() {
 			//
 			if (accentImageWidth == null && accentImage != null) {
@@ -859,9 +861,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			final Document document = testAndApply(Objects::nonNull, html, Jsoup::parse, null);
 			//
+			final Page p = page;
+			//
 			final Collection<TextAndImage> textAndImages = getIfNull(toTextAndImages(ehs, words),
 					Arrays.asList(() -> toTextAndImages1(ehs, textInput, words),
-							() -> toTextAndImages2(ehs, textInput, words, partOfSpeeches),
+							() -> toTextAndImages2(ehs, textInput, words, partOfSpeeches, p),
 							() -> toTextAndImages3(words, document)));
 			//
 			Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
@@ -1115,7 +1119,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	@Nullable
 	private static Collection<TextAndImage> toTextAndImages2(final Iterable<ElementHandle> ehs, final String textInput,
-			final Iterable<ElementHandle> words, final Iterable<String> partOfSpeeches) {
+			final Iterable<ElementHandle> words, final Iterable<String> partOfSpeeches, final Page page) {
 		//
 		if (IterableUtils.size(words) != 1) {
 			//
@@ -1126,6 +1130,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		TextAndImage textAndImage = null;
 		//
 		Collection<TextAndImage> textAndImages = null;
+		//
+		Iterable<ElementHandle> pronunciations = null;
 		//
 		ElementHandle eh = null;
 		//
@@ -1141,6 +1147,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+		ElementHandle pronunciation = null;
+		//
 		for (int i = 0; i < length(ws); i++) {
 			//
 			if (!Boolean.logicalAnd(Objects.equals(textInput, ArrayUtils.get(ws, i)), length(ws) == 2)) {
@@ -1169,6 +1177,33 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				textAndImage.hiragana = StringUtils.trim(textContent(eh));
 				//
+				pronunciations = querySelector(querySelector(eh, ".."), "..")
+						.querySelectorAll(".katsuyo_proc_button a");
+				//
+				for (int k = 0; k < IterableUtils.size(pronunciations); k++) {
+					//
+					if ((pronunciation = IterableUtils.get(pronunciations, k)) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (Objects.equals("function", page != null ? page.evaluate("typeof get_pronounce_url") : null)) {
+						//
+						Util.put(
+								textAndImage.voiceUrlImages = ObjectUtils.getIfNull(textAndImage.voiceUrlImages,
+										LinkedHashMap::new),
+								Util.toString(page.evaluate(String.format("get_pronounce_url(\"%1$s\",\"%2$s\")",
+										pronunciation.getAttribute("id"),
+										//
+										"mp3"// TODO
+								//
+								))), screenshot(pronunciation));
+						//
+					} // if
+						//
+				} // for
+					//
 				Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 				//
 			} // for
