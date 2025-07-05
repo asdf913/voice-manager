@@ -1271,6 +1271,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
+	@Nullable
 	private static Map<String, byte[]> getVoiceUrlImages(@Nullable final Iterable<ElementHandle> ehs, final Page page,
 			final String format) {
 		//
