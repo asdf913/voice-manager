@@ -2087,6 +2087,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	static Object getSelectedItem(@Nullable final JComboBox<?> instance) {
 		//
 		if (instance == null) {
