@@ -850,7 +850,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			if (!isTestMode()) {
 				//
-				try (final InputStream is = Util.openStream(Util.toURL(new URI(Util.toString(url))))) {
+				try (final InputStream is = Util.openStream(Util.toURL(new URI(url)))) {
 					//
 					html = IOUtils.toString(is, StandardCharsets.UTF_8);
 					//
