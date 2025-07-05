@@ -807,7 +807,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			String url = createUrl(baseUrl, map);
 			//
-			if (!isTestMode()) {
+			final boolean testMode = isTestMode();
+			//
+			if (!testMode) {
 				//
 				PageUtil.navigate(
 						page = newPage(browser = BrowserTypeUtil.launch(chromium(playwright = Playwright.create()))),
@@ -845,7 +847,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			String html = null;
 			//
-			if (!isTestMode()) {
+			if (!testMode) {
 				//
 				try (final InputStream is = Util.openStream(Util.toURL(new URI(url)))) {
 					//
