@@ -263,8 +263,6 @@ class VoiceManagerRubyHtmlPanelTest {
 
 	private MH mh = null;
 
-	private JComboBox<?> jcbImplementation = null;
-
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -275,8 +273,6 @@ class VoiceManagerRubyHtmlPanelTest {
 		toolkit = Util.cast(Toolkit.class, Narcissus.allocateInstance(Util.forName("sun.awt.HeadlessToolkit")));
 		//
 		mh = new MH();
-		//
-		jcbImplementation = Util.cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class));
 		//
 	}
 
