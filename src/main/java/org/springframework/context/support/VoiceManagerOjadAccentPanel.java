@@ -842,7 +842,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final Iterable<String> partOfSpeeches = Util.toList(Util.map(
 					Util.filter(Util.stream(querySelectorAll(page, CSS_SELECTOR_MIDASHI)),
-							x -> IterableUtils.isEmpty(x != null ? x.querySelectorAll("div") : null)),
+							x -> IterableUtils.isEmpty(querySelectorAll(x, "div"))),
 					x -> StringUtils.trim(textContent(x))));
 			//
 			final String textInput = Util.getText(tfTextInput);
@@ -1177,8 +1177,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				textAndImage.hiragana = StringUtils.trim(textContent(eh));
 				//
-				pronunciations = querySelector(querySelector(eh, ".."), "..")
-						.querySelectorAll(".katsuyo_proc_button a");
+				pronunciations = querySelectorAll(querySelector(querySelector(eh, ".."), ".."),
+						".katsuyo_proc_button a");
 				//
 				for (int k = 0; k < IterableUtils.size(pronunciations); k++) {
 					//
@@ -1600,6 +1600,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	@Nullable
 	private static List<ElementHandle> querySelectorAll(@Nullable final Page instance, final String selector) {
+		return instance != null ? instance.querySelectorAll(selector) : null;
+	}
+
+	private static List<ElementHandle> querySelectorAll(final ElementHandle instance, final String selector) {
 		return instance != null ? instance.querySelectorAll(selector) : null;
 	}
 
