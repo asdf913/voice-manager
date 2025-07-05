@@ -821,10 +821,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				if (size > 0) {
 					//
-					final JSHandle jsHandle = getProperty(testAndApply(x -> IterableUtils.size(x) == 1,
-							querySelectorAll(page, "#search_limit"), x -> IterableUtils.get(x, 0), null), "value");
-					//
-					Util.put(map, "limit", NumberUtils.toInt(Util.toString(jsHandle.jsonValue()), 1) * size);
+					Util.put(map, "limit", NumberUtils
+							.toInt(Util.toString(jsonValue(getProperty(testAndApply(x -> IterableUtils.size(x) == 1,
+									querySelectorAll(page, "#search_limit"), x -> IterableUtils.get(x, 0), null),
+									"value"))), 1)
+							* size);
 					//
 					PageUtil.navigate(page = newPage(browser), url = createUrl(baseUrl, map));
 					//
@@ -906,6 +907,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // try
 			//
+	}
+
+	private static Object jsonValue(final JSHandle instnace) {
+		return instnace != null ? instnace.jsonValue() : null;
 	}
 
 	private static JSHandle getProperty(final JSHandle instance, final String propertyName) {

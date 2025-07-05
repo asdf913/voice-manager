@@ -225,6 +225,10 @@ class VoiceManagerOjadAccentPanelTest {
 					//
 					return null;
 					//
+				} else if (Objects.equals(methodName, "jsonValue")) {
+					//
+					return null;
+					//
 				} // if
 					//
 			} // if
