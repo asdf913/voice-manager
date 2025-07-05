@@ -444,7 +444,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final String gender = "Gender";
 			//
-			final JTable table = new JTable(dtmVoice = new DefaultTableModel(new Object[] { gender, "URL" }, 0) {
+			final JTable jTable = new JTable(dtmVoice = new DefaultTableModel(new Object[] { gender, "URL" }, 0) {
 
 				private static final long serialVersionUID = -3821080690688708407L;
 
@@ -462,30 +462,25 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 			});
 			//
-			setMaxWidth(table.getColumn(gender), 44);
+			setMaxWidth(jTable.getColumn(gender), 44);
 			//
-			table.setDefaultRenderer(byte[].class, new TableCellRenderer() {
-
-				@Override
-				public Component getTableCellRendererComponent(final JTable table, final Object value,
-						final boolean isSelected, final boolean hasFocus, final int row, final int column) {
+			jTable.setDefaultRenderer(byte[].class, (table, value, isSelected, hasFocus, row, column) -> {
+				//
+				final byte[] bs = Util.cast(byte[].class, value);
+				//
+				try (final InputStream is = new ByteArrayInputStream(bs)) {
 					//
-					final byte[] bs = Util.cast(byte[].class, value);
+					return new JLabel(new ImageIcon(ImageIO.read(is)));
 					//
-					try (final InputStream is = new ByteArrayInputStream(bs)) {
-						//
-						return new JLabel(new ImageIcon(ImageIO.read(is)));
-						//
-					} catch (final IOException e) {
-						//
-						throw new RuntimeIOException(e);
-						//
-					} // try
-						//
-				}
+				} catch (final IOException ioe) {
+					//
+					throw new RuntimeIOException(ioe);
+					//
+				} // try
+					//
 			});
 			//
-			panelVoice.add(new JScrollPane(table), String.format("hmax %1$s", 56));
+			panelVoice.add(new JScrollPane(jTable), String.format("hmax %1$s", 56));
 			//
 			add(panelVoice, String.format("span %1$s,%2$s", 3, growx));
 			//
@@ -514,6 +509,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+
 	}
 
 	private static void setMaxWidth(@Nullable final TableColumn instance, final int maxWidth) {
