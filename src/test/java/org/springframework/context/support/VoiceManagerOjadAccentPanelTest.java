@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -328,15 +329,13 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 			toString = Util.toString(m);
 			//
-			if (Util.contains(Arrays.asList(Double.TYPE, Boolean.TYPE, Integer.TYPE), Util.getReturnType(m))
-					|| Boolean
-							.logicalOr(
-									Boolean.logicalAnd(
-											Objects.equals(name = Util.getName(m),
-													"createTextAndImageListCellRenderer"),
-											Arrays.equals(parameterTypes, new Class<?>[] { Component.class })),
-									Boolean.logicalAnd(Objects.equals(name, "getClipboard"),
-											Arrays.equals(parameterTypes, new Class<?>[] {})))) {
+			if (or(Util.contains(Arrays.asList(Double.TYPE, Boolean.TYPE, Integer.TYPE), Util.getReturnType(m)),
+					Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "createTextAndImageListCellRenderer"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Component.class })),
+					Boolean.logicalAnd(Objects.equals(name, "getClipboard"),
+							Arrays.equals(parameterTypes, new Class<?>[] {})),
+					Boolean.logicalAnd(Objects.equals(name, "createUrl"),
+							Arrays.equals(parameterTypes, new Class<?>[] { String.class, Map.class })))) {
 				//
 				Assertions.assertNotNull(invoke, toString);
 				//
@@ -348,6 +347,30 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 		} // for
 			//
+	}
+
+	private static boolean or(final boolean a, final boolean b, final boolean... bs) {
+		//
+		boolean result = a || b;
+		//
+		if (result) {
+			//
+			return result;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (result |= bs[i]) {
+				//
+				return result;
+				//
+			} // if
+				//
+		} // for
+			//
+		return result;
+		//
 	}
 
 	@Test

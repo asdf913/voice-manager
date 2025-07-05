@@ -38,7 +38,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -785,49 +787,24 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		try {
 			//
-			final StringBuilder url = new StringBuilder("https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index");
+			final Map<Object, Object> map = new LinkedHashMap<>(
+					Collections.singletonMap("word", testAndApply(Objects::nonNull, Util.getText(tfTextInput),
+							x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
 			//
-			final List<Method> ms = Util.toList(Util.filter(
-					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class), Arrays::stream, null),
-					m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getKey"),
-							Arrays.equals(Util.getParameterTypes(m), new Class<?>[] {}))));
+			map.put("curve", Util.toString(testAndApply((a, b) -> a instanceof Entry, Util.getSelectedItem(cbmCurve),
+					testAndApply(x -> IterableUtils.size(x) == 1, Util.toList(Util.filter(
+							testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class), Arrays::stream, null),
+							m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getKey"),
+									Arrays.equals(Util.getParameterTypes(m), new Class<?>[] {})))),
+							x -> IterableUtils.get(x, 0), null),
+					Narcissus::invokeMethod, null)));
 			//
-			testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
-				//
-				throw new IllegalStateException();
-				//
-			});
-			//
-			final String curve = Util
-					.toString(testAndApply((a, b) -> a instanceof Entry, Util.getSelectedItem(cbmCurve),
-							testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null),
-							Narcissus::invokeMethod, null));
-			//
-			if (StringUtils.isNotBlank(curve)) {
-				//
-				if (!StringUtils.endsWith(url, "/")) {
-					//
-					url.append('/');
-					//
-				} // if
-					//
-				url.append(String.join(":", "curve", curve));
-				//
-			} // if
-				//
-			if (!StringUtils.endsWith(url, "/")) {
-				//
-				url.append('/');
-				//
-			} // if
-				//
-			url.append(String.join(":", "word", testAndApply(Objects::nonNull, Util.getText(tfTextInput),
-					x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
+			final String url = createUrl("https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index", map);
 			//
 			if (!isTestMode()) {
 				//
 				PageUtil.navigate(page = newPage(BrowserTypeUtil.launch(chromium(playwright = Playwright.create()))),
-						Util.toString(url));
+						url);
 				//
 			} // if
 				//
@@ -895,6 +872,39 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // try
 			//
+	}
+
+	private static String createUrl(final String url, final Map<Object, Object> map) {
+		//
+		final StringBuilder sb = new StringBuilder(StringUtils.defaultString(url));
+		//
+		final Iterable<Entry<Object, Object>> entrySet = Util.entrySet(map);
+		//
+		if (Util.iterator(entrySet) != null) {
+			//
+			String value = null;
+			//
+			for (final Entry<Object, Object> entry : entrySet) {
+				//
+				if (StringUtils.isNotBlank(value = Util.toString(Util.getValue(entry)))) {
+					//
+					if (!StringUtils.endsWith(sb, "/")) {
+						//
+						sb.append('/');
+						//
+					} // if
+						//
+					sb.append(StringUtils.joinWith(":", Util.getKey(entry), value));
+					//
+				} // if
+					//
+					//
+			} // for
+				//
+		} // if
+			//
+		return Util.toString(sb);
+		//
 	}
 
 	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
