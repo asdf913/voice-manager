@@ -80,6 +80,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.TextStringBuilder;
@@ -113,6 +114,7 @@ import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.BrowserTypeUtil;
 import com.microsoft.playwright.ElementHandle;
+import com.microsoft.playwright.JSHandle;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.PageUtil;
 import com.microsoft.playwright.Playwright;
@@ -785,6 +787,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		Playwright playwright = null;
 		//
+		Browser browser = null;
+		//
 		try {
 			//
 			final Map<Object, Object> map = new LinkedHashMap<>(
@@ -794,7 +798,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final Stream<Method> ms = testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class),
 					Arrays::stream, null);
 			//
-			map.put("curve",
+			Util.put(map, "curve",
 					Util.toString(testAndApply((a, b) -> a instanceof Entry, Util.getSelectedItem(cbmCurve),
 							testAndApply(x -> IterableUtils.size(x) == 1,
 									Util.toList(Util.filter(ms,
@@ -803,13 +807,29 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 									x -> IterableUtils.get(x, 0), null),
 							Narcissus::invokeMethod, null)));
 			//
-			final String url = createUrl("https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index", map);
+			final String baseUrl = "https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index";
+			//
+			String url = createUrl(baseUrl, map);
 			//
 			if (!isTestMode()) {
 				//
-				PageUtil.navigate(page = newPage(BrowserTypeUtil.launch(chromium(playwright = Playwright.create()))),
+				PageUtil.navigate(
+						page = newPage(browser = BrowserTypeUtil.launch(chromium(playwright = Playwright.create()))),
 						url);
 				//
+				final int size = IterableUtils.size(querySelectorAll(page, "#paginator a"));
+				//
+				if (size > 0) {
+					//
+					final JSHandle jsHandle = getProperty(testAndApply(x -> IterableUtils.size(x) == 1,
+							querySelectorAll(page, "#search_limit"), x -> IterableUtils.get(x, 0), null), "value");
+					//
+					Util.put(map, "limit", NumberUtils.toInt(Util.toString(jsHandle.jsonValue()), 1) * size);
+					//
+					PageUtil.navigate(page = newPage(browser), url = createUrl(baseUrl, map));
+					//
+				} // if
+					//
 			} // if
 				//
 			Util.forEach(Util.map(Util.sorted(Util.map(IntStream.range(1, Util.getSize(mcbmTextAndImage)), i -> -i)),
@@ -876,10 +896,20 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} finally {
 			//
+			if (browser != null) {
+				//
+				browser.close();
+				//
+			} // if
+				//
 			close(playwright);
 			//
 		} // try
 			//
+	}
+
+	private static JSHandle getProperty(final JSHandle instance, final String propertyName) {
+		return instance != null ? instance.getProperty(propertyName) : instance;
 	}
 
 	private static String createUrl(final String url, final Map<Object, Object> map) {

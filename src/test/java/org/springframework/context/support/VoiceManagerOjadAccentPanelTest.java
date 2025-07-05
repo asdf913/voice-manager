@@ -75,6 +75,7 @@ import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.ElementHandle;
+import com.microsoft.playwright.JSHandle;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 
@@ -93,7 +94,8 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES, METHOD_TO_TEXT_AND_IMAGES1,
 			METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY, METHOD_TO_BYTE_ARRAY, METHOD_GET_IF_NULL,
 			METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER, METHOD_SAVE_IMAGE,
-			METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS = null;
+			METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS,
+			METHOD_GET_PROPERTY = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -161,6 +163,8 @@ class VoiceManagerOjadAccentPanelTest {
 		(METHOD_PREVIOUS_ELEMENT_SIBLINGS = clz.getDeclaredMethod("previousElementSiblings", Element.class))
 				.setAccessible(true);
 		//
+		(METHOD_GET_PROPERTY = clz.getDeclaredMethod("getProperty", JSHandle.class, String.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -215,6 +219,14 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof JSHandle) {
+				//
+				if (Objects.equals(methodName, "getProperty")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -1077,6 +1089,27 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof Elements) {
 				return (Elements) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetProperty() throws Throwable {
+		//
+		Assertions.assertNotNull(getProperty(Reflection.newProxy(JSHandle.class, ih), null));
+		//
+	}
+
+	private static JSHandle getProperty(final JSHandle instance, final String propertyName) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PROPERTY.invoke(null, instance, propertyName);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof JSHandle) {
+				return (JSHandle) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
