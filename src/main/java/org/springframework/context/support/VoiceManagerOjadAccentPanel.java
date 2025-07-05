@@ -767,11 +767,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			if (textAndImage != null) {
 				//
-				Util.forEach(Util.entrySet(textAndImage.voiceUrlImages), en -> {
-					//
-					Util.addRow(dtmVoice, new Object[] { Util.getValue(en), Util.getKey(en) });
-					//
-				});
+				Util.forEach(Util.entrySet(textAndImage.voiceUrlImages),
+						en -> Util.addRow(dtmVoice, new Object[] { Util.getValue(en), Util.getKey(en) }));
 				//
 			} // if
 				//
