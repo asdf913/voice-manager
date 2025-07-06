@@ -2224,9 +2224,9 @@ public abstract class Util {
 
 	static void setSelectedIndex(final JComboBox<?> instance, final int index) {
 		//
-		final Iterable<Field> fs = toList(filter(
-				stream(testAndApply(Objects::nonNull, getClass(instance), x -> FieldUtils.getAllFieldsList(x), null)),
-				f -> Objects.equals(getName(f), "dataModel")));
+		final Iterable<Field> fs = toList(
+				filter(stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
+						f -> Objects.equals(getName(f), "dataModel")));
 		//
 		if (IterableUtils.size(fs) > 1) {
 			//
