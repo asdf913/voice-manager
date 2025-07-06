@@ -868,8 +868,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static <R> R testAndApply(final IntPredicate predicate, final int value, final IntFunction<R> functionTrue,
-			@Nullable final IntFunction<R> functionFalse) {
+	private static <R> R testAndApply(@Nullable final IntPredicate predicate, final int value,
+			final IntFunction<R> functionTrue, @Nullable final IntFunction<R> functionFalse) {
 		return predicate != null && predicate.test(value) ? Util.apply(functionTrue, value)
 				: Util.apply(functionFalse, value);
 	}
