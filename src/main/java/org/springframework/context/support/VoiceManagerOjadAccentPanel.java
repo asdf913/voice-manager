@@ -974,6 +974,32 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // if
 				//
+			Util.forEach(Util.stream(textAndImages), x -> {
+				//
+				final Map<String, byte[]> voiceUrlImages = x != null ? x.voiceUrlImages : null;
+				//
+				final Iterable<Entry<String, byte[]>> entrySet = testAndApply(Objects::nonNull,
+						Util.entrySet(voiceUrlImages), y -> new ArrayList<>(y), y -> y);
+				//
+				if (Util.iterator(entrySet) != null) {
+					//
+					String key = null;
+					//
+					for (final Entry<String, ?> entry : entrySet) {
+						//
+						if ((key = Util.getKey(entry)) != null && key.matches("^.+\\?\\d+$")) {
+							//
+							Util.put(voiceUrlImages, StringUtils.substringBeforeLast(key, "?"),
+									voiceUrlImages.remove(key));
+							//
+						} // if
+							//
+					} // for
+						//
+				} // if
+					//
+			});
+			//
 			if (IterableUtils.size(textAndImages) == 1
 					|| (IterableUtils.size(words) == 1 && IterableUtils.size(textAndImages) == 1)) {
 				//
