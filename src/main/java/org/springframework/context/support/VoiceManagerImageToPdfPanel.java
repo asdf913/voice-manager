@@ -310,12 +310,12 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				//
 			} // if
 				//
-			if (index != null) {
+			testAndRunThrows(index != null, () -> {
 				//
 				throw new IllegalStateException();
 				//
-			} // if
-				//
+			});
+			//
 			index = Integer.valueOf(i);
 			//
 		} // for
