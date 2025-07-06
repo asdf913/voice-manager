@@ -1015,12 +1015,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} finally {
 			//
-			if (browser != null) {
-				//
-				browser.close();
-				//
-			} // if
-				//
+			close(browser);
+			//
 			close(playwright);
 			//
 		} // try
@@ -1098,6 +1094,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		return object;
 		//
+	}
+
+	private static void close(final Browser instance) {
+		if (instance != null) {
+			instance.close();
+		}
 	}
 
 	private static void close(@Nullable final Playwright instance) {
