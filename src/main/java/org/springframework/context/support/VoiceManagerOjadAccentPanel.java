@@ -1826,7 +1826,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	@Override
-	public void keyReleased(final KeyEvent evt) {
+	public void keyReleased(@Nullable final KeyEvent evt) {
 		//
 		final Object source = Util.getSource(evt);
 		//
