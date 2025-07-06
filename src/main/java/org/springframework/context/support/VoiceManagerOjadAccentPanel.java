@@ -185,6 +185,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Curve")
 	private JLabel lblCurve = null;
 
+	private JLabel lblCount = null;
+
 	private Window window = null;
 
 	private transient ComboBoxModel<Entry<String, String>> cbmCurve = null;
@@ -320,13 +322,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			});
 			//
-			add(jcbCurve, wrap);
+			add(jcbCurve, String.format("%1$s,span %2$s", wrap, 2));
 			//
 			add(new JLabel());
 			//
-			add(btnExecute = new JButton("Execute"), wrap);
+			add(btnExecute = new JButton("Execute"), String.format("%1$s,span %2$s", wrap, 2));
 			//
 			add(new JLabel("Text And Image"));
+			//
+			add(lblCount = new JLabel());
 			//
 			add(jcbTextAndImage = new JComboBox<>(
 					mcbmTextAndImage = new DefaultComboBoxModel<>(new TextAndImage[] { null })),
@@ -882,6 +886,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		try {
 			//
+			Util.setText(lblCount, null);
+			//
 			final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("word", testAndApply(
 					Objects::nonNull, textInput, x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
 			//
@@ -959,6 +965,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							() -> toTextAndImages3(words, document, p)));
 			//
 			Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
+			//
+			Util.setText(lblCount, Integer.toString(IterableUtils.size(textAndImages)));
 			//
 			if (IterableUtils.size(partOfSpeeches) == 1) {
 				//
