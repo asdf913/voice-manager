@@ -654,7 +654,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.hiragana : null;
 	}
 
-	private static String getPartOfSpeech(final TextAndImage instance) {
+	private static String getPartOfSpeech(@Nullable final TextAndImage instance) {
 		return instance != null ? instance.partOfSpeech : null;
 	}
 
