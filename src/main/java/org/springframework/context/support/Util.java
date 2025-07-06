@@ -528,7 +528,7 @@ public abstract class Util {
 		return instance != null ? instance.apply(t, u) : null;
 	}
 
-	static <R> R apply(final IntFunction<R> instance, final int value) {
+	static <R> R apply(@Nullable final IntFunction<R> instance, final int value) {
 		return instance != null ? instance.apply(value) : null;
 	}
 
