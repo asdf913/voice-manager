@@ -652,6 +652,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.hiragana : null;
 	}
 
+	private static String getPartOfSpeech(final TextAndImage instance) {
+		return instance != null ? instance.partOfSpeech : null;
+	}
+
 	@Nullable
 	private static BufferedImage getAccentImage(@Nullable final TextAndImage instance) {
 		return instance != null ? instance.accentImage : null;
@@ -752,7 +756,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				Util.setEnabled(btnCopyPartOfSpeech, StringUtils.isNotBlank(x));
 				//
-			}, textAndImage != null ? textAndImage.partOfSpeech : null);
+			}, getPartOfSpeech(textAndImage));
 			//
 			// Kanji
 			//
