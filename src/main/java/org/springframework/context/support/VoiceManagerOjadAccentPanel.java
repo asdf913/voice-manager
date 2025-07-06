@@ -987,7 +987,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					for (final Entry<String, ?> entry : entrySet) {
 						//
-						if ((key = Util.getKey(entry)) != null && key.matches("^.+\\?\\d+$")) {
+						if (matches(key = Util.getKey(entry), "^.+\\?\\d+$")) {
 							//
 							Util.put(voiceUrlImages, StringUtils.substringBeforeLast(key, "?"),
 									voiceUrlImages.remove(key));
@@ -1009,7 +1009,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			pack(window);
 			//
-		} catch (final IOException | URISyntaxException e) {
+		} catch (final IOException |
+
+				URISyntaxException e) {
 			//
 			throw new RuntimeException(e);
 			//
@@ -1021,6 +1023,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // try
 			//
+	}
+
+	private static boolean matches(final String a, final String b) {
+		return a != null && b != null && a.matches(b);
 	}
 
 	@Nullable

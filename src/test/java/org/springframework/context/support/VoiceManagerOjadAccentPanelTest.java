@@ -97,7 +97,8 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY, METHOD_TO_BYTE_ARRAY,
 			METHOD_GET_IF_NULL, METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER, METHOD_SAVE_IMAGE,
 			METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS,
-			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES = null;
+			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES,
+			METHOD_MATCHES = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -177,6 +178,8 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_GET_VOICE_URL_IMAGES = clz.getDeclaredMethod("getVoiceUrlImages", Iterable.class, Page.class,
 				String.class)).setAccessible(true);
+		//
+		(METHOD_MATCHES = clz.getDeclaredMethod("matches", String.class, String.class)).setAccessible(true);
 		//
 	}
 
@@ -1255,6 +1258,29 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof Map) {
 				return (Map) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMatches() throws Throwable {
+		//
+		Assertions.assertFalse(matches(EMPTY, null));
+		//
+		Assertions.assertTrue(matches(EMPTY, EMPTY));
+		//
+		Assertions.assertFalse(matches(EMPTY, "A"));
+		//
+	}
+
+	private static boolean matches(final String a, final String b) throws Throwable {
+		try {
+			final Object obj = METHOD_MATCHES.invoke(null, a, b);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
