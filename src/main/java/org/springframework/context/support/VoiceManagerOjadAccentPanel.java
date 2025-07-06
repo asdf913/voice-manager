@@ -1029,7 +1029,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		};
 	}
 
-	private static boolean matches(final String a, final String b) {
+	private static boolean matches(@Nullable final String a, @Nullable final String b) {
 		return a != null && b != null && a.matches(b);
 	}
 
