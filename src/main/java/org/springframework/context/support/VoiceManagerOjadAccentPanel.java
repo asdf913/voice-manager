@@ -78,6 +78,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -153,7 +154,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Hiragana")
 	private JTextComponent tfHiragana = null;
 
-	private JTextComponent tfPartOfSpeech = null;
+	private JTextComponent tfPartOfSpeech, tfIndex = null;
 
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
@@ -330,7 +331,19 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(new JLabel("Text And Image"));
 			//
-			add(lblCount = new JLabel());
+			// Index And Count
+			//
+			final JPanel paneIC = new JPanel();
+			//
+			paneIC.add(tfIndex = new JTextField());
+			//
+			tfIndex.setPreferredSize(new Dimension(19, (int) getHeight(Util.getPreferredSize(tfIndex))));
+			//
+			paneIC.add(new JLabel("/"));
+			//
+			paneIC.add(lblCount = new JLabel());
+			//
+			add(paneIC);
 			//
 			add(jcbTextAndImage = new JComboBox<>(
 					mcbmTextAndImage = new DefaultComboBoxModel<>(new TextAndImage[] { null })),
@@ -716,6 +729,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} else if (Objects.equals(source, jcbTextAndImage)) {
 			//
+			if (jcbTextAndImage != null) {
+				//
+				final int selectedIndex = jcbTextAndImage.getSelectedIndex();
+				//
+				Util.setText(tfIndex, selectedIndex >= 0 ? Integer.toString(selectedIndex) : null);
+				//
+				pack(window);
+				//
+			} // if
+				//
 			final TextAndImage textAndImage = Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage));
 			//
 			// Part Of Speech
@@ -968,6 +991,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.setText(lblCount, Integer.toString(IterableUtils.size(textAndImages)));
 			//
+			Util.setEditable(tfIndex, CollectionUtils.isNotEmpty(textAndImages));
+			//
+			if (CollectionUtils.isEmpty(textAndImages)) {
+				//
+				Util.setText(tfIndex, null);
+				//
+			} // if
+				//
 			if (IterableUtils.size(partOfSpeeches) == 1) {
 				//
 				Util.forEach(Util.stream(textAndImages), x -> {
