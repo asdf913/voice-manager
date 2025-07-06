@@ -1301,8 +1301,6 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		final Method accept = Util.getDeclaredMethod(Consumer.class, "accept", Object.class);
 		//
-		final Object textAndImage = Narcissus.allocateInstance(CLASS_TEXT_AND_IMAGE);
-		//
 		final Map<String, Object> voiceUrlImages = new LinkedHashMap<>(Collections.singletonMap(EMPTY, null));
 		//
 		setDefaultPropertyInclusion(setVisibility(objectMapper, PropertyAccessor.ALL, Visibility.ANY),
