@@ -154,7 +154,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Hiragana")
 	private JTextComponent tfHiragana = null;
 
-	private JTextComponent tfPartOfSpeech, tfIndex = null;
+	@Note("Part Of Speech")
+	private JTextComponent tfPartOfSpeech = null;
+
+	private JTextComponent tfIndex = null;
 
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
