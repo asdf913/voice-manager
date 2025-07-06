@@ -13,6 +13,8 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
@@ -131,7 +133,7 @@ import com.microsoft.playwright.Playwright;
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
-public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingBean, ActionListener {
+public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingBean, ActionListener, KeyListener {
 
 	private static final long serialVersionUID = -3247760984161467171L;
 
@@ -344,6 +346,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			tfIndex.setPreferredSize(new Dimension(19, (int) getHeight(Util.getPreferredSize(tfIndex))));
 			//
+			tfIndex.addKeyListener(this);
+			//
 			paneIC.add(new JLabel("/"));
 			//
 			paneIC.add(lblCount = new JLabel());
@@ -512,7 +516,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			Util.forEach(Stream.of(btnCopyPartOfSpeech, btnCopyKanji, btnCopyHiragana, btnCopyAccentImage,
 					btnCopyCurveImage, btnSaveAccentImage, btnSaveCurveImage), x -> Util.setEnabled(x, false));
 			//
-			Util.forEach(Stream.of(tfPartOfSpeech, tfKanji, tfHiragana), x -> Util.setEditable(x, false));
+			Util.forEach(Stream.of(tfIndex, tfPartOfSpeech, tfKanji, tfHiragana), x -> Util.setEditable(x, false));
 			//
 		} // if
 			//
@@ -1811,6 +1815,51 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Nullable
 	private static byte[] screenshot(@Nullable final ElementHandle instance) {
 		return instance != null ? instance.screenshot() : null;
+	}
+
+	@Override
+	public void keyTyped(final KeyEvent evt) {
+	}
+
+	@Override
+	public void keyPressed(final KeyEvent evt) {
+	}
+
+	@Override
+	public void keyReleased(final KeyEvent evt) {
+		//
+		final Object source = Util.getSource(evt);
+		//
+		if (evt != null && evt.getKeyCode() == KeyEvent.VK_ENTER && source == tfIndex) {
+			//
+			final String string = Util.getText(tfIndex);
+			//
+			if (NumberUtils.isCreatable(string) && jcbTextAndImage != null) {
+				//
+				int index = NumberUtils.toInt(string);
+				//
+				final int size = Util.getSize(jcbTextAndImage.getModel());
+				//
+				if (index >= size) {
+					//
+					index = size - 1;
+					//
+				} else if (index < 0) {
+					//
+					index = 0;
+					//
+				} // if
+					//
+				if (index < size) {
+					//
+					jcbTextAndImage.setSelectedIndex(index);
+					//
+				} // if
+					//
+			} // if
+				//
+		} // if
+			//
 	}
 
 }

@@ -1,5 +1,7 @@
 package org.springframework.context.support;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.Window;
@@ -7,6 +9,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
@@ -37,6 +40,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.MutableComboBoxModel;
+import javax.swing.text.JTextComponent;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
@@ -1342,6 +1346,46 @@ class VoiceManagerOjadAccentPanelTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testKeyReleased() throws IllegalAccessException {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final Component component = new JLabel();
+		//
+		Assertions.assertDoesNotThrow(() -> instance.keyReleased(new KeyEvent(component, 0, 0, 0, KeyEvent.VK_A, ' ')));
+		//
+		Assertions.assertDoesNotThrow(
+				() -> instance.keyReleased(new KeyEvent(component, 0, 0, 0, KeyEvent.VK_ENTER, ' ')));
+		//
+		final JTextComponent tfIndex = new JTextField();
+		//
+		FieldUtils.writeDeclaredField(instance, "tfIndex", tfIndex, true);
+		//
+		final KeyEvent keyEvent = new KeyEvent(tfIndex, 0, 0, 0, KeyEvent.VK_ENTER, ' ');
+		//
+		Assertions.assertDoesNotThrow(() -> instance.keyReleased(keyEvent));
+		//
+		Util.setText(tfIndex, "1");
+		//
+		Assertions.assertDoesNotThrow(() -> instance.keyReleased(keyEvent));
+		//
+		final JComboBox<?> jcbTextAndImage = new JComboBox<>();
+		//
+		FieldUtils.writeDeclaredField(instance, "jcbTextAndImage", jcbTextAndImage, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.keyReleased(keyEvent));
+		//
+		Util.setText(tfIndex, "-1");
+		//
+		Assertions.assertDoesNotThrow(() -> instance.keyReleased(keyEvent));
+		//
 	}
 
 }
