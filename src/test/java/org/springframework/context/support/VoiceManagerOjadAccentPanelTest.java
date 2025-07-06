@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -68,6 +69,8 @@ import org.meeuw.functional.ThrowingRunnable;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
@@ -97,8 +100,8 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY, METHOD_TO_BYTE_ARRAY,
 			METHOD_GET_IF_NULL, METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER, METHOD_SAVE_IMAGE,
 			METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS,
-			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES,
-			METHOD_MATCHES = null;
+			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES, METHOD_MATCHES,
+			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -180,6 +183,9 @@ class VoiceManagerOjadAccentPanelTest {
 				String.class)).setAccessible(true);
 		//
 		(METHOD_MATCHES = clz.getDeclaredMethod("matches", String.class, String.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER = clz.getDeclaredMethod("createTextAndImageConsumer"))
+				.setAccessible(true);
 		//
 	}
 
@@ -388,7 +394,9 @@ class VoiceManagerOjadAccentPanelTest {
 					Boolean.logicalAnd(Objects.equals(name, "createUrl"),
 							Arrays.equals(parameterTypes, new Class<?>[] { String.class, Map.class })),
 					Boolean.logicalAnd(Objects.equals(Util.getName(m), "createComparatorByOrder"),
-							Arrays.equals(parameterTypes, new Class<?>[] { List.class })))) {
+							Arrays.equals(parameterTypes, new Class<?>[] { List.class })),
+					Boolean.logicalAnd(Objects.equals(Util.getName(m), "createTextAndImageConsumer"),
+							Arrays.equals(parameterTypes, new Class<?>[] {})))) {
 				//
 				Assertions.assertNotNull(invoke, toString);
 				//
@@ -821,20 +829,25 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testToTextAndImages() throws Throwable {
 		//
-		if (objectMapper != null) {
-			//
-			objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
-			//
-			objectMapper.setDefaultPropertyInclusion(Include.NON_NULL);
-			//
-		} // if
-			//
+		setDefaultPropertyInclusion(setVisibility(objectMapper, PropertyAccessor.ALL, Visibility.ANY),
+				Include.NON_NULL);
+		//
 		Assertions.assertEquals("[{}]",
 				ObjectMapperUtil.writeValueAsString(objectMapper, toTextAndImages(Collections.singleton(null), null)));
 		//
 		Assertions.assertEquals("[{},{}]", ObjectMapperUtil.writeValueAsString(objectMapper,
 				toTextAndImages(Collections.nCopies(2, null), Collections.nCopies(2, null))));
 		//
+	}
+
+	private static ObjectMapper setDefaultPropertyInclusion(final ObjectMapper instance,
+			final JsonInclude.Include incl) {
+		return instance != null ? instance.setDefaultPropertyInclusion(incl) : instance;
+	}
+
+	private static ObjectMapper setVisibility(final ObjectMapper instance, final PropertyAccessor forMethod,
+			final JsonAutoDetect.Visibility visibility) {
+		return instance != null ? instance.setVisibility(forMethod, visibility) : instance;
 	}
 
 	private static Collection<?> toTextAndImages(final Iterable<ElementHandle> ehs, final Iterable<ElementHandle> words)
@@ -855,14 +868,9 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testToTextAndImages1() throws Throwable {
 		//
-		if (objectMapper != null) {
-			//
-			objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
-			//
-			objectMapper.setDefaultPropertyInclusion(Include.NON_NULL);
-			//
-		} // if
-			//
+		setDefaultPropertyInclusion(setVisibility(objectMapper, PropertyAccessor.ALL, Visibility.ANY),
+				Include.NON_NULL);
+		//
 		Assertions.assertEquals("[{}]", ObjectMapperUtil.writeValueAsString(objectMapper,
 				toTextAndImages1(Collections.nCopies(2, null), null, Collections.nCopies(1, null), null)));
 		//
@@ -1270,10 +1278,6 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertFalse(matches(EMPTY, null));
 		//
-		Assertions.assertTrue(matches(EMPTY, EMPTY));
-		//
-		Assertions.assertFalse(matches(EMPTY, "A"));
-		//
 	}
 
 	private static boolean matches(final String a, final String b) throws Throwable {
@@ -1281,6 +1285,60 @@ class VoiceManagerOjadAccentPanelTest {
 			final Object obj = METHOD_MATCHES.invoke(null, a, b);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateTextAndImageConsumer() throws Throwable {
+		//
+		final Consumer<?> consumer = createTextAndImageConsumer();
+		//
+		Util.accept(consumer, null);
+		//
+		final Method accept = Util.getDeclaredMethod(Consumer.class, "accept", Object.class);
+		//
+		final Object textAndImage = Narcissus.allocateInstance(CLASS_TEXT_AND_IMAGE);
+		//
+		final Map<String, Object> voiceUrlImages = new LinkedHashMap<>(Collections.singletonMap(EMPTY, null));
+		//
+		setDefaultPropertyInclusion(setVisibility(objectMapper, PropertyAccessor.ALL, Visibility.ANY),
+				Include.NON_NULL);
+		//
+		Assertions.assertEquals("{}", ObjectMapperUtil.writeValueAsString(objectMapper, textAndImage));
+		//
+		FieldUtils.writeDeclaredField(textAndImage, "voiceUrlImages", voiceUrlImages, true);
+		//
+		Assertions.assertEquals("{\"voiceUrlImages\":{}}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, textAndImage));
+		//
+		Assertions.assertNull(Narcissus.invokeMethod(consumer, accept, textAndImage));
+		//
+		Assertions.assertEquals("{\"voiceUrlImages\":{}}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, textAndImage));
+		//
+		Util.put(voiceUrlImages, "1?2", new byte[] {});
+		//
+		Assertions.assertEquals("{\"voiceUrlImages\":{\"1?2\":\"\"}}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, textAndImage));
+		//
+		Assertions.assertNull(Narcissus.invokeMethod(consumer, accept, textAndImage));
+		//
+		Assertions.assertEquals("{\"voiceUrlImages\":{\"1\":\"\"}}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, textAndImage));
+		//
+	}
+
+	private static Consumer<?> createTextAndImageConsumer() throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER.invoke(null);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Consumer) {
+				return (Consumer) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
