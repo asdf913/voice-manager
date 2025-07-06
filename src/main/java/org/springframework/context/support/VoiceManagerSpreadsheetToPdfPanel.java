@@ -331,10 +331,14 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 			} // for
 				//
-			setSelectedIndex(jcbPDRectangle, index);
-			//
-			// File
-			//
+			if (index != null) {
+				//
+				Util.setSelectedIndex(jcbPDRectangle, index.intValue());
+				//
+			} // if
+				//
+				// File
+				//
 			add(new JLabel("File"));
 			//
 			add(tfFile = new JTextField(), String.format("growx,span %1$s,%2$s", 2, wrap));
@@ -504,12 +508,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private static double getWidth(@Nullable final Dimension instance) {
 		return instance != null ? instance.getWidth() : 0;
-	}
-
-	private static void setSelectedIndex(@Nullable final JComboBox<?> instance, @Nullable final Number index) {
-		if (instance != null && index != null) {
-			instance.setSelectedIndex(index.intValue());
-		}
 	}
 
 	private static void setLayout(@Nullable final Container instance, final LayoutManager layoutManager) {
@@ -721,7 +719,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), file,
 					x -> Util.setText(tfFile, Util.getAbsolutePath(Util.getAbsoluteFile(x))));
 			//
-			testAndRunThrows(IterableUtils.size(wb) == 1, () -> jcbSheet.setSelectedIndex(1));
+			testAndRunThrows(IterableUtils.size(wb) == 1, () -> Util.setSelectedIndex(jcbSheet, 1));
 			//
 		} catch (final IOException e) {
 			//
@@ -1008,7 +1006,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 				cbmSheet.addElement(SheetUtil.getSheetName(WorkbookUtil.getSheetAt(wb, 0)));
 				//
-				jcbSheet.setSelectedIndex(1);
+				Util.setSelectedIndex(jcbSheet, 1);
 				//
 			} // if
 				//

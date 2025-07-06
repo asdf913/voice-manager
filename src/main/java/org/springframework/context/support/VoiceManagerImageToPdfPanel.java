@@ -320,10 +320,14 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 		} // for
 			//
-		setSelectedIndex(jcbPDRectangle, index);
-		//
-		// Font
-		//
+		if (index != null) {
+			//
+			Util.setSelectedIndex(jcbPDRectangle, index.intValue());
+			//
+		} // if
+			//
+			// Font
+			//
 		add(new JLabel("Font"));
 		//
 		add(tfFontSize = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
@@ -449,12 +453,6 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName, tfImageFile, tfImageUrlStateCode, tfOutputFile),
 				x -> Util.setEditable(x, false));
 		//
-	}
-
-	private static void setSelectedIndex(@Nullable final JComboBox<?> instance, @Nullable final Number index) {
-		if (instance != null && index != null) {
-			instance.setSelectedIndex(index.intValue());
-		}
 	}
 
 	private static void setLayoutConstraints(@Nullable final MigLayout instance, final Object constr) {

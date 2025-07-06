@@ -1082,4 +1082,19 @@ class UtilTest {
 		//
 	}
 
+	@Test
+	void testSetSelectedIndex() {
+		//
+		Assertions.assertDoesNotThrow(() -> Util.setSelectedIndex(null, 0));
+		//
+		Assertions.assertDoesNotThrow(() -> Util
+				.setSelectedIndex(Util.cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class)), 0));
+		//
+		Assertions.assertThrows(IllegalArgumentException.class, () -> Util.setSelectedIndex(new JComboBox<>(), 0));
+		//
+		Assertions.assertDoesNotThrow(
+				() -> Util.setSelectedIndex(new JComboBox<>(new DefaultComboBoxModel<>(new Object[] { null })), 0));
+		//
+	}
+
 }

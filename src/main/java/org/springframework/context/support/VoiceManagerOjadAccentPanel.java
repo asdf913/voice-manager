@@ -1852,7 +1852,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 				if (index < size) {
 					//
-					jcbTextAndImage.setSelectedIndex(index);
+					Util.setSelectedIndex(jcbTextAndImage, index);
 					//
 				} // if
 					//

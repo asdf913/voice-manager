@@ -2222,4 +2222,26 @@ public abstract class Util {
 		return instance != null ? instance.toURL() : null;
 	}
 
+	static void setSelectedIndex(final JComboBox<?> instance, final int index) {
+		//
+		final Iterable<Field> fs = toList(filter(
+				stream(testAndApply(Objects::nonNull, getClass(instance), x -> FieldUtils.getAllFieldsList(x), null)),
+				f -> Objects.equals(getName(f), "dataModel")));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f != null && Narcissus.getField(instance, f) != null) {
+			//
+			instance.setSelectedIndex(index);
+			//
+		} // if
+			//
+	}
+
 }

@@ -95,10 +95,10 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE,
 			METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL,
-			METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_OR, METHOD_SET_ICON,
-			METHOD_TEST_AND_APPLY, METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY,
-			METHOD_TO_DATA, METHOD_GET_LAYOUT_MANAGER, METHOD_SET_PREFERRED_SIZE, METHOD_WRITE_VOICE_TO_FILE,
-			METHOD_FOR_EACH_REMAINING, METHOD_GET_HEIGHT, METHOD_GET_SCALED_INSTANCE, METHOD_GET_SELECTED_INDEX,
+			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_OR, METHOD_SET_ICON, METHOD_TEST_AND_APPLY,
+			METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY, METHOD_TO_DATA,
+			METHOD_GET_LAYOUT_MANAGER, METHOD_SET_PREFERRED_SIZE, METHOD_WRITE_VOICE_TO_FILE, METHOD_FOR_EACH_REMAINING,
+			METHOD_GET_HEIGHT, METHOD_GET_SCALED_INSTANCE, METHOD_GET_SELECTED_INDEX,
 			METHOD_IS_ALL_FIELDS_NULL_OR_BLANK = null;
 
 	@BeforeAll
@@ -125,9 +125,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_TO_BIG_DECIMAL = clz.getDeclaredMethod("toBigDecimal", Float.TYPE)).setAccessible(true);
-		//
-		(METHOD_SET_SELECTED_INDEX = clz.getDeclaredMethod("setSelectedIndex", JComboBox.class, Number.class))
-				.setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT3 = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
 				Consumer.class)).setAccessible(true);
@@ -747,22 +744,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				return (BigDecimal) obj;
 			}
 			throw new Throwable(Util.getName(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetSelectedIndex() {
-		//
-		Assertions.assertDoesNotThrow(
-				() -> setSelectedIndex(Util.cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class)), null));
-		//
-	}
-
-	private static void setSelectedIndex(final JComboBox<?> instance, final Number index) throws Throwable {
-		try {
-			METHOD_SET_SELECTED_INDEX.invoke(null, instance, index);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
