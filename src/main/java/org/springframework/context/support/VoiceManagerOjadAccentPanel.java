@@ -48,6 +48,8 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.IntFunction;
+import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
@@ -738,9 +740,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			if (jcbTextAndImage != null) {
 				//
-				final int selectedIndex = jcbTextAndImage.getSelectedIndex();
-				//
-				Util.setText(tfIndex, selectedIndex >= 0 ? Integer.toString(selectedIndex) : null);
+				Util.setText(tfIndex,
+						testAndApply(x -> x >= 0, jcbTextAndImage.getSelectedIndex(), x -> Integer.toString(x), null));
 				//
 				pack(window);
 				//
@@ -860,6 +861,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static <R> R testAndApply(final IntPredicate predicate, final int value, final IntFunction<R> functionTrue,
+			final IntFunction<R> functionFalse) {
+		return predicate != null && predicate.test(value) ? apply(functionTrue, value) : apply(functionFalse, value);
+	}
+
+	private static <R> R apply(final IntFunction<R> instance, final int value) {
+		return instance != null ? instance.apply(value) : null;
 	}
 
 	private static Clipboard getClipboard() {
