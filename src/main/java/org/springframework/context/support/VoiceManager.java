@@ -820,13 +820,11 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 		if (Util.iterator(entrySet) != null) {
 			//
-			IntFunction intFunction = null;
-			//
 			for (final Entry<String, IntFunction> entry : entrySet) {
 				//
-				if ((intFunction = Util.getValue(entry)) != null && preferredHeight != null
-						&& intFunction.apply(preferredHeight.intValue()) instanceof Component c && container != null
-						&& Narcissus.invokeMethod(c,
+				if (preferredHeight != null
+						&& Util.apply(Util.getValue(entry), preferredHeight.intValue()) instanceof Component c
+						&& container != null && Narcissus.invokeMethod(c,
 								Util.getDeclaredMethod(Component.class, "getObjectLock")) != null) {
 					//
 					container.add(c.getName(), c);

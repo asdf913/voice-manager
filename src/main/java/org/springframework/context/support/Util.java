@@ -44,6 +44,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
+import java.util.function.IntFunction;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -525,6 +526,10 @@ public abstract class Util {
 	@Nullable
 	static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, @Nullable final T t, @Nullable final U u) {
 		return instance != null ? instance.apply(t, u) : null;
+	}
+
+	static <R> R apply(final IntFunction<R> instance, final int value) {
+		return instance != null ? instance.apply(value) : null;
 	}
 
 	@Nullable
