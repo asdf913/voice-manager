@@ -589,6 +589,18 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnSaveCurveImage, 0, null)));
 		//
+		// Copy
+		//
+		final Class<?> clz = VoiceManagerOjadAccentPanel.class;
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(EMPTY, 0,
+				StringUtils.join(FieldUtils.readDeclaredStaticField(clz, "COPY", true), ','))));
+		//
+		// Download
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(EMPTY, 0,
+				StringUtils.join(FieldUtils.readDeclaredStaticField(clz, "DOWNLOAD", true), ','))));
+		//
 	}
 
 	@Test

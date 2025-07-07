@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
@@ -31,8 +32,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.channels.IllegalSelectorException;
 import java.nio.charset.StandardCharsets;
@@ -89,6 +92,7 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -102,6 +106,8 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.TextStringBuilder;
 import org.apache.commons.text.TextStringBuilderUtil;
+import org.apache.commons.validator.routines.UrlValidator;
+import org.apache.commons.validator.routines.UrlValidatorUtil;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URIBuilderUtil;
 import org.apache.jena.atlas.RuntimeIOException;
@@ -152,6 +158,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	private static final String CANVAS = "canvas";
 
 	private static final String COPY = "Copy";
+
+	private static final String DOWNLOAD = "Download";
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -462,34 +470,37 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final String gender = "Gender";
 			//
-			final JTable jTable = new JTable(dtmVoice = new DefaultTableModel(new Object[] { gender, "URL", COPY }, 0) {
+			final JTable jTable = new JTable(
+					dtmVoice = new DefaultTableModel(new Object[] { gender, "URL", COPY, DOWNLOAD }, 0) {
 
-				private static final long serialVersionUID = -3821080690688708407L;
+						private static final long serialVersionUID = -3821080690688708407L;
 
-				@Override
-				public Class<?> getColumnClass(final int columnIndex) {
-					//
-					final String columnName = getColumnName(columnIndex);
-					//
-					if (Objects.equals(columnName, gender)) {
-						//
-						return byte[].class;
-						//
-					} else if (Objects.equals(columnName, COPY)) {
-						//
-						return String.class;
-						//
-					} // if
-						//
-					return super.getColumnClass(columnIndex);
-					//
-				}
+						@Override
+						public Class<?> getColumnClass(final int columnIndex) {
+							//
+							final String columnName = getColumnName(columnIndex);
+							//
+							if (Objects.equals(columnName, gender)) {
+								//
+								return byte[].class;
+								//
+							} else if (Util.contains(Arrays.asList(COPY, DOWNLOAD), columnName)) {
+								//
+								return String.class;
+								//
+							} // if
+								//
+							return super.getColumnClass(columnIndex);
+							//
+						}
 
-			});
+					});
 			//
 			setMaxWidth(jTable.getColumn(gender), 44);
 			//
-			setMaxWidth(jTable.getColumn(COPY), 65);
+			setMaxWidth(jTable.getColumn(COPY), 37);
+			//
+			setMaxWidth(jTable.getColumn(DOWNLOAD), 67);
 			//
 			final IH ih = new IH();
 			//
@@ -799,12 +810,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				final Integer column = Util.cast(Integer.class, ArrayUtils.get(args, 4));
 				//
-				if (column != null && Objects.equals(getColumnName(jTable, column), COPY)) {
+				final String columnName = column != null ? getColumnName(jTable, column.intValue()) : null;
+				//
+				if (column != null && Util.contains(Arrays.asList(COPY, DOWNLOAD), columnName)) {
 					//
-					final JButton button = new JButton(COPY);
+					final JButton button = new JButton(columnName);
 					//
-					button.setActionCommand(
-							StringUtils.joinWith(",", COPY, row != null ? getValueAt(jTable, row, column) : null));
+					button.setMargin(new Insets(0, 0, 0, 0));
+					//
+					button.setActionCommand(StringUtils.joinWith(",", columnName,
+							row != null ? getValueAt(jTable, row, column) : null));
 					//
 					button.addActionListener(actionListener);
 					//
@@ -848,10 +863,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 				final Integer column = Util.cast(Integer.class, ArrayUtils.get(args, 5));
 				//
-				if (column != null && Objects
-						.equals(getColumnName(Util.cast(JTable.class, ArrayUtils.get(args, 0)), column), COPY)) {
+				final String columnName = column != null
+						? getColumnName(Util.cast(JTable.class, ArrayUtils.get(args, 0)), column.intValue())
+						: null;
+				//
+				if (Util.contains(Arrays.asList(COPY, DOWNLOAD), columnName)) {
 					//
-					return Unit.with(new JButton(COPY));
+					final JButton button = new JButton(columnName);
+					//
+					button.setMargin(new Insets(0, 0, 0, 0));
+					//
+					return Unit.with(button);
 					//
 				} // if
 					//
@@ -880,10 +902,46 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		final String actionCommand = evt != null ? evt.getActionCommand() : null;
 		//
-		if (StringUtils.contains(actionCommand, StringUtils.join(COPY, ','))) {
+		if (StringUtils.startsWith(actionCommand, StringUtils.join(COPY, ','))) {
 			//
 			setContents(getClipboard(), new StringSelection(StringUtils.substringAfter(actionCommand, ',')), null);
 			//
+			return;
+			//
+		} else if (StringUtils.startsWith(actionCommand, StringUtils.join(DOWNLOAD, ','))) {
+			//
+			final JFileChooser jfc = new JFileChooser(".");
+			//
+			URL url = null;
+			//
+			try {
+				//
+				url = Util.toURL(testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
+						StringUtils.substringAfter(actionCommand, ','), x -> new URI(x), null));
+				//
+			} catch (final MalformedURLException | URISyntaxException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+			jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.getFile(url), x -> Path.of(x), null)));
+			//
+			if (Boolean.logicalOr(!GraphicsEnvironment.isHeadless(), !isTestMode())
+					&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				//
+				try (final InputStream is = Util.openStream(url)) {
+					//
+					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), IOUtils.toByteArray(is));
+					//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
+			} // try
+				//
 			return;
 			//
 		} // if
@@ -968,7 +1026,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					final String key = Util.getKey(en);
 					//
-					Util.addRow(dtmVoice, new Object[] { Util.getValue(en), key, key });
+					Util.addRow(dtmVoice, new Object[] { Util.getValue(en), key, key, key });
 					//
 				});
 				//
