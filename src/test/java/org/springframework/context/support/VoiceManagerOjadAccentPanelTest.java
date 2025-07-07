@@ -601,6 +601,11 @@ class VoiceManagerOjadAccentPanelTest {
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(EMPTY, 0,
 				StringUtils.join(FieldUtils.readDeclaredStaticField(clz, "DOWNLOAD", true), ','))));
 		//
+		// Play
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(EMPTY, 0,
+				StringUtils.join(FieldUtils.readDeclaredStaticField(clz, "PLAY", true), ','))));
+		//
 	}
 
 	@Test

@@ -908,43 +908,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Override
 	public void actionPerformed(@Nullable final ActionEvent evt) {
 		//
-		final String actionCommand = getActionCommand(evt);
-		//
-		if (StringUtils.startsWith(actionCommand, StringUtils.join(COPY, ','))) {
+		if (actionPerformed(getActionCommand(evt))) {
 			//
-			setContents(getClipboard(), new StringSelection(StringUtils.substringAfter(actionCommand, ',')), null);
-			//
-			return;
-			//
-		} else if (StringUtils.startsWith(actionCommand, StringUtils.join(DOWNLOAD, ','))) {
-			//
-			try {
-				//
-				saveURL(Util.toURL(testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
-						StringUtils.substringAfter(actionCommand, ','), URI::new, null)));
-				//
-			} catch (final URISyntaxException | IOException e) {
-				//
-				throw new RuntimeException(e);
-				//
-			} // try
-				//
-			return;
-			//
-		} else if (StringUtils.startsWith(actionCommand, StringUtils.join(PLAY, ','))) {
-			//
-			try (final InputStream is = new ByteArrayInputStream(
-					toByteArray(Util.toURL(testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
-							StringUtils.substringAfter(actionCommand, ','), URI::new, null))))) {
-				//
-				PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
-				//
-			} catch (final URISyntaxException | IOException | JavaLayerException e) {
-				//
-				throw new RuntimeException(e);
-				//
-			} // try
-				//
 			return;
 			//
 		} // if
@@ -1091,6 +1056,52 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static boolean actionPerformed(final String actionCommand) {
+		//
+		if (StringUtils.startsWith(actionCommand, StringUtils.join(COPY, ','))) {
+			//
+			setContents(getClipboard(), new StringSelection(StringUtils.substringAfter(actionCommand, ',')), null);
+			//
+			return true;
+			//
+		} else if (StringUtils.startsWith(actionCommand, StringUtils.join(DOWNLOAD, ','))) {
+			//
+			try {
+				//
+				saveURL(Util.toURL(testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
+						StringUtils.substringAfter(actionCommand, ','), URI::new, null)));
+				//
+			} catch (final URISyntaxException | IOException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+			return true;
+			//
+		} else if (StringUtils.startsWith(actionCommand, StringUtils.join(PLAY, ','))) {
+			//
+			try (final InputStream is = testAndApply(Objects::nonNull,
+					toByteArray(Util.toURL(testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
+							StringUtils.substringAfter(actionCommand, ','), URI::new, null))),
+					ByteArrayInputStream::new, null)) {
+				//
+				PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
+				//
+			} catch (final URISyntaxException | IOException | JavaLayerException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+			return true;
+			//
+		} // if
+			//
+		return false;
+		//
 	}
 
 	private static void saveURL(final URL url) throws IOException {
