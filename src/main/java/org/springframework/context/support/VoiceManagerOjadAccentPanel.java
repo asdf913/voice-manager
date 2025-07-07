@@ -144,6 +144,9 @@ import com.microsoft.playwright.PageUtil;
 import com.microsoft.playwright.Playwright;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
+import javazoom.jl.player.PlayerUtil;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingBean, ActionListener, KeyListener {
@@ -159,6 +162,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	private static final String COPY = "Copy";
 
 	private static final String DOWNLOAD = "Download";
+
+	private static final String PLAY = "Play";
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -470,7 +475,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final String gender = "Gender";
 			//
 			final JTable jTable = new JTable(
-					dtmVoice = new DefaultTableModel(new Object[] { gender, "URL", COPY, DOWNLOAD }, 0) {
+					dtmVoice = new DefaultTableModel(new Object[] { gender, "URL", COPY, DOWNLOAD, PLAY }, 0) {
 
 						private static final long serialVersionUID = -3821080690688708407L;
 
@@ -483,7 +488,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 								//
 								return byte[].class;
 								//
-							} else if (Util.contains(Arrays.asList(COPY, DOWNLOAD), columnName)) {
+							} else if (Util.contains(Arrays.asList(COPY, DOWNLOAD, PLAY), columnName)) {
 								//
 								return String.class;
 								//
@@ -500,6 +505,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			setMaxWidth(jTable.getColumn(COPY), 37);
 			//
 			setMaxWidth(jTable.getColumn(DOWNLOAD), 67);
+			//
+			setMaxWidth(jTable.getColumn(PLAY), 37 - 4);
 			//
 			final IH ih = new IH();
 			//
@@ -811,7 +818,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				final String columnName = column != null ? getColumnName(jTable, column.intValue()) : null;
 				//
-				if (column != null && Util.contains(Arrays.asList(COPY, DOWNLOAD), columnName)) {
+				if (column != null && Util.contains(Arrays.asList(COPY, DOWNLOAD, PLAY), columnName)) {
 					//
 					final JButton button = new JButton(columnName);
 					//
@@ -866,7 +873,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						? getColumnName(Util.cast(JTable.class, ArrayUtils.get(args, 0)), column.intValue())
 						: null;
 				//
-				if (Util.contains(Arrays.asList(COPY, DOWNLOAD), columnName)) {
+				if (Util.contains(Arrays.asList(COPY, DOWNLOAD, PLAY), columnName)) {
 					//
 					final JButton button = new JButton(columnName);
 					//
@@ -915,6 +922,22 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						StringUtils.substringAfter(actionCommand, ','), URI::new, null)));
 				//
 			} catch (final URISyntaxException | IOException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+			return;
+			//
+		} else if (StringUtils.startsWith(actionCommand, StringUtils.join(PLAY, ','))) {
+			//
+			try (final InputStream is = new ByteArrayInputStream(
+					toByteArray(Util.toURL(testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
+							StringUtils.substringAfter(actionCommand, ','), URI::new, null))))) {
+				//
+				PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
+				//
+			} catch (final URISyntaxException | IOException | JavaLayerException e) {
 				//
 				throw new RuntimeException(e);
 				//
@@ -1004,7 +1027,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					final String key = Util.getKey(en);
 					//
-					Util.addRow(dtmVoice, new Object[] { Util.getValue(en), key, key, key });
+					Util.addRow(dtmVoice, new Object[] { Util.getValue(en), key, key, key, key });
 					//
 				});
 				//
@@ -1071,12 +1094,18 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
 				&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 			//
-			try (final InputStream is = Util.openStream(url)) {
-				//
-				FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), IOUtils.toByteArray(is));
-				//
-			} // try
-				//
+			FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), toByteArray(url));
+			//
+		} // try
+			//
+	}
+
+	private static byte[] toByteArray(final URL url) throws IOException {
+		//
+		try (final InputStream is = Util.openStream(url)) {
+			//
+			return testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
+			//
 		} // try
 			//
 	}
