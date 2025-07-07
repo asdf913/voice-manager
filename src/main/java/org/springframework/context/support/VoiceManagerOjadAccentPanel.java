@@ -848,7 +848,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	@Override
-	public void actionPerformed(final ActionEvent evt) {
+	public void actionPerformed(@Nullable final ActionEvent evt) {
 		//
 		final String actionCommand = evt != null ? evt.getActionCommand() : null;
 		//
