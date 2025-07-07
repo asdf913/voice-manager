@@ -1310,8 +1310,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // if
 				//
-			if (Objects.equals(OperatingSystem.LINUX, OperatingSystemUtil.getOperatingSystem())
-					&& IterableUtils.size(textAndImages) > 1) {
+			if (Boolean.logicalAnd(Objects.equals(OperatingSystem.LINUX, OperatingSystemUtil.getOperatingSystem()),
+					IterableUtils.size(textAndImages) > 1)) {
 				//
 				Integer mostOccurenceColor = null;
 				//
