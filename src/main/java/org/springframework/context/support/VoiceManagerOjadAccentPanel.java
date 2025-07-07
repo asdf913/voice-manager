@@ -1296,12 +1296,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.setEditable(tfIndex, CollectionUtils.isNotEmpty(textAndImages));
 			//
-			if (CollectionUtils.isEmpty(textAndImages)) {
+			testAndAccept((a, b) -> CollectionUtils.isEmpty(a), textAndImages, tfIndex, (a, b) -> {
 				//
-				Util.setText(tfIndex, null);
+				Util.setText(b, null);
 				//
-			} // if
-				//
+			});
+			//
 			if (IterableUtils.size(partOfSpeeches) == 1) {
 				//
 				Util.forEach(Util.stream(textAndImages), x -> {
