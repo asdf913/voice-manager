@@ -2021,7 +2021,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 				} // if
 					//
-			} else if (Boolean.logicalAnd(keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_SPACE,
+			} else if (Boolean.logicalAnd(Boolean.logicalOr(keyCode == KeyEvent.VK_ENTER, keyCode == KeyEvent.VK_SPACE),
 					source == btnExecute)) {
 				//
 				actionPerformed(new ActionEvent(btnExecute, 0, null));
