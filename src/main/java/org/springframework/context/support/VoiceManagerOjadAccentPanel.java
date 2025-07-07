@@ -355,8 +355,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			tfIndex.setPreferredSize(new Dimension(19, (int) getHeight(Util.getPreferredSize(tfIndex))));
 			//
-			tfIndex.addKeyListener(this);
-			//
 			paneIC.add(new JLabel("/"));
 			//
 			paneIC.add(lblCount = new JLabel());
@@ -534,6 +532,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					btnCopyCurveImage, btnSaveAccentImage, btnSaveCurveImage), x -> Util.setEnabled(x, false));
 			//
 			Util.forEach(Stream.of(tfIndex, tfPartOfSpeech, tfKanji, tfHiragana), x -> Util.setEditable(x, false));
+			//
+			Util.forEach(Stream.of(btnExecute, tfIndex), x -> {
+				//
+				if (x != null) {
+					//
+					x.addKeyListener(this);
+					//
+				} // if
+					//
+			});
 			//
 		} // if
 			//
@@ -1978,34 +1986,45 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Override
 	public void keyReleased(@Nullable final KeyEvent evt) {
 		//
-		final Object source = Util.getSource(evt);
-		//
-		if (evt != null && evt.getKeyCode() == KeyEvent.VK_ENTER && source == tfIndex) {
+		if (evt != null) {
 			//
-			final String string = Util.getText(tfIndex);
+			final int keyCode = evt.getKeyCode();
 			//
-			if (NumberUtils.isCreatable(string) && jcbTextAndImage != null) {
+			final Object source = Util.getSource(evt);
+			//
+			if (keyCode == KeyEvent.VK_ENTER && source == tfIndex) {
 				//
-				int index = NumberUtils.toInt(string);
+				final String string = Util.getText(tfIndex);
 				//
-				final int size = Util.getSize(jcbTextAndImage.getModel());
-				//
-				if (index >= size) {
+				if (NumberUtils.isCreatable(string) && jcbTextAndImage != null) {
 					//
-					index = size - 1;
+					int index = NumberUtils.toInt(string);
 					//
-				} else if (index < 0) {
+					final int size = Util.getSize(jcbTextAndImage.getModel());
 					//
-					index = 0;
-					//
+					if (index >= size) {
+						//
+						index = size - 1;
+						//
+					} else if (index < 0) {
+						//
+						index = 0;
+						//
+					} // if
+						//
+					if (index < size) {
+						//
+						Util.setSelectedIndex(jcbTextAndImage, index);
+						//
+					} // if
+						//
 				} // if
 					//
-				if (index < size) {
-					//
-					Util.setSelectedIndex(jcbTextAndImage, index);
-					//
-				} // if
-					//
+			} else if (Boolean.logicalAnd(keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_SPACE,
+					source == btnExecute)) {
+				//
+				actionPerformed(new ActionEvent(btnExecute, 0, null));
+				//
 			} // if
 				//
 		} // if

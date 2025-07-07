@@ -1528,28 +1528,43 @@ class VoiceManagerOjadAccentPanelTest {
 		Assertions.assertDoesNotThrow(
 				() -> instance.keyReleased(new KeyEvent(component, 0, 0, 0, KeyEvent.VK_ENTER, ' ')));
 		//
+		// tfIndex
+		//
 		final JTextComponent tfIndex = new JTextField();
 		//
 		FieldUtils.writeDeclaredField(instance, "tfIndex", tfIndex, true);
 		//
-		final KeyEvent keyEvent = new KeyEvent(tfIndex, 0, 0, 0, KeyEvent.VK_ENTER, ' ');
+		final KeyEvent keyEventTfIndex = new KeyEvent(tfIndex, 0, 0, 0, KeyEvent.VK_ENTER, ' ');
 		//
-		Assertions.assertDoesNotThrow(() -> instance.keyReleased(keyEvent));
+		Assertions.assertDoesNotThrow(() -> instance.keyReleased(keyEventTfIndex));
 		//
 		Util.setText(tfIndex, "1");
 		//
-		Assertions.assertDoesNotThrow(() -> instance.keyReleased(keyEvent));
+		Assertions.assertDoesNotThrow(() -> instance.keyReleased(keyEventTfIndex));
 		//
 		final JComboBox<?> jcbTextAndImage = new JComboBox<>();
 		//
 		FieldUtils.writeDeclaredField(instance, "jcbTextAndImage", jcbTextAndImage, true);
 		//
-		Assertions.assertDoesNotThrow(() -> instance.keyReleased(keyEvent));
+		Assertions.assertDoesNotThrow(() -> instance.keyReleased(keyEventTfIndex));
 		//
 		Util.setText(tfIndex, "-1");
 		//
-		Assertions.assertDoesNotThrow(() -> instance.keyReleased(keyEvent));
+		Assertions.assertDoesNotThrow(() -> instance.keyReleased(keyEventTfIndex));
 		//
+		// btnExecute
+		//
+		final Component btnExecute = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnExecute", btnExecute, true);
+		//
+		final KeyEvent keyEventBtnExecute = new KeyEvent(btnExecute, 0, 0, 0, KeyEvent.VK_SPACE, ' ');
+		//
+		Assertions.assertDoesNotThrow(() -> instance.keyReleased(keyEventBtnExecute));
+		//
+		Assertions.assertDoesNotThrow(() -> instance.keyReleased(keyEventBtnExecute));
+		//
+
 	}
 
 }
