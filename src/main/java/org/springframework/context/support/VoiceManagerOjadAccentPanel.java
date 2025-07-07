@@ -2015,11 +2015,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 					} // if
 						//
-					testAndAccept(x -> x < size, index, x -> {
-						//
-						Util.setSelectedIndex(jcbTextAndImage, x);
-						//
-					});
+					testAndAccept(x -> x < size, index, x -> Util.setSelectedIndex(jcbTextAndImage, x));
 					//
 				} // if
 					//
