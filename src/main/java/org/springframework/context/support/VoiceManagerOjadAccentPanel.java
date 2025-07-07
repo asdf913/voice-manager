@@ -900,7 +900,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Override
 	public void actionPerformed(@Nullable final ActionEvent evt) {
 		//
-		final String actionCommand = evt != null ? evt.getActionCommand() : null;
+		final String actionCommand = getActionCommand(evt);
 		//
 		if (StringUtils.startsWith(actionCommand, StringUtils.join(COPY, ','))) {
 			//
@@ -1082,6 +1082,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static String getActionCommand(final ActionEvent instance) {
+		return instance != null ? instance.getActionCommand() : null;
 	}
 
 	private static <R> R testAndApply(@Nullable final IntPredicate predicate, final int value,
