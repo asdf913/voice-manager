@@ -782,11 +782,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 				} // if
 					//
-				final JTable jTable = Util.cast(JTable.class, ArrayUtils.get(args, 0));
-				//
 				final Integer column = Util.cast(Integer.class, ArrayUtils.get(args, 5));
 				//
-				if (column != null && Objects.equals(getColumnName(jTable, column), COPY)) {
+				if (column != null && Objects
+						.equals(getColumnName(Util.cast(JTable.class, ArrayUtils.get(args, 0)), column), COPY)) {
 					//
 					return new JButton(COPY);
 					//
