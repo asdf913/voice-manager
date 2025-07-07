@@ -1371,7 +1371,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static void setRGB(final BufferedImage image, final Integer a, final Integer b) {
+	private static void setRGB(final BufferedImage image, @Nullable final Integer a, @Nullable final Integer b) {
 		//
 		final Field f = getFieldByName(Util.getClass(image), RASTER);
 		//
