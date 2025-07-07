@@ -1065,7 +1065,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		}
 	}
 
-	private static boolean actionPerformed(final String actionCommand) {
+	private static boolean actionPerformed(@Nullable final String actionCommand) {
 		//
 		if (StringUtils.startsWith(actionCommand, StringUtils.join(COPY, ','))) {
 			//
