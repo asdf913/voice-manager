@@ -1361,9 +1361,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			pack(window);
 			//
-		} catch (final IOException |
-
-				URISyntaxException e) {
+		} catch (final IOException | URISyntaxException e) {
 			//
 			throw new RuntimeException(e);
 			//
