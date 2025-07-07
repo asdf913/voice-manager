@@ -1125,7 +1125,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static void close(final Player instance) {
+	private static void close(@Nullable final Player instance) {
 		if (instance != null) {
 			instance.close();
 		}
