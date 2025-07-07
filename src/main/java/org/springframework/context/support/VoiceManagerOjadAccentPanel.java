@@ -90,8 +90,10 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.collections4.Bag;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.bag.TreeBag;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -123,6 +125,8 @@ import org.jsoup.nodes.NodeUtil;
 import org.jsoup.select.Elements;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.ThrowingRunnableUtil;
+import org.oxbow.swingbits.util.OperatingSystem;
+import org.oxbow.swingbits.util.OperatingSystemUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -1304,6 +1308,48 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // if
 				//
+			if (Objects.equals(OperatingSystem.LINUX, OperatingSystemUtil.getOperatingSystem())
+					&& IterableUtils.size(textAndImages) > 1) {
+				//
+				Integer mostOccurenceColor = null;
+				//
+				Integer currentMostOccurenceColor = null;
+				//
+				BufferedImage image = null;
+				//
+				for (final TextAndImage textAndImage : textAndImages) {
+					//
+					if (textAndImage == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (mostOccurenceColor == null
+							&& (mostOccurenceColor = getMostOccurenceColor(textAndImage.accentImage)) != null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (!Objects.equals(mostOccurenceColor,
+							currentMostOccurenceColor = getMostOccurenceColor(image = textAndImage.accentImage))) {
+						//
+						setRGB(image, currentMostOccurenceColor, mostOccurenceColor);
+						//
+					} // if
+						//
+					if (!Objects.equals(mostOccurenceColor,
+							currentMostOccurenceColor = getMostOccurenceColor(image = textAndImage.curveImage))) {
+						//
+						setRGB(image, currentMostOccurenceColor, mostOccurenceColor);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
 			Util.forEach(Util.stream(textAndImages), createTextAndImageConsumer());
 			//
 			if (IterableUtils.size(textAndImages) == 1
@@ -1329,6 +1375,80 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // try
 			//
+	}
+
+	private static void setRGB(final BufferedImage image, final Integer a, final Integer b) {
+		//
+		final Field f = getFieldByName(Util.getClass(image), "raster");
+		//
+		if (f == null || Narcissus.getField(image, f) == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		for (int x = 0; image != null && x < image.getWidth(); x++) {
+			//
+			for (int y = 0; y < image.getHeight(); y++) {
+				//
+				if (a != null && Objects.equals(a.intValue(), image.getRGB(x, y)) && b != null) {
+					//
+					image.setRGB(x, y, b.intValue());
+					//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+	}
+
+	private static Integer getMostOccurenceColor(final BufferedImage image) {
+		//
+		final Field f = getFieldByName(Util.getClass(image), "raster");
+		//
+		if (f == null || Narcissus.getField(image, f) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		Bag<Integer> bag = null;
+		//
+		for (int x = 0; image != null && x < image.getWidth(); x++) {
+			//
+			for (int y = 0; y < image.getHeight(); y++) {
+				//
+				Util.add(bag = ObjectUtils.getIfNull(bag, TreeBag::new), Integer.valueOf(image.getRGB(x, y)));
+				//
+			} // for
+				//
+		} // for
+			//
+		if (bag != null) {
+			//
+			int maxCount = 0;
+			//
+			for (final Object x : bag) {
+				//
+				maxCount = Math.max(maxCount, bag.getCount(x));
+				//
+			} // for
+				//
+			for (final Integer i : bag) {
+				//
+				if (maxCount == bag.getCount(i) && i != null) {
+					//
+					return i;
+					//
+				} // if
+					//
+			} // if
+				//
+		} // if
+			//
+		return null;
+		//
 	}
 
 	private static Consumer<TextAndImage> createTextAndImageConsumer() {

@@ -112,7 +112,8 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_GET_IF_NULL, METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER, METHOD_SAVE_IMAGE,
 			METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS,
 			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES, METHOD_MATCHES,
-			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT = null;
+			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT, METHOD_GET_MOST_OCCURENCE_COLOR,
+			METHOD_SET_RGB = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -200,6 +201,12 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", IntPredicate.class, Integer.TYPE,
 				IntConsumer.class)).setAccessible(true);
+		//
+		(METHOD_GET_MOST_OCCURENCE_COLOR = clz.getDeclaredMethod("getMostOccurenceColor", BufferedImage.class))
+				.setAccessible(true);
+		//
+		(METHOD_SET_RGB = clz.getDeclaredMethod("setRGB", BufferedImage.class, Integer.class, Integer.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -328,6 +335,8 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private ObjectMapper objectMapper = null;
 
+	private BufferedImage bufferedImage = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -342,6 +351,8 @@ class VoiceManagerOjadAccentPanelTest {
 		mh = new MH();
 		//
 		objectMapper = new ObjectMapper();
+		//
+		bufferedImage = Util.cast(BufferedImage.class, Narcissus.allocateInstance(BufferedImage.class));
 		//
 	}
 
@@ -1599,6 +1610,56 @@ class VoiceManagerOjadAccentPanelTest {
 			throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, value, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetMostOccurenceColor() throws Throwable {
+		//
+		Assertions.assertNull(getMostOccurenceColor(bufferedImage));
+		//
+		final BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+		//
+		Assertions.assertEquals(image.getRGB(0, 0), getMostOccurenceColor(image));
+		//
+	}
+
+	private static Integer getMostOccurenceColor(final BufferedImage image) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_MOST_OCCURENCE_COLOR.invoke(null, image);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Integer) {
+				return (Integer) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetRGB() {
+		//
+		Assertions.assertDoesNotThrow(() -> setRGB(bufferedImage, null, null));
+		//
+		final BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+		//
+		Assertions.assertDoesNotThrow(() -> setRGB(image, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> setRGB(image, 0, null));
+		//
+		final int rgb = image.getRGB(0, 0);
+		//
+		Assertions.assertDoesNotThrow(() -> setRGB(image, rgb, rgb));
+		//
+	}
+
+	private static void setRGB(final BufferedImage image, final Integer a, final Integer b) throws Throwable {
+		try {
+			METHOD_SET_RGB.invoke(null, image, a, b);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
