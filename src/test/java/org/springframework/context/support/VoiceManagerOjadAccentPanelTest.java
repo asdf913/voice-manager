@@ -947,6 +947,11 @@ class VoiceManagerOjadAccentPanelTest {
 		Assertions.assertNull(Narcissus
 				.invokeStaticMethod(Util.getDeclaredMethod(clz, "getColumnName", JTable.class, Integer.TYPE), null, 0));
 		//
+		// org.springframework.context.support.VoiceManagerOjadAccentPanel$IH.getValueAt(javax.swing.JTable,int,int)
+		//
+		Assertions.assertNull(Narcissus.invokeStaticMethod(
+				Util.getDeclaredMethod(clz, "getValueAt", JTable.class, Integer.TYPE, Integer.TYPE), null, 0, 0));
+		//
 	}
 
 	@Test

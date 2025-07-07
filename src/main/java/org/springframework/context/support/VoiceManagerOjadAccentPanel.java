@@ -810,7 +810,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					final JButton button = new JButton(COPY);
 					//
 					button.setActionCommand(
-							StringUtils.joinWith(",", COPY, row != null ? jTable.getValueAt(row, column) : null));
+							StringUtils.joinWith(",", COPY, row != null ? getValueAt(jTable, row, column) : null));
 					//
 					button.addActionListener(actionListener);
 					//
@@ -824,6 +824,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			throw new Throwable(methodName);
 			//
+		}
+
+		private static Object getValueAt(final JTable instance, final int row, final int column) {
+			return instance != null ? instance.getValueAt(row, column) : null;
 		}
 
 		private static String getColumnName(final JTable instance, final int column) {
