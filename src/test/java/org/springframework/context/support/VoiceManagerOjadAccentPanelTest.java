@@ -768,7 +768,7 @@ class VoiceManagerOjadAccentPanelTest {
 	}
 
 	@Test
-	void testIH() throws Throwable {
+	void testIH1() throws Throwable {
 		//
 		final Class<?> clz = Util.forName("org.springframework.context.support.VoiceManagerOjadAccentPanel$IH");
 		//
@@ -780,10 +780,8 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(Throwable.class, () -> invocationHandler.invoke(null, null, null));
-		//
-		// java.lang.Object.equals(java.lang.Object)
-		//
+			// java.lang.Object.equals(java.lang.Object)
+			//
 		Assertions.assertEquals(Boolean.FALSE,
 				invocationHandler.invoke(null, Narcissus.findMethod(Object.class, "equals", Object.class), null));
 		//
@@ -927,6 +925,23 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 		} // if
 			//
+	}
+
+	@Test
+	void testIH2() throws Throwable {
+		//
+		final Class<?> clz = Util.forName("org.springframework.context.support.VoiceManagerOjadAccentPanel$IH");
+		//
+		final InvocationHandler invocationHandler = Util.cast(InvocationHandler.class, Narcissus.allocateInstance(clz));
+		//
+		if (invocationHandler == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		Assertions.assertThrows(Throwable.class, () -> invocationHandler.invoke(null, null, null));
+		//
 	}
 
 	@Test
