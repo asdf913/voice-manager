@@ -1993,7 +1993,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final Object source = Util.getSource(evt);
 			//
-			if (keyCode == KeyEvent.VK_ENTER && source == tfIndex) {
+			if (Boolean.logicalAnd(keyCode == KeyEvent.VK_ENTER, source == tfIndex)) {
 				//
 				final String string = Util.getText(tfIndex);
 				//
