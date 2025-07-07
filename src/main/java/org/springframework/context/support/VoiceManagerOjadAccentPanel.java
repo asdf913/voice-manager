@@ -170,6 +170,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static final String PLAY = "Play";
 
+	private static final String RASTER = "raster";
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -260,7 +262,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						.toList(Util.filter(
 								Util.stream(testAndApply(Objects::nonNull, Util.getClass(accentImage),
 										FieldUtils::getAllFieldsList, null)),
-								f -> Objects.equals(Util.getName(f), "raster")));
+								f -> Objects.equals(Util.getName(f), RASTER)));
 				//
 				testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
 					//
@@ -1377,7 +1379,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static void setRGB(final BufferedImage image, final Integer a, final Integer b) {
 		//
-		final Field f = getFieldByName(Util.getClass(image), "raster");
+		final Field f = getFieldByName(Util.getClass(image), RASTER);
 		//
 		if (f == null || Narcissus.getField(image, f) == null) {
 			//
@@ -1403,7 +1405,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static Integer getMostOccurenceColor(final BufferedImage image) {
 		//
-		final Field f = getFieldByName(Util.getClass(image), "raster");
+		final Field f = getFieldByName(Util.getClass(image), RASTER);
 		//
 		if (f == null || Narcissus.getField(image, f) == null) {
 			//
