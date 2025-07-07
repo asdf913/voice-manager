@@ -927,7 +927,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.getFile(url), Path::of, null)));
 			//
-			if (Boolean.logicalOr(!GraphicsEnvironment.isHeadless(), !isTestMode())
+			if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
 					&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
 				try (final InputStream is = Util.openStream(url)) {
