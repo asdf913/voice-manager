@@ -772,73 +772,67 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 				} // if
 					//
-			} else if (proxy instanceof TableCellRenderer) {
+			} else if (proxy instanceof TableCellRenderer && Objects.equals(methodName, "getTableCellRendererComponent")
+					&& args != null && args.length > 5) {
 				//
-				if (Objects.equals(methodName, "getTableCellRendererComponent") && args != null && args.length > 5) {
+				final Object value = ArrayUtils.get(args, 1);
+				//
+				final byte[] bs = Util.cast(byte[].class, value);
+				//
+				if (bs != null) {
 					//
-					final Object value = ArrayUtils.get(args, 1);
+					try (final InputStream is = new ByteArrayInputStream(bs)) {
+						//
+						return testAndApply(Objects::nonNull,
+								testAndApply(Objects::nonNull, ImageIO.read(is), ImageIcon::new, null), JLabel::new,
+								x -> new JLabel());
+						//
+					} catch (final IOException ioe) {
+						//
+						throw new RuntimeIOException(ioe);
+						//
+					} // try
+						//
+				} // if
 					//
-					final byte[] bs = Util.cast(byte[].class, value);
+				final JTable jTable = Util.cast(JTable.class, ArrayUtils.get(args, 0));
+				//
+				final Integer column = Util.cast(Integer.class, ArrayUtils.get(args, 5));
+				//
+				if (jTable != null && column != null && Objects.equals(jTable.getColumnName(column), COPY)) {
 					//
-					if (bs != null) {
-						//
-						try (final InputStream is = new ByteArrayInputStream(bs)) {
-							//
-							return testAndApply(Objects::nonNull,
-									testAndApply(Objects::nonNull, ImageIO.read(is), ImageIcon::new, null), JLabel::new,
-									x -> new JLabel());
-							//
-						} catch (final IOException ioe) {
-							//
-							throw new RuntimeIOException(ioe);
-							//
-						} // try
-							//
-					} // if
-						//
-					final JTable jTable = Util.cast(JTable.class, ArrayUtils.get(args, 0));
-					//
-					final Integer column = Util.cast(Integer.class, ArrayUtils.get(args, 5));
-					//
-					if (jTable != null && column != null && Objects.equals(jTable.getColumnName(column), COPY)) {
-						//
-						return new JButton(COPY);
-						//
-					} // if
-						//
-					return null;
+					return new JButton(COPY);
 					//
 				} // if
 					//
+				return null;
+				//
 			} // if
 				//
-			if (proxy instanceof TableCellEditor) {
+			if (proxy instanceof TableCellEditor && Objects.equals(methodName, "getTableCellEditorComponent")
+					&& args != null && args.length > 4) {
 				//
-				if (Objects.equals(methodName, "getTableCellEditorComponent") && args != null && args.length > 4) {
+				final JTable jTable = Util.cast(JTable.class, ArrayUtils.get(args, 0));
+				//
+				final Integer row = Util.cast(Integer.class, ArrayUtils.get(args, 3));
+				//
+				final Integer column = Util.cast(Integer.class, ArrayUtils.get(args, 4));
+				//
+				if (jTable != null && column != null && Objects.equals(jTable.getColumnName(column), COPY)) {
 					//
-					final JTable jTable = Util.cast(JTable.class, ArrayUtils.get(args, 0));
+					final JButton button = new JButton(COPY);
 					//
-					final Integer row = Util.cast(Integer.class, ArrayUtils.get(args, 3));
+					button.setActionCommand(
+							StringUtils.joinWith(",", COPY, row != null ? jTable.getValueAt(row, column) : null));
 					//
-					final Integer column = Util.cast(Integer.class, ArrayUtils.get(args, 4));
+					button.addActionListener(actionListener);
 					//
-					if (jTable != null && column != null && Objects.equals(jTable.getColumnName(column), COPY)) {
-						//
-						final JButton button = new JButton(COPY);
-						//
-						button.setActionCommand(
-								StringUtils.joinWith(",", COPY, row != null ? jTable.getValueAt(row, column) : null));
-						//
-						button.addActionListener(actionListener);
-						//
-						return button;
-						//
-					} // if
-						//
-					return null;
+					return button;
 					//
 				} // if
 					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
