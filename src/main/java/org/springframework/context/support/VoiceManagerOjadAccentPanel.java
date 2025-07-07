@@ -1098,16 +1098,22 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} else if (StringUtils.startsWith(actionCommand, StringUtils.join(PLAY, ','))) {
 			//
+			Player player = null;
+			//
 			try (final InputStream is = testAndApply(Objects::nonNull,
 					toByteArray(Util.toURL(testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
 							StringUtils.substringAfter(actionCommand, ','), URI::new, null))),
 					ByteArrayInputStream::new, null)) {
 				//
-				PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
+				PlayerUtil.play(player = testAndApply(Objects::nonNull, is, Player::new, null));
 				//
 			} catch (final URISyntaxException | IOException | JavaLayerException e) {
 				//
 				throw new RuntimeException(e);
+				//
+			} finally {
+				//
+				close(player);
 				//
 			} // try
 				//
@@ -1117,6 +1123,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		return false;
 		//
+	}
+
+	private static void close(final Player instance) {
+		if (instance != null) {
+			instance.close();
+		}
 	}
 
 	private static void saveURL(final URL url) throws IOException {
