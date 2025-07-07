@@ -790,7 +790,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				final Integer column = Util.cast(Integer.class, ArrayUtils.get(args, 5));
 				//
-				if (jTable != null && column != null && Objects.equals(jTable.getColumnName(column), COPY)) {
+				if (column != null && Objects.equals(getColumnName(jTable, column), COPY)) {
 					//
 					return new JButton(COPY);
 					//
@@ -809,7 +809,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				final Integer column = Util.cast(Integer.class, ArrayUtils.get(args, 4));
 				//
-				if (jTable != null && column != null && Objects.equals(jTable.getColumnName(column), COPY)) {
+				if (column != null && Objects.equals(getColumnName(jTable, column), COPY)) {
 					//
 					final JButton button = new JButton(COPY);
 					//
@@ -828,6 +828,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			throw new Throwable(methodName);
 			//
+		}
+
+		private static String getColumnName(final JTable instance, final int column) {
+			return instance != null ? instance.getColumnName(column) : null;
 		}
 
 	}
