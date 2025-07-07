@@ -713,7 +713,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.partOfSpeech : null;
 	}
 
-	private static void setPartOfSpeech(final TextAndImage instance, final String partOfSpeech) {
+	private static void setPartOfSpeech(@Nullable final TextAndImage instance, final String partOfSpeech) {
 		if (instance != null) {
 			instance.partOfSpeech = partOfSpeech;
 		}
@@ -1372,7 +1372,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static void setRGB(final BufferedImage image, @Nullable final Integer a, @Nullable final Integer b) {
+	private static void setRGB(@Nullable final BufferedImage image, @Nullable final Integer a,
+			@Nullable final Integer b) {
 		//
 		final Field f = getFieldByName(Util.getClass(image), RASTER);
 		//
@@ -1399,7 +1400,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	@Nullable
-	private static Integer getMostOccurenceColor(final BufferedImage image) {
+	private static Integer getMostOccurenceColor(@Nullable final BufferedImage image) {
 		//
 		final Field f = getFieldByName(Util.getClass(image), RASTER);
 		//
