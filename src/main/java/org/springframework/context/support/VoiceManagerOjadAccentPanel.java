@@ -740,19 +740,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			if (proxy instanceof CellEditor) {
 				//
-				if (Objects.equals(methodName, "isCellEditable")) {
-					//
-					return true;
-					//
-				} else if (Objects.equals(methodName, "stopCellEditing")) {
-					//
-					return true;
-					//
-				} else if (Objects.equals(methodName, "shouldSelectCell")) {
-					//
-					return true;
-					//
-				} else if (Objects.equals(methodName, "addCellEditorListener")) {
+				if (Util.contains(
+						Arrays.asList("isCellEditable", "stopCellEditing", "shouldSelectCell", "addCellEditorListener"),
+						methodName)) {
 					//
 					return true;
 					//
