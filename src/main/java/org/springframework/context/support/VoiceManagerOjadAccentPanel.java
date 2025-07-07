@@ -785,8 +785,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						try (final InputStream is = new ByteArrayInputStream(bs)) {
 							//
 							return testAndApply(Objects::nonNull,
-									testAndApply(Objects::nonNull, ImageIO.read(is), x -> new ImageIcon(x), null),
-									x -> new JLabel(x), x -> new JLabel());
+									testAndApply(Objects::nonNull, ImageIO.read(is), ImageIcon::new, null), JLabel::new,
+									x -> new JLabel());
 							//
 						} catch (final IOException ioe) {
 							//
