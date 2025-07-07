@@ -1403,6 +1403,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
+	@Nullable
 	private static Integer getMostOccurenceColor(final BufferedImage image) {
 		//
 		final Field f = getFieldByName(Util.getClass(image), RASTER);
