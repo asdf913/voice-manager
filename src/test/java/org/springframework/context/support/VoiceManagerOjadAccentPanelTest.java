@@ -1680,19 +1680,17 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testAdjustImageColor() throws IllegalAccessException {
 		//
-		final Object textAndImage = Narcissus.allocateInstance(CLASS_TEXT_AND_IMAGE);
+		final Object tai = Narcissus.allocateInstance(CLASS_TEXT_AND_IMAGE);
 		//
-		Assertions.assertDoesNotThrow(() -> adjustImageColor(Arrays.asList(null, textAndImage)));
+		Assertions.assertDoesNotThrow(() -> adjustImageColor(Arrays.asList(null, tai)));
 		//
-		FieldUtils.writeDeclaredField(textAndImage, "accentImage", Narcissus.allocateInstance(BufferedImage.class),
-				true);
+		FieldUtils.writeDeclaredField(tai, "accentImage", Narcissus.allocateInstance(BufferedImage.class), true);
 		//
-		Assertions.assertDoesNotThrow(() -> adjustImageColor(Arrays.asList(null, textAndImage)));
+		Assertions.assertDoesNotThrow(() -> adjustImageColor(Arrays.asList(null, tai)));
 		//
-		FieldUtils.writeDeclaredField(textAndImage, "accentImage", new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB),
-				true);
+		FieldUtils.writeDeclaredField(tai, "accentImage", new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), true);
 		//
-		Assertions.assertDoesNotThrow(() -> adjustImageColor(Arrays.asList(null, textAndImage, textAndImage)));
+		Assertions.assertDoesNotThrow(() -> adjustImageColor(Arrays.asList(null, tai, tai)));
 		//
 	}
 
