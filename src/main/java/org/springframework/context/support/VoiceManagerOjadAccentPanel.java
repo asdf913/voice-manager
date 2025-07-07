@@ -1085,7 +1085,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static void saveURL(final URL url) throws URISyntaxException, IOException {
+	private static void saveURL(final URL url) throws IOException {
 		//
 		final JFileChooser jfc = new JFileChooser(".");
 		//
