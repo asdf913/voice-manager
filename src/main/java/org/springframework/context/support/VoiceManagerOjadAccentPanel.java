@@ -1081,7 +1081,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static String getActionCommand(final ActionEvent instance) {
+	private static String getActionCommand(@Nullable final ActionEvent instance) {
 		return instance != null ? instance.getActionCommand() : null;
 	}
 
