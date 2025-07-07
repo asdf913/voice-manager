@@ -713,6 +713,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.partOfSpeech : null;
 	}
 
+	private static void setPartOfSpeech(final TextAndImage instance, final String partOfSpeech) {
+		if (instance != null) {
+			instance.partOfSpeech = partOfSpeech;
+		}
+	}
+
 	@Nullable
 	private static BufferedImage getAccentImage(@Nullable final TextAndImage instance) {
 		return instance != null ? instance.accentImage : null;
@@ -1300,12 +1306,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				Util.forEach(Util.stream(textAndImages), x -> {
 					//
-					if (x != null) {
-						//
-						x.partOfSpeech = IterableUtils.get(partOfSpeeches, 0);
-						//
-					} // if
-						//
+					setPartOfSpeech(x, IterableUtils.get(partOfSpeeches, 0));
+					//
 				});
 				//
 			} // if
@@ -1845,7 +1847,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				textAndImage.hiragana = StringUtils.trim(textContent(eh));
 				//
-				textAndImage.partOfSpeech = getPartOfSpeech(document, id);
+				setPartOfSpeech(textAndImage, getPartOfSpeech(document, id));
 				//
 				textAndImage.voiceUrlImages = getVoiceUrlImages(
 						querySelectorAll(querySelector(querySelector(eh, ".."), ".."), ".katsuyo_proc_button a"), page,
@@ -1868,7 +1870,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					textAndImage.hiragana = StringUtils.trim(textContent(eh));
 					//
-					textAndImage.partOfSpeech = getPartOfSpeech(document, id);
+					setPartOfSpeech(textAndImage, getPartOfSpeech(document, id));
 					//
 					textAndImage.voiceUrlImages = getVoiceUrlImages(
 							querySelectorAll(querySelector(querySelector(querySelector(eh, ".."), ".."), ".."),

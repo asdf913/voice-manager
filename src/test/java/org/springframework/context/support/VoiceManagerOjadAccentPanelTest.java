@@ -113,7 +113,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS,
 			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES, METHOD_MATCHES,
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT, METHOD_GET_MOST_OCCURENCE_COLOR,
-			METHOD_SET_RGB = null;
+			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -206,6 +206,9 @@ class VoiceManagerOjadAccentPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_SET_RGB = clz.getDeclaredMethod("setRGB", BufferedImage.class, Integer.class, Integer.class))
+				.setAccessible(true);
+		//
+		(METHOD_SET_PART_OF_SPEECH = clz.getDeclaredMethod("setPartOfSpeech", CLASS_TEXT_AND_IMAGE, String.class))
 				.setAccessible(true);
 		//
 	}
@@ -1660,6 +1663,21 @@ class VoiceManagerOjadAccentPanelTest {
 	private static void setRGB(final BufferedImage image, final Integer a, final Integer b) throws Throwable {
 		try {
 			METHOD_SET_RGB.invoke(null, image, a, b);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetPartOfSpeech() {
+		//
+		Assertions.assertDoesNotThrow(() -> setPartOfSpeech(textAndImage, null));
+		//
+	}
+
+	private static void setPartOfSpeech(final Object textAndImage, final String partOfSpeech) throws Throwable {
+		try {
+			METHOD_SET_PART_OF_SPEECH.invoke(null, textAndImage, partOfSpeech);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
