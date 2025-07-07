@@ -821,7 +821,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		}
 
-		private IValue0<?> invoke2(final Object proxy, final String methodName, final Object... args) {
+		private IValue0<?> invoke2(final Object proxy, final String methodName, @Nullable final Object... args) {
 			//
 			if (proxy instanceof TableCellRenderer && Objects.equals(methodName, "getTableCellRendererComponent")
 					&& args != null && args.length > 5) {
