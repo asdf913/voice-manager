@@ -225,6 +225,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private DefaultTableModel dtmVoice = null;
 
+	private JTable jtVoice = null;
+
 	private static class TextAndImage {
 
 		@Note("Kanji")
@@ -474,7 +476,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final String gender = "Gender";
 			//
-			final JTable jTable = new JTable(
+			jtVoice = new JTable(
 					dtmVoice = new DefaultTableModel(new Object[] { gender, "URL", COPY, DOWNLOAD, PLAY }, 0) {
 
 						private static final long serialVersionUID = -3821080690688708407L;
@@ -500,13 +502,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 					});
 			//
-			setMaxWidth(jTable.getColumn(gender), 44);
+			setMaxWidth(jtVoice.getColumn(gender), 44);
 			//
-			setMaxWidth(jTable.getColumn(COPY), 37);
+			setMaxWidth(jtVoice.getColumn(COPY), 37);
 			//
-			setMaxWidth(jTable.getColumn(DOWNLOAD), 67);
+			setMaxWidth(jtVoice.getColumn(DOWNLOAD), 67);
 			//
-			setMaxWidth(jTable.getColumn(PLAY), 37 - 4);
+			setMaxWidth(jtVoice.getColumn(PLAY), 33);
 			//
 			final IH ih = new IH();
 			//
@@ -517,14 +519,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			if (proxy instanceof TableCellRenderer tcr) {
 				//
-				Util.forEach(Stream.of(byte[].class, String.class), x -> jTable.setDefaultRenderer(x, tcr));
+				Util.forEach(Stream.of(byte[].class, String.class), x -> jtVoice.setDefaultRenderer(x, tcr));
 				//
 			} // if
 				//
-			testAndAccept((a, b) -> b instanceof TableCellEditor, jTable, proxy,
-					(a, b) -> jTable.setDefaultEditor(String.class, Util.cast(TableCellEditor.class, b)));
+			testAndAccept((a, b) -> b instanceof TableCellEditor, jtVoice, proxy,
+					(a, b) -> jtVoice.setDefaultEditor(String.class, Util.cast(TableCellEditor.class, b)));
 			//
-			panelVoice.add(new JScrollPane(jTable), String.format("hmax %1$s", 56));
+			panelVoice.add(new JScrollPane(jtVoice), String.format("hmax %1$s", 56));
 			//
 			add(panelVoice, String.format("span %1$s,%2$s", 3, growx));
 			//
@@ -1021,6 +1023,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			Util.forEach(Util.map(Util.sorted(Util.map(IntStream.rangeClosed(0, Util.getRowCount(dtmVoice)), i -> -i)),
 					i -> -i), i -> Util.removeRow(dtmVoice, i));
 			//
+			if (jtVoice != null) {
+				//
+				jtVoice.removeAll();
+				//
+			} // if
+				//
 			if (textAndImage != null) {
 				//
 				Util.forEach(Util.entrySet(textAndImage.voiceUrlImages), en -> {
