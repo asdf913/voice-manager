@@ -2040,7 +2040,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		}
 	}
 
-	private static <E> ComboBoxModel<E> getModel(final JComboBox<E> instance) {
+	private static <E> ComboBoxModel<E> getModel(@Nullable final JComboBox<E> instance) {
 		return instance != null ? instance.getModel() : null;
 	}
 
