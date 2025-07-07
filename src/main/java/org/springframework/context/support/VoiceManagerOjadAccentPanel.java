@@ -30,6 +30,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
@@ -61,6 +62,7 @@ import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
+import javax.swing.CellEditor;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
@@ -79,6 +81,8 @@ import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.text.JTextComponent;
 
@@ -116,6 +120,7 @@ import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.FactoryBeanUtil;
 import org.springframework.beans.factory.ImageWriterSpiFormatIterableFactoryBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.ReflectionUtils;
 
 import com.google.common.base.Strings;
 import com.google.common.reflect.Reflection;
@@ -142,6 +147,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	private static final String CSS_SELECTOR_MIDASHI = ".midashi";
 
 	private static final String CANVAS = "canvas";
+
+	private static final String COPY = "Copy";
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -374,19 +381,19 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			panalText.add(tfPartOfSpeech = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
 			//
-			panalText.add(btnCopyPartOfSpeech = new JButton("Copy"), wrap);
+			panalText.add(btnCopyPartOfSpeech = new JButton(COPY), wrap);
 			//
 			panalText.add(new JLabel("Kanji"));
 			//
 			panalText.add(tfKanji = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
 			//
-			panalText.add(btnCopyKanji = new JButton("Copy"), wrap);
+			panalText.add(btnCopyKanji = new JButton(COPY), wrap);
 			//
 			panalText.add(new JLabel("Hiragana"));
 			//
 			panalText.add(tfHiragana = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
 			//
-			panalText.add(btnCopyHiragana = new JButton("Copy"), wrap);
+			panalText.add(btnCopyHiragana = new JButton(COPY), wrap);
 			//
 			add(panalText, String.format("span %1$s,%2$s,%3$s", 3, growx, wrap));
 			//
@@ -424,7 +431,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			JPanel panel = new JPanel();
 			//
-			panel.add(btnCopyAccentImage = new JButton("Copy"));
+			panel.add(btnCopyAccentImage = new JButton(COPY));
 			//
 			panel.add(btnSaveAccentImage = new JButton("Save"));
 			//
@@ -436,7 +443,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			panelImage.add(new JLabel());
 			//
-			(panel = new JPanel()).add(btnCopyCurveImage = new JButton("Copy"));
+			(panel = new JPanel()).add(btnCopyCurveImage = new JButton(COPY));
 			//
 			panel.add(btnSaveCurveImage = new JButton("Save"));
 			//
@@ -454,16 +461,22 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final String gender = "Gender";
 			//
-			final JTable jTable = new JTable(dtmVoice = new DefaultTableModel(new Object[] { gender, "URL" }, 0) {
+			final JTable jTable = new JTable(dtmVoice = new DefaultTableModel(new Object[] { gender, "URL", COPY }, 0) {
 
 				private static final long serialVersionUID = -3821080690688708407L;
 
 				@Override
 				public Class<?> getColumnClass(final int columnIndex) {
 					//
-					if (Objects.equals(getColumnName(columnIndex), gender)) {
+					final String columnName = getColumnName(columnIndex);
+					//
+					if (Objects.equals(columnName, gender)) {
 						//
 						return byte[].class;
+						//
+					} else if (Objects.equals(columnName, COPY)) {
+						//
+						return String.class;
 						//
 					} // if
 						//
@@ -475,22 +488,31 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			setMaxWidth(jTable.getColumn(gender), 44);
 			//
-			jTable.setDefaultRenderer(byte[].class, (table, value, isSelected, hasFocus, row, column) -> {
-				//
-				final byte[] bs = Util.cast(byte[].class, value);
-				//
-				try (final InputStream is = new ByteArrayInputStream(bs)) {
-					//
-					return new JLabel(new ImageIcon(ImageIO.read(is)));
-					//
-				} catch (final IOException ioe) {
-					//
-					throw new RuntimeIOException(ioe);
-					//
-				} // try
-					//
-			});
+			setMaxWidth(jTable.getColumn(COPY), 65);
 			//
+			final IH ih = new IH();
+			//
+			ih.actionListener = this;
+			//
+			final Object proxy = Proxy.newProxyInstance(getClass().getClassLoader(),
+					new Class<?>[] { TableCellRenderer.class, TableCellEditor.class }, ih);
+			//
+			if (proxy instanceof TableCellRenderer tcr) {
+				//
+				Util.forEach(Stream.of(byte[].class, String.class), x -> {
+					//
+					jTable.setDefaultRenderer(x, tcr);
+					//
+				});
+				//
+			} // if
+				//
+			if (proxy instanceof TableCellEditor tce) {
+				//
+				jTable.setDefaultEditor(String.class, tce);
+				//
+			} // if
+				//
 			panelVoice.add(new JScrollPane(jTable), String.format("hmax %1$s", 56));
 			//
 			add(panelVoice, String.format("span %1$s,%2$s", 3, growx));
@@ -707,11 +729,41 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 		private Image image = null;
 
+		private ActionListener actionListener = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
+			if (ReflectionUtils.isEqualsMethod(method)) {
+				//
+				return false;
+				//
+			} // if
+				//
 			final String methodName = Util.getName(method);
 			//
+			if (proxy instanceof CellEditor) {
+				//
+				if (Objects.equals(methodName, "isCellEditable")) {
+					//
+					return true;
+					//
+				} else if (Objects.equals(methodName, "stopCellEditing")) {
+					//
+					return true;
+					//
+				} else if (Objects.equals(methodName, "shouldSelectCell")) {
+					//
+					return true;
+					//
+				} else if (Objects.equals(methodName, "addCellEditorListener")) {
+					//
+					return true;
+					//
+				} // if
+					//
+			} // if
+				//
 			if (proxy instanceof Transferable) {
 				//
 				if (Objects.equals(methodName, "getTransferDataFlavors")) {
@@ -721,6 +773,73 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				} else if (Objects.equals(methodName, "getTransferData")) {
 					//
 					return image;
+					//
+				} // if
+					//
+			} else if (proxy instanceof TableCellRenderer) {
+				//
+				if (Objects.equals(methodName, "getTableCellRendererComponent") && args != null && args.length > 5) {
+					//
+					final Object value = ArrayUtils.get(args, 1);
+					//
+					final byte[] bs = Util.cast(byte[].class, value);
+					//
+					if (bs != null) {
+						//
+						try (final InputStream is = new ByteArrayInputStream(bs)) {
+							//
+							return testAndApply(Objects::nonNull,
+									testAndApply(Objects::nonNull, ImageIO.read(is), x -> new ImageIcon(x), null),
+									x -> new JLabel(x), x -> new JLabel());
+							//
+						} catch (final IOException ioe) {
+							//
+							throw new RuntimeIOException(ioe);
+							//
+						} // try
+							//
+					} // if
+						//
+					final JTable jTable = Util.cast(JTable.class, ArrayUtils.get(args, 0));
+					//
+					final Integer column = Util.cast(Integer.class, ArrayUtils.get(args, 5));
+					//
+					if (jTable != null && column != null && Objects.equals(jTable.getColumnName(column), COPY)) {
+						//
+						return new JButton(COPY);
+						//
+					} // if
+						//
+					return null;
+					//
+				} // if
+					//
+			} // if
+				//
+			if (proxy instanceof TableCellEditor) {
+				//
+				if (Objects.equals(methodName, "getTableCellEditorComponent") && args != null && args.length > 4) {
+					//
+					final JTable jTable = Util.cast(JTable.class, ArrayUtils.get(args, 0));
+					//
+					final Integer row = Util.cast(Integer.class, ArrayUtils.get(args, 3));
+					//
+					final Integer column = Util.cast(Integer.class, ArrayUtils.get(args, 4));
+					//
+					if (jTable != null && column != null && Objects.equals(jTable.getColumnName(column), COPY)) {
+						//
+						final JButton button = new JButton(COPY);
+						//
+						button.setActionCommand(
+								StringUtils.joinWith(",", COPY, row != null ? jTable.getValueAt(row, column) : null));
+						//
+						button.addActionListener(actionListener);
+						//
+						return button;
+						//
+					} // if
+						//
+					return null;
 					//
 				} // if
 					//
@@ -735,6 +854,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
+		final String actionCommand = evt != null ? evt.getActionCommand() : null;
+		//
+		if (StringUtils.contains(actionCommand, StringUtils.join(COPY, ','))) {
+			//
+			setContents(getClipboard(), new StringSelection(StringUtils.substringAfter(actionCommand, ',')), null);
+			//
+			return;
+			//
+		} // if
+			//
 		final Object source = Util.getSource(evt);
 		//
 		if (Objects.equals(source, btnExecute)) {
@@ -811,8 +940,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			if (textAndImage != null) {
 				//
-				Util.forEach(Util.entrySet(textAndImage.voiceUrlImages),
-						en -> Util.addRow(dtmVoice, new Object[] { Util.getValue(en), Util.getKey(en) }));
+				Util.forEach(Util.entrySet(textAndImage.voiceUrlImages), en -> {
+					//
+					final String key = Util.getKey(en);
+					//
+					Util.addRow(dtmVoice, new Object[] { Util.getValue(en), key, key });
+					//
+				});
 				//
 			} // if
 				//

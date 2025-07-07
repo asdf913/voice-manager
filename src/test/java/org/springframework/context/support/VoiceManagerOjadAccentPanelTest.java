@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EventObject;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,13 +32,19 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import javax.swing.AbstractButton;
+import javax.swing.CellEditor;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.MutableComboBoxModel;
+import javax.swing.event.CellEditorListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.text.JTextComponent;
 
 import org.apache.bcel.classfile.ClassParser;
@@ -69,10 +76,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.meeuw.functional.ThrowingRunnable;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
@@ -763,8 +770,9 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testIH() throws Throwable {
 		//
-		final InvocationHandler invocationHandler = Util.cast(InvocationHandler.class, Narcissus
-				.allocateInstance(Util.forName("org.springframework.context.support.VoiceManagerOjadAccentPanel$IH")));
+		final Class<?> clz = Util.forName("org.springframework.context.support.VoiceManagerOjadAccentPanel$IH");
+		//
+		final InvocationHandler invocationHandler = Util.cast(InvocationHandler.class, Narcissus.allocateInstance(clz));
 		//
 		if (invocationHandler == null) {
 			//
@@ -774,18 +782,151 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 		Assertions.assertThrows(Throwable.class, () -> invocationHandler.invoke(null, null, null));
 		//
+		// java.lang.Object.equals(java.lang.Object)
+		//
+		Assertions.assertEquals(Boolean.FALSE,
+				invocationHandler.invoke(null, Narcissus.findMethod(Object.class, "equals", Object.class), null));
+		//
 		final Transferable transferable = Reflection.newProxy(Transferable.class, invocationHandler);
 		//
 		Assertions.assertThrows(Throwable.class, () -> invocationHandler.invoke(transferable, null, null));
+		//
+		// java.awt.datatransfer.Transferable.getTransferDataFlavors()
 		//
 		Assertions.assertEquals(
 				ObjectMapperUtil.writeValueAsString(objectMapper, new DataFlavor[] { DataFlavor.imageFlavor }),
 				ObjectMapperUtil.writeValueAsString(objectMapper, invocationHandler.invoke(transferable,
 						Narcissus.findMethod(Transferable.class, "getTransferDataFlavors"), null)));
 		//
+		// java.awt.datatransfer.Transferable.getTransferData(java.awt.datatransfer.DataFlavor)
+		//
 		Assertions.assertNull(invocationHandler.invoke(transferable,
 				Narcissus.findMethod(Transferable.class, "getTransferData", DataFlavor.class), null));
 		//
+		final CellEditor cellEditor = Reflection.newProxy(CellEditor.class, ih);
+		//
+		Assertions.assertThrows(Throwable.class, () -> invocationHandler.invoke(cellEditor, null, null));
+		//
+		// javax.swing.CellEditor.isCellEditable(java.util.EventObject)
+		//
+		Assertions.assertEquals(Boolean.TRUE, invocationHandler.invoke(cellEditor,
+				Narcissus.findMethod(CellEditor.class, "isCellEditable", EventObject.class), null));
+		//
+		// javax.swing.CellEditor.stopCellEditing()
+		//
+		Assertions.assertEquals(Boolean.TRUE, invocationHandler.invoke(cellEditor,
+				Narcissus.findMethod(CellEditor.class, "stopCellEditing"), new Object[] {}));
+		//
+		// javax.swing.CellEditor.shouldSelectCell(java.util.EventObject)
+		//
+		Assertions.assertEquals(Boolean.TRUE, invocationHandler.invoke(cellEditor,
+				Narcissus.findMethod(CellEditor.class, "shouldSelectCell", EventObject.class), null));
+		//
+		// javax.swing.CellEditor.shouldSelectCell(javax.swing.event.CellEditorListener)
+		//
+		Assertions.assertEquals(Boolean.TRUE, invocationHandler.invoke(cellEditor,
+				Narcissus.findMethod(CellEditor.class, "addCellEditorListener", CellEditorListener.class), null));
+		//
+		final TableCellRenderer tableCellRenderer = Reflection.newProxy(TableCellRenderer.class, ih);
+		//
+		Assertions.assertThrows(Throwable.class, () -> invocationHandler.invoke(tableCellRenderer, null, null));
+		//
+		// javax.swing.table.TableCellRenderer.getTableCellRendererComponent(javax.swing.JTable,java.lang.Object,boolean,boolean,int,int)
+		//
+		final Method getTableCellRendererComponent = Narcissus.findMethod(TableCellRenderer.class,
+				"getTableCellRendererComponent", JTable.class, Object.class, Boolean.TYPE, Boolean.TYPE, Integer.TYPE,
+				Integer.TYPE);
+		//
+		Assertions.assertThrows(Throwable.class,
+				() -> invocationHandler.invoke(tableCellRenderer, getTableCellRendererComponent, null));
+		//
+		Assertions.assertThrows(Throwable.class,
+				() -> invocationHandler.invoke(tableCellRenderer, getTableCellRendererComponent, new Object[] {}));
+		//
+		Object[] os = Util.toArray(Collections.nCopies(6, null));
+		//
+		Assertions.assertNull(invocationHandler.invoke(tableCellRenderer, getTableCellRendererComponent, os));
+		//
+		if (length(os) > 1) {
+			//
+			os[1] = new byte[] {};
+			//
+		} // if
+			//
+		Assertions.assertNotNull(invocationHandler.invoke(tableCellRenderer, getTableCellRendererComponent, os));
+		//
+		if (length(os) > 1) {
+			//
+			os[0] = new JTable();
+			//
+			os[1] = null;
+			//
+		} // if
+			//
+		Assertions.assertNull(invocationHandler.invoke(tableCellRenderer, getTableCellRendererComponent, os));
+		//
+		final Object copy = FieldUtils.readDeclaredStaticField(VoiceManagerOjadAccentPanel.class, "COPY", true);
+		//
+		if (length(os) > 5) {
+			//
+			os[0] = new JTable(new DefaultTableModel(new Object[] { null }, 0));
+			//
+			os[5] = Integer.valueOf(0);
+			//
+			Assertions.assertNull(invocationHandler.invoke(tableCellRenderer, getTableCellRendererComponent, os));
+			//
+			os[0] = new JTable(new DefaultTableModel(new Object[] { copy }, 0));
+			//
+			Assertions.assertNotNull(invocationHandler.invoke(tableCellRenderer, getTableCellRendererComponent, os));
+			//
+		} // if
+			//
+		final TableCellEditor tableCellEditor = Reflection.newProxy(TableCellEditor.class, ih);
+		//
+		Assertions.assertThrows(Throwable.class, () -> invocationHandler.invoke(tableCellEditor, null, null));
+		//
+		final Method getTableCellEditorComponent = Narcissus.findMethod(TableCellEditor.class,
+				"getTableCellEditorComponent", JTable.class, Object.class, Boolean.TYPE, Integer.TYPE, Integer.TYPE);
+		//
+		Assertions.assertThrows(Throwable.class,
+				() -> invocationHandler.invoke(tableCellEditor, getTableCellEditorComponent, null));
+		//
+		Assertions.assertThrows(Throwable.class,
+				() -> invocationHandler.invoke(tableCellEditor, getTableCellEditorComponent, new Object[] {}));
+		//
+		Assertions.assertNull(invocationHandler.invoke(tableCellEditor, getTableCellEditorComponent,
+				os = Util.toArray(Collections.nCopies(5, null))));
+		//
+		if (length(os) > 1) {
+			//
+			os[0] = new JTable();
+			//
+		} // if
+			//
+		Assertions.assertNull(invocationHandler.invoke(tableCellEditor, getTableCellEditorComponent, os));
+		//
+		if (length(os) > 4) {
+			//
+			os[4] = Integer.valueOf(0);
+			//
+			os[0] = new JTable(new DefaultTableModel(new Object[] { null }, 0));
+			//
+			Assertions.assertNull(invocationHandler.invoke(tableCellEditor, getTableCellEditorComponent, os));
+			//
+			final DefaultTableModel dtm = new DefaultTableModel(new Object[] { copy }, 0);
+			//
+			os[0] = new JTable(dtm);
+			//
+			Assertions.assertNotNull(invocationHandler.invoke(tableCellEditor, getTableCellEditorComponent, os));
+			//
+			os[3] = Integer.valueOf(0);
+			//
+			dtm.addRow(new Object[] { null });
+			//
+			Assertions.assertNotNull(invocationHandler.invoke(tableCellEditor, getTableCellEditorComponent, os));
+			//
+		} // if
+			//
 	}
 
 	@Test
