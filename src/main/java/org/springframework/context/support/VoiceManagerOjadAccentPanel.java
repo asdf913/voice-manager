@@ -534,11 +534,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.forEach(Stream.of(tfIndex, tfPartOfSpeech, tfKanji, tfHiragana), x -> Util.setEditable(x, false));
 			//
-			Util.forEach(Stream.of(btnExecute, tfIndex), x -> {
-				//
-				addKeyListener(x, this);
-				//
-			});
+			Util.forEach(Stream.of(btnExecute, tfIndex), x -> addKeyListener(x, this));
 			//
 		} // if
 			//
