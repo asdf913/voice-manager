@@ -795,6 +795,20 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // if
 				//
+			final IValue0<?> iValue0 = invoke(proxy, methodName, args);
+			//
+			if (iValue0 != null) {
+				//
+				return IValue0Util.getValue0(iValue0);
+				//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+		private IValue0<?> invoke(final Object proxy, final String methodName, final Object... args) {
+			//
 			if (proxy instanceof TableCellEditor && Objects.equals(methodName, "getTableCellEditorComponent")
 					&& args != null && args.length > 4) {
 				//
@@ -813,15 +827,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					button.addActionListener(actionListener);
 					//
-					return button;
+					return Unit.with(button);
 					//
 				} // if
 					//
-				return null;
+				return Unit.with(null);
 				//
 			} // if
 				//
-			throw new Throwable(methodName);
+			return null;
 			//
 		}
 
