@@ -113,7 +113,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS,
 			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES, METHOD_MATCHES,
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT, METHOD_GET_MOST_OCCURENCE_COLOR,
-			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH = null;
+			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -210,6 +210,8 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_SET_PART_OF_SPEECH = clz.getDeclaredMethod("setPartOfSpeech", CLASS_TEXT_AND_IMAGE, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_ADJUST_IMAGE_COLOR = clz.getDeclaredMethod("adjustImageColor", Iterable.class)).setAccessible(true);
 		//
 	}
 
@@ -338,8 +340,6 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private ObjectMapper objectMapper = null;
 
-	private BufferedImage bufferedImage = null;
-
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -354,8 +354,6 @@ class VoiceManagerOjadAccentPanelTest {
 		mh = new MH();
 		//
 		objectMapper = new ObjectMapper();
-		//
-		bufferedImage = Util.cast(BufferedImage.class, Narcissus.allocateInstance(BufferedImage.class));
 		//
 	}
 
@@ -1621,8 +1619,6 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testGetMostOccurenceColor() throws Throwable {
 		//
-		Assertions.assertNull(getMostOccurenceColor(bufferedImage));
-		//
 		final BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
 		//
 		Assertions.assertEquals(image.getRGB(0, 0), getMostOccurenceColor(image));
@@ -1645,8 +1641,6 @@ class VoiceManagerOjadAccentPanelTest {
 
 	@Test
 	void testSetRGB() {
-		//
-		Assertions.assertDoesNotThrow(() -> setRGB(bufferedImage, null, null));
 		//
 		final BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
 		//
@@ -1678,6 +1672,33 @@ class VoiceManagerOjadAccentPanelTest {
 	private static void setPartOfSpeech(final Object textAndImage, final String partOfSpeech) throws Throwable {
 		try {
 			METHOD_SET_PART_OF_SPEECH.invoke(null, textAndImage, partOfSpeech);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAdjustImageColor() throws IllegalAccessException {
+		//
+		final Object textAndImage = Narcissus.allocateInstance(CLASS_TEXT_AND_IMAGE);
+		//
+		Assertions.assertDoesNotThrow(() -> adjustImageColor(Arrays.asList(null, textAndImage)));
+		//
+		FieldUtils.writeDeclaredField(textAndImage, "accentImage", Narcissus.allocateInstance(BufferedImage.class),
+				true);
+		//
+		Assertions.assertDoesNotThrow(() -> adjustImageColor(Arrays.asList(null, textAndImage)));
+		//
+		FieldUtils.writeDeclaredField(textAndImage, "accentImage", new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB),
+				true);
+		//
+		Assertions.assertDoesNotThrow(() -> adjustImageColor(Arrays.asList(null, textAndImage, textAndImage)));
+		//
+	}
+
+	private static void adjustImageColor(final Iterable<?> textAndImages) throws Throwable {
+		try {
+			METHOD_ADJUST_IMAGE_COLOR.invoke(null, textAndImages);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

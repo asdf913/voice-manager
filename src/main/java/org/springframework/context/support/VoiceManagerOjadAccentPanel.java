@@ -1305,42 +1305,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // if
 				//
-			if (Boolean.logicalAnd(Objects.equals(OperatingSystem.LINUX, OperatingSystemUtil.getOperatingSystem()),
-					IterableUtils.size(textAndImages) > 1)) {
-				//
-				Integer mostOccurenceColor = null;
-				//
-				Integer currentMostOccurenceColor = null;
-				//
-				BufferedImage image = null;
-				//
-				for (final TextAndImage textAndImage : textAndImages) {
-					//
-					if (textAndImage == null || mostOccurenceColor == null
-							&& (mostOccurenceColor = getMostOccurenceColor(textAndImage.accentImage)) != null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (!Objects.equals(mostOccurenceColor,
-							currentMostOccurenceColor = getMostOccurenceColor(image = textAndImage.accentImage))) {
-						//
-						setRGB(image, currentMostOccurenceColor, mostOccurenceColor);
-						//
-					} // if
-						//
-					if (!Objects.equals(mostOccurenceColor,
-							currentMostOccurenceColor = getMostOccurenceColor(image = textAndImage.curveImage))) {
-						//
-						setRGB(image, currentMostOccurenceColor, mostOccurenceColor);
-						//
-					} // if
-						//
-				} // for
-					//
-			} // if
-				//
+			adjustImageColor(textAndImages);
+			//
 			Util.forEach(Util.stream(textAndImages), createTextAndImageConsumer());
 			//
 			if (IterableUtils.size(textAndImages) == 1
@@ -1363,6 +1329,46 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			close(playwright);
 			//
 		} // try
+			//
+	}
+
+	private static void adjustImageColor(final Iterable<TextAndImage> textAndImages) {
+		//
+		if (Boolean.logicalAnd(Objects.equals(OperatingSystem.LINUX, OperatingSystemUtil.getOperatingSystem()),
+				IterableUtils.size(textAndImages) > 1)) {
+			//
+			Integer mostOccurenceColor = null;
+			//
+			Integer currentMostOccurenceColor = null;
+			//
+			BufferedImage image = null;
+			//
+			for (final TextAndImage textAndImage : textAndImages) {
+				//
+				if (textAndImage == null || mostOccurenceColor == null
+						&& (mostOccurenceColor = getMostOccurenceColor(textAndImage.accentImage)) != null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (!Objects.equals(mostOccurenceColor,
+						currentMostOccurenceColor = getMostOccurenceColor(image = textAndImage.accentImage))) {
+					//
+					setRGB(image, currentMostOccurenceColor, mostOccurenceColor);
+					//
+				} // if
+					//
+				if (!Objects.equals(mostOccurenceColor,
+						currentMostOccurenceColor = getMostOccurenceColor(image = textAndImage.curveImage))) {
+					//
+					setRGB(image, currentMostOccurenceColor, mostOccurenceColor);
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
 			//
 	}
 
