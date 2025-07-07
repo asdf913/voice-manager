@@ -540,7 +540,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static void addKeyListener(final Component instance, final KeyListener keyListener) {
+	private static void addKeyListener(@Nullable final Component instance, final KeyListener keyListener) {
 		if (instance != null) {
 			instance.addKeyListener(keyListener);
 		}
