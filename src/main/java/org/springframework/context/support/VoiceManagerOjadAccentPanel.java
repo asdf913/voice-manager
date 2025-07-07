@@ -728,7 +728,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		private ActionListener actionListener = null;
 
 		@Override
-		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
 			//
 			if (ReflectionUtils.isEqualsMethod(method)) {
 				//
