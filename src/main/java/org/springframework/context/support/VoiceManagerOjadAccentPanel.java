@@ -32,7 +32,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -910,36 +909,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} else if (StringUtils.startsWith(actionCommand, StringUtils.join(DOWNLOAD, ','))) {
 			//
-			final JFileChooser jfc = new JFileChooser(".");
-			//
-			URL url = null;
-			//
 			try {
 				//
-				url = Util.toURL(testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
-						StringUtils.substringAfter(actionCommand, ','), URI::new, null));
+				saveURL(Util.toURL(testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
+						StringUtils.substringAfter(actionCommand, ','), URI::new, null)));
 				//
-			} catch (final MalformedURLException | URISyntaxException e) {
+			} catch (final URISyntaxException | IOException e) {
 				//
 				throw new RuntimeException(e);
 				//
-			} // try
-				//
-			jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.getFile(url), Path::of, null)));
-			//
-			if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
-					&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-				//
-				try (final InputStream is = Util.openStream(url)) {
-					//
-					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), IOUtils.toByteArray(is));
-					//
-				} catch (final IOException e) {
-					//
-					throw new RuntimeException(e);
-					//
-				} // try
-					//
 			} // try
 				//
 			return;
@@ -1081,6 +1059,25 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					format);
 			//
 		} // if
+			//
+	}
+
+	private static void saveURL(final URL url) throws URISyntaxException, IOException {
+		//
+		final JFileChooser jfc = new JFileChooser(".");
+		//
+		jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.getFile(url), Path::of, null)));
+		//
+		if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
+				&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			//
+			try (final InputStream is = Util.openStream(url)) {
+				//
+				FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), IOUtils.toByteArray(is));
+				//
+			} // try
+				//
+		} // try
 			//
 	}
 
