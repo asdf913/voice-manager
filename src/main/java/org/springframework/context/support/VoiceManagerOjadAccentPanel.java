@@ -536,16 +536,18 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.forEach(Stream.of(btnExecute, tfIndex), x -> {
 				//
-				if (x != null) {
-					//
-					x.addKeyListener(this);
-					//
-				} // if
-					//
+				addKeyListener(x, this);
+				//
 			});
 			//
 		} // if
 			//
+	}
+
+	private static void addKeyListener(final Component instance, final KeyListener keyListener) {
+		if (instance != null) {
+			instance.addKeyListener(keyListener);
+		}
 	}
 
 	private static <E> Comparator<E> createComparatorByOrder(final List<?> order) {
