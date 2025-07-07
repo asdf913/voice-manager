@@ -1,6 +1,7 @@
 package org.springframework.context.support;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
@@ -988,12 +989,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			Util.forEach(Util.map(Util.sorted(Util.map(IntStream.rangeClosed(0, Util.getRowCount(dtmVoice)), i -> -i)),
 					i -> -i), i -> Util.removeRow(dtmVoice, i));
 			//
-			if (jtVoice != null) {
-				//
-				jtVoice.removeAll();
-				//
-			} // if
-				//
+			removeAll(jtVoice);
+			//
 			if (textAndImage != null) {
 				//
 				Util.forEach(Util.entrySet(textAndImage.voiceUrlImages), en -> {
@@ -1056,6 +1053,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static void removeAll(final Container instance) {
+		if (instance != null) {
+			instance.removeAll();
+		}
 	}
 
 	private static boolean actionPerformed(final String actionCommand) {
