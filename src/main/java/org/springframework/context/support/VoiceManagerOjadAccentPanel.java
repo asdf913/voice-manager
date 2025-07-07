@@ -84,6 +84,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -1997,11 +1998,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				final String string = Util.getText(tfIndex);
 				//
-				if (NumberUtils.isCreatable(string) && jcbTextAndImage != null) {
+				if (NumberUtils.isCreatable(string)) {
 					//
 					int index = NumberUtils.toInt(string);
 					//
-					final int size = Util.getSize(jcbTextAndImage.getModel());
+					final int size = Util.getSize(getModel(jcbTextAndImage));
 					//
 					if (index >= size) {
 						//
@@ -2030,6 +2031,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // if
 			//
+	}
+
+	private static <E> ComboBoxModel<E> getModel(final JComboBox<E> instance) {
+		return instance != null ? instance.getModel() : null;
 	}
 
 }
