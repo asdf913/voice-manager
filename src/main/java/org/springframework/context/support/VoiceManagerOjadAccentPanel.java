@@ -1059,7 +1059,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static void removeAll(final Container instance) {
+	private static void removeAll(@Nullable final Container instance) {
 		if (instance != null) {
 			instance.removeAll();
 		}
