@@ -560,7 +560,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.forEach(Stream.of(tfIndex, tfPartOfSpeech, tfKanji, tfHiragana), x -> Util.setEditable(x, false));
 			//
-			Util.forEach(Stream.of(btnExecute, tfIndex), x -> addKeyListener(x, this));
+			Util.forEach(Stream.of(tfTextInput, btnExecute, tfIndex), x -> addKeyListener(x, this));
 			//
 		} // if
 			//
@@ -2259,8 +2259,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 				} // if
 					//
-			} else if (Boolean.logicalAnd(Boolean.logicalOr(keyCode == KeyEvent.VK_ENTER, keyCode == KeyEvent.VK_SPACE),
-					source == btnExecute)) {
+			} else if (Boolean.logicalOr(
+					Boolean.logicalAnd(Boolean.logicalOr(keyCode == KeyEvent.VK_ENTER, keyCode == KeyEvent.VK_SPACE),
+							source == btnExecute),
+					Boolean.logicalAnd(keyCode == KeyEvent.VK_ENTER, source == tfTextInput))) {
 				//
 				actionPerformed(new ActionEvent(btnExecute, 0, null));
 				//
