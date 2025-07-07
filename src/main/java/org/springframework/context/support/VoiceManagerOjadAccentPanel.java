@@ -825,11 +825,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		}
 
-		private static Object getValueAt(final JTable instance, final int row, final int column) {
+		private static Object getValueAt(@Nullable final JTable instance, final int row, final int column) {
 			return instance != null ? instance.getValueAt(row, column) : null;
 		}
 
-		private static String getColumnName(final JTable instance, final int column) {
+		private static String getColumnName(@Nullable final JTable instance, final int column) {
 			return instance != null ? instance.getColumnName(column) : null;
 		}
 
