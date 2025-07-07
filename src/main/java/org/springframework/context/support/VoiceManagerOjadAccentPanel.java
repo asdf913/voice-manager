@@ -51,6 +51,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
@@ -1032,8 +1033,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static <R> R testAndApply(@Nullable final IntPredicate predicate, final int value,
 			final IntFunction<R> functionTrue, @Nullable final IntFunction<R> functionFalse) {
-		return predicate != null && predicate.test(value) ? Util.apply(functionTrue, value)
-				: Util.apply(functionFalse, value);
+		return test(predicate, value) ? Util.apply(functionTrue, value) : Util.apply(functionFalse, value);
+	}
+
+	private static boolean test(final IntPredicate instance, final int value) {
+		return instance != null && instance.test(value);
 	}
 
 	private static Clipboard getClipboard() {
@@ -2016,12 +2020,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 					} // if
 						//
-					if (index < size) {
+					testAndAccept(x -> x < size, index, x -> {
 						//
-						Util.setSelectedIndex(jcbTextAndImage, index);
+						Util.setSelectedIndex(jcbTextAndImage, x);
 						//
-					} // if
-						//
+					});
+					//
 				} // if
 					//
 			} else if (Boolean.logicalAnd(Boolean.logicalOr(keyCode == KeyEvent.VK_ENTER, keyCode == KeyEvent.VK_SPACE),
@@ -2033,6 +2037,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // if
 			//
+	}
+
+	private static void testAndAccept(final IntPredicate predicate, final int value, final IntConsumer consumer) {
+		if (test(predicate, value) && consumer != null) {
+			consumer.accept(value);
+		}
 	}
 
 	private static <E> ComboBoxModel<E> getModel(final JComboBox<E> instance) {

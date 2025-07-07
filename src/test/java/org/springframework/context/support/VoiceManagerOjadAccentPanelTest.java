@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.IntConsumer;
+import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -110,7 +112,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_GET_IF_NULL, METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER, METHOD_SAVE_IMAGE,
 			METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS,
 			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES, METHOD_MATCHES,
-			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER = null;
+			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -195,6 +197,9 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER = clz.getDeclaredMethod("createTextAndImageConsumer"))
 				.setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", IntPredicate.class, Integer.TYPE,
+				IntConsumer.class)).setAccessible(true);
 		//
 	}
 
@@ -1564,7 +1569,22 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.keyReleased(keyEventBtnExecute));
 		//
+	}
 
+	@Test
+	void testTestAndAccept() {
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(x -> true, 0, null));
+		//
+	}
+
+	private static void testAndAccept(final IntPredicate predicate, final int value, final IntConsumer consumer)
+			throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, value, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }
