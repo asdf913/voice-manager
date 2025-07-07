@@ -917,7 +917,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			try {
 				//
 				url = Util.toURL(testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
-						StringUtils.substringAfter(actionCommand, ','), x -> new URI(x), null));
+						StringUtils.substringAfter(actionCommand, ','), URI::new, null));
 				//
 			} catch (final MalformedURLException | URISyntaxException e) {
 				//
@@ -925,7 +925,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // try
 				//
-			jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.getFile(url), x -> Path.of(x), null)));
+			jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.getFile(url), Path::of, null)));
 			//
 			if (Boolean.logicalOr(!GraphicsEnvironment.isHeadless(), !isTestMode())
 					&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
