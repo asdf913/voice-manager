@@ -505,11 +505,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // if
 				//
-			testAndAccept((a, b) -> b instanceof TableCellEditor, jTable, proxy, (a, b) -> {
-				//
-				jTable.setDefaultEditor(String.class, Util.cast(TableCellEditor.class, b));
-				//
-			});
+			testAndAccept((a, b) -> b instanceof TableCellEditor, jTable, proxy,
+					(a, b) -> jTable.setDefaultEditor(String.class, Util.cast(TableCellEditor.class, b)));
 			//
 			panelVoice.add(new JScrollPane(jTable), String.format("hmax %1$s", 56));
 			//
