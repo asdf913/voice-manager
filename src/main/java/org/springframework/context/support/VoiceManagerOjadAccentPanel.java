@@ -94,6 +94,8 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.function.TriFunction;
+import org.apache.commons.lang3.function.TriFunctionUtil;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -759,56 +761,30 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 				} // if
 					//
-			} else if (proxy instanceof TableCellRenderer && Objects.equals(methodName, "getTableCellRendererComponent")
-					&& args != null && args.length > 5) {
-				//
-				final Object value = ArrayUtils.get(args, 1);
-				//
-				final byte[] bs = Util.cast(byte[].class, value);
-				//
-				if (bs != null) {
-					//
-					try (final InputStream is = new ByteArrayInputStream(bs)) {
-						//
-						return testAndApply(Objects::nonNull,
-								testAndApply(Objects::nonNull, ImageIO.read(is), ImageIcon::new, null), JLabel::new,
-								x -> new JLabel());
-						//
-					} catch (final IOException ioe) {
-						//
-						throw new RuntimeIOException(ioe);
-						//
-					} // try
-						//
-				} // if
-					//
-				final Integer column = Util.cast(Integer.class, ArrayUtils.get(args, 5));
-				//
-				if (column != null && Objects
-						.equals(getColumnName(Util.cast(JTable.class, ArrayUtils.get(args, 0)), column), COPY)) {
-					//
-					return new JButton(COPY);
-					//
-				} // if
-					//
-				return null;
-				//
 			} // if
 				//
-			final IValue0<?> iValue0 = invoke(proxy, methodName, args);
+			final Iterable<TriFunction<Object, String, Object[], IValue0<?>>> functions = Arrays.asList(this::invoke1,
+					this::invoke2);
 			//
-			if (iValue0 != null) {
+			IValue0<?> iValue0 = null;
+			//
+			for (int i = 0; i < IterableUtils.size(functions); i++) {
 				//
-				return IValue0Util.getValue0(iValue0);
-				//
-			} // if
+				if ((iValue0 = TriFunctionUtil.apply(IterableUtils.get(functions, i), proxy, methodName,
+						args)) != null) {
+					//
+					return IValue0Util.getValue0(iValue0);
+					//
+				} // if
+					//
+			} // for
 				//
 			throw new Throwable(methodName);
 			//
 		}
 
 		@Nullable
-		private IValue0<?> invoke(final Object proxy, final String methodName, @Nullable final Object... args) {
+		private IValue0<?> invoke1(final Object proxy, final String methodName, @Nullable final Object... args) {
 			//
 			if (proxy instanceof TableCellEditor && Objects.equals(methodName, "getTableCellEditorComponent")
 					&& args != null && args.length > 4) {
@@ -829,6 +805,48 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					button.addActionListener(actionListener);
 					//
 					return Unit.with(button);
+					//
+				} // if
+					//
+				return Unit.with(null);
+				//
+			} // if
+				//
+			return null;
+			//
+		}
+
+		private IValue0<?> invoke2(final Object proxy, final String methodName, final Object... args) {
+			//
+			if (proxy instanceof TableCellRenderer && Objects.equals(methodName, "getTableCellRendererComponent")
+					&& args != null && args.length > 5) {
+				//
+				final Object value = ArrayUtils.get(args, 1);
+				//
+				final byte[] bs = Util.cast(byte[].class, value);
+				//
+				if (bs != null) {
+					//
+					try (final InputStream is = new ByteArrayInputStream(bs)) {
+						//
+						return Unit.with(testAndApply(Objects::nonNull,
+								testAndApply(Objects::nonNull, ImageIO.read(is), ImageIcon::new, null), JLabel::new,
+								x -> new JLabel()));
+						//
+					} catch (final IOException ioe) {
+						//
+						throw new RuntimeIOException(ioe);
+						//
+					} // try
+						//
+				} // if
+					//
+				final Integer column = Util.cast(Integer.class, ArrayUtils.get(args, 5));
+				//
+				if (column != null && Objects
+						.equals(getColumnName(Util.cast(JTable.class, ArrayUtils.get(args, 0)), column), COPY)) {
+					//
+					return Unit.with(new JButton(COPY));
 					//
 				} // if
 					//
