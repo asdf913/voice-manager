@@ -1031,7 +1031,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return test(predicate, value) ? Util.apply(functionTrue, value) : Util.apply(functionFalse, value);
 	}
 
-	private static boolean test(final IntPredicate instance, final int value) {
+	private static boolean test(@Nullable final IntPredicate instance, final int value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -2034,7 +2034,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static void testAndAccept(final IntPredicate predicate, final int value, final IntConsumer consumer) {
+	private static void testAndAccept(final IntPredicate predicate, final int value,
+			@Nullable final IntConsumer consumer) {
 		if (test(predicate, value) && consumer != null) {
 			consumer.accept(value);
 		}
