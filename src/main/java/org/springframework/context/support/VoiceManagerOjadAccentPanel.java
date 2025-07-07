@@ -499,11 +499,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			if (proxy instanceof TableCellRenderer tcr) {
 				//
-				Util.forEach(Stream.of(byte[].class, String.class), x -> {
-					//
-					jTable.setDefaultRenderer(x, tcr);
-					//
-				});
+				Util.forEach(Stream.of(byte[].class, String.class), x -> jTable.setDefaultRenderer(x, tcr));
 				//
 			} // if
 				//
