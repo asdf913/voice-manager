@@ -1272,6 +1272,103 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			Util.forEach(Util.map(Util.sorted(Util.map(IntStream.range(1, Util.getSize(mcbmTextAndImage)), i -> -i)),
 					i -> -i), i -> Util.removeElementAt(mcbmTextAndImage, i));
 			//
+			final List<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
+			//
+			final Collection<TextAndImage> textAndImages = getTextAndImages(textInput,
+					Util.cast(Entry.class, Util.getSelectedItem(cbmCurve)));
+			//
+			Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
+			//
+			Util.setText(lblCount, Integer.toString(IterableUtils.size(textAndImages)));
+			//
+			Util.setEditable(tfIndex, CollectionUtils.isNotEmpty(textAndImages));
+			//
+			testAndAccept((a, b) -> CollectionUtils.isEmpty(a), textAndImages, tfIndex,
+					(a, b) -> Util.setText(b, null));
+			//
+			if (IterableUtils.size(textAndImages) == 1
+					|| (IterableUtils.size(words) == 1 && IterableUtils.size(textAndImages) == 1)) {
+				//
+				Util.setSelectedItem(mcbmTextAndImage, IterableUtils.get(textAndImages, 0));
+				//
+			} // if
+				//
+			pack(window);
+			//
+		} catch (final IOException | URISyntaxException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} finally {
+			//
+			close(browser);
+			//
+			close(playwright);
+			//
+		} // try
+			//
+	}
+
+	private static Collection<TextAndImage> getTextAndImages(final String textInput, final Entry<?, ?> curve)
+			throws IOException, URISyntaxException {
+		//
+		if (StringUtils.isEmpty(textInput)) {
+			//
+			return null;
+			//
+		} // if
+			//
+		Page page = null;
+		//
+		Playwright playwright = null;
+		//
+		Browser browser = null;
+		//
+		try {
+			//
+			final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("word", testAndApply(
+					Objects::nonNull, textInput, x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
+			//
+			final Stream<Method> ms = testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class),
+					Arrays::stream, null);
+			//
+			Util.put(map, "curve",
+					Util.toString(testAndApply((a, b) -> a != null, curve,
+							testAndApply(x -> IterableUtils.size(x) == 1,
+									Util.toList(Util.filter(ms,
+											m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getKey"),
+													Arrays.equals(Util.getParameterTypes(m), new Class<?>[] {})))),
+									x -> IterableUtils.get(x, 0), null),
+							Narcissus::invokeMethod, null)));
+			//
+			final String baseUrl = "https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index";
+			//
+			String url = createUrl(baseUrl, map);
+			//
+			final boolean testMode = isTestMode();
+			//
+			if (!testMode) {
+				//
+				PageUtil.navigate(
+						page = newPage(browser = BrowserTypeUtil.launch(chromium(playwright = Playwright.create()))),
+						url);
+				//
+				final int size = IterableUtils.size(querySelectorAll(page, "#paginator a"));
+				//
+				if (size > 0) {
+					//
+					Util.put(map, "limit", NumberUtils
+							.toInt(Util.toString(jsonValue(getProperty(testAndApply(x -> IterableUtils.size(x) == 1,
+									querySelectorAll(page, "#search_limit"), x -> IterableUtils.get(x, 0), null),
+									"value"))), 1)
+							* size);
+					//
+					PageUtil.navigate(page = newPage(browser), url = createUrl(baseUrl, map));
+					//
+				} // if
+					//
+			} // if
+				//
 			final List<ElementHandle> ehs = querySelectorAll(page, ".katsuyo_accent");
 			//
 			final List<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
@@ -1302,15 +1399,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							() -> toTextAndImages2(ehs, textInput, words, partOfSpeeches, p),
 							() -> toTextAndImages3(words, document, p)));
 			//
-			Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
-			//
-			Util.setText(lblCount, Integer.toString(IterableUtils.size(textAndImages)));
-			//
-			Util.setEditable(tfIndex, CollectionUtils.isNotEmpty(textAndImages));
-			//
-			testAndAccept((a, b) -> CollectionUtils.isEmpty(a), textAndImages, tfIndex,
-					(a, b) -> Util.setText(b, null));
-			//
 			if (IterableUtils.size(partOfSpeeches) == 1) {
 				//
 				Util.forEach(Util.stream(textAndImages), x -> setPartOfSpeech(x, IterableUtils.get(partOfSpeeches, 0)));
@@ -1321,18 +1409,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.forEach(Util.stream(textAndImages), createTextAndImageConsumer());
 			//
-			if (IterableUtils.size(textAndImages) == 1
-					|| (IterableUtils.size(words) == 1 && IterableUtils.size(textAndImages) == 1)) {
-				//
-				Util.setSelectedItem(mcbmTextAndImage, IterableUtils.get(textAndImages, 0));
-				//
-			} // if
-				//
-			pack(window);
-			//
-		} catch (final IOException | URISyntaxException e) {
-			//
-			throw new RuntimeException(e);
+			return textAndImages;
 			//
 		} finally {
 			//
