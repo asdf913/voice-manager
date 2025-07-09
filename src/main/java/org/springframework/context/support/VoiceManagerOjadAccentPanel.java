@@ -1304,9 +1304,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static Method getMapEntryGetKeyMethod() {
 		//
+		final Stream<Method> stream = testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class),
+				Arrays::stream, null);
+		//
 		return testAndApply(x -> IterableUtils.size(x) == 1,
-				Util.toList(Util.filter(
-						testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class), Arrays::stream, null),
+				Util.toList(Util.filter(stream,
 						m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getKey"),
 								Arrays.equals(Util.getParameterTypes(m), new Class<?>[] {})))),
 				x -> IterableUtils.get(x, 0), null);
