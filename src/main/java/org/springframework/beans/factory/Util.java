@@ -896,6 +896,8 @@ abstract class Util {
 						"org.htmlunit.jetty.client.util.StringContentProvider"),
 						Collectors.toMap(Function.identity(), x -> "bytes")));
 		//
+		put(map, "org.apache.commons.lang3.util.IterableStringTokenizer", "delimiters");
+		//
 		if (Boolean.logicalOr(forEachIsFieldNull(map, clz, instance),
 				contains(Arrays.asList("org.htmlunit.cyberneko.util.SimpleArrayList"), name))) {
 			//
