@@ -1479,12 +1479,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 				final Iterable<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
 				//
-				if (IterableUtils.size(words) > 1) {
+				testAndRunThrows(IterableUtils.size(words) > 1, () -> {
 					//
 					throw new IllegalStateException();
 					//
-				} // if
-					//
+				});
+				//
 				final ElementHandle word = testAndApply(x -> IterableUtils.size(x) == 1, words,
 						x -> IterableUtils.get(x, 0), null);
 				//
