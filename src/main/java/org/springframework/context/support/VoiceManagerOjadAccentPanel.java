@@ -1423,7 +1423,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	private static Collection<TextAndImage> getTextAndImages(final VoiceManagerOjadAccentPanel instance,
-			final TextAndImage input) throws IOException, URISyntaxException {
+			final TextAndImage input) {
 		//
 		if (input != null) {
 			//
