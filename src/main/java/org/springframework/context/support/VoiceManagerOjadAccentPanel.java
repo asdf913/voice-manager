@@ -1586,11 +1586,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 								Util.filter(Util.stream(querySelectorAll(page, CSS_SELECTOR_MIDASHI)),
 										x -> IterableUtils.isEmpty(querySelectorAll(x, "div"))),
 								x -> StringUtils.trim(textContent(x)))),
-						(a, b) -> {
-							//
-							Util.forEach(Util.stream(a), x -> setPartOfSpeech(x, IterableUtils.get(b, 0)));
-							//
-						});
+						(a, b) -> Util.forEach(Util.stream(a), x -> setPartOfSpeech(x, IterableUtils.get(b, 0))));
 				//
 				Util.forEach(Util.stream(textAndImages), createTextAndImageConsumer());
 				//
