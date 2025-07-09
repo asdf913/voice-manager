@@ -1449,23 +1449,20 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				for (int i = 0; i < Util.getSize(cbmCurve); i++) {
 					//
-					if (Objects.equals(key = Narcissus.invokeMethod(Util.getElementAt(cbmCurve, i),
+					if ((Objects.equals(key = Narcissus.invokeMethod(Util.getElementAt(cbmCurve, i),
 							getKey = ObjectUtils.getIfNull(getKey,
 									() -> testAndApply(x -> IterableUtils.size(x) == 1, Util.toList(Util.filter(ms,
 											m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getKey"),
 													Arrays.equals(Util.getParameterTypes(m), new Class<?>[] {})))),
 											x -> IterableUtils.get(x, 0), null))),
-							"invisible") && input.accentImage == null) {
-						//
-						Util.put(map, "curve", key);
-						//
-					} else if (Objects.equals(key, "fujisaki") && input.accentImage != null) {
+							"invisible") && input.accentImage == null)
+							|| (Objects.equals(key, "fujisaki") && input.accentImage != null)) {
 						//
 						Util.put(map, "curve", key);
 						//
 					} // if
 						//
-				} // if
+				} // for
 					//
 				final String baseUrl = "https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index";
 				//
