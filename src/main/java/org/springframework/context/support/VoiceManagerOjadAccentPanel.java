@@ -1422,6 +1422,197 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
+	private static Collection<TextAndImage> getTextAndImages(final VoiceManagerOjadAccentPanel instance,
+			final TextAndImage input) throws IOException, URISyntaxException {
+		//
+		if (input != null) {
+			//
+			Page page = null;
+			//
+			Playwright playwright = null;
+			//
+			Browser browser = null;
+			//
+			try {
+				//
+				final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("word", testAndApply(
+						Objects::nonNull, input.kanji, x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
+				//
+				final Stream<Method> ms = testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class),
+						Arrays::stream, null);
+				//
+				final ComboBoxModel<?> cbmCurve = instance != null ? instance.cbmCurve : null;
+				//
+				Method getKey = null;
+				//
+				Object key = null;
+				//
+				for (int i = 0; i < Util.getSize(cbmCurve); i++) {
+					//
+					if (Objects.equals(key = Narcissus.invokeMethod(Util.getElementAt(cbmCurve, i),
+							getKey = ObjectUtils.getIfNull(getKey,
+									() -> testAndApply(x -> IterableUtils.size(x) == 1, Util.toList(Util.filter(ms,
+											m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getKey"),
+													Arrays.equals(Util.getParameterTypes(m), new Class<?>[] {})))),
+											x -> IterableUtils.get(x, 0), null))),
+							"invisible") && input.accentImage == null) {
+						//
+						Util.put(map, "curve", key);
+						//
+					} else if (Objects.equals(key, "fujisaki") && input.accentImage != null) {
+						//
+						Util.put(map, "curve", key);
+						//
+					} // if
+						//
+				} // if
+					//
+				final String baseUrl = "https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index";
+				//
+				String url = createUrl(baseUrl, map);
+				//
+				if (!isTestMode()) {
+					//
+					PageUtil.navigate(page = newPage(
+							browser = BrowserTypeUtil.launch(chromium(playwright = Playwright.create()))), url);
+					//
+				} // if
+					//
+					// word
+					//
+				final Iterable<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
+				//
+				if (IterableUtils.size(words) > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				final ElementHandle word = testAndApply(x -> IterableUtils.size(x) == 1, words,
+						x -> IterableUtils.get(x, 0), null);
+				//
+				// midashi
+				//
+				final Iterable<ElementHandle> midashis = querySelectorAll(word, ".midashi");
+
+				if (IterableUtils.size(midashis) > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				final String midashi = textContent(
+						testAndApply(x -> IterableUtils.size(x) == 1, midashis, x -> IterableUtils.get(x, 0), null));
+				//
+				final String[] ss = StringUtils.split(midashi, "・");
+				//
+				final Collection<ElementHandle> katsuyoEhs = querySelectorAll(word,
+						".katsuyo p .katsuyo_accent .accented_word");
+				//
+				Collection<TextAndImage> textAndImages = null;
+				//
+				if (length(ss) == 2) {
+					//
+					final String cp1 = Strings.commonPrefix(StringUtils.trim(ArrayUtils.get(ss, 0)),
+							StringUtils.trim(ArrayUtils.get(ss, 1)));
+					//
+					final List<String> katsuyos = Util
+							.toList(Util.map(Util.stream(katsuyoEhs), x -> StringUtils.trim(textContent(x))));
+					//
+					IValue0<String> cp2 = null;
+					//
+					String katsuyoNext = null;
+					//
+					for (int i = 0; i < IterableUtils.size(katsuyos) - 1; i++) {
+						//
+						katsuyoNext = IterableUtils.get(katsuyos, i + 1);
+						//
+						if (cp2 == null) {
+							//
+							cp2 = Unit.with(Strings.commonPrefix(IterableUtils.get(katsuyos, i), katsuyoNext));
+							//
+						} else {
+							//
+							cp2 = Unit.with(Strings.commonPrefix(IValue0Util.getValue0(cp2), katsuyoNext));
+							//
+						} // if
+							//
+					} // for
+						//
+					String katsuyo = null;
+					//
+					TextStringBuilder tsb = null;
+					//
+					TextAndImage textAndImage = null;
+					//
+					ElementHandle eh = null;
+					//
+					for (int i = 0; i < Math.min(IterableUtils.size(katsuyos), IterableUtils.size(katsuyoEhs)); i++) {
+						//
+						if (StringUtils.startsWith(
+								(textAndImage = new TextAndImage()).hiragana = katsuyo = IterableUtils.get(katsuyos, i),
+								IValue0Util.getValue0(cp2))) {
+							//
+							TextStringBuilderUtil.clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
+							//
+							textAndImage.kanji = Util
+									.toString(TextStringBuilderUtil.append(TextStringBuilderUtil.append(tsb, cp1),
+											StringUtils.substringAfter(katsuyo, IValue0Util.getValue0(cp2))));
+							//
+							textAndImage.accentImage = toBufferedImage(
+									screenshot(eh = IterableUtils.get(katsuyoEhs, i)),
+									e -> LoggerUtil.error(LOG, e.getMessage(), e));
+							//
+							textAndImage.curveImage = toBufferedImage(screenshot(querySelector(querySelector(
+									querySelector(querySelector(querySelector(eh, ".."), ".."), ".."), ".."), CANVAS)),
+									e -> LoggerUtil.error(LOG, e.getMessage(), e));
+							//
+							textAndImage.voiceUrlImages = getVoiceUrlImages(
+									querySelectorAll(querySelector(querySelector(querySelector(eh, ".."), ".."), ".."),
+											".katsuyo_proc_button a"),
+									page, "mp3");
+							//
+						} // if
+							//
+						Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
+						//
+					} // for
+						//
+				} else {
+					//
+					// TODO
+					//
+				} // if
+					//
+				testAndAccept((a, b) -> IterableUtils.size(b) == 1, textAndImages,
+						Util.toList(Util.map(
+								Util.filter(Util.stream(querySelectorAll(page, CSS_SELECTOR_MIDASHI)),
+										x -> IterableUtils.isEmpty(querySelectorAll(x, "div"))),
+								x -> StringUtils.trim(textContent(x)))),
+						(a, b) -> {
+							//
+							Util.forEach(Util.stream(a), x -> setPartOfSpeech(x, IterableUtils.get(b, 0)));
+							//
+						});
+				//
+				Util.forEach(Util.stream(textAndImages), createTextAndImageConsumer());
+				//
+				return textAndImages;
+				//
+			} finally {
+				//
+				close(browser);
+				//
+				close(playwright);
+				//
+			} // try
+				//
+		} // if
+			//
+		return null;
+		//
+	}
+
 	private static void adjustImageColor(final Iterable<TextAndImage> textAndImages) {
 		//
 		if (Boolean.logicalAnd(Objects.equals(OperatingSystem.LINUX, OperatingSystemUtil.getOperatingSystem()),

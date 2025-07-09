@@ -114,7 +114,8 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS,
 			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES, METHOD_MATCHES,
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT, METHOD_GET_MOST_OCCURENCE_COLOR,
-			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE = null;
+			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE,
+			METHOD_GET_TEXT_AND_IMAGES = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -215,6 +216,9 @@ class VoiceManagerOjadAccentPanelTest {
 		(METHOD_ADJUST_IMAGE_COLOR = clz.getDeclaredMethod("adjustImageColor", Iterable.class)).setAccessible(true);
 		//
 		(METHOD_CLOSE = clz.getDeclaredMethod("close", Player.class)).setAccessible(true);
+		//
+		(METHOD_GET_TEXT_AND_IMAGES = clz.getDeclaredMethod("getTextAndImages", clz, CLASS_TEXT_AND_IMAGE))
+				.setAccessible(true);
 		//
 	}
 
@@ -1715,6 +1719,30 @@ class VoiceManagerOjadAccentPanelTest {
 	private static void close(final Player instance) throws Throwable {
 		try {
 			METHOD_CLOSE.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetTextAndImages() throws Throwable {
+		//
+		Assertions.assertNull(getTextAndImages(null, textAndImage));
+		//
+		Assertions.assertNull(getTextAndImages(instance, textAndImage));
+		//
+	}
+
+	private static Collection<?> getTextAndImages(final VoiceManagerOjadAccentPanel instance, final Object textAndImage)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TEXT_AND_IMAGES.invoke(null, instance, textAndImage);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Collection) {
+				return (Collection) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
