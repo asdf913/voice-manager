@@ -1434,9 +1434,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("word", testAndApply(
 					Objects::nonNull, getKanji(input), x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
 			//
-			final Stream<Method> ms = testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class),
-					Arrays::stream, null);
-			//
 			final ComboBoxModel<?> cbmCurve = instance != null ? instance.cbmCurve : null;
 			//
 			Method getKey = null;
