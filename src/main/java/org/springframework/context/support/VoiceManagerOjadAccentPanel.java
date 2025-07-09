@@ -1423,6 +1423,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	private static Collection<TextAndImage> getTextAndImages(final VoiceManagerOjadAccentPanel instance,
 			final TextAndImage input) {
 		//
+		if (input == null) {
+			//
+			return null;
+			//
+		} // if
+			//
 		Page page = null;
 		//
 		Playwright playwright = null;
