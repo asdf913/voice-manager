@@ -172,6 +172,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static final String RASTER = "raster";
 
+	private static final String CURVE = "curve";
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -1232,7 +1234,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final Stream<Method> ms = testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class),
 					Arrays::stream, null);
 			//
-			Util.put(map, "curve",
+			Util.put(map, CURVE,
 					Util.toString(testAndApply((a, b) -> a instanceof Entry, Util.getSelectedItem(cbmCurve),
 							testAndApply(x -> IterableUtils.size(x) == 1,
 									Util.toList(Util.filter(ms,
@@ -1333,7 +1335,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final Stream<Method> ms = testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class),
 					Arrays::stream, null);
 			//
-			Util.put(map, "curve",
+			Util.put(map, CURVE,
 					Util.toString(testAndApply((a, b) -> a != null, curve,
 							testAndApply(x -> IterableUtils.size(x) == 1,
 									Util.toList(Util.filter(ms,
@@ -1465,7 +1467,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 										curveImage == null),
 								Boolean.logicalAnd(Objects.equals(key, "fujisaki"), curveImage != null))) {
 					//
-					Util.put(map, "curve", key);
+					Util.put(map, CURVE, key);
 					//
 				} // if
 					//
