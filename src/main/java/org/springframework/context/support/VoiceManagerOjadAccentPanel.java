@@ -1447,6 +1447,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Object key = null;
 			//
+			final Object curveImage = getCurveImage(input);
+			//
 			for (int i = 0; i < Util.getSize(cbmCurve); i++) {
 				//
 				if (Boolean
@@ -1461,8 +1463,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 																				new Class<?>[] {})))),
 																x -> IterableUtils.get(x, 0), null))),
 												"invisible"),
-										input.accentImage == null),
-								Boolean.logicalAnd(Objects.equals(key, "fujisaki"), input.accentImage != null))) {
+										curveImage == null),
+								Boolean.logicalAnd(Objects.equals(key, "fujisaki"), curveImage != null))) {
 					//
 					Util.put(map, "curve", key);
 					//
