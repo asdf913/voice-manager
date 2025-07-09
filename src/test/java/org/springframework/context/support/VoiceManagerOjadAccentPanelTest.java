@@ -434,6 +434,8 @@ class VoiceManagerOjadAccentPanelTest {
 					Boolean.logicalAnd(Objects.equals(Util.getName(m), "createComparatorByOrder"),
 							Arrays.equals(parameterTypes, new Class<?>[] { List.class })),
 					Boolean.logicalAnd(Objects.equals(Util.getName(m), "createTextAndImageConsumer"),
+							Arrays.equals(parameterTypes, new Class<?>[] {})),
+					Boolean.logicalAnd(Objects.equals(Util.getName(m), "getMapEntryGetKeyMethod"),
 							Arrays.equals(parameterTypes, new Class<?>[] {})))) {
 				//
 				Assertions.assertNotNull(invoke, toString);

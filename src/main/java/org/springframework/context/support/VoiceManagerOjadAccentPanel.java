@@ -1231,17 +1231,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("word", testAndApply(
 					Objects::nonNull, textInput, x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
 			//
-			final Stream<Method> ms = testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class),
-					Arrays::stream, null);
-			//
-			Util.put(map, CURVE,
-					Util.toString(testAndApply((a, b) -> a instanceof Entry, Util.getSelectedItem(cbmCurve),
-							testAndApply(x -> IterableUtils.size(x) == 1,
-									Util.toList(Util.filter(ms,
-											m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getKey"),
-													Arrays.equals(Util.getParameterTypes(m), new Class<?>[] {})))),
-									x -> IterableUtils.get(x, 0), null),
-							Narcissus::invokeMethod, null)));
+			Util.put(map, CURVE, Util.toString(testAndApply((a, b) -> a instanceof Entry,
+					Util.getSelectedItem(cbmCurve), getMapEntryGetKeyMethod(), Narcissus::invokeMethod, null)));
 			//
 			final String baseUrl = "https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index";
 			//
@@ -1311,6 +1302,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
+	private static Method getMapEntryGetKeyMethod() {
+		//
+		return testAndApply(x -> IterableUtils.size(x) == 1,
+				Util.toList(Util.filter(
+						testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class), Arrays::stream, null),
+						m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getKey"),
+								Arrays.equals(Util.getParameterTypes(m), new Class<?>[] {})))),
+				x -> IterableUtils.get(x, 0), null);
+		//
+	}
+
 	@Nullable
 	private static Collection<TextAndImage> getTextAndImages(final String textInput, final Entry<?, ?> curve)
 			throws IOException, URISyntaxException {
@@ -1332,17 +1334,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("word", testAndApply(
 					Objects::nonNull, textInput, x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
 			//
-			final Stream<Method> ms = testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class),
-					Arrays::stream, null);
-			//
-			Util.put(map, CURVE,
-					Util.toString(testAndApply((a, b) -> a != null, curve,
-							testAndApply(x -> IterableUtils.size(x) == 1,
-									Util.toList(Util.filter(ms,
-											m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getKey"),
-													Arrays.equals(Util.getParameterTypes(m), new Class<?>[] {})))),
-									x -> IterableUtils.get(x, 0), null),
-							Narcissus::invokeMethod, null)));
+			Util.put(map, CURVE, Util.toString(testAndApply((a, b) -> a != null, curve, getMapEntryGetKeyMethod(),
+					Narcissus::invokeMethod, null)));
 			//
 			final String baseUrl = "https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index";
 			//
@@ -1457,12 +1450,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 								Boolean.logicalAnd(
 										Objects.equals(key = Narcissus.invokeMethod(Util.getElementAt(cbmCurve, i),
 												getKey = ObjectUtils.getIfNull(getKey,
-														() -> testAndApply(x -> IterableUtils.size(x) == 1,
-																Util.toList(Util.filter(ms, m -> Boolean.logicalAnd(
-																		Objects.equals(Util.getName(m), "getKey"),
-																		Arrays.equals(Util.getParameterTypes(m),
-																				new Class<?>[] {})))),
-																x -> IterableUtils.get(x, 0), null))),
+														() -> getMapEntryGetKeyMethod())),
 												"invisible"),
 										curveImage == null),
 								Boolean.logicalAnd(Objects.equals(key, "fujisaki"), curveImage != null))) {
