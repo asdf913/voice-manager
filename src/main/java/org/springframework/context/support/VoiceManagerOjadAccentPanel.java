@@ -2041,8 +2041,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	@Nullable
-	private static Map<String, byte[]> getVoiceUrlImages(@Nullable final Iterable<ElementHandle> ehs, final Page page,
-			final String format) {
+	private static Map<String, byte[]> getVoiceUrlImages(@Nullable final Iterable<ElementHandle> ehs,
+			@Nullable final Page page, final String format) {
 		//
 		ElementHandle eh = null;
 		//
@@ -2270,7 +2270,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, @Nullable final T t, final U u,
 			final BiConsumer<T, U> consumer) {
 		if (Util.test(instance, t, u)) {
 			Util.accept(consumer, t, u);
