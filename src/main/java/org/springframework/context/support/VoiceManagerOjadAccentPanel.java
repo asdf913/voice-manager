@@ -1590,6 +1590,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
+	@Nullable
 	private static String commonPrefix(final Iterable<String> instance) {
 		//
 		IValue0<String> iValue0 = null;
