@@ -1498,7 +1498,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			// midashi
 			//
-			final Iterable<ElementHandle> midashis = querySelectorAll(word, ".midashi");
+			final Iterable<ElementHandle> midashis = querySelectorAll(word, CSS_SELECTOR_MIDASHI);
 			//
 			testAndRunThrows(IterableUtils.size(midashis) > 1, () -> {
 				//
