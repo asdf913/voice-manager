@@ -1456,7 +1456,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 													Arrays.equals(Util.getParameterTypes(m), new Class<?>[] {})))),
 											x -> IterableUtils.get(x, 0), null))),
 							"invisible") && input.accentImage == null)
-							|| (Objects.equals(key, "fujisaki") && input.accentImage != null)) {
+							|| Boolean.logicalAnd(Objects.equals(key, "fujisaki"), input.accentImage != null)) {
 						//
 						Util.put(map, "curve", key);
 						//
