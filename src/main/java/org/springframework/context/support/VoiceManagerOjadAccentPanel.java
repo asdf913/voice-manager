@@ -1524,26 +1524,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				final List<String> katsuyos = Util
 						.toList(Util.map(Util.stream(katsuyoEhs), x -> StringUtils.trim(textContent(x))));
 				//
-				IValue0<String> cp2 = null;
+				final String cp2 = commonPrefix(katsuyos);
 				//
-				String katsuyoNext = null;
-				//
-				for (int i = 0; i < IterableUtils.size(katsuyos) - 1; i++) {
-					//
-					katsuyoNext = IterableUtils.get(katsuyos, i + 1);
-					//
-					if (cp2 == null) {
-						//
-						cp2 = Unit.with(Strings.commonPrefix(IterableUtils.get(katsuyos, i), katsuyoNext));
-						//
-					} else {
-						//
-						cp2 = Unit.with(Strings.commonPrefix(IValue0Util.getValue0(cp2), katsuyoNext));
-						//
-					} // if
-						//
-				} // for
-					//
 				String katsuyo = null;
 				//
 				TextStringBuilder tsb = null;
@@ -1556,13 +1538,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					if (StringUtils.startsWith(
 							(textAndImage = new TextAndImage()).hiragana = katsuyo = IterableUtils.get(katsuyos, i),
-							IValue0Util.getValue0(cp2))) {
+							cp2)) {
 						//
 						TextStringBuilderUtil.clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
 						//
-						textAndImage.kanji = Util
-								.toString(TextStringBuilderUtil.append(TextStringBuilderUtil.append(tsb, cp1),
-										StringUtils.substringAfter(katsuyo, IValue0Util.getValue0(cp2))));
+						textAndImage.kanji = Util.toString(TextStringBuilderUtil.append(
+								TextStringBuilderUtil.append(tsb, cp1), StringUtils.substringAfter(katsuyo, cp2)));
 						//
 						textAndImage.accentImage = toBufferedImage(screenshot(eh = IterableUtils.get(katsuyoEhs, i)),
 								e -> LoggerUtil.error(LOG, e.getMessage(), e));
@@ -1607,6 +1588,41 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // try
 			//
+	}
+
+	private static String commonPrefix(final Iterable<String> instance) {
+		//
+		IValue0<String> iValue0 = null;
+		//
+		String next = null;
+		//
+		final int size = IterableUtils.size(instance);
+		//
+		for (int i = 0; i < size - 1; i++) {
+			//
+			next = IterableUtils.get(instance, i + 1);
+			//
+			if (iValue0 == null) {
+				//
+				iValue0 = testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null),
+						IterableUtils.get(instance, i), next, (a, b) -> Unit.with(Strings.commonPrefix(a, b)), null);
+				//
+			} else {
+				//
+				iValue0 = Unit.with(Strings.commonPrefix(IValue0Util.getValue0(iValue0), next));
+				//
+			} // if
+				//
+		} // for
+			//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
+		return size == 1 ? IterableUtils.get(instance, 0) : null;
+		//
 	}
 
 	private static void adjustImageColor(final Iterable<TextAndImage> textAndImages) {

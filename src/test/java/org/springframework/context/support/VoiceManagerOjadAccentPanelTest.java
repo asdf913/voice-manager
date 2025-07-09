@@ -26,6 +26,7 @@ import java.util.EventObject;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
@@ -35,6 +36,7 @@ import java.util.function.Supplier;
 
 import javax.swing.AbstractButton;
 import javax.swing.CellEditor;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -69,6 +71,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -115,7 +118,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES, METHOD_MATCHES,
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT, METHOD_GET_MOST_OCCURENCE_COLOR,
 			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE,
-			METHOD_GET_TEXT_AND_IMAGES = null;
+			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -219,6 +222,8 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_GET_TEXT_AND_IMAGES = clz.getDeclaredMethod("getTextAndImages", clz, CLASS_TEXT_AND_IMAGE))
 				.setAccessible(true);
+		//
+		(METHOD_COMMON_PREFIX = clz.getDeclaredMethod("commonPrefix", Iterable.class)).setAccessible(true);
 		//
 	}
 
@@ -1731,6 +1736,13 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertNull(getTextAndImages(instance, textAndImage));
 		//
+		FieldUtils.writeDeclaredField(instance, "cbmCurve",
+				new DefaultComboBoxModel<>(new Entry<?, ?>[] { Pair.of(null, null) }), true);
+		//
+		Assertions.assertNull(getTextAndImages(instance, textAndImage));
+		//
+		Assertions.assertNull(getTextAndImages(instance, null));
+		//
 	}
 
 	private static Collection<?> getTextAndImages(final VoiceManagerOjadAccentPanel instance, final Object textAndImage)
@@ -1741,6 +1753,34 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof Collection) {
 				return (Collection) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCommonPrefix() throws Throwable {
+		//
+		Assertions.assertNull(commonPrefix(Collections.singleton(null)));
+		//
+		Assertions.assertNull(commonPrefix(Collections.nCopies(2, null)));
+		//
+		Assertions.assertNull(commonPrefix(Arrays.asList(null, EMPTY)));
+		//
+		Assertions.assertEquals(EMPTY, commonPrefix(Collections.nCopies(3, EMPTY)));
+		//
+
+	}
+
+	private static String commonPrefix(final Iterable<String> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_COMMON_PREFIX.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
