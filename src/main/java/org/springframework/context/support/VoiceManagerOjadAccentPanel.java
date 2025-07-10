@@ -1154,13 +1154,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static boolean actionPerformed(@Nullable final String actionCommand) {
 		//
-		if (StringUtils.startsWith(actionCommand, StringUtils.join(COPY, ','))) {
+		final org.apache.commons.lang3.Strings strings = org.apache.commons.lang3.Strings.CS;
+		//
+		if (startsWith(strings, actionCommand, StringUtils.join(COPY, ','))) {
 			//
 			setContents(getClipboard(), new StringSelection(StringUtils.substringAfter(actionCommand, ',')), null);
 			//
 			return true;
 			//
-		} else if (StringUtils.startsWith(actionCommand, StringUtils.join(DOWNLOAD, ','))) {
+		} else if (startsWith(strings, actionCommand, StringUtils.join(DOWNLOAD, ','))) {
 			//
 			try {
 				//
@@ -1175,7 +1177,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			return true;
 			//
-		} else if (StringUtils.startsWith(actionCommand, StringUtils.join(PLAY, ','))) {
+		} else if (startsWith(strings, actionCommand, StringUtils.join(PLAY, ','))) {
 			//
 			Player player = null;
 			//
@@ -1202,6 +1204,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		return false;
 		//
+	}
+
+	private static boolean startsWith(final org.apache.commons.lang3.Strings instance, final CharSequence str,
+			final CharSequence prefix) {
+		return instance != null && instance.startsWith(str, prefix);
 	}
 
 	private static void close(@Nullable final Player instance) {
@@ -1608,7 +1615,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				for (int i = 0; i < Math.min(IterableUtils.size(katsuyos), IterableUtils.size(katsuyoEhs)); i++) {
 					//
-					if (StringUtils.startsWith(
+					if (startsWith(org.apache.commons.lang3.Strings.CS,
 							(textAndImage = new TextAndImage()).hiragana = katsuyo = IterableUtils.get(katsuyos, i),
 							cp2)) {
 						//
@@ -1870,7 +1877,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				if (StringUtils.isNotBlank(value = Util.toString(Util.getValue(entry)))) {
 					//
-					if (!StringUtils.endsWith(sb, "/")) {
+					if (!startsWith(org.apache.commons.lang3.Strings.CS, sb, "/")) {
 						//
 						sb.append('/');
 						//
@@ -2009,9 +2016,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		TextStringBuilder tsb = null;
 		//
+		final org.apache.commons.lang3.Strings strings = org.apache.commons.lang3.Strings.CS;
+		//
 		for (int i = 0; i < IterableUtils.size(ehs); i++) {
 			//
-			if (!StringUtils.equals(textInput, StringUtils.trim(textContent(eh = IterableUtils.get(ehs, i))))) {
+			if (!startsWith(strings, textInput, StringUtils.trim(textContent(eh = IterableUtils.get(ehs, i))))) {
 				//
 				continue;
 				//
@@ -2034,7 +2043,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				TextStringBuilderUtil.clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
 				//
-				if (StringUtils.startsWith(textInput,
+				if (startsWith(strings, textInput,
 						commonPrefix = Strings.commonPrefix(StringUtils.trim(textContent(IterableUtils.get(ehs, 0))),
 								StringUtils.trim(textContent(IterableUtils.get(ehs, 1)))))) {
 					//
@@ -2245,7 +2254,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 					//
-					if (StringUtils.endsWith(textAndImage.kanji = ArrayUtils.get(ss, j), "[な]")) {
+					if (startsWith(org.apache.commons.lang3.Strings.CS, textAndImage.kanji = ArrayUtils.get(ss, j),
+							"[な]")) {
 						//
 						break;
 						//
