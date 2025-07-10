@@ -1772,8 +1772,7 @@ class VoiceManagerOjadAccentPanelTest {
 		Assertions.assertNull(commonPrefix(Arrays.asList(null, EMPTY)));
 		//
 		Assertions.assertEquals(EMPTY, commonPrefix(Collections.nCopies(3, EMPTY)));
-		//
-
+		//s
 	}
 
 	private static String commonPrefix(final Iterable<String> instance) throws Throwable {
