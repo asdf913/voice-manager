@@ -25,6 +25,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -148,6 +150,13 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.PageUtil;
 import com.microsoft.playwright.Playwright;
 
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateUtil;
+import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
@@ -217,6 +226,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	@Note("Save Curve Image")
 	private AbstractButton btnSaveCurveImage = null;
+
+	private AbstractButton btnPdf = null;
 
 	@Note("Accent")
 	private JLabel lblAccent = null;
@@ -537,7 +548,19 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			panelVoice.add(new JScrollPane(jtVoice), String.format("hmax %1$s", 56));
 			//
-			add(panelVoice, String.format("span %1$s,%2$s", 3, growx));
+			add(panelVoice, String.format("span %1$s,%2$s,%3$s", 3, growx, wrap));
+			//
+			// PDF
+			//
+			final JPanel panelPdf = new JPanel();
+			//
+			panelPdf.setLayout(new MigLayout());
+			//
+			panelPdf.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "PDF"));
+			//
+			panelPdf.add(btnPdf = new JButton("PDF"));
+			//
+			add(panelPdf, String.format("span %1$s,%2$s", 3, growx));
 			//
 			final List<Field> fs = Util
 					.toList(Util.filter(
@@ -558,7 +581,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			} // for
 				//
 			Util.forEach(Stream.of(btnCopyPartOfSpeech, btnCopyKanji, btnCopyHiragana, btnCopyAccentImage,
-					btnCopyCurveImage, btnSaveAccentImage, btnSaveCurveImage), x -> Util.setEnabled(x, false));
+					btnCopyCurveImage, btnSaveAccentImage, btnSaveCurveImage, btnPdf), x -> Util.setEnabled(x, false));
 			//
 			Util.forEach(Stream.of(tfIndex, tfPartOfSpeech, tfKanji, tfHiragana), x -> Util.setEditable(x, false));
 			//
@@ -1017,6 +1040,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // if
 				//
+				// PDF
+				//
+			Util.setEnabled(btnPdf, textAndImage != null);
+			//
 			pack(window);
 			//
 		} else if (Objects.equals(source, btnCopyAccentImage)) {
@@ -1065,6 +1092,52 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							.toFile(Path.of(String.format("%1$s(%2$s).%3$s", Util.getText(tfKanji), "Curve", format))),
 					format);
 			//
+		} else if (Objects.equals(source, btnPdf)) {
+			//
+			final Version version = Configuration.getVersion();
+			//
+			final Configuration configuration = new Configuration(version);
+			//
+			configuration.setTemplateLoader(new ClassTemplateLoader(VoiceManagerOjadAccentPanel.class, "/"));
+			//
+			try (final Writer w = new StringWriter(); final Playwright playwright = Playwright.create()) {
+				//
+				final Template template = configuration.getTemplate("ojad.ftl");
+				//
+				final TextAndImage textAndImage = Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage));
+				//
+				final Map<String, Object> map = new LinkedHashMap<>(
+						Collections.singletonMap("textAndImages", getTextAndImages(this, textAndImage)));
+				//
+				Util.put(map, "static", new BeansWrapper(version).getStaticModels());
+				//
+				TemplateUtil.process(template, map, w);
+				//
+				final Page page = newPage(BrowserTypeUtil.launch(chromium(playwright)));
+				//
+				if (page != null) {
+					//
+					page.setContent(Util.toString(w));
+					//
+				} // if
+					//
+				final JFileChooser jfc = new JFileChooser(".");
+				//
+				jfc.setSelectedFile(Util.toFile(Path.of(StringUtils.joinWith(".", getKanji(textAndImage), "pdf"))));
+				//
+				if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
+						&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+					//
+					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), page != null ? page.pdf() : null);
+					//
+				} // if
+					//
+			} catch (final IOException | TemplateException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
 		} // if
 			//
 	}
@@ -2323,7 +2396,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	@Nullable
-	private static byte[] toByteArray(@Nullable final RenderedImage image, @Nullable final String format)
+	public static byte[] toByteArray(@Nullable final RenderedImage image, @Nullable final String format)
 			throws IOException {
 		//
 		if (image == null || format == null) {

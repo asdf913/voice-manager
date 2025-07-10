@@ -632,6 +632,14 @@ class VoiceManagerOjadAccentPanelTest {
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(EMPTY, 0,
 				StringUtils.join(FieldUtils.readDeclaredStaticField(clz, "PLAY", true), ','))));
 		//
+		// btnPdf
+		//
+		final AbstractButton btnPdf = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnPdf", btnPdf, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnPdf, 0, null)));
+		//
 	}
 
 	@Test
@@ -1772,7 +1780,7 @@ class VoiceManagerOjadAccentPanelTest {
 		Assertions.assertNull(commonPrefix(Arrays.asList(null, EMPTY)));
 		//
 		Assertions.assertEquals(EMPTY, commonPrefix(Collections.nCopies(3, EMPTY)));
-		//s
+		// s
 	}
 
 	private static String commonPrefix(final Iterable<String> instance) throws Throwable {
