@@ -277,7 +277,7 @@ class VoiceManagerOjadAccentPanelTest {
 					//
 			} else if (proxy instanceof Page) {
 				//
-				if (Objects.equals(methodName, "querySelectorAll")) {
+				if (Util.contains(Arrays.asList("querySelectorAll", "pdf"), methodName)) {
 					//
 					return null;
 					//

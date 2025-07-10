@@ -1128,7 +1128,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
 						&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 					//
-					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), page != null ? page.pdf() : null);
+					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), pdf(page));
 					//
 				} // if
 					//
@@ -1140,6 +1140,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // if
 			//
+	}
+
+	private static byte[] pdf(final Page instance) {
+		return instance != null ? instance.pdf() : null;
 	}
 
 	private static void removeAll(@Nullable final Container instance) {
