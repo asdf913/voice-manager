@@ -1142,7 +1142,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static byte[] pdf(final Page instance) {
+	private static byte[] pdf(@Nullable final Page instance) {
 		return instance != null ? instance.pdf() : null;
 	}
 
