@@ -1115,12 +1115,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				final Page page = newPage(BrowserTypeUtil.launch(chromium(playwright)));
 				//
-				if (page != null) {
-					//
-					page.setContent(Util.toString(w));
-					//
-				} // if
-					//
+				setContent(page, Util.toString(w));
+				//
 				final JFileChooser jfc = new JFileChooser(".");
 				//
 				jfc.setSelectedFile(Util.toFile(Path.of(StringUtils.joinWith(".", getKanji(textAndImage), "pdf"))));
@@ -1140,6 +1136,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // if
 			//
+	}
+
+	private static void setContent(final Page instance, final String html) {
+		if (instance != null) {
+			instance.setContent(html);
+		}
 	}
 
 	private static byte[] pdf(@Nullable final Page instance) {
