@@ -60,6 +60,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -172,7 +174,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 			final List<ECSSVersion> list = Util
 					.toList(Util.filter(testAndApply(Objects::nonNull, ECSSVersion.values(), Arrays::stream, null),
-							x -> StringUtils.contains(Util.name(x), string)));
+							x -> StringsUtil.contains(Strings.CS, Util.name(x), string)));
 			//
 			final int size = IterableUtils.size(list);
 			//

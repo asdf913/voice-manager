@@ -1259,7 +1259,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				} // if
 					//
 				if ((l = StringUtils.length(g11)) == 2
-						&& StringUtils.contains(line = IterableUtils.get(lines, i), StringUtils.substring(g11, 1, l))
+						&& StringsUtil.contains(org.apache.commons.lang3.Strings.CS, line = IterableUtils.get(lines, i),
+								StringUtils.substring(g11, 1, l))
 						&& Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA, line)) && Util.groupCount(m2) > 1
 						&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g21 = Util.group(m2, 1), g11))
 						&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g22 = Util.group(m2, 2), g12))
@@ -1418,7 +1419,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			for (int j = 0; j < IterableUtils.size(lines); j++) {
 				//
-				if (keyIntEquals(iop, j) || !StringUtils.contains(line = IterableUtils.get(lines, j), kLast)
+				if (keyIntEquals(iop, j)
+						|| !StringsUtil.contains(org.apache.commons.lang3.Strings.CS,
+								line = IterableUtils.get(lines, j), kLast)
 						|| !Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA, line)) || Util.groupCount(m2) <= 1
 						|| StringUtils.length(g21 = Util.group(m2, 1)) != 2) {
 					//
@@ -6562,9 +6565,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				&& StringUtils.isNotBlank(lcsk = longestCommonSubstring(g11, g21 = Util.group(m2, 1)))
 				&& StringUtils.isNotBlank(lcsv = longestCommonSubstring(g12, g22 = Util.group(m2, 2)))
 				&& StringsUtil.endsWith(strings, g22, "ん")
-				&& !StringUtils.contains(g21,
+				&& !StringsUtil.contains(strings, g21,
 						testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1), null))
-				&& StringUtils.contains(g21,
+				&& StringsUtil.contains(strings, g21,
 						testAndApply(x -> StringUtils.length(x) > 1, g11, x -> StringUtils.substring(x, 1), null))) {
 			//
 			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
@@ -7680,9 +7683,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g23 = Util.group(m2, 3);
 		//
-		if (StringsUtil.equals(org.apache.commons.lang3.Strings.CS, g22, "の")) {
+		final org.apache.commons.lang3.Strings strings = org.apache.commons.lang3.Strings.CS;
+		//
+		if (StringsUtil.equals(strings, g22, "の")) {
 			//
-			if (anyMatch(Stream.of("渦", "花", "丸"), x -> StringUtils.contains(g11, x))) {
+			if (anyMatch(Stream.of("渦", "花", "丸"), x -> StringsUtil.contains(strings, g11, x))) {
 				//
 				MultimapUtil.putAll(
 						multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,

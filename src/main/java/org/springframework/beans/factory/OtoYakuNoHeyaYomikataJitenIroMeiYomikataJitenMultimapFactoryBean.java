@@ -1895,7 +1895,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		for (int k = 0; k < IterableUtils.size(list) && StringUtils.isNotBlank(lcsk); k++) {
 			//
-			if (!StringUtils.contains(s = IterableUtils.get(list, k), lcsk)) {
+			if (!StringsUtil.contains(org.apache.commons.lang3.Strings.CS, s = IterableUtils.get(list, k), lcsk)) {
 				//
 				continue;
 				//
@@ -2343,7 +2343,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(m, 1), Util.group(m, 2));
 				//
-			} else if (StringUtils.contains(s = IterableUtils.get(list, k), g1c2)
+			} else if (StringsUtil.contains(org.apache.commons.lang3.Strings.CS, s = IterableUtils.get(list, k), g1c2)
 					&& Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 							"^([\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
 							s))
@@ -3016,7 +3016,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		for (int k = 0; k < IterableUtils.size(list); k++) {
 			//
-			if (Boolean.logicalOr(!StringUtils.contains(s = IterableUtils.get(list, k), g1s1), k == i)) {
+			if (Boolean.logicalOr(
+					!StringsUtil.contains(org.apache.commons.lang3.Strings.CS, s = IterableUtils.get(list, k), g1s1),
+					k == i)) {
 				//
 				continue;
 				//
@@ -3591,7 +3593,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		for (int k = 0; k < IterableUtils.size(list); k++) {
 			//
-			if (i == k || !StringUtils.contains(s = IterableUtils.get(list, k), g1)) {
+			if (i == k
+					|| !StringsUtil.contains(org.apache.commons.lang3.Strings.CS, s = IterableUtils.get(list, k), g1)) {
 				//
 				continue;
 				//
@@ -3643,7 +3646,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		for (int k = 0; k < IterableUtils.size(list); k++) {
 			//
-			if (i == k || !StringUtils.contains(s = IterableUtils.get(list, k), g1)) {
+			if (i == k
+					|| !StringsUtil.contains(org.apache.commons.lang3.Strings.CS, s = IterableUtils.get(list, k), g1)) {
 				//
 				continue;
 				//
@@ -3689,7 +3693,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		for (int k = 0; k < IterableUtils.size(list); k++) {
 			//
-			if (i == k || !StringUtils.contains(s = IterableUtils.get(list, k), g1)) {
+			if (i == k
+					|| !StringsUtil.contains(org.apache.commons.lang3.Strings.CS, s = IterableUtils.get(list, k), g1)) {
 				//
 				continue;
 				//
@@ -3945,7 +3950,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 					"^(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
 					IterableUtils.get(list, j))) && Util.groupCount(m) > 1
-					&& StringUtils.contains(string, g1 = Util.group(m, 1))) {
+					&& StringsUtil.contains(org.apache.commons.lang3.Strings.CS, string, g1 = Util.group(m, 1))) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g1,
 						Util.group(m, 2));

@@ -510,7 +510,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 			for (final String pattern : patterns) {
 				//
-				if (StringUtils.contains(userString.replaceFirst(pattern, ""), pattern)) {
+				if (StringsUtil.contains(Strings.CS, userString.replaceFirst(pattern, ""), pattern)) {
 					//
 					Util.put(hitCountMap = ObjectUtils.getIfNull(hitCountMap, LinkedHashMap::new), pattern,
 							(size - userString.replaceAll(pattern, "").length()) / testAndApplyAsInt(x -> x == 0,
