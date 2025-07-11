@@ -18,6 +18,8 @@ import javax.annotation.Nullable;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.javatuples.valueintf.IValue0;
@@ -176,6 +178,8 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 		//
 		RomajiOrHiragana romajiOrHiragana = null;
 		//
+		final Strings strings = Strings.CI;
+		//
 		for (final Element e : es) {
 			//
 			if (e == null) {
@@ -184,7 +188,7 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 				//
 			} // if
 				//
-			if (StringUtils.equalsIgnoreCase(classString = NodeUtil.attr(e, "class"), "name-sub01")) {
+			if (StringsUtil.equals(Strings.CI, classString = NodeUtil.attr(e, "class"), "name-sub01")) {
 				//
 				if (Util.containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
 						romajiOrHiragana = RomajiOrHiragana.ROMAJI)) {
@@ -197,7 +201,7 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 					//
 				} // if
 					//
-			} else if (StringUtils.equalsIgnoreCase(classString, "name-sub02")) {
+			} else if (StringsUtil.equals(Strings.CI, classString, "name-sub02")) {
 				//
 				if (Util.containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
 						romajiOrHiragana = RomajiOrHiragana.HIRAGANA)) {

@@ -19,6 +19,8 @@ import javax.swing.JFrame;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -135,16 +137,17 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 			//
 		} // try
 			//
+		final Strings strings = Strings.CI;
+		//
 		List<Field> fs = FieldUtils.getAllFieldsList(JFrame.class).stream()
-				.filter(f -> StringUtils.equalsIgnoreCase(getName(f), string)).toList();
+				.filter(f -> StringsUtil.equals(strings, getName(f), string)).toList();
 		//
 		int size = IterableUtils.size(fs);
 		//
 		if (size != 1) {
 			//
 			size = IterableUtils.size(fs = Arrays.stream(JFrame.class.getInterfaces()).map(FieldUtils::getAllFieldsList)
-					.flatMap(Collection::stream).filter(f -> StringUtils.equalsIgnoreCase(getName(f), string))
-					.toList());
+					.flatMap(Collection::stream).filter(f -> StringsUtil.equals(strings, getName(f), string)).toList());
 			//
 		} // if
 			//

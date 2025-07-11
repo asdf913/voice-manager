@@ -16,6 +16,8 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.poi.ss.usermodel.CellUtil;
@@ -228,7 +230,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 			//
 			if ((td = IterableUtils.get(tds, i)) == null
 					|| (ElementUtil.childrenSize(td) > 0 && (firstChild = ElementUtil.child(td, 0)) != null
-							&& StringUtils.equalsIgnoreCase("script", ElementUtil.tagName(firstChild)))
+							&& StringsUtil.equals(Strings.CI, "script", ElementUtil.tagName(firstChild)))
 					|| (pair = getPair(ElementUtil.text(td), unicodeBlock,
 							arPattern = ObjectUtils.getIfNull(arPattern, AtomicReference::new))) == null
 					|| (ss = IValue0Util.getValue0(pair)) == null) {

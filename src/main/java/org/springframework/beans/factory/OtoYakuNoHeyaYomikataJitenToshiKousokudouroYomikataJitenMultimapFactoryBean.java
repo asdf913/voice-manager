@@ -321,6 +321,8 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 		Matcher matcher = null;
 		//
+		final Strings strings = Strings.CI;
+		//
 		for (final Node node : nodes) {
 			//
 			if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(
@@ -350,9 +352,9 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 				//
 			} else if (Boolean.logicalAnd(b,
 					Boolean.logicalOr(
-							StringUtils.equalsIgnoreCase("img",
+							StringsUtil.equals(strings, "img",
 									tagName = ElementUtil.tagName(Util.cast(Element.class, node))),
-							StringUtils.equalsIgnoreCase("p", tagName)))) {
+							StringsUtil.equals(strings, "p", tagName)))) {
 				//
 				b = false;
 				//

@@ -722,6 +722,8 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		String message = null;
 		//
+		final Strings strings = Strings.CI;
+		//
 		for (final Entry<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> en : entrySet) {
 			//
 			if (en == null) {
@@ -737,11 +739,11 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				if (Boolean
 						.logicalOr(
-								Boolean.logicalAnd(StringUtils.equalsIgnoreCase("xls", string),
+								Boolean.logicalAnd(StringsUtil.equals(strings, "xls", string),
 										Objects.equals(OLE_2_COMPOUND_DOCUMENT,
 												message = getMessage(
 														new ContentInfoUtil().findMatch(baos.toByteArray())))),
-								Boolean.logicalAnd(StringUtils.equalsIgnoreCase("xlsx", string),
+								Boolean.logicalAnd(StringsUtil.equals(strings, "xlsx", string),
 										Objects.equals("Microsoft Office Open XML", message)))) {
 					//
 					testAndAccept((a, b) -> !Util.contains(a, b), classes = getIfNull(classes, ArrayList::new),
@@ -1108,10 +1110,12 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				ArrayUtils.insert(0, encryptionModes, (EncryptionMode) null))),
 				String.format("%1$s,span %2$s", WRAP, 2));
 		//
+		final Strings strings = Strings.CI;
+		//
 		Util.setSelectedItem(cbmEncryptionMode,
 				Util.orElse(
 						findFirst(Util.filter(Arrays.stream(encryptionModes),
-								x -> StringUtils.equalsIgnoreCase(Util.name(x),
+								x -> StringsUtil.equals(strings, Util.name(x),
 										PropertyResolverUtil.getProperty(propertyResolver,
 												"org.springframework.context.support.VoiceManager.encryptionMode")))),
 						null));
@@ -1129,7 +1133,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		Util.setSelectedItem(cbmCompressionLevel,
 				Util.orElse(
 						findFirst(Util.filter(Arrays.stream(compressionLevels),
-								x -> StringUtils.equalsIgnoreCase(Util.name(x),
+								x -> StringsUtil.equals(strings, Util.name(x),
 										PropertyResolverUtil.getProperty(propertyResolver,
 												"org.springframework.context.support.VoiceManager.compressionLevel")))),
 						null));

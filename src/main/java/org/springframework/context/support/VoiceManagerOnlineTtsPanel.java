@@ -294,7 +294,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 						//
 						return TextNodeUtil.text(textNode);
 						//
-					} else if (x instanceof Element e && StringUtils.equalsIgnoreCase(ElementUtil.tagName(e), "br")) {
+					} else if (x instanceof Element e && StringsUtil.equals(Strings.CI, ElementUtil.tagName(e), "br")) {
 						//
 						return "<br/>";
 						//

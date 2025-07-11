@@ -525,7 +525,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkListFactoryBean implements
 		for (int i = 0; fs != null && i < fs.length; i++) {
 			//
 			if ((f = fs[i]) == null
-					|| !StringUtils.equalsIgnoreCase(Util.getName(f), IntStringMap.getString(intStringMap, index))) {
+					|| !StringsUtil.equals(Strings.CI, Util.getName(f), IntStringMap.getString(intStringMap, index))) {
 				//
 				continue;
 				//

@@ -18,6 +18,8 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -180,6 +182,8 @@ public class RyutetsuKanjiHiraganaMapFactoryBean extends StringMapFromResourceFa
 			//
 			Element e = null;
 			//
+			final Strings strings = Strings.CI;
+			//
 			for (final Node node : childNodes) {
 				//
 				if (node == null) {
@@ -188,7 +192,7 @@ public class RyutetsuKanjiHiraganaMapFactoryBean extends StringMapFromResourceFa
 					//
 				} // if
 					//
-				if (StringUtils.equalsIgnoreCase(NodeUtil.nodeName(node), "a") && khr != null && khr.romaji == null) {
+				if (StringsUtil.equals(strings, NodeUtil.nodeName(node), "a") && khr != null && khr.romaji == null) {
 					//
 					khr.romaji = NodeUtil.attr(node, "name");
 					//
@@ -196,7 +200,7 @@ public class RyutetsuKanjiHiraganaMapFactoryBean extends StringMapFromResourceFa
 					//
 					khr.kanji = TextNodeUtil.text(textNode);
 					//
-				} else if (StringUtils.equalsIgnoreCase(NodeUtil.nodeName(node), "span")
+				} else if (StringsUtil.equals(strings, NodeUtil.nodeName(node), "span")
 						&& (e = Util.cast(Element.class, node)) != null && khr != null && khr.hiragana == null) {
 					//
 					khr.hiragana = StringUtils.replaceChars(ElementUtil.text(e), "()", "");

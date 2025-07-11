@@ -1632,9 +1632,11 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 		final int length = length(voiceIds);
 		//
+		final Strings strings = Strings.CI;
+		//
 		for (int j = 0; j < length; j++) {
 			//
-			if (!StringUtils.equalsIgnoreCase(ArrayUtils.get(voiceIds, j), voice)) {
+			if (!StringsUtil.equals(strings, ArrayUtils.get(voiceIds, j), voice)) {
 				//
 				continue;
 				//
@@ -1684,7 +1686,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 		for (int j = 0; j < length; j++) {
 			//
-			if (!(StringUtils.equalsIgnoreCase(
+			if (!(StringsUtil.equals(strings,
 					voiceAttribute = SpeechApi.getVoiceAttribute(speechApi, ArrayUtils.get(voiceIds, j), "Language"),
 					voice) || Objects.equals(ObjIntFunctionUtil.apply(objIntFunction, voiceAttribute, 16), voice))) {
 				//

@@ -1600,7 +1600,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		Object ecssUnit = null;
 		//
 		final List<ECSSUnit> list = Util.toList(Util.filter(Arrays.stream(ECSSUnit.values()),
-				x -> StringUtils.equalsIgnoreCase(Util.name(x), Util.toString(sb))));
+				x -> StringsUtil.equals(Strings.CI, Util.name(x), Util.toString(sb))));
 		//
 		final int size = IterableUtils.size(list);
 		//
@@ -1992,11 +1992,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		final int length = fontNames != null ? fontNames.length : 0;
 		//
+		final Strings strings = Strings.CI;
+		//
 		for (int i = 0; i < length; i++) {
 			//
 			if ((fontName = ArrayUtils.get(fontNames, i)) == null
-					|| (!StringUtils.equalsIgnoreCase(fontName.getName(), prefix)
-							&& !StringUtils.equalsIgnoreCase(Util.name(fontName), prefix))) {
+					|| (!StringsUtil.equals(strings, fontName.getName(), prefix)
+							&& !StringsUtil.equals(strings, Util.name(fontName), prefix))) {
 				//
 				continue;
 				//
