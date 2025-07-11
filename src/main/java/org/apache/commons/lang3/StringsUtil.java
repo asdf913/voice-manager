@@ -31,4 +31,8 @@ public interface StringsUtil {
 		return instance != null ? instance.indexOf(seq, searchSeq) : -1;
 	}
 
+	static int compare(final Strings instance, final String str1, final String str2) {
+		return instance != null ? instance.compare(str1, str2) : 0;
+	}
+
 }

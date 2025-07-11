@@ -1126,7 +1126,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 						testAndApply(Objects::nonNull, FieldUtils.getAllFields(LocaleID.class), Arrays::stream, null),
 						x -> x != null && !Objects.equals(Util.getType(x), Util.getDeclaringClass(x))
 								&& !x.isSynthetic() && !Util.isStatic(x)),
-						(a, b) -> StringUtils.compare(Util.getName(getPackage(Util.getDeclaringClass(a))),
+						(a, b) -> StringsUtil.compare(Strings.CS, Util.getName(getPackage(Util.getDeclaringClass(a))),
 								Util.getName(getPackage(Util.getDeclaringClass(b))))));
 				//
 			} // if

@@ -3349,9 +3349,9 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 
 	private static class ExportTask implements Runnable {
 
-		private static String FILE_NAME_PREFIX_PADDING = Util.orElse(
-				min(Util.stream(IteratorUtils.toList(RgxGen.parse("\\d").iterateUnique())), StringUtils::compare),
-				null);
+		private static String FILE_NAME_PREFIX_PADDING = Util
+				.orElse(min(Util.stream(IteratorUtils.toList(RgxGen.parse("\\d").iterateUnique())),
+						(a, b) -> StringsUtil.compare(Strings.CS, a, b)), null);
 
 		@Note("Count")
 		private Integer count;
@@ -4974,7 +4974,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 						testAndApply(Objects::nonNull, FieldUtils.getAllFields(LocaleID.class), Arrays::stream, null),
 						x -> x != null && !Objects.equals(Util.getType(x), Util.getDeclaringClass(x))
 								&& !x.isSynthetic() && !Util.isStatic(x)),
-						(a, b) -> StringUtils.compare(Util.getName(getPackage(Util.getDeclaringClass(a))),
+						(a, b) -> StringsUtil.compare(Strings.CS, Util.getName(getPackage(Util.getDeclaringClass(a))),
 								Util.getName(getPackage(Util.getDeclaringClass(b))))));
 				//
 			} // if
