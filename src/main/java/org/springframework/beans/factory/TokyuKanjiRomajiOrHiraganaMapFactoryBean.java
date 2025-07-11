@@ -188,7 +188,7 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 				//
 			} // if
 				//
-			if (StringsUtil.equals(Strings.CI, classString = NodeUtil.attr(e, "class"), "name-sub01")) {
+			if (StringsUtil.equals(strings, classString = NodeUtil.attr(e, "class"), "name-sub01")) {
 				//
 				if (Util.containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
 						romajiOrHiragana = RomajiOrHiragana.ROMAJI)) {
@@ -201,7 +201,7 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 					//
 				} // if
 					//
-			} else if (StringsUtil.equals(Strings.CI, classString, "name-sub02")) {
+			} else if (StringsUtil.equals(strings, classString, "name-sub02")) {
 				//
 				if (Util.containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
 						romajiOrHiragana = RomajiOrHiragana.HIRAGANA)) {
