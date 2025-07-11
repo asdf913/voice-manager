@@ -1062,18 +1062,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			setContents(getClipboard(), Reflection.newProxy(Transferable.class, ih), null);
 			//
-		} else if (Objects.equals(source, btnCopyPartOfSpeech)) {
-			//
-			setContents(getClipboard(), new StringSelection(Util.getText(tfPartOfSpeech)), null);
-			//
-		} else if (Objects.equals(source, btnCopyKanji)) {
-			//
-			setContents(getClipboard(), new StringSelection(Util.getText(tfKanji)), null);
-			//
-		} else if (Objects.equals(source, btnCopyHiragana)) {
-			//
-			setContents(getClipboard(), new StringSelection(Util.getText(tfHiragana)), null);
-			//
 		} else if (Objects.equals(source, btnSaveAccentImage)) {
 			//
 			final String format = Util.toString(Util.getSelectedItem(cbmImageFormat));
@@ -1136,6 +1124,44 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // if
 			//
+		final Map<Object, JTextComponent> objectJTextComponentMap = new LinkedHashMap<>(
+				Collections.singletonMap(btnCopyPartOfSpeech, tfPartOfSpeech));
+		//
+		objectJTextComponentMap.put(btnCopyKanji, tfKanji);
+		//
+		objectJTextComponentMap.put(btnCopyHiragana, tfHiragana);
+		//
+		if (setContents(source, () -> getClipboard(), objectJTextComponentMap)) {
+			//
+			return;
+			//
+		} // if
+			//
+	}
+
+	private static boolean setContents(final Object source, final Supplier<Clipboard> suppler,
+			final Map<Object, JTextComponent> map) {
+		//
+		final Iterable<Entry<Object, JTextComponent>> entrySet = Util.entrySet(map);
+		//
+		if (Util.iterator(entrySet) != null) {
+			//
+			for (final Entry<Object, JTextComponent> entry : entrySet) {
+				//
+				if (Objects.equals(source, Util.getKey(entry))) {
+					//
+					setContents(Util.get(suppler), new StringSelection(Util.getText(Util.getValue(entry))), null);
+					//
+					return true;
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return false;
+		//
 	}
 
 	private static void setContent(@Nullable final Page instance, final String html) {
