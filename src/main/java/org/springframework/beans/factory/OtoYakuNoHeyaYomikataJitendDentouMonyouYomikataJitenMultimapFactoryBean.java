@@ -1015,9 +1015,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					TextStringBuilderUtil.clear(ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
 					Util.getValue(e1)));
 			//
+			final org.apache.commons.lang3.Strings strings = org.apache.commons.lang3.Strings.CS;
+			//
 			for (final String s : ik) {
 				//
-				testAndAccept(StringUtils::startsWith, tsbv, s, (a, b) -> delete(a, 0, StringUtils.length(b)));
+				testAndAccept((a, b) -> StringsUtil.startsWith(strings, a, b), tsbv, s,
+						(a, b) -> delete(a, 0, StringUtils.length(b)));
 				//
 			} // for
 				//
@@ -1031,9 +1034,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			for (final String s : iv) {
 				//
-				testAndAccept(
-						(a, b) -> StringsUtil.endsWith(org.apache.commons.lang3.Strings.CS, Util.getKey(a),
-								Util.getValue(a)),
+				testAndAccept((a, b) -> StringsUtil.endsWith(strings, Util.getKey(a), Util.getValue(a)),
 						Pair.of(tsbv, s), ltsb,
 						(a, b) -> delete(Util.getKey(a), b - StringUtils.length(Util.getValue(a)), b));
 				//
@@ -1519,11 +1520,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		Iterable<String> cs = MultimapUtil.get(mm, kFirst);
 		//
+		final org.apache.commons.lang3.Strings strings = org.apache.commons.lang3.Strings.CS;
+		//
 		if (Util.iterator(cs) != null) {
 			//
 			for (final String s : cs) {
 				//
-				testAndAccept(StringUtils::startsWith, tsbv, s, (a, b) -> delete(a, 0, StringUtils.length(b)));
+				testAndAccept((a, b) -> StringsUtil.startsWith(strings, a, b), tsbv, s,
+						(a, b) -> delete(a, 0, StringUtils.length(b)));
 				//
 			} // for
 				//
@@ -1541,9 +1545,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			for (final String s : cs) {
 				//
-				testAndAccept(
-						(a, b) -> StringsUtil.endsWith(org.apache.commons.lang3.Strings.CS, Util.getKey(a),
-								Util.getValue(a)),
+				testAndAccept((a, b) -> StringsUtil.endsWith(strings, Util.getKey(a), Util.getValue(a)),
 						Pair.of(tsbv, s), StringUtils.length(tsbv),
 						(a, b) -> delete(Util.getKey(a), b - StringUtils.length(Util.getValue(a)), b));
 				//
