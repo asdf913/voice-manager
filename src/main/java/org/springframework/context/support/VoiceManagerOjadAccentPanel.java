@@ -1235,8 +1235,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static boolean startsWith(@Nullable final org.apache.commons.lang3.Strings instance, final CharSequence str,
-			final CharSequence prefix) {
+	private static boolean startsWith(@Nullable final org.apache.commons.lang3.Strings instance,
+			@Nullable final CharSequence str, @Nullable final CharSequence prefix) {
 		return instance != null && instance.startsWith(str, prefix);
 	}
 
