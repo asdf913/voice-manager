@@ -3006,7 +3006,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				for (int j = 0; us != null && i < us.length; j++) {
 					//
-					if (StringUtils.endsWithIgnoreCase(Util.toString(sb), name = Util.name(u = us[j]))) {
+					if (StringsUtil.endsWith(Strings.CI, Util.toString(sb), name = Util.name(u = us[j]))) {
 						//
 						Util.setText(tfFontSize1, sb.substring(0, StringUtils.length(sb) - StringUtils.length(name)));
 						//

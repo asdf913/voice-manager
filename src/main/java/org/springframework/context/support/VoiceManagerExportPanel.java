@@ -668,7 +668,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		final List<Class<? extends Workbook>> classes = Util.toList(Util.filter(Util.stream(Util.keySet(map)),
 				x -> Boolean.logicalOr(Objects.equals(Util.getName(x), toString),
-						StringUtils.endsWithIgnoreCase(Util.getName(x), toString))));
+						StringsUtil.endsWith(Strings.CI, Util.getName(x), toString))));
 		//
 		final int size = IterableUtils.size(classes);
 		//
@@ -1985,7 +1985,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					final String[] fileExtensions = getFileExtensions(ContentType.HTML);
 					//
 					if (!anyMatch(testAndApply(Objects::nonNull, fileExtensions, Arrays::stream, null),
-							x -> StringUtils.endsWithIgnoreCase(sb, StringUtils.join('.', x)))) {
+							x -> StringsUtil.endsWith(Strings.CI, sb, StringUtils.join('.', x)))) {
 						//
 						// append "." if the file name does not ends with "."
 						//
@@ -2021,7 +2021,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 						final String[] fileExtensions = getFileExtensions(ContentType.HTML);
 						//
 						if (!anyMatch(testAndApply(Objects::nonNull, fileExtensions, Arrays::stream, null),
-								x -> StringUtils.endsWithIgnoreCase(sb, StringUtils.join('.', x)))) {
+								x -> StringsUtil.endsWith(Strings.CI, sb, StringUtils.join('.', x)))) {
 							//
 							// append "." if the file name does not ends with "."
 							//
