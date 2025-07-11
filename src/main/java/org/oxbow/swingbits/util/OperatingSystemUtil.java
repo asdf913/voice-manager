@@ -4,7 +4,6 @@ package org.oxbow.swingbits.util;
 import java.nio.file.FileSystems;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.StringsUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
