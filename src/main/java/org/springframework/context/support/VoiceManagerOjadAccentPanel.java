@@ -184,6 +184,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static final String CURVE = "curve";
 
+	private static final String VALUE = "value";
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -354,7 +356,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			for (int i = 0; i < IterableUtils.size(es); i++) {
 				//
 				dcbm.addElement(
-						Pair.of(Util.getValue(attribute(e = IterableUtils.get(es, i), "value")), ElementUtil.text(e)));
+						Pair.of(Util.getValue(attribute(e = IterableUtils.get(es, i), VALUE)), ElementUtil.text(e)));
 				//
 			} // for
 				//
@@ -1397,7 +1399,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					Util.put(map, "limit", NumberUtils
 							.toInt(Util.toString(jsonValue(getProperty(testAndApply(x -> IterableUtils.size(x) == 1,
 									querySelectorAll(page, "#search_limit"), x -> IterableUtils.get(x, 0), null),
-									"value"))), 1)
+									VALUE))), 1)
 							* size);
 					//
 					PageUtil.navigate(page = newPage(browser), url = createUrl(baseUrl, map));
@@ -1502,7 +1504,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					Util.put(map, "limit", NumberUtils
 							.toInt(Util.toString(jsonValue(getProperty(testAndApply(x -> IterableUtils.size(x) == 1,
 									querySelectorAll(page, "#search_limit"), x -> IterableUtils.get(x, 0), null),
-									"value"))), 1)
+									VALUE))), 1)
 							* size);
 					//
 					PageUtil.navigate(page = newPage(browser), url = createUrl(baseUrl, map));
