@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
@@ -47,7 +48,8 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5,
 			METHOD_CREATE_MULTI_MAP_ITERABLE, METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2,
 			METHOD_CREATE_MULTI_MAP_STRING_CHAR_ARRAY_ITERABLE, METHOD_CREATE_MULTI_MAP4, METHOD_CREATE_MULTI_MAP5,
-			METHOD_CREATE_MULTI_MAP6, METHOD_CREATE_MULTI_MAP7, METHOD_CREATE_MULTI_MAP8, METHOD_AND = null;
+			METHOD_CREATE_MULTI_MAP6, METHOD_CREATE_MULTI_MAP7, METHOD_CREATE_MULTI_MAP8, METHOD_AND,
+			METHOD_REMOVE_END = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -101,6 +103,9 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 				char[].class, Iterable.class)).setAccessible(true);
 		//
 		(METHOD_AND = clz.getDeclaredMethod("and", Predicate.class, Object.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_REMOVE_END = clz.getDeclaredMethod("removeEnd", Strings.class, String.class, CharSequence.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -609,6 +614,28 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 			final Object obj = METHOD_AND.invoke(null, predicate, a, b);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testRemoveEnd() throws Throwable {
+		//
+		Assertions.assertNull(removeEnd(null, null, null));
+		//
+	}
+
+	private static String removeEnd(final Strings instance, final String str, final CharSequence remove)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_REMOVE_END.invoke(null, instance, str, remove);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

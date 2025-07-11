@@ -612,7 +612,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 						testAndApply(
 								(a, b) -> Boolean.logicalAnd(Objects.equals(a, "雨脚"),
 										StringsUtil.endsWith(strings, b, "とも")),
-								g1, Util.group(matcher, 2), (a, b) -> StringUtils.removeEnd(b, "とも"), (a, b) -> b));
+								g1, Util.group(matcher, 2), (a, b) -> removeEnd(Strings.CS, b, "とも"), (a, b) -> b));
 				//
 			} // while
 				//
@@ -629,7 +629,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 					if (Boolean.logicalAnd(Objects.equals(ss[i], "雨足"),
 							Objects.equals(
 									g1 = testAndApply(x -> StringsUtil.endsWith(strings, x, "とも"),
-											Util.group(matcher, 1), x -> StringUtils.removeEnd(x, "とも"), x -> x),
+											Util.group(matcher, 1), x -> removeEnd(Strings.CS, x, "とも"), x -> x),
 									"うきゃく"))) {
 						//
 						continue;
@@ -658,6 +658,10 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 			//
 		return multimap;
 		//
+	}
+
+	private static String removeEnd(final Strings instance, final String str, final CharSequence remove) {
+		return instance != null ? instance.removeEnd(str, remove) : null;
 	}
 
 	@Nullable
