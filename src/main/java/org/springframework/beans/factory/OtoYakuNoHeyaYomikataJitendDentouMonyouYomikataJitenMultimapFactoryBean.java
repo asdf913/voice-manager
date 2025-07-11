@@ -4944,11 +4944,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} else if (StringUtils.length(g21) == 2) {
 			//
-			if (Boolean
-					.logicalAnd(
-							(indexOf = StringsUtil.indexOf(strings, g22, "ん")) == (lastIndexOf = StringUtils
-									.lastIndexOf(g22, "ん")),
-							Objects.equals(StringUtils.substring(g22, lastIndexOf), "ん"))) {
+			if (Boolean.logicalAnd((indexOf = StringsUtil.indexOf(strings, g22,
+					"ん")) == (lastIndexOf = lastIndexOf(strings, g22, "ん")),
+					Objects.equals(StringUtils.substring(g22, lastIndexOf), "ん"))) {
 				//
 				if (Boolean.logicalOr((length = StringUtils.length(g22)) == 3, length == 4)) {
 					//
