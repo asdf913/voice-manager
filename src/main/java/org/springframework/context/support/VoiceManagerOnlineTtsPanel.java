@@ -589,7 +589,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
-	private static boolean equals(final Strings instance, final CharSequence cs1, final CharSequence cs2) {
+	private static boolean equals(@Nullable final Strings instance, final CharSequence cs1, final CharSequence cs2) {
 		return instance != null && instance.equals(cs1, cs2);
 	}
 
