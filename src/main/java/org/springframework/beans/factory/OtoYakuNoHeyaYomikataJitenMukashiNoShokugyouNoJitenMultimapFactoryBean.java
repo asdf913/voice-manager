@@ -473,6 +473,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 		//
 	}
 
+	@Nullable
 	private static String remove(@Nullable final Strings instance, final String str, final String remove) {
 		return instance != null ? instance.remove(str, remove) : null;
 	}
