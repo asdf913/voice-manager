@@ -463,7 +463,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			} // for
 				//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.toString(sb),
-					StringUtils.remove(Util.group(m, 2), repeatedString));
+					remove(Strings.CS, Util.group(m, 2), repeatedString));
 			//
 			return Unit.with(multimap);
 			//
@@ -471,6 +471,10 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 		return null;
 		//
+	}
+
+	private static String remove(final Strings instance, final String str, final String remove) {
+		return instance != null ? instance.remove(str, remove) : null;
 	}
 
 	// https://gist.github.com/EasyG0ing1/f6e1d2c18d41850f80fa42bad469c9eb
