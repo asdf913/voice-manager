@@ -20,6 +20,8 @@ import javax.annotation.Nullable;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -223,19 +225,21 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 				//
 				final String hiragana = getStringByUnicodeBlock(ElementUtil.text(e), UnicodeBlock.HIRAGANA);
 				//
+				final Strings strings = Strings.CS;
+				//
 				if (Objects.equals(string, "車線")) {
 					//
 					return Collections.singletonMap(string, hiragana);
 					//
-				} else if (StringUtils.endsWith(string, "以外")) {
+				} else if (StringsUtil.endsWith(strings, string, "以外")) {
 					//
 					return Collections.singletonMap("以外", hiragana);
 					//
-				} else if (StringUtils.endsWith(string, "支庁界")) {
+				} else if (StringsUtil.endsWith(strings, string, "支庁界")) {
 					//
 					return Collections.singletonMap("支庁界", hiragana);
 					//
-				} else if (StringUtils.endsWith(string, "科樹林")) {
+				} else if (StringsUtil.endsWith(strings, string, "科樹林")) {
 					//
 					return Collections.singletonMap(kanji, getStringByUnicodeBlock(kanji, UnicodeBlock.KATAKANA)
 							+ getStringByUnicodeBlock(ElementUtil.text(e), UnicodeBlock.HIRAGANA));

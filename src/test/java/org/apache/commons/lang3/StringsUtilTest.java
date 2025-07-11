@@ -77,6 +77,15 @@ class StringsUtilTest {
 	}
 
 	@Test
+	void testEndsWith() {
+		//
+		Assertions.assertFalse(StringsUtil.endsWith(strings, EMPTY, null));
+		//
+		Assertions.assertTrue(StringsUtil.endsWith(strings, null, null));
+		//
+	}
+
+	@Test
 	void testReplace() {
 		//
 		Assertions.assertNull(StringsUtil.replace(strings, null, null, null));
@@ -89,6 +98,15 @@ class StringsUtilTest {
 		Assertions.assertFalse(StringsUtil.equals(strings, EMPTY, null));
 		//
 		Assertions.assertTrue(StringsUtil.equals(strings, null, null));
+		//
+	}
+
+	@Test
+	void testContains() {
+		//
+		Assertions.assertFalse(StringsUtil.contains(strings, null, null));
+		//
+		Assertions.assertTrue(StringsUtil.contains(strings, EMPTY, EMPTY));
 		//
 	}
 

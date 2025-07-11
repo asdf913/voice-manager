@@ -1971,6 +1971,8 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				Util.put(map, "Base64Encoder", Base64.getEncoder());
 				//
+				final Strings strings = Strings.CS;
+				//
 				try (final Writer writer = new StringWriter()) {
 					//
 					ObjectMap.setObject(objectMap, Writer.class, writer);
@@ -1987,7 +1989,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 						//
 						// append "." if the file name does not ends with "."
 						//
-						testAndAccept(x -> !StringUtils.endsWith(x, "."), sb, x -> append(x, '.'));
+						testAndAccept(x -> !StringsUtil.endsWith(strings, x, "."), sb, x -> append(x, '.'));
 						//
 						append(sb, getLongestString(fileExtensions));
 						//
@@ -2023,7 +2025,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 							//
 							// append "." if the file name does not ends with "."
 							//
-							testAndAccept(x -> !StringUtils.endsWith(x, "."), sb, x -> append(x, '.'));
+							testAndAccept(x -> !StringsUtil.endsWith(strings, x, "."), sb, x -> append(x, '.'));
 							//
 							append(sb, getLongestString(fileExtensions));
 							//
@@ -3732,8 +3734,8 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 					final String fileName = Util.getName(file);
 					//
-					if (StringUtils.isNotBlank(fileName) && StringUtils
-							.endsWith(titleNew = StringUtils.substringBeforeLast(fileName, fileExtension), ".")) {
+					if (StringUtils.isNotBlank(fileName) && StringsUtil.endsWith(Strings.CS,
+							titleNew = StringUtils.substringBeforeLast(fileName, fileExtension), ".")) {
 						//
 						titleNew = StringUtils.substringBeforeLast(titleNew, ".");
 						//

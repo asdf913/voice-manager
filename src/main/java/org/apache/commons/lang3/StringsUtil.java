@@ -6,6 +6,10 @@ public interface StringsUtil {
 		return instance != null && instance.startsWith(str, prefix);
 	}
 
+	static boolean endsWith(final Strings instance, final CharSequence str, final CharSequence suffix) {
+		return instance != null && instance.endsWith(str, suffix);
+	}
+
 	static String replace(final Strings instance, final String text, final String searchString,
 			final String replacement) {
 		return instance != null ? instance.replace(text, searchString, replacement) : null;

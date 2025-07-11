@@ -1366,7 +1366,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 		if (((a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）')) && b == StringUtils.length(s) - 1
 				&& StringUtils.countMatches(s, '区') == 1 && (c = StringUtils.indexOf(s, '区')) < a)
-				|| (StringUtils.endsWith(s, "目")
+				|| (StringsUtil.endsWith(Strings.CS, s, "目")
 						&& (a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）'))
 						&& StringUtils.countMatches(s, '区') == 1 && (c = StringUtils.indexOf(s, '区')) < a)) {
 			//

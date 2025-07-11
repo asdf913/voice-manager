@@ -17,6 +17,8 @@ import javax.annotation.Nullable;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.javatuples.Unit;
@@ -236,7 +238,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 			//
 			final String s = Util.group(m1, 2);
 			//
-			if (StringUtils.endsWith(s2, s)) {
+			if (StringsUtil.endsWith(Strings.CS, s2, s)) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
 						StringUtils.substring(s2, 0, StringUtils.length(s2) - StringUtils.length(s)));

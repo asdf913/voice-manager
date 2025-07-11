@@ -22,6 +22,8 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.javatuples.Unit;
@@ -600,13 +602,16 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 			//
 			String g1 = null;
 			//
+			final Strings strings = Strings.CS;
+			//
 			while (Util.find(matcher)) {
 				//
 				MultimapUtil.put(IValue0Util.getValue0(
 						multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))),
 						g1 = Util.group(matcher, 1),
 						testAndApply(
-								(a, b) -> Boolean.logicalAnd(Objects.equals(a, "雨脚"), StringUtils.endsWith(b, "とも")),
+								(a, b) -> Boolean.logicalAnd(Objects.equals(a, "雨脚"),
+										StringsUtil.endsWith(strings, b, "とも")),
 								g1, Util.group(matcher, 2), (a, b) -> StringUtils.removeEnd(b, "とも"), (a, b) -> b));
 				//
 			} // while
@@ -621,11 +626,11 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				//
 				for (int i = 0; ss != null && i < ss.length; i++) {
 					//
-					if (Boolean
-							.logicalAnd(Objects.equals(ss[i], "雨足"),
-									Objects.equals(g1 = testAndApply(x -> StringUtils.endsWith(x, "とも"),
+					if (Boolean.logicalAnd(Objects.equals(ss[i], "雨足"),
+							Objects.equals(
+									g1 = testAndApply(x -> StringsUtil.endsWith(strings, x, "とも"),
 											Util.group(matcher, 1), x -> StringUtils.removeEnd(x, "とも"), x -> x),
-											"うきゃく"))) {
+									"うきゃく"))) {
 						//
 						continue;
 						//

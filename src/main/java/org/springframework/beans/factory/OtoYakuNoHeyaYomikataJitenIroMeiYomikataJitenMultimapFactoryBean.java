@@ -1499,7 +1499,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
 						StringUtils.trim(line = IterableUtils.get(list, j))))
-						&& StringUtils.endsWith(g1 = Util.group(m, 1), g12)) {
+						&& StringsUtil.endsWith(org.apache.commons.lang3.Strings.CS, g1 = Util.group(m, 1), g12)) {
 					//
 					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							ImmutableMultimap.of(g1, g2 = Util.group(m, 2),
@@ -3169,6 +3169,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null;
 		//
+		final org.apache.commons.lang3.Strings strings = org.apache.commons.lang3.Strings.CS;
+		//
 		for (int j = 0; j < IterableUtils.size(entries2); j++) {
 			//
 			if (iop != null && iop.keyInt() == j) {
@@ -3193,9 +3195,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			} else if (Util.and(StringUtils.isNotBlank(lcsk = longestCommonSubstring(k1, k2)),
 					StringUtils.isNotBlank(lcsv = longestCommonSubstring(v1, v2)),
-					StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, k1, lcsk),
-					StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, v1, lcsv),
-					StringUtils.endsWith(v2, lcsv))) {
+					StringsUtil.startsWith(strings, k1, lcsk), StringsUtil.startsWith(strings, v1, lcsv),
+					StringsUtil.endsWith(strings, v2, lcsv))) {
 				//
 				if (Boolean.logicalAnd(StringUtils.isNotBlank(sak = StringUtils.substringAfter(k1, lcsk)),
 						StringUtils.isNotBlank(sav = StringUtils.substringAfter(v1, lcsv)))) {
@@ -3819,6 +3820,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		String k1, v1, v2, lcsk, lcsv;
 		//
+		final org.apache.commons.lang3.Strings strings = org.apache.commons.lang3.Strings.CS;
+		//
 		for (int j = 0; j < IterableUtils.size(quartets); j++) {
 			//
 			if (Objects.equals(v1 = IValue1Util.getValue1(quartet = IterableUtils.get(quartets, j)),
@@ -3832,13 +3835,13 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					lcsk = longestCommonSubstring(k1 = IValue0Util.getValue0(quartet), IValue2Util.getValue2(quartet)),
 					lcsv = longestCommonSubstring(v1, v2));
 			//
-			if (Boolean.logicalAnd(StringUtils.endsWith(k1, lcsk), StringUtils.endsWith(v1, lcsv))) {
+			if (Boolean.logicalAnd(StringsUtil.endsWith(strings, k1, lcsk), StringsUtil.endsWith(strings, v1, lcsv))) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						StringUtils.substringBefore(k1, lcsk), StringUtils.substringBefore(v1, lcsv));
 				//
-			} else if (Boolean.logicalAnd(StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, k1, lcsk),
-					StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, v1, lcsv))) {
+			} else if (Boolean.logicalAnd(StringsUtil.startsWith(strings, k1, lcsk),
+					StringsUtil.startsWith(strings, v1, lcsv))) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						StringUtils.substringAfter(k1, lcsk), StringUtils.substringAfter(v1, lcsv));
@@ -4597,7 +4600,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InHalfwidthAndFullwidthForms}\\p{InHiragana}+[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
 				StringUtils.trim(input))) && Util.groupCount(m) > 2
 				&& StringUtils.countMatches(g4 = Util.group(m, 4), g2 = Util.group(m, 2)) > 0
-				&& StringUtils.endsWith(g4, g2)) {
+				&& StringsUtil.endsWith(strings, g4, g2)) {
 			//
 			for (int i = StringUtils.length(g4) - 1 - StringUtils.length(g2); i >= 0; i--) {
 				//

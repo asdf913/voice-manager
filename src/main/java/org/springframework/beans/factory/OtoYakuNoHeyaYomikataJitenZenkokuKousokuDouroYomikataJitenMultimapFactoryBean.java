@@ -138,7 +138,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 					&& IterableUtils.size(nextElementSiblings = ElementUtil.nextElementSiblings(e)) > 1
 					&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
 							getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))
-					&& StringUtils.endsWith(s2, Util.group(matcher, 2))) {
+					&& StringsUtil.endsWith(Strings.CS, s2, Util.group(matcher, 2))) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(matcher, 1), StringUtils.substring(s2, 0,
@@ -294,6 +294,8 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		String[] ss = null;
 		//
+		final Strings strings = Strings.CS;
+		//
 		if (Boolean
 				.logicalAnd(
 						Util.matches(
@@ -311,7 +313,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 						PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)$"), s1)),
 				Util.groupCount(matcher) > 1)
 				&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2))
-				&& StringUtils.endsWith(s2, g2 = Util.group(matcher, 2))) {
+				&& StringsUtil.endsWith(strings, s2, g2 = Util.group(matcher, 2))) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 1),
@@ -322,7 +324,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 						PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$"), s1)),
 				Util.groupCount(matcher) > 1)
 				&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2))
-				&& StringsUtil.startsWith(Strings.CS, s2, g1 = Util.group(matcher, 1))) {
+				&& StringsUtil.startsWith(strings, s2, g1 = Util.group(matcher, 1))) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 2), StringUtils.substring(s2, StringUtils.length(g1), StringUtils.length(s2)));

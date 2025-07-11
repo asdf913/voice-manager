@@ -18,6 +18,8 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -180,7 +182,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromRe
 		//
 		final String attr = NodeUtil.attr(instance, "href");
 		//
-		if (StringUtils.endsWith(attr, ".pdf")) {
+		if (StringsUtil.endsWith(Strings.CS, attr, ".pdf")) {
 			//
 			return null;
 			//
