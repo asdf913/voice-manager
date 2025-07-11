@@ -19,6 +19,10 @@ public interface StringsUtil {
 		return instance != null && instance.equals(cs1, cs2);
 	}
 
+	static boolean equalsAny(final Strings instance, final CharSequence string, final CharSequence... searchStrings) {
+		return instance != null && instance.equalsAny(string, searchStrings);
+	}
+
 	static boolean contains(final Strings instance, final CharSequence str, final CharSequence searchStr) {
 		return instance != null && instance.contains(str, searchStr);
 	}

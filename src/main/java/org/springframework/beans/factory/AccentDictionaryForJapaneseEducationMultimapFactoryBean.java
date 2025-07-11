@@ -171,7 +171,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 		final Elements as = ElementUtil.select(testAndApply(
 				x -> x != null && (allowProtocols == null || allowProtocols.length == 0
-						|| StringUtils.equalsAnyIgnoreCase(Util.getProtocol(x), allowProtocols)),
+						|| StringsUtil.equalsAny(Strings.CI, Util.getProtocol(x), allowProtocols)),
 				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
 				null), ".menu a");
 		//
@@ -206,7 +206,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 		final Elements tds = ElementUtil.getElementsByTag(testAndApply(
 				x -> x != null && (allowProtocols == null || allowProtocols.length == 0
-						|| StringUtils.equalsAnyIgnoreCase(Util.getProtocol(x), allowProtocols)),
+						|| StringsUtil.equalsAny(Strings.CI, Util.getProtocol(x), allowProtocols)),
 				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
 				null), "td");
 		//

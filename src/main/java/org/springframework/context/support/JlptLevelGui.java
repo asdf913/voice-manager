@@ -56,6 +56,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
@@ -536,7 +538,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		for (int i = 0; jlJlptLevel != null && i < jlJlptLevel.getVisibleRowCount(); i++) {
 			//
-			if (StringUtils.equalsAnyIgnoreCase(Util.getElementAt(Util.getModel(jlJlptLevel), i), level)) {
+			if (StringsUtil.equalsAny(Strings.CI, Util.getElementAt(Util.getModel(jlJlptLevel), i), level)) {
 				//
 				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i);
 				//

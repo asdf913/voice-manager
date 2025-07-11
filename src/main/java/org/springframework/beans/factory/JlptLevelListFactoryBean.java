@@ -12,6 +12,8 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.javatuples.Unit;
@@ -151,7 +153,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 		return Util
 				.toList(Util.map(Util.stream(ElementUtil.select(
 						testAndApply(
-								x -> StringUtils.equalsAnyIgnoreCase(Util.getProtocol(x),
+								x -> StringsUtil.equalsAny(Strings.CI, Util.getProtocol(x),
 										ProtocolUtil.getAllowProtocols()),
 								testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null),
 								x -> Jsoup.parse(x, Util.intValue(toMillis(timeout), 0)), null),

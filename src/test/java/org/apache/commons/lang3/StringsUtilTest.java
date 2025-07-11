@@ -107,6 +107,15 @@ class StringsUtilTest {
 	}
 
 	@Test
+	void testEqualsAny() {
+		//
+		Assertions.assertFalse(StringsUtil.equalsAny(strings, null));
+		//
+		Assertions.assertTrue(StringsUtil.equalsAny(strings, EMPTY, EMPTY));
+		//
+	}
+
+	@Test
 	void testContains() {
 		//
 		Assertions.assertFalse(StringsUtil.contains(strings, null, null));

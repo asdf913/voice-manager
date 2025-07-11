@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.poi.ss.usermodel.Row;
@@ -159,14 +160,13 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 	private static Multimap<String, String> createMultimapByUrl(final String url, final Duration timeout)
 			throws Exception {
 		//
-		final Elements elements = ElementUtil
-				.selectXpath(
-						testAndApply(
-								x -> StringUtils.equalsAnyIgnoreCase(Util.getProtocol(x),
-										ProtocolUtil.getAllowProtocols()),
-								testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null),
-								x -> Jsoup.parse(x, Util.intValue(toMillis(timeout), 0)), null),
-						"//span[@class='mw-headline'][starts-with(.,'第')]");
+		final Elements elements = ElementUtil.selectXpath(
+				testAndApply(
+						x -> StringsUtil.equalsAny(org.apache.commons.lang3.Strings.CI, Util.getProtocol(x),
+								ProtocolUtil.getAllowProtocols()),
+						testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null),
+						x -> Jsoup.parse(x, Util.intValue(toMillis(timeout), 0)), null),
+				"//span[@class='mw-headline'][starts-with(.,'第')]");
 		//
 		Element element = null;
 		//

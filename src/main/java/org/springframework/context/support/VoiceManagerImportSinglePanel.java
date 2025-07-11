@@ -4685,7 +4685,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		for (int i = 0; i < Util.getSize(cbm); i++) {
 			//
-			if (StringUtils.equalsAnyIgnoreCase(Util.getElementAt(cbm, i), string)) {
+			if (StringsUtil.equalsAny(Strings.CI, Util.getElementAt(cbm, i), string)) {
 				//
 				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i);
 				//

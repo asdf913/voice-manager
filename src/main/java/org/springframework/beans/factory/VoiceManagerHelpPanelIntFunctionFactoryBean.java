@@ -471,7 +471,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 	private static String getEncryptionTableHtml(final URL url, final Duration timeout) throws IOException {
 		//
 		org.jsoup.nodes.Document document = testAndApply(
-				x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), ProtocolUtil.getAllowProtocols()), url,
+				x -> StringsUtil.equalsAny(Strings.CI, getProtocol(x), ProtocolUtil.getAllowProtocols()), url,
 				x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null);
 		//
 		if (document == null) {
