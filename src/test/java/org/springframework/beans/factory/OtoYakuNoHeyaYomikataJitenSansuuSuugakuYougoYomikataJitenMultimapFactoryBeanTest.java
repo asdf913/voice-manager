@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
@@ -252,12 +253,19 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		Assertions.assertEquals(Arrays.asList(string), getStrings(string, UnicodeBlock.HIRAGANA));
 		//
-		Assertions.assertEquals(Arrays.asList(string),
-				getStrings(StringUtils.appendIfMissing(string, "(", ")"), UnicodeBlock.HIRAGANA));
+		final Strings strings = Strings.CS;
 		//
 		Assertions.assertEquals(Arrays.asList(string),
-				getStrings(StringUtils.appendIfMissing(string, "("), UnicodeBlock.HIRAGANA));
+				getStrings(appendIfMissing(strings, string, "(", ")"), UnicodeBlock.HIRAGANA));
 		//
+		Assertions.assertEquals(Arrays.asList(string),
+				getStrings(appendIfMissing(strings, string, "("), UnicodeBlock.HIRAGANA));
+		//
+	}
+
+	private static String appendIfMissing(final Strings instance, final String str, final CharSequence suffix,
+			final CharSequence... suffixes) {
+		return instance != null ? instance.appendIfMissing(str, suffix, suffixes) : null;
 	}
 
 	private static List<String> getStrings(final String string, final UnicodeBlock ub, final UnicodeBlock... ubs)
