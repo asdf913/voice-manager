@@ -306,8 +306,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private transient MutableComboBoxModel<TextAndImage> mcbmTextAndImage = null;
 
+	private String url = null;
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		//
+		url = ObjectUtils.getIfNull(url, "https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index");// TODO
 		//
 		setLayout(new MigLayout());// TODO
 		//
@@ -1380,9 +1384,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			Util.put(map, CURVE, Util.toString(testAndApply((a, b) -> a instanceof Entry,
 					Util.getSelectedItem(cbmCurve), getMapEntryGetKeyMethod(), Narcissus::invokeMethod, null)));
 			//
-			final String baseUrl = "https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index";
-			//
-			String url = createUrl(baseUrl, map);
+			String url = createUrl(this.url, map);
 			//
 			final boolean testMode = isTestMode();
 			//
@@ -1402,7 +1404,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 									VALUE))), 1)
 							* size);
 					//
-					PageUtil.navigate(page = newPage(browser), url = createUrl(baseUrl, map));
+					PageUtil.navigate(page = newPage(browser), url = createUrl(this.url, map));
 					//
 				} // if
 					//
@@ -1413,7 +1415,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final List<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
 			//
-			final Collection<TextAndImage> textAndImages = getTextAndImages(textInput,
+			final Collection<TextAndImage> textAndImages = getTextAndImages(url, textInput,
 					Util.cast(Entry.class, Util.getSelectedItem(cbmCurve)));
 			//
 			Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
@@ -1462,8 +1464,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	@Nullable
-	private static Collection<TextAndImage> getTextAndImages(final String textInput, final Entry<?, ?> curve)
-			throws IOException, URISyntaxException {
+	private static Collection<TextAndImage> getTextAndImages(final String baseUrl, final String textInput,
+			final Entry<?, ?> curve) throws IOException, URISyntaxException {
 		//
 		if (StringUtils.isEmpty(textInput)) {
 			//
@@ -1484,8 +1486,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.put(map, CURVE, Util.toString(testAndApply((a, b) -> a != null, curve, getMapEntryGetKeyMethod(),
 					Narcissus::invokeMethod, null)));
-			//
-			final String baseUrl = "https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index";
 			//
 			String url = createUrl(baseUrl, map);
 			//
@@ -1612,7 +1612,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 			} // for
 				//
-			final String baseUrl = "https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index";
+			final String baseUrl = instance != null ? instance.url : null;
 			//
 			String url = createUrl(baseUrl, map);
 			//
