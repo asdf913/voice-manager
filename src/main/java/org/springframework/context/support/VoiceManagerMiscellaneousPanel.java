@@ -1033,8 +1033,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 					commonPrefix);
 			//
 			CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row != null ? row.getLastCellNum() : 0, 0)),
-					StringUtils.defaultIfBlank(testAndApply(StringUtils::contains, commonPrefix, voiceId = voiceIds[i],
-							StringUtils::substringAfter, null), voiceId));
+					StringUtils.defaultIfBlank(testAndApply((a, b) -> StringsUtil.contains(Strings.CS, a, b),
+							commonPrefix, voiceId = voiceIds[i], StringUtils::substringAfter, null), voiceId));
 			//
 			if (objectMap == null && (objectMap = Reflection.newProxy(ObjectMap.class, new IH())) != null) {
 				//
