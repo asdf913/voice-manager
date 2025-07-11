@@ -27,6 +27,8 @@ import javax.annotation.Nullable;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.Pair;
@@ -1315,7 +1317,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 	@Nullable
 	private static String substringBetween(@Nullable final String str, final String open, final String close) {
 		//
-		return Boolean.logicalAnd(StringUtils.startsWith(str, open), StringUtils.endsWith(str, close))
+		return Boolean.logicalAnd(StringsUtil.startsWith(Strings.CS, str, open), StringUtils.endsWith(str, close))
 				? StringUtils.substringBetween(str, open, close)
 				: str;
 		//

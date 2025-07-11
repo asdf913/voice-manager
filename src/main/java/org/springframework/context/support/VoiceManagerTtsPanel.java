@@ -68,6 +68,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableBiFunctionUtil;
@@ -1556,7 +1558,8 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			} // try
 				//
 			return Util.getListCellRendererComponent(listCellRenderer, list,
-					StringUtils.startsWith(s, commonPrefix) ? StringUtils.substringAfter(s, commonPrefix) : value,
+					StringsUtil.startsWith(Strings.CS, s, commonPrefix) ? StringUtils.substringAfter(s, commonPrefix)
+							: value,
 					index, isSelected, cellHasFocus);
 			//
 		}

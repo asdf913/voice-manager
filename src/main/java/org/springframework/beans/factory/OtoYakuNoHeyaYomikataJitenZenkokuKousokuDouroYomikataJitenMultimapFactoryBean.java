@@ -19,6 +19,8 @@ import javax.annotation.Nullable;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.TriFunction;
@@ -320,7 +322,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 						PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$"), s1)),
 				Util.groupCount(matcher) > 1)
 				&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2))
-				&& StringUtils.startsWith(s2, g1 = Util.group(matcher, 1))) {
+				&& StringsUtil.startsWith(Strings.CS, s2, g1 = Util.group(matcher, 1))) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 2), StringUtils.substring(s2, StringUtils.length(g1), StringUtils.length(s2)));

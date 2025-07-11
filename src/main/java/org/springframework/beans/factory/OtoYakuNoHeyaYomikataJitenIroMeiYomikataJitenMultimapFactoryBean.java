@@ -38,6 +38,7 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.Pair;
@@ -621,7 +622,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^\\p{InCJKUnifiedIdeographs}{2,}\\p{InHiragana}+\\p{InCJKUnifiedIdeographs}\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-				StringUtils.trim(s2))) && Util.groupCount(m2) > 1 && StringUtils.startsWith(Util.group(m2, 2), g2)) {
+				StringUtils.trim(s2))) && Util.groupCount(m2) > 1
+				&& StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, Util.group(m2, 2), g2)) {
 			//
 			return Pair.of(
 					ImmutableMultimap.of(g1, g2, StringUtils.substringAfter(Util.group(m2, 1), g1),
@@ -844,7 +846,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 								Objects.equals(a = IValue0Util.getValue0(quartet = IterableUtils.get(quartets, j)),
 										c = IValue2Util.getValue2(quartet)),
 								Objects.equals(b = IValue1Util.getValue1(quartet), d = Util.getValue3(quartet))),
-						!StringUtils.startsWith(a, c), !StringUtils.startsWith(b, d))) {
+						!StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, a, c),
+						!StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, b, d))) {
 					//
 					continue;
 					//
@@ -881,9 +884,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		String g21, g31, g22, commonPrefix1, commonPrefix2, g32;
 		//
-		if (Util.matches(m2) && Util.groupCount(m2) > 1 && StringUtils.startsWith(g21 = Util.group(m2, 1), g11)
-				&& StringUtils.startsWith(g22 = Util.group(m2, 2), g12) && Util.matches(m3) && Util.groupCount(m3) > 1
-				&& StringUtils
+		if (Util.matches(m2) && Util.groupCount(m2) > 1
+				&& StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, g21 = Util.group(m2, 1), g11)
+				&& StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, g22 = Util.group(m2, 2), g12)
+				&& Util.matches(m3) && Util.groupCount(m3) > 1 && StringUtils
 						.isNotEmpty(commonPrefix1 = StringUtils.getCommonPrefix(g11, g21, g31 = Util.group(m3, 1)))) {
 			//
 			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, g21, g22,
@@ -1193,7 +1197,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						g21 = Util.group(m2, 1), Util.group(m3, 1)))
 				&& StringUtils.isNotEmpty(commonPrefix2 = StringUtils.getCommonPrefix(g12 = Util.group(m1, 2),
 						g22 = Util.group(m2, 2), Util.group(m3, 2)))
-				&& StringUtils.startsWith(Util.group(m2, 1), Util.group(m1, 1)) && StringUtils.startsWith(g22, g12)) {
+				&& StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, Util.group(m2, 1), Util.group(m1, 1))
+				&& StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, g22, g12)) {
 			//
 			return Pair.of(ImmutableMultimap.of(g11, g12, g21, g22, StringUtils.substringAfter(g21, g11),
 					StringUtils.substringAfter(g22, g12), commonPrefix1, commonPrefix2,
@@ -1504,7 +1509,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-						line)) && StringUtils.startsWith(g1 = Util.group(m, 1), g12)) {
+						line))
+						&& StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, g1 = Util.group(m, 1), g12)) {
 					//
 					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							ImmutableMultimap.of(g1, g2 = Util.group(m, 2),
@@ -1566,7 +1572,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			for (final Entry<TextStringBuilder, TextStringBuilder> en : tsbs) {
 				//
-				if (!StringUtils.startsWith(key = Util.getKey(en), s = StringUtils.substring(g11, j, j + 1))) {
+				if (!StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, key = Util.getKey(en),
+						s = StringUtils.substring(g11, j, j + 1))) {
 					//
 					continue;
 					//
@@ -1578,7 +1585,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 					final TextStringBuilder tsb = Util.getValue(en);
 					//
-					if (StringUtils.startsWith(tsb, x)) {
+					if (StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, tsb, x)) {
 						//
 						replaceFirst(tsb, x, "");
 						//
@@ -2326,10 +2333,11 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
-			if (StringUtils.startsWith(s = IterableUtils.get(list, k), g1c2) && Util.matches(m = Util.matcher(
-					PatternMap.getPattern(patternMap,
+			if (StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, s = IterableUtils.get(list, k), g1c2)
+					&& Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-					s)) && Util.groupCount(m) > 1) {
+							s))
+					&& Util.groupCount(m) > 1) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(m, 1), Util.group(m, 2));
@@ -2368,7 +2376,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		for (int k = 0; k < IterableUtils.size(list); k++) {
 			//
-			if (Boolean.logicalOr(!StringUtils.startsWith(s = IterableUtils.get(list, k), cp1), k == index)) {
+			if (Boolean.logicalOr(
+					!StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, s = IterableUtils.get(list, k), cp1),
+					k == index)) {
 				//
 				continue;
 				//
@@ -2406,7 +2416,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		for (int k = 0; k < IterableUtils.size(list); k++) {
 			//
-			if (Boolean.logicalOr(!StringUtils.startsWith(s = IterableUtils.get(list, k), cp1), k == index)) {
+			if (Boolean.logicalOr(
+					!StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, s = IterableUtils.get(list, k), cp1),
+					k == index)) {
 				//
 				continue;
 				//
@@ -2455,7 +2467,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		for (int k = 0; k < IterableUtils.size(list); k++) {
 			//
-			if (Boolean.logicalOr(!StringUtils.startsWith(s = IterableUtils.get(list, k), cp1), k == index)
+			if (Boolean.logicalOr(
+					!StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, s = IterableUtils.get(list, k), cp1),
+					k == index)
 					|| !Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
 							s))
@@ -3177,8 +3191,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), csk, csv);
 				//
 			} else if (Util.and(StringUtils.isNotBlank(lcsk = longestCommonSubstring(k1, k2)),
-					StringUtils.isNotBlank(lcsv = longestCommonSubstring(v1, v2)), StringUtils.startsWith(k1, lcsk),
-					StringUtils.startsWith(v1, lcsv), StringUtils.endsWith(v2, lcsv))) {
+					StringUtils.isNotBlank(lcsv = longestCommonSubstring(v1, v2)),
+					StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, k1, lcsk),
+					StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, v1, lcsv),
+					StringUtils.endsWith(v2, lcsv))) {
 				//
 				if (Boolean.logicalAnd(StringUtils.isNotBlank(sak = StringUtils.substringAfter(k1, lcsk)),
 						StringUtils.isNotBlank(sav = StringUtils.substringAfter(v1, lcsv)))) {
@@ -3492,7 +3508,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			for (final Entry<String, String> entry : entries) {
 				//
-				if (StringUtils.startsWith(Util.getKey(entry), g1)) {
+				if (StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, Util.getKey(entry), g1)) {
 					//
 					Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), entry);
 					//
@@ -3516,8 +3532,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			for (final Entry<String, String> entry : entries) {
 				//
-				if (Util.and(StringUtils.length(k = Util.getKey(entry)) == 2, StringUtils.startsWith(k, cpk),
-						StringUtils.startsWith(v = Util.getValue(entry), cpv))) {
+				if (Util.and(StringUtils.length(k = Util.getKey(entry)) == 2,
+						StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, k, cpk),
+						StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, v = Util.getValue(entry), cpv))) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							StringUtils.substringAfter(k, cpk), StringUtils.substringAfter(v, cpv));
@@ -3718,8 +3735,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			} // if
 				//
 			if (Boolean.logicalAnd(
-					StringUtils.startsWith(k2 = IValue2Util.getValue2(quartet), k1 = IValue0Util.getValue0(quartet)),
-					StringUtils.startsWith(v2 = Util.getValue3(quartet), v1 = IValue1Util.getValue1(quartet)))) {
+					StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, k2 = IValue2Util.getValue2(quartet),
+							k1 = IValue0Util.getValue0(quartet)),
+					StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, v2 = Util.getValue3(quartet),
+							v1 = IValue1Util.getValue1(quartet)))) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						StringUtils.substringAfter(k2, k1), StringUtils.substringAfter(v2, v1));
@@ -3816,7 +3835,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						StringUtils.substringBefore(k1, lcsk), StringUtils.substringBefore(v1, lcsv));
 				//
-			} else if (Boolean.logicalAnd(StringUtils.startsWith(k1, lcsk), StringUtils.startsWith(v1, lcsv))) {
+			} else if (Boolean.logicalAnd(StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, k1, lcsk),
+					StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, v1, lcsv))) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						StringUtils.substringAfter(k1, lcsk), StringUtils.substringAfter(v1, lcsv));
@@ -4559,8 +4579,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		String g1, g2, g3;
 		//
-		if (Util.matches(m) && Util.groupCount(m) > 2 && StringUtils.length(g1 = Util.group(m, 1)) == 2
-				&& StringUtils.startsWith(g2 = Util.group(m, 2), g3 = Util.group(m, 3))) {
+		if (Util.matches(m) && Util.groupCount(m) > 2 && StringUtils.length(g1 = Util.group(m, 1)) == 2 && StringsUtil
+				.startsWith(org.apache.commons.lang3.Strings.CS, g2 = Util.group(m, 2), g3 = Util.group(m, 3))) {
 			//
 			return Unit.with(ImmutableMultimap.of(g1, g2, StringUtils.substring(g1, 0, 1), g3,
 					StringUtils.substring(g1, 1), StringUtils.substringAfter(g2, g3)));
@@ -4625,7 +4645,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		for (final String pattern : patterns) {
 			//
 			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, pattern), StringUtils.trim(input)))
-					&& Util.groupCount(m) > 2 && StringUtils.startsWith(g3 = Util.group(m, 3), g1 = Util.group(m, 1))) {
+					&& Util.groupCount(m) > 2 && StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS,
+							g3 = Util.group(m, 3), g1 = Util.group(m, 1))) {
 				//
 				return Unit.with(ImmutableMultimap.of(Util.group(m, 2), StringUtils.substringAfter(g3, g1)));
 				//
@@ -4706,7 +4727,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)(\\p{InCJKSymbolsAndPunctuation})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
 				StringUtils.trim(input)))
 				&& Util.groupCount(m) > 4 && Objects.equals(Util.group(m, 3), "々")
-				&& StringUtils.startsWith(Util.group(m, 1),
+				&& StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, Util.group(m, 1),
 						StringUtils.repeat(Util.group(m, 2), StringUtils.length(Util.group(m, 2))))
 				&& IterableUtils.size(repeatedStrings = getRepeatedStrings(g5 = Util.group(m, 5))) == 1) {
 			//
@@ -4868,8 +4889,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^\\p{InCJKUnifiedIdeographs}+\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+\\p{InBasicLatin}(\\p{InCJKUnifiedIdeographs}+)\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InHiragana}+$"),
 				input)) && Util.groupCount(m) > 3 && Objects.equals(Util.group(m, 1), g3 = Util.group(m, 3))
-				&& (l3 = StringUtils.length(g3)) == 2
-				&& StringUtils.startsWith(g4 = Util.group(m, 4), g2 = Util.group(m, 2))) {
+				&& (l3 = StringUtils.length(g3)) == 2 && StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS,
+						g4 = Util.group(m, 4), g2 = Util.group(m, 2))) {
 			//
 			return Unit.with(
 					ImmutableMultimap.of(StringUtils.substring(g3, l3 - 1, l3), StringUtils.substringAfter(g4, g2)));

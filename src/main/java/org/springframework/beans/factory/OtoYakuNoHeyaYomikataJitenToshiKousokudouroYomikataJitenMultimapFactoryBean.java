@@ -24,6 +24,8 @@ import javax.annotation.Nullable;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.Pair;
@@ -1110,22 +1112,38 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 			// [BASIC_LATIN,CJK_UNIFIED_IDEOGRAPHS,HALFWIDTH_AND_FULLWIDTH_FORMS,HIRAGANA,CJK_SYMBOLS_AND_PUNCTUATION]
 			//
-			// 湊町（みなとまち）　　四つ橋（よつばし）　　信濃橋（しなのばし）　　土佐堀（とさぼり）　　堂島（どうじま）　　北浜（きたはま）　　高麗橋（こうらいばし）　　本町（ほんまち）　　長堀（ながほり）　　道頓堀（どうとんぼり）　高津（こうづ）　夕陽丘（ゆうひがおか）　　えびす町（えびすちょう）　　なんば（なんば）＊難波　　湊町（みなとまち）
-		 	// 天保山（てんぽうざん）JCT　　天保山（てんぽうざん）　　南港北（なんこうきた）　　南港中（なんこうなか）　　南港南（なんこうみなみ）　　三宝（さんぼう）　　大浜（おおはま）　　出島（でじま）　　石津（いしづ）　　浜寺（はまでら）　　高石（たかいし）　　助松（すけまつ）　　助松（すけまつ）JCT　　泉大津（いずみおおつ）　　泉大津（いずみおおつ）PA　　岸和田北（きしわだきた）　　岸和田南（きしわだみなみ）　　貝塚（かいづか）　　泉佐野北（いずみさのきた）　　泉佐野南（いずみさのみなみ）　　りんくうJCT
-		 	// 名谷（みょうだに）JCT　　垂水（たるみ）JCT　　垂水（たるみ）IC
-		 	// 伊川谷（いかわだに）JCT　　永井谷（ながいたに）JCT　　永井谷（ながいたに）　　前開（ぜんかい）PA　　前開（ぜんかい）　　布施畑（ふせはた）JCT　　布施畑西（ふせはたにし）　　布施畑東（ふせはたひがし）　　しあわせの村（しあわせのむら）　　白川（しらかわ）PA　　藍那（あいな）　　箕谷（みのたに）　　からと西（からとにし）　　有馬口（ありまぐち）JCT　　有馬口（ありまぐち）　　五社（ごしゃ）　　柳谷（やなぎだに）JCT
+			// 湊町（みなとまち） 四つ橋（よつばし） 信濃橋（しなのばし） 土佐堀（とさぼり） 堂島（どうじま） 北浜（きたはま） 高麗橋（こうらいばし）
+			// 本町（ほんまち） 長堀（ながほり） 道頓堀（どうとんぼり） 高津（こうづ） 夕陽丘（ゆうひがおか） えびす町（えびすちょう） なんば（なんば）＊難波
+			// 湊町（みなとまち）
+			// 天保山（てんぽうざん）JCT 天保山（てんぽうざん） 南港北（なんこうきた） 南港中（なんこうなか） 南港南（なんこうみなみ） 三宝（さんぼう）
+			// 大浜（おおはま） 出島（でじま） 石津（いしづ） 浜寺（はまでら） 高石（たかいし） 助松（すけまつ） 助松（すけまつ）JCT 泉大津（いずみおおつ）
+			// 泉大津（いずみおおつ）PA 岸和田北（きしわだきた） 岸和田南（きしわだみなみ） 貝塚（かいづか） 泉佐野北（いずみさのきた）
+			// 泉佐野南（いずみさのみなみ） りんくうJCT
+			// 名谷（みょうだに）JCT 垂水（たるみ）JCT 垂水（たるみ）IC
+			// 伊川谷（いかわだに）JCT 永井谷（ながいたに）JCT 永井谷（ながいたに） 前開（ぜんかい）PA 前開（ぜんかい） 布施畑（ふせはた）JCT
+			// 布施畑西（ふせはたにし） 布施畑東（ふせはたひがし） しあわせの村（しあわせのむら） 白川（しらかわ）PA 藍那（あいな） 箕谷（みのたに）
+			// からと西（からとにし） 有馬口（ありまぐち）JCT 有馬口（ありまぐち） 五社（ごしゃ） 柳谷（やなぎだに）JCT
 			//
-			// [BASIC_LATIN, CJK_UNIFIED_IDEOGRAPHS, HALFWIDTH_AND_FULLWIDTH_FORMS, HIRAGANA, CJK_SYMBOLS_AND_PUNCTUATION, KATAKANA]
+			// [BASIC_LATIN, CJK_UNIFIED_IDEOGRAPHS, HALFWIDTH_AND_FULLWIDTH_FORMS,
+			// HIRAGANA, CJK_SYMBOLS_AND_PUNCTUATION, KATAKANA]
 			//
-			// 南港北（なんこうきた）　　天保山（てんぽうざん）JCT　　北港（ほっこう）JCT　　北港西（ほっこうにし）　　中島（なかじま）PA　　中島（なかじま）　　尼崎東海岸（あまがさきひがしかいがん）　　尼崎末広（あまがさきすえひろ）　　鳴尾浜（なるおはま）　　甲子園浜（こうしえんはま）　　西宮浜（にしのみやはま）　　南芦屋浜（みなみあしやはま）　　深江浜（ふかえはま）　　住吉浜（すみよしはま）　　魚崎浜（うおざきはま）　　六甲アイランド北（ろっこうあいらんどきた）
+			// 南港北（なんこうきた） 天保山（てんぽうざん）JCT 北港（ほっこう）JCT 北港西（ほっこうにし） 中島（なかじま）PA 中島（なかじま）
+			// 尼崎東海岸（あまがさきひがしかいがん） 尼崎末広（あまがさきすえひろ） 鳴尾浜（なるおはま） 甲子園浜（こうしえんはま） 西宮浜（にしのみやはま）
+			// 南芦屋浜（みなみあしやはま） 深江浜（ふかえはま） 住吉浜（すみよしはま） 魚崎浜（うおざきはま） 六甲アイランド北（ろっこうあいらんどきた）
 			//
-			// [BASIC_LATIN, CJK_UNIFIED_IDEOGRAPHS, CJK_SYMBOLS_AND_PUNCTUATION, HALFWIDTH_AND_FULLWIDTH_FORMS, HIRAGANA, KATAKANA]
+			// [BASIC_LATIN, CJK_UNIFIED_IDEOGRAPHS, CJK_SYMBOLS_AND_PUNCTUATION,
+			// HALFWIDTH_AND_FULLWIDTH_FORMS, HIRAGANA, KATAKANA]
 			//
-			// 環状線分岐　　西長堀（にしながほり）　　中之島西（なかのしまにし）　　海老江（えびえ）　　姫島（ひめじま）　　大和田（おおわだ）　　尼崎東（あまがさきひがし）　　尼崎（あまがさき）ミニPA　　尼崎西（あまがさきにし）　　武庫川（むこがわ）　　西宮（にしのみや）IC　　西宮（にしのみや）　　芦屋（あしや）　　深江（ふかえ）　　魚崎（うおざき）　　摩耶（まや）　　生田川（いくたがわ）　　京橋（きょうばし）　　京橋（きょうばし）PA　　柳原（やなぎはら）　　湊川（みなとがわ）　　若宮（わかみや）　　月見山（つきみやま）
+			// 環状線分岐 西長堀（にしながほり） 中之島西（なかのしまにし） 海老江（えびえ） 姫島（ひめじま） 大和田（おおわだ） 尼崎東（あまがさきひがし）
+			// 尼崎（あまがさき）ミニPA 尼崎西（あまがさきにし） 武庫川（むこがわ） 西宮（にしのみや）IC 西宮（にしのみや） 芦屋（あしや） 深江（ふかえ）
+			// 魚崎（うおざき） 摩耶（まや） 生田川（いくたがわ） 京橋（きょうばし） 京橋（きょうばし）PA 柳原（やなぎはら） 湊川（みなとがわ） 若宮（わかみや）
+			// 月見山（つきみやま）
 			//
-			// [BASIC_LATIN, CJK_UNIFIED_IDEOGRAPHS, CJK_SYMBOLS_AND_PUNCTUATION, HALFWIDTH_AND_FULLWIDTH_FORMS, HIRAGANA]
+			// [BASIC_LATIN, CJK_UNIFIED_IDEOGRAPHS, CJK_SYMBOLS_AND_PUNCTUATION,
+			// HALFWIDTH_AND_FULLWIDTH_FORMS, HIRAGANA]
 			//
-			// 環状線分岐　　中之島（なかのしま）　　出入橋（でいりばし）　　梅田（うめだ）　　福島（ふくしま）　　塚本（つかもと）　　加島（かしま）　　豊中南（とよなかみなみ）　　豊中北（とよなかきた）　　大阪空港（おおさかくうこう）　　池田（いけだ）　　神田（こうだ）　　川西小花（かわにしおばな）　　池田木部（いけだきべ） 
+			// 環状線分岐 中之島（なかのしま） 出入橋（でいりばし） 梅田（うめだ） 福島（ふくしま） 塚本（つかもと） 加島（かしま） 豊中南（とよなかみなみ）
+			// 豊中北（とよなかきた） 大阪空港（おおさかくうこう） 池田（いけだ） 神田（こうだ） 川西小花（かわにしおばな） 池田木部（いけだきべ）
 			//
 		final Iterable<UnicodeBlock> ubs = getUnicodeBlocks(s);
 		//
@@ -1298,7 +1316,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
-			// 福岡高速５号線　福岡市博多区西月隈（にしつきぐま）四丁目〜福岡市西区福重（ふくしげ）三丁目
+			// 福岡高速５号線 福岡市博多区西月隈（にしつきぐま）四丁目〜福岡市西区福重（ふくしげ）三丁目
 			//
 		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
 				"^[\\p{InCJKUnifiedIdeographs}|\\p{InHalfwidthAndFullwidthForms}|\\p{InCJKSymbolsAndPunctuation}]+区(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）[\\p{InCJKUnifiedIdeographs}|\\p{InHalfwidthAndFullwidthForms}|\\p{InCJKSymbolsAndPunctuation}]+区(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\p{InCJKUnifiedIdeographs}*$"),
@@ -1372,7 +1390,8 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		for (int i = 0; ss != null && i < ss.length; i++) {
 			//
 			if (Util.matches(matcher = Util.matcher(
-					PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）[\\w*|\\p{InKatakana}]*$"),
+					PatternMap.getPattern(patternMap,
+							"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）[\\w*|\\p{InKatakana}]*$"),
 					StringUtils.trim(ss[i])))) {
 				//
 				// 湊町（みなとまち）
@@ -1387,7 +1406,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 											"^(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
 									ss[i]))
 					&& Util.groupCount(matcher) > 2
-					&& StringUtils.startsWith(g3 = Util.group(matcher, 3), g1 = Util.group(matcher, 1))) {
+					&& StringsUtil.startsWith(Strings.CS, g3 = Util.group(matcher, 3), g1 = Util.group(matcher, 1))) {
 				//
 				// えびす町（えびすちょう）
 				//
@@ -1417,15 +1436,16 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 					"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
 					ss[i])) && Util.groupCount(matcher) > 3
 					&& (ss2 = StringUtils.split(Util.group(matcher, 4), Util.group(matcher, 2))) != null
-					&& ss2.length == 2)||(Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
-					"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)(\\p{InCJKUnifiedIdeographs}+)（([(\\p{InHiragana}]+)）$"),
-					ss[i]))
-					&& Util.groupCount(matcher) > 3
-					&& Objects.equals(getUnicodeBlocks(g2 = Util.group(matcher, 2)),
-							Collections.singletonList(UnicodeBlock.KATAKANA))
-					&& (ss2 = StringUtils.split(Util.group(matcher, 4),
-							KanaConverter.convertKana(g2, KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA))) != null
-					&& ss2.length == 2)) {
+					&& ss2.length == 2)
+					|| (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+							"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)(\\p{InCJKUnifiedIdeographs}+)（([(\\p{InHiragana}]+)）$"),
+							ss[i]))
+							&& Util.groupCount(matcher) > 3
+							&& Objects.equals(getUnicodeBlocks(g2 = Util.group(matcher, 2)),
+									Collections.singletonList(UnicodeBlock.KATAKANA))
+							&& (ss2 = StringUtils.split(Util.group(matcher, 4),
+									KanaConverter.convertKana(g2, KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA))) != null
+							&& ss2.length == 2)) {
 				//
 				// 四つ橋（よつばし）
 				//

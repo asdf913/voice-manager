@@ -41,6 +41,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -364,7 +366,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 					.click(Util.cast(DomElement.class, querySelector(htmlPage, "input[type=\"submit\"]"))));
 			//
 			final IValue0<String> attribute = getAttribute(getElementsByTagName(hm, "source"), "src",
-					x -> StringUtils.startsWith(x, "./temp/"));
+					x -> StringsUtil.startsWith(Strings.CS, x, "./temp/"));
 			//
 			if (attribute != null) {
 				//

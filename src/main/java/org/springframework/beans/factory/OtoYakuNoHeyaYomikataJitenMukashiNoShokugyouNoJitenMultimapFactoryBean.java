@@ -24,6 +24,8 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.javatuples.Unit;
@@ -244,9 +246,12 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 		String g1;
 		//
+		final Strings strings = Strings.CS;
+		//
 		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}＊[\\p{InHalfwidthAndFullwidthForms}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+$"),
-				s)) && Util.groupCount(m) > 2 && StringUtils.startsWith(g3 = Util.group(m, 3), g1 = Util.group(m, 1))) {
+				s)) && Util.groupCount(m) > 2
+				&& StringsUtil.startsWith(strings, g3 = Util.group(m, 3), g1 = Util.group(m, 1))) {
 			//
 			return Unit.with(ImmutableMultimap.of(Util.group(m, 2), StringUtils.substring(g3, StringUtils.length(g1))));
 			//
@@ -276,7 +281,8 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 		} else if (Util
 				.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"), s))
-				&& Util.groupCount(m) > 2 && StringUtils.startsWith(g3 = Util.group(m, 3), g1 = Util.group(m, 1))
+				&& Util.groupCount(m) > 2
+				&& StringsUtil.startsWith(strings, g3 = Util.group(m, 3), g1 = Util.group(m, 1))
 				&& CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 						getUnicodeBlocks(g2 = Util.group(m, 2)))) {
 			//
@@ -411,7 +417,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 				|| (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}|\\p{InCJKSymbolsAndPunctuation}]+$"),
 						s)) && Util.groupCount(m) > 2
-						&& StringUtils.startsWith(g3 = Util.group(m, 3), g1 = Util.group(m, 1)))) {
+						&& StringsUtil.startsWith(Strings.CS, g3 = Util.group(m, 3), g1 = Util.group(m, 1)))) {
 			//
 			return Unit.with(ImmutableMultimap.of(Util.group(m, 2), StringUtils.substringAfter(g3, g1)));
 			//

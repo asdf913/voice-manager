@@ -134,6 +134,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiConsumerUtil;
 import org.apache.commons.lang3.function.FailableBiFunction;
@@ -2401,7 +2403,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			final String mimeType = getMimeType(testAndApply((a, b) -> b != null,
 					ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), bs, (a, b) -> findMatch(a, b), null));
 			//
-			if (StringUtils.startsWith(mimeType, "audio")) {
+			if (StringsUtil.startsWith(Strings.CS, mimeType, "audio")) {
 				//
 				return new ByteArrayResource(bs);
 				//
@@ -2483,7 +2485,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		final ContentInfo ci = findMatch(ciu, file);
 		//
-		if (StringUtils.startsWith(getMimeType(ci), "audio")) {
+		if (StringsUtil.startsWith(Strings.CS, getMimeType(ci), "audio")) {
 			//
 			return new FileSystemResource(file);
 			//

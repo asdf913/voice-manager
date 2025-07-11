@@ -69,6 +69,8 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -494,7 +496,7 @@ class VoiceManagerOjadAccentPanelTest {
 			if ((m = ms[i]) == null || (parameterTypes = Util.getParameterTypes(m)) == null
 					|| parameterTypes.length != 1 || (parameterType = ArrayUtils.get(parameterTypes, 0)) == null
 					|| !Modifier.isInterface(parameterType.getModifiers())
-					|| StringUtils.startsWith(Util.getName(m), "lambda$")) {
+					|| StringsUtil.startsWith(Strings.CS, Util.getName(m), "lambda$")) {
 				//
 				continue;
 				//

@@ -7,6 +7,8 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.context.support.SpeechApi;
 
@@ -50,7 +52,9 @@ public class VoiceIdListCellRendererConverter implements Converter<ListCellRende
 						StringUtils.getCommonPrefix(SpeechApi.getVoiceIds(speechApi)), "\\"), "\\");
 				//
 				return getListCellRendererComponent(lcr, list,
-						StringUtils.startsWith(s, commonPrefix) ? StringUtils.substringAfter(s, commonPrefix) : value,
+						StringsUtil.startsWith(Strings.CS, s, commonPrefix)
+								? StringUtils.substringAfter(s, commonPrefix)
+								: value,
 						index, isSelected, cellHasFocus);
 				//
 			}

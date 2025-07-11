@@ -12,6 +12,8 @@ import javax.annotation.Nullable;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.TriFunction;
@@ -193,6 +195,8 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 		//
 		String[] ss = null;
 		//
+		final Strings strings = Strings.CS;
+		//
 		if (Boolean.logicalAnd(
 				isCJKUnifiedIdeographs = Util.matches(
 						Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)$"), s1)),
@@ -242,7 +246,7 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 				.matches(matcher = Util.matcher(
 						PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$"), s1))
 				&& Util.groupCount(matcher) > 1 && isHiragana
-				&& StringUtils.startsWith(s2, g1 = Util.group(matcher, 1))) {
+				&& StringsUtil.startsWith(strings, s2, g1 = Util.group(matcher, 1))) {
 			//
 			return Unit.with(
 					ImmutableMultimap.of(Util.group(matcher, 2), StringUtils.substring(s2, StringUtils.length(g1))));
@@ -250,7 +254,7 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 		} else if (Util
 				.matches(matcher = Util.matcher(
 						PatternMap.getPattern(patternMap, "^(\\p{InKatakana}+)(\\p{InCJKUnifiedIdeographs}+)$"), s1))
-				&& Util.groupCount(matcher) > 1 && isHiragana && StringUtils.startsWith(s2, KanaConverter
+				&& Util.groupCount(matcher) > 1 && isHiragana && StringsUtil.startsWith(strings, s2, KanaConverter
 						.convertKana(g1 = Util.group(matcher, 1), KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA))) {
 			//
 			return Unit.with(

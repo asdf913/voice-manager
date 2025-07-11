@@ -24,6 +24,8 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -381,7 +383,8 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		@Override
 		public boolean test(final String a, final String b) {
 			//
-			return Boolean.logicalOr(Util.matches(Util.matcher(PATTERN, b)), StringUtils.startsWith(b, "関連語："));
+			return Boolean.logicalOr(Util.matches(Util.matcher(PATTERN, b)),
+					StringsUtil.startsWith(Strings.CS, b, "関連語："));
 			//
 		}
 
@@ -398,7 +401,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(matcher, 2), Util.group(matcher, 3));
 				//
-			} else if (StringUtils.startsWith(b, "関連語：")) {
+			} else if (StringsUtil.startsWith(Strings.CS, b, "関連語：")) {
 				//
 				final char[] cs = Util.toCharArray(StringUtils.substringAfter(b, "関連語："));
 				//
@@ -488,7 +491,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 
 		@Override
 		public boolean test(final String a, final String b) {
-			return StringUtils.startsWith(b, "差");
+			return StringsUtil.startsWith(Strings.CS, b, "差");
 		}
 
 		@Override
@@ -583,7 +586,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 
 		@Override
 		public boolean test(final String a, final String b) {
-			return StringUtils.startsWith(b, "R-");
+			return StringsUtil.startsWith(Strings.CS, b, "R-");
 		}
 
 		@Override

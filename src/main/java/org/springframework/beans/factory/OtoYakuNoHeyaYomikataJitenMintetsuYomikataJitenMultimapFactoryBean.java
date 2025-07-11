@@ -19,6 +19,8 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.javatuples.Unit;
@@ -301,7 +303,7 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 				Objects.equals(getUnicodeBlocks(s1),
 						Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
 				Objects.equals(getUnicodeBlocks(s2), Collections.singletonList(UnicodeBlock.HIRAGANA)),
-				StringUtils.startsWith(s2, cp = StringUtils.getCommonPrefix(s1, s2)))) {
+				StringsUtil.startsWith(Strings.CS, s2, cp = StringUtils.getCommonPrefix(s1, s2)))) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create),
 					StringUtils.substring(s1, StringUtils.length(cp)),
@@ -354,7 +356,8 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 		} else if (Util
 				.matches((m1 = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InHiragana}+\\p{InCJKUnifiedIdeographs}+)\\s+（([\\p{InHiragana}|\\s]+)）$"), s)))
-				&& Util.groupCount(m1) > 1 && StringUtils.startsWith(g2 = StringUtils.trim(Util.group(m1, 2)),
+				&& Util.groupCount(m1) > 1
+				&& StringsUtil.startsWith(Strings.CS, g2 = StringUtils.trim(Util.group(m1, 2)),
 						cp = StringUtils.getCommonPrefix(g1 = Util.group(m1, 1), g2))) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, ArrayListMultimap::create),

@@ -34,6 +34,8 @@ import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.Type;
 import org.apache.bcel.generic.TypeUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -212,7 +214,7 @@ class ClassInfoUtilTest {
 					final Type argumentType0 = argumentTypes.length > 0 ? argumentTypes[0] : null;
 					//
 					if (argumentTypes.length == 1 && method.isStatic() && !method.isSynthetic()
-							&& !StringUtils.startsWith(TypeUtil.getClassName(argumentType0), "[")) {
+							&& !StringsUtil.startsWith(Strings.CS, TypeUtil.getClassName(argumentType0), "[")) {
 						//
 						Assertions.assertDoesNotThrow(() -> Narcissus.invokeStaticMethod(Narcissus.findMethod(clz,
 								FieldOrMethodUtil.getName(m), forName(TypeUtil.getClassName(argumentType0))),
