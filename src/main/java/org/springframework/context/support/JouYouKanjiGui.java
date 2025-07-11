@@ -516,8 +516,8 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 	}
 
-	private static String prependIfMissing(final Strings instance, final String str, final CharSequence prefix,
-			final CharSequence... prefixes) {
+	private static String prependIfMissing(@Nullable final Strings instance, final String str,
+			final CharSequence prefix, final CharSequence... prefixes) {
 		return instance != null ? instance.prependIfMissing(str, prefix, prefixes) : null;
 	}
 
