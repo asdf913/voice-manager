@@ -1138,7 +1138,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static void setContent(final Page instance, final String html) {
+	private static void setContent(@Nullable final Page instance, final String html) {
 		if (instance != null) {
 			instance.setContent(html);
 		}
@@ -1209,7 +1209,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static boolean startsWith(final org.apache.commons.lang3.Strings instance, final CharSequence str,
+	private static boolean startsWith(@Nullable final org.apache.commons.lang3.Strings instance, final CharSequence str,
 			final CharSequence prefix) {
 		return instance != null && instance.startsWith(str, prefix);
 	}
