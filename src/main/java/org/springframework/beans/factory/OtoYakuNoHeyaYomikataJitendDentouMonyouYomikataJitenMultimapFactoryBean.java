@@ -3288,8 +3288,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
 		//
+		final org.apache.commons.lang3.Strings strings = org.apache.commons.lang3.Strings.CS;
+		//
 		if (Boolean.logicalOr((keyIntEquals(iop, i)),
-				StringsUtil.equals(org.apache.commons.lang3.Strings.CS, line, StringUtils.trim(PairUtil.right(iop))))) {
+				StringsUtil.equals(strings, line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
 			//
@@ -3418,7 +3420,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			tsbv.deleteCharAt(StringsUtil.indexOf(org.apache.commons.lang3.Strings.CS, g24, Util.group(m2, 2)));
 			//
-			testAndAccept((a, b) -> StringUtils.length(b) - StringUtils.lastIndexOf(b, "ん") > 2, tsbk, tsbv, (a, b) -> {
+			testAndAccept((a, b) -> StringUtils.length(b) - lastIndexOf(strings, b, "ん") > 2, tsbk, tsbv, (a, b) -> {
 				//
 				int l;
 				//
@@ -3431,33 +3433,31 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			});
 			//
-			testAndAccept((a, b) -> StringUtils.length(b) - StringUtils.lastIndexOf(b, "ん") == 1, tsbk, tsbv,
-					(a, b) -> {
-						//
-						int l;
-						//
-						MultimapUtil.put(multimap, substring(a, (l = StringUtils.length(a)) - 1, l),
-								substring(b, (l = StringUtils.length(b)) - 2, l));
-						//
-						deleteLastCharacter(a);
-						//
-						deleteLast2Characters(b);
-						//
-					});
+			testAndAccept((a, b) -> StringUtils.length(b) - lastIndexOf(strings, b, "ん") == 1, tsbk, tsbv, (a, b) -> {
+				//
+				int l;
+				//
+				MultimapUtil.put(multimap, substring(a, (l = StringUtils.length(a)) - 1, l),
+						substring(b, (l = StringUtils.length(b)) - 2, l));
+				//
+				deleteLastCharacter(a);
+				//
+				deleteLast2Characters(b);
+				//
+			});
 			//
-			testAndAccept((a, b) -> StringUtils.length(b) - StringUtils.lastIndexOf(b, "ん") == 1, tsbk, tsbv,
-					(a, b) -> {
-						//
-						int l;
-						//
-						MultimapUtil.put(multimap, substring(a, (l = StringUtils.length(a)) - 1, l),
-								substring(b, (l = StringUtils.length(b)) - 2, l));
-						//
-						deleteLastCharacter(a);
-						//
-						deleteLast2Characters(b);
-						//
-					});
+			testAndAccept((a, b) -> StringUtils.length(b) - lastIndexOf(strings, b, "ん") == 1, tsbk, tsbv, (a, b) -> {
+				//
+				int l;
+				//
+				MultimapUtil.put(multimap, substring(a, (l = StringUtils.length(a)) - 1, l),
+						substring(b, (l = StringUtils.length(b)) - 2, l));
+				//
+				deleteLastCharacter(a);
+				//
+				deleteLast2Characters(b);
+				//
+			});
 			//
 			MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
 			//
@@ -3465,6 +3465,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		return Pair.of(multimap, intCollection);
 		//
+	}
+
+	private static int lastIndexOf(final org.apache.commons.lang3.Strings instance, final CharSequence str,
+			final CharSequence searchStr) {
+		return instance != null ? instance.lastIndexOf(str, searchStr) : -1;
 	}
 
 	@Nullable
@@ -4557,7 +4562,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				IntCollectionUtil.addInt(intCollection, index);
 				//
-			} else if ((lastIndexOf = StringUtils.lastIndexOf(g22, "ん")) == StringUtils.length(g22) - 1
+			} else if ((lastIndexOf = lastIndexOf(strings, g22, "ん")) == StringUtils.length(g22) - 1
 					&& lastIndexOf - StringsUtil.indexOf(strings, g22, "ん") == 2) {
 				//
 				MultimapUtil.put(multimap,
@@ -4591,7 +4596,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				IntCollectionUtil.addInt(intCollection, index);
 				//
 			} else if (Boolean.logicalAnd(StringUtils.countMatches(g22, "ん") == 1,
-					(lastIndexOf = StringUtils.lastIndexOf(g22, "ん")) == StringUtils.length(g22) - 3)) {
+					(lastIndexOf = lastIndexOf(strings, g22, "ん")) == StringUtils.length(g22) - 3)) {
 				//
 				MultimapUtil.putAll(multimap,
 						ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
@@ -4615,7 +4620,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				IntCollectionUtil.addInt(intCollection, index);
 				//
-			} else if (Util.and((lastIndexOf = StringUtils.lastIndexOf(g22, "ん")) == StringUtils.length(g22) - 1,
+			} else if (Util.and((lastIndexOf = lastIndexOf(strings, g22, "ん")) == StringUtils.length(g22) - 1,
 					StringsUtil.indexOf(strings, g22, "ん") == lastIndexOf,
 					StringUtils.length(g22) - StringUtils.length(g21) == 2)) {
 				//
@@ -4893,7 +4898,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final org.apache.commons.lang3.Strings strings = org.apache.commons.lang3.Strings.CS;
 		//
-		if (StringsUtil.indexOf(strings, g22, "ん") < StringUtils.lastIndexOf(g22, "ん")) {
+		if (StringsUtil.indexOf(strings, g22, "ん") < lastIndexOf(strings, g22, "ん")) {
 			//
 			if (Boolean.logicalAnd(StringUtils.length(g21) == 3,
 					(length(ints = toArray(indexOf(g22, c -> c == 'ん')))) == 2)) {
@@ -4958,7 +4963,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				} // if
 					//
 			} else if (Boolean.logicalAnd(
-					(indexOf = StringsUtil.indexOf(strings, g22, "ん")) == (StringUtils.lastIndexOf(g22, "ん")),
+					(indexOf = StringsUtil.indexOf(strings, g22, "ん")) == (lastIndexOf(strings, g22, "ん")),
 					indexOf == 1)) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
@@ -5467,7 +5472,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		int indexOf = StringsUtil.indexOf(strings, g12, "ん");
 		//
-		final int lastIndexOf = StringUtils.lastIndexOf(g12, "ん");
+		final int lastIndexOf = lastIndexOf(strings, g12, "ん");
 		//
 		final int[] ints = toArray(filter(IntStream.range(0, StringUtils.length(g12)),
 				x -> StringsUtil.startsWith(strings, getCharacterName(g12, x), HIRAGANA_LETTER_SMALL)));
@@ -5537,7 +5542,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		if (!Util.matches(m1) || Util.groupCount(m1) <= 1 || StringUtils.isBlank(g11 = Util.group(m1, 1))
 				|| (indexOf = StringsUtil.indexOf(strings, g12 = Util.group(m1, 2), "ん")) != StringUtils.length(g12) - 1
-				|| (indexOf != StringUtils.lastIndexOf(g12, "ん"))
+				|| (indexOf != lastIndexOf(strings, g12, "ん"))
 				|| (ints = toArray(filter(IntStream.range(0, StringUtils.length(g12)),
 						x -> StringsUtil.startsWith(strings, getCharacterName(g12, x), HIRAGANA_LETTER_SMALL)))) == null
 				|| (length = length(ints)) < 1) {
@@ -6445,7 +6450,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}+\\p{InCJKSymbolsAndPunctuation}\\p{InCJKUnifiedIdeographs}+$"),
 				right)) && Util.groupCount(m1) > 1 && StringUtils.length(g11 = Util.group(m1, 1)) == 2
-				&& StringUtils.lastIndexOf(g12 = Util.group(m1, 2), "ん")
+				&& lastIndexOf(org.apache.commons.lang3.Strings.CS, g12 = Util.group(m1, 2), "ん")
 						- (indexOf = StringsUtil.indexOf(org.apache.commons.lang3.Strings.CS, g12, "ん")) == 2) {
 			//
 			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
@@ -6883,7 +6888,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space,
 						x -> charAt(x, StringUtils.length(x) - 1, space), null) == 'ん',
 				(indexOf = StringsUtil.indexOf(org.apache.commons.lang3.Strings.CS, g12, "ゅ")) > 0,
-				StringUtils.lastIndexOf(g12, "ゅ") == indexOf)) {
+				lastIndexOf(org.apache.commons.lang3.Strings.CS, g12, "ゅ") == indexOf)) {
 			//
 			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
 					StringUtils.substring(g12, 0, indexOf - 1), StringUtils.substring(g11, 1, 2),
@@ -8037,6 +8042,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		int[] ints;
 		//
+		final org.apache.commons.lang3.Strings strings = org.apache.commons.lang3.Strings.CS;
+		//
 		if (Util.matches(m1) && Util.groupCount(m1) > 1) {
 			//
 			final String g12 = Util.group(m1, 2);
@@ -8148,7 +8155,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 						final int index = StringsUtil.indexOf(org.apache.commons.lang3.Strings.CS, lcsv, "ょ");
 						//
-						testAndRun(index == StringUtils.lastIndexOf(lcsv, "ょ"), () -> MultimapUtil.put(multimap,
+						testAndRun(index == lastIndexOf(strings, lcsv, "ょ"), () -> MultimapUtil.put(multimap,
 								StringUtils.substring(g11, 1, 2), StringUtils.substring(lcsv, index - 1, index + 2)));
 						//
 						MultimapUtil.put(multimap, StringUtils.substring(g11, 2),
