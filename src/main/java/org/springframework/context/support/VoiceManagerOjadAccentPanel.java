@@ -1384,7 +1384,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			Util.put(map, CURVE, Util.toString(testAndApply((a, b) -> a instanceof Entry,
 					Util.getSelectedItem(cbmCurve), getMapEntryGetKeyMethod(), Narcissus::invokeMethod, null)));
 			//
-			String url = createUrl(this.url, map);
+			String u = createUrl(url, map);
 			//
 			final boolean testMode = isTestMode();
 			//
@@ -1392,7 +1392,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				PageUtil.navigate(
 						page = newPage(browser = BrowserTypeUtil.launch(chromium(playwright = Playwright.create()))),
-						url);
+						u);
 				//
 				final int size = IterableUtils.size(querySelectorAll(page, "#paginator a"));
 				//
@@ -1404,7 +1404,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 									VALUE))), 1)
 							* size);
 					//
-					PageUtil.navigate(page = newPage(browser), url = createUrl(this.url, map));
+					PageUtil.navigate(page = newPage(browser), u = createUrl(url, map));
 					//
 				} // if
 					//
@@ -1415,7 +1415,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final List<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
 			//
-			final Collection<TextAndImage> textAndImages = getTextAndImages(url, textInput,
+			final Collection<TextAndImage> textAndImages = getTextAndImages(u, textInput,
 					Util.cast(Entry.class, Util.getSelectedItem(cbmCurve)));
 			//
 			Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
