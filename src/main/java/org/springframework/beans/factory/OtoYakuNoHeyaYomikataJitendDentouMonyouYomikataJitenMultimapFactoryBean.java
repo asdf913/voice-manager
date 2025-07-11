@@ -3467,7 +3467,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static int lastIndexOf(final org.apache.commons.lang3.Strings instance, final CharSequence str,
+	private static int lastIndexOf(final org.apache.commons.lang3.Strings instance, @Nullable final CharSequence str,
 			final CharSequence searchStr) {
 		return instance != null ? instance.lastIndexOf(str, searchStr) : -1;
 	}
