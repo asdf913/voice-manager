@@ -29,6 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -73,7 +74,8 @@ class JouYouKanjiGuiTest {
 			METHOD_GET_BOOLEAN_VALUES, METHOD_GET_EXPRESSION_AS_CSS_STRING, METHOD_GET_INDEXED_COLORS,
 			METHOD_GET_STYLES_SOURCE, METHOD_GET_PROPERTY, METHOD_TO_MILLIS, METHOD_SET_FILL_BACK_GROUND_COLOR,
 			METHOD_SET_FILL_PATTERN, METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
-			METHOD_MAP_TO_INT, METHOD_SET_AUTO_FILTER, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = null;
+			METHOD_MAP_TO_INT, METHOD_SET_AUTO_FILTER, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS,
+			METHOD_PREPEND_IF_MISSING = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -129,6 +131,9 @@ class JouYouKanjiGuiTest {
 		//
 		(METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = clz.getDeclaredMethod("getPhysicalNumberOfRows", Sheet.class))
 				.setAccessible(true);
+		//
+		(METHOD_PREPEND_IF_MISSING = clz.getDeclaredMethod("prependIfMissing", Strings.class, String.class,
+				CharSequence.class, CharSequence[].class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.JouYouKanjiGui$IH");
 		//
@@ -989,6 +994,28 @@ class JouYouKanjiGuiTest {
 				return null;
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
+			}
+			throw new Throwable(toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPrependIfMissing() throws Throwable {
+		//
+		Assertions.assertNull(prependIfMissing(null, null, null));
+		//
+	}
+
+	private static String prependIfMissing(final Strings instance, final String str, final CharSequence prefix,
+			final CharSequence... prefixes) throws Throwable {
+		try {
+			final Object obj = METHOD_PREPEND_IF_MISSING.invoke(null, instance, str, prefix, prefixes);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -482,7 +482,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 			ObjectMap.setObject(objectMap, ECSSVersion.class, ecssVersion);
 			//
-			final String xPathFormat = StringUtils.prependIfMissing(StringUtils.joinWith("/", "h3",
+			final String xPathFormat = prependIfMissing(Strings.CS, StringUtils.joinWith("/", "h3",
 					"span[text()=\"%1$s\"]", "..", "following-sibling::table[1]", "tbody"), "//");
 			//
 			// h3
@@ -514,6 +514,11 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 		return workbook;
 		//
+	}
+
+	private static String prependIfMissing(final Strings instance, final String str, final CharSequence prefix,
+			final CharSequence... prefixes) {
+		return instance != null ? instance.prependIfMissing(str, prefix, prefixes) : null;
 	}
 
 	private static void addJouYouKanJiSheet(final ObjectMap objectMap, final String sheetName) {
