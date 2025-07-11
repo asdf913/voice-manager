@@ -1139,7 +1139,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static boolean setContents(final Object source, final Supplier<Clipboard> suppler,
+	private static boolean setContents(@Nullable final Object source, final Supplier<Clipboard> suppler,
 			final Map<Object, JTextComponent> map) {
 		//
 		final Iterable<Entry<Object, JTextComponent>> entrySet = Util.entrySet(map);
