@@ -4832,8 +4832,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		int[] ints;
 		//
-		if ((indexOf = StringsUtil.indexOf(org.apache.commons.lang3.Strings.CS, g22, "ん")) < (lastIndexOf = StringUtils
-				.lastIndexOf(g22, "ん"))) {
+		if ((indexOf = StringsUtil.indexOf(org.apache.commons.lang3.Strings.CS, g22,
+				"ん")) < (lastIndexOf = lastIndexOf(org.apache.commons.lang3.Strings.CS, g22, "ん"))) {
 			//
 			if ((length = StringUtils.length(g21)) == 2) {
 				//
