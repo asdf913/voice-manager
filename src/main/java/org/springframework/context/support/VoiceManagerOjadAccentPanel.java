@@ -1067,40 +1067,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} else if (Objects.equals(source, btnPdf)) {
 			//
-			final Version version = Configuration.getVersion();
-			//
-			final Configuration configuration = new Configuration(version);
-			//
-			configuration.setTemplateLoader(new ClassTemplateLoader(VoiceManagerOjadAccentPanel.class, "/"));
-			//
-			try (final Writer w = new StringWriter(); final Playwright playwright = Playwright.create()) {
+			try {
 				//
-				final Template template = configuration.getTemplate("ojad.ftl");
+				actionPerformedBtnPdf(this, Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage)));
 				//
-				final TextAndImage textAndImage = Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage));
-				//
-				final Map<String, Object> map = new LinkedHashMap<>(
-						Collections.singletonMap("textAndImages", getTextAndImages(this, textAndImage)));
-				//
-				Util.put(map, "static", new BeansWrapper(version).getStaticModels());
-				//
-				TemplateUtil.process(template, map, w);
-				//
-				final Page page = newPage(BrowserTypeUtil.launch(chromium(playwright)));
-				//
-				setContent(page, Util.toString(w));
-				//
-				final JFileChooser jfc = new JFileChooser(".");
-				//
-				jfc.setSelectedFile(Util.toFile(Path.of(StringUtils.joinWith(".", getKanji(textAndImage), "pdf"))));
-				//
-				if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
-						&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-					//
-					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), pdf(page));
-					//
-				} // if
-					//
 			} catch (final IOException | TemplateException e) {
 				//
 				throw new RuntimeException(e);
@@ -1132,6 +1102,45 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		setContents(source, supplier, Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage)),
 				objectFunctionMap);
 		//
+	}
+
+	private static void actionPerformedBtnPdf(final VoiceManagerOjadAccentPanel instance,
+			final TextAndImage textAndImage) throws IOException, TemplateException {
+		//
+		final Version version = Configuration.getVersion();
+		//
+		final Configuration configuration = new Configuration(version);
+		//
+		configuration.setTemplateLoader(new ClassTemplateLoader(VoiceManagerOjadAccentPanel.class, "/"));
+		//
+		try (final Writer w = new StringWriter(); final Playwright playwright = Playwright.create()) {
+			//
+			final Template template = configuration.getTemplate("ojad.ftl");
+			//
+			final Map<String, Object> map = new LinkedHashMap<>(
+					Collections.singletonMap("textAndImages", getTextAndImages(instance, textAndImage)));
+			//
+			Util.put(map, "static", new BeansWrapper(version).getStaticModels());
+			//
+			TemplateUtil.process(template, map, w);
+			//
+			final Page page = newPage(BrowserTypeUtil.launch(chromium(playwright)));
+			//
+			setContent(page, Util.toString(w));
+			//
+			final JFileChooser jfc = new JFileChooser(".");
+			//
+			jfc.setSelectedFile(Util.toFile(Path.of(StringUtils.joinWith(".", getKanji(textAndImage), "pdf"))));
+			//
+			if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
+					&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				//
+				FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), pdf(page));
+				//
+			} // if
+				//
+		} // try
+			//
 	}
 
 	private static void setContents(@Nullable final Object source, final Supplier<Clipboard> suppler,
