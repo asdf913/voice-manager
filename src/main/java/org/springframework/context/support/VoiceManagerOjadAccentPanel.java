@@ -1134,7 +1134,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static void setContents(final Object source, final Supplier<Clipboard> suppler,
+	private static void setContents(@Nullable final Object source, final Supplier<Clipboard> suppler,
 			final TextAndImage textAndImage, final Map<Object, Function<TextAndImage, Image>> map) {
 		//
 		final Iterable<Entry<Object, Function<TextAndImage, Image>>> entrySet = Util.entrySet(map);
