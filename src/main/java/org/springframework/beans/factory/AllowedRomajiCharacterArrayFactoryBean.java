@@ -53,7 +53,7 @@ public class AllowedRomajiCharacterArrayFactoryBean implements FactoryBean<char[
 			//
 		} // while
 			//
-		element = ObjectUtils.defaultIfNull(ElementUtil.nextElementSibling(element), element);
+		element = ObjectUtils.getIfNull(ElementUtil.nextElementSibling(element), element);
 		//
 		StringBuilder sb = null;
 		//

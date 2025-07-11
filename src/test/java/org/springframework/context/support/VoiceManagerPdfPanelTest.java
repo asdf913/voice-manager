@@ -677,7 +677,7 @@ class VoiceManagerPdfPanelTest {
 				//
 		} // try
 			//
-		final String templateName = String.format("%1$s", ObjectUtils.defaultIfNull(ldcwGetValue, "pdf.html.ftl"));
+		final String templateName = String.format("%1$s", ObjectUtils.getIfNull(ldcwGetValue, "pdf.html.ftl"));
 		//
 		tl.findTemplateSource(templateName);
 		//

@@ -116,7 +116,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 		} catch (final SQLException | IOException e) {
 			//
-			final Throwable rootCause = ObjectUtils.defaultIfNull(ExceptionUtils.getRootCause(e), e);
+			final Throwable rootCause = ObjectUtils.getIfNull(ExceptionUtils.getRootCause(e), e);
 			//
 			if (GraphicsEnvironment.isHeadless()) {
 				//
@@ -124,7 +124,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 				//
 			} else {
 				//
-				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(ObjectUtils.defaultIfNull(rootCause, e));
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(ObjectUtils.getIfNull(rootCause, e));
 				//
 			} // if
 				//

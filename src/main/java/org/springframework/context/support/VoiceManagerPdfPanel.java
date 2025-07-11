@@ -1014,7 +1014,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(new JLabel("Text Align"));
 		//
-		add(new JComboBox<>(cbmTextAlign1 = new DefaultComboBoxModel<>(ObjectUtils.defaultIfNull(
+		add(new JComboBox<>(cbmTextAlign1 = new DefaultComboBoxModel<>(ObjectUtils.getIfNull(
 				ArrayUtils.insert(0, Util.toArray(getTextAligns(), new String[] {}), (String) null), new String[] {}))),
 				String.format("%1$s,span %2$s", WRAP, span));
 		//
@@ -1324,7 +1324,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final Collection<?> formats = getByteConverterAttributeValues(
 					instance.configurableListableBeanFactory = ObjectUtils
-							.defaultIfNull(Util.cast(ConfigurableListableBeanFactory.class, applicationContext),
+							.getIfNull(Util.cast(ConfigurableListableBeanFactory.class, applicationContext),
 									Util.cast(ConfigurableListableBeanFactory.class,
 											ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext))),
 					FORMAT);
@@ -1765,7 +1765,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						(a, b) -> Boolean.logicalAnd(a != null, b != null),
 						Map.of("font-size",
 								String.format("%1$spx",
-										ObjectUtils.max(ObjectUtils.defaultIfNull(fontSize3, BigDecimal.ZERO),
+										ObjectUtils.max(ObjectUtils.getIfNull(fontSize3, BigDecimal.ZERO),
 												new BigDecimal("40"))),
 								position, absolute),
 						intIntPair, (a, b) -> new LinkedHashMap<>(a), (a, b) -> a);
@@ -1910,8 +1910,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				ObjectMap.setObject(objectMap, SpeechApi.class, speechApi);
 				//
-				ObjectMap.setObject(objectMap, PDFont.class, new PDType1Font(ObjectUtils.defaultIfNull(
-						Util.cast(FontName.class, Util.getSelectedItem(cbmFontName)), FontName.HELVETICA)));
+				ObjectMap.setObject(objectMap, PDFont.class, new PDType1Font(ObjectUtils
+						.getIfNull(Util.cast(FontName.class, Util.getSelectedItem(cbmFontName)), FontName.HELVETICA)));
 				//
 				ObjectMap.setObject(objectMap, File.class, file);
 				//
@@ -2610,7 +2610,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final int firstY = getInt(ily, 0, 0);
 			//
-			return ObjectUtils.defaultIfNull(getSubimage(bi, firstX, firstY, getInt(ilx, sizeIlx - 1, 0) - firstX + 1,
+			return ObjectUtils.getIfNull(getSubimage(bi, firstX, firstY, getInt(ilx, sizeIlx - 1, 0) - firstX + 1,
 					getInt(ily, sizeIly - 1, 0) - firstY + 1), bi);
 			//
 		} // if
@@ -2640,8 +2640,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		return createStyleMap(
 				Map.of("text-align",
-						ObjectUtils.defaultIfNull(Util.toString(Util.getSelectedItem(cbmTextAlign1)), "center"),
-						"display", "block", "margin-left", "auto", "margin-right", "auto"),
+						ObjectUtils.getIfNull(Util.toString(Util.getSelectedItem(cbmTextAlign1)), "center"), "display",
+						"block", "margin-left", "auto", "margin-right", "auto"),
 				testAndApply(NumberUtils::isCreatable, Util.getText(tfFontSize1), NumberUtils::createBigDecimal, null),
 				Util.cast(ECSSUnit.class, Util.getSelectedItem(cbmFontSize1)));
 		//

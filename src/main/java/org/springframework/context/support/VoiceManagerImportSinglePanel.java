@@ -2648,7 +2648,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			final Mp3File mp3File = new Mp3File(file);
 			//
 			return getMp3TagParirs(
-					ObjectUtils.defaultIfNull(Mp3FileUtil.getId3v2Tag(mp3File), Mp3FileUtil.getId3v1Tag(mp3File)),
+					ObjectUtils.getIfNull(Mp3FileUtil.getId3v2Tag(mp3File), Mp3FileUtil.getId3v1Tag(mp3File)),
 					attributes);
 			//
 		} // if
@@ -3199,7 +3199,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 						//
 					} // if
 						//
-					instance.insertVoiceListId(getId(ObjectUtils.defaultIfNull(voiceListOld, voiceList)), voiceId);
+					instance.insertVoiceListId(getId(ObjectUtils.getIfNull(voiceListOld, voiceList)), voiceId);
 					//
 				} // for
 					//

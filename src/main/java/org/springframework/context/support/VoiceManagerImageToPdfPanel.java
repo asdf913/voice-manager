@@ -698,7 +698,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				//
 				Util.setText(tfOutputFile, null);
 				//
-				final PDRectangle pdRectangle = ObjectUtils.defaultIfNull(Util.cast(PDRectangle.class,
+				final PDRectangle pdRectangle = ObjectUtils.getIfNull(Util.cast(PDRectangle.class,
 						testAndApply(Entry.class::isInstance, Util.getSelectedItem(cbmPDRectangle), x -> {
 							//
 							final Collection<Method> ms = Util.toList(Util.filter(
@@ -793,7 +793,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				//
 				try (final PDPageContentStream cs = new PDPageContentStream(pdDocument, pdPage)) {
 					//
-					final PDFont font = new PDType1Font(ObjectUtils.defaultIfNull(
+					final PDFont font = new PDType1Font(ObjectUtils.getIfNull(
 							Util.cast(FontName.class, Util.getSelectedItem(cbmFontName)), FontName.HELVETICA));
 					//
 					final float fontSize = NumberUtils.toFloat(Util.getText(tfFontSize), 14);

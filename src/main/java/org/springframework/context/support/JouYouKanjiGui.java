@@ -545,7 +545,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		final Elements elements = ObjectMap.getObject(objectMap, Elements.class);
 		//
-		final ECSSVersion eccsEcssVersion = ObjectUtils.defaultIfNull(ObjectMap.getObject(objectMap, ECSSVersion.class),
+		final ECSSVersion eccsEcssVersion = ObjectUtils.getIfNull(ObjectMap.getObject(objectMap, ECSSVersion.class),
 				ECSSVersion.CSS30);
 		//
 		for (int i = 0; i < IterableUtils.size(elements); i++) {
@@ -656,7 +656,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 			final List<CSSDeclaration> cssDeclarations = Util.toList(Util.filter(
 					Util.stream(CSSReaderDeclarationList.readFromString(style,
-							ObjectUtils.defaultIfNull(ecssVersion, ECSSVersion.CSS30))),
+							ObjectUtils.getIfNull(ecssVersion, ECSSVersion.CSS30))),
 					x -> Objects.equals(getProperty(x), cssProperty)));
 			//
 			final int size = IterableUtils.size(cssDeclarations);

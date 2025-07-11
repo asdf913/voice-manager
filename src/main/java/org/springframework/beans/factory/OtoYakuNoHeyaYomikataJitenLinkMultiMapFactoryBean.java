@@ -167,7 +167,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 				//
 			} // try
 				//
-			return ObjectUtils.defaultIfNull(Util.toString(
+			return ObjectUtils.getIfNull(Util.toString(
 					evaluate(newXPath(XPathFactory.newDefaultInstance()), "/*/*", document, XPathConstants.STRING)),
 					Double.toString(cell.getNumericCellValue()));
 			//

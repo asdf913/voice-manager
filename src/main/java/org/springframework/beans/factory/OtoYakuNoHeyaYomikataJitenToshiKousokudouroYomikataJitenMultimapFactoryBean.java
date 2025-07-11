@@ -482,7 +482,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 				//
 		} // if
 			//
-		return ObjectUtils.defaultIfNull(result, mm);
+		return ObjectUtils.getIfNull(result, mm);
 		//
 	}
 

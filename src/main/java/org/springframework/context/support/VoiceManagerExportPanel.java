@@ -1898,7 +1898,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			// presentationSlideDuration
 			//
 			ObjectMap.setObject(objectMap, Duration.class,
-					ObjectUtils.defaultIfNull(
+					ObjectUtils.getIfNull(
 							IValue0Util.getValue0(toDurationIvalue0(Util.getText(tfPresentationSlideDuration))),
 							presentationSlideDuration));
 			//
@@ -2112,7 +2112,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		final File file = ObjectMap.getObject(objectMap, File.class);
 		//
 		try (final Database db = create(setFileFormat(testAndApply(Objects::nonNull, file, DatabaseBuilder::new, null),
-				ObjectUtils.defaultIfNull(ObjectMap.getObject(objectMap, FileFormat.class), FileFormat.V2000)))) {
+				ObjectUtils.getIfNull(ObjectMap.getObject(objectMap, FileFormat.class), FileFormat.V2000)))) {
 			//
 			if (Util.iterator(dss) != null) {
 				//
@@ -2510,7 +2510,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				try (final POIFSFileSystem fs = new POIFSFileSystem()) {
 					//
 					final Encryptor encryptor = new EncryptionInfo(
-							ObjectUtils.defaultIfNull(encryptionMode, EncryptionMode.agile)).getEncryptor();
+							ObjectUtils.getIfNull(encryptionMode, EncryptionMode.agile)).getEncryptor();
 					//
 					if (encryptor != null) {
 						//
@@ -3425,7 +3425,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				setStringFieldDefaultValue(v);
 				//
-				setVariable(evaluationContext, VOICE, ObjectUtils.defaultIfNull(v, voice));
+				setVariable(evaluationContext, VOICE, ObjectUtils.getIfNull(v, voice));
 				//
 				// key
 				//
@@ -3723,7 +3723,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				final Mp3File mp3File = new Mp3File(tempFile);
 				//
-				final ID3v1 id3v1 = ObjectUtils.defaultIfNull(Mp3FileUtil.getId3v2Tag(mp3File),
+				final ID3v1 id3v1 = ObjectUtils.getIfNull(Mp3FileUtil.getId3v2Tag(mp3File),
 						Mp3FileUtil.getId3v1Tag(mp3File));
 				//
 				final String titleOld = getTitle(id3v1);
@@ -4140,7 +4140,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 						setStringFieldDefaultValue(
 								temp = clone(objectMap.getObject(ObjectMapper.class), Voice.class, voice));
 						//
-						ObjectMap.setObject(objectMap, Voice.class, ObjectUtils.defaultIfNull(temp, voice));
+						ObjectMap.setObject(objectMap, Voice.class, ObjectUtils.getIfNull(temp, voice));
 						//
 						replaceText(objectMap, StringMap.getString(stringMap, MESSAGE_DIGEST_ALGORITHM));
 						//

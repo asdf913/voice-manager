@@ -1472,7 +1472,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 		final LayoutManager layoutManagerDefault = null;
 		//
-		LayoutManager lm = ObjectUtils.defaultIfNull(this.layoutManager, layoutManagerDefault);
+		LayoutManager lm = ObjectUtils.getIfNull(this.layoutManager, layoutManagerDefault);
 		//
 		if (lm instanceof MigLayout) {
 			//
@@ -1490,7 +1490,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 		} // if
 			//
-		return ObjectUtils.defaultIfNull(lm, layoutManagerDefault);
+		return ObjectUtils.getIfNull(lm, layoutManagerDefault);
 		//
 	}
 

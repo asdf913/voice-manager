@@ -499,7 +499,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		//
 		final Collection<?> formats = getByteConverterAttributeValues(
 				configurableListableBeanFactory = ObjectUtils
-						.defaultIfNull(Util.cast(ConfigurableListableBeanFactory.class, applicationContext),
+						.getIfNull(Util.cast(ConfigurableListableBeanFactory.class, applicationContext),
 								Util.cast(ConfigurableListableBeanFactory.class,
 										ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext))),
 				FORMAT);

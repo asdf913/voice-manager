@@ -100,7 +100,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean, App
 								Util.stream(Util.values(
 										ListableBeanFactoryUtil.getBeansOfType(applicationContext, SpeechApi.class))),
 								x -> x != this)),
-						x -> ObjectUtils.defaultIfNull(IterableUtils.get(x, 0), speechApi), x -> speechApi);
+						x -> ObjectUtils.getIfNull(IterableUtils.get(x, 0), speechApi), x -> speechApi);
 				//
 			} // if
 				//

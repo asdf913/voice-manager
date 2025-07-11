@@ -1431,7 +1431,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		final LayoutManager layoutManagerDefault = null;
 		//
-		LayoutManager lm = ObjectUtils.defaultIfNull(this.layoutManager, layoutManagerDefault);
+		LayoutManager lm = ObjectUtils.getIfNull(this.layoutManager, layoutManagerDefault);
 		//
 		if (lm instanceof MigLayout) {
 			//
@@ -1449,7 +1449,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		} // if
 			//
-		return ObjectUtils.defaultIfNull(lm, layoutManagerDefault);
+		return ObjectUtils.getIfNull(lm, layoutManagerDefault);
 		//
 	}
 
@@ -2226,7 +2226,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				// bitRate
 				//
 						,
-						ObjectUtils.defaultIfNull(bitRate,
+						ObjectUtils.getIfNull(bitRate,
 								Util.cast(Integer.class,
 										FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_BITRATE",
 												true))),

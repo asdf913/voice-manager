@@ -1794,7 +1794,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 					//
 				} // if
 					//
-				final ObjectMap objectMap = ObjectUtils.defaultIfNull(copyObjectMap(_objectMap), _objectMap);
+				final ObjectMap objectMap = ObjectUtils.getIfNull(copyObjectMap(_objectMap), _objectMap);
 				//
 				ObjectMap.setObject(objectMap, Row.class, row);
 				//
@@ -1844,7 +1844,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 							//
 						} // if
 							//
-						it.objectMap = ObjectUtils.defaultIfNull(copyObjectMap(objectMap), objectMap);
+						it.objectMap = ObjectUtils.getIfNull(copyObjectMap(objectMap), objectMap);
 						//
 						it.errorMessageConsumer = errorMessageConsumer;
 						//
@@ -1858,7 +1858,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 						//
 						ih.throwableStackTraceHexs = throwableStackTraceHexs;
 						//
-						submit(es, ObjectUtils.defaultIfNull(Reflection.newProxy(Runnable.class, ih), it));
+						submit(es, ObjectUtils.getIfNull(Reflection.newProxy(Runnable.class, ih), it));
 						//
 					} else {
 						//
@@ -1948,7 +1948,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			final Mp3File mp3File = new Mp3File(file);
 			//
 			return getMp3TagParirs(
-					ObjectUtils.defaultIfNull(Mp3FileUtil.getId3v2Tag(mp3File), Mp3FileUtil.getId3v1Tag(mp3File)),
+					ObjectUtils.getIfNull(Mp3FileUtil.getId3v2Tag(mp3File), Mp3FileUtil.getId3v1Tag(mp3File)),
 					attributes);
 			//
 		} // if
@@ -2657,7 +2657,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			if (ihOld != null) {
 				//
-				ihNew.objects = ObjectUtils.defaultIfNull(
+				ihNew.objects = ObjectUtils.getIfNull(
 						testAndApply(Objects::nonNull, ihOld.objects, LinkedHashMap::new, null), ihNew.objects);
 				//
 			} // if
@@ -3285,7 +3285,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 						//
 					} // if
 						//
-					instance.insertVoiceListId(getId(ObjectUtils.defaultIfNull(voiceListOld, voiceList)), voiceId);
+					instance.insertVoiceListId(getId(ObjectUtils.getIfNull(voiceListOld, voiceList)), voiceId);
 					//
 				} // for
 					//

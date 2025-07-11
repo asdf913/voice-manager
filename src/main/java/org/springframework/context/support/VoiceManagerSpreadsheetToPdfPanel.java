@@ -1075,7 +1075,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		final PDDocument pdDocument = new PDDocument();
 		//
-		final PDPage pdPage = new PDPage(ObjectUtils.defaultIfNull(Util.cast(PDRectangle.class,
+		final PDPage pdPage = new PDPage(ObjectUtils.getIfNull(Util.cast(PDRectangle.class,
 				testAndApply(Entry.class::isInstance, Util.getSelectedItem(cbmPDRectangle), x -> {
 					//
 					final Collection<Method> ms = Util.toList(Util.filter(
