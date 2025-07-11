@@ -6633,7 +6633,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
 			//
-			if (StringUtils.endsWith(StringUtils.substringBefore(g22, csv), "ょ") && StringUtils.length(csv) > 1) {
+			if (StringsUtil.endsWith(org.apache.commons.lang3.Strings.CS, StringUtils.substringBefore(g22, csv), "ょ")
+					&& StringUtils.length(csv) > 1) {
 				//
 				csv = StringUtils.substring(csv, 1);
 				//
