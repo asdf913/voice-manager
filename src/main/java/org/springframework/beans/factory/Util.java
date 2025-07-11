@@ -85,6 +85,8 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableBiPredicate;
 import org.apache.commons.lang3.function.FailableBooleanSupplier;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -811,7 +813,8 @@ abstract class Util {
 		//
 		Method method = null;
 		//
-		try (final InputStream is = getResourceAsStream(clz, "/" + StringUtils.replace(name, ".", "/") + ".class")) {
+		try (final InputStream is = getResourceAsStream(clz,
+				"/" + StringsUtil.replace(Strings.CS, name, ".", "/") + ".class")) {
 			//
 			if (function != null && function.apply(instance) == null) {
 				//
@@ -1488,7 +1491,7 @@ abstract class Util {
 		java.lang.reflect.Method javaLangReflectMethod = null;
 		//
 		try (final InputStream is = getResourceAsStream(clz,
-				"/" + StringUtils.replace(Util.getName(Iterable.class), ".", "/") + ".class")) {
+				"/" + StringsUtil.replace(Strings.CS, Util.getName(Iterable.class), ".", "/") + ".class")) {
 			//
 			final Method method = getForEachMethod(
 					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)));

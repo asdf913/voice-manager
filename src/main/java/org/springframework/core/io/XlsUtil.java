@@ -29,6 +29,8 @@ import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -110,7 +112,7 @@ public abstract class XlsUtil {
 		List<Object> entryNames = null;
 		//
 		try (final InputStream is = getResourceAsStream(clz,
-				String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))) {
+				String.format("/%1$s.class", StringsUtil.replace(Strings.CS, getName(clz), ".", "/")))) {
 			//
 			JavaClass javaClass = null;
 			//

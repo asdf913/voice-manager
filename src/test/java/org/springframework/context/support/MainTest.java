@@ -42,6 +42,8 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -582,7 +584,8 @@ class MainTest {
 		Object argument = null;
 		//
 		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
+				? clz.getResourceAsStream(
+						String.format("/%1$s.class", StringsUtil.replace(Strings.CS, clz.getName(), ".", "/")))
 				: null) {
 			//
 			final org.apache.bcel.classfile.Method[] methods = JavaClassUtil.getMethods(
@@ -723,7 +726,8 @@ class MainTest {
 		Object argument = null;
 		//
 		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
+				? clz.getResourceAsStream(
+						String.format("/%1$s.class", StringsUtil.replace(Strings.CS, clz.getName(), ".", "/")))
 				: null) {
 			//
 			final org.apache.bcel.classfile.Method[] methods = JavaClassUtil.getMethods(

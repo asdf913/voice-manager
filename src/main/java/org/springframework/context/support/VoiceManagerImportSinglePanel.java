@@ -122,6 +122,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiConsumerUtil;
@@ -679,7 +681,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		final Class<?> clz = File.class;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(Util.getName(clz), ".", "/")))) {
+				String.format(CLASS_RESOURCE_FORMAT, StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 			//
 			final Object[] objectTypes = toArray(Util
 					.map(Stream.of("java.lang.String", "java.lang.String", "java.io.File"), ObjectType::getInstance));

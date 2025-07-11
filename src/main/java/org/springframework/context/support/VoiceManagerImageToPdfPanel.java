@@ -92,6 +92,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableConsumer;
@@ -1338,7 +1340,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		MutablePair<Method, Collection<Object>> entry = null;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))) {
+				String.format("/%1$s.class", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 			//
 			// org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject.createFromFileByContent(java.io.File,org.apache.pdfbox.pdmodel.PDDocument)
 			//

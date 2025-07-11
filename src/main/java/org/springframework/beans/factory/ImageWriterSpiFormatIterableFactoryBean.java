@@ -15,6 +15,8 @@ import javax.imageio.spi.ServiceRegistry;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 
@@ -42,8 +44,8 @@ public class ImageWriterSpiFormatIterableFactoryBean implements FactoryBean<Iter
 		//
 		for (int i = 0; i < IterableUtils.size(classNames); i++) {
 			//
-			Util.set(classNames, i, StringUtils
-					.substringBefore(StringUtils.replace(IterableUtils.get(classNames, i), commonPrefix, ""), '.'));
+			Util.set(classNames, i, StringUtils.substringBefore(
+					StringsUtil.replace(Strings.CS, IterableUtils.get(classNames, i), commonPrefix, ""), '.'));
 			//
 		} // if
 			//

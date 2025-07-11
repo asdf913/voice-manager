@@ -61,6 +61,8 @@ import org.apache.bcel.generic.NEW;
 import org.apache.bcel.generic.ObjectType;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
@@ -618,10 +620,8 @@ class JlptLevelGuiTest {
 	private static Class<? extends Throwable> getThrowingThrowableClass(final Class<?> clz, final Method method)
 			throws Throwable {
 		//
-		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(
-						String.format("/%1$s.class", StringUtils.replace(clz != null ? clz.getName() : null, ".", "/")))
-				: null) {
+		try (final InputStream is = clz != null ? clz.getResourceAsStream(String.format("/%1$s.class",
+				StringsUtil.replace(Strings.CS, clz != null ? clz.getName() : null, ".", "/"))) : null) {
 			//
 			final JavaClass javaClass = ClassParserUtil
 					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));

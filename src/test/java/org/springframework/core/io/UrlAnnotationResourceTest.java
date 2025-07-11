@@ -38,6 +38,8 @@ import org.apache.bcel.generic.NEW;
 import org.apache.bcel.generic.Type;
 import org.apache.bcel.generic.TypedInstruction;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -95,7 +97,8 @@ class UrlAnnotationResourceTest {
 		final Class<?> clz = UrlAnnotationResource.class;
 		//
 		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
+				? clz.getResourceAsStream(
+						String.format("/%1$s.class", StringsUtil.replace(Strings.CS, clz.getName(), ".", "/")))
 				: null) {
 			//
 			final org.apache.bcel.classfile.Method[] methods = JavaClassUtil.getMethods(
@@ -203,7 +206,8 @@ class UrlAnnotationResourceTest {
 		final Class<?> clz = UrlAnnotationResource.class;
 		//
 		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
+				? clz.getResourceAsStream(
+						String.format("/%1$s.class", StringsUtil.replace(Strings.CS, clz.getName(), ".", "/")))
 				: null) {
 			//
 			final org.apache.bcel.classfile.Method[] methods = JavaClassUtil.getMethods(
@@ -279,7 +283,8 @@ class UrlAnnotationResourceTest {
 		final Class<?> clz = UrlAnnotationResource.class;
 		//
 		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
+				? clz.getResourceAsStream(
+						String.format("/%1$s.class", StringsUtil.replace(Strings.CS, clz.getName(), ".", "/")))
 				: null) {
 			//
 			final org.apache.bcel.classfile.Method[] methods = JavaClassUtil.getMethods(

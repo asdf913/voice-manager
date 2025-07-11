@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,8 +20,8 @@ class ClassParserUtilTest {
 		Assertions.assertNull(
 				ClassParserUtil.parse(cast(ClassParser.class, Narcissus.allocateInstance(ClassParser.class))));
 		//
-		try (final InputStream is = ClassParserUtilTest.class.getResourceAsStream(
-				String.format("/%1$s.class", StringUtils.replace(ClassParserUtilTest.class.getName(), ".", "/")))) {
+		try (final InputStream is = ClassParserUtilTest.class.getResourceAsStream(String.format("/%1$s.class",
+				StringsUtil.replace(Strings.CS, ClassParserUtilTest.class.getName(), ".", "/")))) {
 			//
 			final ClassParser classParser = new ClassParser(is, null);
 			//

@@ -49,6 +49,8 @@ import org.apache.bcel.generic.ReferenceType;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
@@ -783,7 +785,7 @@ class UtilTest {
 		//
 		try (final InputStream is = clz != null
 				? clz.getResourceAsStream(
-						String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))
+						String.format("/%1$s.class", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))
 				: null) {
 			//
 			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(

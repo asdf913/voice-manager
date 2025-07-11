@@ -106,6 +106,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiConsumerUtil;
@@ -2028,8 +2030,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			final Class<?> clz = Lame.class;
 			//
-			try (final InputStream is = Util.getResourceAsStream(clz,
-					String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(Util.getName(clz), ".", "/")))) {
+			try (final InputStream is = Util.getResourceAsStream(clz, String.format(CLASS_RESOURCE_FORMAT,
+					StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 				//
 				final org.apache.bcel.classfile.Method[] ms = JavaClassUtil.getMethods(
 						ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)));
@@ -2119,8 +2121,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			final Class<?> clz = LameEncoder.class;
 			//
-			try (final InputStream is = Util.getResourceAsStream(clz,
-					String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(Util.getName(clz), ".", "/")))) {
+			try (final InputStream is = Util.getResourceAsStream(clz, String.format(CLASS_RESOURCE_FORMAT,
+					StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 				//
 				final List<org.apache.bcel.classfile.Method> ms = Util
 						.toList(Util.filter(

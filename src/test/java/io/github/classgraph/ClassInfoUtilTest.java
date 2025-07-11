@@ -77,7 +77,8 @@ class ClassInfoUtilTest {
 		final Class<?> clz = ClassInfoUtil.class;
 		//
 		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
+				? clz.getResourceAsStream(
+						String.format("/%1$s.class", StringsUtil.replace(Strings.CS, clz.getName(), ".", "/")))
 				: null) {
 			//
 			final org.apache.bcel.classfile.Method[] methods = JavaClassUtil.getMethods(
@@ -189,7 +190,8 @@ class ClassInfoUtilTest {
 		final Class<?> clz = ClassInfoUtil.class;
 		//
 		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
+				? clz.getResourceAsStream(
+						String.format("/%1$s.class", StringsUtil.replace(Strings.CS, clz.getName(), ".", "/")))
 				: null) {
 			//
 			final org.apache.bcel.classfile.Method[] methods = JavaClassUtil.getMethods(

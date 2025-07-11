@@ -6,4 +6,9 @@ public interface StringsUtil {
 		return instance != null && instance.startsWith(str, prefix);
 	}
 
+	static String replace(final Strings instance, final String text, final String searchString,
+			final String replacement) {
+		return instance != null ? instance.replace(text, searchString, replacement) : null;
+	}
+
 }

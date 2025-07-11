@@ -2838,7 +2838,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		MutablePair<Method, Collection<Object>> entry = null;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))) {
+				String.format("/%1$s.class", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 			//
 			// org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject.createFromByteArray(org.apache.pdfbox.pdmodel.PDDocument,byte[],java.lang.String)
 			//

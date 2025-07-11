@@ -20,6 +20,8 @@ import org.apache.bcel.generic.Type;
 import org.apache.bcel.generic.TypeUtil;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -170,7 +172,7 @@ public final class ClassInfoUtil {
 	private static JavaClass toJavaClass(final ClassLoader cl, final String className) {
 		//
 		try (final InputStream is = cl != null
-				? cl.getResourceAsStream(StringUtils.replace(className, ".", "/") + ".class")
+				? cl.getResourceAsStream(StringsUtil.replace(Strings.CS, className, ".", "/") + ".class")
 				: null) {
 			//
 			return ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));

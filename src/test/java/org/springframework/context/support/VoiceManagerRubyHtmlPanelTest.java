@@ -47,6 +47,8 @@ import org.apache.bcel.generic.ReturnInstruction;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.javatuples.valueintf.IValue0;
@@ -421,7 +423,7 @@ class VoiceManagerRubyHtmlPanelTest {
 		List<Method> list = null;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))) {
+				String.format("/%1$s.class", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 			//
 			final JavaClass javaClass = ClassParserUtil.parse(new ClassParser(is, null));
 			//

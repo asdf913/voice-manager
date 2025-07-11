@@ -2817,8 +2817,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					if (Util.and(StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, key = Util.getKey(en))),
 							StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, value = Util.getValue(en))),
 							StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, key)),
-							StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, value)),
-							!Objects.equals(key, StringUtils.replace(g11, lcs, "")))) {
+							StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, value)), !Objects.equals(key,
+									StringsUtil.replace(org.apache.commons.lang3.Strings.CS, g11, lcs, "")))) {
 						//
 						testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b),
 								intList = ObjectUtils.getIfNull(intList, IntList::create), k,
@@ -2890,7 +2890,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				if (Util.and(StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, key = Util.getKey(en))),
 						StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, Util.getValue(en))),
-						!Objects.equals(key, StringUtils.replace(g11, lcs, "")))) {
+						!Objects.equals(key, StringsUtil.replace(org.apache.commons.lang3.Strings.CS, g11, lcs, "")))) {
 					//
 					testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b),
 							intList = ObjectUtils.getIfNull(intList, IntList::create), index,
@@ -3277,12 +3277,12 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
-			if (StringUtils
-					.isNotBlank(
-							s = StringUtils.replace(
-									StringUtils.replace(v1, StringUtils.getCommonPrefix(
-											StringUtils.replace(v1, csv, ""), StringUtils.replace(v2, csv, "")), ""),
-									csv, ""))) {
+			final org.apache.commons.lang3.Strings strings = org.apache.commons.lang3.Strings.CS;
+			//
+			if (StringUtils.isNotBlank(s = StringsUtil.replace(strings,
+					StringsUtil.replace(strings, v1, StringUtils.getCommonPrefix(
+							StringsUtil.replace(strings, v1, csv, ""), StringsUtil.replace(strings, v2, csv, "")), ""),
+					csv, ""))) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						StringUtils.substring(k1, 1, 2), s);
