@@ -95,10 +95,12 @@ import javassist.util.proxy.ProxyUtil;
 
 class VoiceManagerOnlineTtsPanelTest {
 
+	private static final String EMPTY = "";
+
 	private static Method METHOD_GET_LAYOUT_MANAGER, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
 			METHOD_TEST_AND_APPLY6, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_RUN_THROWS,
 			METHOD_SELECT_STREAM, METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_IIF, METHOD_GET_VOICE,
-			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_SHA512HEX,
+			METHOD_EQUALS_NUMBER, METHOD_EQUALS_STRINGS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_SHA512HEX,
 			METHOD_CREATE_INPUT_STREAM_SOURCE, METHOD_CAN_READ, METHOD_ADD_LIST_DATA_LISTENER,
 			METHOD_GET_ANNOTATED_ELEMENT_OBJECT_ENTRY, METHOD_GET_STRING_OBJECT_ENTRY = null;
 
@@ -140,7 +142,10 @@ class VoiceManagerOnlineTtsPanelTest {
 		(METHOD_GET_VOICE = clz.getDeclaredMethod("getVoice", PropertyResolver.class, String.class, ListModel.class,
 				Map.class)).setAccessible(true);
 		//
-		(METHOD_EQUALS = clz.getDeclaredMethod("equals", Number.class, Integer.TYPE)).setAccessible(true);
+		(METHOD_EQUALS_NUMBER = clz.getDeclaredMethod("equals", Number.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_EQUALS_STRINGS = clz.getDeclaredMethod("equals", Strings.class, CharSequence.class, CharSequence.class))
+				.setAccessible(true);
 		//
 		(METHOD_SHOW_SAVE_DIALOG = clz.getDeclaredMethod("showSaveDialog", JFileChooser.class, Component.class))
 				.setAccessible(true);
@@ -291,7 +296,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent("", 0, null)));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(EMPTY, 0, null)));
 		//
 		// btnExecute
 		//
@@ -653,7 +658,7 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		Assertions.assertNull(selectStream(element, null));
 		//
-		Assertions.assertNull(selectStream(element, ""));
+		Assertions.assertNull(selectStream(element, EMPTY));
 		//
 		Assertions.assertNull(selectStream(element, " "));
 		//
@@ -797,11 +802,28 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		Assertions.assertFalse(equals(Integer.valueOf(one + one), one));
 		//
+		Assertions.assertTrue(equals(Strings.CS, EMPTY, EMPTY));
+		//
+		Assertions.assertFalse(equals(Strings.CS, EMPTY, null));
+		//
 	}
 
 	private static boolean equals(final Number a, final int b) throws Throwable {
 		try {
-			final Object obj = METHOD_EQUALS.invoke(null, a, b);
+			final Object obj = METHOD_EQUALS_NUMBER.invoke(null, a, b);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static boolean equals(final Strings instance, final CharSequence cs1, final CharSequence cs2)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_EQUALS_STRINGS.invoke(null, instance, cs1, cs2);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}

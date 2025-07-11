@@ -584,9 +584,13 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	private static Iterable<Element> getParentPreviousElementSiblingByLabel(final Element element, final String label) {
 		//
-		return Util.toList(Util.filter(selectStream(element, "input[type=\"text\"]"), x -> StringUtils
-				.equals(ElementUtil.text(ElementUtil.previousElementSibling(ElementUtil.parent(x))), label)));
+		return Util.toList(Util.filter(selectStream(element, "input[type=\"text\"]"), x -> equals(Strings.CS,
+				ElementUtil.text(ElementUtil.previousElementSibling(ElementUtil.parent(x))), label)));
 		//
+	}
+
+	private static boolean equals(final Strings instance, final CharSequence cs1, final CharSequence cs2) {
+		return instance != null && instance.equals(cs1, cs2);
 	}
 
 	@Nullable
