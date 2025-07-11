@@ -254,10 +254,15 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 		final String string = "あ";
 		//
 		Assertions.assertEquals(Arrays.asList(string),
-				getStrings(StringUtils.appendIfMissing(string, "(", ")"), UnicodeBlock.HIRAGANA));
+				getStrings(appendIfMissing(Strings.CS, string, "(", ")"), UnicodeBlock.HIRAGANA));
 		//
 		Assertions.assertEquals(Arrays.asList("", "", "雲"), getStrings("イオン雲", UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS));
 		//
+	}
+
+	private static String appendIfMissing(final Strings instance, final String str, final CharSequence suffix,
+			final CharSequence... suffixes) {
+		return instance != null ? instance.appendIfMissing(str, suffix, suffixes) : null;
 	}
 
 	@Test
