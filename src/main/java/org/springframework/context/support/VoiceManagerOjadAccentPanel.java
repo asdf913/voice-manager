@@ -1047,22 +1047,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			pack(window);
 			//
-		} else if (Objects.equals(source, btnCopyAccentImage)) {
-			//
-			final IH ih = new IH();
-			//
-			ih.image = getAccentImage(Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage)));
-			//
-			setContents(getClipboard(), Reflection.newProxy(Transferable.class, ih), null);
-			//
-		} else if (Objects.equals(source, btnCopyCurveImage)) {
-			//
-			final IH ih = new IH();
-			//
-			ih.image = getCurveImage(Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage)));
-			//
-			setContents(getClipboard(), Reflection.newProxy(Transferable.class, ih), null);
-			//
 		} else if (Objects.equals(source, btnSaveAccentImage)) {
 			//
 			final String format = Util.toString(Util.getSelectedItem(cbmImageFormat));
