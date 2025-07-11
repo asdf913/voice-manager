@@ -1415,7 +1415,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final List<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
 			//
-			final Collection<TextAndImage> textAndImages = getTextAndImages(u, textInput,
+			final Collection<TextAndImage> textAndImages = getTextAndImages(url, textInput,
 					Util.cast(Entry.class, Util.getSelectedItem(cbmCurve)));
 			//
 			Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
