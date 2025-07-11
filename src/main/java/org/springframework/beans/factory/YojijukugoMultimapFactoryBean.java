@@ -195,7 +195,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 		//
 		final Elements tables = ElementUtil.getElementsByTag(testAndApply(
 				x -> x != null && (allowProtocols == null || allowProtocols.length == 0
-						|| !StringsUtil.equalsAny(Strings.CI, Util.getProtocol(x), allowProtocols)),
+						|| StringsUtil.equalsAny(Strings.CI, Util.getProtocol(x), allowProtocols)),
 				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
 				null), "table");
 		//
