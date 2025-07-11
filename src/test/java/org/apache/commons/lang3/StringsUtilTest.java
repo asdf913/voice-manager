@@ -2,6 +2,7 @@ package org.apache.commons.lang3;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
@@ -40,7 +41,7 @@ class StringsUtilTest {
 			//
 			toString = Objects.toString(m);
 			//
-			if (Objects.equals(m.getReturnType(), Boolean.TYPE)) {
+			if (contains(Arrays.asList(Boolean.TYPE, Integer.TYPE), m.getReturnType())) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
@@ -52,6 +53,10 @@ class StringsUtilTest {
 				//
 		} // for
 			//
+	}
+
+	private static boolean contains(final Collection<?> instance, final Object item) {
+		return instance != null && instance.contains(item);
 	}
 
 	private static Object[] toArray(final Collection<?> instance) {
@@ -107,6 +112,13 @@ class StringsUtilTest {
 		Assertions.assertFalse(StringsUtil.contains(strings, null, null));
 		//
 		Assertions.assertTrue(StringsUtil.contains(strings, EMPTY, EMPTY));
+		//
+	}
+
+	@Test
+	void testIndexOf() {
+		//
+		Assertions.assertEquals(-1, StringsUtil.indexOf(strings, null, null));
 		//
 	}
 

@@ -23,4 +23,8 @@ public interface StringsUtil {
 		return instance != null && instance.contains(str, searchStr);
 	}
 
+	static int indexOf(final Strings instance, final CharSequence seq, final CharSequence searchSeq) {
+		return instance != null ? instance.indexOf(seq, searchSeq) : -1;
+	}
+
 }

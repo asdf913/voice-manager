@@ -979,7 +979,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 				} // if
 					//
-				if ((idx = StringUtils.indexOf(sb, commonPrefix)) >= 0
+				if ((idx = StringsUtil.indexOf(Strings.CS, sb, commonPrefix)) >= 0
 						&& (sb = getIfNull(sb, () -> new StringBuilder(StringUtils.defaultString(toString)))) != null) {
 					//
 					sb.delete(idx, idx + StringUtils.length(commonPrefix));
