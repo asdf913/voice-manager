@@ -660,7 +660,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 	}
 
-	private static String removeEnd(final Strings instance, final String str, final CharSequence remove) {
+	private static String removeEnd(@Nullable final Strings instance, final String str, final CharSequence remove) {
 		return instance != null ? instance.removeEnd(str, remove) : null;
 	}
 
