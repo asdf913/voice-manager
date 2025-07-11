@@ -1250,7 +1250,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(instance)), Arrays::stream,
 							null),
 					x -> x != null && Objects.equals(Util.getReturnType(x), Integer.TYPE) && x.getParameterCount() == 0
-							&& StringUtils.startsWithIgnoreCase(Util.getName(x), "get" + string)));
+							&& StringsUtil.startsWith(Strings.CI, Util.getName(x), "get" + string)));
 			//
 			final int size = CollectionUtils.size(ms);
 			//
@@ -1483,7 +1483,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 						//
 						final String language = SpeechApi.getVoiceAttribute(speechApi, x, LANGUAGE);
 						//
-						return StringUtils.startsWithIgnoreCase(
+						return StringsUtil.startsWith(Strings.CI,
 								ObjIntFunctionUtil.apply(languageCodeToTextObjIntFunction, language, 16), voiceLanguage)
 								|| Objects.equals(language, voiceLanguage);
 						//

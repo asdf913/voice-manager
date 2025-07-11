@@ -4082,7 +4082,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(instance)), Arrays::stream,
 							null),
 					x -> x != null && Objects.equals(Util.getReturnType(x), Integer.TYPE) && x.getParameterCount() == 0
-							&& StringUtils.startsWithIgnoreCase(Util.getName(x), "get" + string)));
+							&& StringsUtil.startsWith(Strings.CI, Util.getName(x), "get" + string)));
 			//
 			final int size = CollectionUtils.size(ms);
 			//

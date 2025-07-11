@@ -986,7 +986,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(instance)), Arrays::stream,
 							null),
 					x -> x != null && Objects.equals(Util.getReturnType(x), Integer.TYPE) && x.getParameterCount() == 0
-							&& StringUtils.startsWithIgnoreCase(Util.getName(x), "get" + string)));
+							&& StringsUtil.startsWith(Strings.CI, Util.getName(x), "get" + string)));
 			//
 			final int size = CollectionUtils.size(ms);
 			//
@@ -2461,7 +2461,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 					final String stringCellValue = CellUtil.getStringCellValue(cell);
 					//
 					return Objects.equals(name, stringCellValue) || (StringUtils.isNotEmpty(stringCellValue)
-							&& StringUtils.startsWithIgnoreCase(name, stringCellValue));
+							&& StringsUtil.startsWith(Strings.CI, name, stringCellValue));
 					//
 				}))) != null) {
 			//

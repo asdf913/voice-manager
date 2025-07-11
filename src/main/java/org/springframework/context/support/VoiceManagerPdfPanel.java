@@ -886,7 +886,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Playwright.class), Arrays::stream, null),
 					m -> m != null && Objects.equals(Util.getReturnType(m), BrowserType.class)
 							&& m.getParameterCount() == 0
-							&& StringUtils.startsWithIgnoreCase(Util.getName(m), browserType)));
+							&& StringsUtil.startsWith(Strings.CI, Util.getName(m), browserType)));
 			//
 			final int size = IterableUtils.size(ms);
 			//
@@ -2019,8 +2019,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			for (int i = 0; i < length; i++) {
 				//
 				if ((fontName = ArrayUtils.get(fontNames, i)) == null
-						|| (!StringUtils.startsWithIgnoreCase(fontName.getName(), prefix)
-								&& !StringUtils.startsWithIgnoreCase(Util.name(fontName), prefix))) {
+						|| (!StringsUtil.startsWith(strings, fontName.getName(), prefix)
+								&& !StringsUtil.startsWith(strings, Util.name(fontName), prefix))) {
 					//
 					continue;
 					//

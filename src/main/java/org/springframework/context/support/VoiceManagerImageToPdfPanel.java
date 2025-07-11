@@ -554,8 +554,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			for (int i = 0; i < length; i++) {
 				//
 				if ((fontName = ArrayUtils.get(fontNames, i)) == null
-						|| (!StringUtils.startsWithIgnoreCase(fontName.getName(), prefix)
-								&& !StringUtils.startsWithIgnoreCase(Util.name(fontName), prefix))) {
+						|| (!StringsUtil.startsWith(strings, fontName.getName(), prefix)
+								&& !StringsUtil.startsWith(strings, Util.name(fontName), prefix))) {
 					//
 					continue;
 					//

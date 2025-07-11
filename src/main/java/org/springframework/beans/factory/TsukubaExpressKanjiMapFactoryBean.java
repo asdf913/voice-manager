@@ -15,6 +15,8 @@ import javax.annotation.Nullable;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -61,7 +63,7 @@ public class TsukubaExpressKanjiMapFactoryBean extends StringMapFromResourceFact
 			} else {
 				//
 				final List<RomajiOrHiragana> rohs = Util.toList(Util.filter(Arrays.stream(RomajiOrHiragana.values()),
-						x -> StringUtils.startsWithIgnoreCase(Util.name(x), string)));
+						x -> StringsUtil.startsWith(Strings.CI, Util.name(x), string)));
 				//
 				if (IterableUtils.size(rohs) > 1) {
 					//

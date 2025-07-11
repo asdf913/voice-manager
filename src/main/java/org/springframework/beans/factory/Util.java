@@ -132,7 +132,7 @@ abstract class Util {
 		} else {
 			//
 			final List<Field> fs = toList(filter(Arrays.stream(getDeclaredFields(UnicodeBlock.class)),
-					f -> StringUtils.startsWithIgnoreCase(getName(f), string)));
+					f -> StringsUtil.startsWith(Strings.CI, getName(f), string)));
 			//
 			final int size = IterableUtils.size(fs);
 			//

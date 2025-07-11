@@ -544,12 +544,14 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 			//
 			String textContent, methodName = null;
 			//
+			final Strings strings = Strings.CI;
+			//
 			for (int i = 0; i < IterableUtils.size(elements); i++) {
 				//
 				for (int j = 0; j < IterableUtils.size(methodNames); j++) {
 					//
-					if (!StringUtils.startsWithIgnoreCase(methodName = IterableUtils.get(methodNames, j), "is")
-							|| !StringsUtil.contains(Strings.CI,
+					if (!StringsUtil.startsWith(strings, methodName = IterableUtils.get(methodNames, j), "is")
+							|| !StringsUtil.contains(strings,
 									textContent = ElementUtil.text(element = IterableUtils.get(elements, i)),
 									StringUtils.substringAfter(methodName, "is"))
 							|| aTag != null) {
