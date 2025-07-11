@@ -5,6 +5,7 @@ import java.nio.file.FileSystems;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.StringsUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -23,7 +24,7 @@ public interface OperatingSystemUtil {
 		//
 		for (int i = 0; i < length(oss); i++) {
 			//
-			if (!StringUtils.containsIgnoreCase(name, name(os = ArrayUtils.get(oss, i)))) {
+			if (!StringsUtil.contains(org.apache.commons.lang3.Strings.CI, name, name(os = ArrayUtils.get(oss, i)))) {
 				//
 				continue;
 				//

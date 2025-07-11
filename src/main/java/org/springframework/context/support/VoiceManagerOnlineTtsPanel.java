@@ -70,6 +70,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiConsumerUtil;
 import org.apache.commons.lang3.function.FailableConsumer;
@@ -540,7 +542,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				for (int i = 0; i < Util.getSize(listModel); i++) {
 					//
-					if (!StringUtils.containsIgnoreCase(Util.toString(elementAt = Util.getElementAt(listModel, i)),
+					if (!StringsUtil.contains(Strings.CI, Util.toString(elementAt = Util.getElementAt(listModel, i)),
 							propertyValue)) {
 						//
 						continue;

@@ -45,6 +45,8 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
@@ -547,7 +549,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 				for (int j = 0; j < IterableUtils.size(methodNames); j++) {
 					//
 					if (!StringUtils.startsWithIgnoreCase(methodName = IterableUtils.get(methodNames, j), "is")
-							|| !StringUtils.containsIgnoreCase(
+							|| !StringsUtil.contains(Strings.CI,
 									textContent = ElementUtil.text(element = IterableUtils.get(elements, i)),
 									StringUtils.substringAfter(methodName, "is"))
 							|| aTag != null) {

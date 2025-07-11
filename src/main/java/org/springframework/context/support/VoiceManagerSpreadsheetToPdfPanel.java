@@ -1658,7 +1658,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		for (int j = 0; j < length; j++) {
 			//
-			if (!StringUtils.containsIgnoreCase(ArrayUtils.get(voiceIds, j), voice)) {
+			if (!StringsUtil.contains(Strings.CI, ArrayUtils.get(voiceIds, j), voice)) {
 				//
 				continue;
 				//
