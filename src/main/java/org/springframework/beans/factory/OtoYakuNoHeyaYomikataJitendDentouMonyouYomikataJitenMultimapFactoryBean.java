@@ -3244,18 +3244,19 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 					});
 			//
-			testAndAccept((a, b) -> StringUtils.endsWith(a, "ん"), tsbv, Pair.of(g21, g22), (a, b) -> {
-				//
-				final String k = Util.getKey(b);
-				//
-				final String v = Util.getValue(b);
-				//
-				int l;
-				//
-				MultimapUtil.put(multimap, StringUtils.substring(k, (l = StringUtils.length(k)) - 1, l),
-						StringUtils.substring(v, (l = StringUtils.length(v)) - 2, l));
-				//
-			});
+			testAndAccept((a, b) -> StringsUtil.endsWith(org.apache.commons.lang3.Strings.CS, a, "ん"), tsbv,
+					Pair.of(g21, g22), (a, b) -> {
+						//
+						final String k = Util.getKey(b);
+						//
+						final String v = Util.getValue(b);
+						//
+						int l;
+						//
+						MultimapUtil.put(multimap, StringUtils.substring(k, (l = StringUtils.length(k)) - 1, l),
+								StringUtils.substring(v, (l = StringUtils.length(v)) - 2, l));
+						//
+					});
 			//
 			testAndAccept(
 					(a, b, c) -> Boolean.logicalAnd(StringUtils.isNotBlank(Util.getKey(c)),
@@ -6590,7 +6591,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
 			//
 			testAndAccept(
-					(a, b) -> Boolean.logicalAnd(StringUtils.endsWith(g11, a), StringsUtil.endsWith(strings, g12, b)),
+					(a, b) -> Boolean.logicalAnd(StringsUtil.endsWith(strings, g11, a),
+							StringsUtil.endsWith(strings, g12, b)),
 					lcsk, lcsv, (a, b) -> MultimapUtil.putAll(multimap, ImmutableMultimap
 							.of(StringUtils.substringBefore(g11, a), StringUtils.substringBefore(g12, b), a, b)));
 			//
