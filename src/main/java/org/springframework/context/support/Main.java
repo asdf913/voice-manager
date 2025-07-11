@@ -357,7 +357,7 @@ public class Main {
 				} // if
 					//
 				if ((ss = StringUtils.split(BeanDefinitionUtil.getBeanClassName(bd), ".")) != null && ss.length > 0
-						&& StringUtils.equals(string, ss[ss.length - 1])) {
+						&& StringsUtil.equals(Strings.CS, string, ss[ss.length - 1])) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), string,
 							bd);

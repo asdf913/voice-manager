@@ -27,6 +27,8 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableConsumerUtil;
@@ -221,9 +223,10 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 
 	private static void printStackTrace(final Throwable throwable) {
 		//
-		final List<Method> ms = toList(filter(
-				testAndApply(Objects::nonNull, getDeclaredMethods(Throwable.class), Arrays::stream, null),
-				m -> m != null && StringUtils.equals(getName(m), "printStackTrace") && m.getParameterCount() == 0));
+		final List<Method> ms = toList(
+				filter(testAndApply(Objects::nonNull, getDeclaredMethods(Throwable.class), Arrays::stream, null),
+						m -> m != null && StringsUtil.equals(Strings.CS, getName(m), "printStackTrace")
+								&& m.getParameterCount() == 0));
 		//
 		testAndAccept(m -> Boolean.logicalOr(throwable != null, isStatic(m)),
 				testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null),

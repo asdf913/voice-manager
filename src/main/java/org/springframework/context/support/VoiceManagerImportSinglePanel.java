@@ -2256,7 +2256,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)), Arrays::stream, null),
 				f -> {
 					final Group g = Util.isAnnotationPresent(f, Group.class) ? f.getAnnotation(Group.class) : null;
-					return StringUtils.equals(g != null ? g.value() : null, group);
+					return StringsUtil.equals(Strings.CS, g != null ? g.value() : null, group);
 				}));
 		//
 		return Util.toList(FailableStreamUtil.stream(
@@ -2404,7 +2404,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 			final List<Method> ms = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Throwable.class), Arrays::stream, null),
-					m -> m != null && StringUtils.equals(Util.getName(m), "printStackTrace")
+					m -> m != null && StringsUtil.equals(Strings.CS, Util.getName(m), "printStackTrace")
 							&& m.getParameterCount() == 0));
 			//
 			final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
@@ -3973,7 +3973,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		for (final Entry<String, String> en : entries) {
 			//
-			if (en == null || !StringUtils.equals(Util.getValue(en), Util.getText(jTextComponent))) {
+			if (en == null || !StringsUtil.equals(Strings.CS, Util.getValue(en), Util.getText(jTextComponent))) {
 				//
 				continue;
 				//

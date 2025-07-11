@@ -1631,7 +1631,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 			final List<Method> ms = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Throwable.class), Arrays::stream, null),
-					m -> m != null && StringUtils.equals(Util.getName(m), "printStackTrace")
+					m -> m != null && StringsUtil.equals(Strings.CS, Util.getName(m), "printStackTrace")
 							&& m.getParameterCount() == 0));
 			//
 			final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
@@ -5038,7 +5038,8 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		final List<Method> ms = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.getDeclaredMethods(AccessibleObject.class), Arrays::stream, null),
-				m -> m != null && StringUtils.equals(Util.getName(m), "isAccessible") && m.getParameterCount() == 0));
+				m -> m != null && StringsUtil.equals(Strings.CS, Util.getName(m), "isAccessible")
+						&& m.getParameterCount() == 0));
 		//
 		return testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> get(x, 0), null);
 		//

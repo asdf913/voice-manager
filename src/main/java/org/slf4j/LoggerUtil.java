@@ -106,9 +106,10 @@ public class LoggerUtil {
 
 	private static void printStackTrace(final Throwable throwable) {
 		//
-		final List<java.lang.reflect.Method> ms = toList(filter(
-				testAndApply(Objects::nonNull, getDeclaredMethods(Throwable.class), Arrays::stream, null),
-				m -> m != null && StringUtils.equals(getName(m), "printStackTrace") && m.getParameterCount() == 0));
+		final List<java.lang.reflect.Method> ms = toList(
+				filter(testAndApply(Objects::nonNull, getDeclaredMethods(Throwable.class), Arrays::stream, null),
+						m -> m != null && StringsUtil.equals(Strings.CS, getName(m), "printStackTrace")
+								&& m.getParameterCount() == 0));
 		//
 		final java.lang.reflect.Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms,
 				x -> IterableUtils.get(x, 0), null);

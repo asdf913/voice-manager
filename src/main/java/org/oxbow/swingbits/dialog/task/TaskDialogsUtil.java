@@ -17,6 +17,8 @@ import java.util.stream.Stream;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableConsumerUtil;
@@ -61,7 +63,7 @@ public class TaskDialogsUtil {
 		final List<Method> ms = toList(filter(
 				testAndApply(Objects::nonNull, getDeclaredMethods(forName("org.junit.jupiter.api.AssertDoesNotThrow")),
 						Arrays::stream, null),
-				x -> Boolean.logicalAnd(StringUtils.equals(getName(x), "createAssertionFailedError"),
+				x -> Boolean.logicalAnd(StringsUtil.equals(Strings.CS, getName(x), "createAssertionFailedError"),
 						Arrays.equals(new Class<?>[] { Object.class, Throwable.class }, getParameterTypes(x)))));
 		//
 		final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
@@ -109,9 +111,10 @@ public class TaskDialogsUtil {
 
 	private static void printStackTrace(final Throwable throwable) {
 		//
-		final List<Method> ms = toList(filter(
-				testAndApply(Objects::nonNull, getDeclaredMethods(Throwable.class), Arrays::stream, null),
-				m -> m != null && StringUtils.equals(getName(m), "printStackTrace") && m.getParameterCount() == 0));
+		final List<Method> ms = toList(
+				filter(testAndApply(Objects::nonNull, getDeclaredMethods(Throwable.class), Arrays::stream, null),
+						m -> m != null && StringsUtil.equals(Strings.CS, getName(m), "printStackTrace")
+								&& m.getParameterCount() == 0));
 		//
 		final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
 		//

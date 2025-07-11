@@ -2681,9 +2681,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					NodeUtil.attributesSize(element) == 0
 					//
 					,
-					StringUtils.equals(TextNodeUtil
-							.text(Util.cast(TextNode.class, testAndApply(x -> NodeUtil.childNodeSize(x) == 1, element,
-									x -> NodeUtil.childNode(x, 0), null))),
+					StringsUtil.equals(Strings.CS,
+							TextNodeUtil
+									.text(Util.cast(TextNode.class, testAndApply(x -> NodeUtil.childNodeSize(x) == 1,
+											element, x -> NodeUtil.childNode(x, 0), null))),
 							string));
 			//
 		} // if

@@ -1060,7 +1060,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		final FailableStream<Field> fs = new FailableStream<>(Util.filter(testAndApply(Objects::nonNull,
 				Util.getDeclaredFields(VoiceManagerTtsPanel.class), Arrays::stream, null), f -> {
 					final Group g = Util.isAnnotationPresent(f, Group.class) ? f.getAnnotation(Group.class) : null;
-					return StringUtils.equals(g != null ? g.value() : null, group);
+					return StringsUtil.equals(Strings.CS, g != null ? g.value() : null, group);
 				}));
 		//
 		return Util.toList(FailableStreamUtil.stream(FailableStreamUtil.map(fs,

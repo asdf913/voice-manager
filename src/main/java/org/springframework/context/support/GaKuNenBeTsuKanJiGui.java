@@ -53,6 +53,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableConsumerUtil;
@@ -269,7 +271,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 			for (final Entry<String, String> en : entries) {
 				//
-				if (en == null || !StringUtils.equals(Util.getValue(en), Util.getText(jtf))) {
+				if (en == null || !StringsUtil.equals(Strings.CS, Util.getValue(en), Util.getText(jtf))) {
 					//
 					continue;
 					//

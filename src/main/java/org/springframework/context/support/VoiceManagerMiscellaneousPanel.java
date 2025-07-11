@@ -75,6 +75,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiConsumerUtil;
@@ -925,7 +927,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 			final List<Method> ms = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Throwable.class), Arrays::stream, null),
-					m -> m != null && StringUtils.equals(Util.getName(m), "printStackTrace")
+					m -> m != null && StringsUtil.equals(Strings.CS, Util.getName(m), "printStackTrace")
 							&& m.getParameterCount() == 0));
 			//
 			final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
@@ -1199,7 +1201,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 		final List<Method> ms = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.getDeclaredMethods(AccessibleObject.class), Arrays::stream, null),
-				m -> m != null && StringUtils.equals(Util.getName(m), "isAccessible") && m.getParameterCount() == 0));
+				m -> m != null && StringsUtil.equals(Strings.CS, Util.getName(m), "isAccessible")
+						&& m.getParameterCount() == 0));
 		//
 		return testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> get(x, 0), null);
 		//
@@ -1457,7 +1460,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		final FailableStream<Field> fs = new FailableStream<>(Util.filter(testAndApply(Objects::nonNull,
 				Util.getDeclaredFields(VoiceManagerMiscellaneousPanel.class), Arrays::stream, null), f -> {
 					final Group g = Util.isAnnotationPresent(f, Group.class) ? f.getAnnotation(Group.class) : null;
-					return StringUtils.equals(g != null ? g.value() : null, group);
+					return StringsUtil.equals(Strings.CS, g != null ? g.value() : null, group);
 				}));
 		//
 		return Util.toList(FailableStreamUtil.stream(

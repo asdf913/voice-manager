@@ -1584,7 +1584,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String right = PairUtil.right(iop);
 		//
-		if (StringUtils.equals(StringUtils.trim(right), right)) {
+		if (StringsUtil.equals(org.apache.commons.lang3.Strings.CS, StringUtils.trim(right), right)) {
 			//
 			return null;
 			//
@@ -1736,7 +1736,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				} else if (Boolean.logicalAnd(StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21)),
 						StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22)))) {
 					//
-					if (Boolean.logicalAnd(StringUtils.equals(csk, g11), StringUtils.length(csk) == 2)) {
+					if (Boolean.logicalAnd(StringsUtil.equals(org.apache.commons.lang3.Strings.CS, csk, g11),
+							StringUtils.length(csk) == 2)) {
 						//
 						MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 								ImmutableMultimap.of(
@@ -1872,7 +1873,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String right = PairUtil.right(iop);
 		//
-		if (StringUtils.equals(StringUtils.trim(right), right)) {
+		if (StringsUtil.equals(org.apache.commons.lang3.Strings.CS, StringUtils.trim(right), right)) {
 			//
 			return null;
 			//
@@ -2078,7 +2079,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final Map<String, String> map) {
 		//
 		if (Boolean.logicalOr((keyIntEquals(iop, i)),
-				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
+				StringsUtil.equals(org.apache.commons.lang3.Strings.CS, line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
 			//
@@ -2201,7 +2202,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final Map<String, String> map) {
 		//
 		if (Boolean.logicalOr((keyIntEquals(iop, i)),
-				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
+				StringsUtil.equals(org.apache.commons.lang3.Strings.CS, line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
 			//
@@ -2318,7 +2319,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final Map<String, String> map) {
 		//
 		if (Boolean.logicalOr((keyIntEquals(iop, i)),
-				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
+				StringsUtil.equals(org.apache.commons.lang3.Strings.CS, line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
 			//
@@ -2444,7 +2445,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final Map<String, String> map) {
 		//
 		if (Boolean.logicalOr((keyIntEquals(iop, i)),
-				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
+				StringsUtil.equals(org.apache.commons.lang3.Strings.CS, line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
 			//
@@ -2573,7 +2574,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final Map<String, String> map) {
 		//
 		if (Boolean.logicalOr((keyIntEquals(iop, i)),
-				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
+				StringsUtil.equals(org.apache.commons.lang3.Strings.CS, line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
 			//
@@ -2718,7 +2719,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final Map<String, String> map) {
 		//
 		if (Boolean.logicalOr((keyIntEquals(iop, i)),
-				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
+				StringsUtil.equals(org.apache.commons.lang3.Strings.CS, line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
 			//
@@ -2806,7 +2807,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final Map<String, String> map) {
 		//
 		if (Boolean.logicalOr((keyIntEquals(iop, i)),
-				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
+				StringsUtil.equals(org.apache.commons.lang3.Strings.CS, line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
 			//
@@ -2935,7 +2936,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final Map<String, String> map) {
 		//
 		if (Boolean.logicalOr((keyIntEquals(iop, i)),
-				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
+				StringsUtil.equals(org.apache.commons.lang3.Strings.CS, line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
 			//
@@ -3042,7 +3043,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final Map<String, String> map) {
 		//
 		if (Boolean.logicalOr((keyIntEquals(iop, i)),
-				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
+				StringsUtil.equals(org.apache.commons.lang3.Strings.CS, line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
 			//
@@ -3270,7 +3271,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final Map<String, String> map) {
 		//
 		if (Boolean.logicalOr((keyIntEquals(iop, i)),
-				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
+				StringsUtil.equals(org.apache.commons.lang3.Strings.CS, line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
 			//
@@ -3454,7 +3455,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final Map<String, String> map) {
 		//
 		if (Boolean.logicalOr((keyIntEquals(iop, i)),
-				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
+				StringsUtil.equals(org.apache.commons.lang3.Strings.CS, line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
 			//
@@ -3624,7 +3625,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final Map<String, String> map) {
 		//
 		if (Boolean.logicalOr((keyIntEquals(iop, i)),
-				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
+				StringsUtil.equals(org.apache.commons.lang3.Strings.CS, line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
 			//
@@ -3736,7 +3737,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g21;
 		//
-		if (Boolean.logicalOr((keyIntEquals(iop, i)), StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))
+		if (Boolean.logicalOr((keyIntEquals(iop, i)),
+				StringsUtil.equals(org.apache.commons.lang3.Strings.CS, line, StringUtils.trim(PairUtil.right(iop))))
 				|| !Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 						"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 						kFirst)), line))
@@ -3928,7 +3930,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final Map<String, String> map) {
 		//
 		if (Boolean.logicalOr((keyIntEquals(iop, i)),
-				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
+				StringsUtil.equals(org.apache.commons.lang3.Strings.CS, line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
 			//
@@ -4039,7 +4041,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String right = PairUtil.right(iop);
 		//
-		if (StringUtils.equals(StringUtils.trim(right), right)) {
+		if (StringsUtil.equals(org.apache.commons.lang3.Strings.CS, StringUtils.trim(right), right)) {
 			//
 			return null;
 			//
@@ -4983,7 +4985,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} else if (StringUtils.endsWith(g14, "ん")) {
 				//
-				if (StringUtils.equals(g12, "つ")) {
+				if (StringsUtil.equals(org.apache.commons.lang3.Strings.CS, g12, "つ")) {
 					//
 					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							ImmutableMultimap.of(g11, StringUtils.substringBefore(g14, g12), g13,
@@ -5066,7 +5068,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final boolean g14EndsWithHiraganaLetterN = length > 0 && equals(g14, length - 1, 'ん');
 		//
-		if (StringUtils.equals(g12, "の")) {
+		final org.apache.commons.lang3.Strings strings = org.apache.commons.lang3.Strings.CS;
+		//
+		if (StringsUtil.equals(strings, g12, "の")) {
 			//
 			if (Boolean.logicalAnd(g14EndsWithHiraganaLetterN, StringUtils.length(g13) > 1)) {
 				//
@@ -5097,7 +5101,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			intCollection = createIntCollection(iop);
 			//
-		} else if (Util.and(StringUtils.equals(g12, "く"), StringUtils.length(g13) > 1, g14EndsWithHiraganaLetterN)) {
+		} else if (Util.and(StringsUtil.equals(strings, g12, "く"), StringUtils.length(g13) > 1,
+				g14EndsWithHiraganaLetterN)) {
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					ImmutableMultimap.of(StringUtils.substring(g13, 0, 1),
@@ -5758,7 +5763,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			testAndRun(
 					Boolean.logicalAnd(StringUtils.length(g11) == 4,
-							!StringUtils.equals(getCharacterName(g12, ints[0] + 1), HIRAGANA_LETTER_SMALL)),
+							!StringsUtil.equals(org.apache.commons.lang3.Strings.CS, getCharacterName(g12, ints[0] + 1),
+									HIRAGANA_LETTER_SMALL)),
 					() -> MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g11, 0, 3),
 							StringUtils.substring(g12, 0, StringUtils.length(g12) - 2),
 							StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, 1),
@@ -7529,8 +7535,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final org.apache.commons.lang3.Strings strings = org.apache.commons.lang3.Strings.CS;
 		//
-		if (StringsUtil
-				.startsWith(strings, g23,
+		if (StringsUtil.startsWith(strings, g23,
 				testAndApply(x -> StringUtils.length(x) > 1, g11, x -> StringUtils.substring(x, 1, 2), null))) {
 			//
 			if (StringUtils.length(cpv) == 2) {
@@ -7661,7 +7666,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g23 = Util.group(m2, 3);
 		//
-		if (StringUtils.equals(g22, "の")) {
+		if (StringsUtil.equals(org.apache.commons.lang3.Strings.CS, g22, "の")) {
 			//
 			if (anyMatch(Stream.of("渦", "花", "丸"), x -> StringUtils.contains(g11, x))) {
 				//

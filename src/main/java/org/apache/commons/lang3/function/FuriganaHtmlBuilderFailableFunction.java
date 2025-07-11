@@ -19,6 +19,7 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.StringsUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
@@ -90,7 +91,8 @@ public class FuriganaHtmlBuilderFailableFunction implements FailableFunction<Str
 		//
 		final String convertKana = KanaConverter.convertKana(reading, KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA);
 		//
-		if (Boolean.logicalOr(StringUtils.equals(surface, convertKana), Objects.equals(surface, reading))
+		if (Boolean.logicalOr(StringsUtil.equals(org.apache.commons.lang3.Strings.CS, surface, convertKana),
+				Objects.equals(surface, reading))
 				|| (surface != null && surface.matches("^\\d+$") && Objects.equals(reading, "*"))) {
 			//
 			appendUnescapedText(htmlBuilder, surface);
@@ -430,7 +432,7 @@ public class FuriganaHtmlBuilderFailableFunction implements FailableFunction<Str
 					NodeUtil.attributesSize(element) == 0
 					//
 					,
-					StringUtils.equals(
+					StringsUtil.equals(org.apache.commons.lang3.Strings.CS,
 							TextNodeUtil.text(cast(TextNode.class, testAndApply(x -> NodeUtil.childNodeSize(x) == 1,
 									element, x -> NodeUtil.childNode(x, 0), null))),
 							string));

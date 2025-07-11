@@ -14,6 +14,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class StringsUtilTest {
 
+	private static final String EMPTY = "";
+
 	@Test
 	void testNull() {
 		//
@@ -70,7 +72,7 @@ class StringsUtilTest {
 		//
 		Assertions.assertTrue(StringsUtil.startsWith(strings, null, null));
 		//
-		Assertions.assertFalse(StringsUtil.startsWith(strings, "", null));
+		Assertions.assertFalse(StringsUtil.startsWith(strings, EMPTY, null));
 		//
 	}
 
@@ -78,6 +80,15 @@ class StringsUtilTest {
 	void testReplace() {
 		//
 		Assertions.assertNull(StringsUtil.replace(strings, null, null, null));
+		//
+	}
+
+	@Test
+	void testEquals() {
+		//
+		Assertions.assertFalse(StringsUtil.equals(strings, EMPTY, null));
+		//
+		Assertions.assertTrue(StringsUtil.equals(strings, null, null));
 		//
 	}
 

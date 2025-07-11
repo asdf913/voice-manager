@@ -63,15 +63,11 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 		} // if
 			//
-		return toMultimap(
-				Util.toList(
-						Util.filter(
-								NodeUtil.nodeStream(
-										testAndApply(Objects::nonNull,
-												testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(),
-														null),
-												x -> Jsoup.parse(x, 0), null)),
-								x -> StringUtils.equals("b", ElementUtil.tagName(Util.cast(Element.class, x))))));
+		return toMultimap(Util.toList(Util.filter(
+				NodeUtil.nodeStream(testAndApply(Objects::nonNull,
+						testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null),
+						x -> Jsoup.parse(x, 0), null)),
+				x -> StringsUtil.equals(Strings.CS, "b", ElementUtil.tagName(Util.cast(Element.class, x))))));
 		//
 	}
 

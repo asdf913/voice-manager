@@ -319,9 +319,12 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 					//
 				});
 				//
-				final Iterable<HtmlOption> options = Util.toList(Util.filter(Util.stream(getOptions(htmlSelect)),
-						x -> StringUtils.equals(getValueAttribute(x), testAndApply(y -> IterableUtils.size(y) == 1,
-								keys, y -> IterableUtils.get(y, 0), null))));
+				final Iterable<HtmlOption> options = Util
+						.toList(Util
+								.filter(Util.stream(getOptions(htmlSelect)),
+										x -> StringsUtil.equals(Strings.CS, getValueAttribute(x),
+												testAndApply(y -> IterableUtils.size(y) == 1, keys,
+														y -> IterableUtils.get(y, 0), null))));
 				//
 				testAndRunThrows(IterableUtils.size(options) > 1, () -> {
 					//

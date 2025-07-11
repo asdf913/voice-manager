@@ -12,6 +12,8 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -136,11 +138,13 @@ class TextStringBuilderUtilTest {
 		//
 		Assertions.assertSame(tsb, TextStringBuilderUtil.append(tsb, a));
 		//
-		Assertions.assertTrue(StringUtils.equals(tsb, a));
+		final Strings strings = Strings.CS;
+		//
+		Assertions.assertTrue(StringsUtil.equals(strings, tsb, a));
 		//
 		Assertions.assertSame(tsb, TextStringBuilderUtil.append(tsb, a));
 		//
-		Assertions.assertTrue(StringUtils.equals(tsb, StringUtils.repeat(a, 2)));
+		Assertions.assertTrue(StringsUtil.equals(strings, tsb, StringUtils.repeat(a, 2)));
 		//
 	}
 

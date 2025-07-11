@@ -11,4 +11,8 @@ public interface StringsUtil {
 		return instance != null ? instance.replace(text, searchString, replacement) : null;
 	}
 
+	static boolean equals(final Strings instance, final CharSequence cs1, final CharSequence cs2) {
+		return instance != null && instance.equals(cs1, cs2);
+	}
+
 }

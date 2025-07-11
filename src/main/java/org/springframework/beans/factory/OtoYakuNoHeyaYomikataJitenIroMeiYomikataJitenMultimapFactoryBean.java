@@ -1251,7 +1251,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				&& StringUtils.isNotEmpty(commonPrefix1 = StringUtils.getCommonPrefix(g1, g21 = Util.group(m, 1)))
 				&& StringUtils.isNotEmpty(commonPrefix2 = StringUtils.getCommonPrefix(g2, g22 = Util.group(m, 2)))
 				&& StringUtils.isNotEmpty(g1) && StringUtils.isNotEmpty(g2)
-				&& StringUtils.equals(StringUtils.substring(g1, StringUtils.length(g1) - 1),
+				&& StringsUtil.equals(org.apache.commons.lang3.Strings.CS,
+						StringUtils.substring(g1, StringUtils.length(g1) - 1),
 						StringUtils.substring(g2, StringUtils.length(g2) - 1))) {
 			//
 			return Pair.of(ImmutableMultimap.of(g21, g22, commonPrefix1, commonPrefix2),
@@ -3337,7 +3338,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null;
 		//
-		if (StringUtils.isNotBlank(csk = StringUtils.getCommonPrefix(line, g1)) && !StringUtils.equals(csk, g1)) {
+		if (StringUtils.isNotBlank(csk = StringUtils.getCommonPrefix(line, g1))
+				&& !StringsUtil.equals(org.apache.commons.lang3.Strings.CS, csk, g1)) {
 			//
 			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
@@ -4579,8 +4581,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		String g1, g2, g3;
 		//
-		if (Util.matches(m) && Util.groupCount(m) > 2 && StringUtils.length(g1 = Util.group(m, 1)) == 2 && StringsUtil
-				.startsWith(org.apache.commons.lang3.Strings.CS, g2 = Util.group(m, 2), g3 = Util.group(m, 3))) {
+		final org.apache.commons.lang3.Strings strings = org.apache.commons.lang3.Strings.CS;
+		//
+		if (Util.matches(m) && Util.groupCount(m) > 2 && StringUtils.length(g1 = Util.group(m, 1)) == 2
+				&& StringsUtil.startsWith(strings, g2 = Util.group(m, 2), g3 = Util.group(m, 3))) {
 			//
 			return Unit.with(ImmutableMultimap.of(g1, g2, StringUtils.substring(g1, 0, 1), g3,
 					StringUtils.substring(g1, 1), StringUtils.substringAfter(g2, g3)));
@@ -4597,7 +4601,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			for (int i = StringUtils.length(g4) - 1 - StringUtils.length(g2); i >= 0; i--) {
 				//
-				if (!StringUtils.equals(StringUtils.substring(g4, i - 1, i), g2)) {
+				if (!StringsUtil.equals(strings, StringUtils.substring(g4, i - 1, i), g2)) {
 					//
 					continue;
 					//

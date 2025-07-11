@@ -28,6 +28,8 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -310,8 +312,9 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		final List<Element> bs = ElementUtil.select(testAndApply(Objects::nonNull, url, x -> Jsoup.parse(x, 0), null),
 				"b");
 		//
-		final List<Element> es = Util.collect(Util.filter(Util.stream(bs),
-				x -> StringUtils.equals(StringUtils.defaultIfBlank(title, "音訳の部屋読み方辞典"), trim(ElementUtil.text(x)))),
+		final List<Element> es = Util.collect(
+				Util.filter(Util.stream(bs), x -> StringsUtil.equals(Strings.CS,
+						StringUtils.defaultIfBlank(title, "音訳の部屋読み方辞典"), trim(ElementUtil.text(x)))),
 				Collectors.toList());
 		//
 		final int size = IterableUtils.size(es);
