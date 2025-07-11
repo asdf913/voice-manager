@@ -56,6 +56,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
@@ -1124,6 +1125,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // if
 			//
+		final Supplier<Clipboard> supplier = () -> getClipboard();
+		//
 		final Map<Object, JTextComponent> objectJTextComponentMap = new LinkedHashMap<>(
 				Collections.singletonMap(btnCopyPartOfSpeech, tfPartOfSpeech));
 		//
@@ -1131,10 +1134,45 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		objectJTextComponentMap.put(btnCopyHiragana, tfHiragana);
 		//
-		if (setContents(source, () -> getClipboard(), objectJTextComponentMap)) {
+		if (setContents(source, supplier, objectJTextComponentMap)) {
 			//
 			return;
 			//
+		} // if
+			//
+		final Map<Object, Function<TextAndImage, Image>> objectFunctionMap = new LinkedHashMap<>(
+				Collections.singletonMap(btnCopyAccentImage, x -> getAccentImage(x)));
+		//
+		objectFunctionMap.put(btnCopyCurveImage, x -> getCurveImage(x));
+		//
+		setContents(source, supplier, Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage)),
+				objectFunctionMap);
+		//
+	}
+
+	private static void setContents(final Object source, final Supplier<Clipboard> suppler,
+			final TextAndImage textAndImage, final Map<Object, Function<TextAndImage, Image>> map) {
+		//
+		final Iterable<Entry<Object, Function<TextAndImage, Image>>> entrySet = Util.entrySet(map);
+		//
+		if (Util.iterator(entrySet) != null) {
+			//
+			for (final Entry<Object, Function<TextAndImage, Image>> entry : entrySet) {
+				//
+				if (Objects.equals(source, Util.getKey(entry))) {
+					//
+					final IH ih = new IH();
+					//
+					ih.image = Util.apply(Util.getValue(entry), textAndImage);
+					//
+					setContents(Util.get(suppler), Reflection.newProxy(Transferable.class, ih), null);
+					//
+					return;
+					//
+				} // if
+					//
+			} // for
+				//
 		} // if
 			//
 	}
