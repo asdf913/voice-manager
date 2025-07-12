@@ -204,7 +204,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Part Of Speech")
 	private JTextComponent tfPartOfSpeech = null;
 
-	private JTextComponent tfIndex = null;
+	private JTextComponent tfConjugation, tfIndex = null;
 
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
@@ -258,7 +258,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		@Note("Hiragana")
 		private String hiragana = null;
 
-		private String partOfSpeech = null;
+		private String partOfSpeech, conjugation = null;
 
 		@Note("Accent Image")
 		private BufferedImage accentImage = null;
@@ -425,6 +425,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			panalText.add(btnCopyPartOfSpeech = new JButton(COPY), wrap);
 			//
+			panalText.add(new JLabel("Conjugation"));
+			//
+			panalText.add(tfConjugation = new JTextField(), String.format("%1$s,wmin %2$s,%3$s", growx, 59, wrap));
+			//
 			panalText.add(new JLabel("Kanji"));
 			//
 			panalText.add(tfKanji = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
@@ -590,7 +594,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			Util.forEach(Stream.of(btnCopyPartOfSpeech, btnCopyKanji, btnCopyHiragana, btnCopyAccentImage,
 					btnCopyCurveImage, btnSaveAccentImage, btnSaveCurveImage, btnPdf), x -> Util.setEnabled(x, false));
 			//
-			Util.forEach(Stream.of(tfIndex, tfPartOfSpeech, tfKanji, tfHiragana), x -> Util.setEditable(x, false));
+			Util.forEach(Stream.of(tfIndex, tfPartOfSpeech, tfConjugation, tfKanji, tfHiragana),
+					x -> Util.setEditable(x, false));
 			//
 			Util.forEach(Stream.of(tfTextInput, btnExecute, tfIndex), x -> addKeyListener(x, this));
 			//
@@ -987,6 +992,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				Util.setEnabled(btnCopyPartOfSpeech, StringUtils.isNotBlank(x));
 				//
 			}, getPartOfSpeech(textAndImage));
+			//
+			// Conjugation
+			//
+			Util.setText(tfConjugation, textAndImage != null ? textAndImage.conjugation : null);
 			//
 			// Kanji
 			//
@@ -2161,6 +2170,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+		final Iterable<ElementHandle> ths = querySelectorAll(testAndApply(x -> IterableUtils.size(x) == 1,
+				querySelectorAll(page, "thead"), x -> IterableUtils.get(x, 0), null), "th");
+		//
 		for (int i = 0; i < length(ws); i++) {
 			//
 			if (!Boolean.logicalAnd(Objects.equals(textInput, ArrayUtils.get(ws, i)), length(ws) == 2)) {
@@ -2192,6 +2204,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				textAndImage.voiceUrlImages = getVoiceUrlImages(
 						querySelectorAll(querySelector(querySelector(eh, ".."), ".."), ".katsuyo_proc_button a"), page,
 						"mp3");
+				//
+				textAndImage.conjugation = StringUtils
+						.trim(textContent(testAndApply(x -> IterableUtils.size(ths) > x + 2, i,
+								x -> IterableUtils.get(ths, x + 2), null)));
 				//
 				Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 				//
