@@ -102,6 +102,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.TriFunction;
@@ -159,6 +160,7 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateUtil;
 import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
+import it.unimi.dsi.fastutil.objects.ObjectIntImmutablePair;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import javazoom.jl.player.PlayerUtil;
@@ -2342,20 +2344,18 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		String id = null;
 		//
-		final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, THEAD),
-				x -> IterableUtils.get(x, 0), null);
-		//
-		final Iterable<ElementHandle> ths = testAndApply(x -> IterableUtils.size(x) == 1, words,
-				x -> querySelectorAll(thead, "th"), null);
+		Iterable<String> conjugations = null;
 		//
 		for (int i = 0; i < IterableUtils.size(words); i++) {
 			//
-			id = getAttribute(word = IterableUtils.get(words, i), "id");
+			conjugations = getConjugations(document, id = getAttribute(word = IterableUtils.get(words, i), "id"));
 			//
 			if (Boolean.logicalAnd(
 					StringUtils.isNotBlank(
 							textContent = StringUtils.trim(textContent(querySelector(word, "td:nth-child(2)")))),
 					!StringUtils.contains(textContent, '・'))) {
+				//
+				// 求
 				//
 				(textAndImage = new TextAndImage()).accentImage = toBufferedImage(
 						screenshot(eh = IValue0Util.getValue0(getFirstChild(3, word, ".accented_word"))),
@@ -2376,6 +2376,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						querySelectorAll(querySelector(querySelector(eh, ".."), ".."), ".katsuyo_proc_button a"), page,
 						"mp3");
 				//
+				if (IterableUtils.size(conjugations) == 1) {
+					//
+					textAndImage.conjugation = IterableUtils.get(conjugations, 0);
+					//
+				} // if
+					//
 				Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 				//
 			} else if (length(ss = StringUtils.split(textContent, '・')) == 2) {
@@ -2402,9 +2408,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 									".katsuyo_proc_button a"),
 							page, "mp3");
 					//
-					textAndImage.conjugation = StringUtils
-							.trim(textContent(testAndApply(x -> IterableUtils.size(ths) > x + 2, j,
-									x -> IterableUtils.get(ths, x + 2), null)));
+					textAndImage.conjugation = testAndApply(
+							x -> x != null && IterableUtils.size(x.key()) > x.rightInt(),
+							ObjectIntImmutablePair.of(conjugations, j),
+							x -> x != null ? IterableUtils.get(x.key(), x.rightInt()) : null, null);
 					//
 					Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 					//
@@ -2423,6 +2430,79 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		return textAndImages;
 		//
+	}
+
+	private static Iterable<String> getConjugations(final Element element, final String id) {
+		//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(testAndApply(Objects::nonNull, Util.getClass(element), FieldUtils::getAllFieldsList, null)),
+				f -> Objects.equals(Util.getName(f), "childNodes")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalSelectorException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		Iterable<Element> previousElementSiblings = previousElementSiblings(
+				(f == null || Narcissus.getField(element, f) != null) && StringUtils.isNotEmpty(id)
+						? element.getElementById(id)
+						: null);
+		//
+		if (IterableUtils.isEmpty(previousElementSiblings)) {
+			//
+			return Util.toList(Util.map(Util
+					.filter(Util.filter(Util.stream(ElementUtil.children(testAndApply(x -> IterableUtils.size(x) == 1,
+							ElementUtil.children(testAndApply(x -> IterableUtils.size(x) == 1,
+									ElementUtil.select(element, "thead"), x -> IterableUtils.get(x, 0), null)),
+							x -> IterableUtils.get(x, 0), null))), x -> {
+								final String[] ss = StringUtils.split(x.attr("class"), " ");
+								for (int j = 0; j < length(ss); j++) {
+									if (StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS,
+											ArrayUtils.get(ss, j), "katsuyo_")) {
+										return true;
+									}
+								}
+								return false;
+							}), x -> StringUtils.isNotBlank(ElementUtil.text(x))),
+					x -> ElementUtil.text(x)));
+			//
+		} else {
+			//
+			Element previousElementSibling = null;
+			//
+			for (int i = 0; i < IterableUtils.size(previousElementSiblings); i++) {
+				//
+				if ((previousElementSibling = IterableUtils.get(previousElementSiblings, i)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (!NodeUtil.hasAttr(previousElementSibling, "id")) {
+					//
+					return Util.toList(Util.map(
+							Util.filter(Util.filter(Util.stream(ElementUtil.children(previousElementSibling)), x -> {
+								final String[] ss = StringUtils.split(x.attr("class"), " ");
+								for (int j = 0; j < length(ss); j++) {
+									if (StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS,
+											ArrayUtils.get(ss, j), "katsuyo_")) {
+										return true;
+									}
+								}
+								return false;
+							}), x -> StringUtils.isNotBlank(ElementUtil.text(x))), x -> ElementUtil.text(x)));
+					//
+				} // if
+					//
+			} // for
+				//
+			return null;
+			//
+		} // if
+			//
 	}
 
 	private static String getPartOfSpeech(final Element element, @Nullable final String id) {
