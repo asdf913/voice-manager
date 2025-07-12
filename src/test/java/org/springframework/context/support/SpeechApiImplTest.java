@@ -17,6 +17,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.oxbow.swingbits.util.OperatingSystem;
 import org.oxbow.swingbits.util.OperatingSystemUtil;
 
@@ -187,9 +188,19 @@ class SpeechApiImplTest {
 			//
 			Assertions.assertThrows(Throwable.class, () -> ih.invoke(speechApi, null, null));
 			//
-			Assertions.assertThrows(Throwable.class,
-					() -> ih.invoke(speechApi, Util.getDeclaredMethod(SpeechApi.class, "isInstalled"), null));
+			final Executable executable = () -> ih.invoke(speechApi,
+					Util.getDeclaredMethod(SpeechApi.class, "isInstalled"), null);
 			//
+			if (Util.containsKey(System.getProperties(), "org.springframework.context.support.SpeechApi.isInstalled")) {
+				//
+				Assertions.assertDoesNotThrow(executable);
+				//
+			} else {
+				//
+				Assertions.assertThrows(Throwable.class, executable);
+				//
+			} // if
+				//
 		} // if
 			//
 	}
