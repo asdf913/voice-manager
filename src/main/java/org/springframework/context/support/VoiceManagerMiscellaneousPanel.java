@@ -640,7 +640,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
-		if (anyMatch(Util.stream(findFieldsByValue(Util.getDeclaredFields(getClass()), this, source)),
+		if (Util.anyMatch(Util.stream(findFieldsByValue(Util.getDeclaredFields(getClass()), this, source)),
 				f -> Util.isAnnotationPresent(f, ExportButton.class))) {
 			//
 			Util.setText(tfExportFile, null);
@@ -1339,14 +1339,6 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return Util.test(predicate, t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
-	}
-
-	private static <T> boolean anyMatch(@Nullable final Stream<T> instance,
-			@Nullable final Predicate<? super T> predicate) {
-		//
-		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
-				&& instance.anyMatch(predicate);
-		//
 	}
 
 	@Nullable

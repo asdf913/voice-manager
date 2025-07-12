@@ -177,6 +177,13 @@ public abstract class Util {
 		//
 	}
 
+	static <T> boolean anyMatch(final Stream<T> instance, final Predicate<? super T> predicate) {
+		//
+		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
+				&& instance.anyMatch(predicate);
+		//
+	}
+
 	static void forEach(@Nullable final IntStream intStream, @Nullable final IntConsumer intConsumer) {
 		if (intStream != null && intConsumer != null) {
 			intStream.forEach(intConsumer);

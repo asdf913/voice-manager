@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
@@ -63,6 +64,7 @@ import org.junit.jupiter.api.Test;
 import org.meeuw.functional.Consumers;
 import org.springframework.util.ReflectionUtils;
 
+import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 
 import io.github.classgraph.ClassInfo;
@@ -124,7 +126,7 @@ class UtilTest {
 
 	private static class IH implements InvocationHandler {
 
-		private Boolean isAnnotationPresent = null;
+		private Boolean isAnnotationPresent, anyMatch = null;
 
 		private Annotation annotation = null;
 
@@ -139,11 +141,18 @@ class UtilTest {
 				//
 			final String methodName = Util.getName(method);
 			//
-			if (proxy instanceof Stream
-					&& Util.contains(Arrays.asList("map", "filter", "toList", "collect"), methodName)) {
+			if (proxy instanceof Stream) {
 				//
-				return null;
-				//
+				if (Util.contains(Arrays.asList("map", "filter", "toList", "collect"), methodName)) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "anyMatch")) {
+					//
+					return anyMatch;
+					//
+				} // if
+					//
 			} else if (proxy instanceof AnnotatedElement) {
 				//
 				if (Objects.equals(methodName, "isAnnotationPresent")) {
@@ -1095,6 +1104,22 @@ class UtilTest {
 		//
 		Assertions.assertDoesNotThrow(
 				() -> Util.setSelectedIndex(new JComboBox<>(new DefaultComboBoxModel<>(new Object[] { null })), 0));
+		//
+	}
+
+	@Test
+	void testAnyMatch() throws NoSuchMethodException {
+		//
+		Assertions.assertFalse(Util.anyMatch(null, null));
+		//
+		Assertions.assertFalse(Util.anyMatch(Stream.empty(), null));
+		//
+		Assertions.assertTrue(Util.anyMatch(Stream.of(""), Predicates.alwaysTrue()));
+		//
+		Assertions.assertEquals(ih != null ? ih.anyMatch = Boolean.FALSE : null,
+				Narcissus.invokeStaticMethod(
+						Narcissus.findMethod(Util.class, "anyMatch", Stream.class, Predicate.class),
+						Reflection.newProxy(Stream.class, ih), null));
 		//
 	}
 

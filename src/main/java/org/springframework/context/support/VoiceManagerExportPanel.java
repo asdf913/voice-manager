@@ -1984,7 +1984,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 					final String[] fileExtensions = getFileExtensions(ContentType.HTML);
 					//
-					if (!anyMatch(testAndApply(Objects::nonNull, fileExtensions, Arrays::stream, null),
+					if (!Util.anyMatch(testAndApply(Objects::nonNull, fileExtensions, Arrays::stream, null),
 							x -> StringsUtil.endsWith(Strings.CI, sb, StringUtils.join('.', x)))) {
 						//
 						// append "." if the file name does not ends with "."
@@ -2020,7 +2020,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 						//
 						final String[] fileExtensions = getFileExtensions(ContentType.HTML);
 						//
-						if (!anyMatch(testAndApply(Objects::nonNull, fileExtensions, Arrays::stream, null),
+						if (!Util.anyMatch(testAndApply(Objects::nonNull, fileExtensions, Arrays::stream, null),
 								x -> StringsUtil.endsWith(Strings.CI, sb, StringUtils.join('.', x)))) {
 							//
 							// append "." if the file name does not ends with "."
@@ -5202,14 +5202,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 		} // if
 			//
-	}
-
-	private static <T> boolean anyMatch(@Nullable final Stream<T> instance,
-			@Nullable final Predicate<? super T> predicate) {
-		//
-		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
-				&& instance.anyMatch(predicate);
-		//
 	}
 
 	private static void clear(@Nullable final DefaultTableModel instance) {

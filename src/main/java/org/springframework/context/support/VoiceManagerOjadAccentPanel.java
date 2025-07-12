@@ -2460,7 +2460,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 									ElementUtil.select(element, THEAD), x -> IterableUtils.get(x, 0), null)),
 							x -> IterableUtils.get(x, 0), null))), x -> {
 								//
-								return anyMatch(testAndApply(Objects::nonNull,
+								return Util.anyMatch(testAndApply(Objects::nonNull,
 										StringUtils.split(NodeUtil.attr(x, "class"), " "), Arrays::stream, null), y -> {
 											return StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, y,
 													"katsuyo_");
@@ -2486,7 +2486,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					return Util.toList(Util.map(
 							Util.filter(Util.filter(Util.stream(ElementUtil.children(previousElementSibling)), x -> {
 								//
-								return anyMatch(testAndApply(Objects::nonNull,
+								return Util.anyMatch(testAndApply(Objects::nonNull,
 										StringUtils.split(NodeUtil.attr(x, "class"), " "), Arrays::stream, null), y -> {
 											return StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, y,
 													"katsuyo_");
@@ -2502,13 +2502,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
-	}
-
-	private static <T> boolean anyMatch(final Stream<T> instance, final Predicate<? super T> predicate) {
-		//
-		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
-				&& instance.anyMatch(predicate);
-		//
 	}
 
 	private static String getPartOfSpeech(final Element element, @Nullable final String id) {
