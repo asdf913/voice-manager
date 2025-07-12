@@ -2170,8 +2170,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
-		final Iterable<ElementHandle> ths = querySelectorAll(testAndApply(x -> IterableUtils.size(x) == 1,
-				querySelectorAll(page, "thead"), x -> IterableUtils.get(x, 0), null), "th");
+		final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, "thead"),
+				x -> IterableUtils.get(x, 0), null);
+		//
+		final Iterable<ElementHandle> ths = querySelectorAll(thead, "th");
 		//
 		for (int i = 0; i < length(ws); i++) {
 			//
