@@ -177,7 +177,7 @@ public abstract class Util {
 		//
 	}
 
-	static <T> boolean anyMatch(final Stream<T> instance, final Predicate<? super T> predicate) {
+	static <T> boolean anyMatch(@Nullable final Stream<T> instance, @Nullable final Predicate<? super T> predicate) {
 		//
 		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
 				&& instance.anyMatch(predicate);
