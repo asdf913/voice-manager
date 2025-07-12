@@ -233,8 +233,6 @@ class VoiceManagerOjadAccentPanelTest {
 
 		private Map<Object, Object> evaluate = null;
 
-		private Boolean anyMatch = null;
-
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
