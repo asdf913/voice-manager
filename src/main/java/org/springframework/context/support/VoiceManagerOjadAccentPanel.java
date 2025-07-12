@@ -2321,6 +2321,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		String id = null;
 		//
+		final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, "thead"),
+				x -> IterableUtils.get(x, 0), null);
+		//
+		final Iterable<ElementHandle> ths = testAndApply(x -> IterableUtils.size(x) == 1, words,
+				x -> querySelectorAll(thead, "th"), null);
+		//
 		for (int i = 0; i < IterableUtils.size(words); i++) {
 			//
 			id = getAttribute(word = IterableUtils.get(words, i), "id");
@@ -2353,6 +2359,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} else if (length(ss = StringUtils.split(textContent, '・')) == 2) {
 				//
+				// きれい
+				//
 				for (int j = 0; j < 2; j++) {
 					//
 					(textAndImage = new TextAndImage()).accentImage = toBufferedImage(screenshot(
@@ -2372,6 +2380,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							querySelectorAll(querySelector(querySelector(querySelector(eh, ".."), ".."), ".."),
 									".katsuyo_proc_button a"),
 							page, "mp3");
+					//
+					textAndImage.conjugation = StringUtils
+							.trim(textContent(testAndApply(x -> IterableUtils.size(ths) > x + 2, j,
+									x -> IterableUtils.get(ths, x + 2), null)));
 					//
 					Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 					//
