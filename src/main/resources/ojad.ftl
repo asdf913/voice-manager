@@ -6,6 +6,7 @@
 					<#list textAndImages as textAndImage>
 						<#if textAndImage??>
 							<tr>
+								<td><#if static??>${static["org.apache.commons.lang3.reflect.FieldUtils"].readDeclaredField(textAndImage,"conjugation",true)}</#if></td>
 								<td><#if static??>${static["org.apache.commons.lang3.reflect.FieldUtils"].readDeclaredField(textAndImage,"kanji",true)}</#if></td>
 								<td><#if static??>${static["org.apache.commons.lang3.reflect.FieldUtils"].readDeclaredField(textAndImage,"hiragana",true)}</#if></td>
 								<td><#if static?? && static["org.apache.commons.lang3.reflect.FieldUtils"].readDeclaredField(textAndImage,"accentImage",true)??>

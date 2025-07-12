@@ -1692,6 +1692,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			if (length(ss) == 2) {
 				//
+				// さだめる
+				//
 				final String cp1 = Strings.commonPrefix(StringUtils.trim(ArrayUtils.get(ss, 0)),
 						StringUtils.trim(ArrayUtils.get(ss, 1)));
 				//
@@ -1707,6 +1709,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				TextAndImage textAndImage = null;
 				//
 				ElementHandle eh = null;
+				//
+				final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, THEAD),
+						x -> IterableUtils.get(x, 0), null);
+				//
+				final Iterable<ElementHandle> ths = querySelectorAll(thead, "th");
 				//
 				for (int i = 0; i < Math.min(IterableUtils.size(katsuyos), IterableUtils.size(katsuyoEhs)); i++) {
 					//
@@ -1730,6 +1737,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 								querySelectorAll(querySelector(querySelector(querySelector(eh, ".."), ".."), ".."),
 										".katsuyo_proc_button a"),
 								page, "mp3");
+						//
+						textAndImage.conjugation = StringUtils
+								.trim(textContent(testAndApply(x -> IterableUtils.size(ths) > x + 2, i,
+										x -> IterableUtils.get(ths, x + 2), null)));
 						//
 					} // if
 						//
