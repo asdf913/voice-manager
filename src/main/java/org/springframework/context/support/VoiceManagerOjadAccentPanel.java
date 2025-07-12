@@ -2376,12 +2376,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						querySelectorAll(querySelector(querySelector(eh, ".."), ".."), ".katsuyo_proc_button a"), page,
 						"mp3");
 				//
-				if (IterableUtils.size(conjugations) == 1) {
-					//
-					textAndImage.conjugation = IterableUtils.get(conjugations, 0);
-					//
-				} // if
-					//
+				textAndImage.conjugation = testAndApply(x -> IterableUtils.size(x) == 1, conjugations,
+						x -> IterableUtils.get(x, 0), null);
+				//
 				Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 				//
 			} else if (length(ss = StringUtils.split(textContent, '・')) == 2) {
