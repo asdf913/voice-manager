@@ -2458,16 +2458,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					.filter(Util.filter(Util.stream(ElementUtil.children(testAndApply(x -> IterableUtils.size(x) == 1,
 							ElementUtil.children(testAndApply(x -> IterableUtils.size(x) == 1,
 									ElementUtil.select(element, THEAD), x -> IterableUtils.get(x, 0), null)),
-							x -> IterableUtils.get(x, 0), null))), x -> {
-								//
-								return Util.anyMatch(testAndApply(Objects::nonNull,
-										StringUtils.split(NodeUtil.attr(x, "class"), " "), Arrays::stream, null), y -> {
-											return StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, y,
-													"katsuyo_");
-										});
-								//
-							}), x -> StringUtils.isNotBlank(ElementUtil.text(x))),
-					ElementUtil::text));
+							x -> IterableUtils.get(x, 0), null))), x ->
+					//
+					Util.anyMatch(
+							testAndApply(Objects::nonNull, StringUtils.split(NodeUtil.attr(x, "class"), " "),
+									Arrays::stream, null),
+							y -> StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, y, "katsuyo_"))
+					//
+					), x -> StringUtils.isNotBlank(ElementUtil.text(x))), ElementUtil::text));
 			//
 		} else {
 			//
@@ -2483,16 +2481,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 				if (!NodeUtil.hasAttr(previousElementSibling, "id")) {
 					//
-					return Util.toList(Util.map(
-							Util.filter(Util.filter(Util.stream(ElementUtil.children(previousElementSibling)), x -> {
-								//
-								return Util.anyMatch(testAndApply(Objects::nonNull,
-										StringUtils.split(NodeUtil.attr(x, "class"), " "), Arrays::stream, null), y -> {
-											return StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, y,
-													"katsuyo_");
-										});
-								//
-							}), x -> StringUtils.isNotBlank(ElementUtil.text(x))), ElementUtil::text));
+					return Util.toList(Util
+							.map(Util.filter(Util.filter(Util.stream(ElementUtil.children(previousElementSibling)), x ->
+							//
+							Util.anyMatch(
+									testAndApply(Objects::nonNull, StringUtils.split(NodeUtil.attr(x, "class"), " "),
+											Arrays::stream, null),
+									y -> StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, y, "katsuyo_"))
+							//
+							), x -> StringUtils.isNotBlank(ElementUtil.text(x))), ElementUtil::text));
 					//
 				} // if
 					//
