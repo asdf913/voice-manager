@@ -1569,7 +1569,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final Page p = page;
 			//
-			final Collection<TextAndImage> textAndImages = getIfNull(toTextAndImages(ehs, words),
+			final Collection<TextAndImage> textAndImages = getIfNull(toTextAndImages(ehs, words, p),
 					Arrays.asList(() -> toTextAndImages1(ehs, textInput, words, p),
 							() -> toTextAndImages2(ehs, textInput, words, partOfSpeeches, p),
 							() -> toTextAndImages3(words, document, p)));
@@ -2032,13 +2032,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	private static Collection<TextAndImage> toTextAndImages(@Nullable final Iterable<ElementHandle> ehs,
-			@Nullable final Iterable<ElementHandle> words) {
+			@Nullable final Iterable<ElementHandle> words, final Page page) {
 		//
 		TextAndImage textAndImage = null;
 		//
 		ElementHandle eh = null;
 		//
 		if (IterableUtils.size(ehs) == 1) {
+			//
+			// 坂
 			//
 			(textAndImage = new TextAndImage()).kanji = StringUtils.trim(textContent(querySelector(
 					testAndApply(x -> IterableUtils.size(x) == 1, words, x -> IterableUtils.get(x, 0), null),
@@ -2052,6 +2054,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					e -> LoggerUtil.error(LOG, e.getMessage(), e));
 			//
 			textAndImage.hiragana = StringUtils.trim(textContent(eh));
+			//
+			final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, "thead"),
+					x -> IterableUtils.get(x, 0), null);
+			//
+			textAndImage.conjugation = StringUtils.trim(textContent(testAndApply(x -> IterableUtils.size(x) > 2,
+					querySelectorAll(thead, "th"), x -> IterableUtils.get(x, 2), null)));
 			//
 			return Collections.singleton(textAndImage);
 			//

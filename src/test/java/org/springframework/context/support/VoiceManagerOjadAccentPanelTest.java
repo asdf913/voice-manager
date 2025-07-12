@@ -157,8 +157,8 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
-		(METHOD_TO_TEXT_AND_IMAGES = clz.getDeclaredMethod("toTextAndImages", Iterable.class, Iterable.class))
-				.setAccessible(true);
+		(METHOD_TO_TEXT_AND_IMAGES = clz.getDeclaredMethod("toTextAndImages", Iterable.class, Iterable.class,
+				Page.class)).setAccessible(true);
 		//
 		(METHOD_TO_TEXT_AND_IMAGES1 = clz.getDeclaredMethod("toTextAndImages1", Iterable.class, String.class,
 				Iterable.class, Page.class)).setAccessible(true);
@@ -1058,11 +1058,11 @@ class VoiceManagerOjadAccentPanelTest {
 		setDefaultPropertyInclusion(setVisibility(objectMapper, PropertyAccessor.ALL, Visibility.ANY),
 				Include.NON_NULL);
 		//
-		Assertions.assertEquals("[{}]",
-				ObjectMapperUtil.writeValueAsString(objectMapper, toTextAndImages(Collections.singleton(null), null)));
+		Assertions.assertEquals("[{}]", ObjectMapperUtil.writeValueAsString(objectMapper,
+				toTextAndImages(Collections.singleton(null), null, null)));
 		//
 		Assertions.assertEquals("[{},{}]", ObjectMapperUtil.writeValueAsString(objectMapper,
-				toTextAndImages(Collections.nCopies(2, null), Collections.nCopies(2, null))));
+				toTextAndImages(Collections.nCopies(2, null), Collections.nCopies(2, null), null)));
 		//
 	}
 
@@ -1076,10 +1076,10 @@ class VoiceManagerOjadAccentPanelTest {
 		return instance != null ? instance.setVisibility(forMethod, visibility) : instance;
 	}
 
-	private static Collection<?> toTextAndImages(final Iterable<ElementHandle> ehs, final Iterable<ElementHandle> words)
-			throws Throwable {
+	private static Collection<?> toTextAndImages(final Iterable<ElementHandle> ehs, final Iterable<ElementHandle> words,
+			final Page page) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_TEXT_AND_IMAGES.invoke(null, ehs, words);
+			final Object obj = METHOD_TO_TEXT_AND_IMAGES.invoke(null, ehs, words, page);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Collection) {
