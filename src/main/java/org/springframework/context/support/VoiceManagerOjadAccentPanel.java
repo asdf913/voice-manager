@@ -2458,7 +2458,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							ElementUtil.children(testAndApply(x -> IterableUtils.size(x) == 1,
 									ElementUtil.select(element, "thead"), x -> IterableUtils.get(x, 0), null)),
 							x -> IterableUtils.get(x, 0), null))), x -> {
-								final String[] ss = StringUtils.split(x.attr("class"), " ");
+								final String[] ss = StringUtils.split(NodeUtil.attr(x, "class"), " ");
 								for (int j = 0; j < length(ss); j++) {
 									if (StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS,
 											ArrayUtils.get(ss, j), "katsuyo_")) {
@@ -2485,7 +2485,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					return Util.toList(Util.map(
 							Util.filter(Util.filter(Util.stream(ElementUtil.children(previousElementSibling)), x -> {
-								final String[] ss = StringUtils.split(x.attr("class"), " ");
+								final String[] ss = StringUtils.split(NodeUtil.attr(x, "class"), " ");
 								for (int j = 0; j < length(ss); j++) {
 									if (StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS,
 											ArrayUtils.get(ss, j), "katsuyo_")) {
