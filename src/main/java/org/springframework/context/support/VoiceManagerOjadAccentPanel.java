@@ -2468,7 +2468,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 								}
 								return false;
 							}), x -> StringUtils.isNotBlank(ElementUtil.text(x))),
-					x -> ElementUtil.text(x)));
+					ElementUtil::text));
 			//
 		} else {
 			//
@@ -2494,7 +2494,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 									}
 								}
 								return false;
-							}), x -> StringUtils.isNotBlank(ElementUtil.text(x))), x -> ElementUtil.text(x)));
+							}), x -> StringUtils.isNotBlank(ElementUtil.text(x))), ElementUtil::text));
 					//
 				} // if
 					//
