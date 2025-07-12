@@ -33,6 +33,7 @@ import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
 import javax.swing.CellEditor;
@@ -90,6 +91,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.google.common.base.Predicates;
 import com.google.common.base.Suppliers;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
@@ -120,7 +122,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES, METHOD_MATCHES,
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT, METHOD_GET_MOST_OCCURENCE_COLOR,
 			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE,
-			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX = null;
+			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_ANY_MATCH = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -227,11 +229,15 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_COMMON_PREFIX = clz.getDeclaredMethod("commonPrefix", Iterable.class)).setAccessible(true);
 		//
+		(METHOD_ANY_MATCH = clz.getDeclaredMethod("anyMatch", Stream.class, Predicate.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
 
 		private Map<Object, Object> evaluate = null;
+
+		private Boolean anyMatch = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -306,6 +312,14 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof Stream) {
+				//
+				if (Objects.equals(methodName, "anyMatch")) {
+					//
+					return anyMatch;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -1782,7 +1796,7 @@ class VoiceManagerOjadAccentPanelTest {
 		Assertions.assertNull(commonPrefix(Arrays.asList(null, EMPTY)));
 		//
 		Assertions.assertEquals(EMPTY, commonPrefix(Collections.nCopies(3, EMPTY)));
-		// s
+		//
 	}
 
 	private static String commonPrefix(final Iterable<String> instance) throws Throwable {
@@ -1792,6 +1806,31 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAnyMatch() throws Throwable {
+		//
+		Assertions.assertFalse(anyMatch(Stream.empty(), null));
+		//
+		Assertions.assertTrue(anyMatch(Stream.of(EMPTY), Predicates.alwaysTrue()));
+		//
+		Assertions.assertEquals(ih != null ? ih.anyMatch = Boolean.FALSE : null,
+				Narcissus.invokeStaticMethod(METHOD_ANY_MATCH, Reflection.newProxy(Stream.class, ih), null));
+		//
+	}
+
+	private static <T> boolean anyMatch(final Stream<T> instance, final Predicate<? super T> predicate)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_ANY_MATCH.invoke(null, instance, predicate);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

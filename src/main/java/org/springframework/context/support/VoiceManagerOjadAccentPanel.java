@@ -2459,14 +2459,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							ElementUtil.children(testAndApply(x -> IterableUtils.size(x) == 1,
 									ElementUtil.select(element, THEAD), x -> IterableUtils.get(x, 0), null)),
 							x -> IterableUtils.get(x, 0), null))), x -> {
-								final String[] ss = StringUtils.split(NodeUtil.attr(x, "class"), " ");
-								for (int j = 0; j < length(ss); j++) {
-									if (StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS,
-											ArrayUtils.get(ss, j), "katsuyo_")) {
-										return true;
-									}
-								}
-								return false;
+								//
+								return anyMatch(testAndApply(Objects::nonNull,
+										StringUtils.split(NodeUtil.attr(x, "class"), " "), Arrays::stream, null), y -> {
+											return StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, y,
+													"katsuyo_");
+										});
+								//
 							}), x -> StringUtils.isNotBlank(ElementUtil.text(x))),
 					ElementUtil::text));
 			//
@@ -2486,14 +2485,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					return Util.toList(Util.map(
 							Util.filter(Util.filter(Util.stream(ElementUtil.children(previousElementSibling)), x -> {
-								final String[] ss = StringUtils.split(NodeUtil.attr(x, "class"), " ");
-								for (int j = 0; j < length(ss); j++) {
-									if (StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS,
-											ArrayUtils.get(ss, j), "katsuyo_")) {
-										return true;
-									}
-								}
-								return false;
+								//
+								return anyMatch(testAndApply(Objects::nonNull,
+										StringUtils.split(NodeUtil.attr(x, "class"), " "), Arrays::stream, null), y -> {
+											return StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, y,
+													"katsuyo_");
+										});
+								//
 							}), x -> StringUtils.isNotBlank(ElementUtil.text(x))), ElementUtil::text));
 					//
 				} // if
@@ -2504,6 +2502,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static <T> boolean anyMatch(final Stream<T> instance, final Predicate<? super T> predicate) {
+		//
+		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
+				&& instance.anyMatch(predicate);
+		//
 	}
 
 	private static String getPartOfSpeech(final Element element, @Nullable final String id) {
