@@ -2045,7 +2045,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	private static Collection<TextAndImage> toTextAndImages(@Nullable final Iterable<ElementHandle> ehs,
-			@Nullable final Iterable<ElementHandle> words, final Page page) {
+			@Nullable final Iterable<ElementHandle> words, @Nullable final Page page) {
 		//
 		TextAndImage textAndImage = null;
 		//
