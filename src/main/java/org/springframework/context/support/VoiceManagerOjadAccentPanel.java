@@ -2111,6 +2111,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		final org.apache.commons.lang3.Strings strings = org.apache.commons.lang3.Strings.CS;
 		//
+		final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, "thead"),
+				x -> IterableUtils.get(x, 0), null);
+		//
+		final Iterable<ElementHandle> ths = querySelectorAll(thead, "th");
+		//
 		for (int i = 0; i < IterableUtils.size(ehs); i++) {
 			//
 			if (!startsWith(strings, textInput, StringUtils.trim(textContent(eh = IterableUtils.get(ehs, i))))) {
@@ -2152,6 +2157,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				textAndImage.voiceUrlImages = getVoiceUrlImages(
 						querySelectorAll(querySelector(querySelector(eh, ".."), ".."), ".katsuyo_proc_button a"), page,
 						"mp3");
+				//
+				textAndImage.conjugation = StringUtils
+						.trim(textContent(testAndApply(x -> IterableUtils.size(ths) > x + 2, i,
+								x -> IterableUtils.get(ths, x + 2), null)));
 				//
 			} // if
 				//
