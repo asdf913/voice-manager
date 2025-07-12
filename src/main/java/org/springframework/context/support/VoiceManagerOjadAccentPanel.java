@@ -2432,6 +2432,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
+	@Nullable
 	private static Iterable<String> getConjugations(final Element element, @Nullable final String id) {
 		//
 		final Iterable<Field> fs = Util.toList(Util.filter(
