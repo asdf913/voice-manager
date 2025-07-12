@@ -186,6 +186,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static final String VALUE = "value";
 
+	private static final String THEAD = "thead";
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -2055,7 +2057,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			textAndImage.hiragana = StringUtils.trim(textContent(eh));
 			//
-			final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, "thead"),
+			final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, THEAD),
 					x -> IterableUtils.get(x, 0), null);
 			//
 			textAndImage.conjugation = StringUtils.trim(textContent(testAndApply(x -> IterableUtils.size(x) > 2,
@@ -2119,7 +2121,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		final org.apache.commons.lang3.Strings strings = org.apache.commons.lang3.Strings.CS;
 		//
-		final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, "thead"),
+		final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, THEAD),
 				x -> IterableUtils.get(x, 0), null);
 		//
 		final Iterable<ElementHandle> ths = querySelectorAll(thead, "th");
@@ -2219,7 +2221,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
-		final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, "thead"),
+		final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, THEAD),
 				x -> IterableUtils.get(x, 0), null);
 		//
 		final Iterable<ElementHandle> ths = querySelectorAll(thead, "th");
@@ -2329,7 +2331,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		String id = null;
 		//
-		final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, "thead"),
+		final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, THEAD),
 				x -> IterableUtils.get(x, 0), null);
 		//
 		final Iterable<ElementHandle> ths = testAndApply(x -> IterableUtils.size(x) == 1, words,
