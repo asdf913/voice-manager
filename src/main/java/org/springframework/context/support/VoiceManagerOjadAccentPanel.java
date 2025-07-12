@@ -2152,6 +2152,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // if
 				//
+				// きれいです
+				//
+			if (matches(textAndImage.kanji, "^\\p{InHiragana}+$")
+					&& matches(textAndImage.hiragana, "^\\p{InHiragana}+$")
+					&& !Objects.equals(textAndImage.kanji, textAndImage.hiragana)) {
+				//
+				continue;
+				//
+			} // if
+				//
 			testAndAccept((a, b) -> !contains(a, b),
 					textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage, Util::add);
 			//
