@@ -204,7 +204,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Part Of Speech")
 	private JTextComponent tfPartOfSpeech = null;
 
-	private JTextComponent tfConjugation, tfIndex = null;
+	@Note("Conjugation")
+	private JTextComponent tfConjugation = null;
+
+	private JTextComponent tfIndex = null;
 
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
@@ -258,7 +261,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		@Note("Hiragana")
 		private String hiragana = null;
 
-		private String partOfSpeech, conjugation = null;
+		@Note("Part Of Speech")
+		private String partOfSpeech = null;
+
+		@Note("Conjugation")
+		private String conjugation = null;
 
 		@Note("Accent Image")
 		private BufferedImage accentImage = null;
