@@ -33,7 +33,6 @@ import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
 import javax.swing.CellEditor;
@@ -91,7 +90,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
-import com.google.common.base.Predicates;
 import com.google.common.base.Suppliers;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
