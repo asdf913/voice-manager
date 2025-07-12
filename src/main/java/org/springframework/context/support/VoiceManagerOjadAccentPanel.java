@@ -230,7 +230,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Save Curve Image")
 	private AbstractButton btnSaveCurveImage = null;
 
-	private AbstractButton btnPdf = null;
+	private AbstractButton btnCopyConjugation, btnPdf = null;
 
 	@Note("Accent")
 	private JLabel lblAccent = null;
@@ -427,7 +427,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			panalText.add(new JLabel("Conjugation"));
 			//
-			panalText.add(tfConjugation = new JTextField(), String.format("%1$s,wmin %2$s,%3$s", growx, 59, wrap));
+			panalText.add(tfConjugation = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
+			//
+			panalText.add(btnCopyConjugation = new JButton(COPY), wrap);
 			//
 			panalText.add(new JLabel("Kanji"));
 			//
@@ -591,8 +593,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // for
 				//
-			Util.forEach(Stream.of(btnCopyPartOfSpeech, btnCopyKanji, btnCopyHiragana, btnCopyAccentImage,
-					btnCopyCurveImage, btnSaveAccentImage, btnSaveCurveImage, btnPdf), x -> Util.setEnabled(x, false));
+			Util.forEach(
+					Stream.of(btnCopyPartOfSpeech, btnCopyConjugation, btnCopyKanji, btnCopyHiragana,
+							btnCopyAccentImage, btnCopyCurveImage, btnSaveAccentImage, btnSaveCurveImage, btnPdf),
+					x -> Util.setEnabled(x, false));
 			//
 			Util.forEach(Stream.of(tfIndex, tfPartOfSpeech, tfConjugation, tfKanji, tfHiragana),
 					x -> Util.setEditable(x, false));
@@ -995,7 +999,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			// Conjugation
 			//
-			Util.setText(tfConjugation, textAndImage != null ? textAndImage.conjugation : null);
+			Util.accept(x -> {
+				//
+				Util.setText(tfConjugation, x);
+				//
+				Util.setEnabled(btnCopyConjugation, StringUtils.isNotBlank(x));
+				//
+			}, textAndImage != null ? textAndImage.conjugation : null);
 			//
 			// Kanji
 			//
@@ -1098,6 +1108,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		final Map<Object, JTextComponent> objectJTextComponentMap = new LinkedHashMap<>(
 				Collections.singletonMap(btnCopyPartOfSpeech, tfPartOfSpeech));
+		//
+		objectJTextComponentMap.put(btnCopyConjugation, tfConjugation);
 		//
 		objectJTextComponentMap.put(btnCopyKanji, tfKanji);
 		//
