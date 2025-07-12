@@ -215,6 +215,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Copy Part Of Speech")
 	private AbstractButton btnCopyPartOfSpeech = null;
 
+	@Note("Copy Conjugation")
+	private AbstractButton btnCopyConjugation = null;
+
 	@Note("Copy Text")
 	private AbstractButton btnCopyKanji = null;
 
@@ -233,7 +236,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Save Curve Image")
 	private AbstractButton btnSaveCurveImage = null;
 
-	private AbstractButton btnCopyConjugation, btnPdf = null;
+	private AbstractButton btnPdf = null;
 
 	@Note("Accent")
 	private JLabel lblAccent = null;
