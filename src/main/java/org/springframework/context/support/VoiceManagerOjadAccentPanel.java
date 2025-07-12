@@ -2456,7 +2456,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			return Util.toList(Util.map(Util
 					.filter(Util.filter(Util.stream(ElementUtil.children(testAndApply(x -> IterableUtils.size(x) == 1,
 							ElementUtil.children(testAndApply(x -> IterableUtils.size(x) == 1,
-									ElementUtil.select(element, "thead"), x -> IterableUtils.get(x, 0), null)),
+									ElementUtil.select(element, THEAD), x -> IterableUtils.get(x, 0), null)),
 							x -> IterableUtils.get(x, 0), null))), x -> {
 								final String[] ss = StringUtils.split(NodeUtil.attr(x, "class"), " ");
 								for (int j = 0; j < length(ss); j++) {
