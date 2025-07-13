@@ -1295,7 +1295,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				processPage(Util.cast(PDFGraphicsStreamEngine.class, temp), pdPage);
 				//
-				final Collection<ImageDimensionPosition> idps = mh != null ? mh.imageDimensionPositions : null;
+				final Collection<ImageDimensionPosition> idps = mh.imageDimensionPositions;
 				//
 				double[] ds = Util.stream(idps).mapToDouble(x -> x != null ? Util.floatValue(x.translateX, 0) : null)
 						.sorted().distinct().toArray();
@@ -1318,8 +1318,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static <T> Constructor<T> getDeclaredConstructor(final Class<T> clz, final Class<?>... parameterTypes)
-			throws NoSuchMethodException {
+	private static <T> Constructor<T> getDeclaredConstructor(@Nullable final Class<T> clz,
+			final Class<?>... parameterTypes) throws NoSuchMethodException {
 		return clz != null ? clz.getDeclaredConstructor(parameterTypes) : null;
 	}
 
@@ -1329,7 +1329,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		}
 	}
 
-	private static PDPage getPage(final PDDocument instance, final int pageIndex) {
+	private static PDPage getPage(@Nullable final PDDocument instance, final int pageIndex) {
 		//
 		if (instance == null) {
 			//
@@ -1354,7 +1354,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static int getNumberOfPages(final PDDocument instance) {
+	private static int getNumberOfPages(@Nullable final PDDocument instance) {
 		//
 		if (instance == null) {
 			//
