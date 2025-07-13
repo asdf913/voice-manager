@@ -7,6 +7,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -15,6 +16,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
@@ -88,10 +90,14 @@ class PDDocumentUtilTest {
 
 	private Stream<?> stream = null;
 
+	private PDDocument pdDocument = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		stream = Reflection.newProxy(Stream.class, new IH());
+		//
+		pdDocument = cast(PDDocument.class, Narcissus.allocateInstance(PDDocument.class));
 		//
 	}
 
@@ -104,6 +110,8 @@ class PDDocumentUtilTest {
 		//
 		Object invokeStaticMethod = null;
 		//
+		Collection<Object> collection = null;
+		//
 		String toString = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
@@ -114,8 +122,28 @@ class PDDocumentUtilTest {
 				//
 			} // if
 				//
-			invokeStaticMethod = Narcissus.invokeStaticMethod(m,
-					toArray(Collections.nCopies(m.getParameterCount(), null)));
+			if ((collection = ObjectUtils.getIfNull(collection, ArrayList::new)) != null) {
+				//
+				collection.clear();
+				//
+				for (final Class<?> parameterType : m.getParameterTypes()) {
+					//
+					if (Objects.equals(parameterType, Integer.TYPE)) {
+						//
+						collection.add(Integer.valueOf(0));
+						//
+					} else {
+						//
+						collection.add(null);
+						//
+					} // if
+						//
+				} // for
+					//
+					//
+			} // if
+				//
+			invokeStaticMethod = Narcissus.invokeStaticMethod(m, toArray(collection));
 			//
 			toString = Objects.toString(m);
 			//
@@ -251,10 +279,16 @@ class PDDocumentUtilTest {
 	@Test
 	void testGetNumberOfPages() {
 		//
-		Assertions.assertEquals(0,
-				PDDocumentUtil.getNumberOfPages(cast(PDDocument.class, Narcissus.allocateInstance(PDDocument.class))));
+		Assertions.assertEquals(0, PDDocumentUtil.getNumberOfPages(pdDocument));
 		//
 		Assertions.assertEquals(0, PDDocumentUtil.getNumberOfPages(new PDDocument()));
+		//
+	}
+
+	@Test
+	void testGetPage() {
+		//
+		Assertions.assertNull(PDDocumentUtil.getPage(pdDocument, 0));
 		//
 	}
 

@@ -1275,7 +1275,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				final PDDocument pdDocument = Loader.loadPDF(bs);
 				//
 				final PDPage pdPage = testAndApply(x -> PDDocumentUtil.getNumberOfPages(x) > 0, pdDocument,
-						x -> getPage(x, 0), null);
+						x -> PDDocumentUtil.getPage(x, 0), null);
 				//
 				final ProxyFactory proxyFactory = new ProxyFactory();
 				//
@@ -1330,32 +1330,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		if (instance != null) {
 			instance.setHandler(mh);
 		}
-	}
-
-	@Nullable
-	private static PDPage getPage(@Nullable final PDDocument instance, final int pageIndex) {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		final Iterable<Field> fs = Util.toList(Util.filter(
-				Util.stream(
-						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
-				f -> Objects.equals(Util.getName(f), "document")));
-		//
-		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
-			//
-			throw new IllegalStateException();
-			//
-		});
-		//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-		//
-		return f == null || Narcissus.getField(instance, f) != null ? instance.getPage(pageIndex) : null;
-		//
 	}
 
 	private static int length(@Nullable final double[] instance) {

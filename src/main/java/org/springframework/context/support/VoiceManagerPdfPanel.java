@@ -3273,7 +3273,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (PDDocumentUtil.getNumberOfPages(document) > 0) {
 			//
-			final PDPage pd = document.getPage(0);
+			final PDPage pd = PDDocumentUtil.getPage(document, 0);
 			//
 			final PDRectangle md = PDPageUtil.getMediaBox(pd);
 			//

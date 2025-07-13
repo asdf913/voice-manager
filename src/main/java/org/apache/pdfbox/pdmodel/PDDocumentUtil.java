@@ -127,4 +127,28 @@ public interface PDDocumentUtil {
 		//
 	}
 
+	static PDPage getPage(final PDDocument instance, final int pageIndex) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Iterable<Field> fs = toList(
+				filter(stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
+						f -> Objects.equals(getName(f), "document")));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		return f == null || Narcissus.getField(instance, f) != null ? instance.getPage(pageIndex) : null;
+		//
+	}
+
 }
