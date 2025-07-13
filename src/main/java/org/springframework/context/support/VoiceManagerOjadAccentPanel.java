@@ -1308,7 +1308,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				double[] ds = Util.stream(idps).mapToDouble(x -> x != null ? Util.floatValue(x.translateX, 0) : null)
 						.sorted().distinct().toArray();
 				//
-				final double[] translateXs = testAndApply(x -> x > 2, ds != null ? ds.length : 0,
+				final double[] translateXs = testAndApply(x -> x > 2, length(ds),
 						x -> ArrayUtils.subarray(ds, x - 2, x), x -> ds);
 				//
 				System.out.println(Arrays.toString(translateXs));
@@ -1324,6 +1324,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // try
 			//
+	}
+
+	private static int length(final double[] instance) {
+		return instance != null ? instance.length : 0;
 	}
 
 	private static void processPage(final PDFGraphicsStreamEngine instance, final PDPage page) throws IOException {

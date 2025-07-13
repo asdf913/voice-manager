@@ -118,9 +118,10 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL_PAGE,
 			METHOD_QUERY_SELECTOR_ALL_ELEMENT_HANDLE, METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK,
-			METHOD_GET_KANJI, METHOD_GET_HEIGHT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES,
-			METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY, METHOD_TO_BYTE_ARRAY,
-			METHOD_GET_IF_NULL, METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER, METHOD_SAVE_IMAGE,
+			METHOD_GET_KANJI, METHOD_GET_HEIGHT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_LENGTH_OBJECT_ARRAY,
+			METHOD_LENGTH_DOUBLE_ARRAY, METHOD_TO_TEXT_AND_IMAGES, METHOD_TO_TEXT_AND_IMAGES1,
+			METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY, METHOD_TO_BYTE_ARRAY, METHOD_GET_IF_NULL,
+			METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER, METHOD_SAVE_IMAGE,
 			METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS,
 			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES, METHOD_MATCHES,
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT, METHOD_GET_MOST_OCCURENCE_COLOR,
@@ -160,7 +161,9 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
 		//
-		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
+		(METHOD_LENGTH_OBJECT_ARRAY = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
+		//
+		(METHOD_LENGTH_DOUBLE_ARRAY = clz.getDeclaredMethod("length", double[].class)).setAccessible(true);
 		//
 		(METHOD_TO_TEXT_AND_IMAGES = clz.getDeclaredMethod("toTextAndImages", Iterable.class, Iterable.class,
 				Page.class)).setAccessible(true);
@@ -1167,11 +1170,25 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertEquals(0, length(new Object[] {}));
 		//
+		Assertions.assertEquals(0, length(new double[] {}));
+		//
 	}
 
 	private static int length(final Object[] instance) throws Throwable {
 		try {
-			final Object obj = METHOD_LENGTH.invoke(null, (Object) instance);
+			final Object obj = METHOD_LENGTH_OBJECT_ARRAY.invoke(null, (Object) instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static int length(final double[] instance) throws Throwable {
+		try {
+			final Object obj = METHOD_LENGTH_DOUBLE_ARRAY.invoke(null, (Object) instance);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
 			}
