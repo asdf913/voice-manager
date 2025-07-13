@@ -18,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.Dimension2D;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
@@ -117,6 +118,14 @@ import org.apache.commons.validator.routines.UrlValidatorUtil;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URIBuilderUtil;
 import org.apache.jena.atlas.RuntimeIOException;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.contentstream.PDFGraphicsStreamEngine;
+import org.apache.pdfbox.cos.COSName;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
+import org.apache.pdfbox.pdmodel.graphics.state.PDGraphicsState;
+import org.apache.pdfbox.util.Matrix;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -1176,7 +1185,119 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
 					&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
-				FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), pdf(page));
+				final byte[] bs = pdf(page);
+				//
+				final PDDocument pdDocument = Loader.loadPDF(bs);
+				//
+				final PDPage pdPage = pdDocument != null && pdDocument.getNumberOfPages() > 0 ? pdDocument.getPage(0)
+						: null;
+				//
+				final PDFGraphicsStreamEngine pdfGse = new PDFGraphicsStreamEngine(pdPage) {
+
+					@Override
+					public void strokePath() throws IOException {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void shadingFill(COSName shadingName) throws IOException {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void moveTo(float x, float y) throws IOException {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void lineTo(float x, float y) throws IOException {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public Point2D getCurrentPoint() throws IOException {
+						// TODO Auto-generated method stub
+						return null;
+					}
+
+					@Override
+					public void fillPath(int windingRule) throws IOException {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void fillAndStrokePath(int windingRule) throws IOException {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void endPath() throws IOException {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void drawImage(final PDImage pdImage) throws IOException {
+						//
+						if (pdImage != null) {
+							//
+							System.out.println("width     =" + pdImage.getWidth());
+							//
+							System.out.println("height    =" + pdImage.getHeight());
+							//
+						} // if
+							//
+						final PDGraphicsState pdgs = getGraphicsState();
+						//
+						final Matrix ctm = pdgs != null ? pdgs.getCurrentTransformationMatrix() : null;
+						//
+						if (ctm != null) {
+							//
+							System.out.println("translateX=" + ctm.getTranslateX());
+							//
+							System.out.println("translateY=" + ctm.getTranslateY());
+							//
+						} // if
+							//
+						System.out.println();
+						//
+					}
+
+					@Override
+					public void curveTo(float x1, float y1, float x2, float y2, float x3, float y3) throws IOException {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void closePath() throws IOException {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void clip(int windingRule) throws IOException {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void appendRectangle(Point2D p0, Point2D p1, Point2D p2, Point2D p3) throws IOException {
+						// TODO Auto-generated method stub
+
+					}
+
+				};
+				//
+				pdfGse.processPage(pdPage);
+				//
+				FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
 				//
 			} // if
 				//
