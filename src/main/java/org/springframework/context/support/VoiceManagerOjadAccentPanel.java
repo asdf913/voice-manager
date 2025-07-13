@@ -1186,9 +1186,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 					} // if
 						//
-					final PDGraphicsState pdgs = pdfgse != null ? pdfgse.getGraphicsState() : null;
-					//
-					final Matrix ctm = pdgs != null ? pdgs.getCurrentTransformationMatrix() : null;
+					final Matrix ctm = getCurrentTransformationMatrix(
+							pdfgse != null ? pdfgse.getGraphicsState() : null);
 					//
 					if (ctm != null) {
 						//
@@ -1212,6 +1211,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			throw new Throwable(methodName);
 			//
+		}
+
+		private static Matrix getCurrentTransformationMatrix(final PDGraphicsState instance) {
+			return instance != null ? instance.getCurrentTransformationMatrix() : null;
 		}
 
 	}

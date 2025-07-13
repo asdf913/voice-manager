@@ -78,6 +78,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.pdfbox.contentstream.PDFGraphicsStreamEngine;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
+import org.apache.pdfbox.pdmodel.graphics.state.PDGraphicsState;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -1036,8 +1037,9 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testMH() throws Throwable {
 		//
-		final MethodHandler methodHandler = Util.cast(MethodHandler.class, Narcissus
-				.allocateInstance(Util.forName("org.springframework.context.support.VoiceManagerOjadAccentPanel$MH")));
+		final Class<?> mhClass = Util.forName("org.springframework.context.support.VoiceManagerOjadAccentPanel$MH");
+		//
+		final MethodHandler methodHandler = Util.cast(MethodHandler.class, Narcissus.allocateInstance(mhClass));
 		//
 		if (methodHandler == null) {
 			//
@@ -1076,6 +1078,8 @@ class VoiceManagerOjadAccentPanelTest {
 					//
 				});
 		//
+		// org.apache.pdfbox.contentstream.PDFGraphicsStreamEngine.drawImage(org.apache.pdfbox.pdmodel.graphics.image.PDImage)
+		//
 		final Method drawImage = Narcissus.findMethod(clz, "drawImage", PDImage.class);
 		//
 		Assertions.assertDoesNotThrow(() -> methodHandler.invoke(pdfgse, drawImage, null, null));
@@ -1092,6 +1096,22 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 		Assertions.assertDoesNotThrow(() -> methodHandler.invoke(pdfgse, drawImage, null,
 				new Object[] { Reflection.newProxy(PDImage.class, ih) }));
+		//
+		// org.springframework.context.support.VoiceManagerOjadAccentPanel$MH.getCurrentTransformationMatrix(org.apache.pdfbox.pdmodel.graphics.state.PDGraphicsState)
+		//
+		final Method getCurrentTransformationMatrix = Util.getDeclaredMethod(mhClass, "getCurrentTransformationMatrix",
+				PDGraphicsState.class);
+		//
+		if (getCurrentTransformationMatrix != null) {
+			//
+			getCurrentTransformationMatrix.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertEquals(null,
+				getCurrentTransformationMatrix != null
+						? getCurrentTransformationMatrix.invoke(null, Narcissus.allocateInstance(PDGraphicsState.class))
+						: null);
 		//
 	}
 
