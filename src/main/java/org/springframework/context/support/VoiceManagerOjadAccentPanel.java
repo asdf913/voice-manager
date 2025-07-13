@@ -1274,8 +1274,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				final PDDocument pdDocument = Loader.loadPDF(bs);
 				//
-				final PDPage pdPage = pdDocument != null && pdDocument.getNumberOfPages() > 0 ? pdDocument.getPage(0)
-						: null;
+				final PDPage pdPage = testAndApply(x -> getNumberOfPages(x) > 0, pdDocument, x -> getPage(x, 0), null);
 				//
 				final ProxyFactory proxyFactory = new ProxyFactory();
 				//
@@ -1324,6 +1323,56 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // try
 			//
+	}
+
+	private static PDPage getPage(final PDDocument instance, final int pageIndex) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				f -> Objects.equals(Util.getName(f), "document")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		return f == null || Narcissus.getField(instance, f) != null ? instance.getPage(pageIndex) : null;
+		//
+	}
+
+	private static int getNumberOfPages(final PDDocument instance) {
+		//
+		if (instance == null) {
+			//
+			return 0;
+			//
+		} // if
+			//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				f -> Objects.equals(Util.getName(f), "document")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		return f == null || Narcissus.getField(instance, f) != null ? instance.getNumberOfPages() : 0;
+		//
 	}
 
 	private static int length(final double[] instance) {

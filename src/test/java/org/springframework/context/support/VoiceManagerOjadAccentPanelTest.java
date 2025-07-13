@@ -76,6 +76,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.pdfbox.contentstream.PDFGraphicsStreamEngine;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.state.PDGraphicsState;
@@ -126,7 +127,8 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES, METHOD_MATCHES,
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT, METHOD_GET_MOST_OCCURENCE_COLOR,
 			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE,
-			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE = null;
+			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE,
+			METHOD_GET_PAGE, METHOD_GET_NUMBER_OF_PAGES = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -240,6 +242,10 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_PROCESS_PAGE = clz.getDeclaredMethod("processPage", PDFGraphicsStreamEngine.class, PDPage.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_PAGE = clz.getDeclaredMethod("getPage", PDDocument.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_GET_NUMBER_OF_PAGES = clz.getDeclaredMethod("getNumberOfPages", PDDocument.class)).setAccessible(true);
 		//
 	}
 
@@ -385,6 +391,8 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private PDFGraphicsStreamEngine pdfGraphicsStreamEngine = null;
 
+	private PDDocument pdDocument = null;
+
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
@@ -417,6 +425,8 @@ class VoiceManagerOjadAccentPanelTest {
 					return constructor != null ? constructor.newInstance((Object) null) : null;
 					//
 				});
+		//
+		pdDocument = Util.cast(PDDocument.class, Narcissus.allocateInstance(PDDocument.class));
 		//
 	}
 
@@ -1978,6 +1988,46 @@ class VoiceManagerOjadAccentPanelTest {
 	private static void processPage(final PDFGraphicsStreamEngine instance, final PDPage page) throws Throwable {
 		try {
 			METHOD_PROCESS_PAGE.invoke(null, instance, page);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetPage() throws Throwable {
+		//
+		Assertions.assertNull(getPage(pdDocument, 0));
+		//
+	}
+
+	private static PDPage getPage(final PDDocument instance, final int pageIndex) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PAGE.invoke(null, instance, pageIndex);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof PDPage) {
+				return (PDPage) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetNumberOfPages() throws Throwable {
+		//
+		Assertions.assertEquals(0, getNumberOfPages(pdDocument));
+		//
+	}
+
+	private static int getNumberOfPages(final PDDocument instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_NUMBER_OF_PAGES.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
