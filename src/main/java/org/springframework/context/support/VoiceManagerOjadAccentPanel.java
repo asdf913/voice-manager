@@ -123,7 +123,6 @@ import org.apache.http.client.utils.URIBuilderUtil;
 import org.apache.jena.atlas.RuntimeIOException;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.contentstream.PDFGraphicsStreamEngine;
-import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
