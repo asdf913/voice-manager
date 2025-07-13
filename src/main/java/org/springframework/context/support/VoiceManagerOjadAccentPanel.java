@@ -1248,6 +1248,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		configuration.setTemplateLoader(new ClassTemplateLoader(VoiceManagerOjadAccentPanel.class, "/"));
 		//
+		PDDocument pdDocument = null;
+		//
 		try (final Writer w = new StringWriter(); final Playwright playwright = Playwright.create()) {
 			//
 			final Template template = configuration.getTemplate("ojad.ftl");
@@ -1272,10 +1274,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				final byte[] bs = pdf(page);
 				//
-				final PDDocument pdDocument = Loader.loadPDF(bs);
-				//
-				final PDPage pdPage = testAndApply(x -> PDDocumentUtil.getNumberOfPages(x) > 0, pdDocument,
-						x -> PDDocumentUtil.getPage(x, 0), null);
+				final PDPage pdPage = testAndApply(x -> PDDocumentUtil.getNumberOfPages(x) > 0,
+						pdDocument = Loader.loadPDF(bs), x -> PDDocumentUtil.getPage(x, 0), null);
 				//
 				final ProxyFactory proxyFactory = new ProxyFactory();
 				//
@@ -1316,6 +1316,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // if
 				//
+		} finally {
+			//
+			IOUtils.closeQuietly(pdDocument);
+			//
 		} // try
 			//
 	}
