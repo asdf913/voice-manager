@@ -1770,7 +1770,7 @@ public abstract class Util {
 		return instance != null ? instance.doubleValue() : defaultValue;
 	}
 
-	static float floatValue(final Number instance, final float defaultValue) {
+	static float floatValue(@Nullable final Number instance, final float defaultValue) {
 		return instance != null ? instance.floatValue() : defaultValue;
 	}
 
