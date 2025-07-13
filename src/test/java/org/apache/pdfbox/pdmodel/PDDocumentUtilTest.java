@@ -171,11 +171,11 @@ class PDDocumentUtilTest {
 	@Test
 	void testSave() throws Throwable {
 		//
-		final PDDocument pdDocument = new PDDocument();
+		final PDDocument pdd = new PDDocument();
 		//
-		Assertions.assertDoesNotThrow(() -> PDDocumentUtil.save(pdDocument, null));
+		Assertions.assertDoesNotThrow(() -> PDDocumentUtil.save(pdd, null));
 		//
-		Assertions.assertDoesNotThrow(() -> PDDocumentUtil.save(pdDocument, toFile(Path.of("."))));
+		Assertions.assertDoesNotThrow(() -> PDDocumentUtil.save(pdd, toFile(Path.of("."))));
 		//
 		final File file = File.createTempFile(RandomStringUtils.secure().nextAlphanumeric(3), null);
 		//
@@ -185,23 +185,23 @@ class PDDocumentUtilTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> PDDocumentUtil.save(pdDocument, file));
+		Assertions.assertDoesNotThrow(() -> PDDocumentUtil.save(pdd, file));
 		//
-		FieldUtils.getAllFieldsList(getClass(pdDocument)).forEach(x -> {
+		FieldUtils.getAllFieldsList(getClass(pdd)).forEach(x -> {
 			//
 			if (Boolean.logicalAnd((x == null || !Modifier.isStatic(x.getModifiers())),
 					Object.class.isAssignableFrom(x.getType()))) {
 				//
-				Narcissus.setField(pdDocument, x, null);
+				Narcissus.setField(pdd, x, null);
 				//
 			} // if
 				//
 		});
 		//
-		Assertions.assertDoesNotThrow(() -> PDDocumentUtil.save(pdDocument, file));
+		Assertions.assertDoesNotThrow(() -> PDDocumentUtil.save(pdd, file));
 		//
 		Assertions.assertDoesNotThrow(
-				() -> PDDocumentUtil.save(pdDocument, cast(File.class, Narcissus.allocateInstance(File.class))));
+				() -> PDDocumentUtil.save(pdd, cast(File.class, Narcissus.allocateInstance(File.class))));
 		//
 	}
 
