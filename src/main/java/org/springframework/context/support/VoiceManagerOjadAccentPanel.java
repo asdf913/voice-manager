@@ -1163,8 +1163,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 		@Nullable
 		@Override
-		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
-				throws Throwable {
+		public Object invoke(final Object self, final Method thisMethod, @Nullable final Method proceed,
+				@Nullable final Object[] args) throws Throwable {
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
