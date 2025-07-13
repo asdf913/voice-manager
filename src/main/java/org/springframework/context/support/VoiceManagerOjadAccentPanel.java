@@ -32,9 +32,12 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -170,6 +173,9 @@ import freemarker.template.TemplateUtil;
 import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
 import it.unimi.dsi.fastutil.objects.ObjectIntImmutablePair;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import javazoom.jl.player.PlayerUtil;
@@ -1119,7 +1125,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				actionPerformedBtnPdf(this, Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage)));
 				//
-			} catch (final IOException | TemplateException e) {
+			} catch (final IOException | TemplateException | ReflectiveOperationException e) {
 				//
 				throw new RuntimeException(e);
 				//
@@ -1154,8 +1160,65 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
+	private static class MH implements MethodHandler {
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			final String methodName = Util.getName(thisMethod);
+			//
+			if (self instanceof PDFGraphicsStreamEngine pdfgse) {
+				//
+				if (proceed != null && !Modifier.isAbstract(proceed.getModifiers())) {
+					//
+					return Narcissus.invokeMethod(self, proceed, args);
+					//
+				} else if (Util.contains(Arrays.asList("drawImage"), methodName) && args != null && args.length > 0) {
+					//
+					final PDImage pdImage = Util.cast(PDImage.class, ArrayUtils.get(args, 0));
+					//
+					if (pdImage != null) {
+						//
+						System.out.println("width     =" + pdImage.getWidth());
+						//
+						System.out.println("height    =" + pdImage.getHeight());
+						//
+					} // if
+						//
+					final PDGraphicsState pdgs = pdfgse != null ? pdfgse.getGraphicsState() : null;
+					//
+					final Matrix ctm = pdgs != null ? pdgs.getCurrentTransformationMatrix() : null;
+					//
+					if (ctm != null) {
+						//
+						System.out.println("translateX=" + ctm.getTranslateX());
+						//
+						System.out.println("translateY=" + ctm.getTranslateY());
+						//
+					} // if
+						//
+					System.out.println();
+					//
+					return null;
+					//
+				} else if (Util.contains(Arrays.asList(Void.TYPE, Point2D.class), Util.getReturnType(thisMethod))) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
+
 	private static void actionPerformedBtnPdf(final VoiceManagerOjadAccentPanel instance,
-			final TextAndImage textAndImage) throws IOException, TemplateException {
+			final TextAndImage textAndImage) throws IOException, TemplateException, NoSuchMethodException,
+			InstantiationException, IllegalAccessException, InvocationTargetException {
 		//
 		final Version version = Configuration.getVersion();
 		//
@@ -1192,111 +1255,36 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				final PDPage pdPage = pdDocument != null && pdDocument.getNumberOfPages() > 0 ? pdDocument.getPage(0)
 						: null;
 				//
-				final PDFGraphicsStreamEngine pdfGse = new PDFGraphicsStreamEngine(pdPage) {
-
-					@Override
-					public void strokePath() throws IOException {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void shadingFill(COSName shadingName) throws IOException {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void moveTo(float x, float y) throws IOException {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void lineTo(float x, float y) throws IOException {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public Point2D getCurrentPoint() throws IOException {
-						// TODO Auto-generated method stub
-						return null;
-					}
-
-					@Override
-					public void fillPath(int windingRule) throws IOException {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void fillAndStrokePath(int windingRule) throws IOException {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void endPath() throws IOException {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void drawImage(final PDImage pdImage) throws IOException {
-						//
-						if (pdImage != null) {
-							//
-							System.out.println("width     =" + pdImage.getWidth());
-							//
-							System.out.println("height    =" + pdImage.getHeight());
-							//
-						} // if
-							//
-						final PDGraphicsState pdgs = getGraphicsState();
-						//
-						final Matrix ctm = pdgs != null ? pdgs.getCurrentTransformationMatrix() : null;
-						//
-						if (ctm != null) {
-							//
-							System.out.println("translateX=" + ctm.getTranslateX());
-							//
-							System.out.println("translateY=" + ctm.getTranslateY());
-							//
-						} // if
-							//
-						System.out.println();
-						//
-					}
-
-					@Override
-					public void curveTo(float x1, float y1, float x2, float y2, float x3, float y3) throws IOException {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void closePath() throws IOException {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void clip(int windingRule) throws IOException {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void appendRectangle(Point2D p0, Point2D p1, Point2D p2, Point2D p3) throws IOException {
-						// TODO Auto-generated method stub
-
-					}
-
-				};
+				final ProxyFactory proxyFactory = new ProxyFactory();
 				//
-				pdfGse.processPage(pdPage);
+				proxyFactory.setSuperclass(PDFGraphicsStreamEngine.class);
 				//
+				final Class<?> clz = proxyFactory.createClass();
+				//
+				final Constructor<?> constructor = clz != null ? clz.getConstructor(PDPage.class) : null;
+				//
+				if (constructor != null) {
+					//
+					constructor.setAccessible(true);
+					//
+				} // if
+					//
+				final Object temp = constructor != null ? constructor.newInstance(pdPage) : null;
+				//
+				if (temp instanceof ProxyObject proxyObject) {
+					//
+					proxyObject.setHandler(new MH());
+					//
+				} // if
+					//
+				final PDFGraphicsStreamEngine pdfGse1 = Util.cast(PDFGraphicsStreamEngine.class, temp);
+				//
+				if (pdfGse1 != null) {
+					//
+					pdfGse1.processPage(pdPage);
+					//
+				} // if
+					//
 				FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
 				//
 			} // if

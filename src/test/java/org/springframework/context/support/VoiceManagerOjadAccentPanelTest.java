@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -74,6 +75,9 @@ import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.pdfbox.contentstream.PDFGraphicsStreamEngine;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -236,6 +240,8 @@ class VoiceManagerOjadAccentPanelTest {
 
 		private Map<Object, Object> evaluate = null;
 
+		private Integer width, height = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -309,6 +315,19 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 				return null;
 				//
+
+			} else if (proxy instanceof PDImage) {
+				//
+				if (Objects.equals(methodName, "getWidth")) {
+					//
+					return width;
+					//
+				} else if (Objects.equals(methodName, "getHeight")) {
+					//
+					return height;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -831,9 +850,8 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testIH1() throws Throwable {
 		//
-		final Class<?> clz = Util.forName("org.springframework.context.support.VoiceManagerOjadAccentPanel$IH");
-		//
-		final InvocationHandler invocationHandler = Util.cast(InvocationHandler.class, Narcissus.allocateInstance(clz));
+		final InvocationHandler invocationHandler = Util.cast(InvocationHandler.class, Narcissus
+				.allocateInstance(Util.forName("org.springframework.context.support.VoiceManagerOjadAccentPanel$IH")));
 		//
 		if (invocationHandler == null) {
 			//
@@ -1012,6 +1030,68 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertNull(Narcissus.invokeStaticMethod(
 				Util.getDeclaredMethod(clz, "getValueAt", JTable.class, Integer.TYPE, Integer.TYPE), null, 0, 0));
+		//
+	}
+
+	@Test
+	void testMH() throws Throwable {
+		//
+		final MethodHandler methodHandler = Util.cast(MethodHandler.class, Narcissus
+				.allocateInstance(Util.forName("org.springframework.context.support.VoiceManagerOjadAccentPanel$MH")));
+		//
+		if (methodHandler == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		Assertions.assertThrows(Throwable.class, () -> methodHandler.invoke(null, null, null, null));
+		//
+		final Class<PDFGraphicsStreamEngine> clz = PDFGraphicsStreamEngine.class;
+		//
+		final PDFGraphicsStreamEngine pdfgse = ProxyUtil.createProxy(clz, methodHandler, c -> {
+			//
+			final Constructor<?> constructor = c != null ? c.getDeclaredConstructor(PDPage.class) : null;
+			//
+			if (constructor != null) {
+				//
+				constructor.setAccessible(true);
+				//
+			} // if
+				//
+			return constructor != null ? constructor.newInstance((Object) null) : null;
+			//
+		});
+		//
+		Assertions.assertThrows(Throwable.class, () -> methodHandler.invoke(pdfgse, null, null, null));
+		//
+		Util.forEach(Util.filter(
+				testAndApply(Objects::nonNull, Util.getDeclaredMethods(PDFGraphicsStreamEngine.class), Arrays::stream,
+						null),
+				m -> m != null && !m.isSynthetic() && m.getParameterCount() == 0
+						&& Modifier.isAbstract(m.getModifiers())),
+				m -> {
+					//
+					Assertions.assertDoesNotThrow(() -> methodHandler.invoke(pdfgse, m, null, null));
+					//
+				});
+		//
+		final Method drawImage = Narcissus.findMethod(clz, "drawImage", PDImage.class);
+		//
+		Assertions.assertDoesNotThrow(() -> methodHandler.invoke(pdfgse, drawImage, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> methodHandler.invoke(pdfgse, drawImage, null, new Object[] {}));
+		//
+		Assertions.assertDoesNotThrow(() -> methodHandler.invoke(pdfgse, drawImage, null, new Object[] { null }));
+		//
+		if (ih != null) {
+			//
+			ih.width = ih.height = Integer.valueOf(0);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> methodHandler.invoke(pdfgse, drawImage, null,
+				new Object[] { Reflection.newProxy(PDImage.class, ih) }));
 		//
 	}
 
