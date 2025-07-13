@@ -1281,7 +1281,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				final Class<?> clz = proxyFactory.createClass();
 				//
-				final Constructor<?> constructor = clz != null ? clz.getConstructor(PDPage.class) : null;
+				final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor(PDPage.class) : null;
 				//
 				if (constructor != null) {
 					//
