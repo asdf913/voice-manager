@@ -1108,10 +1108,22 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(null,
-				getCurrentTransformationMatrix != null
-						? getCurrentTransformationMatrix.invoke(null, Narcissus.allocateInstance(PDGraphicsState.class))
-						: null);
+		Assertions.assertNull(getCurrentTransformationMatrix != null
+				? getCurrentTransformationMatrix.invoke(null, Narcissus.allocateInstance(PDGraphicsState.class))
+				: null);
+		//
+		// org.springframework.context.support.VoiceManagerOjadAccentPanel$MH.getGraphicsState(org.apache.pdfbox.contentstream.PDFGraphicsStreamEngine)
+		//
+		final Method getGraphicsState = Util.getDeclaredMethod(mhClass, "getGraphicsState",
+				PDFGraphicsStreamEngine.class);
+		//
+		if (getGraphicsState != null) {
+			//
+			getGraphicsState.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(getGraphicsState != null ? getGraphicsState.invoke(null, (Object) null) : null);
 		//
 	}
 

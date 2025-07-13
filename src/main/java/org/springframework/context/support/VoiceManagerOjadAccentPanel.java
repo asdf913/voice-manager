@@ -1168,7 +1168,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
-			if (self instanceof PDFGraphicsStreamEngine pdfgse) {
+			if (self instanceof PDFGraphicsStreamEngine) {
 				//
 				if (proceed != null && !Modifier.isAbstract(proceed.getModifiers())) {
 					//
@@ -1187,7 +1187,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					} // if
 						//
 					final Matrix ctm = getCurrentTransformationMatrix(
-							pdfgse != null ? pdfgse.getGraphicsState() : null);
+							getGraphicsState(Util.cast(PDFGraphicsStreamEngine.class, self)));
 					//
 					if (ctm != null) {
 						//
@@ -1211,6 +1211,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			throw new Throwable(methodName);
 			//
+		}
+
+		private static PDGraphicsState getGraphicsState(final PDFGraphicsStreamEngine instance) {
+			return instance != null ? instance.getGraphicsState() : null;
 		}
 
 		private static Matrix getCurrentTransformationMatrix(final PDGraphicsState instance) {
