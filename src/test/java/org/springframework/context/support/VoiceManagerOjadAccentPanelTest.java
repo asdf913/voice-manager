@@ -125,7 +125,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES, METHOD_MATCHES,
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT, METHOD_GET_MOST_OCCURENCE_COLOR,
 			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE,
-			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION = null;
+			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_FLOAT_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -234,6 +234,8 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_GET_CONJUGATION = clz.getDeclaredMethod("getConjugation", Iterable.class, Integer.TYPE))
 				.setAccessible(true);
+		//
+		(METHOD_FLOAT_VALUE = clz.getDeclaredMethod("floatValue", Number.class, Float.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -435,6 +437,10 @@ class VoiceManagerOjadAccentPanelTest {
 					//
 					Util.add(collection, Integer.valueOf(0));
 					//
+				} else if (Objects.equals(parameterType, Float.TYPE)) {
+					//
+					Util.add(collection, Float.valueOf(0));
+					//
 				} else {
 					//
 					Util.add(collection, null);
@@ -449,7 +455,8 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 			toString = Util.toString(m);
 			//
-			if (or(Util.contains(Arrays.asList(Double.TYPE, Boolean.TYPE, Integer.TYPE), Util.getReturnType(m)),
+			if (or(Util.contains(Arrays.asList(Double.TYPE, Boolean.TYPE, Integer.TYPE, Float.TYPE),
+					Util.getReturnType(m)),
 					Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "createTextAndImageListCellRenderer"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Component.class })),
 					Boolean.logicalAnd(Objects.equals(name, "getClipboard"),
@@ -1928,6 +1935,27 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testFloatValue() throws Throwable {
+		//
+		final float f = 0;
+		//
+		Assertions.assertEquals(f, floatValue(Float.valueOf(f), f));
+		//
+	}
+
+	private static float floatValue(final Number instance, final float defaultValue) throws Throwable {
+		try {
+			final Object obj = METHOD_FLOAT_VALUE.invoke(null, instance, defaultValue);
+			if (obj instanceof Float) {
+				return ((Float) obj).floatValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

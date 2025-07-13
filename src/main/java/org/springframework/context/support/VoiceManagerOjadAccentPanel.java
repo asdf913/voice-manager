@@ -1159,7 +1159,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
+	private static class ImageDimensionPosition {
+
+		private Integer width, height = null;
+
+		private Float translateX, translateY = null;
+
+	}
+
 	private static class MH implements MethodHandler {
+
+		private Collection<ImageDimensionPosition> imageDimensionPositions = null;
 
 		@Nullable
 		@Override
@@ -1176,28 +1186,31 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 				} else if (Util.contains(Arrays.asList("drawImage"), methodName) && args != null && args.length > 0) {
 					//
+					ImageDimensionPosition idp = null;
+					//
 					final PDImage pdImage = Util.cast(PDImage.class, ArrayUtils.get(args, 0));
 					//
-					if (pdImage != null) {
+					if (pdImage != null && (idp = ObjectUtils.getIfNull(idp, ImageDimensionPosition::new)) != null) {
 						//
-						System.out.println("width     =" + pdImage.getWidth());
+						idp.width = Integer.valueOf(pdImage.getWidth());
 						//
-						System.out.println("height    =" + pdImage.getHeight());
+						idp.height = Integer.valueOf(pdImage.getHeight());
 						//
 					} // if
 						//
 					final Matrix ctm = getCurrentTransformationMatrix(
 							getGraphicsState(Util.cast(PDFGraphicsStreamEngine.class, self)));
 					//
-					if (ctm != null) {
+					if (ctm != null && (idp = ObjectUtils.getIfNull(idp, ImageDimensionPosition::new)) != null) {
 						//
-						System.out.println("translateX=" + ctm.getTranslateX());
+						idp.translateX = Float.valueOf(ctm.getTranslateX());
 						//
-						System.out.println("translateY=" + ctm.getTranslateY());
+						idp.translateY = Float.valueOf(ctm.getTranslateY());
 						//
 					} // if
 						//
-					System.out.println();
+					Util.add(imageDimensionPositions = ObjectUtils.getIfNull(imageDimensionPositions, ArrayList::new),
+							idp);
 					//
 					return null;
 					//
@@ -1280,26 +1293,46 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 				final Object temp = constructor != null ? constructor.newInstance(pdPage) : null;
 				//
+				MH mh = null;
+				//
 				if (temp instanceof ProxyObject proxyObject) {
 					//
-					proxyObject.setHandler(new MH());
+					proxyObject.setHandler(mh = new MH());
 					//
 				} // if
 					//
-				final PDFGraphicsStreamEngine pdfGse1 = Util.cast(PDFGraphicsStreamEngine.class, temp);
+				final PDFGraphicsStreamEngine pdfGse = Util.cast(PDFGraphicsStreamEngine.class, temp);
 				//
-				if (pdfGse1 != null) {
+				if (pdfGse != null) {
 					//
-					pdfGse1.processPage(pdPage);
+					pdfGse.processPage(pdPage);
 					//
 				} // if
 					//
+				final Collection<ImageDimensionPosition> idps = mh != null ? mh.imageDimensionPositions : null;
+				//
+				double[] ds = Util.stream(idps).mapToDouble(x -> x != null ? floatValue(x.translateX, 0) : null)
+						.sorted().distinct().toArray();
+				//
+				final double[] translateXs = testAndApply(x -> x > 2, ds != null ? ds.length : 0,
+						x -> ArrayUtils.subarray(ds, x - 2, x), x -> ds);
+				//
+				System.out.println(Arrays.toString(translateXs));
+				//
+				System.out.println(Arrays.toString(Util.filter(Util.stream(idps), x -> {
+					return x != null && ArrayUtils.contains(translateXs, x.translateX);
+				}).mapToDouble(x -> x != null ? floatValue(x.translateY, 0) : null).sorted().distinct().toArray()));
+				//
 				FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
 				//
 			} // if
 				//
 		} // try
 			//
+	}
+
+	private static float floatValue(final Number instance, final float defaultValue) {
+		return instance != null ? instance.floatValue() : defaultValue;
 	}
 
 	private static void setContents(@Nullable final Object source, final Supplier<Clipboard> suppler,
