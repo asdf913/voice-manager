@@ -1161,6 +1161,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static class MH implements MethodHandler {
 
+		@Nullable
 		@Override
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
