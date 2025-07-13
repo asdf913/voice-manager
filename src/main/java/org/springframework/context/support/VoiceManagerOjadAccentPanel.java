@@ -2405,10 +2405,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 									".katsuyo_proc_button a"),
 							page, "mp3");
 					//
-					textAndImage.conjugation = testAndApply(
-							x -> x != null && IterableUtils.size(x.key()) > x.rightInt(),
-							ObjectIntImmutablePair.of(conjugations, j),
-							x -> x != null ? IterableUtils.get(x.key(), x.rightInt()) : null, null);
+					textAndImage.conjugation = getConjugation(conjugations, j);
 					//
 					Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 					//
@@ -2427,6 +2424,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		return textAndImages;
 		//
+	}
+
+	private static String getConjugation(final Iterable<String> ss, final int i) {
+		return testAndApply(x -> x != null && IterableUtils.size(x.key()) > x.rightInt(),
+				ObjectIntImmutablePair.of(ss, i), x -> x != null ? IterableUtils.get(x.key(), x.rightInt()) : null,
+				null);
 	}
 
 	@Nullable
