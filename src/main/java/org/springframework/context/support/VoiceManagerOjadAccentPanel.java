@@ -1323,7 +1323,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return clz != null ? clz.getDeclaredConstructor(parameterTypes) : null;
 	}
 
-	private static void setHandler(final javassist.util.proxy.Proxy instance, final MethodHandler mh) {
+	private static void setHandler(@Nullable final javassist.util.proxy.Proxy instance, final MethodHandler mh) {
 		if (instance != null) {
 			instance.setHandler(mh);
 		}
@@ -1383,7 +1383,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.length : 0;
 	}
 
-	private static void processPage(final PDFGraphicsStreamEngine instance, final PDPage page) throws IOException {
+	private static void processPage(@Nullable final PDFGraphicsStreamEngine instance, @Nullable final PDPage page)
+			throws IOException {
 		if (instance != null && page != null) {
 			instance.processPage(page);
 		}
