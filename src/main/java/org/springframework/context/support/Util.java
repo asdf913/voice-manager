@@ -564,6 +564,7 @@ public abstract class Util {
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
+	@Nullable
 	static <T> Constructor<T> getDeclaredConstructor(@Nullable final Class<T> clz, final Class<?>... parameterTypes)
 			throws NoSuchMethodException {
 		return clz != null ? clz.getDeclaredConstructor(parameterTypes) : null;
