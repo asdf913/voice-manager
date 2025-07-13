@@ -93,7 +93,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE,
+	private static Method METHOD_GET_FIELD_BY_NAME, METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE,
 			METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL,
 			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_OR, METHOD_SET_ICON, METHOD_TEST_AND_APPLY,
 			METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY, METHOD_TO_DATA,
@@ -105,8 +105,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	static void beforeAll() throws NoSuchMethodException {
 		//
 		final Class<?> clz = VoiceManagerSpreadsheetToPdfPanel.class;
-		//
-		(METHOD_FLOAT_VALUE = clz.getDeclaredMethod("floatValue", Number.class, Float.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_FIELD_BY_NAME = clz.getDeclaredMethod("getFieldByName", Collection.class, String.class))
 				.setAccessible(true);
@@ -462,27 +460,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.getName(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testFloatValue() throws Throwable {
-		//
-		final float zero = 0f;
-		//
-		Assertions.assertEquals(zero, floatValue(Float.valueOf(zero), zero));
-		//
-	}
-
-	private static float floatValue(final Number instance, final float defaultValue) throws Throwable {
-		try {
-			final Object obj = METHOD_FLOAT_VALUE.invoke(null, instance, defaultValue);
-			if (obj instanceof Float) {
-				return ((Float) obj).floatValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

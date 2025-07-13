@@ -1176,13 +1176,14 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 			(pdAnnotationFileAttachment = new PDAnnotationFileAttachment()).setFile(pdComplexFileSpecification);
 			//
-			pdAnnotationFileAttachment.setRectangle(new PDRectangle(floatValue(data.x, 0) * ratioMin,
-					PDRectangleUtil.getHeight(mediaBox) - (floatValue(data.y, pdAnnotationFileAttachmentRectangleSize)
-							+ floatValue(data.height, pdAnnotationFileAttachmentRectangleSize)) * ratioMin
+			pdAnnotationFileAttachment.setRectangle(new PDRectangle(Util.floatValue(data.x, 0) * ratioMin,
+					PDRectangleUtil.getHeight(mediaBox)
+							- (Util.floatValue(data.y, pdAnnotationFileAttachmentRectangleSize)
+									+ Util.floatValue(data.height, pdAnnotationFileAttachmentRectangleSize)) * ratioMin
 					//
-					, floatValue(data.width, pdAnnotationFileAttachmentRectangleSize) * ratioMin
+					, Util.floatValue(data.width, pdAnnotationFileAttachmentRectangleSize) * ratioMin
 					//
-					, floatValue(data.height, pdAnnotationFileAttachmentRectangleSize) * ratioMin)
+					, Util.floatValue(data.height, pdAnnotationFileAttachmentRectangleSize) * ratioMin)
 			//
 			);
 			//
@@ -1510,7 +1511,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		if (Objects.equals(Util.getType(field), Float.class)) {
 			//
-			Narcissus.setField(instance, field, value instanceof Number number ? floatValue(number, 0) : value);
+			Narcissus.setField(instance, field, value instanceof Number number ? Util.floatValue(number, 0) : value);
 			//
 		} else {
 			//
@@ -1785,10 +1786,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
-	}
-
-	private static float floatValue(@Nullable final Number instance, final float defaultValue) {
-		return instance != null ? instance.floatValue() : defaultValue;
 	}
 
 	@Nullable

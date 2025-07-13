@@ -1899,10 +1899,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				final FloatMap floatMap = Reflection.newProxy(FloatMap.class, ih);
 				//
-				FloatMap.setFloat(floatMap, "fontSize", floatValue(testAndApply(NumberUtils::isCreatable,
+				FloatMap.setFloat(floatMap, "fontSize", Util.floatValue(testAndApply(NumberUtils::isCreatable,
 						Util.getText(tfFontSize2), NumberUtils::createNumber, null), 14));
 				//
-				FloatMap.setFloat(floatMap, "defaultSize", floatValue(pdAnnotationRectangleSize, 61));
+				FloatMap.setFloat(floatMap, "defaultSize", Util.floatValue(pdAnnotationRectangleSize, 61));
 				//
 				final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, ih);
 				//
@@ -3281,7 +3281,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final FloatMap floatMap = ObjectMap.getObject(objectMap, FloatMap.class);
 			//
-			final float size = floatValue(
+			final float size = Util.floatValue(
 					testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), getWidth(bi), MapUtils.size(map),
 							(a, b) -> divide(BigDecimal.valueOf(a), BigDecimal.valueOf(b)), null),
 					FloatMap.getFloat(floatMap, "defaultSize", (float) 61.2));
@@ -3749,11 +3749,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		final float width = PDRectangleUtil.getWidth(md);
 		//
-		final double ratioWidth = width / floatValue(getWidth(bi), width);
+		final double ratioWidth = width / Util.floatValue(getWidth(bi), width);
 		//
 		final float pdfHeight = Math.min(PDRectangleUtil.getHeight(md), lastHeight);
 		//
-		final double ratioHeight = pdfHeight / floatValue(getHeight(bi), pdfHeight);
+		final double ratioHeight = pdfHeight / Util.floatValue(getHeight(bi), pdfHeight);
 		//
 		final PDPageContentStream cs = ObjectMap.getObject(objectMap, PDPageContentStream.class);
 		//
@@ -3819,10 +3819,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Nullable
 	private static BigDecimal divide(@Nullable final BigDecimal a, @Nullable final BigDecimal b) {
 		return a != null && b != null && !b.equals(BigDecimal.valueOf(0)) ? a.divide(b) : a;
-	}
-
-	private static float floatValue(@Nullable final Number instance, final float defaultValue) {
-		return instance != null ? instance.floatValue() : defaultValue;
 	}
 
 	private static <T, U, E extends Exception> void testAndAccept(final BiPredicate<T, U> instance, final T t,

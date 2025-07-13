@@ -1305,7 +1305,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				final Collection<ImageDimensionPosition> idps = mh != null ? mh.imageDimensionPositions : null;
 				//
-				double[] ds = Util.stream(idps).mapToDouble(x -> x != null ? floatValue(x.translateX, 0) : null)
+				double[] ds = Util.stream(idps).mapToDouble(x -> x != null ? Util.floatValue(x.translateX, 0) : null)
 						.sorted().distinct().toArray();
 				//
 				final double[] translateXs = testAndApply(x -> x > 2, ds != null ? ds.length : 0,
@@ -1315,8 +1315,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				System.out.println(Arrays.toString(
 						Util.filter(Util.stream(idps), x -> x != null && ArrayUtils.contains(translateXs, x.translateX))
-								.mapToDouble(x -> x != null ? floatValue(x.translateY, 0) : null).sorted().distinct()
-								.toArray()));
+								.mapToDouble(x -> x != null ? Util.floatValue(x.translateY, 0) : null).sorted()
+								.distinct().toArray()));
 				//
 				FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
 				//
@@ -1330,10 +1330,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		if (instance != null && page != null) {
 			instance.processPage(page);
 		}
-	}
-
-	private static float floatValue(@Nullable final Number instance, final float defaultValue) {
-		return instance != null ? instance.floatValue() : defaultValue;
 	}
 
 	private static void setContents(@Nullable final Object source, final Supplier<Clipboard> suppler,

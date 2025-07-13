@@ -125,8 +125,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES, METHOD_MATCHES,
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT, METHOD_GET_MOST_OCCURENCE_COLOR,
 			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE,
-			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_FLOAT_VALUE,
-			METHOD_PROCESS_PAGE = null;
+			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -235,8 +234,6 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_GET_CONJUGATION = clz.getDeclaredMethod("getConjugation", Iterable.class, Integer.TYPE))
 				.setAccessible(true);
-		//
-		(METHOD_FLOAT_VALUE = clz.getDeclaredMethod("floatValue", Number.class, Float.TYPE)).setAccessible(true);
 		//
 		(METHOD_PROCESS_PAGE = clz.getDeclaredMethod("processPage", PDFGraphicsStreamEngine.class, PDPage.class))
 				.setAccessible(true);
@@ -1945,27 +1942,6 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testFloatValue() throws Throwable {
-		//
-		final float f = 0;
-		//
-		Assertions.assertEquals(f, floatValue(Float.valueOf(f), f));
-		//
-	}
-
-	private static float floatValue(final Number instance, final float defaultValue) throws Throwable {
-		try {
-			final Object obj = METHOD_FLOAT_VALUE.invoke(null, instance, defaultValue);
-			if (obj instanceof Float) {
-				return ((Float) obj).floatValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
