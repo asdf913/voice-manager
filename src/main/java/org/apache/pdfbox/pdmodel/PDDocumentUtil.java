@@ -17,9 +17,14 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-public interface PDDocumentUtil {
+public abstract class PDDocumentUtil {
 
-	static void save(final PDDocument instance, final File file) throws IOException {
+	private static final String DOCUMENT = "document";
+
+	private PDDocumentUtil() {
+	}
+
+	public static void save(final PDDocument instance, final File file) throws IOException {
 		//
 		// java.io.File.path
 		//
@@ -39,7 +44,7 @@ public interface PDDocumentUtil {
 		//
 		if (IterableUtils.size(iterable = toList(map(
 				filter(stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
-						x -> Objects.equals(getName(x), "document")),
+						x -> Objects.equals(getName(x), DOCUMENT)),
 				x -> Narcissus.getField(instance, x)))) > 1) {
 			//
 			throw new IllegalStateException();
@@ -103,7 +108,7 @@ public interface PDDocumentUtil {
 		return instance != null && instance.test(value);
 	}
 
-	static int getNumberOfPages(final PDDocument instance) {
+	public static int getNumberOfPages(final PDDocument instance) {
 		//
 		if (instance == null) {
 			//
@@ -113,7 +118,7 @@ public interface PDDocumentUtil {
 			//
 		final Iterable<Field> fs = toList(
 				filter(stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
-						f -> Objects.equals(getName(f), "document")));
+						f -> Objects.equals(getName(f), DOCUMENT)));
 		//
 		if (IterableUtils.size(fs) > 1) {
 			//
@@ -127,7 +132,7 @@ public interface PDDocumentUtil {
 		//
 	}
 
-	static PDPage getPage(final PDDocument instance, final int pageIndex) {
+	public static PDPage getPage(final PDDocument instance, final int pageIndex) {
 		//
 		if (instance == null) {
 			//
@@ -137,7 +142,7 @@ public interface PDDocumentUtil {
 			//
 		final Iterable<Field> fs = toList(
 				filter(stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
-						f -> Objects.equals(getName(f), "document")));
+						f -> Objects.equals(getName(f), DOCUMENT)));
 		//
 		if (IterableUtils.size(fs) > 1) {
 			//
