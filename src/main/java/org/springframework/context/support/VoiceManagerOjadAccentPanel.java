@@ -1318,6 +1318,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
+	@Nullable
 	private static <T> Constructor<T> getDeclaredConstructor(@Nullable final Class<T> clz,
 			final Class<?>... parameterTypes) throws NoSuchMethodException {
 		return clz != null ? clz.getDeclaredConstructor(parameterTypes) : null;
@@ -1329,6 +1330,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		}
 	}
 
+	@Nullable
 	private static PDPage getPage(@Nullable final PDDocument instance, final int pageIndex) {
 		//
 		if (instance == null) {
