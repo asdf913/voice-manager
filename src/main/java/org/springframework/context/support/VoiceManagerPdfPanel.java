@@ -2273,7 +2273,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						document = Loader.loadPDF(pdf(Util.toPath(file), getPlaywrightBrowserTypeFunction())),
 						a -> JOptionPane.showMessageDialog(null,
 								testAndApply(Objects::nonNull,
-										chop(testAndApply(x -> getNumberOfPages(x) > 0, a,
+										chop(testAndApply(x -> PDDocumentUtil.getNumberOfPages(x) > 0, a,
 												x -> PDFRendererUtil.renderImage(new PDFRenderer(x), 0), null)),
 										ImageIcon::new, null),
 								IMAGE, JOptionPane.PLAIN_MESSAGE, null));
@@ -3271,7 +3271,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		final VoiceManagerPdfPanel voiceManagerPdfPanel = ObjectMap.getObject(objectMap, VoiceManagerPdfPanel.class);
 		//
-		if (getNumberOfPages(document) > 0) {
+		if (PDDocumentUtil.getNumberOfPages(document) > 0) {
 			//
 			final PDPage pd = document.getPage(0);
 			//
@@ -3660,10 +3660,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		if (instance != null) {
 			instance.actionPerformed(evt);
 		}
-	}
-
-	private static int getNumberOfPages(@Nullable final PDDocument instance) {
-		return instance != null ? instance.getNumberOfPages() : 0;
 	}
 
 	@Nullable

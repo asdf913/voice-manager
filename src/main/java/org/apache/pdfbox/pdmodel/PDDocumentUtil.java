@@ -2,6 +2,7 @@ package org.apache.pdfbox.pdmodel;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Proxy;
 import java.util.Collection;
@@ -100,6 +101,30 @@ public interface PDDocumentUtil {
 
 	private static <T> boolean test(final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
+	}
+
+	static int getNumberOfPages(final PDDocument instance) {
+		//
+		if (instance == null) {
+			//
+			return 0;
+			//
+		} // if
+			//
+		final Iterable<Field> fs = toList(
+				filter(stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
+						f -> Objects.equals(getName(f), "document")));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		return f == null || Narcissus.getField(instance, f) != null ? instance.getNumberOfPages() : 0;
+		//
 	}
 
 }

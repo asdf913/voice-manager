@@ -7,6 +7,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
@@ -118,7 +119,7 @@ class PDDocumentUtilTest {
 			//
 			toString = Objects.toString(m);
 			//
-			if (Objects.equals(m.getReturnType(), Boolean.TYPE)) {
+			if (contains(Arrays.asList(Boolean.TYPE, Integer.TYPE), m.getReturnType())) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
@@ -130,6 +131,10 @@ class PDDocumentUtilTest {
 				//
 		} // for
 			//
+	}
+
+	private static boolean contains(final Collection<?> items, final Object item) {
+		return items != null && items.contains(item);
 	}
 
 	private static Object[] toArray(final Collection<?> instance) {
@@ -241,6 +246,16 @@ class PDDocumentUtilTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testGetNumberOfPages() {
+		//
+		Assertions.assertEquals(0,
+				PDDocumentUtil.getNumberOfPages(cast(PDDocument.class, Narcissus.allocateInstance(PDDocument.class))));
+		//
+		Assertions.assertEquals(0, PDDocumentUtil.getNumberOfPages(new PDDocument()));
+		//
 	}
 
 }

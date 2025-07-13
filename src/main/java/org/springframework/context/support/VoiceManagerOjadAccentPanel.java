@@ -124,6 +124,7 @@ import org.apache.jena.atlas.RuntimeIOException;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.contentstream.PDFGraphicsStreamEngine;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentUtil;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.state.PDGraphicsState;
@@ -1273,7 +1274,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				final PDDocument pdDocument = Loader.loadPDF(bs);
 				//
-				final PDPage pdPage = testAndApply(x -> getNumberOfPages(x) > 0, pdDocument, x -> getPage(x, 0), null);
+				final PDPage pdPage = testAndApply(x -> PDDocumentUtil.getNumberOfPages(x) > 0, pdDocument,
+						x -> getPage(x, 0), null);
 				//
 				final ProxyFactory proxyFactory = new ProxyFactory();
 				//
@@ -1353,31 +1355,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
 		return f == null || Narcissus.getField(instance, f) != null ? instance.getPage(pageIndex) : null;
-		//
-	}
-
-	private static int getNumberOfPages(@Nullable final PDDocument instance) {
-		//
-		if (instance == null) {
-			//
-			return 0;
-			//
-		} // if
-			//
-		final Iterable<Field> fs = Util.toList(Util.filter(
-				Util.stream(
-						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
-				f -> Objects.equals(Util.getName(f), "document")));
-		//
-		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
-			//
-			throw new IllegalStateException();
-			//
-		});
-		//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-		//
-		return f == null || Narcissus.getField(instance, f) != null ? instance.getNumberOfPages() : 0;
 		//
 	}
 

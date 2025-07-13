@@ -129,7 +129,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT, METHOD_GET_MOST_OCCURENCE_COLOR,
 			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE,
 			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE,
-			METHOD_GET_PAGE, METHOD_GET_NUMBER_OF_PAGES, METHOD_SET_HANDLER, METHOD_GET_DECLARED_CONSTRUCTOR = null;
+			METHOD_GET_PAGE, METHOD_SET_HANDLER, METHOD_GET_DECLARED_CONSTRUCTOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -245,8 +245,6 @@ class VoiceManagerOjadAccentPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_PAGE = clz.getDeclaredMethod("getPage", PDDocument.class, Integer.TYPE)).setAccessible(true);
-		//
-		(METHOD_GET_NUMBER_OF_PAGES = clz.getDeclaredMethod("getNumberOfPages", PDDocument.class)).setAccessible(true);
 		//
 		(METHOD_SET_HANDLER = clz.getDeclaredMethod("setHandler", Proxy.class, MethodHandler.class))
 				.setAccessible(true);
@@ -398,8 +396,6 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private PDFGraphicsStreamEngine pdfGraphicsStreamEngine = null;
 
-	private PDDocument pdDocument = null;
-
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
@@ -432,8 +428,6 @@ class VoiceManagerOjadAccentPanelTest {
 					return constructor != null ? constructor.newInstance((Object) null) : null;
 					//
 				});
-		//
-		pdDocument = Util.cast(PDDocument.class, Narcissus.allocateInstance(PDDocument.class));
 		//
 	}
 
@@ -2003,7 +1997,7 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testGetPage() throws Throwable {
 		//
-		Assertions.assertNull(getPage(pdDocument, 0));
+		Assertions.assertNull(getPage(Util.cast(PDDocument.class, Narcissus.allocateInstance(PDDocument.class)), 0));
 		//
 	}
 
@@ -2014,25 +2008,6 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof PDPage) {
 				return (PDPage) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetNumberOfPages() throws Throwable {
-		//
-		Assertions.assertEquals(0, getNumberOfPages(pdDocument));
-		//
-	}
-
-	private static int getNumberOfPages(final PDDocument instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_NUMBER_OF_PAGES.invoke(null, instance);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
