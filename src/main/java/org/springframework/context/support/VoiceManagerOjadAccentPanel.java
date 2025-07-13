@@ -174,7 +174,6 @@ import io.github.toolfactory.narcissus.Narcissus;
 import it.unimi.dsi.fastutil.objects.ObjectIntImmutablePair;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import javazoom.jl.player.PlayerUtil;
@@ -1292,14 +1291,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 				final Object temp = constructor != null ? constructor.newInstance(pdPage) : null;
 				//
-				MH mh = null;
+				final MH mh = new MH();
 				//
-				if (temp instanceof ProxyObject proxyObject) {
-					//
-					proxyObject.setHandler(mh = new MH());
-					//
-				} // if
-					//
+				setHandler(Util.cast(javassist.util.proxy.Proxy.class, temp), mh);
+				//
 				processPage(Util.cast(PDFGraphicsStreamEngine.class, temp), pdPage);
 				//
 				final Collection<ImageDimensionPosition> idps = mh != null ? mh.imageDimensionPositions : null;
@@ -1323,6 +1318,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // try
 			//
+	}
+
+	private static void setHandler(final javassist.util.proxy.Proxy instance, final MethodHandler mh) {
+		if (instance != null) {
+			instance.setHandler(mh);
+		}
 	}
 
 	private static PDPage getPage(final PDDocument instance, final int pageIndex) {

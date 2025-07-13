@@ -108,6 +108,7 @@ import com.microsoft.playwright.Playwright;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.Proxy;
 import javassist.util.proxy.ProxyUtil;
 import javazoom.jl.player.Player;
 
@@ -128,7 +129,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT, METHOD_GET_MOST_OCCURENCE_COLOR,
 			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE,
 			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE,
-			METHOD_GET_PAGE, METHOD_GET_NUMBER_OF_PAGES = null;
+			METHOD_GET_PAGE, METHOD_GET_NUMBER_OF_PAGES, METHOD_SET_HANDLER = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -246,6 +247,9 @@ class VoiceManagerOjadAccentPanelTest {
 		(METHOD_GET_PAGE = clz.getDeclaredMethod("getPage", PDDocument.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_NUMBER_OF_PAGES = clz.getDeclaredMethod("getNumberOfPages", PDDocument.class)).setAccessible(true);
+		//
+		(METHOD_SET_HANDLER = clz.getDeclaredMethod("setHandler", Proxy.class, MethodHandler.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -2028,6 +2032,21 @@ class VoiceManagerOjadAccentPanelTest {
 				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testsetHandler() {
+		//
+		Assertions.assertDoesNotThrow(() -> setHandler(Reflection.newProxy(Proxy.class, ih), null));
+		//
+	}
+
+	private static void setHandler(final Proxy instance, final MethodHandler mh) throws Throwable {
+		try {
+			METHOD_SET_HANDLER.invoke(null, instance, mh);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
