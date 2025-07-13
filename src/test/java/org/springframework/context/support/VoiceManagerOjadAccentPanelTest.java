@@ -128,7 +128,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT, METHOD_GET_MOST_OCCURENCE_COLOR,
 			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE,
 			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE,
-			METHOD_SET_HANDLER = null;
+			METHOD_SET_HANDLER, METHOD_NEW_INSTANCE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -244,6 +244,9 @@ class VoiceManagerOjadAccentPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_SET_HANDLER = clz.getDeclaredMethod("setHandler", Proxy.class, MethodHandler.class))
+				.setAccessible(true);
+		//
+		(METHOD_NEW_INSTANCE = clz.getDeclaredMethod("newInstance", Constructor.class, Object[].class))
 				.setAccessible(true);
 		//
 	}
@@ -1998,6 +2001,21 @@ class VoiceManagerOjadAccentPanelTest {
 	private static void setHandler(final Proxy instance, final MethodHandler mh) throws Throwable {
 		try {
 			METHOD_SET_HANDLER.invoke(null, instance, mh);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMewInstance() throws Throwable {
+		//
+		Assertions.assertNotNull(newInstance(Util.getDeclaredConstructor(String.class)));
+		//
+	}
+
+	private static <T> T newInstance(final Constructor<T> constructor, final Object... initargs) throws Throwable {
+		try {
+			return (T) METHOD_NEW_INSTANCE.invoke(null, constructor, initargs);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -1290,7 +1290,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 				} // if
 					//
-				final Object temp = constructor != null ? constructor.newInstance(pdPage) : null;
+				final Object temp = newInstance(constructor, pdPage);
 				//
 				final MH mh = new MH();
 				//
@@ -1333,6 +1333,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // try
 			//
+	}
+
+	private static <T> T newInstance(final Constructor<T> constructor, final Object... initargs)
+			throws InstantiationException, IllegalAccessException, InvocationTargetException {
+		return constructor != null ? constructor.newInstance(initargs) : null;
 	}
 
 	private static void setHandler(@Nullable final javassist.util.proxy.Proxy instance, final MethodHandler mh) {
