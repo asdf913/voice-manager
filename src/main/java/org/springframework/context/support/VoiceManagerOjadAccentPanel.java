@@ -1213,10 +1213,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		}
 
+		@Nullable
 		private static PDGraphicsState getGraphicsState(@Nullable final PDFGraphicsStreamEngine instance) {
 			return instance != null ? instance.getGraphicsState() : null;
 		}
 
+		@Nullable
 		private static Matrix getCurrentTransformationMatrix(@Nullable final PDGraphicsState instance) {
 			return instance != null ? instance.getCurrentTransformationMatrix() : null;
 		}
