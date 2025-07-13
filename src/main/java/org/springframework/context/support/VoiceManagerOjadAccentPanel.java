@@ -1319,9 +1319,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				System.out.println(Arrays.toString(translateXs));
 				//
-				System.out.println(Arrays.toString(Util.filter(Util.stream(idps), x -> {
-					return x != null && ArrayUtils.contains(translateXs, x.translateX);
-				}).mapToDouble(x -> x != null ? floatValue(x.translateY, 0) : null).sorted().distinct().toArray()));
+				System.out.println(Arrays.toString(
+						Util.filter(Util.stream(idps), x -> x != null && ArrayUtils.contains(translateXs, x.translateX))
+								.mapToDouble(x -> x != null ? floatValue(x.translateY, 0) : null).sorted().distinct()
+								.toArray()));
 				//
 				FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
 				//
