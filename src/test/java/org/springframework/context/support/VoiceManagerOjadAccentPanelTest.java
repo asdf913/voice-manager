@@ -125,7 +125,8 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES, METHOD_MATCHES,
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT, METHOD_GET_MOST_OCCURENCE_COLOR,
 			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE,
-			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_FLOAT_VALUE = null;
+			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_FLOAT_VALUE,
+			METHOD_PROCESS_PAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -236,6 +237,9 @@ class VoiceManagerOjadAccentPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_FLOAT_VALUE = clz.getDeclaredMethod("floatValue", Number.class, Float.TYPE)).setAccessible(true);
+		//
+		(METHOD_PROCESS_PAGE = clz.getDeclaredMethod("processPage", PDFGraphicsStreamEngine.class, PDPage.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -379,8 +383,10 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private ObjectMapper objectMapper = null;
 
+	private PDFGraphicsStreamEngine pdfGraphicsStreamEngine = null;
+
 	@BeforeEach
-	void beforeEach() {
+	void beforeEach() throws Throwable {
 		//
 		elementHandle = Reflection.newProxy(ElementHandle.class, ih = new IH());
 		//
@@ -393,6 +399,24 @@ class VoiceManagerOjadAccentPanelTest {
 		mh = new MH();
 		//
 		objectMapper = new ObjectMapper();
+		//
+		pdfGraphicsStreamEngine = ProxyUtil.createProxy(PDFGraphicsStreamEngine.class,
+				Util.cast(MethodHandler.class,
+						Narcissus.allocateInstance(
+								Util.forName("org.springframework.context.support.VoiceManagerOjadAccentPanel$MH"))),
+				c -> {
+					//
+					final Constructor<?> constructor = c != null ? c.getDeclaredConstructor(PDPage.class) : null;
+					//
+					if (constructor != null) {
+						//
+						constructor.setAccessible(true);
+						//
+					} // if
+						//
+					return constructor != null ? constructor.newInstance((Object) null) : null;
+					//
+				});
 		//
 	}
 
@@ -1056,23 +1080,7 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 		Assertions.assertThrows(Throwable.class, () -> methodHandler.invoke(null, null, null, null));
 		//
-		final Class<PDFGraphicsStreamEngine> clz = PDFGraphicsStreamEngine.class;
-		//
-		final PDFGraphicsStreamEngine pdfgse = ProxyUtil.createProxy(clz, methodHandler, c -> {
-			//
-			final Constructor<?> constructor = c != null ? c.getDeclaredConstructor(PDPage.class) : null;
-			//
-			if (constructor != null) {
-				//
-				constructor.setAccessible(true);
-				//
-			} // if
-				//
-			return constructor != null ? constructor.newInstance((Object) null) : null;
-			//
-		});
-		//
-		Assertions.assertThrows(Throwable.class, () -> methodHandler.invoke(pdfgse, null, null, null));
+		Assertions.assertThrows(Throwable.class, () -> methodHandler.invoke(pdfGraphicsStreamEngine, null, null, null));
 		//
 		Util.forEach(Util.filter(
 				testAndApply(Objects::nonNull, Util.getDeclaredMethods(PDFGraphicsStreamEngine.class), Arrays::stream,
@@ -1081,19 +1089,21 @@ class VoiceManagerOjadAccentPanelTest {
 						&& Modifier.isAbstract(m.getModifiers())),
 				m -> {
 					//
-					Assertions.assertDoesNotThrow(() -> methodHandler.invoke(pdfgse, m, null, null));
+					Assertions.assertDoesNotThrow(() -> methodHandler.invoke(pdfGraphicsStreamEngine, m, null, null));
 					//
 				});
 		//
 		// org.apache.pdfbox.contentstream.PDFGraphicsStreamEngine.drawImage(org.apache.pdfbox.pdmodel.graphics.image.PDImage)
 		//
-		final Method drawImage = Narcissus.findMethod(clz, "drawImage", PDImage.class);
+		final Method drawImage = Narcissus.findMethod(PDFGraphicsStreamEngine.class, "drawImage", PDImage.class);
 		//
-		Assertions.assertDoesNotThrow(() -> methodHandler.invoke(pdfgse, drawImage, null, null));
+		Assertions.assertDoesNotThrow(() -> methodHandler.invoke(pdfGraphicsStreamEngine, drawImage, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> methodHandler.invoke(pdfgse, drawImage, null, new Object[] {}));
+		Assertions.assertDoesNotThrow(
+				() -> methodHandler.invoke(pdfGraphicsStreamEngine, drawImage, null, new Object[] {}));
 		//
-		Assertions.assertDoesNotThrow(() -> methodHandler.invoke(pdfgse, drawImage, null, new Object[] { null }));
+		Assertions.assertDoesNotThrow(
+				() -> methodHandler.invoke(pdfGraphicsStreamEngine, drawImage, null, new Object[] { null }));
 		//
 		if (ih != null) {
 			//
@@ -1101,7 +1111,7 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> methodHandler.invoke(pdfgse, drawImage, null,
+		Assertions.assertDoesNotThrow(() -> methodHandler.invoke(pdfGraphicsStreamEngine, drawImage, null,
 				new Object[] { Reflection.newProxy(PDImage.class, ih) }));
 		//
 		// org.springframework.context.support.VoiceManagerOjadAccentPanel$MH.getCurrentTransformationMatrix(org.apache.pdfbox.pdmodel.graphics.state.PDGraphicsState)
@@ -1958,6 +1968,23 @@ class VoiceManagerOjadAccentPanelTest {
 				return ((Float) obj).floatValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testProcessPage() {
+		//
+		Assertions.assertDoesNotThrow(() -> processPage(pdfGraphicsStreamEngine, null));
+		//
+		Assertions.assertDoesNotThrow(() -> processPage(pdfGraphicsStreamEngine, new PDPage()));
+		//
+	}
+
+	private static void processPage(final PDFGraphicsStreamEngine instance, final PDPage page) throws Throwable {
+		try {
+			METHOD_PROCESS_PAGE.invoke(null, instance, page);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

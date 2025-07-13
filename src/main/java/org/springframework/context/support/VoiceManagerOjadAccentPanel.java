@@ -1301,14 +1301,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 				} // if
 					//
-				final PDFGraphicsStreamEngine pdfGse = Util.cast(PDFGraphicsStreamEngine.class, temp);
+				processPage(Util.cast(PDFGraphicsStreamEngine.class, temp), pdPage);
 				//
-				if (pdfGse != null) {
-					//
-					pdfGse.processPage(pdPage);
-					//
-				} // if
-					//
 				final Collection<ImageDimensionPosition> idps = mh != null ? mh.imageDimensionPositions : null;
 				//
 				double[] ds = Util.stream(idps).mapToDouble(x -> x != null ? floatValue(x.translateX, 0) : null)
@@ -1330,6 +1324,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // try
 			//
+	}
+
+	private static void processPage(final PDFGraphicsStreamEngine instance, final PDPage page) throws IOException {
+		if (instance != null && page != null) {
+			instance.processPage(page);
+		}
 	}
 
 	private static float floatValue(@Nullable final Number instance, final float defaultValue) {
