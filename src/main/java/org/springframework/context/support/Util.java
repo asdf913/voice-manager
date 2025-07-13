@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
@@ -561,6 +562,11 @@ public abstract class Util {
 	@Nullable
 	static Method[] getDeclaredMethods(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredMethods() : null;
+	}
+
+	static <T> Constructor<T> getDeclaredConstructor(final Class<T> clz, final Class<?>... parameterTypes)
+			throws NoSuchMethodException {
+		return clz != null ? clz.getDeclaredConstructor(parameterTypes) : null;
 	}
 
 	static boolean isAnnotationPresent(@Nullable final AnnotatedElement instance,

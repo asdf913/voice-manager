@@ -1281,7 +1281,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				proxyFactory.setSuperclass(PDFGraphicsStreamEngine.class);
 				//
-				final Constructor<?> constructor = getDeclaredConstructor(proxyFactory.createClass(), PDPage.class);
+				final Constructor<?> constructor = Util.getDeclaredConstructor(proxyFactory.createClass(),
+						PDPage.class);
 				//
 				if (constructor != null) {
 					//
@@ -1332,12 +1333,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // try
 			//
-	}
-
-	@Nullable
-	private static <T> Constructor<T> getDeclaredConstructor(@Nullable final Class<T> clz,
-			final Class<?>... parameterTypes) throws NoSuchMethodException {
-		return clz != null ? clz.getDeclaredConstructor(parameterTypes) : null;
 	}
 
 	private static void setHandler(@Nullable final javassist.util.proxy.Proxy instance, final MethodHandler mh) {

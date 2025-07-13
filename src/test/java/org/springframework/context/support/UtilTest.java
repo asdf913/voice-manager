@@ -1123,4 +1123,13 @@ class UtilTest {
 		//
 	}
 
+	@Test
+	void testGetDeclaredConstructor() throws NoSuchMethodException {
+		//
+		Assertions.assertNull(Util.getDeclaredConstructor(null));
+		//
+		Assertions.assertNotNull(Util.getDeclaredConstructor(String.class));
+		//
+	}
+
 }
