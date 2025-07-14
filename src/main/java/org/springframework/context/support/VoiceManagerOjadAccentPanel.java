@@ -67,6 +67,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.ToDoubleFunction;
 import java.util.function.ToIntFunction;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -134,6 +136,8 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.PDPageUtil;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
+import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.state.PDGraphicsState;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
@@ -1269,8 +1273,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final Template template = configuration.getTemplate("ojad.ftl");
 			//
+			final Iterable<TextAndImage> textAndImages = getTextAndImages(instance, textAndImage);
+			//
 			final Map<String, Object> map = new LinkedHashMap<>(
-					Collections.singletonMap("textAndImages", getTextAndImages(instance, textAndImage)));
+					Collections.singletonMap("textAndImages", textAndImages));
 			//
 			Util.put(map, "static", new BeansWrapper(version).getStaticModels());
 			//
@@ -1309,7 +1315,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				processPage(Util.cast(PDFGraphicsStreamEngine.class, temp), pdPage);
 				//
-				addAnnotations(pdDocument, pdPage, mh.imageDimensionPositions);
+				addAnnotations(pdDocument, pdPage, mh.imageDimensionPositions, textAndImages);
 				//
 				PDDocumentUtil.save(pdDocument, jfc.getSelectedFile());
 				//
@@ -1324,7 +1330,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	private static void addAnnotations(final PDDocument pdDocument, final PDPage pdPage,
-			final Collection<ImageDimensionPosition> idps) throws IOException {
+			final Collection<ImageDimensionPosition> idps, final Iterable<TextAndImage> textAndImages)
+			throws IOException {
 		//
 		try (final PDPageContentStream cs = testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), pdDocument,
 				pdPage, (a, b) -> new PDPageContentStream(a, b, AppendMode.APPEND, true), null)) {
@@ -1351,7 +1358,25 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			PDAnnotationFileAttachment pdAnnotationFileAttachment = null;
 			//
+			PDComplexFileSpecification pdComplexFileSpecification = null;
+			//
+			PDEmbeddedFile pdEmbeddedFile = null;
+			//
 			final int size = length(heights) == 1 ? get(heights, 0, 10) : 10;
+			//
+			String url = null;
+			//
+			byte[] bs = null;
+			//
+			TextAndImage textAndImage = null;
+			//
+			List<String> urls = null;
+			//
+			Pattern pattern = null;
+			//
+			Matcher matcher = null;
+			//
+			IValue0<String> iValue0 = null;
 			//
 			for (int x = 0; x < length(translateXs); x++) {
 				//
@@ -1361,6 +1386,69 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							.setRectangle(new PDRectangle((float) translateXs[x] + Util.floatValue(width, 0) - size / 2, // TODO
 									(float) translateYs[y] + size// TODO
 									, size, size));
+					//
+					for (int i = 0; i < IterableUtils.size(textAndImages); i++) {
+						//
+						if ((textAndImage = IterableUtils.get(textAndImages, i)) == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						urls = Util.toList(Util.stream(Util.keySet(textAndImage.voiceUrlImages)));
+						//
+						for (int j = 0; j < IterableUtils.size(urls); j++) {
+							//
+							if (!Util
+									.matches(
+											matcher = Util
+													.matcher(
+															pattern = ObjectUtils.getIfNull(pattern,
+																	() -> Pattern.compile(
+																			"^\\d+_(\\d+)_\\d+_(\\w+)\\.\\w+$")),
+															StringUtils.substringAfterLast(
+																	url = IterableUtils.get(urls, j), '/')))
+									|| Util.groupCount(matcher) != 2
+									|| !Objects.equals(Integer.toString(length(translateYs) - y),
+											Util.group(matcher, 1))) {
+								//
+								continue;
+								//
+							} // if
+								//
+							if (x == 0 && Objects.equals(Util.group(matcher, 2), "female")) {// 1184_1_1_female
+								//
+								iValue0 = Unit.with(url);
+								//
+								break;
+								//
+							} else if (x == 1 && Objects.equals(Util.group(matcher, 2), "male")) {// 1184_1_1_male
+								//
+								iValue0 = Unit.with(url);
+								//
+								break;
+								//
+							} // if
+								//
+						} // for
+							//
+					} // for
+						//
+					try (final InputStream is = testAndApply(Objects::nonNull,
+							bs = toByteArray(new URL(IValue0Util.getValue0(iValue0))), ByteArrayInputStream::new,
+							null)) {
+						//
+						(pdComplexFileSpecification = new PDComplexFileSpecification())
+								.setEmbeddedFile(pdEmbeddedFile = new PDEmbeddedFile(pdDocument, is));
+						//
+						pdComplexFileSpecification
+								.setFile(StringUtils.substringAfterLast(IValue0Util.getValue0(iValue0), '/'));
+						//
+						pdEmbeddedFile.setSubtype(new ContentInfoUtil().findMatch(bs).getMimeType());
+						//
+					} // try
+						//
+					pdAnnotationFileAttachment.setFile(pdComplexFileSpecification);
 					//
 					Util.add(PDPageUtil.getAnnotations(pdPage), pdAnnotationFileAttachment);
 					//
