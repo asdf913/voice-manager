@@ -1326,8 +1326,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	private static void addAnnotations(final PDDocument pdDocument, final PDPage pdPage,
 			final Collection<ImageDimensionPosition> idps) throws IOException {
 		//
-		try (final PDPageContentStream cs = testAndApply((a, b) -> a != null && b != null, pdDocument, pdPage,
-				(a, b) -> new PDPageContentStream(a, b, AppendMode.APPEND, true), null)) {
+		try (final PDPageContentStream cs = testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), pdDocument,
+				pdPage, (a, b) -> new PDPageContentStream(a, b, AppendMode.APPEND, true), null)) {
 			//
 			double[] ds = toArray(distinct(
 					sorted(mapToDouble(Util.stream(idps), x -> x != null ? Util.floatValue(x.translateX, 0) : 0))));
