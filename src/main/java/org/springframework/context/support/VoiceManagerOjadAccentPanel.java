@@ -1392,13 +1392,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.sorted() : instance;
 	}
 
-	private static <T> DoubleStream mapToDouble(final Stream<T> instance, final ToDoubleFunction<? super T> function) {
+	private static <T> DoubleStream mapToDouble(@Nullable final Stream<T> instance,
+			@Nullable final ToDoubleFunction<? super T> function) {
 		return instance != null && (function != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.mapToDouble(function)
 				: null;
 	}
 
-	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> function) {
+	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
+			@Nullable final ToIntFunction<? super T> function) {
 		return instance != null && (function != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.mapToInt(function)
 				: null;
