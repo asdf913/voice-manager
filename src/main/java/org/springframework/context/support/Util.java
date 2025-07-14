@@ -198,6 +198,7 @@ public abstract class Util {
 		return instance != null ? instance.max() : null;
 	}
 
+	@Nullable
 	static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
 			@Nullable final ToIntFunction<? super T> function) {
 		//
