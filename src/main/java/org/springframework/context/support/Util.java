@@ -2265,7 +2265,7 @@ public abstract class Util {
 			//
 	}
 
-	static void setAccessible(final AccessibleObject instance, final boolean flag) {
+	static void setAccessible(@Nullable final AccessibleObject instance, final boolean flag) {
 		if (instance != null) {
 			instance.setAccessible(flag);
 		}
