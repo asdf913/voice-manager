@@ -1447,7 +1447,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 				} // if
 					//
-				if ((x == 0 && Objects.equals(Util.group(matcher, 2), "female"))// 1184_1_1_female
+				if ((Boolean.logicalAnd(x == 0, Objects.equals(Util.group(matcher, 2), "female")))// 1184_1_1_female
 						|| (x == 1 && Objects.equals(Util.group(matcher, 2), "male"))// 1184_1_1_male
 				) {
 					//
