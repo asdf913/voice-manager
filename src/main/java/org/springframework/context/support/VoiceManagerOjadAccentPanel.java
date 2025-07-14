@@ -1397,6 +1397,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 						pdEmbeddedFile.setSubtype(new ContentInfoUtil().findMatch(bs).getMimeType());
 						//
+						if (bs != null) {
+							//
+							pdEmbeddedFile.setSize(bs.length);
+							//
+						} // if
+							//
 					} // try
 						//
 					pdAnnotationFileAttachment.setFile(pdComplexFileSpecification);
