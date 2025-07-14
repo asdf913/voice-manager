@@ -1372,7 +1372,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static int get(final int[] instance, final int index, final int defaultValue) {
+	private static int get(@Nullable final int[] instance, final int index, final int defaultValue) {
 		return instance != null ? instance[index] : defaultValue;
 	}
 
