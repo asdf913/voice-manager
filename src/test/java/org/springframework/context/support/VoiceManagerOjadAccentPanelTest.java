@@ -134,8 +134,8 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT, METHOD_GET_MOST_OCCURENCE_COLOR,
 			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE,
 			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE,
-			METHOD_SET_HANDLER, METHOD_NEW_INSTANCE, METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE,
-			METHOD_MAP_TO_INT = null;
+			METHOD_SET_HANDLER, METHOD_NEW_INSTANCE, METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE, METHOD_MAP_TO_INT,
+			METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -263,6 +263,8 @@ class VoiceManagerOjadAccentPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
+		//
+		(METHOD_GET = clz.getDeclaredMethod("get", int[].class, Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -2121,6 +2123,27 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof IntStream) {
 				return (IntStream) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGet() throws Throwable {
+		//
+		final int zero = 0;
+		//
+		Assertions.assertEquals(zero, get(new int[] { zero }, zero, zero));
+		//
+	}
+
+	private static int get(final int[] instance, final int index, final int defaultValue) throws Throwable {
+		try {
+			final Object obj = METHOD_GET.invoke(null, instance, index, defaultValue);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

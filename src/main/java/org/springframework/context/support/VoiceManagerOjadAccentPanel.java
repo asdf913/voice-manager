@@ -1344,14 +1344,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final int[] widths = toArray(distinct(Util.sorted(mapToInt(Util.filter(Util.stream(idps), predicate),
 					x -> x != null ? Util.intValue(x.width, 0) : null))));
 			//
-			final Integer width = widths != null && widths.length == 1 ? Integer.valueOf(widths[0]) : null;
+			final Integer width = length(widths) == 1 ? Integer.valueOf(get(widths, 0, 0)) : null;
 			//
 			final int[] heights = toArray(distinct(Util.sorted(mapToInt(Util.filter(Util.stream(idps), predicate),
 					x -> x != null ? Util.intValue(x.height, 0) : null))));
 			//
 			PDAnnotationFileAttachment pdAnnotationFileAttachment = null;
 			//
-			final int size = heights != null && heights.length == 1 ? (int) heights[0] : 10;
+			final int size = length(heights) == 1 ? get(heights, 0, 10) : 10;
 			//
 			for (int x = 0; x < length(translateXs); x++) {
 				//
@@ -1370,6 +1370,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // try
 			//
+	}
+
+	private static int get(final int[] instance, final int index, final int defaultValue) {
+		return instance != null ? instance[index] : defaultValue;
 	}
 
 	private static double[] toArray(@Nullable final DoubleStream instance) {
@@ -1416,6 +1420,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		if (instance != null) {
 			instance.setHandler(mh);
 		}
+	}
+
+	private static int length(final int[] instance) {
+		return instance != null ? instance.length : 0;
 	}
 
 	private static int length(@Nullable final double[] instance) {
