@@ -1372,23 +1372,23 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static double[] toArray(final DoubleStream instance) {
+	private static double[] toArray(@Nullable final DoubleStream instance) {
 		return instance != null ? instance.toArray() : null;
 	}
 
-	private static int[] toArray(final IntStream instance) {
+	private static int[] toArray(@Nullable final IntStream instance) {
 		return instance != null ? instance.toArray() : null;
 	}
 
-	private static DoubleStream distinct(final DoubleStream instance) {
+	private static DoubleStream distinct(@Nullable final DoubleStream instance) {
 		return instance != null ? instance.distinct() : instance;
 	}
 
-	private static IntStream distinct(final IntStream instance) {
+	private static IntStream distinct(@Nullable final IntStream instance) {
 		return instance != null ? instance.distinct() : instance;
 	}
 
-	private static DoubleStream sorted(final DoubleStream instance) {
+	private static DoubleStream sorted(@Nullable final DoubleStream instance) {
 		return instance != null ? instance.sorted() : instance;
 	}
 
