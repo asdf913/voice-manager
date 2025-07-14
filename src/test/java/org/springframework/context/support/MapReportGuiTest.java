@@ -139,8 +139,6 @@ class MapReportGuiTest {
 
 		private Map<?, ?> asMap = null;
 
-		private IntStream intStream = null;
-
 		private Map<Object, Object> prorperties = null;
 
 		private Map<Object, Object> getProrperties() {

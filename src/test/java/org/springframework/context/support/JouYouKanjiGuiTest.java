@@ -140,8 +140,6 @@ class JouYouKanjiGuiTest {
 
 		private Spliterator<?> spliterator = null;
 
-		private IntStream intStream = null;
-
 		private Integer firstRowNum, lastRowNum = null;
 
 		private Row row = null;
