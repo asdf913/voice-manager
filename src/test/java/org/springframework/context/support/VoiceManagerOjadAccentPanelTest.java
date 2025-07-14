@@ -374,14 +374,10 @@ class VoiceManagerOjadAccentPanelTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Stream) {
+			} else if (proxy instanceof Stream && Util.contains(Arrays.asList("mapToDouble", "mapToInt"), methodName)) {
 				//
-				if (Util.contains(Arrays.asList("mapToDouble", "mapToInt"), methodName)) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
