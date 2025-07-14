@@ -198,7 +198,8 @@ public abstract class Util {
 		return instance != null ? instance.max() : null;
 	}
 
-	static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> function) {
+	static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
+			@Nullable final ToIntFunction<? super T> function) {
 		//
 		return instance != null && (function != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.mapToInt(function)
