@@ -24,6 +24,7 @@
 													<img src="data:image/png;base64,${static["org.apache.commons.codec.binary.Base64"].encodeBase64String(value)}"/>
 												</#if>
 										   </td>
+										   <td style="width:10px">&nbsp;</td>
 										</#if>
 									</#list>
 									<#list voiceUrlImages as key,value>
@@ -35,6 +36,7 @@
 										   </td>
 										</#if>
 									</#list>  
+									<td style="width:10px">&nbsp;</td>
 								</#if>
 							</tr>
 						</#if>

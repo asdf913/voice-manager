@@ -127,8 +127,13 @@ import org.apache.pdfbox.contentstream.PDFGraphicsStreamEngine;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentUtil;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
+import org.apache.pdfbox.pdmodel.PDPageUtil;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.state.PDGraphicsState;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
 import org.apache.pdfbox.util.Matrix;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -1303,30 +1308,53 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				final Collection<ImageDimensionPosition> idps = mh.imageDimensionPositions;
 				//
-				double[] ds = Util.stream(idps).mapToDouble(x -> x != null ? Util.floatValue(x.translateX, 0) : null)
-						.sorted().distinct().toArray();
-				//
-				final double[] translateXs = testAndApply(x -> x > 2, length(ds),
-						x -> ArrayUtils.subarray(ds, x - 2, x), x -> ds);
-				//
-				System.out.println(Arrays.toString(translateXs));
-				//
-				final Predicate<ImageDimensionPosition> predicate = x -> x != null
-						&& ArrayUtils.contains(translateXs, x.translateX);
-				//
-				System.out.println(Arrays.toString(Util.filter(Util.stream(idps), predicate)
-						.mapToDouble(x -> x != null ? Util.floatValue(x.translateY, 0) : null).sorted().distinct()
-						.toArray()));
-				//
-				System.out.println(Arrays.toString(Util.filter(Util.stream(idps), predicate)
-						.mapToDouble(x -> x != null ? Util.floatValue(x.width, 0) : null).sorted().distinct()
-						.toArray()));
-				//
-				System.out.println(Arrays.toString(Util.filter(Util.stream(idps), predicate)
-						.mapToDouble(x -> x != null ? Util.floatValue(x.height, 0) : null).sorted().distinct()
-						.toArray()));
-				//
-				FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
+				try (final PDPageContentStream cs = new PDPageContentStream(pdDocument, pdPage, AppendMode.APPEND,
+						true)) {
+					//
+					double[] ds = Util.stream(idps)
+							.mapToDouble(x -> x != null ? Util.floatValue(x.translateX, 0) : null).sorted().distinct()
+							.toArray();
+					//
+					final double[] translateXs = testAndApply(x -> x > 2, length(ds),
+							x -> ArrayUtils.subarray(ds, x - 2, x), x -> ds);
+					//
+					final Predicate<ImageDimensionPosition> predicate = x -> x != null
+							&& ArrayUtils.contains(translateXs, x.translateX);
+					//
+					final double[] translateYs = Util.filter(Util.stream(idps), predicate)
+							.mapToDouble(x -> x != null ? Util.floatValue(x.translateY, 0) : null).sorted().distinct()
+							.toArray();
+					//
+					final int[] widths = Util.filter(Util.stream(idps), predicate)
+							.mapToInt(x -> x != null ? Util.intValue(x.width, 0) : null).sorted().distinct().toArray();
+					//
+					final Integer width = widths != null && widths.length == 1 ? Integer.valueOf(widths[0]) : null;
+					//
+					final int[] heights = Util.filter(Util.stream(idps), predicate)
+							.mapToInt(x -> x != null ? Util.intValue(x.height, 0) : null).sorted().distinct().toArray();
+					//
+					PDAnnotationFileAttachment pdAnnotationFileAttachment = null;
+					//
+					final int size = heights != null && heights.length == 1 ? (int) heights[0] : 10;
+					//
+					for (int x = 0; x < length(translateXs); x++) {
+						//
+						for (int y = 0; y < length(translateYs); y++) {
+							//
+							(pdAnnotationFileAttachment = new PDAnnotationFileAttachment()).setRectangle(
+									new PDRectangle((float) translateXs[x] + Util.floatValue(width, 0) - size / 2, // TODO
+											(float) translateYs[y] + size// TODO
+											, size, size));
+							//
+							Util.add(PDPageUtil.getAnnotations(pdPage), pdAnnotationFileAttachment);
+							//
+						} // for
+							//
+					} // for
+						//
+				} // try
+					//
+				PDDocumentUtil.save(pdDocument, jfc.getSelectedFile());
 				//
 			} // if
 				//
