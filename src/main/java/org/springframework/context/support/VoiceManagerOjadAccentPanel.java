@@ -1411,6 +1411,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
+	@Nullable
 	private static IValue0<String> getVoiceUrlByXY(final Pattern pattern, final Iterable<TextAndImage> textAndImages,
 			final int x, final int y) {
 		//
