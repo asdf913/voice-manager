@@ -376,7 +376,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 				IOUtils.closeQuietly(workbook);
 				//
-				final IntStream intStream = mapToInt(testAndApply(Objects::nonNull, spliterator(workbook),
+				final IntStream intStream = Util.mapToInt(testAndApply(Objects::nonNull, spliterator(workbook),
 						x -> StreamSupport.stream(x, false), null), x -> Util.intValue(getPhysicalNumberOfRows(x), 0));
 				//
 				final Integer totalPhysicalNumberOfRows = intStream != null ? Integer.valueOf(intStream.sum()) : null;
@@ -759,7 +759,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 				Util.setSelectedItem(cbmJouYouKanJi,
 						StringUtils.length(text) <= Util
-								.orElse(Util.max(mapToInt(Util.stream(list), StringUtils::length)), 0)
+								.orElse(Util.max(Util.mapToInt(Util.stream(list), StringUtils::length)), 0)
 										? Util.contains(list, text)
 										: null);
 				//
@@ -767,16 +767,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
-			@Nullable final ToIntFunction<? super T> mapper) {
-		//
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
-				? instance.mapToInt(mapper)
-				: null;
-		//
 	}
 
 	@Nullable

@@ -314,7 +314,7 @@ public class MapReportGui extends JFrame
 		Util.addAll(columns,
 				Util.toList(IntStream
 						.range(0,
-								Util.orElse(Util.max(mapToInt(Util.stream(Util.entrySet(asMap(mm))),
+								Util.orElse(Util.max(Util.mapToInt(Util.stream(Util.entrySet(asMap(mm))),
 										x -> IterableUtils.size(Util.getValue(x)))), 0))
 						.mapToObj(x -> String.format("Value %1$s", x + 1))));
 		//
@@ -436,16 +436,6 @@ public class MapReportGui extends JFrame
 		if (instnace != null) {
 			instnace.setModel(dataModel);
 		}
-	}
-
-	@Nullable
-	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
-			@Nullable final ToIntFunction<? super T> mapper) {
-		//
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
-				? instance.mapToInt(mapper)
-				: null;
-		//
 	}
 
 	@Nullable

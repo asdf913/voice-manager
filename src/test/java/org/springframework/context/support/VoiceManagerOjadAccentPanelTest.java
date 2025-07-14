@@ -134,8 +134,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT, METHOD_GET_MOST_OCCURENCE_COLOR,
 			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE,
 			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE,
-			METHOD_SET_HANDLER, METHOD_NEW_INSTANCE, METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE, METHOD_MAP_TO_INT,
-			METHOD_GET = null;
+			METHOD_SET_HANDLER, METHOD_NEW_INSTANCE, METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE, METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -262,8 +261,6 @@ class VoiceManagerOjadAccentPanelTest {
 		(METHOD_MAP_TO_DOUBLE = clz.getDeclaredMethod("mapToDouble", Stream.class, ToDoubleFunction.class))
 				.setAccessible(true);
 		//
-		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
-		//
 		(METHOD_GET = clz.getDeclaredMethod("get", int[].class, Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
 	}
@@ -376,7 +373,7 @@ class VoiceManagerOjadAccentPanelTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Stream && Util.contains(Arrays.asList("mapToDouble", "mapToInt"), methodName)) {
+			} else if (proxy instanceof Stream && Objects.equals(methodName, "mapToDouble")) {
 				//
 				return null;
 				//
@@ -420,8 +417,6 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private Page page = null;
 
-	private Stream<?> stream = null;
-
 	private VoiceManagerOjadAccentPanel instance = null;
 
 	private Object textAndImage = null;
@@ -438,8 +433,6 @@ class VoiceManagerOjadAccentPanelTest {
 		elementHandle = Reflection.newProxy(ElementHandle.class, ih = new IH());
 		//
 		page = Reflection.newProxy(Page.class, ih);
-		//
-		stream = Reflection.newProxy(Stream.class, ih);
 		//
 		instance = new VoiceManagerOjadAccentPanel();
 		//
@@ -2087,7 +2080,8 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertNull(mapToDouble(Stream.empty(), null));
 		//
-		Assertions.assertNull(mapToDouble(stream, null));
+		Assertions.assertNull(
+				Narcissus.invokeStaticMethod(METHOD_MAP_TO_DOUBLE, Reflection.newProxy(Stream.class, ih), null));
 		//
 	}
 
@@ -2099,30 +2093,6 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof DoubleStream) {
 				return (DoubleStream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMapToInt() throws Throwable {
-		//
-		Assertions.assertNull(mapToInt(Stream.empty(), null));
-		//
-		Assertions.assertNull(mapToInt(stream, null));
-		//
-	}
-
-	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> function)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_MAP_TO_INT.invoke(null, instance, function);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof IntStream) {
-				return (IntStream) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

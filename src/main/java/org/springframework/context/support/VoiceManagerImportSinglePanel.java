@@ -3939,21 +3939,13 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		} else if (jouYouKanJiList != null) {
 			//
 			Util.setSelectedItem(cbmJouYouKanJi,
-					StringUtils.length(text) <= Util.orElse(Util.max(mapToInt(Util.stream(list), StringUtils::length)),
-							0) ? Util.contains(list, text) : null);
+					StringUtils.length(text) <= Util
+							.orElse(Util.max(Util.mapToInt(Util.stream(list), StringUtils::length)), 0)
+									? Util.contains(list, text)
+									: null);
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
-			@Nullable final ToIntFunction<? super T> mapper) {
-		//
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
-				? instance.mapToInt(mapper)
-				: null;
-		//
 	}
 
 	private static void keyReleasedForTextImport(final Multimap<String, String> multiMap,

@@ -70,8 +70,8 @@ class MapReportGuiTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_PREFERRED_WIDTH, METHOD_AS_MAP,
-			METHOD_GET_VALUES, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_GET_SYSTEM_CLIP_BOARD,
-			METHOD_SET_CONTENTS, METHOD_LENGTH, METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_TEST_AND_ACCEPT3,
+			METHOD_GET_VALUES, METHOD_CREATE_MULTI_MAP, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS,
+			METHOD_LENGTH, METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_TEST_AND_ACCEPT3,
 			METHOD_TEST_AND_ACCEPT4, METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER,
 			METHOD_WRITE_VALUE_AS_STRING = null;
 
@@ -89,8 +89,6 @@ class MapReportGuiTest {
 		//
 		(METHOD_GET_VALUES = clz.getDeclaredMethod("getValues", BeanFactory.class, Class.class, Iterable.class))
 				.setAccessible(true);
-		//
-		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_MULTI_MAP = clz.getDeclaredMethod("createMultimap", Iterable.class)).setAccessible(true);
 		//
@@ -155,7 +153,7 @@ class MapReportGuiTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			final String methodName = method != null ? method.getName() : null;
+			final String methodName = Util.getName(method);
 			//
 			if (proxy instanceof BeanFactory) {
 				//
@@ -226,14 +224,6 @@ class MapReportGuiTest {
 				if (Objects.equals(methodName, "asMap")) {
 					//
 					return asMap;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Stream) {
-				//
-				if (Objects.equals(methodName, "mapToInt")) {
-					//
-					return intStream;
 					//
 				} // if
 					//
@@ -594,32 +584,6 @@ class MapReportGuiTest {
 				return null;
 			} else if (obj instanceof Collection) {
 				return (Collection) obj;
-			}
-			throw new Throwable(Util.toString(obj.getClass()));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMapToInt() throws Throwable {
-		//
-		Assertions.assertNull(mapToInt(Stream.empty(), null));
-		//
-		Assertions.assertNull(mapToInt(stream, null));
-		//
-		Assertions.assertNotNull(mapToInt(Stream.empty(), x -> 0));
-		//
-	}
-
-	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_MAP_TO_INT.invoke(null, instance, mapper);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof IntStream) {
-				return (IntStream) obj;
 			}
 			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {

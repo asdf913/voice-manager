@@ -50,6 +50,7 @@ import java.util.function.IntFunction;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.function.ToIntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
@@ -195,6 +196,14 @@ public abstract class Util {
 	@Nullable
 	static OptionalInt max(@Nullable final IntStream instance) {
 		return instance != null ? instance.max() : null;
+	}
+
+	static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> function) {
+		//
+		return instance != null && (function != null || Proxy.isProxyClass(Util.getClass(instance)))
+				? instance.mapToInt(function)
+				: null;
+		//
 	}
 
 	static int orElse(@Nullable final OptionalInt instance, final int other) {

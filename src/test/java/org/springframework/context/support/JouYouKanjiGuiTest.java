@@ -74,8 +74,7 @@ class JouYouKanjiGuiTest {
 			METHOD_GET_BOOLEAN_VALUES, METHOD_GET_EXPRESSION_AS_CSS_STRING, METHOD_GET_INDEXED_COLORS,
 			METHOD_GET_STYLES_SOURCE, METHOD_GET_PROPERTY, METHOD_TO_MILLIS, METHOD_SET_FILL_BACK_GROUND_COLOR,
 			METHOD_SET_FILL_PATTERN, METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
-			METHOD_MAP_TO_INT, METHOD_SET_AUTO_FILTER, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS,
-			METHOD_PREPEND_IF_MISSING = null;
+			METHOD_SET_AUTO_FILTER, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_PREPEND_IF_MISSING = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -125,8 +124,6 @@ class JouYouKanjiGuiTest {
 		(METHOD_TEST_AND_ACCEPT4 = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
 				BiConsumer.class)).setAccessible(true);
 		//
-		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
-		//
 		(METHOD_SET_AUTO_FILTER = clz.getDeclaredMethod("setAutoFilter", Sheet.class)).setAccessible(true);
 		//
 		(METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = clz.getDeclaredMethod("getPhysicalNumberOfRows", Sheet.class))
@@ -160,7 +157,7 @@ class JouYouKanjiGuiTest {
 				//
 			} // if
 				//
-			final String methodName = method != null ? method.getName() : null;
+			final String methodName = Util.getName(method);
 			//
 			if (proxy instanceof Iterable) {
 				//
@@ -172,15 +169,7 @@ class JouYouKanjiGuiTest {
 					//
 			} // if
 				//
-			if (proxy instanceof Stream) {
-				//
-				if (Objects.equals(methodName, "mapToInt")) {
-					//
-					return intStream;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Sheet) {
+			if (proxy instanceof Sheet) {
 				//
 				if (Objects.equals(methodName, "getFirstRowNum")) {
 					//
@@ -900,32 +889,6 @@ class JouYouKanjiGuiTest {
 			final BiConsumer<T, U> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT4.invoke(null, predicate, t, u, consumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMapToInt() throws Throwable {
-		//
-		Assertions.assertNull(mapToInt(null, null));
-		//
-		Assertions.assertNull(mapToInt(Stream.empty(), null));
-		//
-		Assertions.assertNull(mapToInt(stream, null));
-		//
-	}
-
-	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_MAP_TO_INT.invoke(null, instance, mapper);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof IntStream) {
-				return (IntStream) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

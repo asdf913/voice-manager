@@ -2776,9 +2776,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		Stream<Entry<String, DataFlavor>> stream = testAndApply(Objects::nonNull, spliterator(entrySet),
 				x -> StreamSupport.stream(x, false), null);
 		//
-		final int maxLength1 = Util.orElse(Util.max(mapToInt(Util.map(stream, Util::getKey), StringUtils::length)), 0);
+		final int maxLength1 = Util.orElse(Util.max(Util.mapToInt(Util.map(stream, Util::getKey), StringUtils::length)),
+				0);
 		//
-		final int maxLength2 = Util.orElse(Util.max(mapToInt(
+		final int maxLength2 = Util.orElse(Util.max(Util.mapToInt(
 				Util.map(stream = testAndApply(Objects::nonNull, spliterator(entrySet),
 						x -> StreamSupport.stream(x, false), null), x -> Util.toString(Util.getValue(x))),
 				StringUtils::length)), 0);
@@ -2813,16 +2814,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Nullable
 	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		return instance != null ? instance.getSystemClipboard() : null;
-	}
-
-	@Nullable
-	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
-			@Nullable final ToIntFunction<? super T> mapper) {
-		//
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
-				? instance.mapToInt(mapper)
-				: null;
-		//
 	}
 
 	@Nullable

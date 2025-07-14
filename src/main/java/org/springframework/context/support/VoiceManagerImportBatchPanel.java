@@ -1775,7 +1775,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			final Integer numberOfSheets = WorkbookUtil.getNumberOfSheets(workbook);
 			//
 			final int maxSheetNameLength = Util
-					.orElse(Util.max(mapToInt(
+					.orElse(Util.max(Util.mapToInt(
 							Util.map(testAndApply(Objects::nonNull, spliterator(workbook),
 									x -> StreamSupport.stream(x, false), null), SheetUtil::getSheetName),
 							StringUtils::length)), 0);
@@ -2598,16 +2598,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		if (instance != null) {
 			instance.submit(task);
 		}
-	}
-
-	@Nullable
-	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
-			@Nullable final ToIntFunction<? super T> mapper) {
-		//
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
-				? instance.mapToInt(mapper)
-				: null;
-		//
 	}
 
 	@Nullable

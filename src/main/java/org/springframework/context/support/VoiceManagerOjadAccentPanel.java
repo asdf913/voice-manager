@@ -1341,12 +1341,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final double[] translateYs = toArray(distinct(sorted(mapToDouble(Util.filter(Util.stream(idps), predicate),
 					x -> x != null ? Util.floatValue(x.translateY, 0) : null))));
 			//
-			final int[] widths = toArray(distinct(Util.sorted(mapToInt(Util.filter(Util.stream(idps), predicate),
+			final int[] widths = toArray(distinct(Util.sorted(Util.mapToInt(Util.filter(Util.stream(idps), predicate),
 					x -> x != null ? Util.intValue(x.width, 0) : null))));
 			//
 			final Integer width = length(widths) == 1 ? Integer.valueOf(get(widths, 0, 0)) : null;
 			//
-			final int[] heights = toArray(distinct(Util.sorted(mapToInt(Util.filter(Util.stream(idps), predicate),
+			final int[] heights = toArray(distinct(Util.sorted(Util.mapToInt(Util.filter(Util.stream(idps), predicate),
 					x -> x != null ? Util.intValue(x.height, 0) : null))));
 			//
 			PDAnnotationFileAttachment pdAnnotationFileAttachment = null;
@@ -1406,14 +1406,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			@Nullable final ToDoubleFunction<? super T> function) {
 		return instance != null && (function != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.mapToDouble(function)
-				: null;
-	}
-
-	@Nullable
-	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
-			@Nullable final ToIntFunction<? super T> function) {
-		return instance != null && (function != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.mapToInt(function)
 				: null;
 	}
 
