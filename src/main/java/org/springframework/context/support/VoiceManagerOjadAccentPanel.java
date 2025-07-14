@@ -1363,17 +1363,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final int size = length(heights) == 1 ? get(heights, 0, 10) : 10;
 			//
-			String url = null;
-			//
 			byte[] bs = null;
 			//
-			TextAndImage textAndImage = null;
-			//
-			List<String> urls = null;
-			//
 			Pattern pattern = null;
-			//
-			Matcher matcher = null;
 			//
 			IValue0<String> iValue0 = null;
 			//
@@ -1386,52 +1378,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 									(float) translateYs[y] + size// TODO
 									, size, size));
 					//
-					for (int i = 0; i < IterableUtils.size(textAndImages); i++) {
-						//
-						if ((textAndImage = IterableUtils.get(textAndImages, i)) == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-						urls = Util.toList(Util.stream(Util.keySet(textAndImage.voiceUrlImages)));
-						//
-						for (int j = 0; j < IterableUtils.size(urls); j++) {
-							//
-							if (!Util
-									.matches(
-											matcher = Util
-													.matcher(
+					try (final InputStream is = testAndApply(Objects::nonNull,
+							bs = toByteArray(
+									new URL(IValue0Util
+											.getValue0(
+													iValue0 = getVoiceUrlByXY(
 															pattern = ObjectUtils.getIfNull(pattern,
 																	() -> Pattern.compile(
 																			"^\\d+_(\\d+)_\\d+_(\\w+)\\.\\w+$")),
-															StringUtils.substringAfterLast(
-																	url = IterableUtils.get(urls, j), '/')))
-									|| Util.groupCount(matcher) != 2
-									|| !Objects.equals(Integer.toString(length(translateYs) - y),
-											Util.group(matcher, 1))) {
-								//
-								continue;
-								//
-							} // if
-								//
-							if ((x == 0 && Objects.equals(Util.group(matcher, 2), "female"))// 1184_1_1_female
-									|| (x == 1 && Objects.equals(Util.group(matcher, 2), "male"))// 1184_1_1_male
-							) {
-								//
-								iValue0 = Unit.with(url);
-								//
-								break;
-								//
-							} // ifs
-								//
-						} // for
-							//
-					} // for
-						//
-					try (final InputStream is = testAndApply(Objects::nonNull,
-							bs = toByteArray(new URL(IValue0Util.getValue0(iValue0))), ByteArrayInputStream::new,
-							null)) {
+															textAndImages, x, y)))),
+							ByteArrayInputStream::new, null)) {
 						//
 						(pdComplexFileSpecification = new PDComplexFileSpecification())
 								.setEmbeddedFile(pdEmbeddedFile = new PDEmbeddedFile(pdDocument, is));
@@ -1453,6 +1409,64 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // try
 			//
+	}
+
+	private static IValue0<String> getVoiceUrlByXY(final Pattern pattern, final Iterable<TextAndImage> textAndImages,
+			final int x, final int y) {
+		//
+		TextAndImage textAndImage = null;
+		//
+		Iterable<String> urls = null;
+		//
+		Matcher matcher = null;
+		//
+		String url = null;
+		//
+		final int size = IterableUtils.size(textAndImages);
+		//
+		IValue0<String> iValue0 = null;
+		//
+		for (int i = 0; i < size; i++) {
+			//
+			if ((textAndImage = IterableUtils.get(textAndImages, i)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			urls = Util.toList(Util.stream(Util.keySet(textAndImage.voiceUrlImages)));
+			//
+			for (int j = 0; j < IterableUtils.size(urls); j++) {
+				//
+				if (!Util.matches(matcher = Util.matcher(pattern,
+						StringUtils.substringAfterLast(url = IterableUtils.get(urls, j), '/')))
+						|| Util.groupCount(matcher) != 2
+						|| !Objects.equals(Integer.toString(size - y), Util.group(matcher, 1))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if ((x == 0 && Objects.equals(Util.group(matcher, 2), "female"))// 1184_1_1_female
+						|| (x == 1 && Objects.equals(Util.group(matcher, 2), "male"))// 1184_1_1_male
+				) {
+					//
+					if (iValue0 != null) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					iValue0 = Unit.with(url);
+					//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		return iValue0;
+		//
 	}
 
 	private static int get(@Nullable final int[] instance, final int index, final int defaultValue) {
