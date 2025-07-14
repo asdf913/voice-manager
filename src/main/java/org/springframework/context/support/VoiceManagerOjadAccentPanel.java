@@ -1161,9 +1161,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static class ImageDimensionPosition {
 
-		private Integer width, height = null;
+		@Note("Width")
+		private Integer width = null;
 
-		private Float translateX, translateY = null;
+		private Integer height = null;
+
+		@Note("Translate X")
+		private Float translateX = null;
+
+		private Float translateY = null;
 
 	}
 
