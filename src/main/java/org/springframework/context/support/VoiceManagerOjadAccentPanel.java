@@ -32,6 +32,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -1290,12 +1291,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				final Constructor<?> constructor = Util.getDeclaredConstructor(proxyFactory.createClass(),
 						PDPage.class);
 				//
-				if (constructor != null) {
-					//
-					constructor.setAccessible(true);
-					//
-				} // if
-					//
+				setAccessible(constructor, true);
+				//
 				final Object temp = newInstance(constructor, pdPage);
 				//
 				final MH mh = new MH();
@@ -1339,6 +1336,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // try
 			//
+	}
+
+	private static void setAccessible(final AccessibleObject instance, final boolean flag) {
+		if (instance != null) {
+			instance.setAccessible(flag);
+		}
 	}
 
 	@Nullable
