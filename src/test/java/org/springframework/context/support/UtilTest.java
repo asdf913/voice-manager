@@ -1132,4 +1132,13 @@ class UtilTest {
 		//
 	}
 
+	@Test
+	void testSetAccessible() {
+		//
+		Assertions.assertDoesNotThrow(() -> Util.setAccessible(null, true));
+		//
+		Assertions.assertDoesNotThrow(() -> Util.setAccessible(Util.getDeclaredField(Util.class, "LOG"), true));
+		//
+	}
+
 }

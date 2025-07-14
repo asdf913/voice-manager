@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
@@ -2262,6 +2263,12 @@ public abstract class Util {
 			//
 		} // if
 			//
+	}
+
+	static void setAccessible(final AccessibleObject instance, final boolean flag) {
+		if (instance != null) {
+			instance.setAccessible(flag);
+		}
 	}
 
 }

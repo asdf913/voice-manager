@@ -1291,7 +1291,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				final Constructor<?> constructor = Util.getDeclaredConstructor(proxyFactory.createClass(),
 						PDPage.class);
 				//
-				setAccessible(constructor, true);
+				Util.setAccessible(constructor, true);
 				//
 				final Object temp = newInstance(constructor, pdPage);
 				//
@@ -1336,12 +1336,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // try
 			//
-	}
-
-	private static void setAccessible(@Nullable final AccessibleObject instance, final boolean flag) {
-		if (instance != null) {
-			instance.setAccessible(flag);
-		}
 	}
 
 	@Nullable

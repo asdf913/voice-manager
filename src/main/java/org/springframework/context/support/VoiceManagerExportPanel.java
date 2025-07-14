@@ -2808,7 +2808,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				continue;
 			} // if
 				//
-			setAccessible(f, true);
+			Util.setAccessible(f, true);
 			//
 			ObjectMap.setObject(objectMap, Field.class, f);
 			//
@@ -2901,12 +2901,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 	@Nullable
 	private static Object get(@Nullable final Field field, final Object instance) throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
-	}
-
-	private static void setAccessible(@Nullable final AccessibleObject instance, final boolean flag) {
-		if (instance != null) {
-			instance.setAccessible(flag);
-		}
 	}
 
 	@Nullable
@@ -3982,7 +3976,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				final Field ticker = Util.getDeclaredField(Stopwatch.class, "ticker");
 				//
-				setAccessible(ticker, true);
+				Util.setAccessible(ticker, true);
 				//
 				if (get(ticker, instance) == null) {
 					//
@@ -4018,7 +4012,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				final Field mPackage = Util.getDeclaredField(OdfPackageDocument.class, "mPackage");
 				//
-				setAccessible(mPackage, true);
+				Util.setAccessible(mPackage, true);
 				//
 				if (get(mPackage, instance) == null) {
 					//

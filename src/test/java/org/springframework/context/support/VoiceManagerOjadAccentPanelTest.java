@@ -129,7 +129,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT, METHOD_GET_MOST_OCCURENCE_COLOR,
 			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE,
 			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE,
-			METHOD_SET_HANDLER, METHOD_NEW_INSTANCE, METHOD_SET_ACCESSIBLE = null;
+			METHOD_SET_HANDLER, METHOD_NEW_INSTANCE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -248,9 +248,6 @@ class VoiceManagerOjadAccentPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_NEW_INSTANCE = clz.getDeclaredMethod("newInstance", Constructor.class, Object[].class))
-				.setAccessible(true);
-		//
-		(METHOD_SET_ACCESSIBLE = clz.getDeclaredMethod("setAccessible", AccessibleObject.class, Boolean.TYPE))
 				.setAccessible(true);
 		//
 	}
@@ -2020,21 +2017,6 @@ class VoiceManagerOjadAccentPanelTest {
 	private static <T> T newInstance(final Constructor<T> constructor, final Object... initargs) throws Throwable {
 		try {
 			return (T) METHOD_NEW_INSTANCE.invoke(null, constructor, initargs);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetAccessible() {
-		//
-		Assertions.assertDoesNotThrow(() -> setAccessible(METHOD_SET_ACCESSIBLE, true));
-		//
-	}
-
-	private static void setAccessible(final AccessibleObject instance, final boolean flag) throws Throwable {
-		try {
-			METHOD_SET_ACCESSIBLE.invoke(null, instance, flag);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -326,7 +326,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 			final Method m = testAndApply(x -> size == 1, ms, x -> IterableUtils.get(x, 0), null);
 			//
-			setAccessible(m, true);
+			Util.setAccessible(m, true);
 			//
 			if (m != null) {
 				//
@@ -381,12 +381,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		Util.setSelectedItem(cbmAudioFormatExecute, audioFormat);
 		//
-	}
-
-	private static void setAccessible(@Nullable final AccessibleObject instance, final boolean flag) {
-		if (instance != null) {
-			instance.setAccessible(flag);
-		}
 	}
 
 	/**
