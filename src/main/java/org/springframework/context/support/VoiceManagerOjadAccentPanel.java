@@ -1335,7 +1335,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static <T> T newInstance(final Constructor<T> constructor, final Object... initargs)
+	private static <T> T newInstance(@Nullable final Constructor<T> constructor, final Object... initargs)
 			throws InstantiationException, IllegalAccessException, InvocationTargetException {
 		return constructor != null ? constructor.newInstance(initargs) : null;
 	}
