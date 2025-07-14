@@ -21,8 +21,6 @@ import java.util.Spliterator;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
-import java.util.function.ToIntFunction;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.swing.JLabel;
