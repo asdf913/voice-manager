@@ -35,6 +35,11 @@ import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
 import javax.swing.CellEditor;
@@ -77,6 +82,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.pdfbox.contentstream.PDFGraphicsStreamEngine;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.state.PDGraphicsState;
@@ -129,7 +135,8 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT, METHOD_GET_MOST_OCCURENCE_COLOR,
 			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE,
 			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE,
-			METHOD_SET_HANDLER, METHOD_NEW_INSTANCE = null;
+			METHOD_SET_HANDLER, METHOD_NEW_INSTANCE, METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE,
+			METHOD_MAP_TO_INT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -250,6 +257,14 @@ class VoiceManagerOjadAccentPanelTest {
 		(METHOD_NEW_INSTANCE = clz.getDeclaredMethod("newInstance", Constructor.class, Object[].class))
 				.setAccessible(true);
 		//
+		(METHOD_ADD_ANNOTATIONS = clz.getDeclaredMethod("addAnnotations", PDDocument.class, PDPage.class,
+				Collection.class)).setAccessible(true);
+		//
+		(METHOD_MAP_TO_DOUBLE = clz.getDeclaredMethod("mapToDouble", Stream.class, ToDoubleFunction.class))
+				.setAccessible(true);
+		//
+		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -344,6 +359,30 @@ class VoiceManagerOjadAccentPanelTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof DoubleStream) {
+				//
+				if (Objects.equals(methodName, "toArray")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof IntStream) {
+				//
+				if (Objects.equals(methodName, "toArray")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Stream) {
+				//
+				if (Util.contains(Arrays.asList("mapToDouble", "mapToInt"), methodName)) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -384,6 +423,8 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private Page page = null;
 
+	private Stream<?> stream = null;
+
 	private VoiceManagerOjadAccentPanel instance = null;
 
 	private Object textAndImage = null;
@@ -400,6 +441,8 @@ class VoiceManagerOjadAccentPanelTest {
 		elementHandle = Reflection.newProxy(ElementHandle.class, ih = new IH());
 		//
 		page = Reflection.newProxy(Page.class, ih);
+		//
+		stream = Reflection.newProxy(Stream.class, ih);
 		//
 		instance = new VoiceManagerOjadAccentPanel();
 		//
@@ -2021,4 +2064,73 @@ class VoiceManagerOjadAccentPanelTest {
 			throw e.getTargetException();
 		}
 	}
+
+	@Test
+	void testAddAnnotations() {
+		//
+		Assertions.assertDoesNotThrow(() -> addAnnotations(new PDDocument(), null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> addAnnotations(new PDDocument(), new PDPage(), null));
+		//
+		Assertions.assertDoesNotThrow(() -> addAnnotations(null, null, Collections.singleton(null)));
+		//
+	}
+
+	private static void addAnnotations(final PDDocument pdDocument, final PDPage pdPage, final Collection<?> idps)
+			throws Throwable {
+		try {
+			METHOD_ADD_ANNOTATIONS.invoke(null, pdDocument, pdPage, idps);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMapToDouble() throws Throwable {
+		//
+		Assertions.assertNull(mapToDouble(Stream.empty(), null));
+		//
+		Assertions.assertNull(mapToDouble(stream, null));
+		//
+	}
+
+	private static <T> DoubleStream mapToDouble(final Stream<T> instance, final ToDoubleFunction<? super T> function)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_MAP_TO_DOUBLE.invoke(null, instance, function);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof DoubleStream) {
+				return (DoubleStream) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMapToInt() throws Throwable {
+		//
+		Assertions.assertNull(mapToInt(Stream.empty(), null));
+		//
+		Assertions.assertNull(mapToInt(stream, null));
+		//
+	}
+
+	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> function)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_MAP_TO_INT.invoke(null, instance, function);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IntStream) {
+				return (IntStream) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 }

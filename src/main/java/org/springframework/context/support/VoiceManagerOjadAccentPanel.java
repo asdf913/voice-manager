@@ -61,12 +61,16 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.DoubleFunction;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -108,6 +112,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.StringsUtil;
+import org.apache.commons.lang3.function.FailableBiFunction;
+import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.TriFunction;
@@ -1306,54 +1312,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				processPage(Util.cast(PDFGraphicsStreamEngine.class, temp), pdPage);
 				//
-				final Collection<ImageDimensionPosition> idps = mh.imageDimensionPositions;
+				addAnnotations(pdDocument, pdPage, mh.imageDimensionPositions);
 				//
-				try (final PDPageContentStream cs = new PDPageContentStream(pdDocument, pdPage, AppendMode.APPEND,
-						true)) {
-					//
-					double[] ds = Util.stream(idps)
-							.mapToDouble(x -> x != null ? Util.floatValue(x.translateX, 0) : null).sorted().distinct()
-							.toArray();
-					//
-					final double[] translateXs = testAndApply(x -> x > 2, length(ds),
-							x -> ArrayUtils.subarray(ds, x - 2, x), x -> ds);
-					//
-					final Predicate<ImageDimensionPosition> predicate = x -> x != null
-							&& ArrayUtils.contains(translateXs, x.translateX);
-					//
-					final double[] translateYs = Util.filter(Util.stream(idps), predicate)
-							.mapToDouble(x -> x != null ? Util.floatValue(x.translateY, 0) : null).sorted().distinct()
-							.toArray();
-					//
-					final int[] widths = Util.filter(Util.stream(idps), predicate)
-							.mapToInt(x -> x != null ? Util.intValue(x.width, 0) : null).sorted().distinct().toArray();
-					//
-					final Integer width = widths != null && widths.length == 1 ? Integer.valueOf(widths[0]) : null;
-					//
-					final int[] heights = Util.filter(Util.stream(idps), predicate)
-							.mapToInt(x -> x != null ? Util.intValue(x.height, 0) : null).sorted().distinct().toArray();
-					//
-					PDAnnotationFileAttachment pdAnnotationFileAttachment = null;
-					//
-					final int size = heights != null && heights.length == 1 ? (int) heights[0] : 10;
-					//
-					for (int x = 0; x < length(translateXs); x++) {
-						//
-						for (int y = 0; y < length(translateYs); y++) {
-							//
-							(pdAnnotationFileAttachment = new PDAnnotationFileAttachment()).setRectangle(
-									new PDRectangle((float) translateXs[x] + Util.floatValue(width, 0) - size / 2, // TODO
-											(float) translateYs[y] + size// TODO
-											, size, size));
-							//
-							Util.add(PDPageUtil.getAnnotations(pdPage), pdAnnotationFileAttachment);
-							//
-						} // for
-							//
-					} // for
-						//
-				} // try
-					//
 				PDDocumentUtil.save(pdDocument, jfc.getSelectedFile());
 				//
 			} // if
@@ -1364,6 +1324,87 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // try
 			//
+	}
+
+	private static void addAnnotations(final PDDocument pdDocument, final PDPage pdPage,
+			final Collection<ImageDimensionPosition> idps) throws IOException {
+		//
+		try (final PDPageContentStream cs = testAndApply((a, b) -> a != null && b != null, pdDocument, pdPage,
+				(a, b) -> new PDPageContentStream(a, b, AppendMode.APPEND, true), null)) {
+			//
+			double[] ds = toArray(distinct(
+					sorted(mapToDouble(Util.stream(idps), x -> x != null ? Util.floatValue(x.translateX, 0) : 0))));
+			//
+			final double[] translateXs = testAndApply(x -> x > 2, length(ds), x -> ArrayUtils.subarray(ds, x - 2, x),
+					x -> ds);
+			//
+			final Predicate<ImageDimensionPosition> predicate = x -> x != null
+					&& ArrayUtils.contains(translateXs, x.translateX);
+			//
+			final double[] translateYs = toArray(distinct(sorted(mapToDouble(Util.filter(Util.stream(idps), predicate),
+					x -> x != null ? Util.floatValue(x.translateY, 0) : null))));
+			//
+			final int[] widths = toArray(distinct(Util.sorted(mapToInt(Util.filter(Util.stream(idps), predicate),
+					x -> x != null ? Util.intValue(x.width, 0) : null))));
+			//
+			final Integer width = widths != null && widths.length == 1 ? Integer.valueOf(widths[0]) : null;
+			//
+			final int[] heights = toArray(distinct(Util.sorted(mapToInt(Util.filter(Util.stream(idps), predicate),
+					x -> x != null ? Util.intValue(x.height, 0) : null))));
+			//
+			PDAnnotationFileAttachment pdAnnotationFileAttachment = null;
+			//
+			final int size = heights != null && heights.length == 1 ? (int) heights[0] : 10;
+			//
+			for (int x = 0; x < length(translateXs); x++) {
+				//
+				for (int y = 0; y < length(translateYs); y++) {
+					//
+					(pdAnnotationFileAttachment = new PDAnnotationFileAttachment())
+							.setRectangle(new PDRectangle((float) translateXs[x] + Util.floatValue(width, 0) - size / 2, // TODO
+									(float) translateYs[y] + size// TODO
+									, size, size));
+					//
+					Util.add(PDPageUtil.getAnnotations(pdPage), pdAnnotationFileAttachment);
+					//
+				} // for
+					//
+			} // for
+				//
+		} // try
+			//
+	}
+
+	private static double[] toArray(final DoubleStream instance) {
+		return instance != null ? instance.toArray() : null;
+	}
+
+	private static int[] toArray(final IntStream instance) {
+		return instance != null ? instance.toArray() : null;
+	}
+
+	private static DoubleStream distinct(final DoubleStream instance) {
+		return instance != null ? instance.distinct() : instance;
+	}
+
+	private static IntStream distinct(final IntStream instance) {
+		return instance != null ? instance.distinct() : instance;
+	}
+
+	private static DoubleStream sorted(final DoubleStream instance) {
+		return instance != null ? instance.sorted() : instance;
+	}
+
+	private static <T> DoubleStream mapToDouble(final Stream<T> instance, final ToDoubleFunction<? super T> function) {
+		return instance != null && (function != null || Proxy.isProxyClass(Util.getClass(instance)))
+				? instance.mapToDouble(function)
+				: null;
+	}
+
+	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> function) {
+		return instance != null && (function != null || Proxy.isProxyClass(Util.getClass(instance)))
+				? instance.mapToInt(function)
+				: null;
 	}
 
 	@Nullable
@@ -2209,9 +2250,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
-			final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse) {
-		return Util.test(predicate, t, u) ? Util.apply(functionTrue, t, u) : Util.apply(functionFalse, t, u);
+	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
+			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
+		return Util.test(predicate, t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
+				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
 
 	@Nullable
