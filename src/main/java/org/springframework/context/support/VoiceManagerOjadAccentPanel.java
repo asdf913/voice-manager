@@ -1338,7 +1338,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static void setAccessible(final AccessibleObject instance, final boolean flag) {
+	private static void setAccessible(@Nullable final AccessibleObject instance, final boolean flag) {
 		if (instance != null) {
 			instance.setAccessible(flag);
 		}
