@@ -220,6 +220,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static final String THEAD = "thead";
 
+	private static final String CLASS = "class";
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -2087,8 +2089,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				testAndAccept(items -> IterableUtils.size(items) == 1,
 						Util.toList(Util.filter(Util.stream(querySelectorAll(page, "thead tr th")),
-								el -> Util.anyMatch(testAndApply(Objects::nonNull,
-										StringUtils.split(getAttribute(el, "class"), " "), Arrays::stream, null),
+								el -> Util.anyMatch(
+										testAndApply(Objects::nonNull, StringUtils.split(getAttribute(el, CLASS), " "),
+												Arrays::stream, null),
 										y -> StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, y, "katsuyo_"))
 										&& StringUtils.isNotBlank(textContent(el)))),
 						items ->
@@ -3000,7 +3003,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							x -> IterableUtils.get(x, 0), null))), x ->
 					//
 					Util.anyMatch(
-							testAndApply(Objects::nonNull, StringUtils.split(NodeUtil.attr(x, "class"), " "),
+							testAndApply(Objects::nonNull, StringUtils.split(NodeUtil.attr(x, CLASS), " "),
 									Arrays::stream, null),
 							y -> StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, y, "katsuyo_"))
 					//
@@ -3024,7 +3027,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							.map(Util.filter(Util.filter(Util.stream(ElementUtil.children(previousElementSibling)), x ->
 							//
 							Util.anyMatch(
-									testAndApply(Objects::nonNull, StringUtils.split(NodeUtil.attr(x, "class"), " "),
+									testAndApply(Objects::nonNull, StringUtils.split(NodeUtil.attr(x, CLASS), " "),
 											Arrays::stream, null),
 									y -> StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, y, "katsuyo_"))
 							//
