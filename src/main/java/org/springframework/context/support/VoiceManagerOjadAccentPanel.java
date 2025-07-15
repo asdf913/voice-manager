@@ -1275,7 +1275,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	}
 
-	private static void actionPerformedBtnPdf(final VoiceManagerOjadAccentPanel instance,
+	private static void actionPerformedBtnPdf(@Nullable final VoiceManagerOjadAccentPanel instance,
 			final TextAndImage textAndImage) throws IOException, TemplateException, NoSuchMethodException,
 			InstantiationException, IllegalAccessException, InvocationTargetException {
 		//
