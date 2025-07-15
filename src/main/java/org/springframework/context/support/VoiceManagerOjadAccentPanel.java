@@ -1460,6 +1460,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 									x)),
 							URL::new, null)), ByteArrayInputStream::new, null)) {
 						//
+						if (is == null) {
+							//
+							continue;
+							//
+						} // if
+							//
 						(pdComplexFileSpecification = new PDComplexFileSpecification())
 								.setEmbeddedFile(createPDEmbeddedFile(pdDocument, is,
 										ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), bs));
