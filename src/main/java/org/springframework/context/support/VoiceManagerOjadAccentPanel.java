@@ -1510,6 +1510,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.getMimeType() : null;
 	}
 
+	@Nullable
 	private static IValue0<String> getVoiceUrlByX(final Pattern pattern, final Iterable<String> ss, final int x) {
 		//
 		String s = null;
@@ -1548,6 +1549,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
+	@Nullable
 	private static TextAndImage getTextAndImageByXY(final Pattern pattern, final Iterable<TextAndImage> textAndImages,
 			final int x, final int y) {
 		//
