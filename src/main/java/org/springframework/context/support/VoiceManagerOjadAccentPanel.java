@@ -2002,7 +2002,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	@Nullable
-	private static Collection<TextAndImage> getTextAndImages(final VoiceManagerOjadAccentPanel instance,
+	private static Collection<TextAndImage> getTextAndImages(@Nullable final VoiceManagerOjadAccentPanel instance,
 			final TextAndImage input) {
 		//
 		if (input == null) {
