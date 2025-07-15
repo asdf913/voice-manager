@@ -1414,7 +1414,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final ContentInfoUtil ciu, final byte[] bs) throws IOException {
 		//
 		final PDEmbeddedFile pdEmbeddedFile = testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null),
-				pdDocument, is, (a, b) -> new PDEmbeddedFile(a, b), null);
+				pdDocument, is, PDEmbeddedFile::new, null);
 		//
 		if (pdEmbeddedFile != null) {
 			//
