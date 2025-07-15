@@ -116,6 +116,8 @@ import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.function.FailableSupplier;
+import org.apache.commons.lang3.function.FailableSupplierUtil;
 import org.apache.commons.lang3.function.TriFunction;
 import org.apache.commons.lang3.function.TriFunctionUtil;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -375,10 +377,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			String html = null;
 			//
-			try (final InputStream is = !isTestMode()
-					? Util.openStream(Util.toURL(URIBuilderUtil.build(
-							new URIBuilder("https://www.gavo.t.u-tokyo.ac.jp").setPath("ojad/search/index/word:"))))
-					: null) {
+			try (final InputStream is = testAndGet(!isTestMode(),
+					() -> Util.openStream(Util.toURL(URIBuilderUtil.build(
+							new URIBuilder("https://www.gavo.t.u-tokyo.ac.jp").setPath("ojad/search/index/word:")))),
+					null)) {
 				//
 				html = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
 				//
@@ -3081,9 +3083,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.length : 0;
 	}
 
-	private static <T> T testAndGet(final boolean condition, final Supplier<T> supplierTrue,
-			final Supplier<T> supplierFalse) {
-		return condition ? Util.get(supplierTrue) : Util.get(supplierFalse);
+	private static <T, E extends Throwable> T testAndGet(final boolean condition,
+			final FailableSupplier<T, E> supplierTrue, final FailableSupplier<T, E> supplierFalse) throws E {
+		return condition ? FailableSupplierUtil.get(supplierTrue) : FailableSupplierUtil.get(supplierFalse);
 	}
 
 	@Nullable
