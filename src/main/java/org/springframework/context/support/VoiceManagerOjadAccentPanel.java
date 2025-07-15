@@ -1406,8 +1406,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		try (final PDPageContentStream cs = testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), pdDocument,
 				pdPage, (a, b) -> new PDPageContentStream(a, b, AppendMode.APPEND, compression), null)) {
 			//
-			double[] ds = toArray(distinct(
-					sorted(mapToDouble(Util.stream(idps), x -> x != null ? Util.floatValue(x.translateX, 0) : 0))));
+			double[] ds = getTranslateXs(idps, 0);
 			//
 			final double[] translateXs = testAndApply(x -> x > 2, length(ds), x -> ArrayUtils.subarray(ds, x - 2, x),
 					x -> ds);
@@ -1487,6 +1486,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // try
 			//
+	}
+
+	private static double[] getTranslateXs(final Collection<ImageDimensionPosition> idps, final double defaultValue) {
+		//
+		return toArray(distinct(sorted(mapToDouble(Util.stream(idps),
+				x -> x != null ? Util.doubleValue(x.translateX, defaultValue) : defaultValue))));
+		//
 	}
 
 	private static int getSize(final Collection<ImageDimensionPosition> idps,

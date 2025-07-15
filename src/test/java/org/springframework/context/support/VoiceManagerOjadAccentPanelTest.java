@@ -126,7 +126,7 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private static final String EMPTY = "";
 
-	private static Class<?> CLASS_TEXT_AND_IMAGE = null;
+	private static Class<?> CLASS_TEXT_AND_IMAGE, CLASS_IMAGE_DIMENSION_POSITION = null;
 
 	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL_PAGE,
 			METHOD_QUERY_SELECTOR_ALL_ELEMENT_HANDLE, METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK,
@@ -141,10 +141,13 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE,
 			METHOD_SET_HANDLER, METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE, METHOD_GET,
 			METHOD_CREATE_PD_EMBEDDED_FILE, METHOD_GET_MIME_TYPE, METHOD_GET_VOICE_URL_BY_X,
-			METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, METHOD_GET_SIZE = null;
+			METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, METHOD_GET_SIZE, METHOD_GET_TRANSLATE_XS = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
+		//
+		CLASS_IMAGE_DIMENSION_POSITION = Util
+				.forName("org.springframework.context.support.VoiceManagerOjadAccentPanel$ImageDimensionPosition");
 		//
 		final Class<?> clz = VoiceManagerOjadAccentPanel.class;
 		//
@@ -279,6 +282,9 @@ class VoiceManagerOjadAccentPanelTest {
 				Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_SIZE = clz.getDeclaredMethod("getSize", Collection.class, Predicate.class, Integer.TYPE))
+				.setAccessible(true);
+		//
+		(METHOD_GET_TRANSLATE_XS = clz.getDeclaredMethod("getTranslateXs", Collection.class, Double.TYPE))
 				.setAccessible(true);
 		//
 	}
@@ -524,6 +530,10 @@ class VoiceManagerOjadAccentPanelTest {
 				} else if (Objects.equals(parameterType, Float.TYPE)) {
 					//
 					Util.add(collection, Float.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Double.TYPE)) {
+					//
+					Util.add(collection, Double.valueOf(0));
 					//
 				} else {
 					//
@@ -2265,8 +2275,7 @@ class VoiceManagerOjadAccentPanelTest {
 				getSize(Collections.singleton(null), Predicates.alwaysTrue(), defaultValue));
 		//
 		Assertions.assertEquals(defaultValue,
-				getSize(Collections.singleton(Narcissus.allocateInstance(Util.forName(
-						"org.springframework.context.support.VoiceManagerOjadAccentPanel$ImageDimensionPosition"))),
+				getSize(Collections.singleton(Narcissus.allocateInstance(CLASS_IMAGE_DIMENSION_POSITION)),
 						Predicates.alwaysTrue(), defaultValue));
 		//
 	}
@@ -2277,6 +2286,30 @@ class VoiceManagerOjadAccentPanelTest {
 			final Object obj = METHOD_GET_SIZE.invoke(null, idps, predicate, defaultValue);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetTranslateXs() throws Throwable {
+		//
+		final double defaultValue = 10;
+		//
+		Assertions.assertArrayEquals(new double[] { defaultValue }, getTranslateXs(
+				Collections.singleton(Narcissus.allocateInstance(CLASS_IMAGE_DIMENSION_POSITION)), defaultValue));
+		//
+	}
+
+	private static double[] getTranslateXs(final Collection<?> idps, final double defaultValue) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TRANSLATE_XS.invoke(null, idps, defaultValue);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof double[]) {
+				return (double[]) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
