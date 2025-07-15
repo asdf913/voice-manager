@@ -3105,7 +3105,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	private static <T, E extends Throwable> T testAndGet(final boolean condition,
-			final FailableSupplier<T, E> supplierTrue, final FailableSupplier<T, E> supplierFalse) throws E {
+			final FailableSupplier<T, E> supplierTrue, @Nullable final FailableSupplier<T, E> supplierFalse) throws E {
 		return condition ? FailableSupplierUtil.get(supplierTrue) : FailableSupplierUtil.get(supplierFalse);
 	}
 
