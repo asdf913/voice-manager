@@ -1488,6 +1488,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
+	@Nullable
 	private static double[] getTranslateXs(final Collection<ImageDimensionPosition> idps, final double defaultValue) {
 		//
 		return toArray(distinct(sorted(mapToDouble(Util.stream(idps),
