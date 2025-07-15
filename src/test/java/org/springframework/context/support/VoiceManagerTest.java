@@ -1504,14 +1504,6 @@ class VoiceManagerTest {
 		}
 	}
 
-	private static <T> T newInstance(final Constructor<T> constructor, final Object... initargs) throws Throwable {
-		try {
-			return (T) METHOD_NEW_INSTANCE.invoke(null, constructor, initargs);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
 	@Test
 	void testGetNumber() throws Throwable {
 		//
