@@ -68,6 +68,7 @@ import java.util.function.Supplier;
 import java.util.function.ToDoubleFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -107,6 +108,7 @@ import org.apache.commons.collections4.bag.TreeBag;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.StringsUtil;
@@ -281,6 +283,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	private transient ComboBoxModel<Entry<String, String>> cbmCurve = null;
 
 	private transient ComboBoxModel<String> cbmImageFormat = null;
+
+	private ComboBoxModel<Boolean> cbmCompression = null;
 
 	private DefaultTableModel dtmVoice = null;
 
@@ -610,6 +614,21 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			panelPdf.setLayout(new MigLayout());
 			//
 			panelPdf.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "PDF"));
+			//
+			panelPdf.add(new JLabel("Compression"));
+			//
+			panelPdf.add(
+					new JComboBox<>(
+							cbmCompression = new DefaultComboBoxModel<>(ArrayUtils.addFirst(Util.toArray(Util.collect(
+									Util.map(Util.filter(
+											testAndApply(Objects::nonNull, Util.getDeclaredFields(Boolean.class),
+													Arrays::stream, null),
+											x -> Objects.equals(Util.getType(x), Boolean.class) && Util.isStatic(x)),
+											x -> Util.cast(Boolean.class, Narcissus.getStaticField(x))),
+									Collectors.toList()), new Boolean[] {}), null))),
+					wrap);
+			//
+			panelPdf.add(new JLabel());
 			//
 			panelPdf.add(btnPdf = new JButton("PDF"));
 			//
@@ -1314,9 +1333,21 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				processPage(Util.cast(PDFGraphicsStreamEngine.class, temp), pdPage);
 				//
-				addAnnotations(pdDocument, pdPage, mh.imageDimensionPositions, textAndImages);
+				addAnnotations(pdDocument, pdPage, mh.imageDimensionPositions, textAndImages,
+						BooleanUtils.toBooleanDefaultIfNull(
+								Util.cast(Boolean.class,
+										Util.getSelectedItem(instance != null ? instance.cbmCompression : null)),
+								true));
 				//
-				PDDocumentUtil.save(pdDocument, jfc.getSelectedFile());
+				final File file = jfc.getSelectedFile();
+				//
+				if (!Util.exists(file)) {
+					//
+					file.createNewFile();
+					//
+				} // if
+					//
+				PDDocumentUtil.save(pdDocument, file);
 				//
 			} // if
 				//
@@ -1329,11 +1360,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	private static void addAnnotations(final PDDocument pdDocument, final PDPage pdPage,
-			final Collection<ImageDimensionPosition> idps, final Iterable<TextAndImage> textAndImages)
-			throws IOException {
+			final Collection<ImageDimensionPosition> idps, final Iterable<TextAndImage> textAndImages,
+			final boolean compression) throws IOException {
 		//
 		try (final PDPageContentStream cs = testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), pdDocument,
-				pdPage, (a, b) -> new PDPageContentStream(a, b, AppendMode.APPEND, true), null)) {
+				pdPage, (a, b) -> new PDPageContentStream(a, b, AppendMode.APPEND, compression), null)) {
 			//
 			double[] ds = toArray(distinct(
 					sorted(mapToDouble(Util.stream(idps), x -> x != null ? Util.floatValue(x.translateX, 0) : 0))));

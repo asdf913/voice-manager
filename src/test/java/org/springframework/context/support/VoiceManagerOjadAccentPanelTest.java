@@ -260,7 +260,7 @@ class VoiceManagerOjadAccentPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_ADD_ANNOTATIONS = clz.getDeclaredMethod("addAnnotations", PDDocument.class, PDPage.class,
-				Collection.class, Iterable.class)).setAccessible(true);
+				Collection.class, Iterable.class, Boolean.TYPE)).setAccessible(true);
 		//
 		(METHOD_MAP_TO_DOUBLE = clz.getDeclaredMethod("mapToDouble", Stream.class, ToDoubleFunction.class))
 				.setAccessible(true);
@@ -2070,18 +2070,18 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testAddAnnotations() {
 		//
-		Assertions.assertDoesNotThrow(() -> addAnnotations(new PDDocument(), null, null, null));
+		Assertions.assertDoesNotThrow(() -> addAnnotations(new PDDocument(), null, null, null, true));
 		//
-		Assertions.assertDoesNotThrow(() -> addAnnotations(new PDDocument(), new PDPage(), null, null));
+		Assertions.assertDoesNotThrow(() -> addAnnotations(new PDDocument(), new PDPage(), null, null, true));
 		//
-		Assertions.assertDoesNotThrow(() -> addAnnotations(null, null, Collections.singleton(null), null));
+		Assertions.assertDoesNotThrow(() -> addAnnotations(null, null, Collections.singleton(null), null, true));
 		//
 	}
 
 	private static void addAnnotations(final PDDocument pdDocument, final PDPage pdPage, final Collection<?> idps,
-			final Iterable<?> textAndImages) throws Throwable {
+			final Iterable<?> textAndImages, final boolean compression) throws Throwable {
 		try {
-			METHOD_ADD_ANNOTATIONS.invoke(null, pdDocument, pdPage, idps, textAndImages);
+			METHOD_ADD_ANNOTATIONS.invoke(null, pdDocument, pdPage, idps, textAndImages, compression);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
