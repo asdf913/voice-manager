@@ -1448,16 +1448,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 									(float) translateYs[y] + size// TODO
 									, size, size));
 					//
-					try (final InputStream is = testAndApply(Objects::nonNull,
-							bs = toByteArray(new URL(IValue0Util.getValue0(iValue0 = getVoiceUrlByX(
+					try (final InputStream is = testAndApply(Objects::nonNull, bs = toByteArray(testAndApply(
+							Objects::nonNull,
+							IValue0Util.getValue0(iValue0 = getVoiceUrlByX(
 									pattern = ObjectUtils.getIfNull(pattern,
 											() -> Pattern.compile("^\\d+_(\\d+)_\\d+_(\\w+)\\.\\w+$")),
 									Util.keySet(
 											(textAndImage = getTextAndImageByXY(pattern, textAndImages, x, y)) != null
 													? textAndImage.voiceUrlImages
 													: null),
-									x)))),
-							ByteArrayInputStream::new, null)) {
+									x)),
+							URL::new, null)), ByteArrayInputStream::new, null)) {
 						//
 						(pdComplexFileSpecification = new PDComplexFileSpecification())
 								.setEmbeddedFile(createPDEmbeddedFile(pdDocument, is,
@@ -2241,9 +2242,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 				} // for
 					//
-			} else {
+			} else if (IterableUtils.size(words) == 1) {
 				//
-				// TODO
+				textAndImages = Collections.singleton(input);
 				//
 			} // if
 				//
