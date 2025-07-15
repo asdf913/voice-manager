@@ -2357,7 +2357,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final Object instance = Util.newInstance(constructor);
+		final Object audioToFlacByteConverter = Util.newInstance(constructor);
 		//
 		// setAudioStreamEncoderByteArrayLength(java.lang.Object)
 		//
@@ -2373,28 +2373,32 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> invoke(setAudioStreamEncoderByteArrayLength, instance, (Object) null));
+		Assertions.assertDoesNotThrow(
+				() -> invoke(setAudioStreamEncoderByteArrayLength, audioToFlacByteConverter, (Object) null));
 		//
-		Assertions.assertNull(get(audioStreamEncoderByteArrayLength, instance));
+		Assertions.assertNull(get(audioStreamEncoderByteArrayLength, audioToFlacByteConverter));
 		//
 		final Integer one = Integer.valueOf(1);
 		//
-		Assertions.assertDoesNotThrow(() -> invoke(setAudioStreamEncoderByteArrayLength, instance, one));
+		Assertions
+				.assertDoesNotThrow(() -> invoke(setAudioStreamEncoderByteArrayLength, audioToFlacByteConverter, one));
 		//
-		Assertions.assertSame(one, get(audioStreamEncoderByteArrayLength, instance));
+		Assertions.assertSame(one, get(audioStreamEncoderByteArrayLength, audioToFlacByteConverter));
 		//
-		Assertions.assertDoesNotThrow(
-				() -> invoke(setAudioStreamEncoderByteArrayLength, instance, Long.valueOf(one.longValue())));
+		Assertions.assertDoesNotThrow(() -> invoke(setAudioStreamEncoderByteArrayLength, audioToFlacByteConverter,
+				Long.valueOf(one.longValue())));
 		//
-		Assertions.assertSame(one, get(audioStreamEncoderByteArrayLength, instance));
+		Assertions.assertSame(one, get(audioStreamEncoderByteArrayLength, audioToFlacByteConverter));
 		//
 		// convert(byte[])
 		//
 		final Method convert = clz != null ? clz.getDeclaredMethod("convert", byte[].class) : null;
 		//
-		Assertions.assertTrue(Objects.deepEquals(new byte[] {}, invoke(convert, instance, (Object) null)));
+		Assertions.assertTrue(
+				Objects.deepEquals(new byte[] {}, invoke(convert, audioToFlacByteConverter, (Object) null)));
 		//
-		Assertions.assertTrue(Objects.deepEquals(new byte[] {}, invoke(convert, instance, new byte[] {})));
+		Assertions.assertTrue(
+				Objects.deepEquals(new byte[] {}, invoke(convert, audioToFlacByteConverter, new byte[] {})));
 		//
 		// createStreamConfiguration(javax.sound.sampled.AudioFormat)
 		//
@@ -2432,15 +2436,15 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final Object instance = Util.newInstance(constructor);
+		final Object audioToMp3ByteConverter = Util.newInstance(constructor);
 		//
 		// convert(byte[])
 		//
 		final Method convert = clz != null ? clz.getDeclaredMethod("convert", byte[].class) : null;
 		//
-		Assertions.assertNull(invoke(convert, instance, (Object) null));
+		Assertions.assertNull(invoke(convert, audioToMp3ByteConverter, (Object) null));
 		//
-		Assertions.assertNull(invoke(convert, instance, new byte[] {}));
+		Assertions.assertNull(invoke(convert, audioToMp3ByteConverter, new byte[] {}));
 		//
 		AssertionsUtil.assertThrowsAndEquals(RuntimeException.class,
 				"{localizedMessage=javax.sound.sampled.UnsupportedAudioFileException: Stream of unsupported format, message=javax.sound.sampled.UnsupportedAudioFileException: Stream of unsupported format}",
@@ -2448,7 +2452,7 @@ class VoiceManagerTest {
 					//
 					try {
 						//
-						invoke(convert, instance, new byte[] { 0 });
+						invoke(convert, audioToMp3ByteConverter, new byte[] { 0 });
 						//
 					} catch (final InvocationTargetException e) {
 						//
@@ -2460,36 +2464,36 @@ class VoiceManagerTest {
 		//
 		// setBitRate(java.lang.Object)
 		//
-		Assertions.assertNull(invoke(clz != null ? clz.getDeclaredMethod("setBitRate", Object.class) : null, instance,
-				(Object) null));
+		Assertions.assertNull(invoke(clz != null ? clz.getDeclaredMethod("setBitRate", Object.class) : null,
+				audioToMp3ByteConverter, (Object) null));
 		//
 		// setQuality(java.lang.Object)
 		//
 		final Method setQuality = clz != null ? clz.getDeclaredMethod("setQuality", Object.class) : null;
 		//
-		Assertions.assertNull(invoke(setQuality, instance, (Object) null));
+		Assertions.assertNull(invoke(setQuality, audioToMp3ByteConverter, (Object) null));
 		//
-		Assertions.assertNull(invoke(setQuality, instance, "lowest"));
+		Assertions.assertNull(invoke(setQuality, audioToMp3ByteConverter, "lowest"));
 		//
-		Assertions.assertNull(invoke(setQuality, instance, "Lowest"));
+		Assertions.assertNull(invoke(setQuality, audioToMp3ByteConverter, "Lowest"));
 		//
 		// setVbr(java.lang.Object)
 		//
 		final Method setVbr = clz != null ? clz.getDeclaredMethod("setVbr", Object.class) : null;
 		//
-		Assertions.assertNull(invoke(setVbr, instance, ""));
+		Assertions.assertNull(invoke(setVbr, audioToMp3ByteConverter, ""));
 		//
 		// afterPropertiesSet()
 		//
 		final Method afterPropertiesSet = clz != null ? clz.getDeclaredMethod("afterPropertiesSet") : null;
 		//
-		Assertions.assertNull(invoke(afterPropertiesSet, instance));
+		Assertions.assertNull(invoke(afterPropertiesSet, audioToMp3ByteConverter));
 		//
-		Assertions.assertNull(invoke(setVbr, instance, "true"));
+		Assertions.assertNull(invoke(setVbr, audioToMp3ByteConverter, "true"));
 		//
-		Assertions.assertNull(invoke(afterPropertiesSet, instance));
+		Assertions.assertNull(invoke(afterPropertiesSet, audioToMp3ByteConverter));
 		//
-		Assertions.assertNull(invoke(setQuality, instance, "-1"));
+		Assertions.assertNull(invoke(setQuality, audioToMp3ByteConverter, "-1"));
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
 				"{localizedMessage=Under VBR,\"quality\" cound be with in 0 to 9, message=Under VBR,\"quality\" cound be with in 0 to 9}",
@@ -2497,7 +2501,7 @@ class VoiceManagerTest {
 					//
 					try {
 						//
-						invoke(afterPropertiesSet, instance);
+						invoke(afterPropertiesSet, audioToMp3ByteConverter);
 						//
 					} catch (final InvocationTargetException e) {
 						//
@@ -2511,15 +2515,15 @@ class VoiceManagerTest {
 		//
 		final Method createQuality = clz != null ? clz.getDeclaredMethod("createQuality", Instruction[].class) : null;
 		//
-		Assertions.assertNull(invoke(createQuality, instance, (Object) null));
+		Assertions.assertNull(invoke(createQuality, audioToMp3ByteConverter, (Object) null));
 		//
-		Assertions.assertNull(invoke(createQuality, instance, new Instruction[] { null }));
+		Assertions.assertNull(invoke(createQuality, audioToMp3ByteConverter, new Instruction[] { null }));
 		//
 		// getValue(org.apache.bcel.generic.ConstantPushInstruction)
 		//
 		Assertions.assertNull(
-				invoke(clz != null ? clz.getDeclaredMethod("getValue", ConstantPushInstruction.class) : null, instance,
-						(Object) null));
+				invoke(clz != null ? clz.getDeclaredMethod("getValue", ConstantPushInstruction.class) : null,
+						audioToMp3ByteConverter, (Object) null));
 		//
 		// createQualityMap(org.apache.bcel.classfile.ConstantPool,org.apache.bcel.generic.Instruction[])
 		//
@@ -2527,9 +2531,9 @@ class VoiceManagerTest {
 				? clz.getDeclaredMethod("createQualityMap", ConstantPool.class, Instruction[].class)
 				: null;
 		//
-		Assertions.assertNull(invoke(createQualityMap, instance, null, null));
+		Assertions.assertNull(invoke(createQualityMap, audioToMp3ByteConverter, null, null));
 		//
-		Assertions.assertNull(invoke(createQualityMap, instance, null, new Instruction[] { null }));
+		Assertions.assertNull(invoke(createQualityMap, audioToMp3ByteConverter, null, new Instruction[] { null }));
 		//
 	}
 
