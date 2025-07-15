@@ -1411,7 +1411,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	private static PDEmbeddedFile createPDEmbeddedFile(final PDDocument pdDocument, final InputStream is,
-			final ContentInfoUtil ciu, final byte[] bs) throws IOException {
+			final ContentInfoUtil ciu, @Nullable final byte[] bs) throws IOException {
 		//
 		final PDEmbeddedFile pdEmbeddedFile = testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null),
 				pdDocument, is, PDEmbeddedFile::new, null);
