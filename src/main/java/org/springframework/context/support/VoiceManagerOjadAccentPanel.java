@@ -1438,6 +1438,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			ContentInfoUtil ciu = null;
 			//
+			TextAndImage textAndImage = null;
+			//
 			for (int x = 0; x < length(translateXs); x++) {
 				//
 				for (int y = 0; y < length(translateYs); y++) {
@@ -1448,14 +1450,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 									, size, size));
 					//
 					try (final InputStream is = testAndApply(Objects::nonNull,
-							bs = toByteArray(
-									new URL(IValue0Util
-											.getValue0(
-													iValue0 = getVoiceUrlByXY(
-															pattern = ObjectUtils.getIfNull(pattern,
-																	() -> Pattern.compile(
-																			"^\\d+_(\\d+)_\\d+_(\\w+)\\.\\w+$")),
-															textAndImages, x, y)))),
+							bs = toByteArray(new URL(IValue0Util.getValue0(iValue0 = getVoiceUrlByX(
+									pattern = ObjectUtils.getIfNull(pattern,
+											() -> Pattern.compile("^\\d+_(\\d+)_\\d+_(\\w+)\\.\\w+$")),
+									Util.keySet(
+											(textAndImage = getTextAndImageByXY(pattern, textAndImages, x, y)) != null
+													? textAndImage.voiceUrlImages
+													: null),
+									x)))),
 							ByteArrayInputStream::new, null)) {
 						//
 						(pdComplexFileSpecification = new PDComplexFileSpecification())
@@ -1468,6 +1470,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					} // try
 						//
 					pdAnnotationFileAttachment.setFile(pdComplexFileSpecification);
+					//
+					pdAnnotationFileAttachment.setSubject(textAndImage != null ? textAndImage.kanji : null);
 					//
 					Util.add(PDPageUtil.getAnnotations(pdPage), pdAnnotationFileAttachment);
 					//
@@ -1506,8 +1510,45 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.getMimeType() : null;
 	}
 
-	@Nullable
-	private static IValue0<String> getVoiceUrlByXY(final Pattern pattern, final Iterable<TextAndImage> textAndImages,
+	private static IValue0<String> getVoiceUrlByX(final Pattern pattern, final Iterable<String> ss, final int x) {
+		//
+		String s = null;
+		//
+		Matcher matcher = null;
+		//
+		IValue0<String> iValue0 = null;
+		//
+		for (int i = 0; i < IterableUtils.size(ss); i++) {
+			//
+			if (!Util.matches(
+					matcher = Util.matcher(pattern, StringUtils.substringAfterLast(s = IterableUtils.get(ss, i), '/')))
+					|| Util.groupCount(matcher) != 2) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Boolean.logicalOr(Boolean.logicalAnd(x == 0, Objects.equals(Util.group(matcher, 2), "female"))// 1184_1_1_female
+					, Boolean.logicalAnd(x == 1, Objects.equals(Util.group(matcher, 2), "male")))// 1184_1_1_male
+			) {
+				//
+				testAndRunThrows(iValue0 != null, () -> {
+					//
+					throw new IllegalStateException();
+					//
+				});
+				//
+				iValue0 = Unit.with(s);
+				//
+			} // if
+				//
+		} // for
+			//
+		return iValue0;
+		//
+	}
+
+	private static TextAndImage getTextAndImageByXY(final Pattern pattern, final Iterable<TextAndImage> textAndImages,
 			final int x, final int y) {
 		//
 		TextAndImage textAndImage = null;
@@ -1516,11 +1557,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		Matcher matcher = null;
 		//
-		String url = null;
-		//
 		final int size = IterableUtils.size(textAndImages);
 		//
-		IValue0<String> iValue0 = null;
+		TextAndImage result = null;
 		//
 		for (int i = 0; i < size; i++) {
 			//
@@ -1535,7 +1574,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			for (int j = 0; j < IterableUtils.size(urls); j++) {
 				//
 				if (!Util.matches(matcher = Util.matcher(pattern,
-						StringUtils.substringAfterLast(url = IterableUtils.get(urls, j), '/')))
+						StringUtils.substringAfterLast(IterableUtils.get(urls, j), '/')))
 						|| Util.groupCount(matcher) != 2
 						|| !Objects.equals(Integer.toString(size - y), Util.group(matcher, 1))) {
 					//
@@ -1547,13 +1586,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						, Boolean.logicalAnd(x == 1, Objects.equals(Util.group(matcher, 2), "male")))// 1184_1_1_male
 				) {
 					//
-					testAndRunThrows(iValue0 != null, () -> {
+					testAndRunThrows(result != null, () -> {
 						//
 						throw new IllegalStateException();
 						//
 					});
 					//
-					iValue0 = Unit.with(url);
+					result = textAndImage;
 					//
 				} // if
 					//
@@ -1561,7 +1600,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // for
 			//
-		return iValue0;
+		return result;
 		//
 	}
 

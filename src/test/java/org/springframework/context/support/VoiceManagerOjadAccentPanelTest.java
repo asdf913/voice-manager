@@ -87,6 +87,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.state.PDGraphicsState;
+import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Element;
@@ -137,8 +138,9 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT, METHOD_GET_MOST_OCCURENCE_COLOR,
 			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE,
 			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE,
-			METHOD_SET_HANDLER, METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE, METHOD_GET, METHOD_GET_VOICE_URL_BY_XY,
-			METHOD_CREATE_PD_EMBEDDED_FILE, METHOD_GET_MIME_TYPE = null;
+			METHOD_SET_HANDLER, METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE, METHOD_GET,
+			METHOD_CREATE_PD_EMBEDDED_FILE, METHOD_GET_MIME_TYPE, METHOD_GET_VOICE_URL_BY_X,
+			METHOD_GET_TEXT_AND_IMAGE_BY_X_Y = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -264,13 +266,16 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_GET = clz.getDeclaredMethod("get", int[].class, Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
-		(METHOD_GET_VOICE_URL_BY_XY = clz.getDeclaredMethod("getVoiceUrlByXY", Pattern.class, Iterable.class,
-				Integer.TYPE, Integer.TYPE)).setAccessible(true);
-		//
 		(METHOD_CREATE_PD_EMBEDDED_FILE = clz.getDeclaredMethod("createPDEmbeddedFile", PDDocument.class,
 				InputStream.class, ContentInfoUtil.class, byte[].class)).setAccessible(true);
 		//
 		(METHOD_GET_MIME_TYPE = clz.getDeclaredMethod("getMimeType", ContentInfo.class)).setAccessible(true);
+		//
+		(METHOD_GET_VOICE_URL_BY_X = clz.getDeclaredMethod("getVoiceUrlByX", Pattern.class, Iterable.class,
+				Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_GET_TEXT_AND_IMAGE_BY_X_Y = clz.getDeclaredMethod("getTextAndImageByXY", Pattern.class, Iterable.class,
+				Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -2116,28 +2121,6 @@ class VoiceManagerOjadAccentPanelTest {
 	}
 
 	@Test
-	void testGetVoiceUrlByXY() throws Throwable {
-		//
-		Assertions.assertNull(getVoiceUrlByXY(null, Collections.singleton(null), 0, 0));
-		//
-	}
-
-	private static IValue0<String> getVoiceUrlByXY(final Pattern pattern, final Iterable<?> textAndImages, final int x,
-			final int y) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_VOICE_URL_BY_XY.invoke(null, pattern, textAndImages, x, y);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof IValue0) {
-				return (IValue0) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testCreatePDEmbeddedFile() throws Throwable {
 		//
 		try (final PDDocument pdDocument = new PDDocument();
@@ -2184,6 +2167,86 @@ class VoiceManagerOjadAccentPanelTest {
 				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetVoiceUrlByX() throws Throwable {
+		//
+		Assertions.assertNull(getVoiceUrlByX(null, Collections.singleton(null), 0));
+		//
+		final Pattern patern = Pattern.compile("^\\d+_(\\d+)_\\d+_(\\w+)\\.\\w+$");
+		//
+		String url = "https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/female/011/1184_1_1_female.mp3";
+		//
+		Assertions.assertEquals(Unit.with(url), getVoiceUrlByX(patern, Collections.singleton(url), 0));
+		//
+		Assertions.assertEquals(
+				Unit.with(url = "https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/male/011/1184_1_1_male.mp3"),
+				getVoiceUrlByX(patern, Collections.singleton(url), 1));
+		//
+		Assertions
+				.assertThrows(IllegalStateException.class,
+						() -> getVoiceUrlByX(patern,
+								Collections.nCopies(2,
+										"https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/male/011/1184_1_1_male.mp3"),
+								1));
+		//
+	}
+
+	private static IValue0<String> getVoiceUrlByX(final Pattern pattern, final Iterable<String> ss, final int x)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_VOICE_URL_BY_X.invoke(null, pattern, ss, x);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetTextAndImageByXY() throws Throwable {
+		//
+		Assertions.assertNull(getTextAndImageByXY(null, Collections.singleton(null), 0, 0));
+		//
+		final Object textAndImage = Narcissus.allocateInstance(CLASS_TEXT_AND_IMAGE);
+		//
+		final Iterable<?> iterable = Collections.singleton(textAndImage);
+		//
+		Assertions.assertNull(getTextAndImageByXY(null, iterable, 0, 0));
+		//
+		FieldUtils.writeDeclaredField(textAndImage, "voiceUrlImages", Collections.singletonMap(
+				"https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/female/011/1184_1_1_female.mp3", null), true);
+		//
+		final Pattern patern = Pattern.compile("^\\d+_(\\d+)_\\d+_(\\w+)\\.\\w+$");
+		//
+		Assertions
+				.assertEquals("{\"voiceUrlImages\":{}}",
+						ObjectMapperUtil.writeValueAsString(setDefaultPropertyInclusion(
+								setVisibility(objectMapper, PropertyAccessor.ALL, Visibility.ANY), Include.NON_NULL),
+								getTextAndImageByXY(patern, iterable, 0, 0)));
+		//
+		FieldUtils.writeDeclaredField(textAndImage, "voiceUrlImages", Collections.singletonMap(
+				"https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/male/011/1184_1_1_male.mp3", null), true);
+		//
+		Assertions.assertEquals("{\"voiceUrlImages\":{}}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, getTextAndImageByXY(patern, iterable, 1, 0)));
+		//
+		Assertions.assertNull(getTextAndImageByXY(patern, iterable, 0, 0));
+		//
+	}
+
+	private static Object getTextAndImageByXY(final Pattern pattern, final Iterable<?> textAndImages, final int x,
+			final int y) throws Throwable {
+		try {
+			return METHOD_GET_TEXT_AND_IMAGE_BY_X_Y.invoke(null, pattern, textAndImages, x, y);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
