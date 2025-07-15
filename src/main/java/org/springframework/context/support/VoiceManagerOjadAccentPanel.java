@@ -2085,6 +2085,27 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				Util.forEach(Util.stream(textAndImages), x -> setPartOfSpeech(x, IterableUtils.get(partOfSpeeches, 0)));
 				//
+				testAndAccept(items -> IterableUtils.size(items) == 1,
+						Util.toList(Util.filter(Util.stream(querySelectorAll(page, "thead tr th")),
+								el -> Util.anyMatch(testAndApply(Objects::nonNull,
+										StringUtils.split(getAttribute(el, "class"), " "), Arrays::stream, null),
+										y -> StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, y, "katsuyo_"))
+										&& StringUtils.isNotBlank(textContent(el)))),
+						items -> {
+							//
+							Util.forEach(items, eh -> Util.forEach(Util.stream(textAndImages), tai -> {
+								//
+								if (tai != null) {
+									//
+									tai.conjugation = StringUtils.trim(textContent(eh));
+									//
+								} // if
+									//
+							}));
+							//
+							//
+						});
+				//
 			} // if
 				//
 			adjustImageColor(textAndImages);
@@ -2101,6 +2122,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // try
 			//
+	}
+
+	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
+		if (Util.test(predicate, value)) {
+			Util.accept(consumer, value);
+		}
 	}
 
 	@Nullable
