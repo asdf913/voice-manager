@@ -1471,7 +1471,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 					pdAnnotationFileAttachment.setFile(pdComplexFileSpecification);
 					//
-					pdAnnotationFileAttachment.setSubject(textAndImage != null ? textAndImage.kanji : null);
+					pdAnnotationFileAttachment.setSubject(getKanji(textAndImage));
 					//
 					Util.add(PDPageUtil.getAnnotations(pdPage), pdAnnotationFileAttachment);
 					//
