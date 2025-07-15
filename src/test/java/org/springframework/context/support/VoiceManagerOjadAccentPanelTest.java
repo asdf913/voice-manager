@@ -96,6 +96,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.meeuw.functional.Predicates;
 import org.meeuw.functional.ThrowingRunnable;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -140,7 +141,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE,
 			METHOD_SET_HANDLER, METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE, METHOD_GET,
 			METHOD_CREATE_PD_EMBEDDED_FILE, METHOD_GET_MIME_TYPE, METHOD_GET_VOICE_URL_BY_X,
-			METHOD_GET_TEXT_AND_IMAGE_BY_X_Y = null;
+			METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, METHOD_GET_SIZE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -276,6 +277,9 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_GET_TEXT_AND_IMAGE_BY_X_Y = clz.getDeclaredMethod("getTextAndImageByXY", Pattern.class, Iterable.class,
 				Integer.TYPE, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_GET_SIZE = clz.getDeclaredMethod("getSize", Collection.class, Predicate.class, Integer.TYPE))
+				.setAccessible(true);
 		//
 	}
 
@@ -2247,6 +2251,34 @@ class VoiceManagerOjadAccentPanelTest {
 			final int y) throws Throwable {
 		try {
 			return METHOD_GET_TEXT_AND_IMAGE_BY_X_Y.invoke(null, pattern, textAndImages, x, y);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSize() throws Throwable {
+		//
+		final int defaultValue = 10;
+		//
+		Assertions.assertEquals(defaultValue,
+				getSize(Collections.singleton(null), Predicates.alwaysTrue(), defaultValue));
+		//
+		Assertions.assertEquals(defaultValue,
+				getSize(Collections.singleton(Narcissus.allocateInstance(Util.forName(
+						"org.springframework.context.support.VoiceManagerOjadAccentPanel$ImageDimensionPosition"))),
+						Predicates.alwaysTrue(), defaultValue));
+		//
+	}
+
+	private static int getSize(final Collection<?> idps, final Predicate<?> predicate, final int defaultValue)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SIZE.invoke(null, idps, predicate, defaultValue);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

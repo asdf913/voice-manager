@@ -1421,14 +1421,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final Integer width = length(widths) == 1 ? Integer.valueOf(get(widths, 0, 0)) : null;
 			//
-			final int[] heights = toArray(distinct(Util.sorted(Util.mapToInt(Util.filter(Util.stream(idps), predicate),
-					x -> x != null ? Util.intValue(x.height, 0) : null))));
-			//
 			PDAnnotationFileAttachment pdAnnotationFileAttachment = null;
 			//
 			PDComplexFileSpecification pdComplexFileSpecification = null;
 			//
-			final int size = length(heights) == 1 ? get(heights, 0, 10) : 10;
+			final int size = getSize(idps, predicate, 10);
 			//
 			byte[] bs = null;
 			//
@@ -1481,6 +1478,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // try
 			//
+	}
+
+	private static int getSize(final Collection<ImageDimensionPosition> idps,
+			final Predicate<ImageDimensionPosition> predicate, final int defaultValue) {
+		//
+		final int[] heights = toArray(distinct(Util.sorted(Util.mapToInt(Util.filter(Util.stream(idps), predicate),
+				x -> x != null ? Util.intValue(x.height, defaultValue) : defaultValue))));
+		//
+		return length(heights) == 1 ? get(heights, 0, defaultValue) : defaultValue;
+		//
 	}
 
 	private static PDEmbeddedFile createPDEmbeddedFile(final PDDocument pdDocument, final InputStream is,
