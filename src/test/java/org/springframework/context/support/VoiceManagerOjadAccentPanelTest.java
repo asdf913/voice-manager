@@ -2216,13 +2216,13 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertNull(getTextAndImageByXY(null, Collections.singleton(null), 0, 0));
 		//
-		final Object textAndImage = Narcissus.allocateInstance(CLASS_TEXT_AND_IMAGE);
+		final Object tai = Narcissus.allocateInstance(CLASS_TEXT_AND_IMAGE);
 		//
-		final Iterable<?> iterable = Collections.singleton(textAndImage);
+		final Iterable<?> iterable = Collections.singleton(tai);
 		//
 		Assertions.assertNull(getTextAndImageByXY(null, iterable, 0, 0));
 		//
-		FieldUtils.writeDeclaredField(textAndImage, "voiceUrlImages", Collections.singletonMap(
+		FieldUtils.writeDeclaredField(tai, "voiceUrlImages", Collections.singletonMap(
 				"https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/female/011/1184_1_1_female.mp3", null), true);
 		//
 		final Pattern patern = Pattern.compile("^\\d+_(\\d+)_\\d+_(\\w+)\\.\\w+$");
@@ -2233,7 +2233,7 @@ class VoiceManagerOjadAccentPanelTest {
 								setVisibility(objectMapper, PropertyAccessor.ALL, Visibility.ANY), Include.NON_NULL),
 								getTextAndImageByXY(patern, iterable, 0, 0)));
 		//
-		FieldUtils.writeDeclaredField(textAndImage, "voiceUrlImages", Collections.singletonMap(
+		FieldUtils.writeDeclaredField(tai, "voiceUrlImages", Collections.singletonMap(
 				"https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/male/011/1184_1_1_male.mp3", null), true);
 		//
 		Assertions.assertEquals("{\"voiceUrlImages\":{}}",
