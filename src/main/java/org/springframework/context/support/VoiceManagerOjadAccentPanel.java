@@ -375,14 +375,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			String html = null;
 			//
-			try (final InputStream is = Util.openStream(Util.toURL(URIBuilderUtil
-					.build(new URIBuilder("https://www.gavo.t.u-tokyo.ac.jp").setPath("ojad/search/index/word:"))))) {
+			try (final InputStream is = !isTestMode()
+					? Util.openStream(Util.toURL(URIBuilderUtil.build(
+							new URIBuilder("https://www.gavo.t.u-tokyo.ac.jp").setPath("ojad/search/index/word:"))))
+					: null) {
 				//
-				html = IOUtils.toString(is, StandardCharsets.UTF_8);
+				html = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
 				//
 			} // try
 				//
-			Iterable<Element> es = ElementUtil.select(Jsoup.parse(html), "[id=\"search_curve\"]");
+			Iterable<Element> es = ElementUtil.select(testAndApply(Objects::nonNull, html, Jsoup::parse, null),
+					"[id=\"search_curve\"]");
 			//
 			testAndRunThrows(IterableUtils.size(es) > 1, () -> {
 				//
