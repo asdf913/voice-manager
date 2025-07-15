@@ -583,7 +583,7 @@ public abstract class Util {
 		return clz != null ? clz.getDeclaredConstructor(parameterTypes) : null;
 	}
 
-	static <T> T newInstance(final Constructor<T> constructor, final Object... initargs)
+	static <T> T newInstance(@Nullable final Constructor<T> constructor, final Object... initargs)
 			throws InstantiationException, IllegalAccessException, InvocationTargetException {
 		return constructor != null ? constructor.newInstance(initargs) : null;
 	}
