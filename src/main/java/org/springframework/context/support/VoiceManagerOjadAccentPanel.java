@@ -619,13 +619,25 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			panelPdf.add(
 					new JComboBox<>(
-							cbmCompression = new DefaultComboBoxModel<>(ArrayUtils.addFirst(Util.toArray(Util.collect(
-									Util.map(Util.filter(
-											testAndApply(Objects::nonNull, Util.getDeclaredFields(Boolean.class),
-													Arrays::stream, null),
-											x -> Objects.equals(Util.getType(x), Boolean.class) && Util.isStatic(x)),
-											x -> Util.cast(Boolean.class, Narcissus.getStaticField(x))),
-									Collectors.toList()), new Boolean[] {}), null))),
+							cbmCompression = new DefaultComboBoxModel<>(
+									ArrayUtils
+											.addFirst(
+													Util.toArray(Util.collect(
+															Util.map(
+																	Util.filter(
+																			testAndApply(
+																					Objects::nonNull,
+																					Util.getDeclaredFields(
+																							Boolean.class),
+																					Arrays::stream, null),
+																			x -> Boolean.logicalAnd(
+																					Objects.equals(Util.getType(x),
+																							Boolean.class),
+																					Util.isStatic(x))),
+																	x -> Util.cast(Boolean.class,
+																			Narcissus.getStaticField(x))),
+															Collectors.toList()), new Boolean[] {}),
+													null))),
 					wrap);
 			//
 			panelPdf.add(new JLabel());
