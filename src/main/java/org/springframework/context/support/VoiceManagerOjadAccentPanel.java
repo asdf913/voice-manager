@@ -306,6 +306,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		@Note("Conjugation")
 		private String conjugation = null;
 
+		private String id = null;
+
 		@Note("Accent Image")
 		private BufferedImage accentImage = null;
 
@@ -2148,7 +2150,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				// word
 				//
-			final Iterable<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
+			final Iterable<ElementHandle> words = testAndApply((a, b) -> StringUtils.isNotBlank(b), page, input.id,
+					(a, b) -> querySelectorAll(a, String.format("tr[id=\"%1$s\"]", b)),
+					(a, b) -> querySelectorAll(a, "tr[id^=\"word\"]"));
 			//
 			testAndRunThrows(IterableUtils.size(words) > 1, () -> {
 				//
@@ -2573,10 +2577,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		if (IterableUtils.size(words) == IterableUtils.size(ehs)) {
 			//
+			// 家
+			//
+			ElementHandle word = null;
+			//
 			for (int i = 0; i < IterableUtils.size(words); i++) {
 				//
 				(textAndImage = new TextAndImage()).kanji = StringUtils
-						.trim(textContent(querySelector(IterableUtils.get(words, i), CSS_SELECTOR_MIDASHI)));
+						.trim(textContent(querySelector(word = IterableUtils.get(words, i), CSS_SELECTOR_MIDASHI)));
 				//
 				textAndImage.accentImage = toBufferedImage(screenshot(eh = IterableUtils.get(ehs, i)),
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
@@ -2586,6 +2594,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
 				textAndImage.hiragana = StringUtils.trim(textContent(eh));
+				//
+				textAndImage.id = getAttribute(word, "id");
 				//
 				Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 				//
