@@ -1359,8 +1359,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			PDComplexFileSpecification pdComplexFileSpecification = null;
 			//
-			PDEmbeddedFile pdEmbeddedFile = null;
-			//
 			final int size = length(heights) == 1 ? get(heights, 0, 10) : 10;
 			//
 			byte[] bs = null;
@@ -1368,6 +1366,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			Pattern pattern = null;
 			//
 			IValue0<String> iValue0 = null;
+			//
+			ContentInfoUtil ciu = null;
 			//
 			for (int x = 0; x < length(translateXs); x++) {
 				//
@@ -1390,19 +1390,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							ByteArrayInputStream::new, null)) {
 						//
 						(pdComplexFileSpecification = new PDComplexFileSpecification())
-								.setEmbeddedFile(pdEmbeddedFile = new PDEmbeddedFile(pdDocument, is));
+								.setEmbeddedFile(createPDEmbeddedFile(pdDocument, is,
+										ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), bs));
 						//
 						pdComplexFileSpecification
 								.setFile(StringUtils.substringAfterLast(IValue0Util.getValue0(iValue0), '/'));
 						//
-						pdEmbeddedFile.setSubtype(new ContentInfoUtil().findMatch(bs).getMimeType());
-						//
-						if (bs != null) {
-							//
-							pdEmbeddedFile.setSize(bs.length);
-							//
-						} // if
-							//
 					} // try
 						//
 					pdAnnotationFileAttachment.setFile(pdComplexFileSpecification);
@@ -1415,6 +1408,32 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // try
 			//
+	}
+
+	private static PDEmbeddedFile createPDEmbeddedFile(final PDDocument pdDocument, final InputStream is,
+			final ContentInfoUtil ciu, final byte[] bs) throws IOException {
+		//
+		final PDEmbeddedFile pdEmbeddedFile = testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null),
+				pdDocument, is, (a, b) -> new PDEmbeddedFile(a, b), null);
+		//
+		if (pdEmbeddedFile != null) {
+			//
+			pdEmbeddedFile.setSubtype(getMimeType(findMatch(ciu, bs)));
+			//
+			if (bs != null) {
+				//
+				pdEmbeddedFile.setSize(bs.length);
+				//
+			} // if
+				//
+		} // if
+			//
+		return pdEmbeddedFile;
+		//
+	}
+
+	private static String getMimeType(final ContentInfo instance) {
+		return instance != null ? instance.getMimeType() : null;
 	}
 
 	@Nullable

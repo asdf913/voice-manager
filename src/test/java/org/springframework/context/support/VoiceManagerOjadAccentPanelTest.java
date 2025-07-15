@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
@@ -83,6 +84,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.pdfbox.contentstream.PDFGraphicsStreamEngine;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.state.PDGraphicsState;
 import org.javatuples.valueintf.IValue0;
@@ -136,7 +138,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE,
 			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE,
 			METHOD_SET_HANDLER, METHOD_NEW_INSTANCE, METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE, METHOD_GET,
-			METHOD_GET_VOICE_URL_BY_XY = null;
+			METHOD_GET_VOICE_URL_BY_XY, METHOD_CREATE_PD_EMBEDDED_FILE, METHOD_GET_MIME_TYPE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -267,6 +269,11 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_GET_VOICE_URL_BY_XY = clz.getDeclaredMethod("getVoiceUrlByXY", Pattern.class, Iterable.class,
 				Integer.TYPE, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_CREATE_PD_EMBEDDED_FILE = clz.getDeclaredMethod("createPDEmbeddedFile", PDDocument.class,
+				InputStream.class, ContentInfoUtil.class, byte[].class)).setAccessible(true);
+		//
+		(METHOD_GET_MIME_TYPE = clz.getDeclaredMethod("getMimeType", ContentInfo.class)).setAccessible(true);
 		//
 	}
 
@@ -2141,6 +2148,58 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreatePDEmbeddedFile() throws Throwable {
+		//
+		try (final PDDocument pdDocument = new PDDocument();
+				final InputStream is = new ByteArrayInputStream(new byte[] {})) {
+			//
+			Assertions.assertNull(createPDEmbeddedFile(pdDocument, null, null, null));
+			//
+			Assertions.assertNotNull(createPDEmbeddedFile(pdDocument, is, null, null));
+			//
+			Assertions.assertNotNull(createPDEmbeddedFile(pdDocument, is, null, new byte[] {}));
+			//
+		} // try
+			//
+	}
+
+	private static PDEmbeddedFile createPDEmbeddedFile(final PDDocument pdDocument, final InputStream is,
+			final ContentInfoUtil ciu, final byte[] bs) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_PD_EMBEDDED_FILE.invoke(null, pdDocument, is, ciu, bs);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof PDEmbeddedFile) {
+				return (PDEmbeddedFile) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetMimeType() throws Throwable {
+		//
+		Assertions.assertNull(getMimeType(Util.cast(ContentInfo.class, Narcissus.allocateInstance(ContentInfo.class))));
+		//
+	}
+
+	private static String getMimeType(final ContentInfo instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_MIME_TYPE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
