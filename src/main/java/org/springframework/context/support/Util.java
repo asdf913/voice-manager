@@ -13,6 +13,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -580,6 +581,11 @@ public abstract class Util {
 	static <T> Constructor<T> getDeclaredConstructor(@Nullable final Class<T> clz, final Class<?>... parameterTypes)
 			throws NoSuchMethodException {
 		return clz != null ? clz.getDeclaredConstructor(parameterTypes) : null;
+	}
+
+	static <T> T newInstance(final Constructor<T> constructor, final Object... initargs)
+			throws InstantiationException, IllegalAccessException, InvocationTargetException {
+		return constructor != null ? constructor.newInstance(initargs) : null;
 	}
 
 	static boolean isAnnotationPresent(@Nullable final AnnotatedElement instance,

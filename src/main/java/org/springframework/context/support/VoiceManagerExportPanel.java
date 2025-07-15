@@ -5340,7 +5340,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 						public Workbook get() throws RuntimeException {
 							try {
 								//
-								return Util.cast(Workbook.class, newInstance(Util.getDeclaredConstructor(x)));
+								return Util.cast(Workbook.class, Util.newInstance(Util.getDeclaredConstructor(x)));
 								//
 							} catch (final NoSuchMethodException | InstantiationException | IllegalAccessException
 									| InvocationTargetException e) {
@@ -5384,12 +5384,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 		return null;
 		//
-	}
-
-	@Nullable
-	private static <T> T newInstance(@Nullable final Constructor<T> constructor, final Object... initargs)
-			throws InstantiationException, IllegalAccessException, InvocationTargetException {
-		return constructor != null ? constructor.newInstance(initargs) : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,

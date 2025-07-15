@@ -1201,7 +1201,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		final Method m = IterableUtils.size(ms) == 1 ? get(ms, 0) : null;
 		//
-		final Object osVersionInfoEx = newInstance(Util.getDeclaredConstructor(clzOsVersionInfoEx));
+		final Object osVersionInfoEx = Util.newInstance(Util.getDeclaredConstructor(clzOsVersionInfoEx));
 		//
 		return Objects.equals(Boolean.TRUE, invoke(m, FieldUtils.readStaticField(f), osVersionInfoEx)) ? osVersionInfoEx
 				: null;
@@ -1689,12 +1689,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static <T> T newInstance(@Nullable final Constructor<T> constructor, final Object... initargs)
-			throws InstantiationException, IllegalAccessException, InvocationTargetException {
-		return constructor != null ? constructor.newInstance(initargs) : null;
 	}
 
 	/*

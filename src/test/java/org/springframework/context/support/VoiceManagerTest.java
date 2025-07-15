@@ -246,9 +246,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_COMPONENTS = clz.getDeclaredMethod("getComponents", Container.class)).setAccessible(true);
 		//
-		(METHOD_NEW_INSTANCE = clz.getDeclaredMethod("newInstance", Constructor.class, Object[].class))
-				.setAccessible(true);
-		//
 		(METHOD_GET_NUMBER = clz.getDeclaredMethod("getNumber", Object.class, Iterable.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_IMPORT_RESULT_PANEL = clz.getDeclaredMethod("createImportResultPanel", LayoutManager.class))
@@ -437,7 +434,7 @@ class VoiceManagerTest {
 			//
 		objectMapper = new ObjectMapper();
 		//
-		instance = !GraphicsEnvironment.isHeadless() ? newInstance(constructor)
+		instance = !GraphicsEnvironment.isHeadless() ? Util.newInstance(constructor)
 				: Util.cast(VoiceManager.class, Narcissus.allocateInstance(VoiceManager.class));
 		//
 		stream = Reflection.newProxy(Stream.class, ih = new IH());
@@ -1377,7 +1374,7 @@ class VoiceManagerTest {
 		//
 		proxyFactory.setSuperclass(Component.class);
 		//
-		final Object object = newInstance(Util.getDeclaredConstructor(proxyFactory.createClass()));
+		final Object object = Util.newInstance(Util.getDeclaredConstructor(proxyFactory.createClass()));
 		//
 		if (object instanceof ProxyObject) {
 			//
@@ -1505,13 +1502,6 @@ class VoiceManagerTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
-	}
-
-	@Test
-	void testNewInstance() throws Throwable {
-		//
-		Assertions.assertNull(newInstance(null));
-		//
 	}
 
 	private static <T> T newInstance(final Constructor<T> constructor, final Object... initargs) throws Throwable {
@@ -1923,7 +1913,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		return Util.cast(InvocationHandler.class, newInstance(constructor));
+		return Util.cast(InvocationHandler.class, Util.newInstance(constructor));
 		//
 	}
 
@@ -2235,7 +2225,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(invoke(setPassword, null, newInstance(constructor), null));
+		Assertions.assertNull(invoke(setPassword, null, Util.newInstance(constructor), null));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.getProgressBarExport(org.springframework.context.support.VoiceManager)
 		//
@@ -2299,7 +2289,7 @@ class VoiceManagerTest {
 		} // if
 			//
 		final ListCellRenderer<?> listCellRenderer1 = Util.cast(ListCellRenderer.class,
-				newInstance(constructor, this.instance));
+				Util.newInstance(constructor, this.instance));
 		//
 		if (listCellRenderer1 != null) {
 			//
@@ -2342,7 +2332,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final ListCellRenderer<?> listCellRenderer = Util.cast(ListCellRenderer.class, newInstance(constructor));
+		final ListCellRenderer<?> listCellRenderer = Util.cast(ListCellRenderer.class, Util.newInstance(constructor));
 		//
 		if (listCellRenderer != null) {
 			//
@@ -2375,7 +2365,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final Object instance = newInstance(constructor);
+		final Object instance = Util.newInstance(constructor);
 		//
 		// setAudioStreamEncoderByteArrayLength(java.lang.Object)
 		//
@@ -2450,7 +2440,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final Object instance = newInstance(constructor);
+		final Object instance = Util.newInstance(constructor);
 		//
 		// convert(byte[])
 		//
@@ -2565,7 +2555,7 @@ class VoiceManagerTest {
 		} // if
 			//
 		final MouseListener[] mouseListeners = getMouseListeners(
-				Util.cast(Component.class, newInstance(constructor, (Object) null)));
+				Util.cast(Component.class, Util.newInstance(constructor, (Object) null)));
 		//
 		for (int i = 0; mouseListeners != null && i < mouseListeners.length; i++) {
 			//
@@ -2625,7 +2615,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final ChangeListener changeListener = Util.cast(ChangeListener.class, newInstance(constructor));
+		final ChangeListener changeListener = Util.cast(ChangeListener.class, Util.newInstance(constructor));
 		//
 		Assertions.assertDoesNotThrow(() -> stateChanged(changeListener, null));
 		//
@@ -2677,7 +2667,8 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final BiConsumer<?, ?> biConsumer = Util.cast(BiConsumer.class, newInstance(constructor, Boolean.TRUE, null));
+		final BiConsumer<?, ?> biConsumer = Util.cast(BiConsumer.class,
+				Util.newInstance(constructor, Boolean.TRUE, null));
 		//
 		Assertions.assertDoesNotThrow(() -> {
 			//
@@ -2732,7 +2723,7 @@ class VoiceManagerTest {
 		} // if
 			//
 		final FocusTraversalPolicy focusTraversalPolicy = Util.cast(FocusTraversalPolicy.class,
-				newInstance(constructor, (Object) null));
+				Util.newInstance(constructor, (Object) null));
 		//
 		if (focusTraversalPolicy != null) {
 			//
