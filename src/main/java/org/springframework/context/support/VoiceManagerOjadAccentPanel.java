@@ -1484,9 +1484,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 											x -> Util.keySet(x != null ? x.voiceUrlImages : null)), Collection::stream),
 									x -> {
 										//
-										final String s = StringUtils.substringAfterLast(x, '/');
-										//
-										final Matcher matcher = Util.matcher(pattern, s);
+										final Matcher matcher = Util.matcher(pattern,
+												StringUtils.substringAfterLast(x, '/'));
 										//
 										return Util.matches(matcher) && Util.groupCount(matcher) > 0
 												? Util.group(matcher, 1)
