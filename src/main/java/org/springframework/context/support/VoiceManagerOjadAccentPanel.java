@@ -850,7 +850,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.curveImage : null;
 	}
 
-	private static Map<String, byte[]> getVoiceUrlImages(final TextAndImage instance) {
+	private static Map<String, byte[]> getVoiceUrlImages(@Nullable final TextAndImage instance) {
 		return instance != null ? instance.voiceUrlImages : null;
 	}
 
