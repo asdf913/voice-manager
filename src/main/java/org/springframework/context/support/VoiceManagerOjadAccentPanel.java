@@ -850,6 +850,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.curveImage : null;
 	}
 
+	private static Map<String, byte[]> getVoiceUrlImages(final TextAndImage instance) {
+		return instance != null ? instance.voiceUrlImages : null;
+	}
+
 	private static Field getFieldByName(final Class<?> clz, final String fieldName) {
 		//
 		final List<Field> fs = Util.toList(
@@ -1136,7 +1140,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			if (textAndImage != null) {
 				//
-				Util.forEach(Util.entrySet(textAndImage.voiceUrlImages), en -> {
+				Util.forEach(Util.entrySet(getVoiceUrlImages(textAndImage)), en -> {
 					//
 					final String key = Util.getKey(en);
 					//
@@ -1477,21 +1481,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			TextAndImage textAndImage = null;
 			//
-			final List<String> ys = Util
-					.toList(Util
-							.distinct(Util.map(
-									flatMap(Util.map(Util.stream(textAndImages),
-											x -> Util.keySet(x != null ? x.voiceUrlImages : null)), Collection::stream),
-									x -> {
-										//
-										final Matcher matcher = Util.matcher(pattern,
-												StringUtils.substringAfterLast(x, '/'));
-										//
-										return Util.matches(matcher) && Util.groupCount(matcher) > 0
-												? Util.group(matcher, 1)
-												: null;
-										//
-									})));
+			final List<String> ys = Util.toList(Util.distinct(
+					Util.map(flatMap(Util.map(Util.stream(textAndImages), x -> Util.keySet(getVoiceUrlImages(x))),
+							Collection::stream), x -> {
+								//
+								final Matcher matcher = Util.matcher(pattern, StringUtils.substringAfterLast(x, '/'));
+								//
+								return Util.matches(matcher) && Util.groupCount(matcher) > 0 ? Util.group(matcher, 1)
+										: null;
+								//
+							})));
 			//
 			for (int x = 0; x < length(translateXs); x++) {
 				//
@@ -1502,16 +1501,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 									(float) translateYs[y] + size// TODO
 									, size, size));
 					//
-					try (final InputStream is = testAndApply(Objects::nonNull,
-							bs = toByteArray(testAndApply(Objects::nonNull,
-									IValue0Util.getValue0(iValue0 = getVoiceUrlByX(pattern,
-											Util.keySet((textAndImage = getTextAndImageByXY(pattern, textAndImages, x,
-													IterableUtils.get(ys, IterableUtils.size(ys) - y - 1))) != null
-															? textAndImage.voiceUrlImages
-															: null),
-											x)),
-									URL::new, null)),
-							ByteArrayInputStream::new, null)) {
+					try (final InputStream is = testAndApply(Objects::nonNull, bs = toByteArray(testAndApply(
+							Objects::nonNull,
+							IValue0Util.getValue0(iValue0 = getVoiceUrlByX(pattern,
+									Util.keySet(getVoiceUrlImages(textAndImage = getTextAndImageByXY(pattern,
+											textAndImages, x, IterableUtils.get(ys, IterableUtils.size(ys) - y - 1)))),
+									x)),
+							URL::new, null)), ByteArrayInputStream::new, null)) {
 						//
 						if (is == null) {
 							//
@@ -1657,7 +1653,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // if
 				//
-			urls = Util.toList(Util.stream(Util.keySet(textAndImage.voiceUrlImages)));
+			urls = Util.toList(Util.stream(Util.keySet(getVoiceUrlImages(textAndImage))));
 			//
 			for (int j = 0; j < IterableUtils.size(urls); j++) {
 				//
@@ -2527,7 +2523,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		return x -> {
 			//
-			final Map<String, byte[]> voiceUrlImages = x != null ? x.voiceUrlImages : null;
+			final Map<String, byte[]> voiceUrlImages = getVoiceUrlImages(x);
 			//
 			final Iterable<Entry<String, byte[]>> entrySet = testAndApply(Objects::nonNull,
 					Util.entrySet(voiceUrlImages), y -> new ArrayList<>(y), y -> y);
