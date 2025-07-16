@@ -1413,8 +1413,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					final Iterable<Method> ms = Util.toList(Util.filter(
 							testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(file)), Arrays::stream,
 									null),
-							m -> Objects.equals(Util.getName(m), "createNewFile")
-									&& Arrays.equals(Util.getParameterTypes(m), new Class<?>[] {})));
+							m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "createNewFile"),
+									Arrays.equals(Util.getParameterTypes(m), new Class<?>[] {}))));
 					//
 					testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
 						//
