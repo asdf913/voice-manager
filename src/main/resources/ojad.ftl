@@ -6,9 +6,9 @@
 					<#list textAndImages as textAndImage>
 						<#if textAndImage??>
 							<tr>
-								<td><#if static??>${static["org.apache.commons.lang3.reflect.FieldUtils"].readDeclaredField(textAndImage,"conjugation",true)!""}</#if></td>
-								<td><#if static??>${static["org.apache.commons.lang3.reflect.FieldUtils"].readDeclaredField(textAndImage,"kanji",true)}</#if></td>
-								<td><#if static??>${static["org.apache.commons.lang3.reflect.FieldUtils"].readDeclaredField(textAndImage,"hiragana",true)}</#if></td>
+								<td style="<#if maxConjugationLength[textAndImage?index]??>font-size:${maxConjugationLength[textAndImage?index]}px</#if>"><#if static??>${static["org.apache.commons.lang3.reflect.FieldUtils"].readDeclaredField(textAndImage,"conjugation",true)!""}</#if></td>
+								<td style="<#if maxKanjiLength[textAndImage?index]??>font-size:${maxKanjiLength[textAndImage?index]}px</#if>"><#if static??>${static["org.apache.commons.lang3.reflect.FieldUtils"].readDeclaredField(textAndImage,"kanji",true)}</#if></td>
+								<td style="<#if maxHiraganaLength[textAndImage?index]??>font-size:${maxHiraganaLength[textAndImage?index]}px</#if>"><#if static??>${static["org.apache.commons.lang3.reflect.FieldUtils"].readDeclaredField(textAndImage,"hiragana",true)}</#if></td>
 								<td><#if static?? && static["org.apache.commons.lang3.reflect.FieldUtils"].readDeclaredField(textAndImage,"accentImage",true)??>
 									<img src="data:image/png;base64,${static["org.apache.commons.codec.binary.Base64"].encodeBase64String(static["org.springframework.context.support.VoiceManagerOjadAccentPanel"].toByteArray(static["org.apache.commons.lang3.reflect.FieldUtils"].readDeclaredField(textAndImage,"accentImage",true),"png"))}"/>
 								</#if></td>

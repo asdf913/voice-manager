@@ -1312,16 +1312,60 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final Template template = configuration.getTemplate("ojad.ftl");
 			//
-			final Iterable<TextAndImage> textAndImages = getTextAndImages(instance, textAndImage);
+			final Collection<TextAndImage> textAndImages = getTextAndImages(instance, textAndImage);
 			//
 			final Map<String, Object> map = new LinkedHashMap<>(
 					Collections.singletonMap("textAndImages", textAndImages));
 			//
 			Util.put(map, "static", new BeansWrapper(version).getStaticModels());
 			//
+			Util.put(map, "maxConjugationLength", Util.toList(Util.map(Util.stream(textAndImages), x -> {
+				//
+				// 〜じゃなかった形
+				//
+				if (StringUtils.length(x != null ? x.conjugation : null) == 8) {
+					//
+					return Integer.valueOf(13);
+					//
+				} // if
+					//
+				return null;
+				//
+			})));
+			//
+			Util.put(map, "maxKanjiLength", Util.toList(Util.map(Util.stream(textAndImages), x -> {
+				//
+				// 補助的じゃなかった
+				//
+				if (StringUtils.length(x != null ? x.kanji : null) == 9) {
+					//
+					return Integer.valueOf(13);
+					//
+				} // if
+					//
+				return null;
+				//
+			})));
+			//
+			Util.put(map, "maxHiraganaLength", Util.toList(Util.map(Util.stream(textAndImages), x -> {
+				//
+				// ほじょてきじゃなかった
+				//
+				if (StringUtils.length(x != null ? x.hiragana : null) == 11) {
+					//
+					return Integer.valueOf(13);
+					//
+				} // if
+					//
+				return null;
+				//
+			})));
+			//
 			TemplateUtil.process(template, map, w);
 			//
 			final Page page = newPage(BrowserTypeUtil.launch(chromium(playwright)));
+			//
+			FileUtils.write(Util.toFile(Path.of("test.html")), Util.toString(w), StandardCharsets.UTF_8, false);
 			//
 			setContent(page, Util.toString(w));
 			//
