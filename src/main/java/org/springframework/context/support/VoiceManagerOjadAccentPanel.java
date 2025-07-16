@@ -1337,7 +1337,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				// 補助的じゃなかった
 				//
-				if (StringUtils.length(x != null ? x.kanji : null) == 9) {
+				if (StringUtils.length(getKanji(x)) == 9) {
 					//
 					return Integer.valueOf(13);
 					//
