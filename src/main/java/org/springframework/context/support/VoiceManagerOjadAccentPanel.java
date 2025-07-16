@@ -1365,8 +1365,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final Page page = newPage(BrowserTypeUtil.launch(chromium(playwright)));
 			//
-			FileUtils.write(Util.toFile(Path.of("test.html")), Util.toString(w), StandardCharsets.UTF_8, false);
-			//
 			setContent(page, Util.toString(w));
 			//
 			final JFileChooser jfc = new JFileChooser(".");
