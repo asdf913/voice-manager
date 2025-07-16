@@ -1542,8 +1542,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static <T, R> Stream<R> flatMap(final Stream<T> instance,
-			final Function<? super T, ? extends Stream<? extends R>> mapper) {
+	private static <T, R> Stream<R> flatMap(@Nullable final Stream<T> instance,
+			@Nullable final Function<? super T, ? extends Stream<? extends R>> mapper) {
 		//
 		return instance != null && (mapper != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.flatMap(mapper)
