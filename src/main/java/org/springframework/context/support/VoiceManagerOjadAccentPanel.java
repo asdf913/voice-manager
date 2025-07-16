@@ -850,6 +850,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.curveImage : null;
 	}
 
+	@Nullable
 	private static Map<String, byte[]> getVoiceUrlImages(@Nullable final TextAndImage instance) {
 		return instance != null ? instance.voiceUrlImages : null;
 	}
@@ -1538,6 +1539,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
+	@Nullable
 	private static <T, R> Stream<R> flatMap(@Nullable final Stream<T> instance,
 			@Nullable final Function<? super T, ? extends Stream<? extends R>> mapper) {
 		//
