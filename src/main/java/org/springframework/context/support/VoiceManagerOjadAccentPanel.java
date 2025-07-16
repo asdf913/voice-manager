@@ -1351,7 +1351,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				// ほじょてきじゃなかった
 				//
-				if (StringUtils.length(x != null ? x.hiragana : null) == 11) {
+				if (StringUtils.length(getHiragana(x)) == 11) {
 					//
 					return Integer.valueOf(13);
 					//
