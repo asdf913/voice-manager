@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
@@ -142,7 +143,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE, METHOD_SET_HANDLER,
 			METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE, METHOD_GET, METHOD_CREATE_PD_EMBEDDED_FILE,
 			METHOD_GET_MIME_TYPE, METHOD_GET_VOICE_URL_BY_X, METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, METHOD_GET_SIZE,
-			METHOD_GET_TRANSLATE_XS = null;
+			METHOD_GET_TRANSLATE_XS, METHOD_FLAT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -267,7 +268,7 @@ class VoiceManagerOjadAccentPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_ADD_ANNOTATIONS = clz.getDeclaredMethod("addAnnotations", PDDocument.class, PDPage.class,
-				Collection.class, Iterable.class, Boolean.TYPE)).setAccessible(true);
+				Collection.class, Collection.class, Boolean.TYPE)).setAccessible(true);
 		//
 		(METHOD_MAP_TO_DOUBLE = clz.getDeclaredMethod("mapToDouble", Stream.class, ToDoubleFunction.class))
 				.setAccessible(true);
@@ -283,13 +284,15 @@ class VoiceManagerOjadAccentPanelTest {
 				Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_TEXT_AND_IMAGE_BY_X_Y = clz.getDeclaredMethod("getTextAndImageByXY", Pattern.class, Iterable.class,
-				Integer.TYPE, Integer.TYPE)).setAccessible(true);
+				Integer.TYPE, String.class)).setAccessible(true);
 		//
 		(METHOD_GET_SIZE = clz.getDeclaredMethod("getSize", Collection.class, Predicate.class, Integer.TYPE))
 				.setAccessible(true);
 		//
 		(METHOD_GET_TRANSLATE_XS = clz.getDeclaredMethod("getTranslateXs", Collection.class, Double.TYPE))
 				.setAccessible(true);
+		//
+		(METHOD_FLAT_MAP = clz.getDeclaredMethod("flatMap", Stream.class, Function.class)).setAccessible(true);
 		//
 	}
 
@@ -401,10 +404,18 @@ class VoiceManagerOjadAccentPanelTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Stream && Objects.equals(methodName, "mapToDouble")) {
+			} else if (proxy instanceof Stream) {
 				//
-				return null;
-				//
+				if (Objects.equals(methodName, "mapToDouble")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "flatMap")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -445,6 +456,8 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private Page page = null;
 
+	private Stream<?> stream = null;
+
 	private VoiceManagerOjadAccentPanel instance = null;
 
 	private Object textAndImage = null;
@@ -461,6 +474,8 @@ class VoiceManagerOjadAccentPanelTest {
 		elementHandle = Reflection.newProxy(ElementHandle.class, ih = new IH());
 		//
 		page = Reflection.newProxy(Page.class, ih);
+		//
+		stream = Reflection.newProxy(Stream.class, ih);
 		//
 		instance = new VoiceManagerOjadAccentPanel();
 		//
@@ -2108,8 +2123,7 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertNull(mapToDouble(Stream.empty(), null));
 		//
-		Assertions.assertNull(
-				Narcissus.invokeStaticMethod(METHOD_MAP_TO_DOUBLE, Reflection.newProxy(Stream.class, ih), null));
+		Assertions.assertNull(mapToDouble(stream, null));
 		//
 	}
 
@@ -2243,13 +2257,13 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testGetTextAndImageByXY() throws Throwable {
 		//
-		Assertions.assertNull(getTextAndImageByXY(null, Collections.singleton(null), 0, 0));
+		Assertions.assertNull(getTextAndImageByXY(null, Collections.singleton(null), 0, null));
 		//
 		final Object tai = Narcissus.allocateInstance(CLASS_TEXT_AND_IMAGE);
 		//
 		final Iterable<?> iterable = Collections.singleton(tai);
 		//
-		Assertions.assertNull(getTextAndImageByXY(null, iterable, 0, 0));
+		Assertions.assertNull(getTextAndImageByXY(null, iterable, 0, null));
 		//
 		FieldUtils.writeDeclaredField(tai, "voiceUrlImages", Collections.singletonMap(
 				"https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/female/011/1184_1_1_female.mp3", null), true);
@@ -2260,20 +2274,20 @@ class VoiceManagerOjadAccentPanelTest {
 				.assertEquals("{\"voiceUrlImages\":{}}",
 						ObjectMapperUtil.writeValueAsString(setDefaultPropertyInclusion(
 								setVisibility(objectMapper, PropertyAccessor.ALL, Visibility.ANY), Include.NON_NULL),
-								getTextAndImageByXY(patern, iterable, 0, 0)));
+								getTextAndImageByXY(patern, iterable, 0, Integer.toString(1))));
 		//
 		FieldUtils.writeDeclaredField(tai, "voiceUrlImages", Collections.singletonMap(
 				"https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/male/011/1184_1_1_male.mp3", null), true);
 		//
-		Assertions.assertEquals("{\"voiceUrlImages\":{}}",
-				ObjectMapperUtil.writeValueAsString(objectMapper, getTextAndImageByXY(patern, iterable, 1, 0)));
+		Assertions.assertEquals("{\"voiceUrlImages\":{}}", ObjectMapperUtil.writeValueAsString(objectMapper,
+				getTextAndImageByXY(patern, iterable, 1, Integer.toString(1))));
 		//
-		Assertions.assertNull(getTextAndImageByXY(patern, iterable, 0, 0));
+		Assertions.assertNull(getTextAndImageByXY(patern, iterable, 0, null));
 		//
 	}
 
 	private static Object getTextAndImageByXY(final Pattern pattern, final Iterable<?> textAndImages, final int x,
-			final int y) throws Throwable {
+			final String y) throws Throwable {
 		try {
 			return METHOD_GET_TEXT_AND_IMAGE_BY_X_Y.invoke(null, pattern, textAndImages, x, y);
 		} catch (final InvocationTargetException e) {
@@ -2325,6 +2339,32 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof double[]) {
 				return (double[]) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testFlatMap() throws Throwable {
+		//
+		Assertions.assertNull(flatMap(Stream.empty(), null));
+		//
+		Assertions.assertNull(flatMap(stream, null));
+		//
+		Assertions.assertNotNull(flatMap(Stream.of(Collections.emptySet()), Collection::stream));
+		//
+	}
+
+	private static <T, R> Stream<R> flatMap(final Stream<T> instance,
+			final Function<? super T, ? extends Stream<? extends R>> mapper) throws Throwable {
+		try {
+			final Object obj = METHOD_FLAT_MAP.invoke(null, instance, mapper);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

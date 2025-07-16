@@ -1439,7 +1439,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	private static void addAnnotations(final PDDocument pdDocument, final PDPage pdPage,
-			final Collection<ImageDimensionPosition> idps, final Iterable<TextAndImage> textAndImages,
+			final Collection<ImageDimensionPosition> idps, final Collection<TextAndImage> textAndImages,
 			final boolean compression) throws IOException {
 		//
 		try (final PDPageContentStream cs = testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), pdDocument,
@@ -1469,13 +1469,30 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			byte[] bs = null;
 			//
-			Pattern pattern = null;
+			final Pattern pattern = Pattern.compile("^\\d+_(\\d+)_\\d+_(\\w+)\\.\\w+$");
 			//
 			IValue0<String> iValue0 = null;
 			//
 			ContentInfoUtil ciu = null;
 			//
 			TextAndImage textAndImage = null;
+			//
+			final List<String> ys = Util
+					.toList(Util
+							.distinct(Util.map(
+									flatMap(Util.map(Util.stream(textAndImages),
+											x -> Util.keySet(x != null ? x.voiceUrlImages : null)), Collection::stream),
+									x -> {
+										//
+										final String s = StringUtils.substringAfterLast(x, '/');
+										//
+										final Matcher matcher = Util.matcher(pattern, s);
+										//
+										return Util.matches(matcher) && Util.groupCount(matcher) > 0
+												? Util.group(matcher, 1)
+												: null;
+										//
+									})));
 			//
 			for (int x = 0; x < length(translateXs); x++) {
 				//
@@ -1486,17 +1503,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 									(float) translateYs[y] + size// TODO
 									, size, size));
 					//
-					try (final InputStream is = testAndApply(Objects::nonNull, bs = toByteArray(testAndApply(
-							Objects::nonNull,
-							IValue0Util.getValue0(iValue0 = getVoiceUrlByX(
-									pattern = ObjectUtils.getIfNull(pattern,
-											() -> Pattern.compile("^\\d+_(\\d+)_\\d+_(\\w+)\\.\\w+$")),
-									Util.keySet(
-											(textAndImage = getTextAndImageByXY(pattern, textAndImages, x, y)) != null
-													? textAndImage.voiceUrlImages
-													: null),
-									x)),
-							URL::new, null)), ByteArrayInputStream::new, null)) {
+					try (final InputStream is = testAndApply(Objects::nonNull,
+							bs = toByteArray(testAndApply(Objects::nonNull,
+									IValue0Util.getValue0(iValue0 = getVoiceUrlByX(pattern,
+											Util.keySet((textAndImage = getTextAndImageByXY(pattern, textAndImages, x,
+													IterableUtils.get(ys, IterableUtils.size(ys) - y - 1))) != null
+															? textAndImage.voiceUrlImages
+															: null),
+											x)),
+									URL::new, null)),
+							ByteArrayInputStream::new, null)) {
 						//
 						if (is == null) {
 							//
@@ -1525,6 +1541,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // try
 			//
+	}
+
+	private static <T, R> Stream<R> flatMap(final Stream<T> instance,
+			final Function<? super T, ? extends Stream<? extends R>> mapper) {
+		//
+		return instance != null && (mapper != null || Proxy.isProxyClass(Util.getClass(instance)))
+				? instance.flatMap(mapper)
+				: null;
+		//
 	}
 
 	@Nullable
@@ -1613,7 +1638,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	@Nullable
 	private static TextAndImage getTextAndImageByXY(final Pattern pattern, final Iterable<TextAndImage> textAndImages,
-			final int x, final int y) {
+			final int x, final String y) {
 		//
 		TextAndImage textAndImage = null;
 		//
@@ -1639,8 +1664,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				if (!Util.matches(matcher = Util.matcher(pattern,
 						StringUtils.substringAfterLast(IterableUtils.get(urls, j), '/')))
-						|| Util.groupCount(matcher) != 2
-						|| !Objects.equals(Integer.toString(size - y), Util.group(matcher, 1))) {
+						|| Util.groupCount(matcher) != 2 || !Objects.equals(y, Util.group(matcher, 1))) {
 					//
 					continue;
 					//
