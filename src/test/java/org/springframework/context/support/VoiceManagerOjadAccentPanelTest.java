@@ -406,11 +406,7 @@ class VoiceManagerOjadAccentPanelTest {
 					//
 			} else if (proxy instanceof Stream) {
 				//
-				if (Objects.equals(methodName, "mapToDouble")) {
-					//
-					return null;
-					//
-				} else if (Objects.equals(methodName, "flatMap")) {
+				if (Util.contains(Arrays.asList("mapToDouble", "flatMap"), methodName)) {
 					//
 					return null;
 					//
