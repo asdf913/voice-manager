@@ -1422,7 +1422,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 					} // if
 						//
-					testAndAccept((a, b) -> a != null && b != null, file,
+					testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null), file,
 							testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null),
 							Narcissus::invokeMethod);
 					//
