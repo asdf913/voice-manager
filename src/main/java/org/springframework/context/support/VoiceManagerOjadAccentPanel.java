@@ -1455,8 +1455,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final double[] translateXs = testAndApply(x -> x > 2, length(ds), x -> ArrayUtils.subarray(ds, x - 2, x),
 					x -> ds);
 			//
-			final Predicate<ImageDimensionPosition> predicate = x -> x != null
-					&& ArrayUtils.contains(translateXs, x.translateX);
+			final Predicate<ImageDimensionPosition> predicate = createImageDimensionPositionPredicate(translateXs);
 			//
 			final double[] translateYs = toArray(distinct(sorted(mapToDouble(Util.filter(Util.stream(idps), predicate),
 					x -> x != null ? Util.floatValue(x.translateY, 0) : null))));
@@ -1546,6 +1545,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // try
 			//
+	}
+
+	private static Predicate<ImageDimensionPosition> createImageDimensionPositionPredicate(final double[] translateXs) {
+		//
+		return x -> x != null && x.translateX != null && translateXs != null
+				&& ArrayUtils.contains(translateXs, x.translateX);
+		//
 	}
 
 	@Nullable
