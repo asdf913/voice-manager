@@ -3091,6 +3091,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							//
 							), x -> StringUtils.isNotBlank(ElementUtil.text(x))), ElementUtil::text));
 					//
+				} else if (previousElementSibling.previousElementSibling() == null) {
+					//
+					return Util.toList(Util.map(Util.filter(Util.filter(Util.stream(element.select("thead tr th")), x ->
+					//
+					Util.anyMatch(
+							testAndApply(Objects::nonNull, StringUtils.split(NodeUtil.attr(x, CLASS), " "),
+									Arrays::stream, null),
+							y -> StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, y, "katsuyo_"))
+					//
+					), x -> StringUtils.isNotBlank(ElementUtil.text(x))), ElementUtil::text));
+					//
 				} // if
 					//
 			} // for
