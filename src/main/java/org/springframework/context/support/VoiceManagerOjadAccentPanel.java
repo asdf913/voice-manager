@@ -1482,16 +1482,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			TextAndImage textAndImage = null;
 			//
-			final List<String> ys = Util.toList(Util.distinct(
-					Util.map(flatMap(Util.map(Util.stream(textAndImages), x -> Util.keySet(getVoiceUrlImages(x))),
-							Collection::stream), x -> {
-								//
-								final Matcher matcher = Util.matcher(pattern, StringUtils.substringAfterLast(x, '/'));
-								//
-								return Util.matches(matcher) && Util.groupCount(matcher) > 0 ? Util.group(matcher, 1)
-										: null;
-								//
-							})));
+			final List<String> ys = Util.toList(Util.distinct(Util.map(
+					flatMap(Util.map(Util.stream(textAndImages), x -> Util.keySet(getVoiceUrlImages(x))), Util::stream),
+					x -> {
+						//
+						final Matcher matcher = Util.matcher(pattern, StringUtils.substringAfterLast(x, '/'));
+						//
+						return Util.matches(matcher) && Util.groupCount(matcher) > 0 ? Util.group(matcher, 1) : null;
+						//
+					})));
 			//
 			for (int x = 0; x < length(translateXs); x++) {
 				//
@@ -1502,13 +1501,23 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 									(float) translateYs[y] + size// TODO
 									, size, size));
 					//
-					try (final InputStream is = testAndApply(Objects::nonNull, bs = toByteArray(testAndApply(
-							Objects::nonNull,
-							IValue0Util.getValue0(iValue0 = getVoiceUrlByX(pattern,
-									Util.keySet(getVoiceUrlImages(textAndImage = getTextAndImageByXY(pattern,
-											textAndImages, x, IterableUtils.get(ys, IterableUtils.size(ys) - y - 1)))),
-									x)),
-							URL::new, null)), ByteArrayInputStream::new, null)) {
+					try (final InputStream is = testAndApply(Objects::nonNull,
+							bs = toByteArray(
+									testAndApply(Objects::nonNull,
+											IValue0Util
+													.getValue0(
+															iValue0 = getVoiceUrlByX(pattern,
+																	Util.keySet(getVoiceUrlImages(
+																			textAndImage = getTextAndImageByXY(pattern,
+																					textAndImages, x,
+																					CollectionUtils.isNotEmpty(ys)
+																							? IterableUtils.get(ys,
+																									IterableUtils.size(
+																											ys) - y - 1)
+																							: null))),
+																	x)),
+											URL::new, null)),
+							ByteArrayInputStream::new, null)) {
 						//
 						if (is == null) {
 							//
