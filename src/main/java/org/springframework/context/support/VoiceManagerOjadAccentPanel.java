@@ -1644,7 +1644,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	@Nullable
 	private static TextAndImage getTextAndImageByXY(final Pattern pattern, final Iterable<TextAndImage> textAndImages,
-			final int x, final String y) {
+			final int x, @Nullable final String y) {
 		//
 		TextAndImage textAndImage = null;
 		//
