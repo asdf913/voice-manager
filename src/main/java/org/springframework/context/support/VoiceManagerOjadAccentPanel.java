@@ -1483,13 +1483,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final List<String> ys = Util.toList(Util.distinct(Util.map(
 					flatMap(Util.map(Util.stream(textAndImages), x -> Util.keySet(getVoiceUrlImages(x))), Util::stream),
-					x -> {
-						//
-						final Matcher matcher = Util.matcher(pattern, StringUtils.substringAfterLast(x, '/'));
-						//
-						return Util.matches(matcher) && Util.groupCount(matcher) > 0 ? Util.group(matcher, 1) : null;
-						//
-					})));
+					createFunction(pattern))));
 			//
 			for (int x = 0; x < length(translateXs); x++) {
 				//
@@ -1545,6 +1539,18 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // try
 			//
+	}
+
+	private static Function<String, String> createFunction(final Pattern pattern) {
+		//
+		return x -> {
+			//
+			final Matcher matcher = Util.matcher(pattern, StringUtils.substringAfterLast(x, '/'));
+			//
+			return Util.matches(matcher) && Util.groupCount(matcher) > 0 ? Util.group(matcher, 1) : null;
+			//
+		};
+		//
 	}
 
 	private static Predicate<ImageDimensionPosition> createImageDimensionPositionPredicate(final double[] translateXs) {

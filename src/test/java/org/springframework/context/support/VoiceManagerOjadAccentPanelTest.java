@@ -145,7 +145,8 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE, METHOD_SET_HANDLER,
 			METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE, METHOD_GET, METHOD_CREATE_PD_EMBEDDED_FILE,
 			METHOD_GET_MIME_TYPE, METHOD_GET_VOICE_URL_BY_X, METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, METHOD_GET_SIZE,
-			METHOD_GET_TRANSLATE_XS, METHOD_FLAT_MAP, METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE = null;
+			METHOD_GET_TRANSLATE_XS, METHOD_FLAT_MAP, METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE,
+			METHOD_CREATE_FUNCTION = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -298,6 +299,8 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE = clz
 				.getDeclaredMethod("createImageDimensionPositionPredicate", double[].class)).setAccessible(true);
+		//
+		(METHOD_CREATE_FUNCTION = clz.getDeclaredMethod("createFunction", Pattern.class)).setAccessible(true);
 		//
 	}
 
@@ -582,7 +585,9 @@ class VoiceManagerOjadAccentPanelTest {
 					Boolean.logicalAnd(Objects.equals(Util.getName(m), "getMapEntryGetKeyMethod"),
 							Arrays.equals(parameterTypes, new Class<?>[] {})),
 					Boolean.logicalAnd(Objects.equals(Util.getName(m), "createImageDimensionPositionPredicate"),
-							Arrays.equals(parameterTypes, new Class<?>[] { double[].class })))) {
+							Arrays.equals(parameterTypes, new Class<?>[] { double[].class })),
+					Boolean.logicalAnd(Objects.equals(Util.getName(m), "createFunction"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Pattern.class })))) {
 				//
 				Assertions.assertNotNull(invoke, toString);
 				//
@@ -2406,6 +2411,33 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof Predicate) {
 				return (Predicate) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateFunction() throws Throwable {
+		//
+		final Method apply = Util.getDeclaredMethod(Function.class, "apply", Object.class);
+		//
+		Assertions.assertNull(Narcissus.invokeMethod(createFunction(null), apply, (Object) null));
+		//
+		Assertions.assertEquals("1",
+				Narcissus.invokeMethod(createFunction(Pattern.compile("^\\d+_(\\d+)_\\d+_(\\w+)\\.\\w+$")), apply,
+						"https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/female/012/1216_1_1_female.mp3"));
+		//
+	}
+
+	private static Function<String, String> createFunction(final Pattern pattern) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_FUNCTION.invoke(null, pattern);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Function) {
+				return (Function) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
