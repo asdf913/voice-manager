@@ -1496,7 +1496,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static <T> void set(final List<T> instance, final int index, final T value) {
+	private static <T> void set(@Nullable final List<T> instance, final int index, final T value) {
 		if (instance != null) {
 			instance.set(index, value);
 		}
