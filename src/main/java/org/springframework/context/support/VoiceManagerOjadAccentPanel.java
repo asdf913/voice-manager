@@ -898,7 +898,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.voiceUrlImages : null;
 	}
 
-	private static String getConjugation(final TextAndImage instance) {
+	private static String getConjugation(@Nullable final TextAndImage instance) {
 		return instance != null ? instance.conjugation : null;
 	}
 
