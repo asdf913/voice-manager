@@ -316,10 +316,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		@Note("Accent Image")
 		private BufferedImage accentImage = null;
 
-		private Integer accentImageWidth, curveImageWidth = null;
+		@Note("Accent Image Width")
+		private Integer accentImageWidth = null;
 
 		@Note("Curve Image")
 		private BufferedImage curveImage = null;
+
+		@Note("Curve Image Width")
+		private Integer curveImageWidth = null;
 
 		private Map<String, byte[]> voiceUrlImages = null;
 
