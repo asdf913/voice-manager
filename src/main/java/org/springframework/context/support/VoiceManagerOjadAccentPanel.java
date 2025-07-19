@@ -1373,9 +1373,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final List<Integer> maxHiraganaLength = testAndApply(Objects::nonNull, list, ArrayList::new,
 					x -> new ArrayList<>());
 			//
-			final IntIntPair iipConjugation = createIntIntPair(textAndImages, x -> {
-				return x != null ? x.conjugation : null;
-			});
+			final IntIntPair iipConjugation = createIntIntPair(textAndImages, x -> x != null ? x.conjugation : null);
 			//
 			final IntIntPair iipKanji = createIntIntPair(textAndImages, VoiceManagerOjadAccentPanel::getKanji);
 			//
