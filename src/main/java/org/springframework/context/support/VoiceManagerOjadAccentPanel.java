@@ -333,6 +333,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		}
 
+		@Nullable
 		private static Integer getWidth(final RenderedImage image) {
 			//
 			final List<Field> fs = Util.toList(Util.filter(
