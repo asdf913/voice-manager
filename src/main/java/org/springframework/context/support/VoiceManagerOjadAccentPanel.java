@@ -898,6 +898,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.voiceUrlImages : null;
 	}
 
+	private static String getConjugation(final TextAndImage instance) {
+		return instance != null ? instance.conjugation : null;
+	}
+
 	private static Field getFieldByName(final Class<?> clz, final String fieldName) {
 		//
 		final List<Field> fs = Util.toList(
@@ -1133,7 +1137,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				Util.setEnabled(btnCopyConjugation, StringUtils.isNotBlank(x));
 				//
-			}, textAndImage != null ? textAndImage.conjugation : null);
+			}, getConjugation(textAndImage));
 			//
 			// Kanji
 			//
@@ -1395,8 +1399,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			for (int i = 0; i < size; i++) {
 				//
 				if (Util.and(imageTotalWidth == 310// 補助的[な]
-						, (la = StringUtils.length(Util.apply(x -> x != null ? x.conjugation : null,
-								tai = IterableUtils.get(textAndImages, i)))) == 8// 〜じゃなかった形
+						, (la = StringUtils.length(
+								Util.apply(x -> getConjugation(x), tai = IterableUtils.get(textAndImages, i)))) == 8// 〜じゃなかった形
 						, (lb = StringUtils.length(getKanji(tai))) == 9// 補助的じゃなかった
 						, (lc = StringUtils.length(getHiragana(tai))) == 11// ほじょてきじゃなかった
 				)) {
@@ -1408,7 +1412,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					set(maxHiraganaLength, i, integer);
 					//
 				} else if (Boolean.logicalAnd(imageTotalWidth == 310, // しゃべり続ける
-						StringUtils.length(textAndImage != null ? textAndImage.conjugation : null) == 3)) {// 辞書形
+						StringUtils.length(getConjugation(textAndImage)) == 3)) {// 辞書形
 					//
 					if (la == 6) {// 〜なかった形
 						//
@@ -1421,7 +1425,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					} // if
 						//
 				} else if (Boolean.logicalAnd(imageTotalWidth == 338, // 勉強になる
-						StringUtils.length(textAndImage != null ? textAndImage.conjugation : null) == 3)// 辞書形
+						StringUtils.length(getConjugation(textAndImage)) == 3)// 辞書形
 						&& la == 6// 〜なかった形
 				) {
 					//
