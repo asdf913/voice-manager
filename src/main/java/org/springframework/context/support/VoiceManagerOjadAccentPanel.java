@@ -1459,7 +1459,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 					} else {
 						//
-						set(maxConjugationLength, i, integer = Integer.valueOf(11));
+						if (la == 3) {// 辞書形
+							//
+							set(maxConjugationLength, i, Integer.valueOf(15));
+							//
+						} else {
+							//
+							set(maxConjugationLength, i, Integer.valueOf(14));
+							//
+						} // if
+							//
+						integer = Integer.valueOf(11);
 						//
 						if (lb == 7) {// 受験勉強します
 							//
