@@ -1362,7 +1362,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.put(map, "static", new BeansWrapper(version).getStaticModels());
 			//
-			final List<Integer> list = Util.toList(Util.map(Util.stream(textAndImages), Functions.always(null)));
+			final int size = IterableUtils.size(textAndImages);
+			//
+			final List<Integer> list = Collections.nCopies(size, null);
 			//
 			final List<Integer> maxConjugationLength = testAndApply(Objects::nonNull, list, ArrayList::new,
 					x -> new ArrayList<>());
@@ -1373,31 +1375,49 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final List<Integer> maxHiraganaLength = testAndApply(Objects::nonNull, list, ArrayList::new,
 					x -> new ArrayList<>());
 			//
-			final IntIntPair iipConjugation = createIntIntPair(textAndImages, x -> x != null ? x.conjugation : null);
+			int la, lb, lc;
 			//
-			final IntIntPair iipKanji = createIntIntPair(textAndImages, VoiceManagerOjadAccentPanel::getKanji);
+			Integer integer = null;
 			//
-			final IntIntPair iipHiragana = createIntIntPair(textAndImages, VoiceManagerOjadAccentPanel::getHiragana);
+			TextAndImage tai = null;
 			//
-			if (iipConjugation != null && iipKanji != null && iipHiragana != null) {
+			for (int i = 0; i < size; i++) {
 				//
-				if ((iipConjugation.value == 8 // 〜じゃなかった形
-						&& iipKanji.value == 9// 補助的じゃなかった
-						&& iipHiragana.value == 11// ほじょてきじゃなかった
-				) || (iipConjugation.value == 6 // 〜なかった形
-						&& iipKanji.value == 10// 追いかけ回さなかった
-						&& iipHiragana.value == 11// おいかけまわさなかった
+				if (Util.and((la = StringUtils.length(Util.apply(x -> x != null ? x.conjugation : null,
+						tai = IterableUtils.get(textAndImages, i)))) == 8// 〜じゃなかった形
+						, (lb = StringUtils.length(Util.apply(VoiceManagerOjadAccentPanel::getKanji, tai))) == 9// 補助的じゃなかった
+						, (lc = StringUtils.length(Util.apply(VoiceManagerOjadAccentPanel::getHiragana, tai))) == 11// ほじょてきじゃなかった
+				) || (la == 6// 〜なかった形
+						&& lb == 10// しゃべり続ければ
+						&& lc == 11// おいかけまわさなかった
+				) || (la == 4// 〜ば形
+						&& lb == 8// しゃべり続ければ
+						&& lc == 9// しゃべりつづければ
+				) || (la == 3// 〜う形
+						&& lb == 8// しゃべり続けよう
+						&& lc == 9// しゃべりつづけよう
 				)) {
 					//
-					set(maxConjugationLength, iipConjugation.key, Integer.valueOf(13));
+					set(maxConjugationLength, i, integer = Integer.valueOf(13));
 					//
-					set(maxKanjiLength, iipKanji.key, Integer.valueOf(13));
+					set(maxKanjiLength, i, integer);
 					//
-					set(maxHiraganaLength, iipHiragana.key, Integer.valueOf(13));
+					set(maxHiraganaLength, i, integer);
+					//
+				} else if (la == 3// 使役形
+						&& lb == 8// しゃべり続けさせる
+						&& lc == 9// しゃべりつづけさせる
+				) {
+					//
+					set(maxConjugationLength, i, integer = Integer.valueOf(12));
+					//
+					set(maxKanjiLength, i, integer);
+					//
+					set(maxHiraganaLength, i, integer);
 					//
 				} // if
 					//
-			} // if
+			} // for
 				//
 			Util.put(map, "maxConjugationLength", maxConjugationLength);
 			//
@@ -1474,7 +1494,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // if
 				//
-		} finally {
+		} finally
+
+		{
 			//
 			IOUtils.closeQuietly(pdDocument);
 			//
@@ -1486,42 +1508,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		if (instance != null) {
 			instance.set(index, value);
 		}
-	}
-
-	private static class IntIntPair {
-
-		@Note("Key")
-		private int key;
-
-		private int value;
-
-	}
-
-	@Nullable
-	private static IntIntPair createIntIntPair(final Collection<TextAndImage> collection,
-			final Function<TextAndImage, String> function) {
-		//
-		final Collection<String> ss = Util.toList(Util.map(Util.stream(collection), function));
-		//
-		final int index = IntStream.range(0, IterableUtils.size(ss)).boxed()
-				.max(Comparator
-						.comparingInt(i -> i != null ? StringUtils.length(IterableUtils.get(ss, i.intValue())) : 0))
-				.orElse(-1);
-		//
-		if (index >= 0) {
-			//
-			final IntIntPair intIntPair = new IntIntPair();
-			//
-			intIntPair.key = index;
-			//
-			intIntPair.value = StringUtils.length(IterableUtils.get(ss, index));
-			//
-			return intIntPair;
-			//
-		} // if
-			//
-		return null;
-		//
 	}
 
 	private static void addAnnotations(final PDDocument pdDocument, final PDPage pdPage,
