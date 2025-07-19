@@ -155,6 +155,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.select.Elements;
+import org.meeuw.functional.Functions;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.ThrowingRunnableUtil;
 import org.oxbow.swingbits.util.OperatingSystem;
@@ -1361,47 +1362,51 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.put(map, "static", new BeansWrapper(version).getStaticModels());
 			//
-			Util.put(map, "maxConjugationLength", Util.toList(Util.map(Util.stream(textAndImages), x -> {
-				//
-				// 〜じゃなかった形
-				//
-				if (StringUtils.length(x != null ? x.conjugation : null) == 8) {
-					//
-					return Integer.valueOf(13);
-					//
-				} // if
-					//
-				return null;
-				//
-			})));
+			final List<Integer> list = Util.toList(Util.map(Util.stream(textAndImages), Functions.always(null)));
 			//
-			Util.put(map, "maxKanjiLength", Util.toList(Util.map(Util.stream(textAndImages), x -> {
-				//
-				// 補助的じゃなかった
-				//
-				if (StringUtils.length(getKanji(x)) == 9) {
-					//
-					return Integer.valueOf(13);
-					//
-				} // if
-					//
-				return null;
-				//
-			})));
+			final List<Integer> maxConjugationLength = testAndApply(Objects::nonNull, list, ArrayList::new,
+					x -> new ArrayList<>());
 			//
-			Util.put(map, "maxHiraganaLength", Util.toList(Util.map(Util.stream(textAndImages), x -> {
+			final List<Integer> maxKanjiLength = testAndApply(Objects::nonNull, list, ArrayList::new,
+					x -> new ArrayList<>());
+			//
+			final List<Integer> maxHiraganaLength = testAndApply(Objects::nonNull, list, ArrayList::new,
+					x -> new ArrayList<>());
+			//
+			final IntIntPair iipConjugation = createIntIntPair(textAndImages, x -> {
+				return x != null ? x.conjugation : null;
+			});
+			//
+			final IntIntPair iipKanji = createIntIntPair(textAndImages, x -> {
+				return getKanji(x);
+			});
+			//
+			final IntIntPair iipHiragana = createIntIntPair(textAndImages, x -> {
+				return getHiragana(x);
+			});
+			//
+			if (iipConjugation != null && iipKanji != null && iipHiragana != null) {
 				//
-				// ほじょてきじゃなかった
-				//
-				if (StringUtils.length(getHiragana(x)) == 11) {
+				if (iipConjugation.value == 8 // 〜じゃなかった形
+						&& iipKanji.value == 9// 補助的じゃなかった
+						&& iipHiragana.value == 11// ほじょてきじゃなかった
+				) {
 					//
-					return Integer.valueOf(13);
+					set(maxConjugationLength, iipConjugation.key, Integer.valueOf(13));
+					//
+					set(maxKanjiLength, iipKanji.key, Integer.valueOf(13));
+					//
+					set(maxHiraganaLength, iipHiragana.key, Integer.valueOf(13));
 					//
 				} // if
 					//
-				return null;
+			} // if
 				//
-			})));
+			Util.put(map, "maxConjugationLength", maxConjugationLength);
+			//
+			Util.put(map, "maxKanjiLength", maxKanjiLength);
+			//
+			Util.put(map, "maxHiraganaLength", maxHiraganaLength);
 			//
 			TemplateUtil.process(template, map, w);
 			//
@@ -1478,6 +1483,44 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // try
 			//
+	}
+
+	private static <T> void set(final List<T> instance, final int index, final T value) {
+		if (instance != null) {
+			instance.set(index, value);
+		}
+	}
+
+	private static class IntIntPair {
+
+		private int key, value;
+
+	}
+
+	private static IntIntPair createIntIntPair(final Collection<TextAndImage> collection,
+			final Function<TextAndImage, String> function) {
+		//
+		final Collection<String> ss = Util.toList(Util.map(Util.stream(collection), function));
+		//
+		final int index = IntStream.range(0, IterableUtils.size(ss)).boxed()
+				.max(Comparator
+						.comparingInt(i -> i != null ? StringUtils.length(IterableUtils.get(ss, i.intValue())) : 0))
+				.orElse(-1);
+		//
+		if (index >= 0) {
+			//
+			final IntIntPair intIntPair = new IntIntPair();
+			//
+			intIntPair.key = index;
+			//
+			intIntPair.value = StringUtils.length(IterableUtils.get(ss, index));
+			//
+			return intIntPair;
+			//
+		} // if
+			//
+		return null;
+		//
 	}
 
 	private static void addAnnotations(final PDDocument pdDocument, final PDPage pdPage,

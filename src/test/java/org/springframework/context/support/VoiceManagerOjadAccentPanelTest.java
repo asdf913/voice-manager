@@ -97,6 +97,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.meeuw.functional.Functions;
 import org.meeuw.functional.Predicates;
 import org.meeuw.functional.ThrowingRunnable;
 
@@ -144,7 +145,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE, METHOD_GET, METHOD_CREATE_PD_EMBEDDED_FILE,
 			METHOD_GET_MIME_TYPE, METHOD_GET_VOICE_URL_BY_X, METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, METHOD_GET_SIZE,
 			METHOD_GET_TRANSLATE_XS, METHOD_FLAT_MAP, METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE,
-			METHOD_CREATE_FUNCTION, METHOD_CREATE_LIST_CELL_RENDERER = null;
+			METHOD_CREATE_FUNCTION, METHOD_CREATE_LIST_CELL_RENDERER, METHOD_CREATE_INT_INT_PAIR = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -303,6 +304,9 @@ class VoiceManagerOjadAccentPanelTest {
 		(METHOD_CREATE_LIST_CELL_RENDERER = clz.getDeclaredMethod("createListCellRenderer", ListCellRenderer.class))
 				.setAccessible(true);
 		//
+		(METHOD_CREATE_INT_INT_PAIR = clz.getDeclaredMethod("createIntIntPair", Collection.class, Function.class))
+				.setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -417,6 +421,14 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof List) {
+				//
+				if (Objects.equals(methodName, "set")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -2466,6 +2478,38 @@ class VoiceManagerOjadAccentPanelTest {
 				return (ListCellRenderer) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSet() {
+		//
+		Assertions
+				.assertDoesNotThrow(
+						() -> Narcissus.invokeStaticMethod(
+								Util.getDeclaredMethod(VoiceManagerOjadAccentPanel.class, "set", List.class,
+										Integer.TYPE, Object.class),
+								Reflection.newProxy(List.class, ih), Integer.valueOf(0), null));
+		//
+	}
+
+	@Test
+	void testCreateIntIntPair() throws Throwable {
+		//
+		Assertions.assertEquals("{\"key\":0,\"value\":0}",
+				ObjectMapperUtil.writeValueAsString(
+						setDefaultPropertyInclusion(setVisibility(objectMapper, PropertyAccessor.ALL, Visibility.ANY),
+								Include.NON_NULL),
+						createIntIntPair(Collections.singleton(null), Functions.always(null))));
+		//
+	}
+
+	private static Object createIntIntPair(final Collection<?> collection, final Function<?, String> function)
+			throws Throwable {
+		try {
+			return METHOD_CREATE_INT_INT_PAIR.invoke(null, collection, function);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
