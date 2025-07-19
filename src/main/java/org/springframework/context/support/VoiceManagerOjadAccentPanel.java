@@ -1504,7 +1504,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static class IntIntPair {
 
-		private int key, value;
+		@Note("Key")
+		private int key;
+
+		private int value;
 
 	}
 
