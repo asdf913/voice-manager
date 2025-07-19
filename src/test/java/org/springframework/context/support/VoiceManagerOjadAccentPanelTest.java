@@ -97,7 +97,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.meeuw.functional.Functions;
 import org.meeuw.functional.Predicates;
 import org.meeuw.functional.ThrowingRunnable;
 

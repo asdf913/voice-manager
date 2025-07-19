@@ -155,7 +155,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.select.Elements;
-import org.meeuw.functional.Functions;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.ThrowingRunnableUtil;
 import org.oxbow.swingbits.util.OperatingSystem;
