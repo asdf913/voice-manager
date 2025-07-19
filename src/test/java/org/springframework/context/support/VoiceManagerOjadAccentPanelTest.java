@@ -421,14 +421,10 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof List) {
+			} else if (proxy instanceof List && Objects.equals(methodName, "set")) {
 				//
-				if (Objects.equals(methodName, "set")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
