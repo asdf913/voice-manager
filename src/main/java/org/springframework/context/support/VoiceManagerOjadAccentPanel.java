@@ -1392,8 +1392,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				if (Util.and(imageTotalWidth == 310// 補助的[な]
 						, (la = StringUtils.length(Util.apply(x -> x != null ? x.conjugation : null,
 								tai = IterableUtils.get(textAndImages, i)))) == 8// 〜じゃなかった形
-						, (lb = StringUtils.length(Util.apply(VoiceManagerOjadAccentPanel::getKanji, tai))) == 9// 補助的じゃなかった
-						, (lc = StringUtils.length(Util.apply(VoiceManagerOjadAccentPanel::getHiragana, tai))) == 11// ほじょてきじゃなかった
+						, (lb = StringUtils.length(getKanji(tai))) == 9// 補助的じゃなかった
+						, (lc = StringUtils.length(getHiragana(tai))) == 11// ほじょてきじゃなかった
 				)) {
 					//
 					set(maxConjugationLength, i, integer = Integer.valueOf(13));
@@ -1402,6 +1402,19 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					set(maxHiraganaLength, i, integer);
 					//
+				} else if (Boolean.logicalAnd(imageTotalWidth == 310, // しゃべり続ける
+						StringUtils.length(textAndImage != null ? textAndImage.conjugation : null) == 3)) {// 辞書形
+					//
+					if (StringUtils.length(tai != null ? tai.conjugation : null) == 6) {// 〜なかった形
+						//
+						set(maxConjugationLength, i, Integer.valueOf(11));
+						//
+						set(maxKanjiLength, i, integer = Integer.valueOf(14));
+						//
+						set(maxHiraganaLength, i, integer);
+						//
+					} // if
+						//
 				} // if
 					//
 			} // for
