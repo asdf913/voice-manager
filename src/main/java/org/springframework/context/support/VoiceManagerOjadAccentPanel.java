@@ -1421,18 +1421,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					} // if
 						//
 				} else if (Boolean.logicalAnd(imageTotalWidth == 338, // 勉強になる
-						StringUtils.length(textAndImage != null ? textAndImage.conjugation : null) == 3)) {// 辞書形
+						StringUtils.length(textAndImage != null ? textAndImage.conjugation : null) == 3)// 辞書形
+						&& la == 6// 〜なかった形
+				) {
 					//
-					if (la == 6) {// 〜なかった形
-						//
-						set(maxConjugationLength, i, Integer.valueOf(11));
-						//
-						set(maxKanjiLength, i, Integer.valueOf(12));
-						//
-						set(maxHiraganaLength, i, Integer.valueOf(13));
-						//
-					} // if
-						//
+					set(maxConjugationLength, i, Integer.valueOf(11));
+					//
+					set(maxKanjiLength, i, Integer.valueOf(12));
+					//
+					set(maxHiraganaLength, i, Integer.valueOf(13));
+					//
 				} // if
 					//
 			} // for
