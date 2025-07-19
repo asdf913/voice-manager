@@ -1396,7 +1396,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final List<Integer> maxHiraganaLength = testAndApply(Objects::nonNull, list, ArrayList::new,
 					x -> new ArrayList<>());
 			//
-			int la;
+			int la, lb;
 			//
 			Integer integer = null;
 			//
@@ -1407,7 +1407,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				if (Util.and(imageTotalWidth == 310// 補助的[な]
 						, (la = StringUtils.length(
 								Util.apply(x -> getConjugation(x), tai = IterableUtils.get(textAndImages, i)))) == 8// 〜じゃなかった形
-						, StringUtils.length(getKanji(tai)) == 9// 補助的じゃなかった
+						, (lb = StringUtils.length(getKanji(tai))) == 9// 補助的じゃなかった
 						, StringUtils.length(getHiragana(tai)) == 11// ほじょてきじゃなかった
 				)) {
 					//
@@ -1461,8 +1461,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 						set(maxConjugationLength, i, integer = Integer.valueOf(11));
 						//
-						set(maxKanjiLength, i, integer);
-						//
+						if (lb == 7) {
+							//
+							set(maxKanjiLength, i, Integer.valueOf(14));
+							//
+						} else if (lb != 6) {
+							//
+							set(maxKanjiLength, i, integer);
+							//
+						} // if
+							//
 						set(maxHiraganaLength, i, integer);
 						//
 					} // if
