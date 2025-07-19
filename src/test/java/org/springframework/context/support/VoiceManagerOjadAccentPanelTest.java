@@ -144,7 +144,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE, METHOD_GET, METHOD_CREATE_PD_EMBEDDED_FILE,
 			METHOD_GET_MIME_TYPE, METHOD_GET_VOICE_URL_BY_X, METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, METHOD_GET_SIZE,
 			METHOD_GET_TRANSLATE_XS, METHOD_FLAT_MAP, METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE,
-			METHOD_CREATE_FUNCTION = null;
+			METHOD_CREATE_FUNCTION, METHOD_CREATE_LIST_CELL_RENDERER = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -299,6 +299,9 @@ class VoiceManagerOjadAccentPanelTest {
 				.getDeclaredMethod("createImageDimensionPositionPredicate", double[].class)).setAccessible(true);
 		//
 		(METHOD_CREATE_FUNCTION = clz.getDeclaredMethod("createFunction", Pattern.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_LIST_CELL_RENDERER = clz.getDeclaredMethod("createListCellRenderer", ListCellRenderer.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -585,7 +588,9 @@ class VoiceManagerOjadAccentPanelTest {
 					Boolean.logicalAnd(Objects.equals(Util.getName(m), "createImageDimensionPositionPredicate"),
 							Arrays.equals(parameterTypes, new Class<?>[] { double[].class })),
 					Boolean.logicalAnd(Objects.equals(Util.getName(m), "createFunction"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Pattern.class })))) {
+							Arrays.equals(parameterTypes, new Class<?>[] { Pattern.class })),
+					Boolean.logicalAnd(Objects.equals(Util.getName(m), "createListCellRenderer"),
+							Arrays.equals(parameterTypes, new Class<?>[] { ListCellRenderer.class })))) {
 				//
 				Assertions.assertNotNull(invoke, toString);
 				//
@@ -2436,6 +2441,29 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof Function) {
 				return (Function) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateListCellRenderer() throws Throwable {
+		//
+		Assertions.assertNull(
+				Util.getListCellRendererComponent(createListCellRenderer(null), null, null, 0, false, false));
+		//
+	}
+
+	private static ListCellRenderer<? super Entry<String, String>> createListCellRenderer(
+			final ListCellRenderer<? super Entry<String, String>> lcr) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_LIST_CELL_RENDERER.invoke(null, lcr);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ListCellRenderer) {
+				return (ListCellRenderer) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

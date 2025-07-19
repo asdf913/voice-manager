@@ -284,7 +284,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private Window window = null;
 
-	private transient ComboBoxModel<Entry<String, String>> cbmCurve = null;
+	private transient ComboBoxModel<Entry<String, String>> cbmCategory, cbmCurve = null;
 
 	private transient ComboBoxModel<String> cbmImageFormat = null;
 
@@ -390,8 +390,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // try
 				//
-			Iterable<Element> es = ElementUtil.select(testAndApply(Objects::nonNull, html, Jsoup::parse, null),
-					"[id=\"search_curve\"]");
+			final Document document = testAndApply(Objects::nonNull, html, Jsoup::parse, null);
+			//
+			// 品詞
+			//
+			Iterable<Element> es = ElementUtil.select(document, "[id=\"search_category\"]");
 			//
 			testAndRunThrows(IterableUtils.size(es) > 1, () -> {
 				//
@@ -399,16 +402,45 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			});
 			//
-			final Element element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0),
-					null);
+			Element element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null);
 			//
 			add(new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(element))));
 			//
 			es = ElementUtil.select(element, "option");
 			//
-			final DefaultComboBoxModel<Entry<String, String>> dcbm = new DefaultComboBoxModel<>();
+			DefaultComboBoxModel<Entry<String, String>> dcbm = new DefaultComboBoxModel<>();
 			//
 			Element e = null;
+			//
+			for (int i = 0; i < IterableUtils.size(es); i++) {
+				//
+				dcbm.addElement(
+						Pair.of(Util.getValue(attribute(e = IterableUtils.get(es, i), VALUE)), ElementUtil.text(e)));
+				//
+			} // for
+				//
+			this.cbmCategory = dcbm;
+			//
+			final JComboBox<Entry<String, String>> jcbCategory = new JComboBox<>(dcbm);
+			//
+			jcbCategory.setRenderer(createListCellRenderer(jcbCategory.getRenderer()));
+			//
+			add(jcbCategory, String.format("%1$s,span %2$s", wrap, 2));
+			//
+			// ピッチカーブ
+			//
+			testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_curve\"]")) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			add(new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(
+					element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null)))));
+			//
+			es = ElementUtil.select(element, "option");
+			//
+			dcbm = new DefaultComboBoxModel<>();
 			//
 			for (int i = 0; i < IterableUtils.size(es); i++) {
 				//
@@ -421,18 +453,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final JComboBox<Entry<String, String>> jcbCurve = new JComboBox<>(dcbm);
 			//
-			final ListCellRenderer<? super Entry<String, String>> lcr = jcbCurve.getRenderer();
-			//
-			jcbCurve.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
-				//
-				final Component component = Util.getListCellRendererComponent(lcr, list, value, index, isSelected,
-						cellHasFocus);
-				//
-				Util.setText(Util.cast(JLabel.class, component), Util.getValue(value));
-				//
-				return component;
-				//
-			});
+			jcbCurve.setRenderer(createListCellRenderer(jcbCurve.getRenderer()));
 			//
 			add(jcbCurve, String.format("%1$s,span %2$s", wrap, 2));
 			//
@@ -685,6 +706,22 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static ListCellRenderer<? super Entry<String, String>> createListCellRenderer(
+			final ListCellRenderer<? super Entry<String, String>> lcr) {
+		//
+		return (list, value, index, isSelected, cellHasFocus) -> {
+			//
+			final Component component = Util.getListCellRendererComponent(lcr, list, value, index, isSelected,
+					cellHasFocus);
+			//
+			Util.setText(Util.cast(JLabel.class, component), Util.getValue(value));
+			//
+			return component;
+			//
+		};
+		//
 	}
 
 	private static void addKeyListener(@Nullable final Component instance, final KeyListener keyListener) {
@@ -2000,8 +2037,23 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("word", testAndApply(
 					Objects::nonNull, textInput, x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
 			//
+			final Method getKey = getMapEntryGetKeyMethod();
+			//
+			// 品詞
+			//
+			final Entry<?, ?> entry = Util.cast(Entry.class, Util.getSelectedItem(cbmCategory));
+			//
+			if (!Objects.equals(Util.getValue(entry), "すべて")) {
+				//
+				Util.put(map, "category",
+						Util.toString(testAndApply((a, b) -> a != null, entry, getKey, Narcissus::invokeMethod, null)));
+				//
+			} // if
+				//
+				// ピッチカーブ
+				//
 			Util.put(map, CURVE, Util.toString(testAndApply((a, b) -> a instanceof Entry,
-					Util.getSelectedItem(cbmCurve), getMapEntryGetKeyMethod(), Narcissus::invokeMethod, null)));
+					Util.getSelectedItem(cbmCurve), getKey, Narcissus::invokeMethod, null)));
 			//
 			String u = createUrl(url, map);
 			//
@@ -2034,8 +2086,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final List<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
 			//
-			final Collection<TextAndImage> textAndImages = getTextAndImages(url, textInput,
-					Util.cast(Entry.class, Util.getSelectedItem(cbmCurve)));
+			final Collection<TextAndImage> textAndImages = getTextAndImages(url, textInput, map);
 			//
 			Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
 			//
@@ -2084,7 +2135,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	@Nullable
 	private static Collection<TextAndImage> getTextAndImages(final String baseUrl, final String textInput,
-			final Entry<?, ?> curve) throws IOException, URISyntaxException {
+			final Map<Object, Object> map) throws IOException, URISyntaxException {
 		//
 		if (StringUtils.isEmpty(textInput)) {
 			//
@@ -2099,12 +2150,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		Browser browser = null;
 		//
 		try {
-			//
-			final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("word", testAndApply(
-					Objects::nonNull, textInput, x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
-			//
-			Util.put(map, CURVE, Util.toString(testAndApply((a, b) -> a != null, curve, getMapEntryGetKeyMethod(),
-					Narcissus::invokeMethod, null)));
 			//
 			String url = createUrl(baseUrl, map);
 			//
