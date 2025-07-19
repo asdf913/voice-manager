@@ -627,12 +627,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final Object proxy = Proxy.newProxyInstance(getClass().getClassLoader(),
 					new Class<?>[] { TableCellRenderer.class, TableCellEditor.class }, ih);
 			//
-			if (proxy instanceof TableCellRenderer tcr) {
+			testAndAccept(Objects::nonNull, Util.cast(TableCellRenderer.class, proxy), tcr -> {
 				//
 				Util.forEach(Stream.of(byte[].class, String.class), x -> jtVoice.setDefaultRenderer(x, tcr));
 				//
-			} // if
-				//
+			});
+			//
 			testAndAccept((a, b) -> b instanceof TableCellEditor, jtVoice, proxy,
 					(a, b) -> jtVoice.setDefaultEditor(String.class, Util.cast(TableCellEditor.class, b)));
 			//
