@@ -1435,6 +1435,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					set(maxHiraganaLength, i, Integer.valueOf(13));
 					//
+				} else if (imageTotalWidth == 422) {// 実況中継する
+					//
+					set(maxConjugationLength, i, integer = Integer.valueOf(8));
+					//
+					set(maxKanjiLength, i, integer);
+					//
+					set(maxHiraganaLength, i, integer);
+					//
 				} // if
 					//
 			} // for
