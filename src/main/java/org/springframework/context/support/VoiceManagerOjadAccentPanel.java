@@ -1381,21 +1381,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			if (iipConjugation != null && iipKanji != null && iipHiragana != null) {
 				//
-				if (iipConjugation.value == 8 // 〜じゃなかった形
+				if ((iipConjugation.value == 8 // 〜じゃなかった形
 						&& iipKanji.value == 9// 補助的じゃなかった
 						&& iipHiragana.value == 11// ほじょてきじゃなかった
-				) {
-					//
-					set(maxConjugationLength, iipConjugation.key, Integer.valueOf(13));
-					//
-					set(maxKanjiLength, iipKanji.key, Integer.valueOf(13));
-					//
-					set(maxHiraganaLength, iipHiragana.key, Integer.valueOf(13));
-					//
-				} else if (iipConjugation.value == 6 // 〜なかった形
+				) || (iipConjugation.value == 6 // 〜なかった形
 						&& iipKanji.value == 10// 追いかけ回さなかった
 						&& iipHiragana.value == 11// おいかけまわさなかった
-				) {
+				)) {
 					//
 					set(maxConjugationLength, iipConjugation.key, Integer.valueOf(13));
 					//
