@@ -1377,13 +1377,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				return x != null ? x.conjugation : null;
 			});
 			//
-			final IntIntPair iipKanji = createIntIntPair(textAndImages, x -> {
-				return getKanji(x);
-			});
+			final IntIntPair iipKanji = createIntIntPair(textAndImages, VoiceManagerOjadAccentPanel::getKanji);
 			//
-			final IntIntPair iipHiragana = createIntIntPair(textAndImages, x -> {
-				return getHiragana(x);
-			});
+			final IntIntPair iipHiragana = createIntIntPair(textAndImages, VoiceManagerOjadAccentPanel::getHiragana);
 			//
 			if (iipConjugation != null && iipKanji != null && iipHiragana != null) {
 				//
