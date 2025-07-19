@@ -888,6 +888,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.accentImage : null;
 	}
 
+	@Nullable
 	private static Integer getAccentImageWidth(@Nullable final TextAndImage instance) {
 		return instance != null ? instance.getAccentImageWidth() : null;
 	}
