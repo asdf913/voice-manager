@@ -1396,7 +1396,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final List<Integer> maxHiraganaLength = testAndApply(Objects::nonNull, list, ArrayList::new,
 					x -> new ArrayList<>());
 			//
-			int la, lb;
+			int la, lb, lc;
 			//
 			Integer integer = null;
 			//
@@ -1408,7 +1408,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						, (la = StringUtils.length(
 								Util.apply(x -> getConjugation(x), tai = IterableUtils.get(textAndImages, i)))) == 8// 〜じゃなかった形
 						, (lb = StringUtils.length(getKanji(tai))) == 9// 補助的じゃなかった
-						, StringUtils.length(getHiragana(tai)) == 11// ほじょてきじゃなかった
+						, (lc = StringUtils.length(getHiragana(tai))) == 11// ほじょてきじゃなかった
 				)) {
 					//
 					set(maxConjugationLength, i, integer = Integer.valueOf(13));
@@ -1461,7 +1461,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 						set(maxConjugationLength, i, integer = Integer.valueOf(11));
 						//
-						if (lb == 7) {
+						if (lb == 7) {// 受験勉強します
 							//
 							set(maxKanjiLength, i, Integer.valueOf(14));
 							//
@@ -1471,8 +1471,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							//
 						} // if
 							//
-						set(maxHiraganaLength, i, integer);
-						//
+						if (lc == 11) {// じゅけんべんきょうする
+							//
+							set(maxHiraganaLength, i, Integer.valueOf(12));
+							//
+						} else {
+							//
+							set(maxHiraganaLength, i, integer);
+							//
+						} // if
+							//
 					} // if
 						//
 				} // if
