@@ -1424,10 +1424,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 					} // if
 						//
-				} else if (Boolean.logicalAnd(imageTotalWidth == 338, // 勉強になる
-						StringUtils.length(getConjugation(textAndImage)) == 3)// 辞書形
-						&& la == 6// 〜なかった形
-				) {
+				} else if (Util.and(imageTotalWidth == 338, // 勉強になる
+						StringUtils.length(getConjugation(textAndImage)) == 3// 辞書形
+						, la == 6// 〜なかった形
+				)) {
 					//
 					set(maxConjugationLength, i, Integer.valueOf(11));
 					//
