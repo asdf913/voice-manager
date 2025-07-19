@@ -144,7 +144,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE, METHOD_GET, METHOD_CREATE_PD_EMBEDDED_FILE,
 			METHOD_GET_MIME_TYPE, METHOD_GET_VOICE_URL_BY_X, METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, METHOD_GET_SIZE,
 			METHOD_GET_TRANSLATE_XS, METHOD_FLAT_MAP, METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE,
-			METHOD_CREATE_FUNCTION, METHOD_CREATE_LIST_CELL_RENDERER = null;
+			METHOD_CREATE_FUNCTION, METHOD_CREATE_LIST_CELL_RENDERER, METHOD_GET_ACCENT_IMAGE_WIDTH = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -301,6 +301,9 @@ class VoiceManagerOjadAccentPanelTest {
 		(METHOD_CREATE_FUNCTION = clz.getDeclaredMethod("createFunction", Pattern.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_LIST_CELL_RENDERER = clz.getDeclaredMethod("createListCellRenderer", ListCellRenderer.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_ACCENT_IMAGE_WIDTH = clz.getDeclaredMethod("getAccentImageWidth", CLASS_TEXT_AND_IMAGE))
 				.setAccessible(true);
 		//
 	}
@@ -2484,6 +2487,13 @@ class VoiceManagerOjadAccentPanelTest {
 								Util.getDeclaredMethod(VoiceManagerOjadAccentPanel.class, "set", List.class,
 										Integer.TYPE, Object.class),
 								Reflection.newProxy(List.class, ih), Integer.valueOf(0), null));
+		//
+	}
+
+	@Test
+	void testGetAccentImageWidth() {
+		//
+		Assertions.assertNull(Narcissus.invokeStaticMethod(METHOD_GET_ACCENT_IMAGE_WIDTH, textAndImage));
 		//
 	}
 

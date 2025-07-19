@@ -838,7 +838,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 						final TextAndImage textAndImage = Util.getElementAt(model, i);
 						//
-						return Util.intValue(textAndImage != null ? textAndImage.getAccentImageWidth() : null, 0);
+						return Util.intValue(getAccentImageWidth(textAndImage), 0);
 						//
 					})), 0)));
 			//
@@ -886,6 +886,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Nullable
 	private static BufferedImage getAccentImage(@Nullable final TextAndImage instance) {
 		return instance != null ? instance.accentImage : null;
+	}
+
+	private static Integer getAccentImageWidth(final TextAndImage instance) {
+		return instance != null ? instance.getAccentImageWidth() : null;
 	}
 
 	@Nullable
@@ -1366,9 +1370,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final Collection<TextAndImage> textAndImages = getTextAndImages(instance, textAndImage);
 			//
-			final int imageTotalWidth = Util
-					.orElse(Util.max(Util.mapToInt(Util.stream(textAndImages),
-							x -> x != null ? Util.intValue(x.getAccentImageWidth(), 0) : 0)), 0)
+			final int imageTotalWidth = Util.orElse(
+					Util.max(Util.mapToInt(Util.stream(textAndImages), x -> Util.intValue(getAccentImageWidth(x), 0))),
+					0)
 					+ Util.orElse(Util.max(Util.mapToInt(Util.stream(textAndImages),
 							x -> x != null ? Util.intValue(x.getCurveImageWidth(), 0) : 0)), 0);
 			//
