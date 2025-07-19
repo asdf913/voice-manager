@@ -1511,6 +1511,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	}
 
+	@Nullable
 	private static IntIntPair createIntIntPair(final Collection<TextAndImage> collection,
 			final Function<TextAndImage, String> function) {
 		//
