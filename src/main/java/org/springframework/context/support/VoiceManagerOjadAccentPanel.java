@@ -316,7 +316,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		@Note("Accent Image")
 		private BufferedImage accentImage = null;
 
-		private Integer accentImageWidth = null;
+		private Integer accentImageWidth, curveImageWidth = null;
 
 		@Note("Curve Image")
 		private BufferedImage curveImage = null;
@@ -325,31 +325,32 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 		private Integer getAccentImageWidth() {
 			//
-			if (accentImageWidth == null && accentImage != null) {
+			return accentImageWidth = ObjectUtils.getIfNull(accentImageWidth, () -> getWidth(accentImage));
+			//
+		}
+
+		private static Integer getWidth(final RenderedImage image) {
+			//
+			final List<Field> fs = Util.toList(Util.filter(
+					Util.stream(
+							testAndApply(Objects::nonNull, Util.getClass(image), FieldUtils::getAllFieldsList, null)),
+					f -> Objects.equals(Util.getName(f), RASTER)));
+			//
+			testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
 				//
-				final List<Field> fs = Util
-						.toList(Util.filter(
-								Util.stream(testAndApply(Objects::nonNull, Util.getClass(accentImage),
-										FieldUtils::getAllFieldsList, null)),
-								f -> Objects.equals(Util.getName(f), RASTER)));
+				throw new IllegalStateException();
 				//
-				testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
-					//
-					throw new IllegalStateException();
-					//
-				});
-				//
-				final Field f = testAndApply(x -> IterableUtils.size(fs) == 1, fs, x -> IterableUtils.get(fs, 0), null);
-				//
-				if (f == null || Narcissus.getField(accentImage, f) != null) {
-					//
-					accentImageWidth = Integer.valueOf(accentImage.getWidth());
-					//
-				} // if
-					//
-			} // if
-				//
-			return accentImageWidth;
+			});
+			//
+			final Field f = testAndApply(x -> IterableUtils.size(fs) == 1, fs, x -> IterableUtils.get(fs, 0), null);
+			//
+			return f != null && Narcissus.getField(image, f) != null ? Integer.valueOf(image.getWidth()) : null;
+			//
+		}
+
+		private Integer getCurveImageWidth() {
+			//
+			return curveImageWidth = ObjectUtils.getIfNull(curveImageWidth, () -> getWidth(curveImage));
 			//
 		}
 
@@ -1356,6 +1357,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final Collection<TextAndImage> textAndImages = getTextAndImages(instance, textAndImage);
 			//
+			final int imageTotalWidth = Util
+					.orElse(Util.max(Util.mapToInt(Util.stream(textAndImages),
+							x -> x != null ? Util.intValue(x.getAccentImageWidth(), 0) : 0)), 0)
+					+ Util.orElse(Util.max(Util.mapToInt(Util.stream(textAndImages),
+							x -> x != null ? Util.intValue(x.getCurveImageWidth(), 0) : 0)), 0);
+			//
 			final Map<String, Object> map = new LinkedHashMap<>(
 					Collections.singletonMap("textAndImages", textAndImages));
 			//
@@ -1382,33 +1389,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			for (int i = 0; i < size; i++) {
 				//
-				if (Util.and((la = StringUtils.length(Util.apply(x -> x != null ? x.conjugation : null,
-						tai = IterableUtils.get(textAndImages, i)))) == 8// 〜じゃなかった形
+				if (Util.and(imageTotalWidth == 310// 補助的[な]
+						, (la = StringUtils.length(Util.apply(x -> x != null ? x.conjugation : null,
+								tai = IterableUtils.get(textAndImages, i)))) == 8// 〜じゃなかった形
 						, (lb = StringUtils.length(Util.apply(VoiceManagerOjadAccentPanel::getKanji, tai))) == 9// 補助的じゃなかった
 						, (lc = StringUtils.length(Util.apply(VoiceManagerOjadAccentPanel::getHiragana, tai))) == 11// ほじょてきじゃなかった
-				) || (la == 6// 〜なかった形
-						&& lb == 10// しゃべり続ければ
-						&& lc == 11// おいかけまわさなかった
-				) || (la == 4// 〜ば形
-						&& lb == 8// しゃべり続ければ
-						&& lc == 9// しゃべりつづければ
-				) || (la == 3// 〜う形
-						&& lb == 8// しゃべり続けよう
-						&& lc == 9// しゃべりつづけよう
 				)) {
 					//
 					set(maxConjugationLength, i, integer = Integer.valueOf(13));
-					//
-					set(maxKanjiLength, i, integer);
-					//
-					set(maxHiraganaLength, i, integer);
-					//
-				} else if (la == 3// 使役形
-						&& lb == 8// しゃべり続けさせる
-						&& lc == 9// しゃべりつづけさせる
-				) {
-					//
-					set(maxConjugationLength, i, integer = Integer.valueOf(12));
 					//
 					set(maxKanjiLength, i, integer);
 					//
