@@ -1551,7 +1551,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				final File file = jfc.getSelectedFile();
 				//
-				if (!Util.exists(file)) {
+				testAndAccept(f -> !Util.exists(f), file, f -> {
 					//
 					// java.io.File.createNewFile();
 					//
@@ -1567,19 +1567,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 					});
 					//
-					testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null), file,
+					testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null), f,
 							testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null),
 							Narcissus::invokeMethod);
 					//
-				} // if
-					//
+				});
+				//
 				PDDocumentUtil.save(pdDocument, file);
 				//
 			} // if
 				//
-		} finally
-
-		{
+		} finally {
 			//
 			IOUtils.closeQuietly(pdDocument);
 			//
