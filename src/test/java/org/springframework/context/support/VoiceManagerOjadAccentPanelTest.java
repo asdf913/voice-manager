@@ -144,7 +144,8 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE, METHOD_GET, METHOD_CREATE_PD_EMBEDDED_FILE,
 			METHOD_GET_MIME_TYPE, METHOD_GET_VOICE_URL_BY_X, METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, METHOD_GET_SIZE,
 			METHOD_GET_TRANSLATE_XS, METHOD_FLAT_MAP, METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE,
-			METHOD_CREATE_FUNCTION, METHOD_CREATE_LIST_CELL_RENDERER, METHOD_GET_ACCENT_IMAGE_WIDTH = null;
+			METHOD_CREATE_FUNCTION, METHOD_CREATE_LIST_CELL_RENDERER, METHOD_GET_ACCENT_IMAGE_WIDTH,
+			METHOD_GET_CURVE_IMAGE_WIDTH = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -304,6 +305,9 @@ class VoiceManagerOjadAccentPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_ACCENT_IMAGE_WIDTH = clz.getDeclaredMethod("getAccentImageWidth", CLASS_TEXT_AND_IMAGE))
+				.setAccessible(true);
+		//
+		(METHOD_GET_CURVE_IMAGE_WIDTH = clz.getDeclaredMethod("getCurveImageWidth", CLASS_TEXT_AND_IMAGE))
 				.setAccessible(true);
 		//
 	}
@@ -2494,6 +2498,13 @@ class VoiceManagerOjadAccentPanelTest {
 	void testGetAccentImageWidth() {
 		//
 		Assertions.assertNull(Narcissus.invokeStaticMethod(METHOD_GET_ACCENT_IMAGE_WIDTH, textAndImage));
+		//
+	}
+
+	@Test
+	void testGetCurveImageWidth() {
+		//
+		Assertions.assertNull(Narcissus.invokeStaticMethod(METHOD_GET_CURVE_IMAGE_WIDTH, textAndImage));
 		//
 	}
 

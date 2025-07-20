@@ -898,6 +898,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.curveImage : null;
 	}
 
+	private static Integer getCurveImageWidth(final TextAndImage instance) {
+		return instance != null ? instance.getCurveImageWidth() : null;
+	}
+
 	@Nullable
 	private static Map<String, byte[]> getVoiceUrlImages(@Nullable final TextAndImage instance) {
 		return instance != null ? instance.voiceUrlImages : null;
@@ -1375,8 +1379,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final int imageTotalWidth = Util.orElse(
 					Util.max(Util.mapToInt(Util.stream(textAndImages), x -> Util.intValue(getAccentImageWidth(x), 0))),
 					0)
-					+ Util.orElse(Util.max(Util.mapToInt(Util.stream(textAndImages),
-							x -> x != null ? Util.intValue(x.getCurveImageWidth(), 0) : 0)), 0);
+					+ Util.orElse(Util.max(
+							Util.mapToInt(Util.stream(textAndImages), x -> Util.intValue(getCurveImageWidth(x), 0))),
+							0);
 			//
 			final Map<String, Object> map = new LinkedHashMap<>(
 					Collections.singletonMap("textAndImages", textAndImages));
