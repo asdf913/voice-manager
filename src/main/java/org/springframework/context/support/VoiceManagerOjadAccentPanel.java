@@ -381,20 +381,29 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(new JLabel());
 			//
-			final String u = "https://www.gavo.t.u-tokyo.ac.jp";
+			final TextStringBuilder tsb = new TextStringBuilder(url);
 			//
+			final String[] ss = StringUtils.split(url, '/');
+			//
+			if (length(ss) > 2) {
+				//
+				TextStringBuilderUtil.append(TextStringBuilderUtil.clear(tsb),
+						StringUtils.joinWith("//", (Object[]) ArrayUtils.subarray(ss, 0, 2)));
+				//
+			} // if
+				//
 			String html = null;
 			//
-			try (final InputStream is = testAndGet(!isTestMode(),
-					() -> Util.openStream(
-							Util.toURL(URIBuilderUtil.build(new URIBuilder(u).setPath("ojad/search/index/word:")))),
+			try (final InputStream is = testAndGet(!isTestMode(), () -> Util.openStream(Util.toURL(
+					URIBuilderUtil.build(new URIBuilder(Util.toString(tsb)).setPath("ojad/search/index/word:")))),
 					null)) {
 				//
 				html = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
 				//
 			} // try
 				//
-			final Document document = testAndApply(Objects::nonNull, html, x -> Jsoup.parse(x, u), null);
+			final Document document = testAndApply(Objects::nonNull, html, x -> Jsoup.parse(x, Util.toString(tsb)),
+					null);
 			//
 			List<Element> es = ElementUtil.select(document, ".flags_ul li a");
 			//
