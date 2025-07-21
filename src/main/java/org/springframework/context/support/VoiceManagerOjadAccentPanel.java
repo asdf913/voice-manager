@@ -87,6 +87,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -378,9 +379,90 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		if (f == null || Narcissus.getField(this, f) != null) {
 			//
-			add(new JLabel("Text"));
+			add(new JLabel());
+			//
+			final String url = "https://www.gavo.t.u-tokyo.ac.jp";
+			//
+			String html = null;
+			//
+			try (final InputStream is = testAndGet(!isTestMode(),
+					() -> Util.openStream(
+							Util.toURL(URIBuilderUtil.build(new URIBuilder(url).setPath("ojad/search/index/word:")))),
+					null)) {
+				//
+				html = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
+				//
+			} // try
+				//
+			final Document document = testAndApply(Objects::nonNull, html, x -> Jsoup.parse(x, url), null);
+			//
+			List<Element> es = ElementUtil.select(document, ".flags_ul li a");
 			//
 			final String wrap = "wrap";
+			//
+			final DefaultComboBoxModel<Entry<String, Image>> dcbmUrlImage = new DefaultComboBoxModel<>();
+			//
+			testAndAccept(Objects::nonNull, Util.toList(Util.map(Util.stream(es), x -> {
+				//
+				try {
+					//
+					return Pair.of(NodeUtil.absUrl(x, "href"),
+							(Image) toBufferedImage(
+									toByteArray(
+											new URL(NodeUtil.absUrl(x != null ? x.selectFirst("img") : null, "src"))),
+									e -> LoggerUtil.error(LOG, e.getMessage(), e)));
+					//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
+			})), x -> {
+				dcbmUrlImage.addAll(x);
+			});
+			//
+			final JComboBox<Entry<String, Image>> jcb = new JComboBox<>(dcbmUrlImage);// TODO
+			//
+			final ListCellRenderer<? super Entry<String, Image>> lcr = jcb.getRenderer();
+			//
+			final Dimension preferredSize = jcb.getPreferredSize();
+			//
+			jcb.setRenderer(new ListCellRenderer<Entry<String, Image>>() {
+
+				@Override
+				public Component getListCellRendererComponent(final JList<? extends Entry<String, Image>> list,
+						final Entry<String, Image> value, final int index, final boolean isSelected,
+						final boolean cellHasFocus) {
+					//
+					final Component component = Util.getListCellRendererComponent(lcr, list, value, index, isSelected,
+							cellHasFocus);
+					//
+					final JLabel jLabel = Util.cast(JLabel.class, component);
+					//
+					Util.setText(jLabel, null);
+					//
+					final Image image = Util.getValue(value);
+					//
+					if (image != null && preferredSize != null) {
+						//
+						setIcon(jLabel,
+								new ImageIcon(image.getScaledInstance(Math.min((int) preferredSize.getWidth(), 17),
+										Math.min((int) preferredSize.getHeight(), 17), Image.SCALE_DEFAULT)));
+						//
+					} // if
+						//
+					return component;
+					//
+				}
+
+			});
+			//
+			testAndAccept(x -> Util.getSize(getModel(x)) > 0, jcb, x -> Util.setSelectedIndex(x, 0));
+			//
+			add(jcb, wrap);
+			//
+			add(new JLabel("Text"));
 			//
 			final String growx = "growx";
 			//
@@ -388,28 +470,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(tfTextInput = new JTextField(), String.format("%1$s,%2$s,span %3$s", wrap, growx, span));
 			//
-			String html = null;
-			//
-			try (final InputStream is = testAndGet(!isTestMode(),
-					() -> Util.openStream(Util.toURL(URIBuilderUtil.build(
-							new URIBuilder("https://www.gavo.t.u-tokyo.ac.jp").setPath("ojad/search/index/word:")))),
-					null)) {
-				//
-				html = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
-				//
-			} // try
-				//
-			final Document document = testAndApply(Objects::nonNull, html, Jsoup::parse, null);
-			//
 			// 品詞
 			//
-			Iterable<Element> es = ElementUtil.select(document, "[id=\"search_category\"]");
-			//
-			testAndRunThrows(IterableUtils.size(es) > 1, () -> {
-				//
-				throw new IllegalStateException();
-				//
-			});
+			testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_category\"]")) > 1,
+					() -> {
+						//
+						throw new IllegalStateException();
+						//
+					});
 			//
 			Element element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null);
 			//
