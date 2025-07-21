@@ -291,7 +291,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("ピッチカーブ")
 	private JLabel lblCurveSearch = null;
 
-	private JLabel lblCount = null;
+	private JLabel lblTitle, lblCount = null;
 
 	private Window window = null;
 
@@ -462,7 +462,19 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(jcbLanguage, wrap);
 			//
-			add(new JLabel("Text"));
+			// 単語の検索
+			//
+			testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_word\"]")) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			Element element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null);
+			//
+			add(lblTitle = new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(ElementUtil.parent(
+					ElementUtil.parent(ElementUtil.parent(element = testAndApply(x -> IterableUtils.size(x) == 1, es,
+							x -> IterableUtils.get(x, 0), null))))))));
 			//
 			final String growx = "growx";
 			//
@@ -479,9 +491,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 					});
 			//
-			Element element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null);
-			//
-			add(lblCategory = new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(element))));
+			add(lblCategory = new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(
+					element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null)))));
 			//
 			es = ElementUtil.select(element, "option");
 			//
@@ -1343,15 +1354,28 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			final Document document = testAndApply(Objects::nonNull, html, Jsoup::parse, null);
 			//
-			List<Element> es = ElementUtil.select(document, "[id=\"search_category\"]");
+			// 単語の検索
 			//
-			// 品詞
+			List<Element> es = ElementUtil.select(document, "[id=\"search_word\"]");
 			//
 			testAndRunThrows(IterableUtils.size(es) > 1, () -> {
 				//
 				throw new IllegalStateException();
 				//
 			});
+			//
+			Util.setText(lblTitle, ElementUtil
+					.text(ElementUtil.previousElementSibling(ElementUtil.parent(ElementUtil.parent(ElementUtil.parent(
+							testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null)))))));
+			//
+			// 品詞
+			//
+			testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_category\"]")) > 1,
+					() -> {
+						//
+						throw new IllegalStateException();
+						//
+					});
 			//
 			Util.setText(lblCategory, ElementUtil.text(ElementUtil.previousElementSibling(
 					testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null))));
