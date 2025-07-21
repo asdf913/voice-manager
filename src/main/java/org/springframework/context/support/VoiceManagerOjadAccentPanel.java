@@ -1354,14 +1354,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} else if (Objects.equals(source, jcbLanguage)) {
 			//
-			String html = null;
-			//
-			final Entry<?, ?> entry = Util.cast(Entry.class, Util.getSelectedItem(jcbLanguage));
-			//
-			try (final InputStream is = testAndGet(!isTestMode(),
-					() -> Util.openStream(Util.toURL(new URI(Util.toString(Util.getKey(entry))))), null)) {
+			try {
 				//
-				html = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
+				actionPerformedJcbLanguage(this);
 				//
 			} catch (final Exception e) {
 				//
@@ -1369,123 +1364,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // try
 				//
-			final Document document = testAndApply(Objects::nonNull, html, Jsoup::parse, null);
-			//
-			// 単語の検索
-			//
-			List<Element> es = ElementUtil.select(document, "[id=\"search_word\"]");
-			//
-			testAndRunThrows(IterableUtils.size(es) > 1, () -> {
-				//
-				throw new IllegalStateException();
-				//
-			});
-			//
-			Util.setText(lblTitle, ElementUtil
-					.text(ElementUtil.previousElementSibling(ElementUtil.parent(ElementUtil.parent(ElementUtil.parent(
-							testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null)))))));
-			//
-			// 品詞
-			//
-			testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_category\"]")) > 1,
-					() -> {
-						//
-						throw new IllegalStateException();
-						//
-					});
-			//
-			Element element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null);
-			//
-			Util.setText(lblCategory, ElementUtil.text(ElementUtil.previousElementSibling(element)));
-			//
-			es = ElementUtil.select(element, OPTION);
-			//
-			Element e = null;
-			//
-			Entry<?, ?> en = null;
-			//
-			Method setValue = null;
-			//
-			for (int i = 0; i < Math.min(Util.getSize(cbmCategory), IterableUtils.size(es)); i++) {
-				//
-				if (Objects.equals(NodeUtil.attr(e = IterableUtils.get(es, i), VALUE),
-						Util.getKey(en = Util.cast(Entry.class, Util.getElementAt(cbmCategory, i))))) {
-					//
-					testAndAccept((a, b, c) -> Boolean.logicalAnd(a != null, b != null), en,
-							setValue = ObjectUtils.getIfNull(setValue,
-									VoiceManagerOjadAccentPanel::getMapEntrySetValueMethod),
-							ElementUtil.text(e), Narcissus::invokeMethod);
-					//
-				} // if
-					//
-			} // for
-				//
-				// アクセント型
-				//
-			testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_accent_type\"]")) > 1,
-					() -> {
-						//
-						throw new IllegalStateException();
-						//
-					});
-			//
-			Util.setText(lblAccentType, ElementUtil.text(ElementUtil.previousElementSibling(
-					element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null))));
-			//
-			es = ElementUtil.select(element, OPTION);
-			//
-			for (int i = 0; i < Math.min(Util.getSize(cbmAccentType), IterableUtils.size(es)); i++) {
-				//
-				if (Objects.equals(NodeUtil.attr(e = IterableUtils.get(es, i), VALUE),
-						Util.getKey(en = Util.cast(Entry.class, Util.getElementAt(cbmAccentType, i))))) {
-					//
-					testAndAccept((a, b, c) -> Boolean.logicalAnd(a != null, b != null), en,
-							setValue = ObjectUtils.getIfNull(setValue,
-									VoiceManagerOjadAccentPanel::getMapEntrySetValueMethod),
-							ElementUtil.text(e), Narcissus::invokeMethod);
-					//
-				} // if
-					//
-			} // for
-				//
-				// ピッチカーブ
-				//
-			testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_curve\"]")) > 1, () -> {
-				//
-				throw new IllegalStateException();
-				//
-			});
-			//
-			Util.setText(lblCurveSearch, ElementUtil.text(ElementUtil.previousElementSibling(
-					element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null))));
-			//
-			es = ElementUtil.select(element, OPTION);
-			//
-			for (int i = 0; i < Math.min(Util.getSize(cbmCurve), IterableUtils.size(es)); i++) {
-				//
-				if (Objects.equals(NodeUtil.attr(e = IterableUtils.get(es, i), VALUE),
-						Util.getKey(en = Util.cast(Entry.class, Util.getElementAt(cbmCurve, i))))) {
-					//
-					testAndAccept((a, b, c) -> Boolean.logicalAnd(a != null, b != null), en,
-							setValue = ObjectUtils.getIfNull(setValue,
-									VoiceManagerOjadAccentPanel::getMapEntrySetValueMethod),
-							ElementUtil.text(e), Narcissus::invokeMethod);
-					//
-				} // if
-					//
-			} // for
-				//
-				// 実行
-				//
-			testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[type=\"submit\"]")) > 1, () -> {
-				//
-				throw new IllegalStateException();
-				//
-			});
-			//
-			setText(btnExecute, NodeUtil.attr(
-					testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null), VALUE));
-			//
 		} else if (Objects.equals(source, btnSaveAccentImage)) {
 			//
 			final String format = Util.toString(Util.getSelectedItem(cbmImageFormat));
@@ -1543,6 +1421,144 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		setContents(source, supplier, Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage)),
 				objectFunctionMap);
 		//
+	}
+
+	private static void actionPerformedJcbLanguage(final VoiceManagerOjadAccentPanel instance) throws Exception {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		String html = null;
+		//
+		final Entry<?, ?> entry = Util.cast(Entry.class, Util.getSelectedItem(instance.jcbLanguage));
+		//
+		try (final InputStream is = testAndGet(!isTestMode(),
+				() -> Util.openStream(Util.toURL(new URI(Util.toString(Util.getKey(entry))))), null)) {
+			//
+			html = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
+			//
+		} // try
+			//
+		final Document document = testAndApply(Objects::nonNull, html, Jsoup::parse, null);
+		//
+		// 単語の検索
+		//
+		List<Element> es = ElementUtil.select(document, "[id=\"search_word\"]");
+		//
+		testAndRunThrows(IterableUtils.size(es) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		Util.setText(instance.lblTitle, ElementUtil
+				.text(ElementUtil.previousElementSibling(ElementUtil.parent(ElementUtil.parent(ElementUtil.parent(
+						testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null)))))));
+		//
+		// 品詞
+		//
+		testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_category\"]")) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		Element element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null);
+		//
+		Util.setText(instance.lblCategory, ElementUtil.text(ElementUtil.previousElementSibling(element)));
+		//
+		es = ElementUtil.select(element, OPTION);
+		//
+		Element e = null;
+		//
+		Entry<?, ?> en = null;
+		//
+		Method setValue = null;
+		//
+		for (int i = 0; i < Math.min(Util.getSize(instance.cbmCategory), IterableUtils.size(es)); i++) {
+			//
+			if (Objects.equals(NodeUtil.attr(e = IterableUtils.get(es, i), VALUE),
+					Util.getKey(en = Util.cast(Entry.class, Util.getElementAt(instance.cbmCategory, i))))) {
+				//
+				testAndAccept((a, b, c) -> Boolean.logicalAnd(a != null, b != null), en,
+						setValue = ObjectUtils.getIfNull(setValue,
+								VoiceManagerOjadAccentPanel::getMapEntrySetValueMethod),
+						ElementUtil.text(e), Narcissus::invokeMethod);
+				//
+			} // if
+				//
+		} // for
+			//
+			// アクセント型
+			//
+		testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_accent_type\"]")) > 1,
+				() -> {
+					//
+					throw new IllegalStateException();
+					//
+				});
+		//
+		Util.setText(instance.lblAccentType, ElementUtil.text(ElementUtil.previousElementSibling(
+				element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null))));
+		//
+		es = ElementUtil.select(element, OPTION);
+		//
+		for (int i = 0; i < Math.min(Util.getSize(instance.cbmAccentType), IterableUtils.size(es)); i++) {
+			//
+			if (Objects.equals(NodeUtil.attr(e = IterableUtils.get(es, i), VALUE),
+					Util.getKey(en = Util.cast(Entry.class, Util.getElementAt(instance.cbmAccentType, i))))) {
+				//
+				testAndAccept((a, b, c) -> Boolean.logicalAnd(a != null, b != null), en,
+						setValue = ObjectUtils.getIfNull(setValue,
+								VoiceManagerOjadAccentPanel::getMapEntrySetValueMethod),
+						ElementUtil.text(e), Narcissus::invokeMethod);
+				//
+			} // if
+				//
+		} // for
+			//
+			// ピッチカーブ
+			//
+		testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_curve\"]")) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		Util.setText(instance.lblCurveSearch, ElementUtil.text(ElementUtil.previousElementSibling(
+				element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null))));
+		//
+		es = ElementUtil.select(element, OPTION);
+		//
+		for (int i = 0; i < Math.min(Util.getSize(instance.cbmCurve), IterableUtils.size(es)); i++) {
+			//
+			if (Objects.equals(NodeUtil.attr(e = IterableUtils.get(es, i), VALUE),
+					Util.getKey(en = Util.cast(Entry.class, Util.getElementAt(instance.cbmCurve, i))))) {
+				//
+				testAndAccept((a, b, c) -> Boolean.logicalAnd(a != null, b != null), en,
+						setValue = ObjectUtils.getIfNull(setValue,
+								VoiceManagerOjadAccentPanel::getMapEntrySetValueMethod),
+						ElementUtil.text(e), Narcissus::invokeMethod);
+				//
+			} // if
+				//
+		} // for
+			//
+			// 実行
+			//
+		testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[type=\"submit\"]")) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		setText(instance.btnExecute, NodeUtil
+				.attr(testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null), VALUE));
+		//
+
 	}
 
 	private static <T, U, R> void testAndAccept(final TriPredicate<T, U, R> predicate, final T t, final U u, final R r,
