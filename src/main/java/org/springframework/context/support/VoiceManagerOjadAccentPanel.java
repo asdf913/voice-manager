@@ -294,14 +294,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("ピッチカーブ")
 	private JLabel lblCurveSearch = null;
 
-	private JLabel lblCount = null;
+	private JLabel lblAccentType, lblCount = null;
 
 	private Window window = null;
 
 	@Note("品詞")
 	private transient ComboBoxModel<Entry<String, String>> cbmCategory = null;
 
-	private transient ComboBoxModel<Entry<String, String>> cbmCurve = null;
+	private transient ComboBoxModel<Entry<String, String>> cbmAccentType, cbmCurve = null;
 
 	private transient ComboBoxModel<String> cbmImageFormat = null;
 
@@ -516,6 +516,37 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			jcbCategory.setRenderer(createListCellRenderer(jcbCategory.getRenderer()));
 			//
 			add(jcbCategory, String.format("%1$s,span %2$s", wrap, 2));
+			//
+			// アクセント型
+			//
+			testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_accent_type\"]")) > 1,
+					() -> {
+						//
+						throw new IllegalStateException();
+						//
+					});
+			//
+			add(lblAccentType = new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(
+					element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null)))));
+			//
+			es = ElementUtil.select(element, "option");
+			//
+			dcbm = new DefaultComboBoxModel<>();
+			//
+			for (int i = 0; i < IterableUtils.size(es); i++) {
+				//
+				dcbm.addElement(
+						Pair.of(Util.getValue(attribute(e = IterableUtils.get(es, i), VALUE)), ElementUtil.text(e)));
+				//
+			} // for
+				//
+			this.cbmAccentType = dcbm;
+			//
+			final JComboBox<Entry<String, String>> jcbAccentType = new JComboBox<>(dcbm);
+			//
+			jcbAccentType.setRenderer(createListCellRenderer(jcbAccentType.getRenderer()));
+			//
+			add(jcbAccentType, String.format("%1$s,span %2$s", wrap, 2));
 			//
 			// ピッチカーブ
 			//
@@ -1349,6 +1380,18 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					});
 			//
 			Util.setText(lblCategory, ElementUtil.text(ElementUtil.previousElementSibling(
+					testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null))));
+			//
+			// アクセント型
+			//
+			testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_accent_type\"]")) > 1,
+					() -> {
+						//
+						throw new IllegalStateException();
+						//
+					});
+			//
+			Util.setText(lblAccentType, ElementUtil.text(ElementUtil.previousElementSibling(
 					testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null))));
 			//
 			// ピッチカーブ
@@ -2323,11 +2366,22 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			// 品詞
 			//
-			final Entry<?, ?> entry = Util.cast(Entry.class, Util.getSelectedItem(cbmCategory));
+			Entry<?, ?> entry = Util.cast(Entry.class, Util.getSelectedItem(cbmCategory));
 			//
 			if (!Objects.equals(Util.getValue(entry), "すべて")) {
 				//
 				Util.put(map, "category",
+						Util.toString(testAndApply((a, b) -> a != null, entry, getKey, Narcissus::invokeMethod, null)));
+				//
+			} // if
+				//
+				// アクセント型
+				//
+			entry = Util.cast(Entry.class, Util.getSelectedItem(cbmAccentType));
+			//
+			if (!Objects.equals(Util.getValue(entry), "すべて")) {
+				//
+				Util.put(map, "accent_type",
 						Util.toString(testAndApply((a, b) -> a != null, entry, getKey, Narcissus::invokeMethod, null)));
 				//
 			} // if
