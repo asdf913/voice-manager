@@ -1,6 +1,8 @@
 package org.springframework.context.support;
 
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
@@ -63,9 +65,16 @@ import javax.swing.text.JTextComponent;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.FieldOrMethodUtil;
+import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.generic.ALOAD;
 import org.apache.bcel.generic.ANEWARRAY;
+import org.apache.bcel.generic.ARETURN;
 import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.DUP;
+import org.apache.bcel.generic.ILOAD;
+import org.apache.bcel.generic.INVOKEDYNAMIC;
+import org.apache.bcel.generic.INVOKESPECIAL;
 import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
@@ -74,6 +83,7 @@ import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.LDCUtil;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
+import org.apache.bcel.generic.NEW;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -145,8 +155,9 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE, METHOD_GET, METHOD_CREATE_PD_EMBEDDED_FILE,
 			METHOD_GET_MIME_TYPE, METHOD_GET_VOICE_URL_BY_X, METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, METHOD_GET_SIZE,
 			METHOD_GET_TRANSLATE_XS, METHOD_FLAT_MAP, METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE,
-			METHOD_CREATE_FUNCTION, METHOD_CREATE_LIST_CELL_RENDERER, METHOD_GET_ACCENT_IMAGE_WIDTH,
-			METHOD_GET_CURVE_IMAGE_WIDTH, METHOD_FOR_EACH_ORDERED, METHOD_SET, METHOD_CREATE_DEFAULT_TABLE_MODEL = null;
+			METHOD_CREATE_FUNCTION, METHOD_CREATE_LIST_CELL_RENDERER1, METHOD_CREATE_LIST_CELL_RENDERER2,
+			METHOD_GET_ACCENT_IMAGE_WIDTH, METHOD_GET_CURVE_IMAGE_WIDTH, METHOD_FOR_EACH_ORDERED, METHOD_SET,
+			METHOD_CREATE_DEFAULT_TABLE_MODEL = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -302,8 +313,11 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_CREATE_FUNCTION = clz.getDeclaredMethod("createFunction", Pattern.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_LIST_CELL_RENDERER = clz.getDeclaredMethod("createListCellRenderer", ListCellRenderer.class))
+		(METHOD_CREATE_LIST_CELL_RENDERER1 = clz.getDeclaredMethod("createListCellRenderer", ListCellRenderer.class))
 				.setAccessible(true);
+		//
+		(METHOD_CREATE_LIST_CELL_RENDERER2 = clz.getDeclaredMethod("createListCellRenderer", ListCellRenderer.class,
+				Dimension.class)).setAccessible(true);
 		//
 		(METHOD_GET_ACCENT_IMAGE_WIDTH = clz.getDeclaredMethod("getAccentImageWidth", CLASS_TEXT_AND_IMAGE))
 				.setAccessible(true);
@@ -548,6 +562,16 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		String toString, name = null;
 		//
+		JavaClass javaClass = null;
+		//
+		org.apache.bcel.classfile.Method bcelMethod = null;
+		//
+		Instruction[] ins = null;
+		//
+		int length = 0;
+		//
+		boolean invokeDynamic, invokeSpecial;
+		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ms[i]) == null || m.isSynthetic()) {
@@ -592,28 +616,62 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 			toString = Util.toString(m);
 			//
-			if (or(Util.contains(Arrays.asList(Double.TYPE, Boolean.TYPE, Integer.TYPE, Float.TYPE),
-					Util.getReturnType(m)),
-					Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "createTextAndImageListCellRenderer"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Component.class })),
-					Boolean.logicalAnd(Objects.equals(name, "getClipboard"),
+			if (javaClass == null) {
+				//
+				final Class<?> clz = VoiceManagerOjadAccentPanel.class;
+				//
+				try (final InputStream is = Util.getResourceAsStream(clz, StringUtils.join("/",
+						StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/"), ".class"))) {
+					//
+					javaClass = ClassParserUtil.parse(new ClassParser(is, null));
+					//
+				} // try
+					//
+			} // if
+				//
+			invokeDynamic = invokeSpecial = false;
+			//
+			if ((bcelMethod = JavaClassUtil.getMethod(javaClass, m)) != null) {
+				//
+				final ConstantPoolGen cpg = new ConstantPoolGen(javaClass.getConstantPool());
+				//
+				if ((length = length(ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
+						testAndApply(Objects::nonNull, bcelMethod, x -> new MethodGen(x, null, cpg), null))))) == 2) {
+					//
+					invokeDynamic = Boolean.logicalAnd(ArrayUtils.get(ins, 0) instanceof INVOKEDYNAMIC,
+							ArrayUtils.get(ins, 1) instanceof ARETURN);
+					//
+				} else if (length == 3) {
+					//
+					invokeDynamic = Util.and(ArrayUtils.get(ins, 0) instanceof ALOAD,
+							ArrayUtils.get(ins, 1) instanceof INVOKEDYNAMIC, ArrayUtils.get(ins, 2) instanceof ARETURN);
+					//
+				} else if (length == 4) {
+					//
+					invokeDynamic = Util.and(ArrayUtils.get(ins, 0) instanceof ALOAD,
+							ArrayUtils.get(ins, 1) instanceof ALOAD, ArrayUtils.get(ins, 2) instanceof INVOKEDYNAMIC,
+							ArrayUtils.get(ins, 3) instanceof ARETURN);
+					//
+				} else if (length == 6) {
+					//
+					invokeSpecial = Util.and(ArrayUtils.get(ins, 0) instanceof NEW,
+							ArrayUtils.get(ins, 1) instanceof DUP, ArrayUtils.get(ins, 2) instanceof ALOAD,
+							ArrayUtils.get(ins, 3) instanceof ILOAD, ArrayUtils.get(ins, 4) instanceof INVOKESPECIAL,
+							ArrayUtils.get(ins, 5) instanceof ARETURN);
+					//
+				} // if
+					//
+			} // if
+				//
+			if (or(Util.contains(
+					Arrays.asList(Double.TYPE, Boolean.TYPE, Integer.TYPE, Float.TYPE), Util.getReturnType(m)),
+					invokeDynamic, invokeSpecial,
+					Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "getClipboard"),
 							Arrays.equals(parameterTypes, new Class<?>[] {})),
 					Boolean.logicalAnd(Objects.equals(name, "createUrl"),
 							Arrays.equals(parameterTypes, new Class<?>[] { String.class, Map.class })),
-					Boolean.logicalAnd(Objects.equals(Util.getName(m), "createComparatorByOrder"),
-							Arrays.equals(parameterTypes, new Class<?>[] { List.class })),
-					Boolean.logicalAnd(Objects.equals(Util.getName(m), "createTextAndImageConsumer"),
-							Arrays.equals(parameterTypes, new Class<?>[] {})),
 					Boolean.logicalAnd(Objects.equals(Util.getName(m), "getMapEntryGetKeyMethod"),
-							Arrays.equals(parameterTypes, new Class<?>[] {})),
-					Boolean.logicalAnd(Objects.equals(Util.getName(m), "createImageDimensionPositionPredicate"),
-							Arrays.equals(parameterTypes, new Class<?>[] { double[].class })),
-					Boolean.logicalAnd(Objects.equals(Util.getName(m), "createFunction"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Pattern.class })),
-					Boolean.logicalAnd(Objects.equals(Util.getName(m), "createListCellRenderer"),
-							Arrays.equals(parameterTypes, new Class<?>[] { ListCellRenderer.class })),
-					Boolean.logicalAnd(Objects.equals(Util.getName(m), "createDefaultTableModel"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Object[].class, Integer.TYPE })))) {
+							Arrays.equals(parameterTypes, new Class<?>[] {})))) {
 				//
 				Assertions.assertNotNull(invoke, toString);
 				//
@@ -2491,12 +2549,35 @@ class VoiceManagerOjadAccentPanelTest {
 		Assertions.assertNull(
 				Util.getListCellRendererComponent(createListCellRenderer(null), null, null, 0, false, false));
 		//
+		Assertions.assertNull(
+				Util.getListCellRendererComponent(createListCellRenderer(null, null), null, null, 0, false, false));
+		//
+		Assertions.assertNull(Util.getListCellRendererComponent(
+				createListCellRenderer(null, Util.cast(Dimension.class, Narcissus.allocateInstance(Dimension.class))),
+				null, null, 0, false, false));
+		//
 	}
 
 	private static ListCellRenderer<? super Entry<String, String>> createListCellRenderer(
 			final ListCellRenderer<? super Entry<String, String>> lcr) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_LIST_CELL_RENDERER.invoke(null, lcr);
+			final Object obj = METHOD_CREATE_LIST_CELL_RENDERER1.invoke(null, lcr);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ListCellRenderer) {
+				return (ListCellRenderer) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static ListCellRenderer<? super Entry<String, String>> createListCellRenderer(
+			final ListCellRenderer<? super Entry<String, ? extends Image>> lcr, final Dimension preferredSize)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_LIST_CELL_RENDERER2.invoke(null, lcr, preferredSize);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof ListCellRenderer) {

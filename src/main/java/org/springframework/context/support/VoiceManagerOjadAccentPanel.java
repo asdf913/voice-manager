@@ -442,29 +442,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			jcbLanguage.addActionListener(this);
 			//
-			final Dimension preferredSize = Util.getPreferredSize(jcbLanguage);
-			//
-			jcbLanguage.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
-				//
-				final Component component = Util.getListCellRendererComponent(lcr, list, value, index, isSelected,
-						cellHasFocus);
-				//
-				final JLabel jLabel = Util.cast(JLabel.class, component);
-				//
-				Util.setText(jLabel, null);
-				//
-				if (preferredSize != null) {
-					//
-					setIcon(jLabel, testAndApply(Objects::nonNull,
-							Util.getScaledInstance(Util.getValue(value), Math.min((int) preferredSize.getWidth(), 17),
-									Math.min((int) preferredSize.getHeight(), 17), Image.SCALE_DEFAULT),
-							ImageIcon::new, null));
-					//
-				} // if
-					//
-				return component;
-				//
-			});
+			jcbLanguage
+					.setRenderer(createListCellRenderer(jcbLanguage.getRenderer(), Util.getPreferredSize(jcbLanguage)));
 			//
 			testAndAccept(x -> Util.getSize(getModel(x)) > 0, jcbLanguage, x -> Util.setSelectedIndex(x, 0));
 			//
@@ -839,6 +818,33 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			}
 
+		};
+		//
+	}
+
+	private static ListCellRenderer<? super Entry<String, ? extends Image>> createListCellRenderer(
+			final ListCellRenderer<? super Entry<String, ? extends Image>> lcr, final Dimension preferredSize) {
+		//
+		return (list, value, index, isSelected, cellHasFocus) -> {
+			//
+			final Component component = Util.getListCellRendererComponent(lcr, list, value, index, isSelected,
+					cellHasFocus);
+			//
+			final JLabel jLabel = Util.cast(JLabel.class, component);
+			//
+			Util.setText(jLabel, null);
+			//
+			if (preferredSize != null) {
+				//
+				setIcon(jLabel, testAndApply(Objects::nonNull,
+						Util.getScaledInstance(Util.getValue(value), Math.min((int) preferredSize.getWidth(), 17),
+								Math.min((int) preferredSize.getHeight(), 17), Image.SCALE_DEFAULT),
+						ImageIcon::new, null));
+				//
+			} // if
+				//
+			return component;
+			//
 		};
 		//
 	}
