@@ -1565,16 +1565,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} else {
 				//
-				if (la == 3) {// 辞書形
-					//
-					set(maxConjugationLength, i, Integer.valueOf(15));
-					//
-				} else {
-					//
-					set(maxConjugationLength, i, Integer.valueOf(14));
-					//
-				} // if
-					//
+				set(maxConjugationLength, i, iif(la == 3/* 辞書形 */, 15, 14));
+				//
 				integer = Integer.valueOf(11);
 				//
 				if (lb == 7) {// 受験勉強します
@@ -1601,6 +1593,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // if
 			//
+	}
+
+	private static int iif(final boolean condition, final int valueTrue, final int valueFalse) {
+		return condition ? valueTrue : valueFalse;
 	}
 
 	private static <T> void set(@Nullable final List<T> instance, final int index, final T value) {
