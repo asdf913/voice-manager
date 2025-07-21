@@ -741,6 +741,20 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventJcbTextAndImage));
 		//
+		// jcbTextAndImage
+		//
+		final JComboBox<?> jcbLanguage = new JComboBox<>();
+		//
+		FieldUtils.writeDeclaredField(instance, "jcbLanguage", jcbLanguage, true);
+		//
+		final ActionEvent actionEventJcbLanguage = new ActionEvent(jcbLanguage, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventJcbLanguage));
+		//
+		FieldUtils.writeDeclaredField(instance, "btnExecute", null, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventJcbLanguage));
+		//
 		// btnCopyAccentImage
 		//
 		final AbstractButton btnCopyAccentImage = new JButton();

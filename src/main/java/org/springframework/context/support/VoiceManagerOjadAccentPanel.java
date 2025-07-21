@@ -285,7 +285,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Curve")
 	private JLabel lblCurve = null;
 
-	private JLabel lblCount = null;
+	private JLabel lblCategory, lblCurveSearch, lblCount = null;
 
 	private Window window = null;
 
@@ -368,6 +368,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private JComboBox<TextAndImage> jcbTextAndImage = null;
 
+	private JComboBox<Entry<String, ? extends Image>> jcbLanguage = null;
+
 	private transient MutableComboBoxModel<TextAndImage> mcbmTextAndImage = null;
 
 	private String url = null;
@@ -406,8 +408,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			List<Element> es = ElementUtil.select(document, ".flags_ul li a");
 			//
-			final String wrap = "wrap";
-			//
 			final DefaultComboBoxModel<Entry<String, ? extends Image>> dcbmUrlImage = new DefaultComboBoxModel<>();
 			//
 			testAndAccept(Objects::nonNull, Util
@@ -421,13 +421,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					))), dcbmUrlImage::addAll);
 			//
-			final JComboBox<Entry<String, ? extends Image>> jcb = new JComboBox<>(dcbmUrlImage);// TODO
+			final ListCellRenderer<? super Entry<String, ? extends Image>> lcr = (jcbLanguage = new JComboBox<>(
+					dcbmUrlImage)).getRenderer();
 			//
-			final ListCellRenderer<? super Entry<String, ? extends Image>> lcr = jcb.getRenderer();
+			jcbLanguage.addActionListener(this);
 			//
-			final Dimension preferredSize = jcb.getPreferredSize();
+			final Dimension preferredSize = Util.getPreferredSize(jcbLanguage);
 			//
-			jcb.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
+			jcbLanguage.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
 				//
 				final Component component = Util.getListCellRendererComponent(lcr, list, value, index, isSelected,
 						cellHasFocus);
@@ -449,9 +450,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			});
 			//
-			testAndAccept(x -> Util.getSize(getModel(x)) > 0, jcb, x -> Util.setSelectedIndex(x, 0));
+			testAndAccept(x -> Util.getSize(getModel(x)) > 0, jcbLanguage, x -> Util.setSelectedIndex(x, 0));
 			//
-			add(jcb, wrap);
+			final String wrap = "wrap";
+			//
+			add(jcbLanguage, wrap);
 			//
 			add(new JLabel("Text"));
 			//
@@ -472,7 +475,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Element element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null);
 			//
-			add(new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(element))));
+			add(lblCategory = new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(element))));
 			//
 			es = ElementUtil.select(element, "option");
 			//
@@ -503,7 +506,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			});
 			//
-			add(new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(
+			add(lblCurveSearch = new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(
 					element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null)))));
 			//
 			es = ElementUtil.select(element, "option");
@@ -527,7 +530,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(new JLabel());
 			//
-			add(btnExecute = new JButton("Execute"), String.format("%1$s,span %2$s", wrap, 2));
+			// 実行
+			//
+			testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[type=\"submit\"]")) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			add(btnExecute = new JButton(NodeUtil.attr(
+					testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null), "value")),
+					String.format("%1$s,span %2$s", wrap, 2));
 			//
 			add(new JLabel("Text And Image"));
 			//
@@ -1305,6 +1318,65 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			pack(window);
 			//
+		} else if (Objects.equals(source, jcbLanguage)) {
+			//
+			String html = null;
+			//
+			final Entry<?, ?> entry = Util.cast(Entry.class, Util.getSelectedItem(jcbLanguage));
+			//
+			try (final InputStream is = testAndGet(!isTestMode(),
+					() -> Util.openStream(Util.toURL(new URI(Util.toString(Util.getKey(entry))))), null)) {
+				//
+				html = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
+				//
+			} catch (final Exception e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+			final Document document = testAndApply(Objects::nonNull, html, x -> Jsoup.parse(x), null);
+			//
+			List<Element> es = ElementUtil.select(document, "[id=\"search_category\"]");
+			//
+			// 品詞
+			//
+			testAndRunThrows(IterableUtils.size(es) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			Util.setText(lblCategory, ElementUtil.text(ElementUtil.previousElementSibling(
+					testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null))));
+			//
+			// ピッチカーブ
+			//
+			testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_curve\"]")) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			Util.setText(lblCurveSearch, ElementUtil.text(ElementUtil.previousElementSibling(
+					testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null))));
+			//
+			// 実行
+			//
+			testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[type=\"submit\"]")) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			if (btnExecute != null) {
+				//
+				btnExecute.setText(NodeUtil.attr(
+						testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null),
+						"value"));
+				//
+			} // if
+				//
 		} else if (Objects.equals(source, btnSaveAccentImage)) {
 			//
 			final String format = Util.toString(Util.getSelectedItem(cbmImageFormat));
