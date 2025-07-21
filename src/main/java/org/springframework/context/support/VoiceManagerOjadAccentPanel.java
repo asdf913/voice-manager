@@ -427,9 +427,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 				} // try
 					//
-			})), x -> {
-				dcbmUrlImage.addAll(x);
-			});
+			})), dcbmUrlImage::addAll);
 			//
 			final JComboBox<Entry<String, Image>> jcb = new JComboBox<>(dcbmUrlImage);// TODO
 			//
