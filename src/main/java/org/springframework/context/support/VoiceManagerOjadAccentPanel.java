@@ -553,8 +553,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			for (int i = 0; i < IterableUtils.size(es); i++) {
 				//
-				dcbm.addElement(
-						Pair.of(Util.getValue(attribute(e = IterableUtils.get(es, i), VALUE)), ElementUtil.text(e)));
+				dcbm.addElement(MutablePair.of(Util.getValue(attribute(e = IterableUtils.get(es, i), VALUE)),
+						ElementUtil.text(e)));
 				//
 			} // for
 				//
@@ -1457,10 +1457,26 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			});
 			//
 			Util.setText(lblCurveSearch, ElementUtil.text(ElementUtil.previousElementSibling(
-					testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null))));
+					element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null))));
 			//
-			// 実行
+			es = ElementUtil.select(element, OPTION);
 			//
+			for (int i = 0; i < Math.min(Util.getSize(cbmCurve), IterableUtils.size(es)); i++) {
+				//
+				if (Objects.equals(NodeUtil.attr(e = IterableUtils.get(es, i), VALUE),
+						Util.getKey(en = Util.cast(Entry.class, Util.getElementAt(cbmCurve, i))))) {
+					//
+					testAndAccept((a, b, c) -> Boolean.logicalAnd(a != null, b != null), en,
+							setValue = ObjectUtils.getIfNull(setValue, () -> {
+								return getMapEntrySetValueMethod();
+							}), ElementUtil.text(e), (a, b, c) -> Narcissus.invokeMethod(a, b, c));
+					//
+				} // if
+					//
+			} // for
+				//
+				// 実行
+				//
 			testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[type=\"submit\"]")) > 1, () -> {
 				//
 				throw new IllegalStateException();
