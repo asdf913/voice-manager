@@ -292,17 +292,23 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("品詞")
 	private JLabel lblCategory = null;
 
+	@Note("アクセント型")
+	private JLabel lblAccentType = null;
+
 	@Note("ピッチカーブ")
 	private JLabel lblCurveSearch = null;
 
-	private JLabel lblAccentType, lblCount = null;
+	private JLabel lblCount = null;
 
 	private Window window = null;
 
 	@Note("品詞")
 	private transient ComboBoxModel<Entry<String, String>> cbmCategory = null;
 
-	private transient ComboBoxModel<Entry<String, String>> cbmAccentType, cbmCurve = null;
+	@Note("アクセント型")
+	private transient ComboBoxModel<Entry<String, String>> cbmAccentType = null;
+
+	private transient ComboBoxModel<Entry<String, String>> cbmCurve = null;
 
 	private transient ComboBoxModel<String> cbmImageFormat = null;
 
