@@ -1492,7 +1492,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static void forEachOrdered(final IntStream instance, final IntConsumer consumer) {
+	private static void forEachOrdered(@Nullable final IntStream instance, @Nullable final IntConsumer consumer) {
 		if (instance != null && (consumer != null || Proxy.isProxyClass(Util.getClass(instance)))) {
 			instance.forEachOrdered(consumer);
 		}
