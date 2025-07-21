@@ -432,12 +432,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				Util.setText(jLabel, null);
 				//
-				final Image image = Util.getValue(value);
-				//
-				if (image != null && preferredSize != null) {
+				if (preferredSize != null) {
 					//
-					setIcon(jLabel, new ImageIcon(image.getScaledInstance(Math.min((int) preferredSize.getWidth(), 17),
-							Math.min((int) preferredSize.getHeight(), 17), Image.SCALE_DEFAULT)));
+					setIcon(jLabel, testAndApply(Objects::nonNull,
+							getScaledInstance(Util.getValue(value), Math.min((int) preferredSize.getWidth(), 17),
+									Math.min((int) preferredSize.getHeight(), 17), Image.SCALE_DEFAULT),
+							ImageIcon::new, null));
 					//
 				} // if
 					//
@@ -767,6 +767,32 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static Image getScaledInstance(final Image instance, final int width, final int height, final int hints) {
+		//
+		if (instance == null || width <= 0 || height <= 0) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final List<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), RASTER)));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		return (f == null || Narcissus.getField(instance, f) != null) ? instance.getScaledInstance(width, height, hints)
+				: null;
+		//
 	}
 
 	private static ListCellRenderer<? super Entry<String, String>> createListCellRenderer(
