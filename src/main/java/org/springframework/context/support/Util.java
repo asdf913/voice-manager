@@ -2290,6 +2290,7 @@ public abstract class Util {
 		}
 	}
 
+	@Nullable
 	static Image getScaledInstance(final Image instance, final int width, final int height, final int hints) {
 		//
 		if (instance == null || width <= 0 || height <= 0) {
