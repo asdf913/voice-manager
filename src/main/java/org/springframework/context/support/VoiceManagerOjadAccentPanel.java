@@ -436,35 +436,26 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final Dimension preferredSize = jcb.getPreferredSize();
 			//
-			jcb.setRenderer(new ListCellRenderer<Entry<String, ? extends Image>>() {
-
-				@Override
-				public Component getListCellRendererComponent(
-						final JList<? extends Entry<String, ? extends Image>> list,
-						final Entry<String, ? extends Image> value, final int index, final boolean isSelected,
-						final boolean cellHasFocus) {
+			jcb.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
+				//
+				final Component component = Util.getListCellRendererComponent(lcr, list, value, index, isSelected,
+						cellHasFocus);
+				//
+				final JLabel jLabel = Util.cast(JLabel.class, component);
+				//
+				Util.setText(jLabel, null);
+				//
+				final Image image = Util.getValue(value);
+				//
+				if (image != null && preferredSize != null) {
 					//
-					final Component component = Util.getListCellRendererComponent(lcr, list, value, index, isSelected,
-							cellHasFocus);
+					setIcon(jLabel, new ImageIcon(image.getScaledInstance(Math.min((int) preferredSize.getWidth(), 17),
+							Math.min((int) preferredSize.getHeight(), 17), Image.SCALE_DEFAULT)));
 					//
-					final JLabel jLabel = Util.cast(JLabel.class, component);
+				} // if
 					//
-					Util.setText(jLabel, null);
-					//
-					final Image image = Util.getValue(value);
-					//
-					if (image != null && preferredSize != null) {
-						//
-						setIcon(jLabel,
-								new ImageIcon(image.getScaledInstance(Math.min((int) preferredSize.getWidth(), 17),
-										Math.min((int) preferredSize.getHeight(), 17), Image.SCALE_DEFAULT)));
-						//
-					} // if
-						//
-					return component;
-					//
-				}
-
+				return component;
+				//
 			});
 			//
 			testAndAccept(x -> Util.getSize(getModel(x)) > 0, jcb, x -> Util.setSelectedIndex(x, 0));
