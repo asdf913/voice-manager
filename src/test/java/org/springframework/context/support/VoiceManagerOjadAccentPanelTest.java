@@ -741,7 +741,7 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventJcbTextAndImage));
 		//
-		// jcbTextAndImage
+		// jcbLanguage
 		//
 		final JComboBox<?> jcbLanguage = new JComboBox<>();
 		//
