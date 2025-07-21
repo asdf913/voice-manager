@@ -1558,7 +1558,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		setText(instance.btnExecute, NodeUtil
 				.attr(testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null), VALUE));
 		//
-
 	}
 
 	private static <T, U, R> void testAndAccept(final TriPredicate<T, U, R> predicate, final T t, final U u, final R r,
