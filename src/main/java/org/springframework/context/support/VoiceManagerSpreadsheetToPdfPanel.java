@@ -596,10 +596,12 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 				if (ratioMin != 0) {
 					//
-					setIcon(lblThumbnail, testAndApply(Objects::nonNull,
-							getScaledInstance(bufferedImage, Math.max((int) (getWidth(bufferedImage) / ratioMin), 1),
-									Math.max((int) (imageHeight / ratioMin), 1), Image.SCALE_DEFAULT),
-							ImageIcon::new, null));
+					setIcon(lblThumbnail,
+							testAndApply(Objects::nonNull,
+									Util.getScaledInstance(bufferedImage,
+											Math.max((int) (getWidth(bufferedImage) / ratioMin), 1),
+											Math.max((int) (imageHeight / ratioMin), 1), Image.SCALE_DEFAULT),
+									ImageIcon::new, null));
 					//
 				} // if
 					//
@@ -729,12 +731,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		} // try
 			//
-	}
-
-	@Nullable
-	private static Image getScaledInstance(@Nullable final Image instance, final int width, final int height,
-			final int hints) {
-		return instance != null ? instance.getScaledInstance(width, height, hints) : instance;
 	}
 
 	private static double getHeight(@Nullable final Dimension2D instance, final double defaultValue) {
@@ -1842,7 +1838,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 					&& (f == null || Narcissus.getField(bufferedImage, f) != null), () ->
 			//
 			JOptionPane.showMessageDialog(null,
-					new ImageIcon(getScaledInstance(bufferedImage, Math.max((int) (width / ratioMin), 1),
+					new ImageIcon(Util.getScaledInstance(bufferedImage, Math.max((int) (width / ratioMin), 1),
 							Math.max((int) (imageHeight / ratioMin), 1), Image.SCALE_DEFAULT)),
 					"Image", JOptionPane.PLAIN_MESSAGE)
 			//

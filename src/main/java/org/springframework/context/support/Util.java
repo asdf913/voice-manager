@@ -3,6 +3,7 @@ package org.springframework.context.support;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
@@ -2287,6 +2288,32 @@ public abstract class Util {
 		if (instance != null) {
 			instance.setAccessible(flag);
 		}
+	}
+
+	static Image getScaledInstance(final Image instance, final int width, final int height, final int hints) {
+		//
+		if (instance == null || width <= 0 || height <= 0) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final List<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), "raster")));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		return (f == null || Narcissus.getField(instance, f) != null) ? instance.getScaledInstance(width, height, hints)
+				: null;
+		//
 	}
 
 }

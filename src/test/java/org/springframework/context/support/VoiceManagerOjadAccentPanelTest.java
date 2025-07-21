@@ -147,8 +147,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_GET_MIME_TYPE, METHOD_GET_VOICE_URL_BY_X, METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, METHOD_GET_SIZE,
 			METHOD_GET_TRANSLATE_XS, METHOD_FLAT_MAP, METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE,
 			METHOD_CREATE_FUNCTION, METHOD_CREATE_LIST_CELL_RENDERER, METHOD_GET_ACCENT_IMAGE_WIDTH,
-			METHOD_GET_CURVE_IMAGE_WIDTH, METHOD_FOR_EACH_ORDERED, METHOD_SET, METHOD_GET_SCALED_INSTANCE,
-			METHOD_CREATE_DEFAULT_TABLE_MODEL = null;
+			METHOD_GET_CURVE_IMAGE_WIDTH, METHOD_FOR_EACH_ORDERED, METHOD_SET, METHOD_CREATE_DEFAULT_TABLE_MODEL = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -318,9 +317,6 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_SET = clz.getDeclaredMethod("set", Iterable.class, Integer.TYPE, CLASS_TEXT_AND_IMAGE, Integer.TYPE,
 				List.class, List.class, List.class)).setAccessible(true);
-		//
-		(METHOD_GET_SCALED_INSTANCE = clz.getDeclaredMethod("getScaledInstance", Image.class, Integer.TYPE,
-				Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_CREATE_DEFAULT_TABLE_MODEL = clz.getDeclaredMethod("createDefaultTableModel", Object[].class,
 				Integer.TYPE)).setAccessible(true);
@@ -2642,36 +2638,6 @@ class VoiceManagerOjadAccentPanelTest {
 	private static void forEachOrdered(final IntStream instance, final IntConsumer consumer) throws Throwable {
 		try {
 			METHOD_FOR_EACH_ORDERED.invoke(null, instance, consumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetScaledInstance() throws Throwable {
-		//
-		final Image image = Util.cast(Image.class, Narcissus.allocateInstance(BufferedImage.class));
-		//
-		Assertions.assertNull(getScaledInstance(image, 0, 0, 0));
-		//
-		Assertions.assertNull(getScaledInstance(image, 1, 0, 0));
-		//
-		Assertions.assertNull(getScaledInstance(image, 1, 1, 0));
-		//
-		Assertions.assertNotNull(getScaledInstance(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), 1, 1, 0));
-		//
-	}
-
-	private static Image getScaledInstance(final Image instance, final int width, final int height, final int hints)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_GET_SCALED_INSTANCE.invoke(null, instance, width, height, hints);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Image) {
-				return (Image) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

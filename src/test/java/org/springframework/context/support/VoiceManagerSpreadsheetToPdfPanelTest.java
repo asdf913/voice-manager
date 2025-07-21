@@ -98,8 +98,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_OR, METHOD_SET_ICON, METHOD_TEST_AND_APPLY,
 			METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY, METHOD_TO_DATA,
 			METHOD_GET_LAYOUT_MANAGER, METHOD_SET_PREFERRED_SIZE, METHOD_WRITE_VOICE_TO_FILE, METHOD_FOR_EACH_REMAINING,
-			METHOD_GET_HEIGHT, METHOD_GET_SCALED_INSTANCE, METHOD_GET_SELECTED_INDEX,
-			METHOD_IS_ALL_FIELDS_NULL_OR_BLANK = null;
+			METHOD_GET_HEIGHT, METHOD_GET_SELECTED_INDEX, METHOD_IS_ALL_FIELDS_NULL_OR_BLANK = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -165,9 +164,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", Dimension2D.class, Double.TYPE)).setAccessible(true);
-		//
-		(METHOD_GET_SCALED_INSTANCE = clz.getDeclaredMethod("getScaledInstance", Image.class, Integer.TYPE,
-				Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_SELECTED_INDEX = clz.getDeclaredMethod("getSelectedIndex", JComboBox.class)).setAccessible(true);
 		//
@@ -1117,30 +1113,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			final Object obj = METHOD_GET_HEIGHT.invoke(null, instance, defaultValue);
 			if (obj instanceof Double) {
 				return ((Double) obj).doubleValue();
-			}
-			throw new Throwable(Util.getName(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetScaledInstance() throws Throwable {
-		//
-		final Image image = ProxyUtil.createProxy(Image.class, mh);
-		//
-		Assertions.assertSame(image, getScaledInstance(image, ZERO, ZERO, ZERO));
-		//
-	}
-
-	private static Image getScaledInstance(final Image instance, final int width, final int height, final int hints)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_GET_SCALED_INSTANCE.invoke(null, instance, width, height, hints);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Image) {
-				return (Image) obj;
 			}
 			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
