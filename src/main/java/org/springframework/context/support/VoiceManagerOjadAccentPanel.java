@@ -1303,17 +1303,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			removeAll(jtVoice);
 			//
-			testAndAccept(Objects::nonNull, textAndImage, x -> {
+			testAndAccept(Objects::nonNull, textAndImage, x ->
+			//
+			Util.forEach(Util.entrySet(getVoiceUrlImages(x)), en -> {
 				//
-				Util.forEach(Util.entrySet(getVoiceUrlImages(x)), en -> {
-					//
-					final String key = Util.getKey(en);
-					//
-					Util.addRow(dtmVoice, new Object[] { Util.getValue(en), key, key, key, key });
-					//
-				});
+				final String key = Util.getKey(en);
 				//
-			});
+				Util.addRow(dtmVoice, new Object[] { Util.getValue(en), key, key, key, key });
+				//
+			})
+			//
+			);
 			//
 			// PDF
 			//
