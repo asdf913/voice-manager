@@ -1565,7 +1565,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} else {
 				//
-				set(maxConjugationLength, i, iif(la == 3/* 辞書形 */, 15, 14));
+				set(maxConjugationLength, i, Integer.valueOf(iif(la == 3/* 辞書形 */, 15, 14)));
 				//
 				integer = Integer.valueOf(11);
 				//
@@ -1579,16 +1579,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 				} // if
 					//
-				if (lc == 11) {// じゅけんべんきょうする
-					//
-					set(maxHiraganaLength, i, Integer.valueOf(12));
-					//
-				} else {
-					//
-					set(maxHiraganaLength, i, integer);
-					//
-				} // if
-					//
+				set(maxHiraganaLength, i,
+						Integer.valueOf(iif(lc == 11/* じゅけんべんきょうする */, 12, Util.intValue(integer, 11))));
+				//
 			} // if
 				//
 		} // if
