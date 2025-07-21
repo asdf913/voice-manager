@@ -1338,7 +1338,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // try
 				//
-			final Document document = testAndApply(Objects::nonNull, html, x -> Jsoup.parse(x), null);
+			final Document document = testAndApply(Objects::nonNull, html, Jsoup::parse, null);
 			//
 			List<Element> es = ElementUtil.select(document, "[id=\"search_category\"]");
 			//
