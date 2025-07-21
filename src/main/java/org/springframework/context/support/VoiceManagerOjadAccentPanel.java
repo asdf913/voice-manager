@@ -1372,13 +1372,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			});
 			//
-			if (btnExecute != null) {
-				//
-				btnExecute.setText(NodeUtil.attr(
-						testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null), VALUE));
-				//
-			} // if
-				//
+			setText(btnExecute, NodeUtil.attr(
+					testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null), VALUE));
+			//
 		} else if (Objects.equals(source, btnSaveAccentImage)) {
 			//
 			final String format = Util.toString(Util.getSelectedItem(cbmImageFormat));
@@ -1436,6 +1432,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		setContents(source, supplier, Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage)),
 				objectFunctionMap);
 		//
+	}
+
+	private static void setText(final AbstractButton instance, final String text) {
+		if (instance != null) {
+			instance.setText(text);
+		}
 	}
 
 	private static class ImageDimensionPosition {
