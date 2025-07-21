@@ -409,16 +409,19 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final String wrap = "wrap";
 			//
-			final DefaultComboBoxModel<Entry<String, Image>> dcbmUrlImage = new DefaultComboBoxModel<>();
+			final DefaultComboBoxModel<Entry<String, ? extends Image>> dcbmUrlImage = new DefaultComboBoxModel<>();
 			//
 			testAndAccept(Objects::nonNull, Util.toList(Util.map(Util.stream(es), x -> {
 				//
 				try {
 					//
+					NodeUtil.absUrl(testAndApply(y -> IterableUtils.size(y) > 0, ElementUtil.select(x, "img"),
+							y -> IterableUtils.get(y, 0), null), "src");
+					//
 					return Pair.of(NodeUtil.absUrl(x, "href"),
-							(Image) toBufferedImage(
-									toByteArray(
-											new URL(NodeUtil.absUrl(x != null ? x.selectFirst("img") : null, "src"))),
+							toBufferedImage(
+									toByteArray(new URL(NodeUtil.absUrl(testAndApply(y -> IterableUtils.size(y) > 0,
+											ElementUtil.select(x, "img"), y -> IterableUtils.get(y, 0), null), "src"))),
 									e -> LoggerUtil.error(LOG, e.getMessage(), e)));
 					//
 				} catch (final IOException e) {
@@ -429,17 +432,18 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 			})), dcbmUrlImage::addAll);
 			//
-			final JComboBox<Entry<String, Image>> jcb = new JComboBox<>(dcbmUrlImage);// TODO
+			final JComboBox<Entry<String, ? extends Image>> jcb = new JComboBox<>(dcbmUrlImage);// TODO
 			//
-			final ListCellRenderer<? super Entry<String, Image>> lcr = jcb.getRenderer();
+			final ListCellRenderer<? super Entry<String, ? extends Image>> lcr = jcb.getRenderer();
 			//
 			final Dimension preferredSize = jcb.getPreferredSize();
 			//
-			jcb.setRenderer(new ListCellRenderer<Entry<String, Image>>() {
+			jcb.setRenderer(new ListCellRenderer<Entry<String, ? extends Image>>() {
 
 				@Override
-				public Component getListCellRendererComponent(final JList<? extends Entry<String, Image>> list,
-						final Entry<String, Image> value, final int index, final boolean isSelected,
+				public Component getListCellRendererComponent(
+						final JList<? extends Entry<String, ? extends Image>> list,
+						final Entry<String, ? extends Image> value, final int index, final boolean isSelected,
 						final boolean cellHasFocus) {
 					//
 					final Component component = Util.getListCellRendererComponent(lcr, list, value, index, isSelected,
