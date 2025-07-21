@@ -2458,7 +2458,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Entry<?, ?> entry = Util.cast(Entry.class, Util.getSelectedItem(cbmCategory));
 			//
-			final Object key = Util.getKey(entry);
+			Object key = Util.getKey(entry);
 			//
 			if (!Objects.equals(key, "0")) {
 				//
@@ -2472,10 +2472,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final Method getKey = getMapEntryGetKeyMethod();
 			//
-			if (!Objects.equals(Util.getValue(entry), "すべて")) {
+			if (!Objects.equals(key = Util.getKey(entry), "0")) {
 				//
-				Util.put(map, "accent_type",
-						Util.toString(testAndApply((a, b) -> a != null, entry, getKey, Narcissus::invokeMethod, null)));
+				Util.put(map, "accent_type", Util.toString(key));
 				//
 			} // if
 				//
