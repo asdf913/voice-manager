@@ -539,7 +539,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			});
 			//
 			add(btnExecute = new JButton(NodeUtil.attr(
-					testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null), "value")),
+					testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null), VALUE)),
 					String.format("%1$s,span %2$s", wrap, 2));
 			//
 			add(new JLabel("Text And Image"));
@@ -1372,8 +1372,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			if (btnExecute != null) {
 				//
 				btnExecute.setText(NodeUtil.attr(
-						testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null),
-						"value"));
+						testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null), VALUE));
 				//
 			} // if
 				//
