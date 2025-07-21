@@ -1303,9 +1303,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			removeAll(jtVoice);
 			//
-			if (textAndImage != null) {
+			testAndAccept(Objects::nonNull, textAndImage, x -> {
 				//
-				Util.forEach(Util.entrySet(getVoiceUrlImages(textAndImage)), en -> {
+				Util.forEach(Util.entrySet(getVoiceUrlImages(x)), en -> {
 					//
 					final String key = Util.getKey(en);
 					//
@@ -1313,10 +1313,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 				});
 				//
-			} // if
-				//
-				// PDF
-				//
+			});
+			//
+			// PDF
+			//
 			Util.setEnabled(btnPdf, textAndImage != null);
 			//
 			pack(window);
