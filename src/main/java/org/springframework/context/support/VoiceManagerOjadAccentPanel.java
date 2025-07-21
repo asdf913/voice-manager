@@ -384,12 +384,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final TextStringBuilder tsb = new TextStringBuilder(url);
 			//
-			testAndAccept((a, b) -> length(b) > 2, tsb, StringUtils.split(url, '/'), (a, b) -> {
-				//
-				TextStringBuilderUtil.append(TextStringBuilderUtil.clear(a),
-						StringUtils.joinWith("//", (Object[]) ArrayUtils.subarray(b, 0, 2)));
-				//
-			});
+			testAndAccept((a, b) -> length(b) > 2, tsb, StringUtils.split(url, '/'),
+					(a, b) -> TextStringBuilderUtil.append(TextStringBuilderUtil.clear(a),
+							StringUtils.joinWith("//", (Object[]) ArrayUtils.subarray(b, 0, 2))));
 			//
 			String html = null;
 			//
