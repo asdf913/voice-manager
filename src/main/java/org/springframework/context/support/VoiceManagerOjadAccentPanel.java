@@ -231,7 +231,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static final String GENDER = "Gender";
 
-	//
+	private static final String OPTION = "option";
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -483,7 +484,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			add(lblCategory = new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(
 					element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null)))));
 			//
-			es = ElementUtil.select(element, "option");
+			es = ElementUtil.select(element, OPTION);
 			//
 			DefaultComboBoxModel<Entry<String, String>> dcbm = new DefaultComboBoxModel<>();
 			//
@@ -516,7 +517,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			add(lblAccentType = new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(
 					element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null)))));
 			//
-			es = ElementUtil.select(element, "option");
+			es = ElementUtil.select(element, OPTION);
 			//
 			dcbm = new DefaultComboBoxModel<>();
 			//
@@ -546,7 +547,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			add(lblCurveSearch = new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(
 					element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null)))));
 			//
-			es = ElementUtil.select(element, "option");
+			es = ElementUtil.select(element, OPTION);
 			//
 			dcbm = new DefaultComboBoxModel<>();
 			//
@@ -1397,7 +1398,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.setText(lblCategory, ElementUtil.text(ElementUtil.previousElementSibling(element)));
 			//
-			es = ElementUtil.select(element, "option");
+			es = ElementUtil.select(element, OPTION);
 			//
 			Element e = null;
 			//
@@ -1431,7 +1432,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			Util.setText(lblAccentType, ElementUtil.text(ElementUtil.previousElementSibling(
 					element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null))));
 			//
-			es = ElementUtil.select(element, "option");
+			es = ElementUtil.select(element, OPTION);
 			//
 			for (int i = 0; i < Math.min(Util.getSize(cbmAccentType), IterableUtils.size(es)); i++) {
 				//
