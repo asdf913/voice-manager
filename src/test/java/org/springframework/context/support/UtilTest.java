@@ -1,6 +1,8 @@
 package org.springframework.context.support;
 
 import java.awt.Component;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
@@ -1138,6 +1140,23 @@ class UtilTest {
 		Assertions.assertDoesNotThrow(() -> Util.setAccessible(null, true));
 		//
 		Assertions.assertDoesNotThrow(() -> Util.setAccessible(Util.getDeclaredField(Util.class, "LOG"), true));
+		//
+	}
+
+	@Test
+	void testGetScaledInstance() throws Throwable {
+		//
+		Assertions.assertNull(Util.getScaledInstance(null, 0, 0, 0));
+		//
+		final Image image = Util.cast(Image.class, Narcissus.allocateInstance(BufferedImage.class));
+		//
+		Assertions.assertNull(Util.getScaledInstance(image, 0, 0, 0));
+		//
+		Assertions.assertNull(Util.getScaledInstance(image, 1, 0, 0));
+		//
+		Assertions.assertNull(Util.getScaledInstance(image, 1, 1, 0));
+		//
+		Assertions.assertNotNull(Util.getScaledInstance(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), 1, 1, 0));
 		//
 	}
 
