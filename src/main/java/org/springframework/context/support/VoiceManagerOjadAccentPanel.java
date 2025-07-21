@@ -413,9 +413,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				try {
 					//
-					NodeUtil.absUrl(testAndApply(y -> IterableUtils.size(y) > 0, ElementUtil.select(x, "img"),
-							y -> IterableUtils.get(y, 0), null), "src");
-					//
 					return Pair.of(NodeUtil.absUrl(x, "href"),
 							toBufferedImage(
 									toByteArray(new URL(NodeUtil.absUrl(testAndApply(y -> IterableUtils.size(y) > 0,
