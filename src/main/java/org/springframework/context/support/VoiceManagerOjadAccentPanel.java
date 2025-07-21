@@ -1437,7 +1437,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static void setText(final AbstractButton instance, final String text) {
+	private static void setText(@Nullable final AbstractButton instance, final String text) {
 		if (instance != null) {
 			instance.setText(text);
 		}
