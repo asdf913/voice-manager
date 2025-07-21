@@ -381,20 +381,20 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(new JLabel());
 			//
-			final String url = "https://www.gavo.t.u-tokyo.ac.jp";
+			final String u = "https://www.gavo.t.u-tokyo.ac.jp";
 			//
 			String html = null;
 			//
 			try (final InputStream is = testAndGet(!isTestMode(),
 					() -> Util.openStream(
-							Util.toURL(URIBuilderUtil.build(new URIBuilder(url).setPath("ojad/search/index/word:")))),
+							Util.toURL(URIBuilderUtil.build(new URIBuilder(u).setPath("ojad/search/index/word:")))),
 					null)) {
 				//
 				html = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
 				//
 			} // try
 				//
-			final Document document = testAndApply(Objects::nonNull, html, x -> Jsoup.parse(x, url), null);
+			final Document document = testAndApply(Objects::nonNull, html, x -> Jsoup.parse(x, u), null);
 			//
 			List<Element> es = ElementUtil.select(document, ".flags_ul li a");
 			//
