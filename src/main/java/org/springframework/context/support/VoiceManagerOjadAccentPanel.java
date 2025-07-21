@@ -224,6 +224,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static final String CLASS = "class";
 
+	private static final String GENDER = "Gender";
+
+	//
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -645,35 +648,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			panelVoice.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Voice"));
 			//
-			final String gender = "Gender";
-			//
-			jtVoice = new JTable(
-					dtmVoice = new DefaultTableModel(new Object[] { gender, "URL", COPY, DOWNLOAD, PLAY }, 0) {
-
-						private static final long serialVersionUID = -3821080690688708407L;
-
-						@Override
-						public Class<?> getColumnClass(final int columnIndex) {
-							//
-							final String columnName = getColumnName(columnIndex);
-							//
-							if (Objects.equals(columnName, gender)) {
-								//
-								return byte[].class;
-								//
-							} else if (Util.contains(Arrays.asList(COPY, DOWNLOAD, PLAY), columnName)) {
-								//
-								return String.class;
-								//
-							} // if
-								//
-							return super.getColumnClass(columnIndex);
-							//
-						}
-
-					});
-			//
-			setMaxWidth(jtVoice.getColumn(gender), 44);
+			setMaxWidth((jtVoice = new JTable(
+					dtmVoice = createDefaultTableModel(new Object[] { GENDER, "URL", COPY, DOWNLOAD, PLAY }, 0)))
+					.getColumn(GENDER), 44);
 			//
 			setMaxWidth(jtVoice.getColumn(COPY), 37);
 			//
@@ -767,6 +744,35 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static DefaultTableModel createDefaultTableModel(final Object[] columnNames, final int rowCount) {
+		//
+		return new DefaultTableModel(columnNames, rowCount) {
+
+			private static final long serialVersionUID = -3821080690688708407L;
+
+			@Override
+			public Class<?> getColumnClass(final int columnIndex) {
+				//
+				final String columnName = getColumnName(columnIndex);
+				//
+				if (Objects.equals(columnName, GENDER)) {
+					//
+					return byte[].class;
+					//
+				} else if (Util.contains(Arrays.asList(COPY, DOWNLOAD, PLAY), columnName)) {
+					//
+					return String.class;
+					//
+				} // if
+					//
+				return super.getColumnClass(columnIndex);
+				//
+			}
+
+		};
+		//
 	}
 
 	private static Image getScaledInstance(final Image instance, final int width, final int height, final int hints) {
