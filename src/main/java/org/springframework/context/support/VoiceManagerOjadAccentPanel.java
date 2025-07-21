@@ -437,10 +437,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					))), dcbmUrlImage::addAll);
 			//
-			final ListCellRenderer<? super Entry<String, ? extends Image>> lcr = (jcbLanguage = new JComboBox<>(
-					dcbmUrlImage)).getRenderer();
-			//
-			jcbLanguage.addActionListener(this);
+			(jcbLanguage = new JComboBox<>(dcbmUrlImage)).addActionListener(this);
 			//
 			jcbLanguage
 					.setRenderer(createListCellRenderer(jcbLanguage.getRenderer(), Util.getPreferredSize(jcbLanguage)));
