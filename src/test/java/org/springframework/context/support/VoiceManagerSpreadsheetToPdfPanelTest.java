@@ -2,7 +2,6 @@ package org.springframework.context.support;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;

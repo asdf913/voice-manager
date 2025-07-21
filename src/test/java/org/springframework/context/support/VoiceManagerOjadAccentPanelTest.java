@@ -1,7 +1,6 @@
 package org.springframework.context.support;
 
 import java.awt.Component;
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
