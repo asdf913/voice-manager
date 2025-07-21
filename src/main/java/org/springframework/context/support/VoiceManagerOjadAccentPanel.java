@@ -738,10 +738,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 																	x -> Util.cast(Boolean.class,
 																			Narcissus.getStaticField(x))),
 															Collectors.toList()), new Boolean[] {}),
-													null))),
-					wrap);
-			//
-			panelPdf.add(new JLabel());
+													null))));
 			//
 			panelPdf.add(btnPdf = new JButton("PDF"));
 			//
