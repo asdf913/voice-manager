@@ -285,7 +285,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Curve")
 	private JLabel lblCurve = null;
 
-	private JLabel lblCategory, lblCurveSearch, lblCount = null;
+	@Note("品詞")
+	private JLabel lblCategory = null;
+
+	private JLabel lblCurveSearch, lblCount = null;
 
 	private Window window = null;
 
