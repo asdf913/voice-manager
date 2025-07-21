@@ -1401,107 +1401,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final List<Integer> maxHiraganaLength = testAndApply(Objects::nonNull, list, ArrayList::new,
 					x -> new ArrayList<>());
 			//
-			int la, lb, lc;
-			//
-			Integer integer = null;
-			//
-			TextAndImage tai = null;
-			//
-			for (int i = 0; i < size; i++) {
+			forEachOrdered(IntStream.range(0, size), i -> {
 				//
-				if (Util.and(imageTotalWidth == 310// 補助的[な]
-						, (la = StringUtils.length(
-								Util.apply(x -> getConjugation(x), tai = IterableUtils.get(textAndImages, i)))) == 8// 〜じゃなかった形
-						, (lb = StringUtils.length(getKanji(tai))) == 9// 補助的じゃなかった
-						, (lc = StringUtils.length(getHiragana(tai))) == 11// ほじょてきじゃなかった
-				)) {
-					//
-					set(maxConjugationLength, i, integer = Integer.valueOf(13));
-					//
-					set(maxKanjiLength, i, integer);
-					//
-					set(maxHiraganaLength, i, integer);
-					//
-				} else if (Util.and(imageTotalWidth == 310, // しゃべり続ける
-						StringUtils.length(getConjugation(textAndImage)) == 3// 辞書形
-						, la == 6// 〜なかった形
-				)) {
-					//
-					set(maxConjugationLength, i, Integer.valueOf(11));
-					//
-					set(maxKanjiLength, i, integer = Integer.valueOf(14));
-					//
-					set(maxHiraganaLength, i, integer);
-					//
-				} else if (Util.and(imageTotalWidth == 338, // 勉強になる
-						StringUtils.length(getConjugation(textAndImage)) == 3// 辞書形
-						, la == 6// 〜なかった形
-				)) {
-					//
-					set(maxConjugationLength, i, Integer.valueOf(11));
-					//
-					set(maxKanjiLength, i, Integer.valueOf(12));
-					//
-					set(maxHiraganaLength, i, Integer.valueOf(13));
-					//
-				} else if (imageTotalWidth == 422) {// 実況中継する
-					//
-					set(maxConjugationLength, i, integer = Integer.valueOf(8));
-					//
-					set(maxKanjiLength, i, integer);
-					//
-					set(maxHiraganaLength, i, integer);
-					//
-				} else if (imageTotalWidth == 394) {// 受験勉強する
-					//
-					if (la == 6) {// 〜なかった形
-						//
-						set(maxConjugationLength, i, integer = Integer.valueOf(9));
-						//
-						set(maxKanjiLength, i, integer);
-						//
-						set(maxHiraganaLength, i, integer);
-						//
-					} else {
-						//
-						if (la == 3) {// 辞書形
-							//
-							set(maxConjugationLength, i, Integer.valueOf(15));
-							//
-						} else {
-							//
-							set(maxConjugationLength, i, Integer.valueOf(14));
-							//
-						} // if
-							//
-						integer = Integer.valueOf(11);
-						//
-						if (lb == 7) {// 受験勉強します
-							//
-							set(maxKanjiLength, i, Integer.valueOf(14));
-							//
-						} else if (lb != 6) {
-							//
-							set(maxKanjiLength, i, integer);
-							//
-						} // if
-							//
-						if (lc == 11) {// じゅけんべんきょうする
-							//
-							set(maxHiraganaLength, i, Integer.valueOf(12));
-							//
-						} else {
-							//
-							set(maxHiraganaLength, i, integer);
-							//
-						} // if
-							//
-					} // if
-						//
-				} // if
-					//
-			} // for
+				set(textAndImages, i, textAndImage, imageTotalWidth, maxConjugationLength, maxKanjiLength,
+						maxHiraganaLength);
 				//
+			});
+			//
 			Util.put(map, "maxConjugationLength", maxConjugationLength);
 			//
 			Util.put(map, "maxKanjiLength", maxKanjiLength);
@@ -1582,6 +1488,121 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			IOUtils.closeQuietly(pdDocument);
 			//
 		} // try
+			//
+	}
+
+	private static void forEachOrdered(final IntStream instance, final IntConsumer consumer) {
+		if (instance != null && (consumer != null || Proxy.isProxyClass(Util.getClass(instance)))) {
+			instance.forEachOrdered(consumer);
+		}
+	}
+
+	private static void set(final Iterable<TextAndImage> textAndImages, final int i, final TextAndImage textAndImage,
+			final int imageTotalWidth, final List<Integer> maxConjugationLength, final List<Integer> maxKanjiLength,
+			final List<Integer> maxHiraganaLength) {
+		//
+		final TextAndImage tai = testAndApply(x -> IterableUtils.size(x) > i, textAndImages,
+				x -> IterableUtils.get(x, i), null);
+		//
+		final String conjugation = getConjugation(textAndImage);
+		//
+		final int la = StringUtils.length(getConjugation(tai));
+		//
+		final int lb = StringUtils.length(getKanji(tai));
+		//
+		final int lc = StringUtils.length(getHiragana(tai));
+		//
+		Integer integer = null;
+		//
+		if (Util.and(imageTotalWidth == 310// 補助的[な]
+				, la == 8// 〜じゃなかった形
+				, lb == 9// 補助的じゃなかった
+				, lc == 11// ほじょてきじゃなかった
+		)) {
+			//
+			set(maxConjugationLength, i, integer = Integer.valueOf(13));
+			//
+			set(maxKanjiLength, i, integer);
+			//
+			set(maxHiraganaLength, i, integer);
+			//
+		} else if (Util.and(imageTotalWidth == 310, // しゃべり続ける
+				StringUtils.length(conjugation) == 3// 辞書形
+				, la == 6// 〜なかった形
+		)) {
+			//
+			set(maxConjugationLength, i, Integer.valueOf(11));
+			//
+			set(maxKanjiLength, i, integer = Integer.valueOf(14));
+			//
+			set(maxHiraganaLength, i, integer);
+			//
+		} else if (Util.and(imageTotalWidth == 338, // 勉強になる
+				StringUtils.length(conjugation) == 3// 辞書形
+				, la == 6// 〜なかった形
+		)) {
+			//
+			set(maxConjugationLength, i, Integer.valueOf(11));
+			//
+			set(maxKanjiLength, i, Integer.valueOf(12));
+			//
+			set(maxHiraganaLength, i, Integer.valueOf(13));
+			//
+		} else if (imageTotalWidth == 422) {// 実況中継する
+			//
+			set(maxConjugationLength, i, integer = Integer.valueOf(8));
+			//
+			set(maxKanjiLength, i, integer);
+			//
+			set(maxHiraganaLength, i, integer);
+			//
+		} else if (imageTotalWidth == 394) {// 受験勉強する
+			//
+			if (la == 6) {// 〜なかった形
+				//
+				set(maxConjugationLength, i, integer = Integer.valueOf(9));
+				//
+				set(maxKanjiLength, i, integer);
+				//
+				set(maxHiraganaLength, i, integer);
+				//
+			} else {
+				//
+				if (la == 3) {// 辞書形
+					//
+					set(maxConjugationLength, i, Integer.valueOf(15));
+					//
+				} else {
+					//
+					set(maxConjugationLength, i, Integer.valueOf(14));
+					//
+				} // if
+					//
+				integer = Integer.valueOf(11);
+				//
+				if (lb == 7) {// 受験勉強します
+					//
+					set(maxKanjiLength, i, Integer.valueOf(14));
+					//
+				} else if (lb != 6) {
+					//
+					set(maxKanjiLength, i, integer);
+					//
+				} // if
+					//
+				if (lc == 11) {// じゅけんべんきょうする
+					//
+					set(maxHiraganaLength, i, Integer.valueOf(12));
+					//
+				} else {
+					//
+					set(maxHiraganaLength, i, integer);
+					//
+				} // if
+					//
+			} // if
+				//
+		} // if
 			//
 	}
 

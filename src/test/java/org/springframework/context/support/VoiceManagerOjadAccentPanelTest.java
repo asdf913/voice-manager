@@ -145,7 +145,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_GET_MIME_TYPE, METHOD_GET_VOICE_URL_BY_X, METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, METHOD_GET_SIZE,
 			METHOD_GET_TRANSLATE_XS, METHOD_FLAT_MAP, METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE,
 			METHOD_CREATE_FUNCTION, METHOD_CREATE_LIST_CELL_RENDERER, METHOD_GET_ACCENT_IMAGE_WIDTH,
-			METHOD_GET_CURVE_IMAGE_WIDTH = null;
+			METHOD_GET_CURVE_IMAGE_WIDTH, METHOD_FOR_EACH_ORDERED, METHOD_SET = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -309,6 +309,12 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_GET_CURVE_IMAGE_WIDTH = clz.getDeclaredMethod("getCurveImageWidth", CLASS_TEXT_AND_IMAGE))
 				.setAccessible(true);
+		//
+		(METHOD_FOR_EACH_ORDERED = clz.getDeclaredMethod("forEachOrdered", IntStream.class, IntConsumer.class))
+				.setAccessible(true);
+		//
+		(METHOD_SET = clz.getDeclaredMethod("set", Iterable.class, Integer.TYPE, CLASS_TEXT_AND_IMAGE, Integer.TYPE,
+				List.class, List.class, List.class)).setAccessible(true);
 		//
 	}
 
@@ -2483,7 +2489,7 @@ class VoiceManagerOjadAccentPanelTest {
 	}
 
 	@Test
-	void testSet() {
+	void testSet() throws IllegalAccessException {
 		//
 		Assertions
 				.assertDoesNotThrow(
@@ -2492,6 +2498,97 @@ class VoiceManagerOjadAccentPanelTest {
 										Integer.TYPE, Object.class),
 								Reflection.newProxy(List.class, ih), Integer.valueOf(0), null));
 		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			set(Collections.singleton(null), 0, null, 0, null, null, null);
+			//
+		});
+		//
+		FieldUtils.writeDeclaredField(textAndImage, "conjugation", StringUtils.repeat(' ', 8), true);
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			set(Collections.singleton(textAndImage), 0, null, 310, null, null, null);
+			//
+		});
+		//
+		FieldUtils.writeDeclaredField(textAndImage, "kanji", StringUtils.repeat(' ', 9), true);
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			set(Collections.singleton(textAndImage), 0, null, 310, null, null, null);
+			//
+		});
+		//
+		FieldUtils.writeDeclaredField(textAndImage, "hiragana", StringUtils.repeat(' ', 11), true);
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			set(Collections.singleton(textAndImage), 0, null, 310, null, null, null);
+			//
+		});
+		//
+		FieldUtils.writeDeclaredField(textAndImage, "conjugation", StringUtils.repeat(' ', 3), true);
+		//
+		final Object textAndImage2 = Narcissus.allocateInstance(CLASS_TEXT_AND_IMAGE);
+		//
+		FieldUtils.writeDeclaredField(textAndImage2, "conjugation", StringUtils.repeat(' ', 6), true);
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			set(Collections.singleton(textAndImage2), 0, textAndImage, 310, null, null, null);
+			//
+		});
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			set(Collections.singleton(textAndImage2), 0, textAndImage, 338, null, null, null);
+			//
+		});
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			set(null, 0, null, 422, null, null, null);
+			//
+		});
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			set(null, 0, null, 394, null, null, null);
+			//
+		});
+		//
+		FieldUtils.writeDeclaredField(textAndImage2, "conjugation", StringUtils.repeat(' ', 6), true);
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			set(Collections.singleton(textAndImage2), 0, null, 394, null, null, null);
+			//
+		});
+		//
+		FieldUtils.writeDeclaredField(textAndImage2, "conjugation", StringUtils.repeat(' ', 3), true);
+		//
+		FieldUtils.writeDeclaredField(textAndImage2, "kanji", StringUtils.repeat(' ', 7), true);
+		//
+		FieldUtils.writeDeclaredField(textAndImage2, "hiragana", StringUtils.repeat(' ', 11), true);
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			set(Collections.singleton(textAndImage2), 0, null, 394, null, null, null);
+			//
+		});
+		//
+	}
+
+	private static void set(final Iterable<?> textAndImages, final int i, final Object textAndImage,
+			final int imageTotalWidth, final List<Integer> maxConjugationLength, final List<Integer> maxKanjiLength,
+			final List<Integer> maxHiraganaLength) throws Throwable {
+		try {
+			METHOD_SET.invoke(null, textAndImages, i, textAndImage, imageTotalWidth, maxConjugationLength,
+					maxKanjiLength, maxHiraganaLength);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
@@ -2506,6 +2603,23 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertNull(Narcissus.invokeStaticMethod(METHOD_GET_CURVE_IMAGE_WIDTH, textAndImage));
 		//
+	}
+
+	@Test
+	void testForEachOrdered() {
+		//
+		Assertions.assertDoesNotThrow(() -> forEachOrdered(IntStream.empty(), null));
+		//
+		Assertions.assertDoesNotThrow(() -> forEachOrdered(Reflection.newProxy(IntStream.class, ih), null));
+		//
+	}
+
+	private static void forEachOrdered(final IntStream instance, final IntConsumer consumer) throws Throwable {
+		try {
+			METHOD_FOR_EACH_ORDERED.invoke(null, instance, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }
