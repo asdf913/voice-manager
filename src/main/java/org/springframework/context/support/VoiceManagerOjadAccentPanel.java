@@ -1414,16 +1414,21 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					if (setValue == null) {
 						//
-						if (IterableUtils.size(ms = Util.toList(Util.filter(
-								testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class), Arrays::stream,
-										null),
-								m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "setValue"), Arrays
-										.equals(Util.getParameterTypes(m), new Class<?>[] { Object.class }))))) > 1) {
-							//
-							throw new IllegalStateException();
-							//
-						} // if
-							//
+						testAndRunThrows(
+								IterableUtils
+										.size(ms = Util.toList(Util.filter(
+												testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class),
+														Arrays::stream, null),
+												m -> Boolean
+														.logicalAnd(Objects.equals(Util.getName(m), "setValue"),
+																Arrays.equals(Util.getParameterTypes(m),
+																		new Class<?>[] { Object.class }))))) > 1,
+								() -> {
+									//
+									throw new IllegalStateException();
+									//
+								});
+						//
 						setValue = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0),
 								null);
 						//
