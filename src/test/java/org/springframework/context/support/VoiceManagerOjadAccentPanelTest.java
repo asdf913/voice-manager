@@ -110,6 +110,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.meeuw.functional.Predicates;
 import org.meeuw.functional.ThrowingRunnable;
+import org.meeuw.functional.TriConsumer;
+import org.meeuw.functional.TriPredicate;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -149,15 +151,15 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS,
 			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES, METHOD_MATCHES,
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT_INT_PREDICATE,
-			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_GET_MOST_OCCURENCE_COLOR, METHOD_SET_RGB,
-			METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE, METHOD_GET_TEXT_AND_IMAGES,
-			METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE, METHOD_SET_HANDLER,
-			METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE, METHOD_GET, METHOD_CREATE_PD_EMBEDDED_FILE,
-			METHOD_GET_MIME_TYPE, METHOD_GET_VOICE_URL_BY_X, METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, METHOD_GET_SIZE,
-			METHOD_GET_TRANSLATE_XS, METHOD_FLAT_MAP, METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE,
-			METHOD_CREATE_FUNCTION, METHOD_CREATE_LIST_CELL_RENDERER1, METHOD_CREATE_LIST_CELL_RENDERER2,
-			METHOD_GET_ACCENT_IMAGE_WIDTH, METHOD_GET_CURVE_IMAGE_WIDTH, METHOD_FOR_EACH_ORDERED, METHOD_SET,
-			METHOD_CREATE_DEFAULT_TABLE_MODEL = null;
+			METHOD_TEST_AND_ACCEPT_PREDICATE3, METHOD_TEST_AND_ACCEPT_PREDICATE5, METHOD_GET_MOST_OCCURENCE_COLOR,
+			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE,
+			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE,
+			METHOD_SET_HANDLER, METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE, METHOD_GET,
+			METHOD_CREATE_PD_EMBEDDED_FILE, METHOD_GET_MIME_TYPE, METHOD_GET_VOICE_URL_BY_X,
+			METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, METHOD_GET_SIZE, METHOD_GET_TRANSLATE_XS, METHOD_FLAT_MAP,
+			METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE, METHOD_CREATE_FUNCTION, METHOD_CREATE_LIST_CELL_RENDERER1,
+			METHOD_CREATE_LIST_CELL_RENDERER2, METHOD_GET_ACCENT_IMAGE_WIDTH, METHOD_GET_CURVE_IMAGE_WIDTH,
+			METHOD_FOR_EACH_ORDERED, METHOD_SET, METHOD_CREATE_DEFAULT_TABLE_MODEL = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -251,8 +253,11 @@ class VoiceManagerOjadAccentPanelTest {
 		(METHOD_TEST_AND_ACCEPT_INT_PREDICATE = clz.getDeclaredMethod("testAndAccept", IntPredicate.class, Integer.TYPE,
 				IntConsumer.class)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_ACCEPT_PREDICATE = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
+		(METHOD_TEST_AND_ACCEPT_PREDICATE3 = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
 				Consumer.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT_PREDICATE5 = clz.getDeclaredMethod("testAndAccept", TriPredicate.class, Object.class,
+				Object.class, Object.class, TriConsumer.class)).setAccessible(true);
 		//
 		(METHOD_GET_MOST_OCCURENCE_COLOR = clz.getDeclaredMethod("getMostOccurenceColor", BufferedImage.class))
 				.setAccessible(true);
@@ -1970,6 +1975,8 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, null));
 		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept((a, b, c) -> true, null, null, null, null));
+		//
 	}
 
 	private static void testAndAccept(final IntPredicate predicate, final int value, final IntConsumer consumer)
@@ -1984,7 +1991,16 @@ class VoiceManagerOjadAccentPanelTest {
 	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer)
 			throws Throwable {
 		try {
-			METHOD_TEST_AND_ACCEPT_PREDICATE.invoke(null, predicate, value, consumer);
+			METHOD_TEST_AND_ACCEPT_PREDICATE3.invoke(null, predicate, value, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T, U, R> void testAndAccept(final TriPredicate<T, U, R> predicate, final T t, final U u, final R r,
+			final TriConsumer<T, U, R> consumer) throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT_PREDICATE5.invoke(null, predicate, t, u, r, consumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

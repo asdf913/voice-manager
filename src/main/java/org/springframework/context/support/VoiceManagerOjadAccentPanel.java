@@ -160,6 +160,10 @@ import org.jsoup.nodes.NodeUtil;
 import org.jsoup.select.Elements;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.ThrowingRunnableUtil;
+import org.meeuw.functional.TriConsumer;
+import org.meeuw.functional.TriConsumerUtil;
+import org.meeuw.functional.TriPredicate;
+import org.meeuw.functional.TriPredicateUtil;
 import org.oxbow.swingbits.util.OperatingSystem;
 import org.oxbow.swingbits.util.OperatingSystemUtil;
 import org.slf4j.Logger;
@@ -1402,36 +1406,30 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Method setValue = null;
 			//
-			List<Method> ms = null;
-			//
 			for (int i = 0; i < Math.min(Util.getSize(cbmCategory), IterableUtils.size(es)); i++) {
 				//
 				if (Objects.equals(NodeUtil.attr(e = IterableUtils.get(es, i), VALUE),
 						Util.getKey(en = Util.cast(Entry.class, Util.getElementAt(cbmCategory, i))))) {
 					//
-					if (setValue == null) {
-						//
-						testAndRunThrows(
-								IterableUtils
-										.size(ms = Util.toList(Util.filter(
-												testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class),
-														Arrays::stream, null),
-												m -> Boolean
-														.logicalAnd(Objects.equals(Util.getName(m), "setValue"),
-																Arrays.equals(Util.getParameterTypes(m),
-																		new Class<?>[] { Object.class }))))) > 1,
-								() -> {
+					testAndAccept((a, b, c) -> Boolean.logicalAnd(a != null, b != null), en,
+							setValue = ObjectUtils.getIfNull(setValue, () -> {
+								//
+								final List<Method> ms = Util.toList(Util.filter(
+										testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class),
+												Arrays::stream, null),
+										m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "setValue"), Arrays
+												.equals(Util.getParameterTypes(m), new Class<?>[] { Object.class }))));
+								//
+								testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
 									//
 									throw new IllegalStateException();
 									//
 								});
-						//
-						setValue = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0),
-								null);
-						//
-					} // if
-						//
-					Narcissus.invokeMethod(en, setValue, ElementUtil.text(e));
+								//
+								return testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0),
+										null);
+								//
+							}), ElementUtil.text(e), (a, b, c) -> Narcissus.invokeMethod(a, b, c));
 					//
 				} // if
 					//
@@ -1528,6 +1526,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		setContents(source, supplier, Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage)),
 				objectFunctionMap);
 		//
+	}
+
+	private static <T, U, R> void testAndAccept(final TriPredicate<T, U, R> predicate, final T t, final U u, final R r,
+			final TriConsumer<T, U, R> consumer) {
+		if (TriPredicateUtil.test(predicate, t, u, r)) {
+			TriConsumerUtil.accept(consumer, t, u, r);
+		} // if
 	}
 
 	private static void setText(@Nullable final AbstractButton instance, final String text) {
