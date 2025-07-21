@@ -472,9 +472,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Element element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null);
 			//
-			add(lblTitle = new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(ElementUtil.parent(
-					ElementUtil.parent(ElementUtil.parent(element = testAndApply(x -> IterableUtils.size(x) == 1, es,
-							x -> IterableUtils.get(x, 0), null))))))));
+			add(lblTitle = new JLabel(ElementUtil.text(ElementUtil
+					.previousElementSibling(ElementUtil.parent(ElementUtil.parent(ElementUtil.parent(element)))))));
 			//
 			final String growx = "growx";
 			//
