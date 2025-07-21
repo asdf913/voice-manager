@@ -124,6 +124,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.TextStringBuilder;
 import org.apache.commons.text.TextStringBuilderUtil;
@@ -504,8 +505,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			for (int i = 0; i < IterableUtils.size(es); i++) {
 				//
-				dcbm.addElement(
-						Pair.of(Util.getValue(attribute(e = IterableUtils.get(es, i), VALUE)), ElementUtil.text(e)));
+				dcbm.addElement(MutablePair.of(Util.getValue(attribute(e = IterableUtils.get(es, i), VALUE)),
+						ElementUtil.text(e)));
 				//
 			} // for
 				//
@@ -1379,11 +1380,51 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 					});
 			//
-			Util.setText(lblCategory, ElementUtil.text(ElementUtil.previousElementSibling(
-					testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null))));
+			final Element element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0),
+					null);
 			//
-			// アクセント型
+			Util.setText(lblCategory, ElementUtil.text(ElementUtil.previousElementSibling(element)));
 			//
+			es = ElementUtil.select(element, "option");
+			//
+			Element e = null;
+			//
+			Entry<?, ?> en = null;
+			//
+			Method setValue = null;
+			//
+			List<Method> ms = null;
+			//
+			for (int i = 0; i < Math.min(Util.getSize(cbmCategory), IterableUtils.size(es)); i++) {
+				//
+				if (Objects.equals(NodeUtil.attr(e = IterableUtils.get(es, i), VALUE),
+						Util.getKey(en = Util.cast(Entry.class, Util.getElementAt(cbmCategory, i))))) {
+					//
+					if (setValue == null) {
+						//
+						if (IterableUtils.size(ms = Util.toList(Util.filter(
+								testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class), Arrays::stream,
+										null),
+								m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "setValue"), Arrays
+										.equals(Util.getParameterTypes(m), new Class<?>[] { Object.class }))))) > 1) {
+							//
+							throw new IllegalStateException();
+							//
+						} // if
+							//
+						setValue = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0),
+								null);
+						//
+					} // if
+						//
+					Narcissus.invokeMethod(en, setValue, ElementUtil.text(e));
+					//
+				} // if
+					//
+			} // for
+				//
+				// アクセント型
+				//
 			testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_accent_type\"]")) > 1,
 					() -> {
 						//
@@ -2362,22 +2403,23 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("word", testAndApply(
 					Objects::nonNull, textInput, x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
 			//
-			final Method getKey = getMapEntryGetKeyMethod();
-			//
 			// 品詞
 			//
 			Entry<?, ?> entry = Util.cast(Entry.class, Util.getSelectedItem(cbmCategory));
 			//
-			if (!Objects.equals(Util.getValue(entry), "すべて")) {
+			final Object key = Util.getKey(entry);
+			//
+			if (!Objects.equals(key, "0")) {
 				//
-				Util.put(map, "category",
-						Util.toString(testAndApply((a, b) -> a != null, entry, getKey, Narcissus::invokeMethod, null)));
+				Util.put(map, "category", Util.toString(key));
 				//
 			} // if
 				//
 				// アクセント型
 				//
 			entry = Util.cast(Entry.class, Util.getSelectedItem(cbmAccentType));
+			//
+			final Method getKey = getMapEntryGetKeyMethod();
 			//
 			if (!Objects.equals(Util.getValue(entry), "すべて")) {
 				//
