@@ -522,8 +522,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			for (int i = 0; i < IterableUtils.size(es); i++) {
 				//
-				dcbm.addElement(
-						Pair.of(Util.getValue(attribute(e = IterableUtils.get(es, i), VALUE)), ElementUtil.text(e)));
+				dcbm.addElement(MutablePair.of(Util.getValue(attribute(e = IterableUtils.get(es, i), VALUE)),
+						ElementUtil.text(e)));
 				//
 			} // for
 				//
@@ -1393,8 +1393,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 					});
 			//
-			final Element element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0),
-					null);
+			Element element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null);
 			//
 			Util.setText(lblCategory, ElementUtil.text(ElementUtil.previousElementSibling(element)));
 			//
@@ -1413,22 +1412,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					testAndAccept((a, b, c) -> Boolean.logicalAnd(a != null, b != null), en,
 							setValue = ObjectUtils.getIfNull(setValue, () -> {
-								//
-								final List<Method> ms = Util.toList(Util.filter(
-										testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class),
-												Arrays::stream, null),
-										m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "setValue"), Arrays
-												.equals(Util.getParameterTypes(m), new Class<?>[] { Object.class }))));
-								//
-								testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
-									//
-									throw new IllegalStateException();
-									//
-								});
-								//
-								return testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0),
-										null);
-								//
+								return getMapEntrySetValueMethod();
 							}), ElementUtil.text(e), (a, b, c) -> Narcissus.invokeMethod(a, b, c));
 					//
 				} // if
@@ -1445,10 +1429,26 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					});
 			//
 			Util.setText(lblAccentType, ElementUtil.text(ElementUtil.previousElementSibling(
-					testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null))));
+					element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null))));
 			//
-			// ピッチカーブ
+			es = ElementUtil.select(element, "option");
 			//
+			for (int i = 0; i < Math.min(Util.getSize(cbmAccentType), IterableUtils.size(es)); i++) {
+				//
+				if (Objects.equals(NodeUtil.attr(e = IterableUtils.get(es, i), VALUE),
+						Util.getKey(en = Util.cast(Entry.class, Util.getElementAt(cbmAccentType, i))))) {
+					//
+					testAndAccept((a, b, c) -> Boolean.logicalAnd(a != null, b != null), en,
+							setValue = ObjectUtils.getIfNull(setValue, () -> {
+								return getMapEntrySetValueMethod();
+							}), ElementUtil.text(e), (a, b, c) -> Narcissus.invokeMethod(a, b, c));
+					//
+				} // if
+					//
+			} // for
+				//
+				// ピッチカーブ
+				//
 			testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_curve\"]")) > 1, () -> {
 				//
 				throw new IllegalStateException();
@@ -2527,6 +2527,23 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getKey"),
 								Arrays.equals(Util.getParameterTypes(m), new Class<?>[] {})))),
 				x -> IterableUtils.get(x, 0), null);
+		//
+	}
+
+	private static Method getMapEntrySetValueMethod() {
+		//
+		final List<Method> ms = Util.toList(
+				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class), Arrays::stream, null),
+						m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "setValue"),
+								Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { Object.class }))));
+		//
+		testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		return testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
 		//
 	}
 

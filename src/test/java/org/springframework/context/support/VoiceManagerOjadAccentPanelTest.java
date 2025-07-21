@@ -676,6 +676,8 @@ class VoiceManagerOjadAccentPanelTest {
 					Boolean.logicalAnd(Objects.equals(name, "createUrl"),
 							Arrays.equals(parameterTypes, new Class<?>[] { String.class, Map.class })),
 					Boolean.logicalAnd(Objects.equals(Util.getName(m), "getMapEntryGetKeyMethod"),
+							Arrays.equals(parameterTypes, new Class<?>[] {})),
+					Boolean.logicalAnd(Objects.equals(Util.getName(m), "getMapEntrySetValueMethod"),
 							Arrays.equals(parameterTypes, new Class<?>[] {})))) {
 				//
 				Assertions.assertNotNull(invoke, toString);
