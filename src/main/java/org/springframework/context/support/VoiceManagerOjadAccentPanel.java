@@ -123,6 +123,8 @@ import org.apache.commons.lang3.function.TriFunction;
 import org.apache.commons.lang3.function.TriFunctionUtil;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
+import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.TextStringBuilder;
 import org.apache.commons.text.TextStringBuilderUtil;
@@ -409,23 +411,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final DefaultComboBoxModel<Entry<String, ? extends Image>> dcbmUrlImage = new DefaultComboBoxModel<>();
 			//
-			testAndAccept(Objects::nonNull, Util.toList(Util.map(Util.stream(es), x -> {
-				//
-				try {
-					//
-					return Pair.of(NodeUtil.absUrl(x, "href"),
-							toBufferedImage(
-									toByteArray(new URL(NodeUtil.absUrl(testAndApply(y -> IterableUtils.size(y) > 0,
-											ElementUtil.select(x, "img"), y -> IterableUtils.get(y, 0), null), "src"))),
-									e -> LoggerUtil.error(LOG, e.getMessage(), e)));
-					//
-				} catch (final IOException e) {
-					//
-					throw new RuntimeException(e);
-					//
-				} // try
-					//
-			})), dcbmUrlImage::addAll);
+			testAndAccept(Objects::nonNull, Util.toList(
+					FailableStreamUtil.stream(FailableStreamUtil.map(new FailableStream<>(Util.stream(es)), x -> {
+						//
+						return Pair.of(NodeUtil.absUrl(x, "href"), toBufferedImage(
+								toByteArray(new URL(NodeUtil.absUrl(testAndApply(y -> IterableUtils.size(y) > 0,
+										ElementUtil.select(x, "img"), y -> IterableUtils.get(y, 0), null), "src"))),
+								e -> LoggerUtil.error(LOG, e.getMessage(), e)));
+						//
+					}))), dcbmUrlImage::addAll);
 			//
 			final JComboBox<Entry<String, ? extends Image>> jcb = new JComboBox<>(dcbmUrlImage);// TODO
 			//
