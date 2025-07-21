@@ -898,6 +898,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.curveImage : null;
 	}
 
+	@Nullable
 	private static Integer getCurveImageWidth(@Nullable final TextAndImage instance) {
 		return instance != null ? instance.getCurveImageWidth() : null;
 	}
