@@ -1412,9 +1412,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						Util.getKey(en = Util.cast(Entry.class, Util.getElementAt(cbmCategory, i))))) {
 					//
 					testAndAccept((a, b, c) -> Boolean.logicalAnd(a != null, b != null), en,
-							setValue = ObjectUtils.getIfNull(setValue, () -> {
-								return getMapEntrySetValueMethod();
-							}), ElementUtil.text(e), (a, b, c) -> Narcissus.invokeMethod(a, b, c));
+							setValue = ObjectUtils.getIfNull(setValue,
+									VoiceManagerOjadAccentPanel::getMapEntrySetValueMethod),
+							ElementUtil.text(e), Narcissus::invokeMethod);
 					//
 				} // if
 					//
@@ -1440,9 +1440,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						Util.getKey(en = Util.cast(Entry.class, Util.getElementAt(cbmAccentType, i))))) {
 					//
 					testAndAccept((a, b, c) -> Boolean.logicalAnd(a != null, b != null), en,
-							setValue = ObjectUtils.getIfNull(setValue, () -> {
-								return getMapEntrySetValueMethod();
-							}), ElementUtil.text(e), (a, b, c) -> Narcissus.invokeMethod(a, b, c));
+							setValue = ObjectUtils.getIfNull(setValue,
+									VoiceManagerOjadAccentPanel::getMapEntrySetValueMethod),
+							ElementUtil.text(e), Narcissus::invokeMethod);
 					//
 				} // if
 					//
@@ -1467,9 +1467,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						Util.getKey(en = Util.cast(Entry.class, Util.getElementAt(cbmCurve, i))))) {
 					//
 					testAndAccept((a, b, c) -> Boolean.logicalAnd(a != null, b != null), en,
-							setValue = ObjectUtils.getIfNull(setValue, () -> {
-								return getMapEntrySetValueMethod();
-							}), ElementUtil.text(e), (a, b, c) -> Narcissus.invokeMethod(a, b, c));
+							setValue = ObjectUtils.getIfNull(setValue,
+									VoiceManagerOjadAccentPanel::getMapEntrySetValueMethod),
+							ElementUtil.text(e), Narcissus::invokeMethod);
 					//
 				} // if
 					//
