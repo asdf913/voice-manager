@@ -872,6 +872,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		}
 	}
 
+	@Nullable
 	private static Font getFont(@Nullable final Component instance) {
 		return instance != null ? instance.getFont() : null;
 	}
@@ -1696,6 +1697,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
+	@Nullable
 	private static Entry<?, ?> findEntryWithLongestValue(final ListModel<?> model) {
 		//
 		Entry<?, ?> temp, longest = null;
@@ -1716,6 +1718,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
+	@Nullable
 	private static String getTypeName(@Nullable final Type instance) {
 		return instance != null ? instance.getTypeName() : null;
 	}
