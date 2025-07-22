@@ -40,6 +40,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -1644,45 +1645,55 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		setText(instance.btnExecute, NodeUtil
 				.attr(testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null), VALUE));
 		//
-		Util.forEach(Stream.of(instance.jcbCategory, instance.jcbAccentType, instance.jcbMora, instance.jcbCurve),
-				jcb -> {
+		final Collection<JComboBox<?>> jcbs = Util.toList(Util.map(Util.filter(
+				testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)), Arrays::stream, null),
+				f -> {
 					//
-					final ListModel<?> model = getModel(jcb);
+					final Type genericType = Util.getGenericType(f);
 					//
-					Entry<?, ?> temp, longest = null;
+					return Objects.equals(
+							"javax.swing.JComboBox<java.util.Map$Entry<java.lang.String, java.lang.String>>",
+							Util.toString(genericType != null ? genericType.getTypeName() : null));
 					//
-					for (int i = 0; i < Util.getSize(model); i++) {
-						//
-						if (StringUtils.length(Util.toString(Util
-								.getValue(temp = Util.cast(Entry.class, Util.getElementAt(model, i))))) >= StringUtils
-										.length(Util.toString(Util.getValue(longest)))) {
-							//
-							longest = temp;
-							//
-						} // if
-							//
-					} // for
-						//
-					final Iterable<Method> ms = Util.toList(Util.filter(
-							testAndApply(Objects::nonNull, Util.getDeclaredMethods(JComboBox.class), Arrays::stream,
-									null),
-							m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "setPrototypeDisplayValue"),
-									Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { Object.class }))));
+				}), f -> Util.cast(JComboBox.class, Narcissus.getField(instance, f))));
+
+		//
+		Util.forEach(jcbs, jcb -> {
+			//
+			final ListModel<?> model = getModel(jcb);
+			//
+			Entry<?, ?> temp, longest = null;
+			//
+			for (int i = 0; i < Util.getSize(model); i++) {
+				//
+				if (StringUtils.length(Util.toString(
+						Util.getValue(temp = Util.cast(Entry.class, Util.getElementAt(model, i))))) >= StringUtils
+								.length(Util.toString(Util.getValue(longest)))) {
 					//
-					testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
-						//
-						throw new IllegalStateException();
-						//
-					});
+					longest = temp;
 					//
-					final Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0),
-							null);
+				} // if
 					//
-					Util.forEach(Stream.of(null, longest),
-							x -> testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null), jcb, m,
-									(a, b) -> Narcissus.invokeMethod(a, b, x)));
-					//
-				});
+			} // for
+				//
+			final Iterable<Method> ms = Util.toList(Util.filter(
+					testAndApply(Objects::nonNull, Util.getDeclaredMethods(JComboBox.class), Arrays::stream, null),
+					m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "setPrototypeDisplayValue"),
+							Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { Object.class }))));
+			//
+			testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			final Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
+			//
+			Util.forEach(Stream.of(null, longest),
+					x -> testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null), jcb, m,
+							(a, b) -> Narcissus.invokeMethod(a, b, x)));
+			//
+		});
 		//
 	}
 
