@@ -302,10 +302,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("アクセント型")
 	private JLabel lblAccentType = null;
 
+	@Note("単語長")
+	private JLabel lblMora = null;
+
 	@Note("ピッチカーブ")
 	private JLabel lblCurveSearch = null;
 
-	private JLabel lblMora, lblCount = null;
+	private JLabel lblCount = null;
 
 	private Window window = null;
 
@@ -315,7 +318,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("アクセント型")
 	private transient ComboBoxModel<Entry<String, String>> cbmAccentType = null;
 
-	private transient ComboBoxModel<Entry<String, String>> cbmMora, cbmCurve = null;
+	@Note("単語長")
+	private transient ComboBoxModel<Entry<String, String>> cbmMora = null;
+
+	private transient ComboBoxModel<Entry<String, String>> cbmCurve = null;
 
 	private transient ComboBoxModel<String> cbmImageFormat = null;
 
@@ -401,7 +407,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("アクセント型")
 	private JComboBox<Entry<String, String>> jcbAccentType = null;
 
-	private JComboBox<Entry<String, String>> jcbMora, jcbCurve = null;
+	@Note("単語長")
+	private JComboBox<Entry<String, String>> jcbMora = null;
+
+	private JComboBox<Entry<String, String>> jcbCurve = null;
 
 	private String url = null;
 
