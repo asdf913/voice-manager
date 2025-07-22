@@ -393,7 +393,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private transient MutableComboBoxModel<TextAndImage> mcbmTextAndImage = null;
 
-	private JComboBox<Entry<String, String>> jcbCategory, jcbAccentType, jcbCurve = null;
+	@Note("品詞")
+	private JComboBox<Entry<String, String>> jcbCategory = null;
+
+	private JComboBox<Entry<String, String>> jcbAccentType, jcbCurve = null;
 
 	private String url = null;
 
