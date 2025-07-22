@@ -1668,13 +1668,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		final Collection<JComboBox<?>> jcbs = Util.toList(Util.map(Util.filter(
 				testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)), Arrays::stream, null),
-				f -> {
-					//
-					return Objects.equals(
-							"javax.swing.JComboBox<java.util.Map$Entry<java.lang.String, java.lang.String>>",
-							Util.toString(getTypeName(Util.getGenericType(f))));
-					//
-				}), f -> Util.cast(JComboBox.class, Narcissus.getField(instance, f))));
+				f -> Objects.equals("javax.swing.JComboBox<java.util.Map$Entry<java.lang.String, java.lang.String>>",
+						Util.toString(getTypeName(Util.getGenericType(f))))),
+				f -> Util.cast(JComboBox.class, Narcissus.getField(instance, f))));
 
 		//
 		Util.forEach(jcbs, jcb -> {
