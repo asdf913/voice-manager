@@ -235,6 +235,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static final String OPTION = "option";
 
+	private static final String COMPONENT = "component";
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -421,7 +423,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		setLayout(new MigLayout());// TODO
 		//
-		Field f = getFieldByName(Util.getClass(this), "component");
+		Field f = getFieldByName(Util.getClass(this), COMPONENT);
 		//
 		if (f == null || Narcissus.getField(this, f) != null) {
 			//
@@ -680,7 +682,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			add(panalText, String.format("span %1$s,%2$s,%3$s", 3, growx, wrap));
 			//
 			Collection<?> collection = Util.cast(Collection.class,
-					Narcissus.getField(panalText, Narcissus.findField(JPanel.class, "component")));
+					Narcissus.getField(panalText, Narcissus.findField(JPanel.class, COMPONENT)));
 			//
 			Util.forEach(Util.filter(Util.map(Util.stream(collection), x -> Util.cast(AbstractButton.class, x)),
 					Objects::nonNull), x -> {
@@ -4018,7 +4020,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		//
-		final Field f = getFieldByName(JFrame.class, "component");
+		final Field f = getFieldByName(JFrame.class, COMPONENT);
 		//
 		final boolean gui = f == null || Narcissus.getField(jFrame, f) != null;
 		//
