@@ -608,7 +608,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final JPanel panalText = new JPanel();
 			//
-			panalText.setLayout(new MigLayout());
+			panalText.setLayout(new MigLayout("insets 0"));
 			//
 			panalText.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Text"));
 			//
@@ -731,7 +731,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final JPanel panelPdf = new JPanel();
 			//
-			panelPdf.setLayout(new MigLayout());
+			panelPdf.setLayout(new MigLayout("insets 0"));
 			//
 			panelPdf.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "PDF"));
 			//
@@ -790,6 +790,18 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					x -> Util.setEditable(x, false));
 			//
 			Util.forEach(Stream.of(tfTextInput, btnExecute, tfIndex), x -> addKeyListener(x, this));
+			//
+//			Util.forEach(Stream.of(btnCopyAccentImage, btnSaveAccentImage, btnCopyCurveImage, btnSaveCurveImage), x -> {
+//				//
+//				final Font font = x != null ? x.getFont() : null;
+//				//
+//				if (x != null && font != null) {
+//					//
+//					x.setFont(new Font(font.getName(), font.getStyle(), font.getSize() - 2));
+//					//
+//				} // if
+//					//
+//			});
 			//
 		} // if
 			//
