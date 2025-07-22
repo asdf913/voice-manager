@@ -676,7 +676,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			Util.forEach(Util.filter(Util.map(Util.stream(collection), x -> Util.cast(AbstractButton.class, x)),
 					Objects::nonNull), x -> {
 						//
-						final Font font = x != null ? x.getFont() : null;
+						final Font font = getFont(x);
 						//
 						if (x != null && font != null) {
 							//
@@ -742,7 +742,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.forEach(Stream.of(btnCopyAccentImage, btnSaveAccentImage, btnCopyCurveImage, btnSaveCurveImage), x -> {
 				//
-				final Font font = x != null ? x.getFont() : null;
+				final Font font = getFont(x);
 				//
 				if (x != null && font != null) {
 					//
@@ -853,6 +853,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static Font getFont(final Component instance) {
+		return instance != null ? instance.getFont() : null;
 	}
 
 	private static DefaultTableModel createDefaultTableModel(final Object[] columnNames, final int rowCount) {
