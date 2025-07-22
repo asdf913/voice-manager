@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -457,6 +458,14 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof Type) {
+				//
+				if (Objects.equals(methodName, "getTypeName")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);

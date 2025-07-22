@@ -1664,11 +1664,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)), Arrays::stream, null),
 				f -> {
 					//
-					final Type genericType = Util.getGenericType(f);
-					//
 					return Objects.equals(
 							"javax.swing.JComboBox<java.util.Map$Entry<java.lang.String, java.lang.String>>",
-							Util.toString(genericType != null ? genericType.getTypeName() : null));
+							Util.toString(getTypeName(Util.getGenericType(f))));
 					//
 				}), f -> Util.cast(JComboBox.class, Narcissus.getField(instance, f))));
 
@@ -1710,6 +1708,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		});
 		//
+	}
+
+	private static String getTypeName(final Type instance) {
+		return instance != null ? instance.getTypeName() : null;
 	}
 
 	private static <T, U, R> void testAndAccept(final TriPredicate<T, U, R> predicate, final T t, final U u, final R r,
