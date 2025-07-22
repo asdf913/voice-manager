@@ -689,9 +689,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 						final Font font = getFont(x);
 						//
-						if (x != null && font != null) {
+						if (font != null) {
 							//
-							x.setFont(new Font(font.getName(), font.getStyle(), font.getSize() - 2));
+							setFont(x, new Font(font.getName(), font.getStyle(), font.getSize() - 2));
 							//
 						} // if
 							//
@@ -755,9 +755,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				final Font font = getFont(x);
 				//
-				if (x != null && font != null) {
+				if (font != null) {
 					//
-					x.setFont(new Font(font.getName(), font.getStyle(), font.getSize() - 2));
+					setFont(x, new Font(font.getName(), font.getStyle(), font.getSize() - 2));
 					//
 				} // if
 					//
@@ -864,6 +864,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static void setFont(final Component instance, final Font font) {
+		if (instance != null) {
+			instance.setFont(font);
+		}
 	}
 
 	private static Font getFont(final Component instance) {
