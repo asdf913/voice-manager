@@ -458,14 +458,10 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof Type) {
+			} else if (proxy instanceof Type && Objects.equals(methodName, "getTypeName")) {
 				//
-				if (Objects.equals(methodName, "getTypeName")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
