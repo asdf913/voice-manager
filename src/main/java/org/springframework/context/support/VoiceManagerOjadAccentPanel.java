@@ -396,7 +396,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("品詞")
 	private JComboBox<Entry<String, String>> jcbCategory = null;
 
-	private JComboBox<Entry<String, String>> jcbAccentType, jcbCurve = null;
+	@Note("アクセント型")
+	private JComboBox<Entry<String, String>> jcbAccentType = null;
+
+	private JComboBox<Entry<String, String>> jcbCurve = null;
 
 	private String url = null;
 
