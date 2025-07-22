@@ -3,6 +3,7 @@ package org.springframework.context.support;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Insets;
@@ -303,7 +304,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("ピッチカーブ")
 	private JLabel lblCurveSearch = null;
 
-	private JLabel lblCount = null;
+	private JLabel lblMora, lblCount = null;
 
 	private Window window = null;
 
@@ -313,7 +314,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("アクセント型")
 	private transient ComboBoxModel<Entry<String, String>> cbmAccentType = null;
 
-	private transient ComboBoxModel<Entry<String, String>> cbmCurve = null;
+	private transient ComboBoxModel<Entry<String, String>> cbmMora, cbmCurve = null;
 
 	private transient ComboBoxModel<String> cbmImageFormat = null;
 
@@ -399,7 +400,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("アクセント型")
 	private JComboBox<Entry<String, String>> jcbAccentType = null;
 
-	private JComboBox<Entry<String, String>> jcbCurve = null;
+	private JComboBox<Entry<String, String>> jcbMora, jcbCurve = null;
 
 	private String url = null;
 
@@ -540,6 +541,34 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(jcbAccentType, String.format("%1$s,span %2$s", wrap, 2));
 			//
+			// 単語長
+			//
+			testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_mola\"]")) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			add(lblMora = new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(
+					element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null)))));
+			//
+			es = ElementUtil.select(element, OPTION);
+			//
+			dcbm = new DefaultComboBoxModel<>();
+			//
+			for (int i = 0; i < IterableUtils.size(es); i++) {
+				//
+				dcbm.addElement(MutablePair.of(Util.getValue(attribute(e = IterableUtils.get(es, i), VALUE)),
+						ElementUtil.text(e)));
+				//
+			} // for
+				//
+			this.cbmMora = dcbm;
+			//
+			(jcbMora = new JComboBox<>(dcbm)).setRenderer(createListCellRenderer(jcbMora.getRenderer()));
+			//
+			add(jcbMora, String.format("%1$s,span %2$s", wrap, 2));
+			//
 			// ピッチカーブ
 			//
 			testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_curve\"]")) > 1, () -> {
@@ -640,11 +669,27 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(panalText, String.format("span %1$s,%2$s,%3$s", 3, growx, wrap));
 			//
+			Collection<?> collection = Util.cast(Collection.class,
+					Narcissus.getField(panalText, Narcissus.findField(JPanel.class, "component")));
+			//
+			Util.forEach(Util.filter(Util.map(Util.stream(collection), x -> Util.cast(AbstractButton.class, x)),
+					Objects::nonNull), x -> {
+						//
+						final Font font = x != null ? x.getFont() : null;
+						//
+						if (x != null && font != null) {
+							//
+							x.setFont(new Font(font.getName(), font.getStyle(), font.getSize() - 2));
+							//
+						} // if
+							//
+					});
+			//
 			// Image
 			//
 			final JPanel panelImage = new JPanel();
 			//
-			panelImage.setLayout(new MigLayout());
+			panelImage.setLayout(new MigLayout("insets 0"));
 			//
 			panelImage.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Image"));
 			//
@@ -693,6 +738,18 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			panelImage.add(panel, wrap);
 			//
 			add(panelImage, String.format("span %1$s,%2$s,%3$s", 3, growx, wrap));
+			//
+			Util.forEach(Stream.of(btnCopyAccentImage, btnSaveAccentImage, btnCopyCurveImage, btnSaveCurveImage), x -> {
+				//
+				final Font font = x != null ? x.getFont() : null;
+				//
+				if (x != null && font != null) {
+					//
+					x.setFont(new Font(font.getName(), font.getStyle(), font.getSize() - 2));
+					//
+				} // if
+					//
+			});
 			//
 			// Voice
 			//
@@ -1522,6 +1579,33 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // for
 			//
+			// 単語長
+			//
+		testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_mola\"]")) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		Util.setText(instance.lblMora, ElementUtil.text(ElementUtil.previousElementSibling(
+				element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null))));
+		//
+		es = ElementUtil.select(element, OPTION);
+		//
+		for (int i = 0; i < Math.min(Util.getSize(instance.cbmMora), IterableUtils.size(es)); i++) {
+			//
+			if (Objects.equals(NodeUtil.attr(e = IterableUtils.get(es, i), VALUE),
+					Util.getKey(en = Util.cast(Entry.class, Util.getElementAt(instance.cbmMora, i))))) {
+				//
+				testAndAccept((a, b, c) -> Boolean.logicalAnd(a != null, b != null), en,
+						setValue = ObjectUtils.getIfNull(setValue,
+								VoiceManagerOjadAccentPanel::getMapEntrySetValueMethod),
+						ElementUtil.text(e), Narcissus::invokeMethod);
+				//
+			} // if
+				//
+		} // for
+			//
 			// ピッチカーブ
 			//
 		testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_curve\"]")) > 1, () -> {
@@ -1560,42 +1644,45 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		setText(instance.btnExecute, NodeUtil
 				.attr(testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null), VALUE));
 		//
-		Util.forEach(Stream.of(instance.jcbCategory, instance.jcbAccentType, instance.jcbCurve), jcb -> {
-			//
-			final ListModel<?> model = getModel(jcb);
-			//
-			Entry<?, ?> temp, longest = null;
-			//
-			for (int i = 0; i < Util.getSize(model); i++) {
-				//
-				if (StringUtils.length(Util.toString(
-						Util.getValue(temp = Util.cast(Entry.class, Util.getElementAt(model, i))))) >= StringUtils
-								.length(Util.toString(Util.getValue(longest)))) {
+		Util.forEach(Stream.of(instance.jcbCategory, instance.jcbAccentType, instance.jcbMora, instance.jcbCurve),
+				jcb -> {
 					//
-					longest = temp;
+					final ListModel<?> model = getModel(jcb);
 					//
-				} // if
+					Entry<?, ?> temp, longest = null;
 					//
-			} // for
-				//
-			final Iterable<Method> ms = Util.toList(Util.filter(
-					testAndApply(Objects::nonNull, Util.getDeclaredMethods(JComboBox.class), Arrays::stream, null),
-					m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "setPrototypeDisplayValue"),
-							Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { Object.class }))));
-			//
-			testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
-				//
-				throw new IllegalStateException();
-				//
-			});
-			//
-			final Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
-			//
-			Util.forEach(Stream.of(null, longest),
-					x -> testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null), jcb, m,
-							(a, b) -> Narcissus.invokeMethod(a, b, x)));
-			//
-		});
+					for (int i = 0; i < Util.getSize(model); i++) {
+						//
+						if (StringUtils.length(Util.toString(Util
+								.getValue(temp = Util.cast(Entry.class, Util.getElementAt(model, i))))) >= StringUtils
+										.length(Util.toString(Util.getValue(longest)))) {
+							//
+							longest = temp;
+							//
+						} // if
+							//
+					} // for
+						//
+					final Iterable<Method> ms = Util.toList(Util.filter(
+							testAndApply(Objects::nonNull, Util.getDeclaredMethods(JComboBox.class), Arrays::stream,
+									null),
+							m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "setPrototypeDisplayValue"),
+									Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { Object.class }))));
+					//
+					testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
+						//
+						throw new IllegalStateException();
+						//
+					});
+					//
+					final Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0),
+							null);
+					//
+					Util.forEach(Stream.of(null, longest),
+							x -> testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null), jcb, m,
+									(a, b) -> Narcissus.invokeMethod(a, b, x)));
+					//
+				});
 		//
 	}
 
@@ -2514,6 +2601,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			if (!Objects.equals(key = Util.getKey(entry), "0")) {
 				//
 				Util.put(map, "accent_type", Util.toString(key));
+				//
+			} // if
+				//
+				// 単語長
+				//
+			entry = Util.cast(Entry.class, Util.getSelectedItem(cbmMora));
+			//
+			if (!Objects.equals(key = Util.getKey(entry), "0")) {
+				//
+				Util.put(map, "mola", Util.toString(key));
 				//
 			} // if
 				//
