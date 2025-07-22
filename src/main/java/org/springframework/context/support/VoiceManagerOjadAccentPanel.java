@@ -68,6 +68,7 @@ import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -684,17 +685,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			Collection<?> collection = Util.cast(Collection.class,
 					Narcissus.getField(panalText, Narcissus.findField(JPanel.class, COMPONENT)));
 			//
+			final ToIntFunction<Font> toIntFunction = y -> y != null ? y.getSize() - 2 : 0;
+			//
 			Util.forEach(Util.filter(Util.map(Util.stream(collection), x -> Util.cast(AbstractButton.class, x)),
 					Objects::nonNull), x -> {
 						//
-						final Font font = getFont(x);
+						setFont(x, createFont(getFont(x), toIntFunction));
 						//
-						if (font != null) {
-							//
-							setFont(x, new Font(font.getName(), font.getStyle(), font.getSize() - 2));
-							//
-						} // if
-							//
 					});
 			//
 			// Image
@@ -753,14 +750,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.forEach(Stream.of(btnCopyAccentImage, btnSaveAccentImage, btnCopyCurveImage, btnSaveCurveImage), x -> {
 				//
-				final Font font = getFont(x);
+				setFont(x, createFont(getFont(x), toIntFunction));
 				//
-				if (font != null) {
-					//
-					setFont(x, new Font(font.getName(), font.getStyle(), font.getSize() - 2));
-					//
-				} // if
-					//
 			});
 			//
 			// Voice
@@ -864,6 +855,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static Font createFont(final Font instance, final ToIntFunction<Font> function) {
+		//
+		return instance != null
+				? new Font(instance.getName(), instance.getStyle(),
+						function != null ? function.applyAsInt(instance) : instance.getSize())
+				: instance;
+		//
 	}
 
 	private static void setFont(@Nullable final Component instance, final Font font) {

@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Window;
@@ -40,6 +41,7 @@ import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
 import java.util.regex.Pattern;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
@@ -162,7 +164,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE, METHOD_CREATE_FUNCTION, METHOD_CREATE_LIST_CELL_RENDERER1,
 			METHOD_CREATE_LIST_CELL_RENDERER2, METHOD_GET_ACCENT_IMAGE_WIDTH, METHOD_GET_CURVE_IMAGE_WIDTH,
 			METHOD_FOR_EACH_ORDERED, METHOD_SET, METHOD_CREATE_DEFAULT_TABLE_MODEL,
-			METHOD_FIND_ENTRY_WITH_LONGEST_VALUE = null;
+			METHOD_FIND_ENTRY_WITH_LONGEST_VALUE, METHOD_CREATE_FONT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -344,6 +346,8 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_FIND_ENTRY_WITH_LONGEST_VALUE = clz.getDeclaredMethod("findEntryWithLongestValue", ListModel.class))
 				.setAccessible(true);
+		//
+		(METHOD_CREATE_FONT = clz.getDeclaredMethod("createFont", Font.class, ToIntFunction.class)).setAccessible(true);
 		//
 	}
 
@@ -2827,6 +2831,27 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof Entry) {
 				return (Entry) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateFont() throws Throwable {
+		//
+		Assertions.assertNotNull(createFont(Util.cast(Font.class, Narcissus.allocateInstance(Font.class)), null));
+		//
+	}
+
+	private static Font createFont(final Font instance, final ToIntFunction<Font> function) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_FONT.invoke(null, instance, function);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Font) {
+				return (Font) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
