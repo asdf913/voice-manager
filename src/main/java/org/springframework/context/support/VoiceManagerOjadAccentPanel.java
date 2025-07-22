@@ -688,11 +688,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final ToIntFunction<Font> toIntFunction = y -> y != null ? y.getSize() - 2 : 0;
 			//
 			Util.forEach(Util.filter(Util.map(Util.stream(collection), x -> Util.cast(AbstractButton.class, x)),
-					Objects::nonNull), x -> {
-						//
-						setFont(x, createFont(getFont(x), toIntFunction));
-						//
-					});
+					Objects::nonNull), x -> setFont(x, createFont(getFont(x), toIntFunction)));
 			//
 			// Image
 			//
@@ -748,11 +744,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(panelImage, String.format("span %1$s,%2$s,%3$s", 3, growx, wrap));
 			//
-			Util.forEach(Stream.of(btnCopyAccentImage, btnSaveAccentImage, btnCopyCurveImage, btnSaveCurveImage), x -> {
-				//
-				setFont(x, createFont(getFont(x), toIntFunction));
-				//
-			});
+			Util.forEach(Stream.of(btnCopyAccentImage, btnSaveAccentImage, btnCopyCurveImage, btnSaveCurveImage),
+					x -> setFont(x, createFont(getFont(x), toIntFunction)));
 			//
 			// Voice
 			//
