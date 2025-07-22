@@ -872,7 +872,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		}
 	}
 
-	private static Font getFont(final Component instance) {
+	private static Font getFont(@Nullable final Component instance) {
 		return instance != null ? instance.getFont() : null;
 	}
 
@@ -1716,7 +1716,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static String getTypeName(final Type instance) {
+	private static String getTypeName(@Nullable final Type instance) {
 		return instance != null ? instance.getTypeName() : null;
 	}
 
