@@ -393,6 +393,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private transient MutableComboBoxModel<TextAndImage> mcbmTextAndImage = null;
 
+	private JComboBox<Entry<String, String>> jcbCategory, jcbAccentType, jcbCurve = null;
+
 	private String url = null;
 
 	@Override
@@ -499,9 +501,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			this.cbmCategory = dcbm;
 			//
-			final JComboBox<Entry<String, String>> jcbCategory = new JComboBox<>(dcbm);
-			//
-			jcbCategory.setRenderer(createListCellRenderer(jcbCategory.getRenderer()));
+			(jcbCategory = new JComboBox<>(dcbm)).setRenderer(createListCellRenderer(jcbCategory.getRenderer()));
 			//
 			add(jcbCategory, String.format("%1$s,span %2$s", wrap, 2));
 			//
@@ -530,9 +530,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			this.cbmAccentType = dcbm;
 			//
-			final JComboBox<Entry<String, String>> jcbAccentType = new JComboBox<>(dcbm);
-			//
-			jcbAccentType.setRenderer(createListCellRenderer(jcbAccentType.getRenderer()));
+			(jcbAccentType = new JComboBox<>(dcbm)).setRenderer(createListCellRenderer(jcbAccentType.getRenderer()));
 			//
 			add(jcbAccentType, String.format("%1$s,span %2$s", wrap, 2));
 			//
@@ -560,9 +558,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			this.cbmCurve = dcbm;
 			//
-			final JComboBox<Entry<String, String>> jcbCurve = new JComboBox<>(dcbm);
-			//
-			jcbCurve.setRenderer(createListCellRenderer(jcbCurve.getRenderer()));
+			(jcbCurve = new JComboBox<>(dcbm)).setRenderer(createListCellRenderer(jcbCurve.getRenderer()));
 			//
 			add(jcbCurve, String.format("%1$s,span %2$s", wrap, 2));
 			//
@@ -1569,6 +1565,44 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		setText(instance.btnExecute, NodeUtil
 				.attr(testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null), VALUE));
+		//
+		Util.forEach(Stream.of(instance.jcbCategory, instance.jcbAccentType, instance.jcbCurve), jcb -> {
+			//
+			final ListModel<?> model = getModel(jcb);
+			//
+			Entry<?, ?> temp, longest = null;
+			//
+			for (int i = 0; i < Util.getSize(model); i++) {
+				//
+				if (StringUtils.length(Util.toString(
+						Util.getValue(temp = Util.cast(Entry.class, Util.getElementAt(model, i))))) >= StringUtils
+								.length(Util.toString(Util.getValue(longest)))) {
+					//
+					longest = temp;
+					//
+				} // if
+					//
+			} // for
+				//
+			final Iterable<Method> ms = Util.toList(Util.filter(
+					testAndApply(Objects::nonNull, Util.getDeclaredMethods(JComboBox.class), Arrays::stream, null),
+					m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "setPrototypeDisplayValue"),
+							Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { Object.class }))));
+			//
+			testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			final Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
+			//
+			Util.forEach(Stream.of(null, longest), x -> {
+				testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null), jcb, m,
+						(a, b) -> Narcissus.invokeMethod(a, b, x));
+			});
+			//
+		});
 		//
 	}
 
