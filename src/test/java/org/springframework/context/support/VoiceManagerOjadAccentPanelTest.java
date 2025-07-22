@@ -164,7 +164,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE, METHOD_CREATE_FUNCTION, METHOD_CREATE_LIST_CELL_RENDERER1,
 			METHOD_CREATE_LIST_CELL_RENDERER2, METHOD_GET_ACCENT_IMAGE_WIDTH, METHOD_GET_CURVE_IMAGE_WIDTH,
 			METHOD_FOR_EACH_ORDERED, METHOD_SET, METHOD_CREATE_DEFAULT_TABLE_MODEL,
-			METHOD_FIND_ENTRY_WITH_LONGEST_VALUE, METHOD_CREATE_FONT = null;
+			METHOD_FIND_ENTRY_WITH_LONGEST_VALUE, METHOD_CREATE_FONT, METHOD_CREATE_TO_INT_FUNCTION = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -348,6 +348,9 @@ class VoiceManagerOjadAccentPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_FONT = clz.getDeclaredMethod("createFont", Font.class, ToIntFunction.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_TO_INT_FUNCTION = clz.getDeclaredMethod("createToIntFunction", Integer.TYPE))
+				.setAccessible(true);
 		//
 	}
 
@@ -605,6 +608,8 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		boolean invokeDynamic, invokeSpecial;
 		//
+		Instruction in = null;
+		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ms[i]) == null || m.isSynthetic()) {
@@ -676,7 +681,8 @@ class VoiceManagerOjadAccentPanelTest {
 					//
 				} else if (length == 3) {
 					//
-					invokeDynamic = Util.and(ArrayUtils.get(ins, 0) instanceof ALOAD,
+					invokeDynamic = Util.and(
+							Boolean.logicalOr((in = ArrayUtils.get(ins, 0)) instanceof ALOAD, in instanceof ILOAD),
 							ArrayUtils.get(ins, 1) instanceof INVOKEDYNAMIC, ArrayUtils.get(ins, 2) instanceof ARETURN);
 					//
 				} else if (length == 4) {
@@ -2852,6 +2858,29 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof Font) {
 				return (Font) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateToIntFunction() throws Throwable {
+		//
+		final ToIntFunction<Font> toIntFunction = createToIntFunction(0);
+		//
+		Assertions.assertEquals(0, toIntFunction != null ? toIntFunction.applyAsInt(null) : null);
+		//
+	}
+
+	private static ToIntFunction<Font> createToIntFunction(final int difference) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_TO_INT_FUNCTION.invoke(null, difference);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ToIntFunction) {
+				return (ToIntFunction) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

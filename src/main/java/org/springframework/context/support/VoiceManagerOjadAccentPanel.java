@@ -685,7 +685,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			Collection<?> collection = Util.cast(Collection.class,
 					Narcissus.getField(panalText, Narcissus.findField(JPanel.class, COMPONENT)));
 			//
-			final ToIntFunction<Font> toIntFunction = y -> y != null ? y.getSize() - 2 : 0;
+			final ToIntFunction<Font> toIntFunction = createToIntFunction(-2);
 			//
 			Util.forEach(Util.filter(Util.map(Util.stream(collection), x -> Util.cast(AbstractButton.class, x)),
 					Objects::nonNull), x -> setFont(x, createFont(getFont(x), toIntFunction)));
@@ -848,6 +848,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static ToIntFunction<Font> createToIntFunction(final int difference) {
+		//
+		return font -> font != null ? font.getSize() + difference : 0;
+		//
 	}
 
 	private static Font createFont(@Nullable final Font instance, @Nullable final ToIntFunction<Font> function) {
