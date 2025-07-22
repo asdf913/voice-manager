@@ -856,6 +856,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
+	@Nullable
 	private static Font createFont(@Nullable final Font instance, @Nullable final ToIntFunction<Font> function) {
 		//
 		if (instance == null) {
