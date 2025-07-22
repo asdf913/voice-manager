@@ -787,18 +787,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.forEach(Stream.of(tfTextInput, btnExecute, tfIndex), x -> addKeyListener(x, this));
 			//
-//			Util.forEach(Stream.of(btnCopyAccentImage, btnSaveAccentImage, btnCopyCurveImage, btnSaveCurveImage), x -> {
-//				//
-//				final Font font = x != null ? x.getFont() : null;
-//				//
-//				if (x != null && font != null) {
-//					//
-//					x.setFont(new Font(font.getName(), font.getStyle(), font.getSize() - 2));
-//					//
-//				} // if
-//					//
-//			});
-			//
 		} // if
 			//
 	}
