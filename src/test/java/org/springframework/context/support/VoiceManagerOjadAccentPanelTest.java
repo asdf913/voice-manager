@@ -55,6 +55,7 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.event.CellEditorListener;
 import javax.swing.table.AbstractTableModel;
@@ -160,7 +161,8 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, METHOD_GET_SIZE, METHOD_GET_TRANSLATE_XS, METHOD_FLAT_MAP,
 			METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE, METHOD_CREATE_FUNCTION, METHOD_CREATE_LIST_CELL_RENDERER1,
 			METHOD_CREATE_LIST_CELL_RENDERER2, METHOD_GET_ACCENT_IMAGE_WIDTH, METHOD_GET_CURVE_IMAGE_WIDTH,
-			METHOD_FOR_EACH_ORDERED, METHOD_SET, METHOD_CREATE_DEFAULT_TABLE_MODEL = null;
+			METHOD_FOR_EACH_ORDERED, METHOD_SET, METHOD_CREATE_DEFAULT_TABLE_MODEL,
+			METHOD_FIND_ENTRY_WITH_LONGEST_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -340,13 +342,18 @@ class VoiceManagerOjadAccentPanelTest {
 		(METHOD_CREATE_DEFAULT_TABLE_MODEL = clz.getDeclaredMethod("createDefaultTableModel", Object[].class,
 				Integer.TYPE)).setAccessible(true);
 		//
+		(METHOD_FIND_ENTRY_WITH_LONGEST_VALUE = clz.getDeclaredMethod("findEntryWithLongestValue", ListModel.class))
+				.setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
 
 		private Map<Object, Object> evaluate = null;
 
-		private Integer width, height = null;
+		private Integer width, height, size = null;
+
+		private Object getElementAt = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -462,6 +469,18 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof ListModel) {
+				//
+				if (Objects.equals(methodName, "getSize")) {
+					//
+					return size;
+					//
+				} else if (Objects.equals(methodName, "getElementAt")) {
+					//
+					return getElementAt;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -736,6 +755,12 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		String toString = null;
 		//
+		if (ih != null) {
+			//
+			ih.size = Integer.valueOf(0);
+			//
+		} // if
+			//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ms[i]) == null || (parameterTypes = Util.getParameterTypes(m)) == null
@@ -2775,6 +2800,33 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof DefaultTableModel) {
 				return (DefaultTableModel) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testFindEntryWithLongestValue() throws Throwable {
+		//
+		if (ih != null) {
+			//
+			ih.size = 1;
+			//
+		} // if
+			//
+		Assertions.assertNull(findEntryWithLongestValue(Reflection.newProxy(ListModel.class, ih)));
+		//
+	}
+
+	private static Entry<?, ?> findEntryWithLongestValue(final ListModel<?> model) throws Throwable {
+		try {
+			final Object obj = METHOD_FIND_ENTRY_WITH_LONGEST_VALUE.invoke(null, model);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Entry) {
+				return (Entry) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

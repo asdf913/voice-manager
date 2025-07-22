@@ -1675,22 +1675,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		Util.forEach(jcbs, jcb -> {
 			//
-			final ListModel<?> model = getModel(jcb);
-			//
-			Entry<?, ?> temp, longest = null;
-			//
-			for (int i = 0; i < Util.getSize(model); i++) {
-				//
-				if (StringUtils.length(Util.toString(
-						Util.getValue(temp = Util.cast(Entry.class, Util.getElementAt(model, i))))) >= StringUtils
-								.length(Util.toString(Util.getValue(longest)))) {
-					//
-					longest = temp;
-					//
-				} // if
-					//
-			} // for
-				//
 			final Iterable<Method> ms = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull, Util.getDeclaredMethods(JComboBox.class), Arrays::stream, null),
 					m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "setPrototypeDisplayValue"),
@@ -1704,11 +1688,31 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
 			//
-			Util.forEach(Stream.of(null, longest),
+			Util.forEach(Stream.of(null, findEntryWithLongestValue(getModel(jcb))),
 					x -> testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null), jcb, m,
 							(a, b) -> Narcissus.invokeMethod(a, b, x)));
 			//
 		});
+		//
+	}
+
+	private static Entry<?, ?> findEntryWithLongestValue(final ListModel<?> model) {
+		//
+		Entry<?, ?> temp, longest = null;
+		//
+		for (int i = 0; i < Util.getSize(model); i++) {
+			//
+			if (StringUtils.length(Util
+					.toString(Util.getValue(temp = Util.cast(Entry.class, Util.getElementAt(model, i))))) >= StringUtils
+							.length(Util.toString(Util.getValue(longest)))) {
+				//
+				longest = temp;
+				//
+			} // if
+				//
+		} // for
+			//
+		return longest;
 		//
 	}
 
