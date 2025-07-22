@@ -1585,10 +1585,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
 			//
-			Util.forEach(Stream.of(null, longest), x -> {
-				testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null), jcb, m,
-						(a, b) -> Narcissus.invokeMethod(a, b, x));
-			});
+			Util.forEach(Stream.of(null, longest),
+					x -> testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null), jcb, m,
+							(a, b) -> Narcissus.invokeMethod(a, b, x)));
 			//
 		});
 		//
