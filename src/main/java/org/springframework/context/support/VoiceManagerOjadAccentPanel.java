@@ -861,6 +861,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
+	@Nullable
 	private static Component add(@Nullable final Container container, @Nullable final Component component) {
 		//
 		if (container == null) {
