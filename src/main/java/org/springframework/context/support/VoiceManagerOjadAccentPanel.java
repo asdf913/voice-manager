@@ -620,7 +620,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(panel, jcbCurve, String.format("%1$s,span %2$s", wrap, span));
 			//
-			add(new JScrollPane(panel), String.format("%1$s,span %2$s,%3$s,hmax %4$s", wrap, 3, growx, height + 24));
+			add(new JScrollPane(panel), String.format("%1$s,span %2$s,%3$s,hmax %4$s", wrap, 3, growx, height
+					+ (Objects.equals(OperatingSystemUtil.getOperatingSystem(), OperatingSystem.LINUX) ? 21 : 24)));
 			//
 			add(new JLabel());
 			//
