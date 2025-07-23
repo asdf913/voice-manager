@@ -500,7 +500,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(panel, tfTextInput = new JTextField(), String.format("%1$s,%2$s,span %3$s", wrap, growx, span));
 			//
-			height += tfTextInput.getPreferredSize() != null ? tfTextInput.getPreferredSize().getHeight() : 0;
+			height += getHeight(Util.getPreferredSize(tfTextInput));
 			//
 			// 品詞
 			//
@@ -531,7 +531,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			(jcbCategory = new JComboBox<>(dcbm)).setRenderer(createListCellRenderer(jcbCategory.getRenderer()));
 			//
-			height += jcbCategory.getPreferredSize() != null ? jcbCategory.getPreferredSize().getHeight() : 0;
+			height += getHeight(Util.getPreferredSize(jcbCategory));
 			//
 			add(panel, jcbCategory, String.format("%1$s,span %2$s", wrap, 2));
 			//
