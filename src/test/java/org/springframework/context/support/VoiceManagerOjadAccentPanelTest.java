@@ -1,6 +1,7 @@
 package org.springframework.context.support;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
@@ -54,6 +55,7 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
@@ -164,7 +166,8 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE, METHOD_CREATE_FUNCTION, METHOD_CREATE_LIST_CELL_RENDERER1,
 			METHOD_CREATE_LIST_CELL_RENDERER2, METHOD_GET_ACCENT_IMAGE_WIDTH, METHOD_GET_CURVE_IMAGE_WIDTH,
 			METHOD_FOR_EACH_ORDERED, METHOD_SET, METHOD_CREATE_DEFAULT_TABLE_MODEL,
-			METHOD_FIND_ENTRY_WITH_LONGEST_VALUE, METHOD_CREATE_FONT, METHOD_CREATE_TO_INT_FUNCTION = null;
+			METHOD_FIND_ENTRY_WITH_LONGEST_VALUE, METHOD_CREATE_FONT, METHOD_CREATE_TO_INT_FUNCTION, METHOD_ADD_2,
+			METHOD_ADD_3 = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -350,6 +353,11 @@ class VoiceManagerOjadAccentPanelTest {
 		(METHOD_CREATE_FONT = clz.getDeclaredMethod("createFont", Font.class, ToIntFunction.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_TO_INT_FUNCTION = clz.getDeclaredMethod("createToIntFunction", Integer.TYPE))
+				.setAccessible(true);
+		//
+		(METHOD_ADD_2 = clz.getDeclaredMethod("add", Container.class, Component.class)).setAccessible(true);
+		//
+		(METHOD_ADD_3 = clz.getDeclaredMethod("add", Container.class, Component.class, Object.class))
 				.setAccessible(true);
 		//
 	}
@@ -2883,6 +2891,46 @@ class VoiceManagerOjadAccentPanelTest {
 				return (ToIntFunction) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAdd() throws Throwable {
+		//
+		final Container container = Util.cast(Container.class, Narcissus.allocateInstance(Container.class));
+		//
+		Assertions.assertSame(container, add(container, null));
+		//
+		Assertions.assertDoesNotThrow(() -> add(container, null, null));
+		//
+		final JPanel jPanel = new JPanel();
+		//
+		Assertions.assertSame(jPanel, add(jPanel, null));
+		//
+		Assertions.assertDoesNotThrow(() -> add(jPanel, null, null));
+		//
+	}
+
+	private static Component add(final Container container, final Component component) throws Throwable {
+		try {
+			final Object obj = METHOD_ADD_2.invoke(null, container, component);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Component) {
+				return (Component) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static void add(final Container container, final Component component, final Object constraints)
+			throws Throwable {
+		try {
+			METHOD_ADD_3.invoke(null, container, component, constraints);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

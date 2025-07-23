@@ -475,6 +475,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(jcbLanguage, wrap);
 			//
+			JPanel panel = new JPanel();
+			//
+			panel.setLayout(new MigLayout());
+			//
+			int height = 0;
+			//
 			// 単語の検索
 			//
 			testAndRunThrows(IterableUtils.size(es = ElementUtil.select(document, "[id=\"search_word\"]")) > 1, () -> {
@@ -485,14 +491,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Element element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null);
 			//
-			add(lblTitle = new JLabel(ElementUtil.text(ElementUtil
+			add(panel, lblTitle = new JLabel(ElementUtil.text(ElementUtil
 					.previousElementSibling(ElementUtil.parent(ElementUtil.parent(ElementUtil.parent(element)))))));
 			//
 			final String growx = "growx";
 			//
 			final int span = 2;
 			//
-			add(tfTextInput = new JTextField(), String.format("%1$s,%2$s,span %3$s", wrap, growx, span));
+			add(panel, tfTextInput = new JTextField(), String.format("%1$s,%2$s,span %3$s", wrap, growx, span));
+			//
+			height += tfTextInput.getPreferredSize() != null ? tfTextInput.getPreferredSize().getHeight() : 0;
 			//
 			// 品詞
 			//
@@ -503,7 +511,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 					});
 			//
-			add(lblCategory = new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(
+			add(panel, lblCategory = new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(
 					element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null)))));
 			//
 			es = ElementUtil.select(element, OPTION);
@@ -523,7 +531,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			(jcbCategory = new JComboBox<>(dcbm)).setRenderer(createListCellRenderer(jcbCategory.getRenderer()));
 			//
-			add(jcbCategory, String.format("%1$s,span %2$s", wrap, 2));
+			height += jcbCategory.getPreferredSize() != null ? jcbCategory.getPreferredSize().getHeight() : 0;
+			//
+			add(panel, jcbCategory, String.format("%1$s,span %2$s", wrap, 2));
 			//
 			// アクセント型
 			//
@@ -534,7 +544,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 					});
 			//
-			add(lblAccentType = new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(
+			add(panel, lblAccentType = new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(
 					element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null)))));
 			//
 			es = ElementUtil.select(element, OPTION);
@@ -552,7 +562,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			(jcbAccentType = new JComboBox<>(dcbm)).setRenderer(createListCellRenderer(jcbAccentType.getRenderer()));
 			//
-			add(jcbAccentType, String.format("%1$s,span %2$s", wrap, 2));
+			add(panel, jcbAccentType, String.format("%1$s,span %2$s", wrap, 2));
 			//
 			// 単語長
 			//
@@ -562,7 +572,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			});
 			//
-			add(lblMora = new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(
+			add(panel, lblMora = new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(
 					element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null)))));
 			//
 			es = ElementUtil.select(element, OPTION);
@@ -580,7 +590,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			(jcbMora = new JComboBox<>(dcbm)).setRenderer(createListCellRenderer(jcbMora.getRenderer()));
 			//
-			add(jcbMora, String.format("%1$s,span %2$s", wrap, 2));
+			add(panel, jcbMora, String.format("%1$s,span %2$s", wrap, span));
 			//
 			// ピッチカーブ
 			//
@@ -590,7 +600,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			});
 			//
-			add(lblCurveSearch = new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(
+			add(panel, lblCurveSearch = new JLabel(ElementUtil.text(ElementUtil.previousElementSibling(
 					element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null)))));
 			//
 			es = ElementUtil.select(element, OPTION);
@@ -608,7 +618,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			(jcbCurve = new JComboBox<>(dcbm)).setRenderer(createListCellRenderer(jcbCurve.getRenderer()));
 			//
-			add(jcbCurve, String.format("%1$s,span %2$s", wrap, 2));
+			add(panel, jcbCurve, String.format("%1$s,span %2$s", wrap, span));
+			//
+			add(new JScrollPane(panel), String.format("%1$s,span %2$s,%3$s,hmax %4$s", wrap, 3, growx, height + 24));
 			//
 			add(new JLabel());
 			//
@@ -630,13 +642,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final JPanel paneIC = new JPanel();
 			//
-			paneIC.add(tfIndex = new JTextField());
+			add(paneIC, tfIndex = new JTextField());
 			//
 			tfIndex.setPreferredSize(new Dimension(19, (int) getHeight(Util.getPreferredSize(tfIndex))));
 			//
-			paneIC.add(new JLabel("/"));
+			add(paneIC, new JLabel("/"));
 			//
-			paneIC.add(lblCount = new JLabel());
+			add(paneIC, lblCount = new JLabel());
 			//
 			add(paneIC);
 			//
@@ -656,29 +668,29 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			panalText.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Text"));
 			//
-			panalText.add(new JLabel("Part of Speech"));
+			add(panalText, new JLabel("Part of Speech"));
 			//
-			panalText.add(tfPartOfSpeech = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
+			add(panalText, tfPartOfSpeech = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
 			//
-			panalText.add(btnCopyPartOfSpeech = new JButton(COPY), wrap);
+			add(panalText, btnCopyPartOfSpeech = new JButton(COPY), wrap);
 			//
-			panalText.add(new JLabel("Conjugation"));
+			add(panalText, new JLabel("Conjugation"));
 			//
-			panalText.add(tfConjugation = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
+			add(panalText, tfConjugation = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
 			//
-			panalText.add(btnCopyConjugation = new JButton(COPY), wrap);
+			add(panalText, btnCopyConjugation = new JButton(COPY), wrap);
 			//
-			panalText.add(new JLabel("Kanji"));
+			add(panalText, new JLabel("Kanji"));
 			//
-			panalText.add(tfKanji = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
+			add(panalText, tfKanji = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
 			//
-			panalText.add(btnCopyKanji = new JButton(COPY), wrap);
+			add(panalText, btnCopyKanji = new JButton(COPY), wrap);
 			//
-			panalText.add(new JLabel("Hiragana"));
+			add(panalText, new JLabel("Hiragana"));
 			//
-			panalText.add(tfHiragana = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
+			add(panalText, tfHiragana = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
 			//
-			panalText.add(btnCopyHiragana = new JButton(COPY), wrap);
+			add(panalText, btnCopyHiragana = new JButton(COPY), wrap);
 			//
 			add(panalText, String.format("span %1$s,%2$s,%3$s", 3, growx, wrap));
 			//
@@ -698,7 +710,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			panelImage.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Image"));
 			//
-			panelImage.add(new JLabel("Format"));
+			add(panelImage, new JLabel("Format"));
 			//
 			final List<String> list = testAndApply(Objects::nonNull, FactoryBeanUtil.getObject(
 					//
@@ -712,35 +724,33 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			));
 			//
-			panelImage.add(
+			add(panelImage,
 					new JComboBox<>(cbmImageFormat = new DefaultComboBoxModel<>(Util.toArray(list, new String[] {}))),
 					wrap);
 			//
-			panelImage.add(new JLabel("Accent"));
+			add(panelImage, new JLabel("Accent"));
 			//
-			panelImage.add(lblAccent = new JLabel(), String.format("%1$s,span %2$s", wrap, span));
+			add(panelImage, lblAccent = new JLabel(), String.format("%1$s,span %2$s", wrap, span));
 			//
-			panelImage.add(new JLabel());
+			add(panelImage, new JLabel());
 			//
-			JPanel panel = new JPanel();
+			add(panel = new JPanel(), btnCopyAccentImage = new JButton(COPY));
 			//
-			panel.add(btnCopyAccentImage = new JButton(COPY));
+			add(panel, btnSaveAccentImage = new JButton("Save"));
 			//
-			panel.add(btnSaveAccentImage = new JButton("Save"));
+			add(panelImage, panel, wrap);
 			//
-			panelImage.add(panel, wrap);
+			add(panelImage, new JLabel("Curve"));
 			//
-			panelImage.add(new JLabel("Curve"));
+			add(panelImage, lblCurve = new JLabel(), String.format("%1$s,span %2$s", wrap, span));
 			//
-			panelImage.add(lblCurve = new JLabel(), String.format("%1$s,span %2$s", wrap, span));
+			add(panelImage, new JLabel());
 			//
-			panelImage.add(new JLabel());
+			add(panel = new JPanel(), btnCopyCurveImage = new JButton(COPY));
 			//
-			(panel = new JPanel()).add(btnCopyCurveImage = new JButton(COPY));
+			add(panel, btnSaveCurveImage = new JButton("Save"));
 			//
-			panel.add(btnSaveCurveImage = new JButton("Save"));
-			//
-			panelImage.add(panel, wrap);
+			add(panelImage, panel, wrap);
 			//
 			add(panelImage, String.format("span %1$s,%2$s,%3$s", 3, growx, wrap));
 			//
@@ -778,7 +788,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			testAndAccept((a, b) -> b instanceof TableCellEditor, jtVoice, proxy,
 					(a, b) -> jtVoice.setDefaultEditor(String.class, Util.cast(TableCellEditor.class, b)));
 			//
-			panelVoice.add(new JScrollPane(jtVoice), String.format("hmax %1$s", 56));
+			add(panelVoice, new JScrollPane(jtVoice), String.format("hmax %1$s", 56));
 			//
 			add(panelVoice, String.format("span %1$s,%2$s,%3$s", 3, growx, wrap));
 			//
@@ -790,9 +800,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			panelPdf.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "PDF"));
 			//
-			panelPdf.add(new JLabel("Compression"));
+			add(panelPdf, new JLabel("Compression"));
 			//
-			panelPdf.add(
+			add(panelPdf,
 					new JComboBox<>(
 							cbmCompression = new DefaultComboBoxModel<>(
 									ArrayUtils
@@ -814,7 +824,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 															Collectors.toList()), new Boolean[] {}),
 													null))));
 			//
-			panelPdf.add(btnPdf = new JButton("PDF"));
+			add(panelPdf, btnPdf = new JButton("PDF"));
 			//
 			add(panelPdf, String.format("span %1$s,%2$s", 3, growx));
 			//
@@ -848,6 +858,61 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static Component add(final Container container, final Component component) {
+		//
+		if (container == null) {
+			//
+			return container;
+			//
+		} // if
+			//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.getDeclaredFields(Container.class), Arrays::stream, null),
+				f -> Objects.equals(Util.getName(f), "component")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		return f != null && Narcissus.getField(container, f) != null && component != null ? container.add(component)
+				: container;
+		//
+	}
+
+	private static void add(final Container container, final Component component, final Object constraints) {
+		//
+		if (container == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.getDeclaredFields(Container.class), Arrays::stream, null),
+				f -> Objects.equals(Util.getName(f), "component")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f == null || Narcissus.getField(container, f) == null || component == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		container.add(component, constraints);
+		//
 	}
 
 	private static ToIntFunction<Font> createToIntFunction(final int difference) {
@@ -1028,7 +1093,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 			} // if
 				//
-			panel.add(
+			add(panel,
 					new JLabel(
 							StringUtils
 									.rightPad(getKanji(value),
@@ -1040,7 +1105,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 											'\u3000')),
 					"left");
 			//
-			panel.add(
+			add(panel,
 					new JLabel(
 							StringUtils
 									.rightPad(getHiragana(value),
@@ -1056,7 +1121,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			label.setIcon(testAndApply(Objects::nonNull, getAccentImage(value), ImageIcon::new, x -> new ImageIcon()));
 			//
-			panel.add(label, String.format("right,wmin %1$s",
+			add(panel, label, String.format("right,wmin %1$s",
 					Util.orElse(Util.max(Util.map(IntStream.range(0, Util.getSize(model)), i -> {
 						//
 						final TextAndImage textAndImage = Util.getElementAt(model, i);
@@ -1068,7 +1133,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			(label = new JLabel()).setIcon(
 					testAndApply(Objects::nonNull, getCurveImage(value), ImageIcon::new, x -> new ImageIcon()));
 			//
-			panel.add(label, "right");
+			add(panel, label, "right");
 			//
 			return panel;
 			//
@@ -4045,7 +4110,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		if (gui) {
 			//
-			jFrame.add(instance);
+			add(jFrame, instance);
 			//
 		} // if
 			//
