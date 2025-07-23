@@ -871,7 +871,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		final Iterable<Field> fs = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.getDeclaredFields(Container.class), Arrays::stream, null),
-				f -> Objects.equals(Util.getName(f), "component")));
+				f -> Objects.equals(Util.getName(f), COMPONENT)));
 		//
 		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
 			//
@@ -896,7 +896,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		final Iterable<Field> fs = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.getDeclaredFields(Container.class), Arrays::stream, null),
-				f -> Objects.equals(Util.getName(f), "component")));
+				f -> Objects.equals(Util.getName(f), COMPONENT)));
 		//
 		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
 			//
