@@ -77,7 +77,7 @@ import javassist.util.proxy.ProxyUtil;
 class SpeechApiOnlineImplTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TEST_AND_ACCEPT, METHOD_WRITE, METHOD_AND, METHOD_GET_FORMAT,
-			METHOD_GET_AUDIO_INPUT_STREAM, METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_SET_SELECTED_INDEX,
+			METHOD_GET_AUDIO_INPUT_STREAM, METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS,
 			METHOD_GET_NEXT_ELEMENT_SIBLING, METHOD_TEST_AND_RUN_THROWS, METHOD_GET_ATTRIBUTE,
 			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_QUERY_SELECTOR, METHOD_EXECUTE = null;
 
@@ -105,9 +105,6 @@ class SpeechApiOnlineImplTest {
 		(METHOD_GET_VALUE_ATTRIBUTE = clz.getDeclaredMethod("getValueAttribute", HtmlOption.class)).setAccessible(true);
 		//
 		(METHOD_GET_OPTIONS = clz.getDeclaredMethod("getOptions", HtmlSelect.class)).setAccessible(true);
-		//
-		(METHOD_SET_SELECTED_INDEX = clz.getDeclaredMethod("setSelectedIndex", HtmlSelect.class, HtmlOption.class))
-				.setAccessible(true);
 		//
 		(METHOD_GET_NEXT_ELEMENT_SIBLING = clz.getDeclaredMethod("getNextElementSibling", DomNode.class))
 				.setAccessible(true);
@@ -618,25 +615,6 @@ class SpeechApiOnlineImplTest {
 				return (List) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetSelectedIndex() {
-		//
-		final HtmlSelect htmlSelect = Util.cast(HtmlSelect.class, Narcissus.allocateInstance(HtmlSelect.class));
-		//
-		Assertions.assertDoesNotThrow(() -> setSelectedIndex(htmlSelect, null));
-		//
-		Assertions.assertDoesNotThrow(() -> setSelectedIndex(htmlSelect, htmlOption));
-		//
-	}
-
-	private static void setSelectedIndex(final HtmlSelect htmlSelect, final HtmlOption htmlOption) throws Throwable {
-		try {
-			METHOD_SET_SELECTED_INDEX.invoke(null, htmlSelect, htmlOption);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

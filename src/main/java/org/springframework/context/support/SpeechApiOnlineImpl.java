@@ -307,35 +307,35 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 			//
 			if (getElementByName(htmlPage, "SPKR") instanceof HtmlSelect htmlSelect) {
 				//
-				final List<String> keys = Util.toList(Util.map(
-						Util.filter(Util.stream(Util.entrySet(voices)), x -> Objects.equals(Util.getKey(x), voiceId)),
-						Util::getKey));
+				HtmlOption option = null;
 				//
-				final int size = IterableUtils.size(keys);
+				Integer index = null;
 				//
-				testAndRunThrows(size > 1, () -> {
+				for (int i = 0; i < IterableUtils.size(getOptions(htmlSelect)); i++) {
 					//
-					throw new IllegalStateException();
+					if ((option = htmlSelect.getOption(i)) == null
+							|| !Objects.equals(option.getAttribute("value"), voiceId)) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (index != null) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					index = Integer.valueOf(i);
 					//
-				});
-				//
-				final Iterable<HtmlOption> options = Util
-						.toList(Util
-								.filter(Util.stream(getOptions(htmlSelect)),
-										x -> StringsUtil.equals(Strings.CS, getValueAttribute(x),
-												testAndApply(y -> IterableUtils.size(y) == 1, keys,
-														y -> IterableUtils.get(y, 0), null))));
-				//
-				testAndRunThrows(IterableUtils.size(options) > 1, () -> {
+				} // for
 					//
-					throw new IllegalStateException();
+				if (index != null) {
 					//
-				});
-				//
-				setSelectedIndex(htmlSelect, testAndApply(x -> IterableUtils.size(x) == 1, options,
-						x -> testAndApply(y -> IterableUtils.size(y) == 1, x, y -> IterableUtils.get(y, 0), null),
-						null));
-				//
+					htmlSelect.setSelectedIndex(index.intValue());
+					//
+				} // if
+					//
 			} // if
 				//
 			if (getElementByName(htmlPage, "SYNTEXT") instanceof HtmlTextArea htmlTextArea) {
@@ -443,40 +443,6 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 	@Nullable
 	private static List<HtmlOption> getOptions(@Nullable final HtmlSelect instance) {
 		return instance != null ? instance.getOptions() : null;
-	}
-
-	private static void setSelectedIndex(@Nullable final HtmlSelect htmlSelect, @Nullable final HtmlOption htmlOption) {
-		//
-		if (htmlSelect == null) {
-			//
-			return;
-			//
-		} // if
-			//
-		final Iterable<Field> fs = Util
-				.toList(Util.filter(testAndApply(Objects::nonNull, FieldUtils.getAllFields(Util.getClass(htmlSelect)),
-						Arrays::stream, null), f -> Objects.equals(Util.getName(f), "attributes_")));
-		//
-		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
-			//
-			throw new IllegalStateException();
-			//
-		});
-		//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-		//
-		if (f != null && Narcissus.getField(htmlSelect, f) == null) {
-			//
-			return;
-			//
-		} // if
-			//
-		if (htmlOption != null) {
-			//
-			htmlSelect.setSelectedIndex(htmlOption.getIndex());
-			//
-		} // if
-			//
 	}
 
 	@Nullable
