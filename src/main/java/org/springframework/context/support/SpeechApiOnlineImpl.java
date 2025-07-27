@@ -308,7 +308,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 			if (getElementByName(htmlPage, "SPKR") instanceof HtmlSelect htmlSelect) {
 				//
 				final List<String> keys = Util.toList(Util.map(
-						Util.filter(Util.stream(Util.entrySet(voices)), x -> Objects.equals(Util.getValue(x), voiceId)),
+						Util.filter(Util.stream(Util.entrySet(voices)), x -> Objects.equals(Util.getKey(x), voiceId)),
 						Util::getKey));
 				//
 				final int size = IterableUtils.size(keys);
