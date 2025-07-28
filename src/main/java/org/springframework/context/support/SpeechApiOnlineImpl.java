@@ -398,6 +398,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		//
 	}
 
+	@Nullable
 	private static String getAttribute(@Nullable final Element instance, final String name) {
 		return instance != null ? instance.getAttribute(name) : null;
 	}
