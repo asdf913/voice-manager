@@ -193,14 +193,10 @@ class SpeechApiOnlineImplTest {
 				//
 				return MapUtils.getObject(namedItems, args[0]);
 				//
-			} else if (proxy instanceof Element) {
+			} else if (proxy instanceof Element && Objects.equals(methodName, "getAttribute")) {
 				//
-				if (Objects.equals(methodName, "getAttribute")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
