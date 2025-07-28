@@ -68,6 +68,7 @@ import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.ThrowingRunnableUtil;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.InputStreamSourceUtil;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -307,14 +308,11 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 			//
 			if (getElementByName(htmlPage, "SPKR") instanceof HtmlSelect htmlSelect) {
 				//
-				HtmlOption option = null;
-				//
 				Integer index = null;
 				//
 				for (int i = 0; i < IterableUtils.size(getOptions(htmlSelect)); i++) {
 					//
-					if ((option = htmlSelect.getOption(i)) == null
-							|| !Objects.equals(option.getAttribute("value"), voiceId)) {
+					if (!Objects.equals(getAttribute(getOption(htmlSelect, i), "value"), voiceId)) {
 						//
 						continue;
 						//
@@ -400,6 +398,10 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		//
 	}
 
+	private static String getAttribute(final Element instance, final String name) {
+		return instance != null ? instance.getAttribute(name) : null;
+	}
+
 	private static void setSelectedIndex(final HtmlSelect instance, final Integer index) {
 		//
 		if (instance == null || index == null) {
@@ -466,6 +468,10 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 	@Nullable
 	private static List<HtmlOption> getOptions(@Nullable final HtmlSelect instance) {
 		return instance != null ? instance.getOptions() : null;
+	}
+
+	private static HtmlOption getOption(final HtmlSelect instance, final int index) {
+		return instance != null && instance.getOptionSize() > index ? instance.getOption(index) : null;
 	}
 
 	@Nullable

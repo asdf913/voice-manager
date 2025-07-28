@@ -64,6 +64,7 @@ import org.junit.jupiter.api.Test;
 import org.meeuw.functional.Predicates;
 import org.meeuw.functional.ThrowingRunnable;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -78,8 +79,9 @@ class SpeechApiOnlineImplTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TEST_AND_ACCEPT, METHOD_WRITE, METHOD_AND, METHOD_GET_FORMAT,
 			METHOD_GET_AUDIO_INPUT_STREAM, METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS,
-			METHOD_GET_NEXT_ELEMENT_SIBLING, METHOD_TEST_AND_RUN_THROWS, METHOD_GET_ATTRIBUTE,
-			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_QUERY_SELECTOR, METHOD_EXECUTE, METHOD_SET_SELECTED_INDEX = null;
+			METHOD_GET_NEXT_ELEMENT_SIBLING, METHOD_TEST_AND_RUN_THROWS, METHOD_GET_ATTRIBUTE2, METHOD_GET_ATTRIBUTE3,
+			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_QUERY_SELECTOR, METHOD_EXECUTE, METHOD_SET_SELECTED_INDEX,
+			METHOD_GET_OPTION = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -112,7 +114,10 @@ class SpeechApiOnlineImplTest {
 		(METHOD_TEST_AND_RUN_THROWS = clz.getDeclaredMethod("testAndRunThrows", Boolean.TYPE, ThrowingRunnable.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_ATTRIBUTE = clz.getDeclaredMethod("getAttribute", NodeList.class, String.class, Predicate.class))
+		(METHOD_GET_ATTRIBUTE2 = clz.getDeclaredMethod("getAttribute", Element.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_ATTRIBUTE3 = clz.getDeclaredMethod("getAttribute", NodeList.class, String.class, Predicate.class))
 				.setAccessible(true);
 		//
 		(METHOD_GET_ELEMENTS_BY_TAG_NAME = clz.getDeclaredMethod("getElementsByTagName", Document.class, String.class))
@@ -126,6 +131,8 @@ class SpeechApiOnlineImplTest {
 		//
 		(METHOD_SET_SELECTED_INDEX = clz.getDeclaredMethod("setSelectedIndex", HtmlSelect.class, Integer.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_OPTION = clz.getDeclaredMethod("getOption", HtmlSelect.class, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -146,6 +153,20 @@ class SpeechApiOnlineImplTest {
 			//
 			final String methodName = Util.getName(method);
 			//
+			if (proxy instanceof Node) {
+				//
+				if (Objects.equals(methodName, "getAttributes")) {
+					//
+					return attributes;
+					//
+				} else if (Objects.equals(methodName, "getNodeValue")) {
+					//
+					return nodeValue;
+					//
+				} // if
+					//
+			} // if
+				//
 			if (proxy instanceof Document && Objects.equals(methodName, "getElementsByTagName")) {
 				//
 				return null;
@@ -167,23 +188,19 @@ class SpeechApiOnlineImplTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Node) {
-				//
-				if (Objects.equals(methodName, "getAttributes")) {
-					//
-					return attributes;
-					//
-				} else if (Objects.equals(methodName, "getNodeValue")) {
-					//
-					return nodeValue;
-					//
-				} // if
-					//
 			} else if (proxy instanceof NamedNodeMap && Objects.equals(methodName, "getNamedItem") && args != null
 					&& args.length > 0) {
 				//
 				return MapUtils.getObject(namedItems, args[0]);
 				//
+			} else if (proxy instanceof Element) {
+				//
+				if (Objects.equals(methodName, "getAttribute")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -229,6 +246,8 @@ class SpeechApiOnlineImplTest {
 
 	private MH mh = null;
 
+	private HtmlSelect htmlSelect = null;
+
 	private HtmlOption htmlOption = null;
 
 	private DomNode domNode = null;
@@ -239,6 +258,8 @@ class SpeechApiOnlineImplTest {
 	void beforeEach() throws Throwable {
 		//
 		instance = new SpeechApiOnlineImpl();
+		//
+		htmlSelect = Util.cast(HtmlSelect.class, Narcissus.allocateInstance(HtmlSelect.class));
 		//
 		htmlOption = Util.cast(HtmlOption.class, Narcissus.allocateInstance(HtmlOption.class));
 		//
@@ -604,8 +625,7 @@ class SpeechApiOnlineImplTest {
 	@Test
 	void testGetOptions() throws Throwable {
 		//
-		Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.emptySet(),
-				getOptions(Util.cast(HtmlSelect.class, Narcissus.allocateInstance(HtmlSelect.class)))));
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.emptySet(), getOptions(htmlSelect)));
 		//
 	}
 
@@ -663,6 +683,8 @@ class SpeechApiOnlineImplTest {
 	@Test
 	void testGetAttribute() throws Throwable {
 		//
+		Assertions.assertNull(getAttribute(Reflection.newProxy(Element.class, ih), null));
+		//
 		final Node node = Reflection.newProxy(Node.class, ih);
 		//
 		if (ih != null) {
@@ -693,10 +715,24 @@ class SpeechApiOnlineImplTest {
 		//
 	}
 
+	private static String getAttribute(final Element instance, final String name) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ATTRIBUTE2.invoke(null, instance, name);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 	private static IValue0<String> getAttribute(final NodeList nodeList, final String attrbiuteName,
 			final Predicate<String> predicate) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_ATTRIBUTE.invoke(null, nodeList, attrbiuteName, predicate);
+			final Object obj = METHOD_GET_ATTRIBUTE3.invoke(null, nodeList, attrbiuteName, predicate);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IValue0) {
@@ -826,8 +862,6 @@ class SpeechApiOnlineImplTest {
 	@Test
 	void testSetSelectedIndex() {
 		//
-		final HtmlSelect htmlSelect = Util.cast(HtmlSelect.class, Narcissus.allocateInstance(HtmlSelect.class));
-		//
 		Assertions.assertDoesNotThrow(() -> setSelectedIndex(htmlSelect, null));
 		//
 		Assertions.assertDoesNotThrow(() -> setSelectedIndex(htmlSelect, Integer.valueOf(0)));
@@ -837,6 +871,27 @@ class SpeechApiOnlineImplTest {
 	private static void setSelectedIndex(final HtmlSelect instance, final Integer index) throws Throwable {
 		try {
 			METHOD_SET_SELECTED_INDEX.invoke(null, instance, index);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetOption() {
+		//
+		Assertions.assertDoesNotThrow(() -> getOption(htmlSelect, 0));
+		//
+	}
+
+	private static HtmlOption getOption(final HtmlSelect instance, final int index) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_OPTION.invoke(null, instance, index);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof HtmlOption) {
+				return (HtmlOption) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
