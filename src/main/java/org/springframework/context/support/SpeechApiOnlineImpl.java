@@ -320,12 +320,12 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 						//
 					} // if
 						//
-					if (index != null) {
+					testAndRunThrows(index != null, () -> {
 						//
 						throw new IllegalStateException();
 						//
-					} // if
-						//
+					});
+					//
 					index = Integer.valueOf(i);
 					//
 				} // for
