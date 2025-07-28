@@ -402,7 +402,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		return instance != null ? instance.getAttribute(name) : null;
 	}
 
-	private static void setSelectedIndex(final HtmlSelect instance, final Integer index) {
+	private static void setSelectedIndex(@Nullable final HtmlSelect instance, @Nullable final Integer index) {
 		//
 		if (instance == null || index == null) {
 			//
