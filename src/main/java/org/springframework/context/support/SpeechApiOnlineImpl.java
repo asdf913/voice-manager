@@ -330,12 +330,8 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 					//
 				} // for
 					//
-				if (index != null) {
-					//
-					htmlSelect.setSelectedIndex(index.intValue());
-					//
-				} // if
-					//
+				setSelectedIndex(htmlSelect, index);
+				//
 			} // if
 				//
 			if (getElementByName(htmlPage, "SYNTEXT") instanceof HtmlTextArea htmlTextArea) {
@@ -402,6 +398,33 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 			//
 		return null;
 		//
+	}
+
+	private static void setSelectedIndex(final HtmlSelect instance, final Integer index) {
+		//
+		if (instance == null || index == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final Iterable<Field> fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(HtmlSelect.class)),
+				f -> Objects.equals(Util.getName(f), "attributes_")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalArgumentException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f == null || Narcissus.getField(instance, f) != null) {
+			//
+			instance.setSelectedIndex(index.intValue());
+			//
+		} // if
+			//
 	}
 
 	@Nullable

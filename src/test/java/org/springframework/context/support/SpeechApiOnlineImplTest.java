@@ -79,7 +79,7 @@ class SpeechApiOnlineImplTest {
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TEST_AND_ACCEPT, METHOD_WRITE, METHOD_AND, METHOD_GET_FORMAT,
 			METHOD_GET_AUDIO_INPUT_STREAM, METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS,
 			METHOD_GET_NEXT_ELEMENT_SIBLING, METHOD_TEST_AND_RUN_THROWS, METHOD_GET_ATTRIBUTE,
-			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_QUERY_SELECTOR, METHOD_EXECUTE = null;
+			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_QUERY_SELECTOR, METHOD_EXECUTE, METHOD_SET_SELECTED_INDEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -123,6 +123,9 @@ class SpeechApiOnlineImplTest {
 		//
 		(METHOD_EXECUTE = clz.getDeclaredMethod("execute", String.class, String.class, Map.class, String.class,
 				Integer.TYPE, Map.class)).setAccessible(true);
+		//
+		(METHOD_SET_SELECTED_INDEX = clz.getDeclaredMethod("setSelectedIndex", HtmlSelect.class, Integer.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -815,6 +818,25 @@ class SpeechApiOnlineImplTest {
 				return (URL) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetSelectedIndex() {
+		//
+		final HtmlSelect htmlSelect = Util.cast(HtmlSelect.class, Narcissus.allocateInstance(HtmlSelect.class));
+		//
+		Assertions.assertDoesNotThrow(() -> setSelectedIndex(htmlSelect, null));
+		//
+		Assertions.assertDoesNotThrow(() -> setSelectedIndex(htmlSelect, Integer.valueOf(0)));
+		//
+	}
+
+	private static void setSelectedIndex(final HtmlSelect instance, final Integer index) throws Throwable {
+		try {
+			METHOD_SET_SELECTED_INDEX.invoke(null, instance, index);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
