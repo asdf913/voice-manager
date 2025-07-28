@@ -470,7 +470,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		return instance != null ? instance.getOptions() : null;
 	}
 
-	private static HtmlOption getOption(final HtmlSelect instance, final int index) {
+	private static HtmlOption getOption(@Nullable final HtmlSelect instance, final int index) {
 		return instance != null && instance.getOptionSize() > index ? instance.getOption(index) : null;
 	}
 
