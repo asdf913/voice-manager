@@ -58,7 +58,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
-import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -102,9 +101,6 @@ import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
 
 import com.google.common.reflect.Reflection;
-import com.helger.commons.version.IHasVersion;
-import com.helger.commons.version.Version;
-import com.helger.css.ECSSVersion;
 import com.helger.css.decl.CSSDeclaration;
 import com.helger.css.decl.CSSExpression;
 import com.helger.css.reader.CSSReaderDeclarationList;
@@ -138,9 +134,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	private String url = null;
 
-	@Nullable
-	private ECSSVersion ecssVersion = null;
-
 	private JouYouKanjiGui() {
 	}
 
@@ -155,88 +148,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	public void setUrl(final String url) {
 		this.url = url;
-	}
-
-	public void setEcssVersion(@Nullable final Object object) {
-		//
-		if (object == null) {
-			//
-			this.ecssVersion = null;
-			//
-		} else if (object instanceof ECSSVersion ev) {
-			//
-			this.ecssVersion = ev;
-			//
-		} else if (object instanceof String string) {
-			//
-			final List<ECSSVersion> list = Util
-					.toList(Util.filter(testAndApply(Objects::nonNull, ECSSVersion.values(), Arrays::stream, null),
-							x -> StringsUtil.contains(Strings.CS, Util.name(x), string)));
-			//
-			final int size = IterableUtils.size(list);
-			//
-			if (size > 1) {
-				//
-				throw new IllegalArgumentException();
-				//
-			} else if (size == 1) {
-				//
-				this.ecssVersion = IterableUtils.get(list, 0);
-				//
-			} // if
-				//
-		} else if (object instanceof Number number) {
-			//
-			final IValue0<ECSSVersion> iValue0 = getECSSVersionByMajor(ECSSVersion.values(), number);
-			//
-			if (iValue0 != null) {
-				//
-				this.ecssVersion = IValue0Util.getValue0(iValue0);
-				//
-			} // if
-				//
-		} // if
-			//
-	}
-
-	@Nullable
-	private static IValue0<ECSSVersion> getECSSVersionByMajor(@Nullable final ECSSVersion[] evs, final Number number) {
-		//
-		IValue0<ECSSVersion> iValue0 = null;
-		//
-		if (evs != null) {
-			//
-			Version v = null;
-			//
-			for (final ECSSVersion ev : evs) {
-				//
-				if ((v = getVersion(ev)) == null || number.intValue() != v.getMajor()) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (iValue0 == null) {
-					//
-					iValue0 = Unit.with(ev);
-					//
-				} else {
-					//
-					throw new IllegalArgumentException();
-					//
-				} // if
-					//
-			} // for
-				//
-		} // if
-			//
-		return iValue0;
-		//
-	}
-
-	@Nullable
-	private static Version getVersion(@Nullable final IHasVersion instance) {
-		return instance != null ? instance.getVersion() : null;
 	}
 
 	@Override
@@ -350,9 +261,8 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			try (final OutputStream os = Files.newOutputStream(path)) {
 				//
 				CustomPropertiesUtil.addProperty(
-						POIXMLPropertiesUtil
-								.getCustomProperties(POIXMLDocumentUtil.getProperties(Util.cast(POIXMLDocument.class,
-										workbook = createJouYouKanJiWorkbook(url, Duration.ZERO, ecssVersion)))),
+						POIXMLPropertiesUtil.getCustomProperties(POIXMLDocumentUtil.getProperties(Util
+								.cast(POIXMLDocument.class, workbook = createJouYouKanJiWorkbook(url, Duration.ZERO)))),
 						"Source", url);
 				//
 				WorkbookUtil.write(workbook, os);
@@ -461,8 +371,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	}
 
 	@Nullable
-	private static Workbook createJouYouKanJiWorkbook(final String url, final Duration timeout,
-			final ECSSVersion ecssVersion) throws Exception {
+	private static Workbook createJouYouKanJiWorkbook(final String url, final Duration timeout) throws Exception {
 		//
 		Workbook workbook = null;
 		//
@@ -476,8 +385,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 			ObjectMap.setObject(objectMap, Workbook.class,
 					workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new));
-			//
-			ObjectMap.setObject(objectMap, ECSSVersion.class, ecssVersion);
 			//
 			final String xPathFormat = prependIfMissing(Strings.CS, StringUtils.joinWith("/", "h3",
 					"span[text()=\"%1$s\"]", "..", "following-sibling::table[1]", "tbody"), "//");
@@ -548,9 +455,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		final Elements elements = ObjectMap.getObject(objectMap, Elements.class);
 		//
-		final ECSSVersion eccsEcssVersion = ObjectUtils.getIfNull(ObjectMap.getObject(objectMap, ECSSVersion.class),
-				ECSSVersion.CSS30);
-		//
 		for (int i = 0; i < IterableUtils.size(elements); i++) {
 			//
 			if ((sheet = ObjectUtils.getIfNull(sheet, () -> WorkbookUtil.createSheet(workbook, sheetName))) != null
@@ -563,7 +467,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			tds = ElementUtil.children(domNode = IterableUtils.get(elements, i));
 			//
 			backGroundColorString = getExpressionAsCSSString(
-					getCSSDeclarationByAttributeAndCssProperty(domNode, "style", eccsEcssVersion, "background-color"));
+					getCSSDeclarationByAttributeAndCssProperty(domNode, "style", "background-color"));
 			//
 			for (int j = 0; j < IterableUtils.size(tds); j++) {
 				//
@@ -649,7 +553,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	@Nullable
 	private static CSSDeclaration getCSSDeclarationByAttributeAndCssProperty(final Element element,
-			final String attribute, final ECSSVersion ecssVersion, final String cssProperty) {
+			final String attribute, final String cssProperty) {
 		//
 		final String style = NodeUtil.attr(element, attribute);
 		//
@@ -657,10 +561,9 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		if (StringUtils.isNotBlank(style)) {
 			//
-			final List<CSSDeclaration> cssDeclarations = Util.toList(Util.filter(
-					Util.stream(CSSReaderDeclarationList.readFromString(style,
-							ObjectUtils.getIfNull(ecssVersion, ECSSVersion.CSS30))),
-					x -> Objects.equals(getProperty(x), cssProperty)));
+			final List<CSSDeclaration> cssDeclarations = Util
+					.toList(Util.filter(Util.stream(CSSReaderDeclarationList.readFromString(style)),
+							x -> Objects.equals(getProperty(x), cssProperty)));
 			//
 			final int size = IterableUtils.size(cssDeclarations);
 			//

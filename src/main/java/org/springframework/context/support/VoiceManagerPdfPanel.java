@@ -240,7 +240,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.collect.Sets;
 import com.google.common.reflect.Reflection;
-import com.helger.commons.url.URLValidator;
 import com.helger.css.ECSSUnit;
 import com.helger.css.propertyvalue.CSSSimpleValueWithUnit;
 import com.j256.simplemagic.ContentInfo;
@@ -2394,7 +2393,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		final String string = Util.toString(testAndApply(VoiceManagerPdfPanel::isDataFlavorSupported, transferable,
 				DataFlavor.stringFlavor, (a, b) -> getTransferData(a, b), null));
 		//
-		final URL url = testAndApply(URLValidator::isValid, string, URL::new, null);
+		final URL url = testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x), string, URL::new,
+				null);
 		//
 		try (final InputStream is = Util.openStream(url)) {
 			//

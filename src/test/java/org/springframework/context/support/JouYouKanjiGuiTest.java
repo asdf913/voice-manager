@@ -21,7 +21,6 @@ import java.util.Spliterator;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -40,7 +39,6 @@ import org.apache.poi.xssf.model.StylesTable;
 import org.apache.poi.xssf.usermodel.IndexedColorMap;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Unit;
-import org.javatuples.valueintf.IValue0;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.AssertionsUtil;
@@ -51,7 +49,6 @@ import org.springframework.beans.factory.InitializingBean;
 
 import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
-import com.helger.css.ECSSVersion;
 import com.helger.css.decl.CSSDeclaration;
 import com.helger.css.decl.CSSExpression;
 
@@ -67,7 +64,7 @@ class JouYouKanjiGuiTest {
 
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_IH = null;
 
-	private static Method METHOD_GET, METHOD_GET_ECSS_VERSION_BY_MAJOR, METHOD_ADD_JOU_YOU_KAN_JI_SHEET,
+	private static Method METHOD_GET, METHOD_ADD_JOU_YOU_KAN_JI_SHEET,
 			METHOD_GET_CSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY, METHOD_SET_PREFERRED_WIDTH,
 			METHOD_GET_BOOLEAN_VALUES, METHOD_GET_EXPRESSION_AS_CSS_STRING, METHOD_GET_INDEXED_COLORS,
 			METHOD_GET_STYLES_SOURCE, METHOD_GET_PROPERTY, METHOD_TO_MILLIS, METHOD_SET_FILL_BACK_GROUND_COLOR,
@@ -81,16 +78,13 @@ class JouYouKanjiGuiTest {
 		//
 		(METHOD_GET = clz.getDeclaredMethod("get", Field.class, Object.class)).setAccessible(true);
 		//
-		(METHOD_GET_ECSS_VERSION_BY_MAJOR = clz.getDeclaredMethod("getECSSVersionByMajor", ECSSVersion[].class,
-				Number.class)).setAccessible(true);
-		//
 		(METHOD_ADD_JOU_YOU_KAN_JI_SHEET = clz.getDeclaredMethod("addJouYouKanJiSheet",
 				CLASS_OBJECT_MAP = Class.forName("org.springframework.context.support.JouYouKanjiGui$ObjectMap"),
 				String.class)).setAccessible(true);
 		//
 		(METHOD_GET_CSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY = clz.getDeclaredMethod(
-				"getCSSDeclarationByAttributeAndCssProperty", Element.class, String.class, ECSSVersion.class,
-				String.class)).setAccessible(true);
+				"getCSSDeclarationByAttributeAndCssProperty", Element.class, String.class, String.class))
+				.setAccessible(true);
 		//
 		(METHOD_SET_PREFERRED_WIDTH = clz.getDeclaredMethod("setPreferredWidth", Integer.TYPE, Iterable.class))
 				.setAccessible(true);
@@ -227,8 +221,6 @@ class JouYouKanjiGuiTest {
 
 	private CellStyle cellStyle = null;
 
-	private Stream<?> stream = null;
-
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
@@ -251,8 +243,6 @@ class JouYouKanjiGuiTest {
 		} // if
 			//
 		cellStyle = Reflection.newProxy(CellStyle.class, ih = new IH());
-		//
-		stream = Reflection.newProxy(Stream.class, ih);
 		//
 	}
 
@@ -370,50 +360,6 @@ class JouYouKanjiGuiTest {
 	}
 
 	@Test
-	void testSetEcssVersion() throws Throwable {
-		//
-		final Field ecssVersion = JouYouKanjiGui.class.getDeclaredField("ecssVersion");
-		//
-		if (ecssVersion != null) {
-			//
-			ecssVersion.setAccessible(true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> setEcssVersion(instance, null));
-		//
-		// com.helger.css.ECSSVersion
-		//
-		final ECSSVersion ev = ECSSVersion.CSS10;
-		//
-		Assertions.assertDoesNotThrow(() -> setEcssVersion(instance, ev));
-		//
-		Assertions.assertSame(ev, get(ecssVersion, instance));
-		//
-		// java.lang.String
-		//
-		Assertions.assertDoesNotThrow(() -> setEcssVersion(instance, "2"));
-		//
-		Assertions.assertSame(ECSSVersion.CSS21, get(ecssVersion, instance));
-		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{}",
-				() -> setEcssVersion(instance, "CSS"));
-		//
-		// java.lang.Integer
-		//
-		Assertions.assertDoesNotThrow(() -> setEcssVersion(instance, 3));
-		//
-		Assertions.assertSame(ECSSVersion.CSS30, get(ecssVersion, instance));
-		//
-	}
-
-	private static void setEcssVersion(final JouYouKanjiGui instance, final Object object) {
-		if (instance != null) {
-			instance.setEcssVersion(object);
-		}
-	}
-
-	@Test
 	void testGet() throws Throwable {
 		//
 		Assertions.assertNull(get(null, null));
@@ -430,33 +376,6 @@ class JouYouKanjiGuiTest {
 
 	private static String toString(final Object instance) {
 		return instance != null ? instance.toString() : null;
-	}
-
-	@Test
-	void testGetECSSVersionByMajor() throws Throwable {
-		//
-		Assertions.assertNull(getECSSVersionByMajor(null, null));
-		//
-		Assertions.assertNull(getECSSVersionByMajor(new ECSSVersion[] { null }, null));
-		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{}",
-				() -> getECSSVersionByMajor(new ECSSVersion[] { ECSSVersion.CSS30, ECSSVersion.CSS30 }, 3));
-		//
-	}
-
-	private static IValue0<ECSSVersion> getECSSVersionByMajor(final ECSSVersion[] evs, final Number number)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_GET_ECSS_VERSION_BY_MAJOR.invoke(null, evs, number);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof IValue0) {
-				return (IValue0) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -598,15 +517,15 @@ class JouYouKanjiGuiTest {
 	@Test
 	void testGetCSSDeclarationByAttributeAndCssProperty() throws Throwable {
 		//
-		Assertions.assertNull(getCSSDeclarationByAttributeAndCssProperty(null, null, null, null));
+		Assertions.assertNull(getCSSDeclarationByAttributeAndCssProperty(null, null, null));
 		//
 	}
 
 	private static CSSDeclaration getCSSDeclarationByAttributeAndCssProperty(final Element element,
-			final String attribute, final ECSSVersion ecssVersion, final String cssProperty) throws Throwable {
+			final String attribute, final String cssProperty) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_CSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY.invoke(null, element, attribute,
-					ecssVersion, cssProperty);
+					cssProperty);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof CSSDeclaration) {
