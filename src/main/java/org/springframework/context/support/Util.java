@@ -962,7 +962,7 @@ public abstract class Util {
 			//
 			put(map, "com.helger.collection.commons.CommonsCopyOnWriteArraySet", "al");
 			//
-			put(map, "com.helger.commons.collection.map.LRUSet", "m_aMap");
+			put(map, "com.helger.collection.map.LRUSet", "m_aMap");
 			//
 			put(map, "com.helger.commons.http.HttpHeaderMap", "m_aHeaders");
 			//

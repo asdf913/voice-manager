@@ -1110,7 +1110,7 @@ abstract class Util {
 						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
 						&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE
 						&& ArrayUtils.get(ins, 3) instanceof ARETURN,
-				// com.helger.commons.collection.map.LRUSet
+				// com.helger.collection.map.LRUSet
 				length == 5 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
 						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
 						&& ArrayUtils.get(ins, 2) instanceof INVOKEVIRTUAL
