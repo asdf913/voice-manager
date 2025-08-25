@@ -2278,7 +2278,7 @@ abstract class Util {
 						"org.springframework.beans.factory.support.ManagedSet", "map"));
 		//
 		putAll(map,
-				collect(Stream.of("com.helger.commons.collection.impl.CommonsHashSet",
+				collect(Stream.of("com.helger.collection.commons.CommonsHashSet",
 						"com.helger.commons.collection.impl.CommonsLinkedHashSet"),
 						Collectors.toMap(Function.identity(), x -> "map")));
 		//
