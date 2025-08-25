@@ -1366,6 +1366,8 @@ public abstract class Util {
 			//
 			put(map, "org.htmlunit.jetty.websocket.common.extensions.WebSocketExtensionFactory", "availableExtensions");
 			//
+			put(map, "com.helger.base.callback.CallbackList", "m_aRWLock");
+			//
 			if ((iValue0 = iterator(clz, instance, map)) != null) {
 				//
 				return IValue0Util.getValue0(iValue0);
