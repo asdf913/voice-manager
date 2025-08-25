@@ -1619,7 +1619,7 @@ abstract class Util {
 				"com.healthmarketscience.jackcess.impl.IndexCursorImpl", "_entryCursor",
 				"com.healthmarketscience.jackcess.impl.TableImpl", "_columns",
 				"com.healthmarketscience.jackcess.impl.TableScanCursor", "_ownedPagesCursor",
-				"com.helger.base.CallbackList", "m_aRWLock", "org.d2ab.collection.ints.CollectionIntList",
+				"com.helger.base.callback.CallbackList", "m_aRWLock", "org.d2ab.collection.ints.CollectionIntList",
 				"collection"));
 		//
 		putAll(map,
