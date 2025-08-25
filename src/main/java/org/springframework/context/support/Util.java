@@ -960,7 +960,7 @@ public abstract class Util {
 			//
 			put(map, "com.helger.commons.callback.CallbackList", "m_aRWLock");
 			//
-			put(map, "com.helger.commons.collection.impl.CommonsCopyOnWriteArraySet", "al");
+			put(map, "com.helger.commons.collection.commons.CommonsCopyOnWriteArraySet", "al");
 			//
 			put(map, "com.helger.commons.collection.map.LRUSet", "m_aMap");
 			//

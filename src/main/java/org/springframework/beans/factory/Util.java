@@ -2273,7 +2273,7 @@ abstract class Util {
 		//
 		putAll(map,
 				Map.of("com.helger.collection.commons.CommonsCopyOnWriteArrayList", "array",
-						"com.helger.commons.collection.impl.CommonsCopyOnWriteArraySet", "al",
+						"com.helger.commons.collection.commons.CommonsCopyOnWriteArraySet", "al",
 						"com.helger.commons.collection.impl.CommonsTreeSet", "m",
 						"org.springframework.beans.factory.support.ManagedSet", "map"));
 		//
