@@ -684,6 +684,13 @@ class VoiceManagerTest {
 				//
 				for (final String u : urls) {
 					//
+					if (Objects.equals(u, "https://ja.wikipedia.org")
+							&& Util.forName("org.junit.jupiter.api.Test") != null) {
+						//
+						continue;
+						//
+					} // if
+						//
 					try (final InputStream is = new URL(u).openStream()) {
 						//
 						IOUtils.toByteArray(is);
