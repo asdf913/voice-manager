@@ -2279,7 +2279,7 @@ abstract class Util {
 		//
 		putAll(map,
 				collect(Stream.of("com.helger.collection.commons.CommonsHashSet",
-						"com.helger.commons.collection.impl.CommonsLinkedHashSet"),
+						"com.helger.collection.commons.CommonsLinkedHashSet"),
 						Collectors.toMap(Function.identity(), x -> "map")));
 		//
 		putAll(map,
