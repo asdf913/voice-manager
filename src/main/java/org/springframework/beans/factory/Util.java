@@ -1627,7 +1627,7 @@ abstract class Util {
 						"org.apache.pdfbox.pdmodel.interactive.form.PDFieldTree", "acroForm",
 						"com.google.gson.internal.NonNullElementWrapperList", DELEGATE,
 						"com.helger.commons.collection.iterate.ArrayIterator", "m_aArray",
-						"com.helger.commons.collection.iterate.MapperIterator", "m_aBaseIter",
+						"com.helger.collection.base.MapperIterator", "m_aBaseIter",
 						"com.helger.commons.io.file.FileSystemRecursiveIterator", "m_aFilesLeft",
 						"com.helger.commons.math.CombinationGenerator", "m_aCombinationsLeft",
 						"com.opencsv.bean.PositionToBeanField", "ranges",
