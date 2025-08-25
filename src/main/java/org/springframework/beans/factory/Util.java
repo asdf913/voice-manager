@@ -2272,7 +2272,7 @@ abstract class Util {
 		// io.github.toolfactory.narcissus.Narcissus.getField(java.lang.Object,java.lang.reflect.Field)
 		//
 		putAll(map,
-				Map.of("com.helger.commons.collection.impl.CommonsCopyOnWriteArrayList", "array",
+				Map.of("com.helger.collection.commons.CommonsCopyOnWriteArrayList", "array",
 						"com.helger.commons.collection.impl.CommonsCopyOnWriteArraySet", "al",
 						"com.helger.commons.collection.impl.CommonsTreeSet", "m",
 						"org.springframework.beans.factory.support.ManagedSet", "map"));
