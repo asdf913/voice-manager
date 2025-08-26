@@ -1285,8 +1285,6 @@
 		<property name="layout" ref="MigLayout" />
 		<property name="jouYouKanJiList" ref="JouYouKanJiList" />
 		<property name="url" ref="JouYouKanJiPageUrl" />
-		<property name="ecssVersion"
-			value="${org.springframework.context.support.JouYouKanjiGui.ecssVersion}" />
 	</bean>
 
 	<!-- -->
