@@ -1626,9 +1626,8 @@ abstract class Util {
 				Map.of("org.apache.pdfbox.pdmodel.PDPageTree", "root",
 						"org.apache.pdfbox.pdmodel.interactive.form.PDFieldTree", "acroForm",
 						"com.google.gson.internal.NonNullElementWrapperList", DELEGATE,
-						"com.helger.commons.collection.iterate.ArrayIterator", "m_aArray",
-						"com.helger.collection.commons.CommonsMapperIterator", "m_aBaseIter",
-						"com.helger.commons.io.file.FileSystemRecursiveIterator", "m_aFilesLeft",
+						"com.helger.collection.iterator.ArrayIterator", "m_aArray",
+						"com.helger.io.file.FileSystemRecursiveIterator", "m_aFilesLeft",
 						"com.helger.commons.math.CombinationGenerator", "m_aCombinationsLeft",
 						"com.opencsv.bean.PositionToBeanField", "ranges",
 						"com.sun.jna.platform.win32.Advapi32Util$EventLogIterator", "_buffer",
@@ -1986,16 +1985,17 @@ abstract class Util {
 		//
 		// org.apache.commons.lang3.reflect.FieldUtils.readField(java.lang.Object,java.lang.String,boolean)
 		//
-		putAll(map, Map.of("org.apache.poi.poifs.property.RootProperty", "_children",
-				"org.apache.poi.xslf.usermodel.XSLFDiagram$XSLFDiagramGroupShape", "_shapes",
-				"com.helger.commons.io.file.FileSystemIterator", "m_aIter", "com.opencsv.bean.FieldMapByPosition",
-				"complexMapList", "org.apache.commons.collections.set.CompositeSet", "all",
-				"org.apache.commons.math3.genetics.ElitisticListPopulation", "chromosomes",
-				"org.apache.poi.xssf.usermodel.XSSFRow", "_cells",
-				"org.openjdk.nashorn.internal.runtime.JSONListAdapter", "obj",
-				"org.openjdk.nashorn.internal.runtime.SharedPropertyMap", "properties",
-				"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMultiset$StandardElementSet",
-				"multiset"));
+		putAll(map,
+				Map.of("org.apache.poi.poifs.property.RootProperty", "_children",
+						"org.apache.poi.xslf.usermodel.XSLFDiagram$XSLFDiagramGroupShape", "_shapes",
+						"com.helger.io.file.FileSystemIterator", "m_aIter", "com.opencsv.bean.FieldMapByPosition",
+						"complexMapList", "org.apache.commons.collections.set.CompositeSet", "all",
+						"org.apache.commons.math3.genetics.ElitisticListPopulation", "chromosomes",
+						"org.apache.poi.xssf.usermodel.XSSFRow", "_cells",
+						"org.openjdk.nashorn.internal.runtime.JSONListAdapter", "obj",
+						"org.openjdk.nashorn.internal.runtime.SharedPropertyMap", "properties",
+						"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMultiset$StandardElementSet",
+						"multiset"));
 		//
 		putAll(map,
 				collect(Stream.of("com.google.common.collect.ForwardingMap$StandardKeySet",
@@ -2274,8 +2274,13 @@ abstract class Util {
 		putAll(map,
 				Map.of("com.helger.collection.commons.CommonsCopyOnWriteArrayList", "array",
 						"com.helger.collection.commons.CommonsCopyOnWriteArraySet", "al",
-						"com.helger.commons.collection.impl.CommonsTreeSet", "m",
+						"com.helger.collection.commons.CommonsTreeSet", "m",
 						"org.springframework.beans.factory.support.ManagedSet", "map"));
+		//
+		putAll(map,
+				collect(Stream.of("com.helger.collection.commons.CommonsMapperIterator",
+						"com.helger.collection.base.MapperIterator"),
+						Collectors.toMap(Function.identity(), x -> "m_aBaseIter")));
 		//
 		putAll(map,
 				collect(Stream.of("com.helger.collection.commons.CommonsHashSet",
