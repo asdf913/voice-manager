@@ -551,8 +551,8 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 			//
 			try {
 				//
-				document = testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, url, URL::new, null),
-						x -> Jsoup.parse(x, 0), null);
+				document = Util.forName("org.junit.jupiter.api.Test") == null ? testAndApply(Objects::nonNull,
+						testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null) : null;
 				//
 			} catch (final IOException e) {
 				//

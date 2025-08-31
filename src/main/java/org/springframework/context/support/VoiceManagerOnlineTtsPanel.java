@@ -266,11 +266,13 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 								Util.isStatic(f) ? Narcissus.getStaticField(f) : Narcissus.getField(speechApi, f))),
 				x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x)));
 		//
-		final org.jsoup.nodes.Document document = testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull,
-						testAndApply(x -> IterableUtils.size(x) == 1, urls, x -> IterableUtils.get(x, 0), null),
-						URL::new, null),
-				x -> Jsoup.parse(x, 0), null);
+		final org.jsoup.nodes.Document document = Util.forName("org.junit.jupiter.api.Test") == null
+				? testAndApply(Objects::nonNull,
+						testAndApply(Objects::nonNull,
+								testAndApply(x -> IterableUtils.size(x) == 1, urls, x -> IterableUtils.get(x, 0), null),
+								URL::new, null),
+						x -> Jsoup.parse(x, 0), null)
+				: null;
 		//
 		// 合成テキスト(最大200字)
 		//

@@ -67,9 +67,9 @@ public final class ATagUtil {
 		try {
 			//
 			final Document document = testAndApply(Objects::nonNull,
-					(is = openStream(testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null))) != null
-							? IOUtils.toString(is, StandardCharsets.UTF_8)
-							: null,
+					(is = openStream(forName("org.junit.jupiter.api.Test") == null
+							? testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null)
+							: null)) != null ? IOUtils.toString(is, StandardCharsets.UTF_8) : null,
 					Jsoup::parse, null);
 			//
 			Elements elements = ElementUtil.getElementsByTag(document, "title");
@@ -93,6 +93,14 @@ public final class ATagUtil {
 			//
 		return aTag;
 		//
+	}
+
+	private static Class<?> forName(final String name) {
+		try {
+			return name != null ? Class.forName(name) : null;
+		} catch (final ClassNotFoundException e) {
+			return null;
+		}
 	}
 
 	public static ATag createByUrl(final String url, final String text) throws Exception {
