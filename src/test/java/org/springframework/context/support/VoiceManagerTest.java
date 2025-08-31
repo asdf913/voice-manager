@@ -72,7 +72,6 @@ import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.generic.ConstantPushInstruction;
 import org.apache.bcel.generic.Instruction;
 import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -693,8 +692,12 @@ class VoiceManagerTest {
 						//
 					try (final InputStream is = new URL(u).openStream()) {
 						//
-						IOUtils.toByteArray(is);
-						//
+						if (is != null) {
+							//
+							is.readAllBytes();
+							//
+						} // if
+							//
 					} catch (final UnknownHostException e) {
 						//
 						uhe = e;

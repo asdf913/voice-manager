@@ -273,8 +273,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		//
 		try (final InputStream is = Util.openStream(u)) {
 			//
-			testAndAccept((a, b) -> b != null, file, is,
-					(a, b) -> FileUtils.writeByteArrayToFile(a, IOUtils.toByteArray(b)));
+			testAndAccept((a, b) -> b != null, file, is, (a, b) -> FileUtils.writeByteArrayToFile(a, readAllBytes(b)));
 			//
 		} catch (final IOException e) {
 			//
@@ -282,6 +281,10 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 			//
 		} // try
 			//
+	}
+
+	private static byte[] readAllBytes(final InputStream instance) throws IOException {
+		return instance != null ? instance.readAllBytes() : null;
 	}
 
 	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> predicate,
