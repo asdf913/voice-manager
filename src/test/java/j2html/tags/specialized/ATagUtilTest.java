@@ -175,7 +175,7 @@ class ATagUtilTest {
 	}
 
 	@Test
-	public void testCreateByUrl() throws Exception {
+	void testCreateByUrl() throws Exception {
 		//
 		String url = "";
 		//
