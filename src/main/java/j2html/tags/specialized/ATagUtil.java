@@ -64,7 +64,7 @@ public final class ATagUtil {
 	}
 
 	public static ATag createByUrl(final String urlString)
-			throws NoSuchFieldException, MalformedURLException, IOException, URISyntaxException {
+			throws NoSuchFieldException, IOException, URISyntaxException {
 		//
 		InputStream is = null;
 		//
