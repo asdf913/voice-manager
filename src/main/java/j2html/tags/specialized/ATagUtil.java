@@ -2,8 +2,10 @@ package j2html.tags.specialized;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -11,6 +13,7 @@ import java.util.function.Predicate;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.jsoup.Jsoup;
@@ -24,6 +27,7 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.ptr.IntByReference;
 
+import io.github.toolfactory.narcissus.Narcissus;
 import j2html.tags.ContainerTagUtil;
 import j2html.tags.TagUtil;
 
@@ -58,7 +62,7 @@ public final class ATagUtil {
 		//
 	}
 
-	public static ATag createByUrl(final String url) throws Exception {
+	public static ATag createByUrl(final String urlString) throws Exception {
 		//
 		InputStream is = null;
 		//
@@ -66,10 +70,15 @@ public final class ATagUtil {
 		//
 		try {
 			//
-			final Document document = testAndApply(Objects::nonNull,
-					(is = openStream(forName("org.junit.jupiter.api.Test") == null
-							? testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null)
-							: null)) != null ? IOUtils.toString(is, StandardCharsets.UTF_8) : null,
+			final URLConnection urlConnection = openConnection(forName("org.junit.jupiter.api.Test") == null
+					? toURL(testAndApply(StringUtils::isNotBlank, urlString, URI::new, null))
+					: null);
+			//
+			setRequestProperty(urlConnection, "User-Agent",
+					"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36");
+			//
+			final Document document = testAndApply(Objects::nonNull, testAndApply(Objects::nonNull,
+					is = getInputStream(urlConnection), x -> IOUtils.toString(x, StandardCharsets.UTF_8), null),
 					Jsoup::parse, null);
 			//
 			Elements elements = ElementUtil.getElementsByTag(document, "title");
@@ -83,7 +92,7 @@ public final class ATagUtil {
 				//
 			TagUtil.attr(ContainerTagUtil.withText(aTag = new ATag(), ElementUtil
 					.text(testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null))),
-					"href", url);
+					"href", urlString);
 			//
 		} finally {
 			//
@@ -95,9 +104,37 @@ public final class ATagUtil {
 		//
 	}
 
+	private static InputStream getInputStream(final URLConnection instance) throws IOException {
+		return instance != null ? instance.getInputStream() : null;
+	}
+
+	private static void setRequestProperty(final URLConnection instance, final String key, final String value)
+			throws NoSuchFieldException {
+		//
+		if (instance != null && key != null
+				&& !Narcissus.getBooleanField(instance, Narcissus.findField(URLConnection.class, "connected"))) {
+			//
+			instance.setRequestProperty(key, value);
+			//
+		} // if
+			//
+	}
+
+	private static URLConnection openConnection(final URL instance) throws IOException, NoSuchFieldException {
+		//
+		return instance != null && Narcissus.getField(instance, Narcissus.findField(URL.class, "handler")) != null
+				? instance.openConnection()
+				: null;
+		//
+	}
+
+	private static URL toURL(final URI instance) throws MalformedURLException {
+		return instance != null && instance.isAbsolute() ? instance.toURL() : null;
+	}
+
 	private static Class<?> forName(final String name) {
 		try {
-			return name != null ? Class.forName(name) : null;
+			return StringUtils.isNotBlank(name) ? Class.forName(name) : null;
 		} catch (final ClassNotFoundException e) {
 			return null;
 		}
@@ -123,10 +160,6 @@ public final class ATagUtil {
 
 	private static final <T> boolean test(final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
-	}
-
-	private static InputStream openStream(final URL instance) throws IOException {
-		return instance != null ? instance.openStream() : null;
 	}
 
 }
