@@ -1,7 +1,6 @@
 package j2html.tags.specialized;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URI;
@@ -97,7 +96,7 @@ class ATagUtilTest {
 	}
 
 	@Test
-	void testTestAndApply() throws IllegalAccessException, InvocationTargetException {
+	void testTestAndApply() {
 		//
 		Assertions.assertNull(
 				Narcissus.invokeStaticMethod(METHOD_TEST_AND_APPLY, Predicates.alwaysTrue(), null, null, null));
