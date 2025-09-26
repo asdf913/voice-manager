@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -62,7 +63,8 @@ public final class ATagUtil {
 		//
 	}
 
-	public static ATag createByUrl(final String urlString) throws Exception {
+	public static ATag createByUrl(final String urlString)
+			throws NoSuchFieldException, MalformedURLException, IOException, URISyntaxException {
 		//
 		InputStream is = null;
 		//
