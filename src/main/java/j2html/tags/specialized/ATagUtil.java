@@ -142,7 +142,8 @@ public final class ATagUtil {
 		}
 	}
 
-	public static ATag createByUrl(final String url, final String text) throws Exception {
+	public static ATag createByUrl(final String url, final String text)
+			throws NoSuchFieldException, IOException, URISyntaxException {
 		//
 		if (!InternetGetConnectedState(true)) {
 			//
