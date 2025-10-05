@@ -757,7 +757,8 @@ class UtilTest {
 								"org.h2.jdbc.JdbcSQLTimeoutException",
 								"org.h2.jdbc.JdbcSQLTransactionRollbackException",
 								"org.h2.jdbc.JdbcSQLTransientException",
-								"org.springframework.jdbc.core.AggregatedBatchUpdateException"), name)) {
+								"org.springframework.jdbc.core.AggregatedBatchUpdateException",
+								"org.htmlunit.corejs.javascript.CompoundOperationMap"), name)) {
 					//
 					final Iterable<?> iterable = Util.cast(Iterable.class, Narcissus.allocateInstance(clz));
 					//

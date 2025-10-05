@@ -803,16 +803,14 @@ public abstract class Util {
 			put(predicates, "java.util.TreeSet",
 					x -> Narcissus.getField(instance, Narcissus.findField(x, "m")) == null);
 			//
-			put(predicates, "java.util.HashSet",
-					x -> Narcissus.getField(instance, Narcissus.findField(x, "map")) == null);
-			//
 			put(predicates, "com.opencsv.CSVReader",
 					x -> Narcissus.getField(instance, Narcissus.findField(x, "peekedLines")) == null);
 			//
 			putAll(predicates, x -> Narcissus.getField(instance, Narcissus.findField(x, "map")) == null,
-					"org.apache.commons.collections.bag.AbstractMapBag",
+					"java.util.HashSet", "org.apache.commons.collections.bag.AbstractMapBag",
 					"org.apache.commons.collections4.bag.AbstractMapBag",
-					"org.apache.commons.collections4.multiset.AbstractMapMultiSet");
+					"org.apache.commons.collections4.multiset.AbstractMapMultiSet",
+					"org.htmlunit.corejs.javascript.CompoundOperationMap");
 			//
 			putAll(predicates, x -> Narcissus.getField(instance, Narcissus.findField(x, "_map")) == null,
 					"org.apache.commons.collections.DefaultMapBag", "org.htmlunit.jetty.http.PathMap$PathSet");
