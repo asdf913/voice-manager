@@ -322,7 +322,7 @@
 		<dependency>
 		    <groupId>io.github.classgraph</groupId>
 		    <artifactId>classgraph</artifactId>
-		    <version>4.8.181</version>
+		    <version>4.8.182</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.d2ab/sequence -->
 		<dependency>
