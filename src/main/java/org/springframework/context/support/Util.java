@@ -2062,7 +2062,7 @@ public abstract class Util {
 	@Nullable
 	static InputStream openStream(@Nullable final URL instance) throws IOException {
 		//
-		if (instance == null) {
+		if (instance == null || StringUtils.isBlank(getHost(instance))) {
 			//
 			return null;
 			//
@@ -2085,7 +2085,12 @@ public abstract class Util {
 
 	@Nullable
 	static InputStream getInputStream(@Nullable final URLConnection instance) throws IOException {
-		return instance != null ? instance.getInputStream() : null;
+		return instance != null && StringUtils.isNotBlank(getHost(instance.getURL())) ? instance.getInputStream()
+				: null;
+	}
+
+	private static String getHost(final URL instance) {
+		return instance != null ? instance.getHost() : null;
 	}
 
 	@Nullable
