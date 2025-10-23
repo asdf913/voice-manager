@@ -568,7 +568,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 	}
 
-	private static int length(final byte[] instance) {
+	private static int length(@Nullable final byte[] instance) {
 		return instance != null ? instance.length : 0;
 	}
 
