@@ -583,8 +583,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static byte[] synthesis(@Nullable final HostAndPort hostAndPort, final Style style, final String audioQuery)
-			throws IOException, URISyntaxException {
+	private static byte[] synthesis(@Nullable final HostAndPort hostAndPort, @Nullable final Style style,
+			final String audioQuery) throws IOException, URISyntaxException {
 		//
 		final URIBuilder uriBuilder = new URIBuilder();
 		//
@@ -671,8 +671,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		return instance != null && instance.test(t, u);
 	}
 
-	private static String audioQuery(@Nullable final HostAndPort hostAndPort, final Style style, final String text)
-			throws IOException, URISyntaxException {
+	private static String audioQuery(@Nullable final HostAndPort hostAndPort, @Nullable final Style style,
+			final String text) throws IOException, URISyntaxException {
 		//
 		final URIBuilder uriBuilder = new URIBuilder();
 		//
