@@ -506,9 +506,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 			try {
 				//
-				final Style style = Util.cast(Style.class, Util.getSelectedItem(dcbmStyle));
-				//
-				audioQuery = audioQuery(createHostAndPort(), style != null ? style.id : null, Util.getText(tfText));
+				audioQuery = audioQuery(createHostAndPort(), Util.cast(Style.class, Util.getSelectedItem(dcbmStyle)),
+						Util.getText(tfText));
 				//
 			} catch (final IOException | URISyntaxException e) {
 				//
@@ -672,8 +671,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		return instance != null && instance.test(t, u);
 	}
 
-	private static String audioQuery(@Nullable final HostAndPort hostAndPort, @Nullable final String speaker,
-			final String text) throws IOException, URISyntaxException {
+	private static String audioQuery(@Nullable final HostAndPort hostAndPort, final Style style, final String text)
+			throws IOException, URISyntaxException {
 		//
 		final URIBuilder uriBuilder = new URIBuilder();
 		//
@@ -689,7 +688,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 		uriBuilder.setPath("audio_query");
 		//
-		uriBuilder.addParameter("speaker", speaker);
+		uriBuilder.addParameter("speaker", style != null ? style.id : null);
 		//
 		uriBuilder.addParameter("text", text);
 		//

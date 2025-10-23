@@ -105,12 +105,12 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_SPEAKERS_ITERABLE = clz.getDeclaredMethod("speakers", Iterable.class)).setAccessible(true);
 		//
-		(METHOD_AUDIO_QUERY = clz.getDeclaredMethod("audioQuery", HostAndPort.class, String.class, String.class))
-				.setAccessible(true);
-		//
-		(METHOD_SYNTHESIS = clz.getDeclaredMethod("synthesis", HostAndPort.class,
+		(METHOD_AUDIO_QUERY = clz.getDeclaredMethod("audioQuery", HostAndPort.class,
 				CLASS_STYLE = Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$Style"),
 				String.class)).setAccessible(true);
+		//
+		(METHOD_SYNTHESIS = clz.getDeclaredMethod("synthesis", HostAndPort.class, CLASS_STYLE, String.class))
+				.setAccessible(true);
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", byte[].class)).setAccessible(true);
 		//
@@ -216,6 +216,8 @@ class AivisSpeechRestApiJPanelTest {
 
 	private MH mh = null;
 
+	private Object style = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -225,6 +227,8 @@ class AivisSpeechRestApiJPanelTest {
 		ih = new IH();
 		//
 		mh = new MH();
+		//
+		style = Narcissus.allocateInstance(CLASS_STYLE);
 		//
 	}
 
@@ -615,7 +619,13 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testAudioQuery() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(invoke(METHOD_AUDIO_QUERY, null, HostAndPort.fromParts(EMPTY, 1), null, null));
+		Assertions.assertNull(invoke(METHOD_AUDIO_QUERY, null, HostAndPort.fromHost(EMPTY), null, null));
+		//
+		final HostAndPort hostAndPort = HostAndPort.fromParts(EMPTY, 1);
+		//
+		Assertions.assertNull(invoke(METHOD_AUDIO_QUERY, null, hostAndPort, null, null));
+		//
+		Assertions.assertNull(invoke(METHOD_AUDIO_QUERY, null, hostAndPort, style, null));
 		//
 	}
 
@@ -628,8 +638,7 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Assertions.assertNull(invoke(METHOD_SYNTHESIS, null, hostAndPort, null, null));
 		//
-		Assertions
-				.assertNull(invoke(METHOD_SYNTHESIS, null, hostAndPort, Narcissus.allocateInstance(CLASS_STYLE), null));
+		Assertions.assertNull(invoke(METHOD_SYNTHESIS, null, hostAndPort, style, null));
 		//
 	}
 
