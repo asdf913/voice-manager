@@ -641,8 +641,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
-			throws E {
+			@Nullable final FailableFunction<T, R, E> functionTrue,
+			@Nullable final FailableFunction<T, R, E> functionFalse) throws E {
 		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
