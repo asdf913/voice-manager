@@ -258,6 +258,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 	}
 
+	@Nullable
 	private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<? super E> instance,
 			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
 			final boolean cellHasFocus) {
@@ -320,10 +321,12 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
+	@Nullable
 	private static byte[] getCode(@Nullable final Code instance) {
 		return instance != null ? instance.getCode() : null;
 	}
 
+	@Nullable
 	private static Code getCode(@Nullable final Method instance) {
 		return instance != null ? instance.getCode() : null;
 	}
@@ -457,6 +460,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		} // if
 	}
 
+	@Nullable
 	private static String replace(@Nullable final Strings instance, final String text, final String searchString,
 			final String replacement) {
 		return instance != null ? instance.replace(text, searchString, replacement) : null;
@@ -652,6 +656,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		return test(predicate, t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
 	}
 
+	@Nullable
 	private static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, final T t, final U u) {
 		return instance != null ? instance.apply(t, u) : null;
 	}
@@ -737,10 +742,12 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
+	@Nullable
 	private static String getHost(@Nullable final URL instance) {
 		return instance != null ? instance.getHost() : null;
 	}
 
+	@Nullable
 	private static byte[] getBytes(@Nullable final String instance) {
 		return instance != null ? instance.getBytes() : null;
 	}
@@ -855,6 +862,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
+	@Nullable
 	private static String getHost(@Nullable final HostAndPort instance) {
 		return instance != null ? instance.getHost() : null;
 	}
