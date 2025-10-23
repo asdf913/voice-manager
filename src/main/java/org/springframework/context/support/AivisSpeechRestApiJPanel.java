@@ -109,12 +109,18 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	@Note("Host")
 	private JTextComponent tfHost = null;
 
-	private JTextComponent tfPort, tfText = null;
+	@Note("Port")
+	private JTextComponent tfPort = null;
+
+	private JTextComponent tfText = null;
 
 	@Note("Speakers")
 	private AbstractButton btnSpeakers = null;
 
-	private AbstractButton btnAudioQuery, btnViewAudioQuery, btnSynthesis = null;
+	@Note("Audio Query")
+	private AbstractButton btnAudioQuery = null;
+
+	private AbstractButton btnViewAudioQuery, btnSynthesis = null;
 
 	private JComboBox<Speaker> jcbSpeaker = null;
 
