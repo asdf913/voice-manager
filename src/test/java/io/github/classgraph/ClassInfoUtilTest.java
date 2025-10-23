@@ -19,6 +19,7 @@ import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.classfile.MethodUtil;
 import org.apache.bcel.generic.ACONST_NULL;
 import org.apache.bcel.generic.ALOAD;
 import org.apache.bcel.generic.ARETURN;
@@ -208,7 +209,7 @@ class ClassInfoUtilTest {
 					//
 				} // if
 					//
-				if ((argumentTypes = method.getArgumentTypes()) != null) {
+				if ((argumentTypes = MethodUtil.getArgumentTypes(method)) != null) {
 					//
 					final org.apache.bcel.classfile.Method m = method;
 					//

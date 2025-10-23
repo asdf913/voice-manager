@@ -97,6 +97,7 @@ import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.classfile.MethodUtil;
 import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.IF_ICMPGE;
 import org.apache.bcel.generic.Instruction;
@@ -476,7 +477,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 											testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null))),
 									Arrays::stream, null),
 							m -> m != null && Objects.equals(FieldOrMethodUtil.getName(m), "createTempFile")
-									&& Objects.deepEquals(m.getArgumentTypes(), objectTypes)));
+									&& Objects.deepEquals(MethodUtil.getArgumentTypes(m), objectTypes)));
 			//
 			if (ms != null && !ms.isEmpty()) {
 				//

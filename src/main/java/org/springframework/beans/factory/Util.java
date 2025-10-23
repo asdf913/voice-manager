@@ -52,6 +52,7 @@ import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.classfile.Method;
+import org.apache.bcel.classfile.MethodUtil;
 import org.apache.bcel.generic.ALOAD;
 import org.apache.bcel.generic.ARETURN;
 import org.apache.bcel.generic.ARRAYLENGTH;
@@ -1039,7 +1040,7 @@ abstract class Util {
 			final List<Method> ms = toList(
 					filter(testAndApply(Objects::nonNull, javaClass.getMethods(), Arrays::stream, null),
 							m -> Boolean.logicalAnd(Objects.equals(FieldOrMethodUtil.getName(m), "hasNext"),
-									length(getArgumentTypes(m)) == 0)));
+									length(MethodUtil.getArgumentTypes(m)) == 0)));
 			//
 			testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
 				throw new IllegalStateException();
@@ -1084,7 +1085,7 @@ abstract class Util {
 				filter(testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream, null),
 						x -> Boolean.logicalAnd(
 								Objects.equals(FieldOrMethodUtil.getName(x), getName(javaLangReflectMethod)),
-								getParameterCount(javaLangReflectMethod) == length(getArgumentTypes(x)))),
+								getParameterCount(javaLangReflectMethod) == length(MethodUtil.getArgumentTypes(x)))),
 				Collectors.toCollection(ArrayList::new));
 		//
 		Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
@@ -1205,7 +1206,7 @@ abstract class Util {
 				filter(testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream, null),
 						x -> Boolean.logicalAnd(
 								Objects.equals(FieldOrMethodUtil.getName(x), getName(javaLangReflectMethod)),
-								getParameterCount(javaLangReflectMethod) == length(getArgumentTypes(x)))),
+								getParameterCount(javaLangReflectMethod) == length(MethodUtil.getArgumentTypes(x)))),
 				Collectors.toCollection(ArrayList::new));
 		//
 		Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
@@ -1313,7 +1314,7 @@ abstract class Util {
 				filter(testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream, null),
 						x -> Boolean.logicalAnd(
 								Objects.equals(FieldOrMethodUtil.getName(x), getName(javaLangReflectMethod)),
-								getParameterCount(javaLangReflectMethod) == length(getArgumentTypes(x)))),
+								getParameterCount(javaLangReflectMethod) == length(MethodUtil.getArgumentTypes(x)))),
 				Collectors.toCollection(ArrayList::new));
 		//
 		final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
@@ -1375,11 +1376,6 @@ abstract class Util {
 
 	private static boolean remove(@Nullable final Collection<?> instance, final Object o) {
 		return instance != null && instance.remove(o);
-	}
-
-	@Nullable
-	private static Type[] getArgumentTypes(@Nullable final Method instance) {
-		return instance != null ? instance.getArgumentTypes() : null;
 	}
 
 	@Nullable
@@ -2524,8 +2520,9 @@ abstract class Util {
 		final Method[] ms = JavaClassUtil.getMethods(javaClass);
 		//
 		final List<Method> list = toList(filter(ms != null ? Arrays.stream(ms) : null,
-				m -> m != null && Objects.equals(m.getName(), "forEach") && Arrays.equals(m.getArgumentTypes(),
-						new Type[] { ObjectType.getInstance("java.util.function.Consumer") })));
+				m -> m != null && Objects.equals(m.getName(), "forEach")
+						&& Arrays.equals(MethodUtil.getArgumentTypes(m),
+								new Type[] { ObjectType.getInstance("java.util.function.Consumer") })));
 		//
 		return IterableUtils.size(list) == 1 ? IterableUtils.get(list, 0) : null;
 		//

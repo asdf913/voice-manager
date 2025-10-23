@@ -64,6 +64,7 @@ import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.classfile.Method;
+import org.apache.bcel.classfile.MethodUtil;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.IFLT;
 import org.apache.bcel.generic.Instruction;
@@ -277,14 +278,24 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			final JavaClass javaClass = ClassParserUtil
 					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
 			//
-			final Iterable<Method> ms = Util.collect(Util
-					.filter(testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream, null),
-							m -> m != null && Objects.equals(FieldOrMethodUtil.getName(m), "isValidPort")
-									&& CollectionUtils.isEqualCollection(
-											Util.collect(Util.map(Arrays.stream(m.getArgumentTypes()),
-													TypeUtil::getClassName), Collectors.toList()),
-											Collections.singleton("int"))),
-					Collectors.toList());
+			final Iterable<Method> ms = Util
+					.collect(
+							Util.filter(
+									testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream,
+											null),
+									m -> m != null
+											&& Objects.equals(FieldOrMethodUtil.getName(m),
+													"isValidPort")
+											&& CollectionUtils
+													.isEqualCollection(
+															Util.collect(
+																	Util.map(
+																			Arrays.stream(
+																					MethodUtil.getArgumentTypes(m)),
+																			TypeUtil::getClassName),
+																	Collectors.toList()),
+															Collections.singleton("int"))),
+							Collectors.toList());
 			//
 			if (IterableUtils.size(ms) > 1) {
 				//
