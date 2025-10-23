@@ -418,7 +418,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static void setDefaultCloseOperation(final JFrame instance, final int defaultCloseOperation) {
+	private static void setDefaultCloseOperation(@Nullable final JFrame instance, final int defaultCloseOperation) {
 		if (instance != null) {
 			instance.setDefaultCloseOperation(defaultCloseOperation);
 		}
@@ -544,8 +544,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static byte[] synthesis(final HostAndPort hostAndPort, final String speaker, final String audioQuery)
-			throws IOException, URISyntaxException {
+	private static byte[] synthesis(final HostAndPort hostAndPort, @Nullable final String speaker,
+			final String audioQuery) throws IOException, URISyntaxException {
 		//
 		final URIBuilder uriBuilder = new URIBuilder();
 		//
@@ -608,7 +608,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
 		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
@@ -630,7 +631,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		return instance != null && instance.test(t, u);
 	}
 
-	private static String audioQuery(final HostAndPort hostAndPort, final String speaker, final String text)
+	private static String audioQuery(final HostAndPort hostAndPort, @Nullable final String speaker, final String text)
 			throws IOException, URISyntaxException {
 		//
 		final URIBuilder uriBuilder = new URIBuilder();
@@ -700,7 +701,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	}
 
 	@Nullable
-	private static OutputStream getOutputStream(final URLConnection instance) throws IOException {
+	private static OutputStream getOutputStream(@Nullable final URLConnection instance) throws IOException {
 		//
 		return instance != null && StringUtils.isNotBlank(getHost(instance.getURL())) ? instance.getOutputStream()
 				: null;
