@@ -811,7 +811,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 					//
 				} // if
 					//
-				((style = new Style())).id = Util.toString(Util.get(map, "id"));
+				(style = new Style()).id = Util.toString(Util.get(map, "id"));
 				//
 				style.name = Util.toString(Util.get(map, "name"));
 				//
