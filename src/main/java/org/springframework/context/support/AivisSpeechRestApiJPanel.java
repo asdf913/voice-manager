@@ -33,6 +33,7 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -534,6 +535,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 	}
 
+	@Nullable
 	private static Dimension getScreenSize(final Toolkit instance) {
 		//
 		return instance != null && Boolean.logicalOr(!GraphicsEnvironment.isHeadless(), isJavassistProxy(instance))
@@ -697,6 +699,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
+	@Nullable
 	private static OutputStream getOutputStream(final URLConnection instance) throws IOException {
 		//
 		return instance != null && StringUtils.isNotBlank(getHost(instance.getURL())) ? instance.getOutputStream()
@@ -742,6 +745,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
+	@Nullable
 	private static List<Speaker> speakers(final HostAndPort hostAndPort) throws IOException, URISyntaxException {
 		//
 		List<Speaker> list = null;

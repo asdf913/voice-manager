@@ -2089,6 +2089,7 @@ public abstract class Util {
 				: null;
 	}
 
+	@Nullable
 	private static String getHost(@Nullable final URL instance) {
 		return instance != null ? instance.getHost() : null;
 	}
