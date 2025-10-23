@@ -508,13 +508,15 @@ class AivisSpeechRestApiJPanelTest {
 	}
 
 	@Test
-	void testRemoveAllElements() throws IllegalAccessException, InvocationTargetException, NoSuchFieldException {
+	void testRemoveAllElements() throws IllegalAccessException, InvocationTargetException, NoSuchFieldException,
+			InstantiationException, NoSuchMethodException {
 		//
 		final Object dcbm = Narcissus.allocateInstance(DefaultComboBoxModel.class);
 		//
 		Assertions.assertNull(invoke(METHOD_REMOVE_ALL_ELEMENTS, null, dcbm));
 		//
-		Narcissus.setField(dcbm, Narcissus.findField(Util.getClass(dcbm), "objects"), new Vector<>());
+		Narcissus.setField(dcbm, Narcissus.findField(Util.getClass(dcbm), "objects"),
+				Util.newInstance(Vector.class.getDeclaredConstructor()));
 		//
 		Assertions.assertNull(invoke(METHOD_REMOVE_ALL_ELEMENTS, null, dcbm));
 		//
