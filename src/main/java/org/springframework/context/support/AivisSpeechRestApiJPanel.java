@@ -13,6 +13,10 @@ import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
@@ -96,9 +100,21 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 
 	private static Pattern PATTERN_JAVASSIST_CLASS_NAME = null;
 
-	private JTextComponent tfHost, tfPort, tfText = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
 
-	private AbstractButton btnSpeakers, btnAudioQuery, btnViewAudioQuery, btnSynthesis = null;
+	@Note("Host")
+	private JTextComponent tfHost = null;
+
+	private JTextComponent tfPort, tfText = null;
+
+	@Note("Speakers")
+	private AbstractButton btnSpeakers = null;
+
+	private AbstractButton btnAudioQuery, btnViewAudioQuery, btnSynthesis = null;
 
 	private JComboBox<Speaker> jcbSpeaker = null;
 
@@ -446,7 +462,10 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 
 	private static class Style {
 
-		private String id, name = null;
+		@Note("id")
+		private String id = null;
+
+		private String name = null;
 
 	}
 
