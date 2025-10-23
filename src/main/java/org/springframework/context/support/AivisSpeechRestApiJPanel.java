@@ -231,7 +231,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
+	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
 		//
 		AbstractButton ab = null;
 		//
@@ -348,7 +348,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static void setVisible(final Component instance, final boolean visible) {
+	private static void setVisible(@Nullable final Component instance, final boolean visible) {
 		if (instance != null) {
 			instance.setVisible(visible);
 		}
@@ -555,7 +555,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	}
 
 	@Nullable
-	private static Dimension getScreenSize(final Toolkit instance) {
+	private static Dimension getScreenSize(@Nullable final Toolkit instance) {
 		//
 		return instance != null && Boolean.logicalOr(!GraphicsEnvironment.isHeadless(), isJavassistProxy(instance))
 				? instance.getScreenSize()
@@ -563,7 +563,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static byte[] synthesis(final HostAndPort hostAndPort, @Nullable final String speaker,
+	private static byte[] synthesis(@Nullable final HostAndPort hostAndPort, @Nullable final String speaker,
 			final String audioQuery) throws IOException, URISyntaxException {
 		//
 		final URIBuilder uriBuilder = new URIBuilder();
@@ -633,7 +633,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static <T> boolean test(final Predicate<T> instance, final T value) {
+	private static <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -646,12 +646,12 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		return instance != null ? instance.apply(t, u) : null;
 	}
 
-	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) {
+	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, final U u) {
 		return instance != null && instance.test(t, u);
 	}
 
-	private static String audioQuery(final HostAndPort hostAndPort, @Nullable final String speaker, final String text)
-			throws IOException, URISyntaxException {
+	private static String audioQuery(@Nullable final HostAndPort hostAndPort, @Nullable final String speaker,
+			final String text) throws IOException, URISyntaxException {
 		//
 		final URIBuilder uriBuilder = new URIBuilder();
 		//
@@ -766,7 +766,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	}
 
 	@Nullable
-	private static List<Speaker> speakers(final HostAndPort hostAndPort) throws IOException, URISyntaxException {
+	private static List<Speaker> speakers(@Nullable final HostAndPort hostAndPort)
+			throws IOException, URISyntaxException {
 		//
 		List<Speaker> list = null;
 		//
