@@ -681,7 +681,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 	}
 
-	private static void write(final OutputStream instance, final byte[] bs) throws IOException {
+	private static void write(@Nullable final OutputStream instance, final byte[] bs) throws IOException {
 		//
 		if (instance != null && Boolean.logicalOr(bs != null, isJavassistProxy(instance))) {
 			//
