@@ -531,13 +531,11 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			jPanel.add(new JScrollPane(jTextArea),
 					String.format("wmax %1$s", screenSize != null ? screenSize.getWidth() - 30 : "100%"));
 			//
-			if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(),
-					Util.forName("org.junit.jupiter.api.Test") == null)) {
-				//
-				JOptionPane.showMessageDialog(null, jPanel, "Audio Query", JOptionPane.PLAIN_MESSAGE);
-				//
-			} // if
-				//
+			testAndRun(
+					Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(),
+							Util.forName("org.junit.jupiter.api.Test") == null),
+					() -> JOptionPane.showMessageDialog(null, jPanel, "Audio Query", JOptionPane.PLAIN_MESSAGE));
+			//
 		} else if (Objects.equals(source, btnSynthesis)) {
 			//
 			final Style style = Util.cast(Style.class, Util.getSelectedItem(dcbmStyle));
@@ -566,6 +564,12 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 		} // if
 			//
+	}
+
+	private static <T> void testAndRun(final boolean condition, final Runnable runnable) {
+		if (condition) {
+			Util.run(runnable);
+		}
 	}
 
 	private static int length(@Nullable final byte[] instance) {

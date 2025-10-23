@@ -61,7 +61,7 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_REMOVE_ALL_ELEMENTS, METHOD_GET_SCREEN_SIZE, METHOD_GET_HOST, METHOD_TEST_AND_ACCEPT,
 			METHOD_SET_VISIBLE, METHOD_PACK, METHOD_ADD, METHOD_SET_DEFAULT_CLOSE_OPERATION,
 			METHOD_SPEAKERS_HOST_AND_PORT, METHOD_SPEAKERS_ITERABLE, METHOD_AUDIO_QUERY, METHOD_SYNTHESIS,
-			METHOD_LENGTH = null;
+			METHOD_LENGTH, METHOD_TEST_AND_RUN = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -108,6 +108,8 @@ class AivisSpeechRestApiJPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", byte[].class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_RUN = clz.getDeclaredMethod("testAndRun", Boolean.TYPE, Runnable.class)).setAccessible(true);
 		//
 	}
 
@@ -625,6 +627,13 @@ class AivisSpeechRestApiJPanelTest {
 	void testLength() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertEquals(Integer.valueOf(0), invoke(METHOD_LENGTH, null, new byte[] {}));
+		//
+	}
+
+	@Test
+	void testTestAndRun() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_RUN, null, Boolean.TRUE, null));
 		//
 	}
 
