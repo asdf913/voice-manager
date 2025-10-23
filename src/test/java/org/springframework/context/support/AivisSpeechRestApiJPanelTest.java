@@ -179,8 +179,6 @@ class AivisSpeechRestApiJPanelTest {
 
 	private static class MH implements MethodHandler {
 
-//		private Collection<ImageDimensionPosition> imageDimensionPositions = null;
-
 		@Override
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
