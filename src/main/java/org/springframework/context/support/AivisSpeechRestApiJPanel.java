@@ -249,7 +249,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 	}
 
-	private static <E> Component getListCellRendererComponent(final ListCellRenderer<? super E> instance,
+	private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<? super E> instance,
 			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
 			final boolean cellHasFocus) {
 		return instance != null ? instance.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
@@ -310,11 +310,11 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static byte[] getCode(final Code instance) {
+	private static byte[] getCode(@Nullable final Code instance) {
 		return instance != null ? instance.getCode() : null;
 	}
 
-	private static Code getCode(final Method instance) {
+	private static Code getCode(@Nullable final Method instance) {
 		return instance != null ? instance.getCode() : null;
 	}
 
@@ -354,7 +354,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		}
 	}
 
-	private static void pack(final Window instance) {
+	private static void pack(@Nullable final Window instance) {
 		//
 		if (instance == null) {
 			//
@@ -402,7 +402,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static void add(final Container instance, final Component component) {
+	private static void add(@Nullable final Container instance, final Component component) {
 		//
 		if (instance == null) {
 			//
@@ -447,7 +447,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		} // if
 	}
 
-	private static String replace(final Strings instance, final String text, final String searchString,
+	private static String replace(@Nullable final Strings instance, final String text, final String searchString,
 			final String replacement) {
 		return instance != null ? instance.replace(text, searchString, replacement) : null;
 	}
@@ -642,7 +642,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		return test(predicate, t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
 	}
 
-	private static <T, U, R> R apply(final BiFunction<T, U, R> instance, final T t, final U u) {
+	private static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, final T t, final U u) {
 		return instance != null ? instance.apply(t, u) : null;
 	}
 
@@ -727,15 +727,15 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static String getHost(final URL instance) {
+	private static String getHost(@Nullable final URL instance) {
 		return instance != null ? instance.getHost() : null;
 	}
 
-	private static byte[] getBytes(final String instance) {
+	private static byte[] getBytes(@Nullable final String instance) {
 		return instance != null ? instance.getBytes() : null;
 	}
 
-	private static void removeAllElements(final DefaultComboBoxModel<?> instance) {
+	private static void removeAllElements(@Nullable final DefaultComboBoxModel<?> instance) {
 		//
 		if (instance == null) {
 			//
@@ -843,7 +843,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static String getHost(final HostAndPort instance) {
+	private static String getHost(@Nullable final HostAndPort instance) {
 		return instance != null ? instance.getHost() : null;
 	}
 
