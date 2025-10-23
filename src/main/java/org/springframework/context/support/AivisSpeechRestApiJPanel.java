@@ -256,6 +256,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				: null;
 	}
 
+	@Nullable
 	private static int[] getInts(final Class<?> clz) throws IOException {
 		//
 		int[] ints = null;
@@ -796,6 +797,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
+	@Nullable
 	private static List<Speaker> speakers(final Iterable<?> iterable) {
 		//
 		List<Speaker> list = null;
