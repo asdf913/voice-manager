@@ -161,14 +161,10 @@ class AivisSpeechRestApiJPanelTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Iterable) {
+			} else if (proxy instanceof Iterable && Objects.equals(name, "iterator")) {
 				//
-				if (Objects.equals(name, "iterator")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
@@ -191,14 +187,10 @@ class AivisSpeechRestApiJPanelTest {
 				//
 			final String name = Util.getName(thisMethod);
 			//
-			if (self instanceof Toolkit) {
+			if (self instanceof Toolkit && Objects.equals(name, "getScreenSize")) {
 				//
-				if (Objects.equals(name, "getScreenSize")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
