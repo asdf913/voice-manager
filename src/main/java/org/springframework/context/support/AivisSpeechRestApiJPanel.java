@@ -546,7 +546,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 				final byte[] bs = synthesis(createHostAndPort(), style != null ? style.id : null, audioQuery);
 				//
-				if (bs != null && bs.length > 0) {
+				if (length(bs) > 0) {
 					//
 					final JFileChooser jfc = new JFileChooser(".");
 					//
@@ -566,6 +566,10 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 		} // if
 			//
+	}
+
+	private static int length(final byte[] instance) {
+		return instance != null ? instance.length : 0;
 	}
 
 	@Nullable

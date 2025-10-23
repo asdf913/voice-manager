@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
@@ -31,6 +32,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.ListCellRenderer;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -58,7 +60,8 @@ class AivisSpeechRestApiJPanelTest {
 	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_CREATE_HOST_AND_PORT, METHOD_WRITE, METHOD_GET_BYTES,
 			METHOD_REMOVE_ALL_ELEMENTS, METHOD_GET_SCREEN_SIZE, METHOD_GET_HOST, METHOD_TEST_AND_ACCEPT,
 			METHOD_SET_VISIBLE, METHOD_PACK, METHOD_ADD, METHOD_SET_DEFAULT_CLOSE_OPERATION,
-			METHOD_SPEAKERS_HOST_AND_PORT, METHOD_SPEAKERS_ITERABLE, METHOD_AUDIO_QUERY, METHOD_SYNTHESIS = null;
+			METHOD_SPEAKERS_HOST_AND_PORT, METHOD_SPEAKERS_ITERABLE, METHOD_AUDIO_QUERY, METHOD_SYNTHESIS,
+			METHOD_LENGTH = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -103,6 +106,8 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_SYNTHESIS = clz.getDeclaredMethod("synthesis", HostAndPort.class, String.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_LENGTH = clz.getDeclaredMethod("length", byte[].class)).setAccessible(true);
 		//
 	}
 
@@ -276,7 +281,7 @@ class AivisSpeechRestApiJPanelTest {
 			invoke = Modifier.isStatic(m.getModifiers()) ? Narcissus.invokeStaticMethod(m, arguments)
 					: Narcissus.invokeMethod(instance, m, arguments);
 			//
-			if (Objects.equals(m.getReturnType(), Boolean.TYPE)) {
+			if (IterableUtils.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE), getReturnType(m))) {
 				//
 				Assertions.assertNotNull(invoke, toString);
 				//
@@ -360,7 +365,7 @@ class AivisSpeechRestApiJPanelTest {
 			invoke = Modifier.isStatic(m.getModifiers()) ? Narcissus.invokeStaticMethod(m, arguments)
 					: Narcissus.invokeMethod(instance, m, arguments);
 			//
-			if (Objects.equals(m.getReturnType(), Boolean.TYPE)) {
+			if (IterableUtils.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE), getReturnType(m))) {
 				//
 				Assertions.assertNotNull(invoke, toString);
 				//
@@ -613,6 +618,13 @@ class AivisSpeechRestApiJPanelTest {
 	void testSynthesis() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_SYNTHESIS, null, HostAndPort.fromParts("", 1), null, null));
+		//
+	}
+
+	@Test
+	void testLength() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertEquals(Integer.valueOf(0), invoke(METHOD_LENGTH, null, new byte[] {}));
 		//
 	}
 
