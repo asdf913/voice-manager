@@ -57,6 +57,10 @@ import javassist.util.proxy.ProxyUtil;
 
 class AivisSpeechRestApiJPanelTest {
 
+	private static final String EMPTY = "";
+
+	private static Class<?> CLASS_STYLE = null;
+
 	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_CREATE_HOST_AND_PORT, METHOD_WRITE, METHOD_GET_BYTES,
 			METHOD_REMOVE_ALL_ELEMENTS, METHOD_GET_SCREEN_SIZE, METHOD_GET_HOST, METHOD_TEST_AND_ACCEPT,
 			METHOD_SET_VISIBLE, METHOD_PACK, METHOD_ADD, METHOD_SET_DEFAULT_CLOSE_OPERATION,
@@ -104,8 +108,9 @@ class AivisSpeechRestApiJPanelTest {
 		(METHOD_AUDIO_QUERY = clz.getDeclaredMethod("audioQuery", HostAndPort.class, String.class, String.class))
 				.setAccessible(true);
 		//
-		(METHOD_SYNTHESIS = clz.getDeclaredMethod("synthesis", HostAndPort.class, String.class, String.class))
-				.setAccessible(true);
+		(METHOD_SYNTHESIS = clz.getDeclaredMethod("synthesis", HostAndPort.class,
+				CLASS_STYLE = Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$Style"),
+				String.class)).setAccessible(true);
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", byte[].class)).setAccessible(true);
 		//
@@ -453,9 +458,7 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Assertions.assertNull(createHostAndPort(null, Integer.toString(port)));
 		//
-		final String host = "";
-		//
-		Assertions.assertEquals(HostAndPort.fromParts(host, port), createHostAndPort(host, Integer.toString(port)));
+		Assertions.assertEquals(HostAndPort.fromParts(EMPTY, port), createHostAndPort(EMPTY, Integer.toString(port)));
 		//
 	}
 
@@ -499,7 +502,7 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testGetBytes() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertTrue(Objects.deepEquals(new byte[] {}, invoke(METHOD_GET_BYTES, null, "")));
+		Assertions.assertTrue(Objects.deepEquals(new byte[] {}, invoke(METHOD_GET_BYTES, null, EMPTY)));
 		//
 	}
 
@@ -595,7 +598,7 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testSpeakers() throws IllegalAccessException, InvocationTargetException, JsonProcessingException {
 		//
-		Assertions.assertNull(invoke(METHOD_SPEAKERS_HOST_AND_PORT, null, HostAndPort.fromParts("", 1)));
+		Assertions.assertNull(invoke(METHOD_SPEAKERS_HOST_AND_PORT, null, HostAndPort.fromParts(EMPTY, 1)));
 		//
 		Assertions.assertNull(invoke(METHOD_SPEAKERS_ITERABLE, null, Collections.singleton(null)));
 		//
@@ -612,14 +615,21 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testAudioQuery() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(invoke(METHOD_AUDIO_QUERY, null, HostAndPort.fromParts("", 1), null, null));
+		Assertions.assertNull(invoke(METHOD_AUDIO_QUERY, null, HostAndPort.fromParts(EMPTY, 1), null, null));
 		//
 	}
 
 	@Test
 	void testSynthesis() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(invoke(METHOD_SYNTHESIS, null, HostAndPort.fromParts("", 1), null, null));
+		Assertions.assertNull(invoke(METHOD_SYNTHESIS, null, HostAndPort.fromHost(EMPTY), null, null));
+		//
+		final HostAndPort hostAndPort = HostAndPort.fromParts(EMPTY, 1);
+		//
+		Assertions.assertNull(invoke(METHOD_SYNTHESIS, null, hostAndPort, null, null));
+		//
+		Assertions
+				.assertNull(invoke(METHOD_SYNTHESIS, null, hostAndPort, Narcissus.allocateInstance(CLASS_STYLE), null));
 		//
 	}
 
