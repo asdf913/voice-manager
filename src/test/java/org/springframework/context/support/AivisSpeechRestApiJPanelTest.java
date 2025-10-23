@@ -44,7 +44,6 @@ import org.springframework.util.ReflectionUtils;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.net.HostAndPort;
@@ -222,7 +221,7 @@ class AivisSpeechRestApiJPanelTest {
 	}
 
 	@Test
-	void testNull() throws IllegalAccessException, InvocationTargetException {
+	void testNull() {
 		//
 		final Method[] ms = AivisSpeechRestApiJPanel.class.getDeclaredMethods();
 		//
@@ -296,7 +295,7 @@ class AivisSpeechRestApiJPanelTest {
 	}
 
 	@Test
-	void testMethodWithInterfaceParameter() throws IllegalAccessException, InvocationTargetException {
+	void testMethodWithInterfaceParameter() {
 		//
 		final Method[] ms = AivisSpeechRestApiJPanel.class.getDeclaredMethods();
 		//
@@ -513,7 +512,7 @@ class AivisSpeechRestApiJPanelTest {
 	}
 
 	@Test
-	void testGetScreenSize() throws IllegalAccessException, InvocationTargetException, Throwable {
+	void testGetScreenSize() throws Throwable {
 		//
 		Assertions.assertNull(invoke(METHOD_GET_SCREEN_SIZE, null, ProxyUtil.createProxy(Toolkit.class, mh)));
 		//
@@ -587,8 +586,7 @@ class AivisSpeechRestApiJPanelTest {
 	}
 
 	@Test
-	void testSpeakers()
-			throws IllegalAccessException, InvocationTargetException, JsonMappingException, JsonProcessingException {
+	void testSpeakers() throws IllegalAccessException, InvocationTargetException, JsonProcessingException {
 		//
 		Assertions.assertNull(invoke(METHOD_SPEAKERS_HOST_AND_PORT, null, HostAndPort.fromParts("", 1)));
 		//
