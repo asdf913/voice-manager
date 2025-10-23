@@ -535,12 +535,26 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 							Util.forName("org.junit.jupiter.api.Test") == null),
 					() -> JOptionPane.showMessageDialog(null, jPanel, "Audio Query", JOptionPane.PLAIN_MESSAGE));
 			//
-		} else if (Objects.equals(source, btnSynthesis)) {
+		} // if
+			//
+		actionPerformed(this, source);
+		//
+	}
+
+	private static void actionPerformed(final AivisSpeechRestApiJPanel instance, final Object source) {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		if (Objects.equals(source, instance.btnSynthesis)) {
 			//
 			try {
 				//
-				final byte[] bs = synthesis(createHostAndPort(),
-						Util.cast(Style.class, Util.getSelectedItem(dcbmStyle)), audioQuery);
+				final byte[] bs = synthesis(instance.createHostAndPort(),
+						Util.cast(Style.class, Util.getSelectedItem(instance.dcbmStyle)), instance.audioQuery);
 				//
 				if (length(bs) > 0) {
 					//
