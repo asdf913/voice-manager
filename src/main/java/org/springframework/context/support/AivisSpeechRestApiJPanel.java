@@ -120,7 +120,10 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	@Note("Audio Query")
 	private AbstractButton btnAudioQuery = null;
 
-	private AbstractButton btnViewAudioQuery, btnSynthesis = null;
+	@Note("View Audio Query")
+	private AbstractButton btnViewAudioQuery = null;
+
+	private AbstractButton btnSynthesis = null;
 
 	private JComboBox<Speaker> jcbSpeaker = null;
 
