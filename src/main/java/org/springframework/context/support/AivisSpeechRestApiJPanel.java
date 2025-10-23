@@ -18,6 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -680,7 +681,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 		try (final InputStream is = Util.getInputStream(httpURLConnection)) {
 			//
-			return testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, "UTF-8"), null);
+			return testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
 			//
 		} // try
 			//
