@@ -309,23 +309,14 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 		final Map<Object, Object> properties = System.getProperties();
 		//
-		testAndAccept(Util::containsKey, properties, "host", (a, b) -> {
-			//
-			Util.setText(instance.tfHost, Util.toString(Util.get(a, b)));
-			//
-		});
+		testAndAccept(Util::containsKey, properties, "host",
+				(a, b) -> Util.setText(instance.tfHost, Util.toString(Util.get(a, b))));
 		//
-		testAndAccept(Util::containsKey, properties, "port", (a, b) -> {
-			//
-			Util.setText(instance.tfPort, Util.toString(Util.get(a, b)));
-			//
-		});
+		testAndAccept(Util::containsKey, properties, "port",
+				(a, b) -> Util.setText(instance.tfPort, Util.toString(Util.get(a, b))));
 		//
-		testAndAccept(Util::containsKey, properties, "text", (a, b) -> {
-			//
-			Util.setText(instance.tfText, Util.toString(Util.get(a, b)));
-			//
-		});
+		testAndAccept(Util::containsKey, properties, "text",
+				(a, b) -> Util.setText(instance.tfText, Util.toString(Util.get(a, b))));
 		//
 		final JFrame jFrame = Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(),
 				Util.forName("org.junit.jupiter.api.Test") == null) ? new JFrame() : null;
