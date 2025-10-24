@@ -545,9 +545,7 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		ComboBoxModel<?> cbm = jcbSpeaker.getModel();
 		//
-		Method addElement = Util.getClass(cbm).getDeclaredMethod("addElement", Object.class);
-		//
-		invoke(addElement, cbm, speak);
+		invoke(Util.getDeclaredMethod(Util.getClass(cbm), "addElement", Object.class), cbm, speak);
 		//
 		final ItemEvent itemEventJcbSpeaker = new ItemEvent(jcbSpeaker, 0, null, 0);
 		//
@@ -572,7 +570,7 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.itemStateChanged(itemEventJcbStyle));
 		//
-		invoke(addElement = Util.getClass(cbm = jcbStyle.getModel()).getDeclaredMethod("addElement", Object.class), cbm,
+		invoke(Util.getDeclaredMethod(Util.getClass(cbm = jcbStyle.getModel()), "addElement", Object.class), cbm,
 				style);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.itemStateChanged(itemEventJcbStyle));
