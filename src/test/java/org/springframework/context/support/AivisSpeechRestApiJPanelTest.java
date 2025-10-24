@@ -644,18 +644,11 @@ class AivisSpeechRestApiJPanelTest {
 		}
 	}
 
-	private static byte[] getBytes(final String instance) throws Throwable {
-		try {
-			final Object obj = invoke(METHOD_GET_BYTES, null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof byte[]) {
-				return (byte[]) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
+	@Test
+	void testGetBytes() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertTrue(Objects.deepEquals(new byte[] {}, invoke(METHOD_GET_BYTES, null, EMPTY)));
+		//
 	}
 
 	@Test
