@@ -607,18 +607,6 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 			} // try
 				//
-		} else if (Objects.equals(source, btnViewIcon)) {
-			//
-			final Style style = Util.cast(Style.class, Util.getSelectedItem(jcbStyle));
-			//
-			if (Util.and(style != null && style.styleInfo != null, !GraphicsEnvironment.isHeadless(), isTestMode())) {
-				//
-				JOptionPane.showMessageDialog(null,
-						testAndApply(Objects::nonNull, style.styleInfo.icon, ImageIcon::new, null), null,
-						JOptionPane.PLAIN_MESSAGE);
-				//
-			} // if
-				//
 		} // if
 			//
 		final Iterable<ToBooleanBiFunction<AivisSpeechRestApiJPanel, Object>> functions = Arrays
@@ -873,6 +861,20 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 				JOptionPane.showMessageDialog(null,
 						testAndApply(Objects::nonNull, speaker.speakerInfo.portrait, ImageIcon::new, null), null,
+						JOptionPane.PLAIN_MESSAGE);
+				//
+			} // if
+				//
+			return true;
+			//
+		} else if (Objects.equals(source, instance.btnViewIcon)) {
+			//
+			final Style style = Util.cast(Style.class, Util.getSelectedItem(instance.jcbStyle));
+			//
+			if (Util.and(style != null && style.styleInfo != null, !GraphicsEnvironment.isHeadless(), isTestMode())) {
+				//
+				JOptionPane.showMessageDialog(null,
+						testAndApply(Objects::nonNull, style.styleInfo.icon, ImageIcon::new, null), null,
 						JOptionPane.PLAIN_MESSAGE);
 				//
 			} // if
