@@ -201,14 +201,10 @@ class AivisSpeechRestApiJPanelTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Map) {
+			} else if (proxy instanceof Map && Objects.equals(name, "get")) {
 				//
-				if (Objects.equals(name, "get")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
