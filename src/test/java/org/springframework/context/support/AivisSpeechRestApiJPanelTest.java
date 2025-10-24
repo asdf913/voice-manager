@@ -195,11 +195,7 @@ class AivisSpeechRestApiJPanelTest {
 					//
 			} else if (proxy instanceof Iterable) {
 				//
-				if (Objects.equals(name, "iterator")) {
-					//
-					return null;
-					//
-				} else if (Objects.equals(name, "spliterator")) {
+				if (IterableUtils.contains(Arrays.asList("iterator", "spliterator"), name)) {
 					//
 					return null;
 					//
