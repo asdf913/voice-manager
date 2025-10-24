@@ -273,7 +273,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static void addItemListener(final ItemListener itemListener, final ItemSelectable... iss) {
+	private static void addItemListener(final ItemListener itemListener, @Nullable final ItemSelectable... iss) {
 		//
 		ItemSelectable is = null;
 		//
@@ -696,7 +696,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 
 	}
 
-	private static SpeakerInfo speakerInfo(final HostAndPort hostAndPort, final String speakerUuid)
+	private static SpeakerInfo speakerInfo(@Nullable final HostAndPort hostAndPort, final String speakerUuid)
 			throws IOException, URISyntaxException {
 		//
 		SpeakerInfo speakerInfo = null;
@@ -777,7 +777,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static byte[] decode(final Decoder instance, final String string) {
+	private static byte[] decode(@Nullable final Decoder instance, @Nullable final String string) {
 		return instance != null && string != null ? instance.decode(string) : null;
 	}
 
@@ -1211,7 +1211,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 	}
 
-	private static void setIcon(final JLabel instance, final Icon icon) {
+	private static void setIcon(@Nullable final JLabel instance, final Icon icon) {
 		if (instance != null) {
 			instance.setIcon(icon);
 		}
