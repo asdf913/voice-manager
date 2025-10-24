@@ -574,41 +574,43 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 				FailableStreamUtil.forEach(new FailableStream<>(Util.stream(speakers(hostAndPort))), x -> {
 					//
+					Util.addElement(dcbmSpeaker, x);
+					//
 					if (x != null) {
 						//
-						final SpeakerInfo speakerInfo = x.speakerInfo = speakerInfo(hostAndPort, x.speakerUuid);
+						return;
 						//
-						if (speakerInfo != null) {
+					} // if
+						//
+					final SpeakerInfo speakerInfo = x.speakerInfo = speakerInfo(hostAndPort, x.speakerUuid);
+					//
+					if (speakerInfo != null) {
+						//
+						Util.forEach(x.styles, y -> {
 							//
-							Util.forEach(x.styles, y -> {
+							if (y != null) {
 								//
-								if (y != null) {
+								final Iterable<StyleInfo> styleInfos = Util
+										.collect(
+												Util.filter(Util.stream(speakerInfo.styleInfos),
+														z -> z != null && Objects.equals(z.id, y.id)),
+												Collectors.toList());
+								//
+								if (IterableUtils.size(styleInfos) > 1) {
 									//
-									final Iterable<StyleInfo> styleInfos = Util
-											.collect(
-													Util.filter(Util.stream(speakerInfo.styleInfos),
-															z -> z != null && Objects.equals(z.id, y.id)),
-													Collectors.toList());
-									//
-									if (IterableUtils.size(styleInfos) > 1) {
-										//
-										throw new IllegalStateException();
-										//
-									} // if
-										//
-									y.styleInfo = testAndApply(z -> IterableUtils.size(z) == 1, styleInfos,
-											z -> IterableUtils.get(z, 0), null);
+									throw new IllegalStateException();
 									//
 								} // if
 									//
-							});
-							//
-						} // if
-							//
+								y.styleInfo = testAndApply(z -> IterableUtils.size(z) == 1, styleInfos,
+										z -> IterableUtils.get(z, 0), null);
+								//
+							} // if
+								//
+						});
+						//
 					} // if
 						//
-					Util.addElement(dcbmSpeaker, x);
-					//
 				});
 				//
 			} catch (final IOException | URISyntaxException e) {
