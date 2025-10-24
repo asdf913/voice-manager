@@ -9,6 +9,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationHandler;
@@ -17,8 +18,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64.Decoder;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Vector;
 import java.util.function.BiConsumer;
@@ -27,14 +30,19 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.ListCellRenderer;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
@@ -44,6 +52,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.util.ReflectionUtils;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,7 +74,8 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_REMOVE_ALL_ELEMENTS, METHOD_GET_SCREEN_SIZE, METHOD_GET_HOST, METHOD_TEST_AND_ACCEPT,
 			METHOD_SET_VISIBLE, METHOD_PACK, METHOD_ADD, METHOD_SET_DEFAULT_CLOSE_OPERATION,
 			METHOD_SPEAKERS_HOST_AND_PORT, METHOD_SPEAKERS_ITERABLE, METHOD_AUDIO_QUERY, METHOD_SYNTHESIS,
-			METHOD_LENGTH, METHOD_TEST_AND_RUN = null;
+			METHOD_LENGTH, METHOD_TEST_AND_RUN, METHOD_ADD_ITEM_LISTENER, METHOD_SPEAKER_INFO_HOST_AND_PORT,
+			METHOD_SPEAKER_INFO_MAP, METHOD_DECODE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -115,6 +125,16 @@ class AivisSpeechRestApiJPanelTest {
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", byte[].class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_RUN = clz.getDeclaredMethod("testAndRun", Boolean.TYPE, Runnable.class)).setAccessible(true);
+		//
+		(METHOD_ADD_ITEM_LISTENER = clz.getDeclaredMethod("addItemListener", ItemListener.class,
+				ItemSelectable[].class)).setAccessible(true);
+		//
+		(METHOD_SPEAKER_INFO_HOST_AND_PORT = clz.getDeclaredMethod("speakerInfo", HostAndPort.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_SPEAKER_INFO_MAP = clz.getDeclaredMethod("speakerInfo", Map.class)).setAccessible(true);
+		//
+		(METHOD_DECODE = clz.getDeclaredMethod("decode", Decoder.class, String.class)).setAccessible(true);
 		//
 	}
 
@@ -172,10 +192,26 @@ class AivisSpeechRestApiJPanelTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Iterable && Objects.equals(name, "iterator")) {
+			} else if (proxy instanceof Iterable) {
 				//
-				return null;
+				if (Objects.equals(name, "iterator")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(name, "spliterator")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Map) {
 				//
+				if (Objects.equals(name, "get")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -218,6 +254,8 @@ class AivisSpeechRestApiJPanelTest {
 
 	private Object style = null;
 
+	private ObjectMapper objectMapper = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -229,6 +267,8 @@ class AivisSpeechRestApiJPanelTest {
 		mh = new MH();
 		//
 		style = Narcissus.allocateInstance(CLASS_STYLE);
+		//
+		objectMapper = new ObjectMapper();
 		//
 	}
 
@@ -376,7 +416,9 @@ class AivisSpeechRestApiJPanelTest {
 			invoke = Modifier.isStatic(m.getModifiers()) ? Narcissus.invokeStaticMethod(m, arguments)
 					: Narcissus.invokeMethod(instance, m, arguments);
 			//
-			if (IterableUtils.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE), getReturnType(m))) {
+			if (Boolean.logicalOr(IterableUtils.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE), getReturnType(m)),
+					Boolean.logicalAnd(Objects.equals(Util.getName(m), "speakerInfo"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Map.class })))) {
 				//
 				Assertions.assertNotNull(invoke, toString);
 				//
@@ -403,11 +445,15 @@ class AivisSpeechRestApiJPanelTest {
 			//
 		} // if
 			//
+			// btnAudioQuery
+			//
 		final Object btnAudioQuery = new JButton();
 		//
 		FieldUtils.writeDeclaredField(instance, "btnAudioQuery", btnAudioQuery, true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnAudioQuery, 0, null)));
+		//
+		// btnViewAudioQuery
 		//
 		final Object btnViewAudioQuery = new JButton();
 		//
@@ -415,16 +461,74 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnViewAudioQuery, 0, null)));
 		//
+		// btnSynthesis
+		//
 		final Object btnSynthesis = new JButton();
 		//
 		FieldUtils.writeDeclaredField(instance, "btnSynthesis", btnSynthesis, true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnSynthesis, 0, null)));
 		//
+		// btnViewPortrait
+		//
+		final Object btnViewPortrait = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnViewPortrait", btnViewPortrait, true);
+		//
+		final ActionEvent actionEventBtnViewPortrait = new ActionEvent(btnViewPortrait, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnViewPortrait));
+		//
+		final JComboBox<?> jcbSpeaker = new JComboBox<>();
+		//
+		FieldUtils.writeDeclaredField(instance, "jcbSpeaker", jcbSpeaker, true);
+		//
+		final Object speak = Narcissus
+				.allocateInstance(Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$Speaker"));
+		//
+		ComboBoxModel<?> cbm = jcbSpeaker.getModel();
+		//
+		Method addElement = Util.getClass(cbm).getDeclaredMethod("addElement", Object.class);
+		//
+		invoke(addElement, cbm, speak);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnViewPortrait));
+		//
+		FieldUtils.writeDeclaredField(speak, "speakerInfo",
+				Narcissus.allocateInstance(
+						Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$SpeakerInfo")),
+				true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnViewPortrait));
+		//
+		// btnViewIcon
+		//
+		final Object btnViewIcon = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnViewIcon", btnViewIcon, true);
+		//
+		final ActionEvent actionEventBtnViewIcon = new ActionEvent(btnViewIcon, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnViewIcon));
+		//
+		final JComboBox<?> jcbStyle = new JComboBox<>();
+		//
+		FieldUtils.writeDeclaredField(instance, "jcbStyle", jcbStyle, true);
+		//
+		invoke(addElement = Util.getClass(cbm = jcbStyle.getModel()).getDeclaredMethod("addElement", Object.class), cbm,
+				style);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnViewIcon));
+		//
+		FieldUtils.writeDeclaredField(style, "styleInfo", Narcissus.allocateInstance(
+				Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$StyleInfo")), true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnViewIcon));
+		//
 	}
 
 	@Test
-	void testItemStateChanged() {
+	void testItemStateChanged() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		//
 		if (instance == null) {
 			//
@@ -440,6 +544,54 @@ class AivisSpeechRestApiJPanelTest {
 			//
 		Assertions.assertDoesNotThrow(() -> instance
 				.itemStateChanged(new ItemEvent(Reflection.newProxy(ItemSelectable.class, ih), 0, null, 0)));
+		//
+		// jcbSpeaker
+		//
+		final JComboBox<?> jcbSpeaker = new JComboBox<>();
+		//
+		FieldUtils.writeDeclaredField(instance, "jcbSpeaker", jcbSpeaker, true);
+		//
+		final Object speak = Narcissus
+				.allocateInstance(Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$Speaker"));
+		//
+		ComboBoxModel<?> cbm = jcbSpeaker.getModel();
+		//
+		Method addElement = Util.getClass(cbm).getDeclaredMethod("addElement", Object.class);
+		//
+		invoke(addElement, cbm, speak);
+		//
+		final ItemEvent itemEventJcbSpeaker = new ItemEvent(jcbSpeaker, 0, null, 0);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.itemStateChanged(itemEventJcbSpeaker));
+		//
+		FieldUtils.writeDeclaredField(speak, "speakerInfo",
+				Narcissus.allocateInstance(
+						Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$SpeakerInfo")),
+				true);
+		//
+		FieldUtils.writeDeclaredField(instance, "jLabelPortrait", new JLabel(), true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.itemStateChanged(itemEventJcbSpeaker));
+		//
+		// jcbStyle
+		//
+		final JComboBox<?> jcbStyle = new JComboBox<>();
+		//
+		FieldUtils.writeDeclaredField(instance, "jcbStyle", jcbStyle, true);
+		//
+		final ItemEvent itemEventJcbStyle = new ItemEvent(jcbStyle, 0, null, 0);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.itemStateChanged(itemEventJcbStyle));
+		//
+		invoke(addElement = Util.getClass(cbm = jcbStyle.getModel()).getDeclaredMethod("addElement", Object.class), cbm,
+				style);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.itemStateChanged(itemEventJcbStyle));
+		//
+		FieldUtils.writeDeclaredField(style, "styleInfo", Narcissus.allocateInstance(
+				Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$StyleInfo")), true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.itemStateChanged(itemEventJcbStyle));
 		//
 	}
 
@@ -503,11 +655,18 @@ class AivisSpeechRestApiJPanelTest {
 		}
 	}
 
-	@Test
-	void testGetBytes() throws IllegalAccessException, InvocationTargetException {
-		//
-		Assertions.assertTrue(Objects.deepEquals(new byte[] {}, invoke(METHOD_GET_BYTES, null, EMPTY)));
-		//
+	private static byte[] getBytes(final String instance) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_GET_BYTES, null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof byte[]) {
+				return (byte[]) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
@@ -602,15 +761,20 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testSpeakers() throws IllegalAccessException, InvocationTargetException, JsonProcessingException {
 		//
+		Assertions.assertNull(invoke(METHOD_SPEAKERS_HOST_AND_PORT, null, HostAndPort.fromHost(EMPTY)));
+		//
 		Assertions.assertNull(invoke(METHOD_SPEAKERS_HOST_AND_PORT, null, HostAndPort.fromParts(EMPTY, 1)));
 		//
 		Assertions.assertNull(invoke(METHOD_SPEAKERS_ITERABLE, null, Collections.singleton(null)));
 		//
-		final ObjectMapper objectMapper = new ObjectMapper();
-		//
-		objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-		//
-		Assertions.assertEquals("[{\"name\":null,\"styles\":[{\"id\":null,\"name\":null}]}]",
+		if (objectMapper != null) {
+			//
+			objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+			//
+		} // if
+			//
+		Assertions.assertEquals(
+				"[{\"name\":null,\"speakerUuid\":null,\"styles\":[{\"id\":null,\"name\":null,\"styleInfo\":null}],\"speakerInfo\":null}]",
 				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_SPEAKERS_ITERABLE, null,
 						ObjectMapperUtil.readValue(objectMapper, "[{\"styles\":[null,{}]}]", Object.class))));
 		//
@@ -653,6 +817,55 @@ class AivisSpeechRestApiJPanelTest {
 	void testTestAndRun() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_RUN, null, Boolean.TRUE, null));
+		//
+	}
+
+	@Test
+	void testAddItemListener() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_ADD_ITEM_LISTENER, null, null, (Object) null));
+		//
+	}
+
+	@Test
+	void testSpeakInfo() throws Throwable {
+		//
+		Assertions.assertNull(invoke(METHOD_SPEAKER_INFO_HOST_AND_PORT, null, HostAndPort.fromHost(EMPTY), null));
+		//
+		Assertions.assertNull(invoke(METHOD_SPEAKER_INFO_HOST_AND_PORT, null, HostAndPort.fromParts(EMPTY, 1), null));
+		//
+		if (objectMapper != null) {
+			//
+			objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+			//
+			objectMapper.setDefaultPropertyInclusion(Include.NON_NULL);
+			//
+		} // if
+			//
+		Assertions.assertEquals("{\"portrait\":\"\"}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_SPEAKER_INFO_MAP, null,
+						Collections.singletonMap("portrait", Base64.encodeBase64String(getBytes(EMPTY))))));
+		//
+		Assertions.assertEquals("{\"styleInfos\":[{}]}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_SPEAKER_INFO_MAP, null,
+						ObjectMapperUtil.readValue(objectMapper, "{\"style_infos\":[null,{}]}", Object.class))));
+		//
+		Assertions.assertEquals("{\"styleInfos\":[{\"icon\":\"\",\"voiceSamples\":[\"\"]}]}",
+				ObjectMapperUtil.writeValueAsString(objectMapper,
+						invoke(METHOD_SPEAKER_INFO_MAP, null, ObjectMapperUtil.readValue(objectMapper,
+								"{\"style_infos\":[{\"icon\":\"\",\"voice_samples\":[\"\"]}]}", Object.class))));
+		//
+	}
+
+	@Test
+	void testDecode() throws IllegalAccessException, InvocationTargetException, JsonProcessingException {
+		//
+		final Decoder decoder = java.util.Base64.getDecoder();
+		//
+		Assertions.assertNull(invoke(METHOD_DECODE, null, decoder, (Object) null));
+		//
+		Assertions.assertEquals(StringUtils.repeat('"', 2),
+				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_DECODE, null, decoder, EMPTY)));
 		//
 	}
 

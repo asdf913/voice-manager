@@ -4,12 +4,15 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.awt.ItemSelectable;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,20 +29,28 @@ import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Spliterator;
+import java.util.Base64.Decoder;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
+import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -85,6 +96,8 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
+import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -124,15 +137,19 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	@Note("View Audio Query")
 	private AbstractButton btnViewAudioQuery = null;
 
-	private AbstractButton btnSynthesis = null;
+	private AbstractButton btnSynthesis, btnViewPortrait, btnViewIcon = null;
 
 	private JComboBox<Speaker> jcbSpeaker = null;
 
 	private DefaultComboBoxModel<Speaker> dcbmSpeaker = null;
 
+	private JComboBox<Style> jcbStyle = null;
+
 	private DefaultComboBoxModel<Style> dcbmStyle = null;
 
 	private String audioQuery = null;
+
+	private JLabel jLabelPortrait, jLabelIcon = null;
 
 	private AivisSpeechRestApiJPanel() {
 	}
@@ -178,7 +195,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 		final String wrap = "wrap";
 		//
-		add(tfPort = new JFormattedTextField(numberFormatter), String.format("%1$s,wmin %2$spx", wrap, 42));
+		add(tfPort = new JFormattedTextField(numberFormatter),
+				String.format("%1$s,wmin %2$spx,span %3$s", wrap, 42, 2));
 		//
 		add(new JLabel());
 		//
@@ -201,15 +219,16 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 		});
 		//
-		jcbSpeaker.addItemListener(this);
+		add(jcbSpeaker);
 		//
-		add(jcbSpeaker, wrap);
+		add(jLabelPortrait = new JLabel(), String.format("span %1$s", 2));
+		//
+		add(btnViewPortrait = new JButton("View"), wrap);
 		//
 		add(new JLabel("Style"));
 		//
-		final JComboBox<Style> jcbStyle = new JComboBox<>(dcbmStyle = new DefaultComboBoxModel<>());
-		//
-		final ListCellRenderer<? super Style> lcrStyle = jcbStyle.getRenderer();
+		final ListCellRenderer<? super Style> lcrStyle = (jcbStyle = new JComboBox<>(
+				dcbmStyle = new DefaultComboBoxModel<>())).getRenderer();
 		//
 		jcbStyle.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
 			//
@@ -223,13 +242,17 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 		});
 		//
-		add(jcbStyle, wrap);
+		add(jcbStyle);
+		//
+		add(jLabelIcon = new JLabel(), String.format("span %1$s", 2));
+		//
+		add(btnViewIcon = new JButton("View"), wrap);
 		//
 		add(new JLabel("Text"));
 		//
 		add(tfText = new JTextField(), "growx");
 		//
-		add(btnAudioQuery = new JButton("Audio Query"), String.format("span %1$s", 2));
+		add(btnAudioQuery = new JButton("Audio Query"), String.format("span %1$s", 3));
 		//
 		add(btnViewAudioQuery = new JButton("View"), wrap);
 		//
@@ -237,8 +260,29 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 		add(btnSynthesis = new JButton("Synthesis"));
 		//
-		addActionListener(this, btnSpeakers, btnAudioQuery, btnViewAudioQuery, btnSynthesis);
+		addItemListener(this, jcbSpeaker, jcbStyle);
 		//
+		addActionListener(this, btnSpeakers, btnAudioQuery, btnViewAudioQuery, btnSynthesis, btnViewPortrait,
+				btnViewIcon);
+		//
+	}
+
+	private static void addItemListener(final ItemListener itemListener, final ItemSelectable... iss) {
+		//
+		ItemSelectable is = null;
+		//
+		for (int i = 0; iss != null && i < iss.length; i++) {
+			//
+			if ((is = ArrayUtils.get(iss, i)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			is.addItemListener(itemListener);
+			//
+		} // for
+			//
 	}
 
 	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
@@ -479,18 +523,22 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 
 	private static class Speaker {
 
-		private String name = null;
+		private String name, speakerUuid;
 
-		private List<Style> styles = null;
+		private List<Style> styles;
+
+		private SpeakerInfo speakerInfo;
 
 	}
 
 	private static class Style {
 
 		@Note("id")
-		private String id = null;
+		private String id;
 
-		private String name = null;
+		private String name;
+
+		private StyleInfo styleInfo;
 
 	}
 
@@ -505,7 +553,46 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 			try {
 				//
-				Util.forEach(Util.stream(speakers(createHostAndPort())), x -> Util.addElement(dcbmSpeaker, x));
+				final HostAndPort hostAndPort = createHostAndPort();
+				//
+				FailableStreamUtil.forEach(new FailableStream<>(Util.stream(speakers(hostAndPort))), x -> {
+					//
+					if (x != null) {
+						//
+						final SpeakerInfo speakerInfo = x.speakerInfo = speakerInfo(hostAndPort, x.speakerUuid);
+						//
+						if (speakerInfo != null) {
+							//
+							Util.forEach(x.styles, y -> {
+								//
+								if (y != null) {
+									//
+									final Iterable<StyleInfo> styleInfos = Util
+											.collect(
+													Util.filter(Util.stream(speakerInfo.styleInfos),
+															z -> z != null && Objects.equals(z.id, y.id)),
+													Collectors.toList());
+									//
+									if (IterableUtils.size(styleInfos) > 1) {
+										//
+										throw new IllegalStateException();
+										//
+									} // if
+										//
+									y.styleInfo = testAndApply(z -> IterableUtils.size(z) == 1, styleInfos,
+											z -> IterableUtils.get(z, 0), null);
+									//
+								} // if
+									//
+							});
+							//
+						} // if
+							//
+					} // if
+						//
+					Util.addElement(dcbmSpeaker, x);
+					//
+				});
 				//
 			} catch (final IOException | URISyntaxException e) {
 				//
@@ -546,10 +633,153 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 							Util.forName("org.junit.jupiter.api.Test") == null),
 					() -> JOptionPane.showMessageDialog(null, jPanel, "Audio Query", JOptionPane.PLAIN_MESSAGE));
 			//
+		} else if (Objects.equals(source, btnViewIcon)) {
+			//
+			final Style style = Util.cast(Style.class, Util.getSelectedItem(jcbStyle));
+			//
+			if (Util.and(style != null && style.styleInfo != null, !GraphicsEnvironment.isHeadless(),
+					Util.forName("org.junit.jupiter.api.Test") == null)) {
+				//
+				JOptionPane.showMessageDialog(null,
+						testAndApply(Objects::nonNull, style.styleInfo.icon, ImageIcon::new, null), null,
+						JOptionPane.PLAIN_MESSAGE);
+				//
+			} // if
+				//
+		} else if (Objects.equals(source, btnViewPortrait)) {
+			//
+			final Speaker speaker = Util.cast(Speaker.class, Util.getSelectedItem(jcbSpeaker));
+			//
+			if (Util.and(speaker != null && speaker.speakerInfo != null, !GraphicsEnvironment.isHeadless(),
+					Util.forName("org.junit.jupiter.api.Test") == null)) {
+				//
+				JOptionPane.showMessageDialog(null,
+						testAndApply(Objects::nonNull, speaker.speakerInfo.portrait, ImageIcon::new, null), null,
+						JOptionPane.PLAIN_MESSAGE);
+				//
+			} // if
+				//
 		} // if
 			//
 		actionPerformed(this, source);
 		//
+	}
+
+	private static class SpeakerInfo {
+
+		private byte[] portrait;
+
+		private List<StyleInfo> styleInfos = null;
+
+	}
+
+	private static class StyleInfo {
+
+		private String id;
+
+		private byte[] icon;
+
+		private List<byte[]> voiceSamples;
+
+		private List<String> voiceSampleTranscripts;
+
+	}
+
+	private static SpeakerInfo speakerInfo(final HostAndPort hostAndPort, final String speakerUuid)
+			throws IOException, URISyntaxException {
+		//
+		SpeakerInfo speakerInfo = null;
+		//
+		final URIBuilder uriBuilder = new URIBuilder();
+		//
+		uriBuilder.setScheme("http");
+		//
+		uriBuilder.setHost(getHost(hostAndPort));
+		//
+		if (hostAndPort != null && hostAndPort.hasPort()) {
+			//
+			uriBuilder.setPort(hostAndPort.getPort());
+			//
+		} // if
+			//
+		uriBuilder.setPath("speaker_info");
+		//
+		uriBuilder.addParameter("speaker_uuid", speakerUuid);
+		//
+		try (final InputStream is = Util.openStream(Util.toURL(uriBuilder.build()))) {
+			//
+			speakerInfo = speakerInfo(
+					Util.cast(Map.class, ObjectMapperUtil.readValue(new ObjectMapper(), is, Object.class)));
+			//
+		} // try
+			//
+		return speakerInfo;
+		//
+	}
+
+	private static SpeakerInfo speakerInfo(final Map<?, ?> instance) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final SpeakerInfo speakerInfo = new SpeakerInfo();
+		//
+		speakerInfo.portrait = testAndApply(Objects::nonNull, Util.toString(Util.get(instance, "portrait")),
+				x -> decode(Base64.getDecoder(), x), null);
+		//
+		final Iterable<?> iterable = Util.cast(Iterable.class, Util.get(instance, "style_infos"));
+		//
+		Map<?, ?> map = null;
+		//
+		StyleInfo styleInfo = null;
+		//
+		for (int i = 0; i < IterableUtils.size(iterable); i++) {
+			//
+			if ((map = Util.cast(Map.class, IterableUtils.get(iterable, i))) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			(styleInfo = new StyleInfo()).id = Util.toString(Util.get(map, "id"));
+			//
+			styleInfo.icon = testAndApply(Objects::nonNull, Util.toString(Util.get(map, "icon")),
+					x -> decode(Base64.getDecoder(), x), null);
+			//
+			styleInfo.voiceSamples = Util.collect(Util.map(
+					Util.stream(toCollection(Util.cast(Iterable.class, Util.get(map, "voice_samples")))),
+					x -> testAndApply(Objects::nonNull, Util.toString(x), y -> decode(Base64.getDecoder(), y), null)),
+					Collectors.toList());
+			//
+			styleInfo.voiceSampleTranscripts = Util.collect(Util.map(
+					Util.stream(toCollection(Util.cast(Iterable.class, Util.get(map, "voice_sample_transcripts")))),
+					Util::toString), Collectors.toList());
+			//
+			Util.add(speakerInfo.styleInfos = ObjectUtils.getIfNull(speakerInfo.styleInfos, ArrayList::new), styleInfo);
+			//
+		} // for
+			//
+		return speakerInfo;
+		//
+	}
+
+	private static byte[] decode(final Decoder instance, final String string) {
+		return instance != null && string != null ? instance.decode(string) : null;
+	}
+
+	private static Collection<?> toCollection(final Iterable<?> iterable) {
+		//
+		return Util.collect(
+				testAndApply(Objects::nonNull, spliterator(iterable), x -> StreamSupport.stream(x, false), null),
+				Collectors.toList());
+		//
+	}
+
+	private static <E> Spliterator<E> spliterator(final Iterable<E> instance) {
+		return instance != null ? instance.spliterator() : null;
 	}
 
 	private static void actionPerformed(@Nullable final AivisSpeechRestApiJPanel instance, final Object source) {
@@ -867,6 +1097,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 			(speaker = new Speaker()).name = Util.toString(Util.get(map, "name"));
 			//
+			speaker.speakerUuid = Util.toString(Util.get(map, "speaker_uuid"));
+			//
 			styles = Util.cast(Iterable.class, Util.cast(Iterable.class, Util.get(map, "styles")));
 			//
 			for (int j = 0; j < IterableUtils.size(styles); j++) {
@@ -901,7 +1133,9 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	@Override
 	public void itemStateChanged(final ItemEvent evt) {
 		//
-		if (Objects.equals(Util.getSource(evt), jcbSpeaker)) {
+		final Object source = Util.getSource(evt);
+		//
+		if (Objects.equals(source, jcbSpeaker)) {
 			//
 			removeAllElements(dcbmStyle);
 			//
@@ -909,12 +1143,67 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 			if (speaker != null) {
 				//
+				if (speaker.speakerInfo != null) {
+					//
+					Image image = null;
+					//
+					final byte[] portrait = speaker.speakerInfo.portrait;
+					//
+					try (final InputStream is = testAndApply(Objects::nonNull, portrait, ByteArrayInputStream::new,
+							null)) {
+						//
+						image = Util.getScaledInstance(testAndApply(Objects::nonNull, is, ImageIO::read, null), 25, 25,
+								Image.SCALE_SMOOTH);
+						//
+					} catch (final IOException e) {
+						//
+						throw new RuntimeException(e);
+						//
+					} // try
+						//
+					setIcon(jLabelPortrait, testAndApply(Objects::nonNull, image, ImageIcon::new,
+							x -> testAndApply(Objects::nonNull, portrait, ImageIcon::new, null)));
+					//
+				} // if
+					//
 				Util.forEach(speaker.styles, x -> Util.addElement(dcbmStyle, x));
+				//
+			} // if
+				//
+		} else if (Objects.equals(source, jcbStyle)) {
+			//
+			final Style style = Util.cast(Style.class, Util.getSelectedItem(jcbStyle));
+			//
+			if (style != null && style.styleInfo != null) {
+				//
+				Image image = null;
+				//
+				final byte[] icon = style.styleInfo.icon;
+				//
+				try (final InputStream is = testAndApply(Objects::nonNull, icon, ByteArrayInputStream::new, null)) {
+					//
+					image = Util.getScaledInstance(testAndApply(Objects::nonNull, is, ImageIO::read, null), 25, 25,
+							Image.SCALE_SMOOTH);
+					//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
+				setIcon(jLabelIcon, testAndApply(Objects::nonNull, image, ImageIcon::new,
+						x -> testAndApply(Objects::nonNull, icon, ImageIcon::new, null)));
 				//
 			} // if
 				//
 		} // if
 			//
+	}
+
+	private static void setIcon(final JLabel instance, final Icon icon) {
+		if (instance != null) {
+			instance.setIcon(icon);
+		}
 	}
 
 }
