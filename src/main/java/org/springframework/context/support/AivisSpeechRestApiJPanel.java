@@ -576,7 +576,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 					//
 					Util.addElement(dcbmSpeaker, x);
 					//
-					if (x != null) {
+					if (x == null) {
 						//
 						return;
 						//
@@ -590,20 +590,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 							//
 							if (y != null) {
 								//
-								final Iterable<StyleInfo> styleInfos = Util
-										.collect(
-												Util.filter(Util.stream(speakerInfo.styleInfos),
-														z -> z != null && Objects.equals(z.id, y.id)),
-												Collectors.toList());
-								//
-								if (IterableUtils.size(styleInfos) > 1) {
-									//
-									throw new IllegalStateException();
-									//
-								} // if
-									//
-								y.styleInfo = testAndApply(z -> IterableUtils.size(z) == 1, styleInfos,
-										z -> IterableUtils.get(z, 0), null);
+								y.styleInfo = getStyleInfoById(speakerInfo.styleInfos, y.id);
 								//
 							} // if
 								//
@@ -647,6 +634,22 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		} // if
 			//
 		actionPerformed(this, source);
+		//
+	}
+
+	private static StyleInfo getStyleInfoById(final Iterable<StyleInfo> styleInfos, final String id) {
+		//
+		final Iterable<StyleInfo> iterable = Util.collect(Util.filter(
+				testAndApply(Objects::nonNull, spliterator(styleInfos), x -> StreamSupport.stream(x, false), null),
+				z -> z != null && Objects.equals(z.id, id)), Collectors.toList());
+		//
+		if (IterableUtils.size(iterable) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		return testAndApply(x -> IterableUtils.size(iterable) == 1, iterable, x -> IterableUtils.get(x, 0), null);
 		//
 	}
 

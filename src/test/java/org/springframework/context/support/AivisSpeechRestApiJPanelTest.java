@@ -74,7 +74,7 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_SET_VISIBLE, METHOD_PACK, METHOD_ADD, METHOD_SET_DEFAULT_CLOSE_OPERATION,
 			METHOD_SPEAKERS_HOST_AND_PORT, METHOD_SPEAKERS_ITERABLE, METHOD_AUDIO_QUERY, METHOD_SYNTHESIS,
 			METHOD_LENGTH, METHOD_TEST_AND_RUN, METHOD_ADD_ITEM_LISTENER, METHOD_SPEAKER_INFO_HOST_AND_PORT,
-			METHOD_SPEAKER_INFO_MAP, METHOD_DECODE = null;
+			METHOD_SPEAKER_INFO_MAP, METHOD_DECODE, METHOD_GET_STYLE_INFO_BY_ID = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -134,6 +134,9 @@ class AivisSpeechRestApiJPanelTest {
 		(METHOD_SPEAKER_INFO_MAP = clz.getDeclaredMethod("speakerInfo", Map.class)).setAccessible(true);
 		//
 		(METHOD_DECODE = clz.getDeclaredMethod("decode", Decoder.class, String.class)).setAccessible(true);
+		//
+		(METHOD_GET_STYLE_INFO_BY_ID = clz.getDeclaredMethod("getStyleInfoById", Iterable.class, String.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -243,7 +246,7 @@ class AivisSpeechRestApiJPanelTest {
 
 	private MH mh = null;
 
-	private Object style = null;
+	private Object style, styleInfo = null;
 
 	private ObjectMapper objectMapper = null;
 
@@ -258,6 +261,9 @@ class AivisSpeechRestApiJPanelTest {
 		mh = new MH();
 		//
 		style = Narcissus.allocateInstance(CLASS_STYLE);
+		//
+		styleInfo = Narcissus.allocateInstance(
+				Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$StyleInfo"));
 		//
 		objectMapper = new ObjectMapper();
 		//
@@ -509,8 +515,7 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnViewIcon));
 		//
-		FieldUtils.writeDeclaredField(style, "styleInfo", Narcissus.allocateInstance(
-				Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$StyleInfo")), true);
+		FieldUtils.writeDeclaredField(style, "styleInfo", styleInfo, true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnViewIcon));
 		//
@@ -845,6 +850,30 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Assertions.assertEquals(StringUtils.repeat('"', 2),
 				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_DECODE, null, decoder, EMPTY)));
+		//
+	}
+
+	@Test
+	void testGetStyleInfobyId() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_GET_STYLE_INFO_BY_ID, null, Collections.singleton(null), null));
+		//
+		Assertions.assertSame(styleInfo,
+				invoke(METHOD_GET_STYLE_INFO_BY_ID, null, Collections.singleton(styleInfo), null));
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			//
+			try {
+				//
+				invoke(METHOD_GET_STYLE_INFO_BY_ID, null, Collections.nCopies(2, styleInfo), null);
+				//
+			} catch (final InvocationTargetException e) {
+				//
+				throw e.getTargetException();
+				//
+			} // try
+				//
+		});
 		//
 	}
 
