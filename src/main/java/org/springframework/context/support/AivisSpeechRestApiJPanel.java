@@ -630,24 +630,6 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 			} // try
 				//
-		} else if (Objects.equals(source, btnViewAudioQuery)) {
-			//
-			final JPanel jPanel = new JPanel();
-			//
-			jPanel.setLayout(new MigLayout());
-			//
-			final JTextArea jTextArea = new JTextArea(audioQuery);
-			//
-			jTextArea.setRows(2);
-			//
-			final Dimension screenSize = getScreenSize(Toolkit.getDefaultToolkit());
-			//
-			jPanel.add(new JScrollPane(jTextArea),
-					String.format("wmax %1$s", screenSize != null ? screenSize.getWidth() - 30 : "100%"));
-			//
-			testAndRun(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), isTestMode()),
-					() -> JOptionPane.showMessageDialog(null, jPanel, "Audio Query", JOptionPane.PLAIN_MESSAGE));
-			//
 		} else if (Objects.equals(source, btnViewIcon)) {
 			//
 			final Style style = Util.cast(Style.class, Util.getSelectedItem(jcbStyle));
@@ -807,7 +789,25 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 		} // if
 			//
-		if (Objects.equals(source, instance.btnSynthesis)) {
+		if (Objects.equals(source, instance.btnViewAudioQuery)) {
+			//
+			final JPanel jPanel = new JPanel();
+			//
+			jPanel.setLayout(new MigLayout());
+			//
+			final JTextArea jTextArea = new JTextArea(instance.audioQuery);
+			//
+			jTextArea.setRows(2);
+			//
+			final Dimension screenSize = getScreenSize(Toolkit.getDefaultToolkit());
+			//
+			jPanel.add(new JScrollPane(jTextArea),
+					String.format("wmax %1$s", screenSize != null ? screenSize.getWidth() - 30 : "100%"));
+			//
+			testAndRun(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), isTestMode()),
+					() -> JOptionPane.showMessageDialog(null, jPanel, "Audio Query", JOptionPane.PLAIN_MESSAGE));
+			//
+		} else if (Objects.equals(source, instance.btnSynthesis)) {
 			//
 			try {
 				//
