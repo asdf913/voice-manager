@@ -18,7 +18,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -38,7 +40,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.ListCellRenderer;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -842,9 +843,8 @@ class AivisSpeechRestApiJPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals("{\"portrait\":\"\"}",
-				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_SPEAKER_INFO_MAP, null,
-						Collections.singletonMap("portrait", Base64.encodeBase64String(getBytes(EMPTY))))));
+		Assertions.assertEquals("{\"portrait\":\"\"}", ObjectMapperUtil.writeValueAsString(objectMapper,
+				invoke(METHOD_SPEAKER_INFO_MAP, null, Collections.singletonMap("portrait", EMPTY))));
 		//
 		Assertions.assertEquals("{\"styleInfos\":[{}]}",
 				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_SPEAKER_INFO_MAP, null,
