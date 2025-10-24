@@ -403,8 +403,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		testAndAccept(Util::containsKey, properties, "text",
 				(a, b) -> Util.setText(instance.tfText, Util.toString(Util.get(a, b))));
 		//
-		final JFrame jFrame = Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(),
-				Util.forName("org.junit.jupiter.api.Test") == null) ? new JFrame() : null;
+		final JFrame jFrame = Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), isTestMode()) ? new JFrame() : null;
 		//
 		setDefaultCloseOperation(jFrame, WindowConstants.EXIT_ON_CLOSE);
 		//
@@ -413,6 +412,12 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		pack(jFrame);
 		//
 		setVisible(jFrame, true);
+		//
+	}
+
+	private static boolean isTestMode() {
+		//
+		return Util.forName("org.junit.jupiter.api.Test") == null;
 		//
 	}
 
@@ -628,17 +633,14 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			jPanel.add(new JScrollPane(jTextArea),
 					String.format("wmax %1$s", screenSize != null ? screenSize.getWidth() - 30 : "100%"));
 			//
-			testAndRun(
-					Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(),
-							Util.forName("org.junit.jupiter.api.Test") == null),
+			testAndRun(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), isTestMode()),
 					() -> JOptionPane.showMessageDialog(null, jPanel, "Audio Query", JOptionPane.PLAIN_MESSAGE));
 			//
 		} else if (Objects.equals(source, btnViewIcon)) {
 			//
 			final Style style = Util.cast(Style.class, Util.getSelectedItem(jcbStyle));
 			//
-			if (Util.and(style != null && style.styleInfo != null, !GraphicsEnvironment.isHeadless(),
-					Util.forName("org.junit.jupiter.api.Test") == null)) {
+			if (Util.and(style != null && style.styleInfo != null, !GraphicsEnvironment.isHeadless(), isTestMode())) {
 				//
 				JOptionPane.showMessageDialog(null,
 						testAndApply(Objects::nonNull, style.styleInfo.icon, ImageIcon::new, null), null,
@@ -651,7 +653,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			final Speaker speaker = Util.cast(Speaker.class, Util.getSelectedItem(jcbSpeaker));
 			//
 			if (Util.and(speaker != null && speaker.speakerInfo != null, !GraphicsEnvironment.isHeadless(),
-					Util.forName("org.junit.jupiter.api.Test") == null)) {
+					isTestMode())) {
 				//
 				JOptionPane.showMessageDialog(null,
 						testAndApply(Objects::nonNull, speaker.speakerInfo.portrait, ImageIcon::new, null), null,
