@@ -1189,9 +1189,23 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 			} // if
 				//
-		} else if (Objects.equals(source, jcbStyle)) {
+		} // if
 			//
-			final Style style = Util.cast(Style.class, Util.getSelectedItem(jcbStyle));
+		itemStateChanged(this, source);
+		//
+	}
+
+	private static void itemStateChanged(final AivisSpeechRestApiJPanel instance, final Object source) {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		if (Objects.equals(source, instance.jcbStyle)) {
+			//
+			final Style style = Util.cast(Style.class, Util.getSelectedItem(instance.jcbStyle));
 			//
 			if (style != null && style.styleInfo != null) {
 				//
@@ -1210,7 +1224,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 					//
 				} // try
 					//
-				setIcon(jLabelIcon, testAndApply(Objects::nonNull, image, ImageIcon::new,
+				setIcon(instance.jLabelIcon, testAndApply(Objects::nonNull, image, ImageIcon::new,
 						x -> testAndApply(Objects::nonNull, icon, ImageIcon::new, null)));
 				//
 			} // if
