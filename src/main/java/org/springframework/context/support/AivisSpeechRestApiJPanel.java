@@ -573,33 +573,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 				final HostAndPort hostAndPort = createHostAndPort();
 				//
-				FailableStreamUtil.forEach(new FailableStream<>(Util.stream(speakers(hostAndPort))), x -> {
-					//
-					if (x == null) {
-						//
-						return;
-						//
-					} // if
-						//
-					final SpeakerInfo speakerInfo = x.speakerInfo = speakerInfo(hostAndPort, x.speakerUuid);
-					//
-					if (speakerInfo != null) {
-						//
-						Util.forEach(x.styles, y -> {
-							//
-							if (y != null) {
-								//
-								y.styleInfo = getStyleInfoById(speakerInfo.styleInfos, y.id);
-								//
-							} // if
-								//
-						});
-						//
-					} // if
-						//
-					Util.addElement(dcbmSpeaker, x);
-					//
-				});
+				FailableStreamUtil.forEach(new FailableStream<>(Util.stream(speakers(hostAndPort))),
+						x -> setStyleInfo(x, hostAndPort, dcbmSpeaker));
 				//
 			} catch (final IOException | URISyntaxException e) {
 				//
@@ -628,6 +603,35 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 		} // for
 			//
+	}
+
+	private static void setStyleInfo(final Speaker speaker, final HostAndPort hostAndPort,
+			final DefaultComboBoxModel<Speaker> dcbmSpeaker) throws IOException, URISyntaxException {
+		//
+		if (speaker == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final SpeakerInfo speakerInfo = speaker.speakerInfo = speakerInfo(hostAndPort, speaker.speakerUuid);
+		//
+		if (speakerInfo != null) {
+			//
+			Util.forEach(speaker.styles, y -> {
+				//
+				if (y != null) {
+					//
+					y.styleInfo = getStyleInfoById(speakerInfo.styleInfos, y.id);
+					//
+				} // if
+					//
+			});
+			//
+		} // if
+			//
+		Util.addElement(dcbmSpeaker, speaker);
+		//
 	}
 
 	private static StyleInfo getStyleInfoById(final Iterable<StyleInfo> styleInfos, final String id) {

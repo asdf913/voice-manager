@@ -11,11 +11,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64.Decoder;
@@ -67,14 +69,14 @@ class AivisSpeechRestApiJPanelTest {
 
 	private static final String EMPTY = "";
 
-	private static Class<?> CLASS_STYLE = null;
+	private static Class<?> CLASS_STYLE, CLASS_SPEAKER = null;
 
 	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_CREATE_HOST_AND_PORT, METHOD_WRITE, METHOD_GET_BYTES,
 			METHOD_REMOVE_ALL_ELEMENTS, METHOD_GET_SCREEN_SIZE, METHOD_GET_HOST, METHOD_TEST_AND_ACCEPT,
 			METHOD_SET_VISIBLE, METHOD_PACK, METHOD_ADD, METHOD_SET_DEFAULT_CLOSE_OPERATION,
 			METHOD_SPEAKERS_HOST_AND_PORT, METHOD_SPEAKERS_ITERABLE, METHOD_AUDIO_QUERY, METHOD_SYNTHESIS,
 			METHOD_LENGTH, METHOD_TEST_AND_RUN, METHOD_ADD_ITEM_LISTENER, METHOD_SPEAKER_INFO_HOST_AND_PORT,
-			METHOD_SPEAKER_INFO_MAP, METHOD_DECODE, METHOD_GET_STYLE_INFO_BY_ID = null;
+			METHOD_SPEAKER_INFO_MAP, METHOD_DECODE, METHOD_GET_STYLE_INFO_BY_ID, METHOD_SET_STYLE_INFO = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -137,6 +139,10 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_GET_STYLE_INFO_BY_ID = clz.getDeclaredMethod("getStyleInfoById", Iterable.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_SET_STYLE_INFO = clz.getDeclaredMethod("setStyleInfo",
+				CLASS_SPEAKER = Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$Speaker"),
+				HostAndPort.class, DefaultComboBoxModel.class)).setAccessible(true);
 		//
 	}
 
@@ -246,7 +252,7 @@ class AivisSpeechRestApiJPanelTest {
 
 	private MH mh = null;
 
-	private Object style, styleInfo = null;
+	private Object style, styleInfo, speaker = null;
 
 	private ObjectMapper objectMapper = null;
 
@@ -264,6 +270,8 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		styleInfo = Narcissus.allocateInstance(
 				Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$StyleInfo"));
+		//
+		speaker = Narcissus.allocateInstance(CLASS_SPEAKER);
 		//
 		objectMapper = new ObjectMapper();
 		//
@@ -480,16 +488,13 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		FieldUtils.writeDeclaredField(instance, "jcbSpeaker", jcbSpeaker, true);
 		//
-		final Object speak = Narcissus
-				.allocateInstance(Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$Speaker"));
-		//
 		ComboBoxModel<?> cbm = jcbSpeaker.getModel();
 		//
-		invoke(Util.getDeclaredMethod(Util.getClass(cbm), "addElement", Object.class), cbm, speak);
+		invoke(Util.getDeclaredMethod(Util.getClass(cbm), "addElement", Object.class), cbm, speaker);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnViewPortrait));
 		//
-		FieldUtils.writeDeclaredField(speak, "speakerInfo",
+		FieldUtils.writeDeclaredField(speaker, "speakerInfo",
 				Narcissus.allocateInstance(
 						Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$SpeakerInfo")),
 				true);
@@ -545,18 +550,15 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		FieldUtils.writeDeclaredField(instance, "jcbSpeaker", jcbSpeaker, true);
 		//
-		final Object speak = Narcissus
-				.allocateInstance(Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$Speaker"));
-		//
 		ComboBoxModel<?> cbm = jcbSpeaker.getModel();
 		//
-		invoke(Util.getDeclaredMethod(Util.getClass(cbm), "addElement", Object.class), cbm, speak);
+		invoke(Util.getDeclaredMethod(Util.getClass(cbm), "addElement", Object.class), cbm, speaker);
 		//
 		final ItemEvent itemEventJcbSpeaker = new ItemEvent(jcbSpeaker, 0, null, 0);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.itemStateChanged(itemEventJcbSpeaker));
 		//
-		FieldUtils.writeDeclaredField(speak, "speakerInfo",
+		FieldUtils.writeDeclaredField(speaker, "speakerInfo",
 				Narcissus.allocateInstance(
 						Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$SpeakerInfo")),
 				true);
@@ -874,6 +876,13 @@ class AivisSpeechRestApiJPanelTest {
 			} // try
 				//
 		});
+		//
+	}
+
+	@Test
+	void testSetStyleInfo() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_SET_STYLE_INFO, null, speaker, null, null));
 		//
 	}
 
