@@ -681,6 +681,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 
 	}
 
+	@Nullable
 	private static SpeakerInfo speakerInfo(@Nullable final HostAndPort hostAndPort, final String speakerUuid)
 			throws IOException, URISyntaxException {
 		//
