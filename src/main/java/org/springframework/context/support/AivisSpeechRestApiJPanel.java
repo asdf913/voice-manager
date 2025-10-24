@@ -605,7 +605,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 	}
 
-	private static void setStyleInfo(final Speaker speaker, final HostAndPort hostAndPort,
+	private static void setStyleInfo(@Nullable final Speaker speaker, final HostAndPort hostAndPort,
 			final DefaultComboBoxModel<Speaker> dcbmSpeaker) throws IOException, URISyntaxException {
 		//
 		if (speaker == null) {
