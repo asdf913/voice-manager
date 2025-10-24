@@ -94,6 +94,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.function.ToBooleanBiFunction;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
@@ -620,8 +621,25 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 		} // if
 			//
-		actionPerformed(this, source);
+		final Iterable<ToBooleanBiFunction<AivisSpeechRestApiJPanel, Object>> functions = Arrays
+				.asList(AivisSpeechRestApiJPanel::actionPerformed1, AivisSpeechRestApiJPanel::actionPerformed2);
 		//
+		ToBooleanBiFunction<AivisSpeechRestApiJPanel, Object> function = null;
+		//
+		for (int i = 0; i < IterableUtils.size(functions); i++) {
+			//
+			if ((function = IterableUtils.get(functions, i)) == null) {
+				//
+				continue;
+				//
+			} else if (function.applyAsBoolean(this, source)) {
+				//
+				break;
+				//
+			} // if
+				//
+		} // for
+			//
 	}
 
 	private static StyleInfo getStyleInfoById(final Iterable<StyleInfo> styleInfos, final String id) {
@@ -761,11 +779,11 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		return instance != null ? instance.spliterator() : null;
 	}
 
-	private static void actionPerformed(@Nullable final AivisSpeechRestApiJPanel instance, final Object source) {
+	private static boolean actionPerformed1(@Nullable final AivisSpeechRestApiJPanel instance, final Object source) {
 		//
 		if (instance == null) {
 			//
-			return;
+			return false;
 			//
 		} // if
 			//
@@ -783,6 +801,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 			} // try
 				//
+			return true;
+			//
 		} else if (Objects.equals(source, instance.btnSynthesis)) {
 			//
 			try {
@@ -808,6 +828,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 			} // try
 				//
+			return true;
+			//
 		} else if (Objects.equals(source, instance.btnViewAudioQuery)) {
 			//
 			final JPanel jPanel = new JPanel();
@@ -826,7 +848,23 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			testAndRun(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), isTestMode()),
 					() -> JOptionPane.showMessageDialog(null, jPanel, "Audio Query", JOptionPane.PLAIN_MESSAGE));
 			//
-		} else if (Objects.equals(source, instance.btnViewPortrait)) {
+			return true;
+			//
+		} // if
+			//
+		return false;
+		//
+	}
+
+	private static boolean actionPerformed2(final AivisSpeechRestApiJPanel instance, final Object source) {
+		//
+		if (instance == null) {
+			//
+			return false;
+			//
+		} // if
+			//
+		if (Objects.equals(source, instance.btnViewPortrait)) {
 			//
 			final Speaker speaker = Util.cast(Speaker.class, Util.getSelectedItem(instance.jcbSpeaker));
 			//
@@ -839,8 +877,12 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 			} // if
 				//
+			return true;
+			//
 		} // if
 			//
+		return false;
+		//
 	}
 
 	private static void testAndRun(final boolean condition, final Runnable runnable) {
