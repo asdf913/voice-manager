@@ -617,19 +617,6 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 			} // try
 				//
-		} else if (Objects.equals(source, btnAudioQuery)) {
-			//
-			try {
-				//
-				audioQuery = audioQuery(createHostAndPort(), Util.cast(Style.class, Util.getSelectedItem(dcbmStyle)),
-						Util.getText(tfText));
-				//
-			} catch (final IOException | URISyntaxException e) {
-				//
-				throw new RuntimeException(e);
-				//
-			} // try
-				//
 		} else if (Objects.equals(source, btnViewIcon)) {
 			//
 			final Style style = Util.cast(Style.class, Util.getSelectedItem(jcbStyle));
@@ -808,6 +795,20 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			testAndRun(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), isTestMode()),
 					() -> JOptionPane.showMessageDialog(null, jPanel, "Audio Query", JOptionPane.PLAIN_MESSAGE));
 			//
+		} else if (Objects.equals(source, instance.btnAudioQuery)) {
+			//
+			try {
+				//
+				instance.audioQuery = audioQuery(instance.createHostAndPort(),
+						Util.cast(Style.class, Util.getSelectedItem(instance.dcbmStyle)),
+						Util.getText(instance.tfText));
+				//
+			} catch (final IOException | URISyntaxException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
 		} else if (Objects.equals(source, instance.btnSynthesis)) {
 			//
 			try {
