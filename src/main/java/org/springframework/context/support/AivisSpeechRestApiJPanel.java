@@ -1195,7 +1195,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static void itemStateChanged(final AivisSpeechRestApiJPanel instance, final Object source) {
+	private static void itemStateChanged(@Nullable final AivisSpeechRestApiJPanel instance, final Object source) {
 		//
 		if (instance == null) {
 			//
