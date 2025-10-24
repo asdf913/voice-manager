@@ -137,7 +137,10 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	@Note("View Audio Query")
 	private AbstractButton btnViewAudioQuery = null;
 
-	private AbstractButton btnSynthesis, btnViewPortrait, btnViewIcon = null;
+	@Note("Synthesis")
+	private AbstractButton btnSynthesis = null;
+
+	private AbstractButton btnViewPortrait, btnViewIcon = null;
 
 	private JComboBox<Speaker> jcbSpeaker = null;
 
@@ -149,7 +152,10 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 
 	private String audioQuery = null;
 
-	private JLabel jLabelPortrait, jLabelIcon = null;
+	@Note("Portrait")
+	private JLabel jLabelPortrait = null;
+
+	private JLabel jLabelIcon = null;
 
 	private AivisSpeechRestApiJPanel() {
 	}
@@ -528,7 +534,10 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 
 	private static class Speaker {
 
-		private String name, speakerUuid;
+		@Note("Name")
+		private String name;
+
+		private String speakerUuid;
 
 		private List<Style> styles;
 
