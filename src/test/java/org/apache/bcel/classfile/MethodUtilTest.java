@@ -62,7 +62,7 @@ class MethodUtilTest {
 			final Iterable<Method> ms = Arrays.stream(JavaClassUtil.getMethods(javaClass))
 					.filter(m -> m != null && Objects.equals(FieldOrMethodUtil.getName(m), "toString")
 							&& length(MethodUtil.getArgumentTypes(m)) == 0)
-					.collect(Collectors.toList());
+					.toList();
 			//
 			if (IterableUtils.size(ms) > 1) {
 				//
