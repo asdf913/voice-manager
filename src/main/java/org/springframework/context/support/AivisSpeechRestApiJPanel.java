@@ -574,8 +574,6 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 				FailableStreamUtil.forEach(new FailableStream<>(Util.stream(speakers(hostAndPort))), x -> {
 					//
-					Util.addElement(dcbmSpeaker, x);
-					//
 					if (x == null) {
 						//
 						return;
@@ -598,6 +596,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 						//
 					} // if
 						//
+					Util.addElement(dcbmSpeaker, x);
+					//
 				});
 				//
 			} catch (final IOException | URISyntaxException e) {
