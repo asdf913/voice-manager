@@ -731,6 +731,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
+	@Nullable
 	private static SpeakerInfo speakerInfo(@Nullable final Map<?, ?> instance) {
 		//
 		if (instance == null) {
@@ -780,6 +781,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
+	@Nullable
 	private static byte[] decode(@Nullable final Decoder instance, @Nullable final String string) {
 		return instance != null && string != null ? instance.decode(string) : null;
 	}
@@ -792,6 +794,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
+	@Nullable
 	private static <E> Spliterator<E> spliterator(@Nullable final Iterable<E> instance) {
 		return instance != null ? instance.spliterator() : null;
 	}
