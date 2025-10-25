@@ -225,14 +225,10 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof Stream) {
+			} else if (proxy instanceof Stream && Objects.equals(name, "count")) {
 				//
-				if (Objects.equals(name, "count")) {
-					//
-					return count;
-					//
-				} // if
-					//
+				return count;
+				//
 			} // if
 				//
 			throw new Throwable(name);
