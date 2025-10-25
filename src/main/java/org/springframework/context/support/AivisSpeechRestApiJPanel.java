@@ -884,7 +884,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	}
 
 	@Nullable
-	private static String toJson(@Nullable final Gson instance, final Object src) {
+	private static String toJson(@Nullable final Gson instance, @Nullable final Object src) {
 		//
 		// formattingStyle
 		//
