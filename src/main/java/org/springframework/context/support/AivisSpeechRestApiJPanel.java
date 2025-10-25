@@ -43,6 +43,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
@@ -105,6 +106,8 @@ import org.springframework.beans.factory.InitializingBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.net.HostAndPort;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
@@ -144,7 +147,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	@Note("View Portrait")
 	private AbstractButton btnViewPortrait = null;
 
-	private AbstractButton btnViewIcon = null;
+	private AbstractButton btnViewIcon, btnCopyVoiceSampleTranscriptToText = null;
 
 	private JComboBox<Speaker> jcbSpeaker = null;
 
@@ -154,12 +157,18 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 
 	private DefaultComboBoxModel<Style> dcbmStyle = null;
 
+	private JComboBox<String> jcbVoiceSampleTranscript = null;
+
+	private DefaultComboBoxModel<String> dcbmVoiceSampleTranscript = null;
+
 	private String audioQuery = null;
 
 	@Note("Portrait")
 	private JLabel jLabelPortrait = null;
 
 	private JLabel jLabelIcon = null;
+
+	private Window window = null;
 
 	private AivisSpeechRestApiJPanel() {
 	}
@@ -258,9 +267,16 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 		add(btnViewIcon = new JButton("View"), wrap);
 		//
+		add(new JLabel("Voice Sample Transcript"), String.format("span %1$s", 3));
+		//
+		add(jcbVoiceSampleTranscript = new JComboBox<>(dcbmVoiceSampleTranscript = new DefaultComboBoxModel<>()),
+				String.format("span %1$s", 3));
+		//
+		add(btnCopyVoiceSampleTranscriptToText = new JButton("Copy"), wrap);
+		//
 		add(new JLabel("Text"));
 		//
-		add(tfText = new JTextField(), "growx");
+		add(tfText = new JTextField(), String.format("growx,span %1$s", 5));
 		//
 		add(btnAudioQuery = new JButton("Audio Query"), String.format("span %1$s", 3));
 		//
@@ -270,10 +286,10 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 		add(btnSynthesis = new JButton("Synthesis"));
 		//
-		addItemListener(this, jcbSpeaker, jcbStyle);
+		addItemListener(this, jcbSpeaker, jcbStyle, jcbVoiceSampleTranscript);
 		//
 		addActionListener(this, btnSpeakers, btnAudioQuery, btnViewAudioQuery, btnSynthesis, btnViewPortrait,
-				btnViewIcon);
+				btnViewIcon, btnCopyVoiceSampleTranscriptToText);
 		//
 	}
 
@@ -415,6 +431,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 		final JFrame jFrame = Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), isTestMode()) ? new JFrame() : null;
 		//
+		instance.window = jFrame;
+		//
 		setDefaultCloseOperation(jFrame, WindowConstants.EXIT_ON_CLOSE);
 		//
 		add(jFrame, instance);
@@ -447,16 +465,9 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 			// objectLock
 			//
-		Iterable<Field> fs = Util.collect(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(instance))),
-				x -> Objects.equals(Util.getName(x), "objectLock")), Collectors.toList());
+		final Class<?> clz = Util.getClass(instance);
 		//
-		if (IterableUtils.size(fs) > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		Field f = getFieldByName(clz, "objectLock");
 		//
 		if (f != null && Narcissus.getField(instance, f) == null) {
 			//
@@ -466,22 +477,30 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 			// graphicsConfig
 			//
-		if (IterableUtils
-				.size(fs = Util.collect(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(instance))),
-						x -> Objects.equals(Util.getName(x), "graphicsConfig")), Collectors.toList())) > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		if ((f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) != null
-				&& Narcissus.getField(instance, f) == null) {
+		if ((f = getFieldByName(clz, "graphicsConfig")) != null && Narcissus.getField(instance, f) == null) {
 			//
 			return;
 			//
 		} // if
 			//
 		instance.pack();
+		//
+	}
+
+	private static Field getFieldByName(final Class<?> clz, final String name) {
+		//
+		final Iterable<Field> fs = Util.collect(
+				Util.filter(Util.stream(testAndApply(Objects::nonNull, clz, FieldUtils::getAllFieldsList, null)),
+						x -> Objects.equals(Util.getName(x), name)),
+				Collectors.toList());
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		return testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
 	}
 
@@ -495,17 +514,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 			// component
 			//
-		final Iterable<Field> fs = Util
-				.collect(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(instance))),
-						x -> Objects.equals(Util.getName(x), "component")), Collectors.toList());
-		//
-		if (IterableUtils.size(fs) > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		final Field f = getFieldByName(Util.getClass(instance), "component");
 		//
 		if (f != null && Narcissus.getField(instance, f) == null) {
 			//
@@ -828,9 +837,13 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 			jPanel.setLayout(new MigLayout());
 			//
-			final JTextArea jTextArea = new JTextArea(instance.audioQuery);
+			final Gson gson = create(new GsonBuilder().setPrettyPrinting());
 			//
-			jTextArea.setRows(2);
+			final String json = toJson(gson, fromJson(gson, instance.audioQuery, Object.class));
+			//
+			final JTextArea jTextArea = new JTextArea(json);
+			//
+			jTextArea.setRows((int) Math.min(count(lines(json)), 40));
 			//
 			final Dimension screenSize = getScreenSize(Toolkit.getDefaultToolkit());
 			//
@@ -845,6 +858,78 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		} // if
 			//
 		return false;
+		//
+	}
+
+	private static long count(final Stream<?> instance) {
+		return instance != null ? instance.count() : 0;
+	}
+
+	private static Stream<String> lines(final String instance) {
+		//
+		final Field f = getFieldByName(Util.getClass(instance), "value");
+		//
+		if (f != null && Narcissus.getField(instance, f) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance != null ? instance.lines() : null;
+		//
+	}
+
+	private static String toJson(final Gson instance, final Object src) {
+		//
+		// formattingStyle
+		//
+		final Field f = getFieldByName(Util.getClass(instance), "formattingStyle");
+		//
+		if (f != null && Narcissus.getField(instance, f) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance != null ? instance.toJson(src) : null;
+		//
+	}
+
+	private static <T> T fromJson(final Gson instance, final String json, final Class<T> classOfT) {
+		//
+		if (instance == null || classOfT == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+			// typeTokenCache
+			//
+		final Field f = getFieldByName(Util.getClass(instance), "typeTokenCache");
+		//
+		if (f != null && Narcissus.getField(instance, f) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance.fromJson(json, classOfT);
+		//
+	}
+
+	private static Gson create(final GsonBuilder instance) {
+		//
+		// factories
+		//
+		final Field f = getFieldByName(Util.getClass(instance), "factories");
+		//
+		if (f != null && Narcissus.getField(instance, f) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance != null ? instance.create() : null;
 		//
 	}
 
@@ -883,6 +968,12 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 			} // if
 				//
+			return true;
+			//
+		} else if (Objects.equals(source, instance.btnCopyVoiceSampleTranscriptToText)) {
+			//
+			Util.setText(instance.tfText, Util.toString(Util.getSelectedItem(instance.dcbmVoiceSampleTranscript)));
+			//
 			return true;
 			//
 		} // if
@@ -1279,6 +1370,13 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 					//
 				setIcon(instance.jLabelIcon, testAndApply(Objects::nonNull, image, ImageIcon::new,
 						x -> testAndApply(Objects::nonNull, icon, ImageIcon::new, null)));
+				//
+				removeAllElements(instance.dcbmVoiceSampleTranscript);
+				//
+				Util.forEach(Util.stream(style.styleInfo.voiceSampleTranscripts),
+						x -> Util.addElement(instance.dcbmVoiceSampleTranscript, x));
+				//
+				pack(instance.window);
 				//
 			} // if
 				//

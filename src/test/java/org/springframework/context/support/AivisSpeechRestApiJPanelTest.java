@@ -28,6 +28,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
@@ -58,6 +59,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.net.HostAndPort;
 import com.google.common.reflect.Reflection;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
@@ -74,7 +77,8 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_SET_VISIBLE, METHOD_PACK, METHOD_ADD, METHOD_SET_DEFAULT_CLOSE_OPERATION,
 			METHOD_SPEAKERS_HOST_AND_PORT, METHOD_SPEAKERS_ITERABLE, METHOD_AUDIO_QUERY, METHOD_SYNTHESIS,
 			METHOD_LENGTH, METHOD_TEST_AND_RUN, METHOD_ADD_ITEM_LISTENER, METHOD_SPEAKER_INFO_HOST_AND_PORT,
-			METHOD_SPEAKER_INFO_MAP, METHOD_DECODE, METHOD_GET_STYLE_INFO_BY_ID, METHOD_SET_STYLE_INFO = null;
+			METHOD_SPEAKER_INFO_MAP, METHOD_DECODE, METHOD_GET_STYLE_INFO_BY_ID, METHOD_SET_STYLE_INFO, METHOD_LINES,
+			METHOD_TO_JSON, METHOD_FROM_JSON, METHOD_CREATE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -142,11 +146,22 @@ class AivisSpeechRestApiJPanelTest {
 				CLASS_SPEAKER = Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$Speaker"),
 				HostAndPort.class, DefaultComboBoxModel.class)).setAccessible(true);
 		//
+		(METHOD_LINES = clz.getDeclaredMethod("lines", String.class)).setAccessible(true);
+		//
+		(METHOD_TO_JSON = clz.getDeclaredMethod("toJson", Gson.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_FROM_JSON = clz.getDeclaredMethod("fromJson", Gson.class, String.class, Class.class))
+				.setAccessible(true);
+		//
+		(METHOD_CREATE = clz.getDeclaredMethod("create", GsonBuilder.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
 
 		private Boolean test, equals = null;
+
+		private Long count = null;
 
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -210,6 +225,14 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof Stream) {
+				//
+				if (Objects.equals(name, "count")) {
+					//
+					return count;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -335,7 +358,7 @@ class AivisSpeechRestApiJPanelTest {
 			invoke = Modifier.isStatic(m.getModifiers()) ? Narcissus.invokeStaticMethod(m, arguments)
 					: Narcissus.invokeMethod(instance, m, arguments);
 			//
-			if (IterableUtils.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE), getReturnType(m))) {
+			if (IterableUtils.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE, Long.TYPE), getReturnType(m))) {
 				//
 				Assertions.assertNotNull(invoke, toString);
 				//
@@ -375,6 +398,8 @@ class AivisSpeechRestApiJPanelTest {
 		if (ih != null) {
 			//
 			ih.test = Boolean.FALSE;
+			//
+			ih.count = Long.valueOf(0);
 			//
 		} // if
 			//
@@ -419,7 +444,8 @@ class AivisSpeechRestApiJPanelTest {
 			invoke = Modifier.isStatic(m.getModifiers()) ? Narcissus.invokeStaticMethod(m, arguments)
 					: Narcissus.invokeMethod(instance, m, arguments);
 			//
-			if (Boolean.logicalOr(IterableUtils.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE), getReturnType(m)),
+			if (Boolean.logicalOr(
+					IterableUtils.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE, Long.TYPE), getReturnType(m)),
 					Boolean.logicalAnd(Objects.equals(Util.getName(m), "speakerInfo"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Map.class })))) {
 				//
@@ -521,6 +547,16 @@ class AivisSpeechRestApiJPanelTest {
 		FieldUtils.writeDeclaredField(style, "styleInfo", styleInfo, true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnViewIcon));
+		//
+		// btnCopyVoiceSampleTranscriptToText
+		//
+		final Object btnCopyVoiceSampleTranscriptToText = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnCopyVoiceSampleTranscriptToText",
+				btnCopyVoiceSampleTranscriptToText, true);
+		//
+		Assertions.assertDoesNotThrow(
+				() -> instance.actionPerformed(new ActionEvent(btnCopyVoiceSampleTranscriptToText, 0, null)));
 		//
 	}
 
@@ -881,6 +917,44 @@ class AivisSpeechRestApiJPanelTest {
 	void testSetStyleInfo() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_SET_STYLE_INFO, null, speaker, null, null));
+		//
+	}
+
+	@Test
+	void testLines() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_LINES, null, Narcissus.allocateInstance(String.class)));
+		//
+	}
+
+	@Test
+	void testToJson() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_TO_JSON, null, Narcissus.allocateInstance(Gson.class), null));
+		//
+		Assertions.assertEquals(Objects.toString(null), invoke(METHOD_TO_JSON, null, new Gson(), null));
+		//
+	}
+
+	@Test
+	void testFromJson() throws IllegalAccessException, InvocationTargetException {
+		//
+		final Object gson = Narcissus.allocateInstance(Gson.class);
+		//
+		Assertions.assertNull(invoke(METHOD_FROM_JSON, null, gson, null, null));
+		//
+		Assertions.assertNull(invoke(METHOD_FROM_JSON, null, gson, null, Object.class));
+		//
+		Assertions.assertNull(invoke(METHOD_FROM_JSON, null, gson, "", Object.class));
+		//
+		Assertions.assertNull(invoke(METHOD_FROM_JSON, null, gson, "{}", Object.class));
+		//
+	}
+
+	@Test
+	void testCreate() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_CREATE, null, Narcissus.allocateInstance(GsonBuilder.class)));
 		//
 	}
 
