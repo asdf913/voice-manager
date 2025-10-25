@@ -901,7 +901,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	}
 
 	@Nullable
-	private static <T> T fromJson(final Gson instance, final String json, final Class<T> classOfT) {
+	private static <T> T fromJson(@Nullable final Gson instance, final String json, @Nullable final Class<T> classOfT) {
 		//
 		if (instance == null || classOfT == null) {
 			//
