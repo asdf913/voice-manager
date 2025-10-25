@@ -864,11 +864,11 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static long count(final Stream<?> instance) {
+	private static long count(@Nullable final Stream<?> instance) {
 		return instance != null ? instance.count() : 0;
 	}
 
-	private static Stream<String> lines(final String instance) {
+	private static Stream<String> lines(@Nullable final String instance) {
 		//
 		final Field f = getFieldByName(Util.getClass(instance), "value");
 		//
@@ -882,7 +882,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static String toJson(final Gson instance, final Object src) {
+	private static String toJson(@Nullable final Gson instance, final Object src) {
 		//
 		// formattingStyle
 		//
@@ -920,7 +920,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static Gson create(final GsonBuilder instance) {
+	private static Gson create(@Nullable final GsonBuilder instance) {
 		//
 		// factories
 		//
