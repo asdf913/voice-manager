@@ -1014,7 +1014,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static void play(final StyleInfo instance, final int index) throws IOException, InterruptedException {
+	private static void play(@Nullable final StyleInfo instance, final int index)
+			throws IOException, InterruptedException {
 		//
 		play(testAndApply(x -> IterableUtils.size(x) > index, instance != null ? instance.voiceSamples : null,
 				x -> IterableUtils.get(x, index), null));
