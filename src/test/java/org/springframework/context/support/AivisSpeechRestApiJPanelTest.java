@@ -1185,25 +1185,22 @@ class AivisSpeechRestApiJPanelTest {
 			//
 			for (int i = 0; instructions != null && i < instructions.length; i++) {
 				//
-				if (ArrayUtils.get(instructions, i) instanceof LDC ldc) {
+				if (ArrayUtils.get(instructions, i) instanceof LDC ldc && i > 0
+						&& ArrayUtils.get(instructions, i - 1) instanceof INVOKESTATIC invokeStatic
+						&& Objects.equals("java.lang.Runtime",
+								InvokeInstructionUtil.getClassName(invokeStatic, cpg = ObjectUtils.getIfNull(cpg,
+										() -> new ConstantPoolGen(javaClass.getConstantPool()))))) {
 					//
-					if (i > 0 && ArrayUtils.get(instructions, i - 1) instanceof INVOKESTATIC invokeStatic
-							&& Objects.equals("java.lang.Runtime",
-									InvokeInstructionUtil.getClassName(invokeStatic, cpg = ObjectUtils.getIfNull(cpg,
-											() -> new ConstantPoolGen(javaClass.getConstantPool()))))) {
+					if (ivalue0 != null) {
 						//
-						if (ivalue0 != null) {
-							//
-							throw new IllegalStateException();
-							//
-						} // if
-							//
-						ivalue0 = Unit.with(Pair.of(testAndApply(x -> x != null && x.length > 0,
-								StringUtils.split(Util.toString(LDCUtil.getValue(ldc, cpg)), ' '),
-								x -> ArrayUtils.get(x, 0), null), method));
+						throw new IllegalStateException();
 						//
 					} // if
 						//
+					ivalue0 = Unit.with(Pair.of(testAndApply(x -> x != null && x.length > 0,
+							StringUtils.split(Util.toString(LDCUtil.getValue(ldc, cpg)), ' '),
+							x -> ArrayUtils.get(x, 0), null), method));
+					//
 				} // if
 					//
 			} // for
