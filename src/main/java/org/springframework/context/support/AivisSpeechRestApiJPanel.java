@@ -995,7 +995,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static boolean actionPerformed3(final AivisSpeechRestApiJPanel instance, final Object source) {
+	private static boolean actionPerformed3(@Nullable final AivisSpeechRestApiJPanel instance, final Object source) {
 		//
 		if (instance == null) {
 			//
