@@ -1072,6 +1072,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 	}
 
+	@Nullable
 	private static String nextAlphanumeric(@Nullable final RandomStringUtils instance, final int count) {
 		return instance != null ? instance.nextAlphanumeric(count) : null;
 	}
