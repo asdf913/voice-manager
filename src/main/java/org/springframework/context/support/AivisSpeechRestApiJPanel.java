@@ -1009,7 +1009,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static void play(final byte[] bs) throws IOException, InterruptedException {
+	private static void play(@Nullable final byte[] bs) throws IOException, InterruptedException {
 		//
 		File file = null;
 		//
