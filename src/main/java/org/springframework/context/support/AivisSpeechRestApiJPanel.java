@@ -1052,7 +1052,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		return instance != null ? instance.nextAlphanumeric(count) : null;
 	}
 
-	private static Process exec(final Runtime instance, final String command) throws IOException {
+	private static Process exec(@Nullable final Runtime instance, final String command) throws IOException {
 		return instance != null && StringUtils.isNotEmpty(command) ? instance.exec(command) : null;
 	}
 
