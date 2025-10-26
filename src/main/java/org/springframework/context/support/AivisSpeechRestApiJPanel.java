@@ -609,11 +609,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 		for (int i = 0; i < IterableUtils.size(functions); i++) {
 			//
-			if ((function = IterableUtils.get(functions, i)) == null) {
-				//
-				continue;
-				//
-			} else if (function.applyAsBoolean(this, source)) {
+			if ((function = IterableUtils.get(functions, i)) != null && function.applyAsBoolean(this, source)) {
 				//
 				break;
 				//
