@@ -605,8 +605,9 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 		} // if
 			//
-		final Iterable<ToBooleanBiFunction<AivisSpeechRestApiJPanel, Object>> functions = Arrays
-				.asList(AivisSpeechRestApiJPanel::actionPerformed1, AivisSpeechRestApiJPanel::actionPerformed2);
+		final Iterable<ToBooleanBiFunction<AivisSpeechRestApiJPanel, Object>> functions = Arrays.asList(
+				AivisSpeechRestApiJPanel::actionPerformed1, AivisSpeechRestApiJPanel::actionPerformed2,
+				AivisSpeechRestApiJPanel::actionPerformed3);
 		//
 		ToBooleanBiFunction<AivisSpeechRestApiJPanel, Object> function = null;
 		//
@@ -988,7 +989,21 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 			return true;
 			//
-		} else if (Objects.equals(source, instance.btnPlayVoiceSampleTranscript)) {
+		} // if
+			//
+		return false;
+		//
+	}
+
+	private static boolean actionPerformed3(final AivisSpeechRestApiJPanel instance, final Object source) {
+		//
+		if (instance == null) {
+			//
+			return false;
+			//
+		} // if
+			//
+		if (Objects.equals(source, instance.btnPlayVoiceSampleTranscript)) {
 			//
 			final Style style = Util.cast(Style.class, Util.getSelectedItem(instance.dcbmStyle));
 			//
