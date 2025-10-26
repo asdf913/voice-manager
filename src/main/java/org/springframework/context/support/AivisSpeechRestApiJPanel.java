@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,18 +27,18 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Base64.Decoder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Spliterator;
-import java.util.Base64.Decoder;
-import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -91,8 +92,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.function.FailableBiConsumer;
+import org.apache.commons.lang3.function.FailableBiConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.ToBooleanBiFunction;
@@ -150,7 +154,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	@Note("View Icon")
 	private AbstractButton btnViewIcon = null;
 
-	private AbstractButton btnCopyVoiceSampleTranscriptToText = null;
+	private AbstractButton btnCopyVoiceSampleTranscriptToText, btnPlayVoiceSampleTranscript = null;
 
 	private JComboBox<Speaker> jcbSpeaker = null;
 
@@ -275,7 +279,9 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		add(jcbVoiceSampleTranscript = new JComboBox<>(dcbmVoiceSampleTranscript = new DefaultComboBoxModel<>()),
 				String.format("span %1$s", 3));
 		//
-		add(btnCopyVoiceSampleTranscriptToText = new JButton("Copy"), wrap);
+		add(btnCopyVoiceSampleTranscriptToText = new JButton("Copy"));
+		//
+		add(btnPlayVoiceSampleTranscript = new JButton("Play"), String.format("%1$s,span %2$s", wrap, 3));
 		//
 		add(new JLabel("Text"));
 		//
@@ -292,7 +298,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		addItemListener(this, jcbSpeaker, jcbStyle, jcbVoiceSampleTranscript);
 		//
 		addActionListener(this, btnSpeakers, btnAudioQuery, btnViewAudioQuery, btnSynthesis, btnViewPortrait,
-				btnViewIcon, btnCopyVoiceSampleTranscriptToText);
+				btnViewIcon, btnCopyVoiceSampleTranscriptToText, btnPlayVoiceSampleTranscript);
 		//
 	}
 
@@ -535,10 +541,10 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		}
 	}
 
-	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
-			final BiConsumer<T, U> consumer) {
+	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, final T t,
+			final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
 		if (Util.test(instance, t, u)) {
-			Util.accept(consumer, t, u);
+			FailableBiConsumerUtil.accept(consumer, t, u);
 		} // if
 	}
 
@@ -983,10 +989,71 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 			return true;
 			//
+		} else if (Objects.equals(source, instance.btnPlayVoiceSampleTranscript)) {
+			//
+			final Style style = Util.cast(Style.class, Util.getSelectedItem(instance.dcbmStyle));
+			//
+			try {
+				//
+				play(instance.jcbVoiceSampleTranscript != null ? IterableUtils.get(
+						style != null && style.styleInfo != null ? style.styleInfo.voiceSamples : null,
+						instance.jcbVoiceSampleTranscript.getSelectedIndex()) : null);
+				//
+			} catch (final IOException | InterruptedException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+			return true;
+			//
 		} // if
 			//
 		return false;
 		//
+	}
+
+	private static void play(final byte[] bs) throws IOException, InterruptedException {
+		//
+		File file = null;
+		//
+		try {
+			//
+			if (Objects.equals(Util.getName(Util.getClass(FileSystems.getDefault())), "sun.nio.fs.LinuxFileSystem")) {
+				//
+				testAndAccept((a, b) -> b != null,
+						file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3), ".m4a"), bs,
+						FileUtils::writeByteArrayToFile);
+				//
+				final Process process = exec(Runtime.getRuntime(),
+						String.format("ffplay -autoexit -nodisp %1$s", Util.getAbsolutePath(file)));
+				//
+				if (process != null) {
+					//
+					process.waitFor();
+					//
+				} // if
+					//
+				return;
+				//
+			} // if
+				//
+			throw new UnsupportedOperationException();
+			//
+		} finally {
+			//
+			FileUtils.delete(file);
+			//
+		} // try
+			//
+	}
+
+	private static String nextAlphanumeric(final RandomStringUtils instance, final int count) throws IOException {
+		return instance != null ? instance.nextAlphanumeric(count) : null;
+	}
+
+	private static Process exec(final Runtime instance, final String command) throws IOException {
+		return instance != null && StringUtils.isNotEmpty(command) ? instance.exec(command) : null;
 	}
 
 	private static void testAndRun(final boolean condition, final Runnable runnable) {

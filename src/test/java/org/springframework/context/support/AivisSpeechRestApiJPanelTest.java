@@ -11,23 +11,26 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64.Decoder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Vector;
-import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
@@ -39,12 +42,35 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.ListCellRenderer;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.Code;
+import org.apache.bcel.classfile.FieldOrMethodUtil;
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.classfile.MethodUtil;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.INVOKESTATIC;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionList;
+import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.InvokeInstructionUtil;
+import org.apache.bcel.generic.LDC;
+import org.apache.bcel.generic.LDCUtil;
+import org.apache.bcel.generic.TypeUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -78,7 +104,8 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_SPEAKERS_HOST_AND_PORT, METHOD_SPEAKERS_ITERABLE, METHOD_AUDIO_QUERY, METHOD_SYNTHESIS,
 			METHOD_LENGTH, METHOD_TEST_AND_RUN, METHOD_ADD_ITEM_LISTENER, METHOD_SPEAKER_INFO_HOST_AND_PORT,
 			METHOD_SPEAKER_INFO_MAP, METHOD_DECODE, METHOD_GET_STYLE_INFO_BY_ID, METHOD_SET_STYLE_INFO, METHOD_LINES,
-			METHOD_TO_JSON, METHOD_FROM_JSON, METHOD_CREATE = null;
+			METHOD_TO_JSON, METHOD_FROM_JSON, METHOD_CREATE, METHOD_EXEC, METHOD_GET_CODE_METHOD, METHOD_GET_CODE_CODE,
+			METHOD_TEST_AND_APPLY, METHOD_REPLACE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -103,7 +130,7 @@ class AivisSpeechRestApiJPanelTest {
 		(METHOD_GET_HOST = clz.getDeclaredMethod("getHost", HostAndPort.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
-				BiConsumer.class)).setAccessible(true);
+				FailableBiConsumer.class)).setAccessible(true);
 		//
 		(METHOD_SET_VISIBLE = clz.getDeclaredMethod("setVisible", Component.class, Boolean.TYPE)).setAccessible(true);
 		//
@@ -154,6 +181,19 @@ class AivisSpeechRestApiJPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_CREATE = clz.getDeclaredMethod("create", GsonBuilder.class)).setAccessible(true);
+		//
+		(METHOD_EXEC = clz.getDeclaredMethod("exec", Runtime.class, String.class)).setAccessible(true);
+		//
+		(METHOD_GET_CODE_METHOD = clz.getDeclaredMethod("getCode", org.apache.bcel.classfile.Method.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_CODE_CODE = clz.getDeclaredMethod("getCode", Code.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+				FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		//
+		(METHOD_REPLACE = clz.getDeclaredMethod("replace", Strings.class, String.class, String.class, String.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -273,6 +313,10 @@ class AivisSpeechRestApiJPanelTest {
 
 	private ObjectMapper objectMapper = null;
 
+	private Boolean exec = null;
+
+	private org.apache.bcel.classfile.Method method = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -292,6 +336,58 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		objectMapper = new ObjectMapper();
 		//
+		if (Objects.equals(Util.getName(Util.getClass(FileSystems.getDefault())), "sun.nio.fs.LinuxFileSystem")) {
+			//
+			try {
+				//
+				final Entry<String, org.apache.bcel.classfile.Method> entry = getCommandAndMethod(
+						AivisSpeechRestApiJPanel.class);
+				//
+				method = Util.getValue(entry);
+				//
+				exec(Runtime.getRuntime(), Util.getKey(entry));
+				//
+				exec = Boolean.TRUE;
+				//
+			} catch (final Throwable e) {
+				//
+				exec = Boolean.FALSE;
+				//
+			} // try
+				//
+		} // if
+			//
+	}
+
+	@Test
+	void testExec() throws Throwable {
+		//
+		final Runtime runtime = Runtime.getRuntime();
+		//
+		Assertions.assertNull(exec(runtime, null));
+		//
+		Assertions.assertNull(exec(runtime, EMPTY));
+		//
+		if (Objects.equals(Util.getName(Util.getClass(FileSystems.getDefault())), "sun.nio.fs.LinuxFileSystem")) {
+			//
+			Assertions.assertNotNull(exec(runtime, "uname"));
+			//
+		} // if
+			//
+	}
+
+	private static Process exec(final Runtime instance, final String command) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_EXEC, null, instance, command);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Process) {
+				return (Process) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static Class<?> getReturnType(final Method instance) {
@@ -351,6 +447,43 @@ class AivisSpeechRestApiJPanelTest {
 			//
 			toString = Util.toString(m);
 			//
+			if (Objects.equals(FieldOrMethodUtil.getName(method), Util.getName(m)) && method != null
+					&& Objects.equals(
+							Util.collect(Util.map(Arrays.stream(method.getArgumentTypes()), TypeUtil::getClassName),
+									Collectors.joining()),
+							Util.collect(Util.map(Arrays.stream(method.getArgumentTypes()), TypeUtil::getClassName),
+									Collectors.joining()))) {
+				//
+				if (Objects.equals(exec, Boolean.FALSE)) {
+					//
+					if (Modifier.isStatic(m.getModifiers())) {
+						//
+						Throwable throwable = null;
+						//
+						try {
+							//
+							Narcissus.invokeStaticMethod(m, arguments);
+							//
+						} catch (final Throwable e) {
+							//
+							throwable = e;
+							//
+						} // try
+							//
+						Assertions.assertEquals("java.io.IOException", Util.getName(Util.getClass(throwable)));
+						//
+						continue;
+						//
+					} // if
+						//
+				} else if (!Objects.equals(exec, Boolean.TRUE)) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // if
+				//
 			invoke = Modifier.isStatic(m.getModifiers()) ? Narcissus.invokeStaticMethod(m, arguments)
 					: Narcissus.invokeMethod(instance, m, arguments);
 			//
@@ -437,6 +570,43 @@ class AivisSpeechRestApiJPanelTest {
 			//
 			toString = Util.toString(m);
 			//
+			if (Objects.equals(FieldOrMethodUtil.getName(method), Util.getName(m)) && method != null
+					&& Objects.equals(
+							Util.collect(Util.map(Arrays.stream(method.getArgumentTypes()), TypeUtil::getClassName),
+									Collectors.joining()),
+							Util.collect(Util.map(Arrays.stream(method.getArgumentTypes()), TypeUtil::getClassName),
+									Collectors.joining()))) {
+				//
+				if (Objects.equals(exec, Boolean.FALSE)) {
+					//
+					if (Modifier.isStatic(m.getModifiers())) {
+						//
+						Throwable throwable = null;
+						//
+						try {
+							//
+							Narcissus.invokeStaticMethod(m, arguments);
+							//
+						} catch (final Throwable e) {
+							//
+							throwable = e;
+							//
+						} // try
+							//
+						Assertions.assertEquals("java.io.IOException", Util.getName(Util.getClass(throwable)));
+						//
+						continue;
+						//
+					} // if
+						//
+				} else if (!Objects.equals(exec, Boolean.TRUE)) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // if
+				//
 			invoke = Modifier.isStatic(m.getModifiers()) ? Narcissus.invokeStaticMethod(m, arguments)
 					: Narcissus.invokeMethod(instance, m, arguments);
 			//
@@ -554,6 +724,26 @@ class AivisSpeechRestApiJPanelTest {
 		Assertions.assertDoesNotThrow(
 				() -> instance.actionPerformed(new ActionEvent(btnCopyVoiceSampleTranscriptToText, 0, null)));
 		//
+		// btnPlayVoiceSampleTranscript
+		//
+		final Object btnPlayVoiceSampleTranscript = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnPlayVoiceSampleTranscript", btnPlayVoiceSampleTranscript, true);
+		//
+		final ActionEvent actionEventBtnPlayVoiceSampleTranscript = new ActionEvent(btnPlayVoiceSampleTranscript, 0,
+				null);
+		//
+		if (Objects.equals(exec, Boolean.TRUE)) {
+			//
+			Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnPlayVoiceSampleTranscript));
+			//
+		} else if (Objects.equals(exec, Boolean.FALSE)) {
+			//
+			Assertions.assertThrows(RuntimeException.class,
+					() -> instance.actionPerformed(actionEventBtnPlayVoiceSampleTranscript));
+			//
+		} // if
+			//
 	}
 
 	@Test
@@ -952,6 +1142,129 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Assertions.assertNull(invoke(METHOD_CREATE, null, Narcissus.allocateInstance(GsonBuilder.class)));
 		//
+	}
+
+	private static Entry<String, org.apache.bcel.classfile.Method> getCommandAndMethod(final Class<?> clz)
+			throws Throwable {
+		//
+		IValue0<Entry<String, org.apache.bcel.classfile.Method>> ivalue0 = null;
+		//
+		try (final InputStream is = Util.getResourceAsStream(clz,
+				StringUtils.join("/", replace(Strings.CS, Util.getName(clz), ".", "/"), ".class"))) {
+			//
+			final JavaClass javaClass = ClassParserUtil
+					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
+			//
+			final Iterable<org.apache.bcel.classfile.Method> ms = Util
+					.collect(
+							Util.filter(
+									testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream,
+											null),
+									m -> m != null
+											&& Objects.equals(FieldOrMethodUtil.getName(m),
+													"play")
+											&& CollectionUtils.isEqualCollection(
+													Util.collect(Util.map(Arrays.stream(MethodUtil.getArgumentTypes(m)),
+															TypeUtil::getClassName), Collectors.toList()),
+													Collections.singleton("[B"))),
+							Collectors.toList());
+			//
+			if (IterableUtils.size(ms) > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			final org.apache.bcel.classfile.Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms,
+					x -> IterableUtils.get(x, 0), null);
+			//
+			final Instruction[] instructions = InstructionListUtil.getInstructions(
+					testAndApply(Objects::nonNull, getCode(getCode(method)), InstructionList::new, null));
+			//
+			ConstantPoolGen cpg = null;
+			//
+			for (int i = 0; instructions != null && i < instructions.length; i++) {
+				//
+				if (ArrayUtils.get(instructions, i) instanceof LDC ldc) {
+					//
+					if (i > 0 && ArrayUtils.get(instructions, i - 1) instanceof INVOKESTATIC invokeStatic
+							&& Objects.equals("java.lang.Runtime",
+									InvokeInstructionUtil.getClassName(invokeStatic, cpg = ObjectUtils.getIfNull(cpg,
+											() -> new ConstantPoolGen(javaClass.getConstantPool()))))) {
+						//
+						if (ivalue0 != null) {
+							//
+							throw new IllegalStateException();
+							//
+						} // if
+							//
+						ivalue0 = Unit.with(Pair.of(testAndApply(x -> x != null && x.length > 0,
+								StringUtils.split(Util.toString(LDCUtil.getValue(ldc, cpg)), ' '),
+								x -> ArrayUtils.get(x, 0), null), method));
+						//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+		} // try
+			//
+		return IValue0Util.getValue0(ivalue0);
+		//
+	}
+
+	private static byte[] getCode(final Code instance) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_GET_CODE_CODE, null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof byte[]) {
+				return (byte[]) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Code getCode(final org.apache.bcel.classfile.Method instance) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_GET_CODE_METHOD, null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Code) {
+				return (Code) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
+			throws Throwable {
+		try {
+			return (R) invoke(METHOD_TEST_AND_APPLY, null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static String replace(final Strings instance, final String text, final String searchString,
+			final String replacement) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_REPLACE, null, instance, text, searchString, replacement);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }
