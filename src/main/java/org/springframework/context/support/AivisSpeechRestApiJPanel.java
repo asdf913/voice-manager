@@ -1015,9 +1015,9 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 					//
 				} // if
 					//
-			} catch (final IOException | InterruptedException e) {
+			} catch (final Exception e) {
 				//
-				throw new RuntimeException(e);
+				throw e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException(e);
 				//
 			} // try
 				//
