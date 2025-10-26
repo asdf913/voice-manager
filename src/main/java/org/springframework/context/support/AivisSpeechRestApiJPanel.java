@@ -994,10 +994,12 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 			try {
 				//
-				play(instance.jcbVoiceSampleTranscript != null ? IterableUtils.get(
-						style != null && style.styleInfo != null ? style.styleInfo.voiceSamples : null,
-						instance.jcbVoiceSampleTranscript.getSelectedIndex()) : null);
-				//
+				if (instance.jcbVoiceSampleTranscript != null) {
+					//
+					play(style != null ? style.styleInfo : null, instance.jcbVoiceSampleTranscript.getSelectedIndex());
+					//
+				} // if
+					//
 			} catch (final IOException | InterruptedException e) {
 				//
 				throw new RuntimeException(e);
@@ -1009,6 +1011,13 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		} // if
 			//
 		return false;
+		//
+	}
+
+	private static void play(final StyleInfo instance, final int index) throws IOException, InterruptedException {
+		//
+		play(testAndApply(x -> IterableUtils.size(x) > index, instance != null ? instance.voiceSamples : null,
+				x -> IterableUtils.get(x, index), null));
 		//
 	}
 

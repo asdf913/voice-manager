@@ -96,7 +96,7 @@ class AivisSpeechRestApiJPanelTest {
 
 	private static final String EMPTY = "";
 
-	private static Class<?> CLASS_STYLE, CLASS_SPEAKER = null;
+	private static Class<?> CLASS_STYLE, CLASS_STYLE_INFO, CLASS_SPEAKER = null;
 
 	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_CREATE_HOST_AND_PORT, METHOD_WRITE, METHOD_GET_BYTES,
 			METHOD_REMOVE_ALL_ELEMENTS, METHOD_GET_SCREEN_SIZE, METHOD_GET_HOST, METHOD_TEST_AND_ACCEPT,
@@ -105,7 +105,7 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_LENGTH, METHOD_TEST_AND_RUN, METHOD_ADD_ITEM_LISTENER, METHOD_SPEAKER_INFO_HOST_AND_PORT,
 			METHOD_SPEAKER_INFO_MAP, METHOD_DECODE, METHOD_GET_STYLE_INFO_BY_ID, METHOD_SET_STYLE_INFO, METHOD_LINES,
 			METHOD_TO_JSON, METHOD_FROM_JSON, METHOD_CREATE, METHOD_EXEC, METHOD_GET_CODE_METHOD, METHOD_GET_CODE_CODE,
-			METHOD_TEST_AND_APPLY, METHOD_REPLACE = null;
+			METHOD_TEST_AND_APPLY, METHOD_REPLACE, METHOD_PLAY = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -194,6 +194,11 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_REPLACE = clz.getDeclaredMethod("replace", Strings.class, String.class, String.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_PLAY = clz.getDeclaredMethod("play",
+				CLASS_STYLE_INFO = Util
+						.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$StyleInfo"),
+				Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -329,8 +334,7 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		style = Narcissus.allocateInstance(CLASS_STYLE);
 		//
-		styleInfo = Narcissus.allocateInstance(
-				Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$StyleInfo"));
+		styleInfo = Narcissus.allocateInstance(CLASS_STYLE_INFO);
 		//
 		speaker = Narcissus.allocateInstance(CLASS_SPEAKER);
 		//
@@ -1262,6 +1266,17 @@ class AivisSpeechRestApiJPanelTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testPlay() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_PLAY, null, styleInfo, 0));
+		//
+		FieldUtils.writeDeclaredField(styleInfo, "voiceSamples", Collections.singletonList(null), true);
+		//
+		Assertions.assertNull(invoke(METHOD_PLAY, null, styleInfo, 0));
+		//
 	}
 
 }
