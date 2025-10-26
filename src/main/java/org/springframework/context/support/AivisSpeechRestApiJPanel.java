@@ -545,7 +545,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	}
 
 	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, final T t,
-			final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
+			@Nullable final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
 		if (Util.test(instance, t, u)) {
 			FailableBiConsumerUtil.accept(consumer, t, u);
 		} // if
