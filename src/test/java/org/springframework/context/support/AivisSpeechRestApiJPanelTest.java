@@ -734,20 +734,9 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		FieldUtils.writeDeclaredField(instance, "btnPlayVoiceSampleTranscript", btnPlayVoiceSampleTranscript, true);
 		//
-		final ActionEvent actionEventBtnPlayVoiceSampleTranscript = new ActionEvent(btnPlayVoiceSampleTranscript, 0,
-				null);
+		Assertions.assertDoesNotThrow(
+				() -> instance.actionPerformed(new ActionEvent(btnPlayVoiceSampleTranscript, 0, null)));
 		//
-		if (Objects.equals(exec, Boolean.TRUE)) {
-			//
-			Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnPlayVoiceSampleTranscript));
-			//
-		} else if (Objects.equals(exec, Boolean.FALSE)) {
-			//
-			Assertions.assertThrows(RuntimeException.class,
-					() -> instance.actionPerformed(actionEventBtnPlayVoiceSampleTranscript));
-			//
-		} // if
-			//
 	}
 
 	@Test
@@ -1271,12 +1260,32 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testPlay() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(invoke(METHOD_PLAY, null, styleInfo, 0));
-		//
-		FieldUtils.writeDeclaredField(styleInfo, "voiceSamples", Collections.singletonList(null), true);
-		//
-		Assertions.assertNull(invoke(METHOD_PLAY, null, styleInfo, 0));
-		//
+		if (Objects.equals(exec, Boolean.FALSE)) {
+			//
+			Throwable targetException = null;
+			//
+			try {
+				//
+				invoke(METHOD_PLAY, null, styleInfo, 0);
+				//
+			} catch (final InvocationTargetException e) {
+				//
+				targetException = e.getTargetException();
+				//
+			} // try
+				//
+			Assertions.assertEquals("java.io.IOException", Util.getName(Util.getClass(targetException)));
+			//
+		} else if (Objects.equals(exec, Boolean.TRUE)) {
+			//
+			Assertions.assertNull(invoke(METHOD_PLAY, null, styleInfo, 0));
+			//
+			FieldUtils.writeDeclaredField(styleInfo, "voiceSamples", Collections.singletonList(null), true);
+			//
+			Assertions.assertNull(invoke(METHOD_PLAY, null, styleInfo, 0));
+			//
+		} // if
+			//
 	}
 
 }
