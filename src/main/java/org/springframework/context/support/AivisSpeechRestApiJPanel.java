@@ -1117,10 +1117,10 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 			final String messsage = contentInfo.getMessage();
 			//
-			final String longestCommonSubstring = Util.orElse(Util
-					.map(Util.stream(ElementUtil.getElementsByTag(document, "td")),
-							x -> longestCommonSubstring(ElementUtil.text(x), messsage))
-					.max((a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null);
+			final String longestCommonSubstring = Util.orElse(Util.max(
+					Util.map(Util.stream(ElementUtil.getElementsByTag(document, "td")),
+							x -> longestCommonSubstring(ElementUtil.text(x), messsage)),
+					(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null);
 			//
 			final String string = Util.orElse(Util
 					.map(Util.filter(Util.stream(ElementUtil.getElementsByTag(document, "td")),

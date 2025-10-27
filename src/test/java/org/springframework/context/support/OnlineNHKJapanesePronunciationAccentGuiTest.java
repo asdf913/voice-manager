@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
@@ -70,8 +69,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS,
 			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_SAVE_PITCH_ACCENT_IMAGE,
 			METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_GET_FIELD, METHOD_SAVE_FILE,
-			METHOD_IIF, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_SET_PREFERRED_SIZE, METHOD_MAX,
-			METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
+			METHOD_IIF, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_SET_PREFERRED_SIZE, METHOD_TEST_AND_RUN,
+			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -115,8 +114,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_SET_PREFERRED_SIZE = clz.getDeclaredMethod("setPreferredSize", Component.class, Dimension.class))
 				.setAccessible(true);
 		//
-		(METHOD_MAX = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
-		//
 		(METHOD_TEST_AND_RUN = clz.getDeclaredMethod("testAndRun", Boolean.TYPE, Runnable.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT3 = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
@@ -140,8 +137,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		private Iterator<?> iterator = null;
 
 		private Boolean hasNext, isEmpty = null;
-
-		private Optional<?> max = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -212,10 +207,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Stream && Objects.equals(methodName, "max")) {
-				//
-				return max;
-				//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -892,32 +883,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static void setPreferredSize(final Component instance, final Dimension preferredSize) throws Throwable {
 		try {
 			METHOD_SET_PREFERRED_SIZE.invoke(null, instance, preferredSize);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMax() throws Throwable {
-		//
-		Assertions.assertNull(max(null, null));
-		//
-		Assertions.assertNull(max(Stream.empty(), null));
-		//
-		Assertions.assertNull(max(Reflection.newProxy(Stream.class, ih), null));
-		//
-	}
-
-	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_MAX.invoke(null, instance, comparator);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Optional) {
-				return (Optional) obj;
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

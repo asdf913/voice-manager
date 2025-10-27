@@ -462,7 +462,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				.collect(Collectors.toList());
 		//
 		final Double maxPreferredSizeWidth = Util.orElse(
-				max(Util.map(Util.stream(cs), x -> getWidth(Util.getPreferredSize(x))), ObjectUtils::compare), null);
+				Util.max(Util.map(Util.stream(cs), x -> getWidth(Util.getPreferredSize(x))), ObjectUtils::compare),
+				null);
 		//
 		Util.forEach(cs, c -> {
 			//
@@ -505,16 +506,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		if (Util.test(predicate, t, u)) {
 			Util.accept(consumer, t, u);
 		}
-	}
-
-	@Nullable
-	private static <T> Optional<T> max(@Nullable final Stream<T> instance,
-			@Nullable final Comparator<? super T> comparator) {
-		//
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || comparator != null)
-				? instance.max(comparator)
-				: null;
-		//
 	}
 
 	private static void setPreferredSize(@Nullable final Component instance, final Dimension preferredSize) {

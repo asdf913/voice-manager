@@ -19,7 +19,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -56,7 +55,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 
 	private static Method METHOD_CREATE_WORK_BOOK, METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE, METHOD_IIF,
 			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_LENGTH, METHOD_LONG_VALUE,
-			METHOD_SET_PREFERRED_WIDTH, METHOD_MAX, METHOD_CREATE_DIMENSION_COMPARATOR = null;
+			METHOD_SET_PREFERRED_WIDTH, METHOD_CREATE_DIMENSION_COMPARATOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -86,8 +85,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 		//
 		(METHOD_SET_PREFERRED_WIDTH = clz.getDeclaredMethod("setPreferredWidth", Integer.TYPE, Iterable.class))
 				.setAccessible(true);
-		//
-		(METHOD_MAX = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_DIMENSION_COMPARATOR = clz.getDeclaredMethod("createDimensionComparator")).setAccessible(true);
 		//
@@ -184,8 +181,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 
 	private IH ih = null;
 
-	private Stream<?> stream = null;
-
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
@@ -207,7 +202,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			//
 		} // if
 			//
-		stream = Reflection.newProxy(Stream.class, ih = new IH());
+		ih = new IH();
 		//
 	}
 
@@ -578,30 +573,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 	private static void setPreferredWidth(final int width, final Iterable<Component> cs) throws Throwable {
 		try {
 			METHOD_SET_PREFERRED_WIDTH.invoke(null, width, cs);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMax() throws Throwable {
-		//
-		Assertions.assertNull(max(Stream.empty(), null));
-		//
-		Assertions.assertNull(max(stream, null));
-		//
-	}
-
-	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_MAX.invoke(null, instance, comparator);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Optional) {
-				return (Optional) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

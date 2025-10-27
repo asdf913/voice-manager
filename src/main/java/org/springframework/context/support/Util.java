@@ -200,6 +200,14 @@ public abstract class Util {
 		return instance != null ? instance.max() : null;
 	}
 
+	static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator) {
+		//
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || comparator != null)
+				? instance.max(comparator)
+				: null;
+		//
+	}
+
 	@Nullable
 	static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
 			@Nullable final ToIntFunction<? super T> function) {

@@ -1208,7 +1208,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 														.sorted(),
 												x -> StringUtils.wrap(StringUtils.join('.', x), '"')),
 										Collectors.joining(" or ")),
-								StringUtils.defaultIfBlank(Util.orElse(max(
+								StringUtils.defaultIfBlank(Util.orElse(Util.max(
 										fileExtensions != null ? Arrays.stream(fileExtensions) : null,
 										(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null),
 										"")));
@@ -2422,7 +2422,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 
 	private static String getLongestString(@Nullable final String[] ss) {
 		//
-		return Util.orElse(max(testAndApply(Objects::nonNull, ss, Arrays::stream, null),
+		return Util.orElse(Util.max(testAndApply(Objects::nonNull, ss, Arrays::stream, null),
 				(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null);
 		//
 	}
@@ -3036,7 +3036,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			int size = IterableUtils.size(voices);
 			//
 			Integer numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(Util.toString(Util.orElse(
-					max(Util.filter(Util.map(Util.stream(voices), x -> getOrdinalPosition(x)), Objects::nonNull),
+					Util.max(Util.filter(Util.map(Util.stream(voices), x -> getOrdinalPosition(x)), Objects::nonNull),
 							ObjectUtils::compare),
 					null))));
 			//
@@ -3133,12 +3133,14 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 										.length(Util
 												.toString(
 														Util.orElse(
-																max(Util.filter(
-																		Util.map(
-																				Util.stream(
-																						MultimapUtil.values(multimap)),
-																				x -> getOrdinalPosition(x)),
-																		Objects::nonNull), ObjectUtils::compare),
+																Util.max(
+																		Util.filter(
+																				Util.map(
+																						Util.stream(MultimapUtil
+																								.values(multimap)),
+																						x -> getOrdinalPosition(x)),
+																				Objects::nonNull),
+																		ObjectUtils::compare),
 																null))));
 				//
 				final AtomicInteger numerator = new AtomicInteger(1);
@@ -3272,13 +3274,10 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		final int size = MultimapUtil.size(multimap);
 		//
-		final int numberOfOrdinalPositionDigit = StringUtils
-				.length(Util
-						.toString(
-								Util.orElse(
-										max(Util.filter(Util.map(Util.stream(MultimapUtil.values(multimap)),
-												x -> getOrdinalPosition(x)), Objects::nonNull), ObjectUtils::compare),
-										null)));
+		final int numberOfOrdinalPositionDigit = StringUtils.length(Util.toString(Util.orElse(
+				Util.max(Util.filter(Util.map(Util.stream(MultimapUtil.values(multimap)), x -> getOrdinalPosition(x)),
+						Objects::nonNull), ObjectUtils::compare),
+				null)));
 		//
 		EvaluationContext evaluationContext = testAndApply(c -> ObjectMap.containsObject(objectMap, c),
 				EvaluationContext.class, c -> ObjectMap.getObject(objectMap, c), null);
@@ -5280,16 +5279,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		if (instance != null) {
 			instance.setToolTipText(toolTipText);
 		}
-	}
-
-	@Nullable
-	private static <T> Optional<T> max(@Nullable final Stream<T> instance,
-			@Nullable final Comparator<? super T> comparator) {
-		//
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || comparator != null)
-				? instance.max(comparator)
-				: null;
-		//
 	}
 
 	@Nullable
