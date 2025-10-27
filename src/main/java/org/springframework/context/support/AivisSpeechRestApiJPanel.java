@@ -1403,14 +1403,9 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	@Nullable
 	private static OutputStream getOutputStream(@Nullable final URLConnection instance) throws IOException {
 		//
-		return instance != null && StringUtils.isNotBlank(getHost(instance.getURL())) ? instance.getOutputStream()
+		return instance != null && StringUtils.isNotBlank(Util.getHost(instance.getURL())) ? instance.getOutputStream()
 				: null;
 		//
-	}
-
-	@Nullable
-	private static String getHost(@Nullable final URL instance) {
-		return instance != null ? instance.getHost() : null;
 	}
 
 	@Nullable
