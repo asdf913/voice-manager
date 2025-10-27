@@ -1141,11 +1141,11 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static boolean find(final Matcher instance) {
+	private static boolean find(@Nullable final Matcher instance) {
 		return instance != null && instance.find();
 	}
 
-	private static boolean equals(final Strings instance, final String str1, final String str2) {
+	private static boolean equals(@Nullable final Strings instance, final String str1, final String str2) {
 		return instance != null && instance.equals(str1, str2);
 	}
 
