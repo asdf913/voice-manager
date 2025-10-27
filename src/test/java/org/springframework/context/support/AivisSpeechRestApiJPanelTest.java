@@ -34,7 +34,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -118,8 +117,8 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		final Class<?> clz = AivisSpeechRestApiJPanel.class;
 		//
-		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
-				AbstractButton[].class)).setAccessible(true);
+		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class, Iterable.class))
+				.setAccessible(true);
 		//
 		(METHOD_CREATE_HOST_AND_PORT = clz.getDeclaredMethod("createHostAndPort", String.class, String.class))
 				.setAccessible(true);
@@ -752,6 +751,14 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Assertions.assertDoesNotThrow(
 				() -> instance.actionPerformed(new ActionEvent(btnPlayVoiceSampleTranscript, 0, null)));
+		//
+		// btnPlay
+		//
+		final Object btnPlay = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnPlay", btnPlay, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnPlay, 0, null)));
 		//
 	}
 

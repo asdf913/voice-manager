@@ -167,7 +167,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	@Note("Copy Voice Sample Transcript To Text")
 	private AbstractButton btnCopyVoiceSampleTranscriptToText = null;
 
-	private AbstractButton btnPlayVoiceSampleTranscript = null;
+	private AbstractButton btnPlayVoiceSampleTranscript, btnPlay = null;
 
 	private JComboBox<Speaker> jcbSpeaker = null;
 
@@ -308,10 +308,15 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 		add(btnSynthesis = new JButton("Synthesis"));
 		//
+		add(btnPlay = new JButton("Play"), String.format("span %1$s", 3));
+		//
 		addItemListener(this, jcbSpeaker, jcbStyle, jcbVoiceSampleTranscript);
 		//
-		addActionListener(this, btnSpeakers, btnAudioQuery, btnViewAudioQuery, btnSynthesis, btnViewPortrait,
-				btnViewIcon, btnCopyVoiceSampleTranscriptToText, btnPlayVoiceSampleTranscript);
+		addActionListener(this,
+				Util.toList(Util.map(
+						Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
+								x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
+						x -> Util.cast(AbstractButton.class, Narcissus.getField(this, x)))));
 		//
 	}
 
@@ -333,13 +338,14 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 	}
 
-	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
+	private static void addActionListener(final ActionListener actionListener,
+			@Nullable final Iterable<AbstractButton> iterable) {
 		//
 		AbstractButton ab = null;
 		//
-		for (int i = 0; abs != null && i < abs.length; i++) {
+		for (int i = 0; i < IterableUtils.size(iterable); i++) {
 			//
-			if ((ab = ArrayUtils.get(abs, i)) == null) {
+			if ((ab = IterableUtils.get(iterable, i)) == null) {
 				//
 				continue;
 				//
@@ -1033,6 +1039,21 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 					//
 				} // if
 					//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+			return true;
+			//
+		} else if (Objects.equals(source, instance.btnPlay)) {
+			//
+			try {
+				//
+				play(synthesis(instance.createHostAndPort(),
+						Util.cast(Style.class, Util.getSelectedItem(instance.dcbmStyle)), instance.audioQuery));
+				//
+			} catch (final IOException | URISyntaxException | InterruptedException e) {
+				//
 				throw new RuntimeException(e);
 				//
 			} // try
