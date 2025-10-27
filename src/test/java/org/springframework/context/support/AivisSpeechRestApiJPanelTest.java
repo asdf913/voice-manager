@@ -1273,7 +1273,7 @@ class AivisSpeechRestApiJPanelTest {
 	}
 
 	@Test
-	void testPlay() throws IllegalAccessException, InvocationTargetException, IOException {
+	void testPlay() throws IllegalAccessException, InvocationTargetException {
 		//
 		if (Objects.equals(exec, Boolean.FALSE)) {
 			//
