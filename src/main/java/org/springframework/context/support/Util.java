@@ -200,6 +200,7 @@ public abstract class Util {
 		return instance != null ? instance.max() : null;
 	}
 
+	@Nullable
 	static <T> Optional<T> max(@Nullable final Stream<T> instance, @Nullable final Comparator<? super T> comparator) {
 		//
 		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || comparator != null)
