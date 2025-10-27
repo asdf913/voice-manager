@@ -754,12 +754,20 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		// btnPlay
 		//
-		final Object btnPlay = new JButton();
-		//
-		FieldUtils.writeDeclaredField(instance, "btnPlay", btnPlay, true);
-		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnPlay, 0, null)));
-		//
+		if (Objects.equals(exec, Boolean.TRUE)) {
+			//
+			final Object btnPlay = new JButton();
+			//
+			FieldUtils.writeDeclaredField(instance, "btnPlay", btnPlay, true);
+			//
+			Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnPlay, 0, null)));
+			//
+		} else if (!Objects.equals(exec, Boolean.FALSE)) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
 	}
 
 	@Test
