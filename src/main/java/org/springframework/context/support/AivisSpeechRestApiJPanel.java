@@ -127,13 +127,16 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 
 	private static final long serialVersionUID = -1383116618784980170L;
 
-	private static Pattern PATTERN_JAVASSIST_CLASS_NAME, PATTERN_FILE_EXTENSION = null;
-
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
 		String value();
 	}
+
+	@Note("Javassist Class Name Pattern")
+	private static Pattern PATTERN_JAVASSIST_CLASS_NAME = null;
+
+	private static Pattern PATTERN_FILE_EXTENSION = null;
 
 	@Note("Host")
 	private JTextComponent tfHost = null;
