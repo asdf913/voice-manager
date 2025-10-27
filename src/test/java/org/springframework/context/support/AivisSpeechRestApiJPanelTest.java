@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationHandler;
@@ -20,6 +21,7 @@ import java.lang.reflect.Modifier;
 import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Collection;
 import java.util.Collections;
@@ -68,6 +70,8 @@ import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -87,6 +91,8 @@ import com.google.common.net.HostAndPort;
 import com.google.common.reflect.Reflection;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.j256.simplemagic.ContentInfo;
+import com.j256.simplemagic.ContentType;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
@@ -105,7 +111,8 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_LENGTH, METHOD_TEST_AND_RUN, METHOD_ADD_ITEM_LISTENER, METHOD_SPEAKER_INFO_HOST_AND_PORT,
 			METHOD_SPEAKER_INFO_MAP, METHOD_DECODE, METHOD_GET_STYLE_INFO_BY_ID, METHOD_SET_STYLE_INFO, METHOD_LINES,
 			METHOD_TO_JSON, METHOD_FROM_JSON, METHOD_CREATE, METHOD_EXEC, METHOD_GET_CODE_METHOD, METHOD_GET_CODE_CODE,
-			METHOD_TEST_AND_APPLY, METHOD_REPLACE, METHOD_PLAY = null;
+			METHOD_TEST_AND_APPLY, METHOD_REPLACE, METHOD_PLAY, METHOD_GET_FILE_EXTENSION_BYTE_ARRAY,
+			METHOD_GET_FILE_EXTENSION_CONTENT_INFO = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -199,6 +206,12 @@ class AivisSpeechRestApiJPanelTest {
 				CLASS_STYLE_INFO = Util
 						.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$StyleInfo"),
 				Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_GET_FILE_EXTENSION_BYTE_ARRAY = clz.getDeclaredMethod("getFileExtension", byte[].class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_FILE_EXTENSION_CONTENT_INFO = clz.getDeclaredMethod("getFileExtension", ContentInfo.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -322,6 +335,8 @@ class AivisSpeechRestApiJPanelTest {
 
 	private org.apache.bcel.classfile.Method method = null;
 
+	private Decoder decoder = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -339,6 +354,8 @@ class AivisSpeechRestApiJPanelTest {
 		speaker = Narcissus.allocateInstance(CLASS_SPEAKER);
 		//
 		objectMapper = new ObjectMapper();
+		//
+		decoder = Base64.getDecoder();
 		//
 		if (Objects.equals(Util.getName(Util.getClass(FileSystems.getDefault())), "sun.nio.fs.LinuxFileSystem")) {
 			//
@@ -1059,8 +1076,6 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testDecode() throws IllegalAccessException, InvocationTargetException, JsonProcessingException {
 		//
-		final Decoder decoder = java.util.Base64.getDecoder();
-		//
 		Assertions.assertNull(invoke(METHOD_DECODE, null, decoder, (Object) null));
 		//
 		Assertions.assertEquals(StringUtils.repeat('"', 2),
@@ -1258,7 +1273,7 @@ class AivisSpeechRestApiJPanelTest {
 	}
 
 	@Test
-	void testPlay() throws IllegalAccessException, InvocationTargetException {
+	void testPlay() throws IllegalAccessException, InvocationTargetException, IOException {
 		//
 		if (Objects.equals(exec, Boolean.FALSE)) {
 			//
@@ -1286,6 +1301,74 @@ class AivisSpeechRestApiJPanelTest {
 			//
 		} // if
 			//
+	}
+
+	@Test
+	void testGetFileExtension() throws Throwable {
+		//
+		// wav.wav
+		//
+		Assertions.assertEquals("wav",
+				getFileExtension(decode(decoder, "UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=")));
+		//
+		try (final Workbook wb = new HSSFWorkbook(); final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			wb.write(baos);
+			//
+			Assertions.assertNull(getFileExtension(baos.toByteArray()));
+			//
+		} // try
+			//
+		Assertions.assertNull(getFileExtension(new ContentInfo(ContentType.HTML)));
+		//
+		final ContentInfo contentInfo = new ContentInfo(ContentType.OTHER);
+		//
+		Assertions.assertNull(getFileExtension(contentInfo));
+		//
+		FieldUtils.writeDeclaredField(contentInfo, "mimeType", "audio/mp4", true);
+		//
+		Assertions.assertNull(getFileExtension(contentInfo));
+		//
+		FieldUtils.writeDeclaredField(contentInfo, "name", "ISO", true);
+		//
+		Assertions.assertNull(getFileExtension(contentInfo));
+		//
+		FieldUtils.writeDeclaredField(contentInfo, "message", "ISO Media, MPEG v4 system, iTunes AAC-LC", true);
+		//
+		Assertions.assertNotNull(getFileExtension(contentInfo));
+		//
+	}
+
+	private static byte[] decode(final Decoder instance, final String string) {
+		return instance != null ? instance.decode(string) : null;
+	}
+
+	private static String getFileExtension(final byte[] bs) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_GET_FILE_EXTENSION_BYTE_ARRAY, null, bs);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static String getFileExtension(final ContentInfo contentInfo) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_GET_FILE_EXTENSION_CONTENT_INFO, null, contentInfo);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }

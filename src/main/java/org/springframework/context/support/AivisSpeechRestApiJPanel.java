@@ -23,6 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -42,6 +43,7 @@ import java.util.Spliterator;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -105,6 +107,9 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.http.client.utils.URIBuilder;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.ElementUtil;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -112,6 +117,9 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.net.HostAndPort;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.j256.simplemagic.ContentInfo;
+import com.j256.simplemagic.ContentInfoUtil;
+import com.j256.simplemagic.ContentType;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
@@ -120,7 +128,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 
 	private static final long serialVersionUID = -1383116618784980170L;
 
-	private static Pattern PATTERN_JAVASSIST_CLASS_NAME = null;
+	private static Pattern PATTERN_JAVASSIST_CLASS_NAME, PATTERN_FILE_EXTENSION = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -1046,8 +1054,9 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			if (Objects.equals(Util.getName(Util.getClass(FileSystems.getDefault())), "sun.nio.fs.LinuxFileSystem")) {
 				//
 				testAndAccept((a, b) -> b != null,
-						file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3), ".m4a"), bs,
-						FileUtils::writeByteArrayToFile);
+						file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3),
+								StringUtils.join(".", Objects.toString(getFileExtension(bs), "m4a"))),
+						bs, FileUtils::writeByteArrayToFile);
 				//
 				final Process process = exec(Runtime.getRuntime(),
 						String.format("ffplay -autoexit -nodisp %1$s", Util.getAbsolutePath(file)));
@@ -1066,10 +1075,108 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 		} finally {
 			//
-			FileUtils.delete(file);
+			FileUtils.deleteQuietly(file);
 			//
 		} // try
 			//
+	}
+
+	private static String getFileExtension(final byte[] bs)
+			throws MalformedURLException, IOException, RuntimeException {
+		// s
+		return getFileExtension(testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null));
+		//
+	}
+
+	private static String getFileExtension(final ContentInfo contentInfo) throws MalformedURLException, IOException {
+		//
+		final String[] fileExtensions = contentInfo != null ? contentInfo.getFileExtensions() : null;
+		//
+		if (fileExtensions != null && fileExtensions.length == 1) {
+			//
+			return ArrayUtils.get(fileExtensions, 0);
+			//
+		} // if
+			//
+		if (contentInfo != null && Objects.equals(contentInfo.getContentType(), ContentType.OTHER)
+				&& Objects.equals(contentInfo.getMimeType(), "audio/mp4")
+				&& Objects.equals(contentInfo.getName(), "ISO")) {
+			//
+			final Document document = Jsoup.parse(new URL("https://www.ftyps.com"), 0);
+			//
+			final String messsage = contentInfo.getMessage();
+			//
+			final String longestCommonSubstring = Util.orElse(Util
+					.map(Util.stream(ElementUtil.getElementsByTag(document, "td")),
+							x -> longestCommonSubstring(ElementUtil.text(x), messsage))
+					.max((a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null);
+			//
+			final String string = Util.orElse(Util
+					.map(Util.filter(Util.stream(ElementUtil.getElementsByTag(document, "td")),
+							x -> equals(Strings.CI, longestCommonSubstring,
+									longestCommonSubstring(ElementUtil.text(x), messsage))),
+							ElementUtil::text)
+					.min((a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null);
+			//
+			final Matcher matcher = Util.matcher(PATTERN_FILE_EXTENSION = ObjectUtils.getIfNull(PATTERN_FILE_EXTENSION,
+					() -> Pattern.compile("\\(\\.([^\\.]+)\\)")), string);
+			//
+			if (find(matcher) && Util.groupCount(matcher) == 1) {
+				//
+				return matcher.group(1);
+				//
+			} // if
+				//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static boolean find(final Matcher instance) {
+		return instance != null && instance.find();
+	}
+
+	private static boolean equals(final Strings instance, final String str1, final String str2) {
+		return instance != null && instance.equals(str1, str2);
+	}
+
+	private static String longestCommonSubstring(final String a, final String b) {
+		//
+		int start = 0, max = 0;
+		//
+		for (int i = 0; i < StringUtils.length(a); i++) {
+			//
+			for (int j = 0; j < StringUtils.length(b); j++) {
+				//
+				int x = 0;
+				//
+				while (a.charAt(i + x) == b.charAt(j + x)) {
+					//
+					x++;
+					//
+					if (((i + x) >= a.length()) || ((j + x) >= b.length())) {
+						//
+						break;
+						//
+					} // if
+						//
+				} // while
+					//
+				if (x > max) {
+					//
+					max = x;
+					//
+					start = i;
+					//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		return StringUtils.substring(a, start, start + max);
+		//
 	}
 
 	@Nullable
