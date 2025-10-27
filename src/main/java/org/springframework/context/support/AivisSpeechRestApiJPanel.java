@@ -167,7 +167,10 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	@Note("Copy Voice Sample Transcript To Text")
 	private AbstractButton btnCopyVoiceSampleTranscriptToText = null;
 
-	private AbstractButton btnPlayVoiceSampleTranscript, btnPlay = null;
+	@Note("Play Voice Sample Transcript")
+	private AbstractButton btnPlayVoiceSampleTranscript = null;
+
+	private AbstractButton btnPlay = null;
 
 	private JComboBox<Speaker> jcbSpeaker = null;
 
