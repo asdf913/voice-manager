@@ -1087,6 +1087,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 	}
 
+	@Nullable
 	private static String getFileExtension(@Nullable final byte[] bs) throws IOException {
 		//
 		final ContentInfo contentInfo = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
