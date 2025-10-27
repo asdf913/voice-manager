@@ -1096,7 +1096,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static String getFileExtension(final ContentInfo contentInfo) throws MalformedURLException, IOException {
+	private static String getFileExtension(@Nullable final ContentInfo contentInfo)
+			throws MalformedURLException, IOException {
 		//
 		final String[] fileExtensions = contentInfo != null ? contentInfo.getFileExtensions() : null;
 		//
