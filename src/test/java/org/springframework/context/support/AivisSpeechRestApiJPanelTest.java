@@ -1716,7 +1716,7 @@ class AivisSpeechRestApiJPanelTest {
 			//
 			try {
 				//
-				return Paths.get(getWideString(pbr.getValue(), 0));
+				return Path.of(getWideString(pbr.getValue(), 0));
 				//
 			} finally {
 				//
