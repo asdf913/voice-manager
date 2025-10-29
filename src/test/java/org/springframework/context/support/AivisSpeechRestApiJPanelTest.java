@@ -19,6 +19,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -1572,12 +1574,14 @@ class AivisSpeechRestApiJPanelTest {
 				//
 			} // if
 				//
+
+			//
 			Assertions.assertNull(invoke(method, null,
 					decode(decoder, "UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=")));
 			//
 			final Iterable<File> iterable = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull,
-							testAndApply(x -> x != null && x.exists() && x.isDirectory(), getWindowFolder(),
+							testAndApply(x -> x != null && x.exists() && x.isDirectory(), Util.toFile(getWindowPath()),
 									AivisSpeechRestApiJPanelTest::listFiles, null),
 							Arrays::stream, null),
 					x -> Objects.equals(Util.getName(x), "Media")));
@@ -1694,7 +1698,7 @@ class AivisSpeechRestApiJPanelTest {
 			//
 	}
 
-	private static File getWindowFolder() {
+	private static Path getWindowPath() {
 		//
 		if (!Objects.equals(OperatingSystem.WINDOWS, OperatingSystemUtil.getOperatingSystem())) {
 			//
@@ -1711,7 +1715,7 @@ class AivisSpeechRestApiJPanelTest {
 			//
 			try {
 				//
-				return new File(getWideString(pbr.getValue(), 0));
+				return Paths.get(getWideString(pbr.getValue(), 0));
 				//
 			} finally {
 				//
