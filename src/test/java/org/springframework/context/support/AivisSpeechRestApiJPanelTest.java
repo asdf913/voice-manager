@@ -1381,7 +1381,7 @@ class AivisSpeechRestApiJPanelTest {
 			//
 			for (int i = 0; instructions != null && i < instructions.length; i++) {
 				//
-				if (ArrayUtils.get(instructions, i) instanceof ATHROW athrow
+				if (ArrayUtils.get(instructions, i) instanceof ATHROW
 						&& ArrayUtils.get(instructions, i - 1) instanceof INVOKESPECIAL invokespecial) {
 					//
 					if (ivalue0 != null) {
