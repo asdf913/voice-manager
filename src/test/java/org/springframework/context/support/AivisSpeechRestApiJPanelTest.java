@@ -1567,18 +1567,16 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		if (Objects.equals(OperatingSystem.WINDOWS, operatingSystem)) {
 			//
-			final Method method = AivisSpeechRestApiJPanel.class.getDeclaredMethod("play", byte[].class);
+			final Method m = AivisSpeechRestApiJPanel.class.getDeclaredMethod("play", byte[].class);
 			//
-			if (method != null) {
+			if (m != null) {
 				//
-				method.setAccessible(true);
+				m.setAccessible(true);
 				//
 			} // if
 				//
-
-			//
-			Assertions.assertNull(invoke(method, null,
-					decode(decoder, "UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=")));
+			Assertions.assertNull(
+					invoke(m, null, decode(decoder, "UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=")));
 			//
 			final Iterable<File> iterable = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull,
@@ -1630,7 +1628,7 @@ class AivisSpeechRestApiJPanelTest {
 				} // if
 					//
 
-				Assertions.assertNull(invoke(method, null, Files.readAllBytes(Util.toPath(f))));
+				Assertions.assertNull(invoke(m, null, Files.readAllBytes(Util.toPath(f))));
 				//
 				break;
 				//
