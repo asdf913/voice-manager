@@ -96,6 +96,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.google.common.io.Files;
 import com.google.common.net.HostAndPort;
 import com.google.common.reflect.Reflection;
 import com.google.gson.Gson;
@@ -1628,7 +1629,7 @@ class AivisSpeechRestApiJPanelTest {
 					//
 				} // if
 					//
-				Assertions.assertNull(invoke(method, null, FileUtils.readFileToByteArray(f)));
+				Assertions.assertNull(invoke(method, null, Files.toByteArray(f)));
 				//
 				break;
 				//
