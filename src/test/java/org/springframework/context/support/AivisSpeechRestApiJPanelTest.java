@@ -460,11 +460,11 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Throwable throwable = null;
 		//
-		boolean isStatic = false;
+		boolean isStatic, isWindows;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ms[i]) == null || m.isSynthetic()) {
+			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
 				//
 				continue;
 				//
@@ -498,6 +498,8 @@ class AivisSpeechRestApiJPanelTest {
 			//
 			isStatic = Modifier.isStatic(m.getModifiers());
 			//
+			isWindows = Objects.equals(OperatingSystem.WINDOWS, operatingSystem);
+			//
 			if (Objects.equals(FieldOrMethodUtil.getName(method), name = Util.getName(m)) && method != null
 					&& Objects.equals(
 							Util.collect(Util.map(Arrays.stream(parameterTypes), Util::getName),
@@ -507,7 +509,7 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				if (Objects.equals(exec, Boolean.FALSE)) {
 					//
-					if (Modifier.isStatic(m.getModifiers())) {
+					if (isStatic) {
 						//
 						throwable = null;
 						//
@@ -533,7 +535,7 @@ class AivisSpeechRestApiJPanelTest {
 					//
 				} // if
 					//
-				if (Boolean.logicalAnd(Objects.equals(OperatingSystem.WINDOWS, operatingSystem), isStatic)) {
+				if (Boolean.logicalAnd(isWindows, isStatic)) {
 					//
 					throwable = null;
 					//
@@ -555,26 +557,39 @@ class AivisSpeechRestApiJPanelTest {
 					//
 			} // if
 				//
-			if (Util.and(Objects.equals(OperatingSystem.WINDOWS, operatingSystem), isStatic,
-					Boolean.logicalAnd(Objects.equals(Util.getName(m), name),
-							Arrays.equals(parameterTypes, new Class<?>[] { CLASS_STYLE_INFO, Integer.TYPE })))) {
+			if (Util.and(Objects.equals(name, FieldOrMethodUtil.getName(method)),
+					Arrays.equals(parameterTypes, new Class<?>[] { CLASS_STYLE_INFO, Integer.TYPE }), isStatic)) {
 				//
-				throwable = null;
-				//
-				try {
+				if (Boolean.logicalOr(isWindows, Boolean.logicalAnd(
+						Objects.equals(OperatingSystem.LINUX, operatingSystem), Objects.equals(Boolean.FALSE, exec)))) {
 					//
-					Narcissus.invokeStaticMethod(m, arguments);
+					throwable = null;
 					//
-				} catch (final Throwable e) {
-					//
-					throwable = e;
+					try {
+						//
+						Narcissus.invokeStaticMethod(m, arguments);
+						//
+					} catch (final Throwable e) {
+						//
+						throwable = e;
+						//
+					} // if
+						//
+					if (isWindows) {
+						//
+						Assertions.assertEquals(playMethodThrowExceptionClassName,
+								Util.getName(Util.getClass(throwable)));
+						//
+					} else {
+						//
+						Assertions.assertEquals("java.io.IOException", Util.getName(Util.getClass(throwable)));
+						//
+					} // if
+						//
+					continue;
 					//
 				} // if
 					//
-				Assertions.assertEquals(playMethodThrowExceptionClassName, Util.getName(Util.getClass(throwable)));
-				//
-				continue;
-				//
 			} // if
 				//
 			invoke = isStatic ? Narcissus.invokeStaticMethod(m, arguments)
@@ -617,9 +632,9 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		String name, toString = null;
 		//
-		boolean isStatic = false;
-		//
 		Throwable throwable = null;
+		//
+		boolean isStatic, isWindows;
 		//
 		if (ih != null) {
 			//
@@ -669,6 +684,8 @@ class AivisSpeechRestApiJPanelTest {
 			//
 			isStatic = Modifier.isStatic(m.getModifiers());
 			//
+			isWindows = Objects.equals(OperatingSystem.WINDOWS, operatingSystem);
+			//
 			if (Objects.equals(FieldOrMethodUtil.getName(method), name) && method != null
 					&& Objects.equals(
 							Util.collect(Util.map(Arrays.stream(parameterTypes), Util::getName),
@@ -678,7 +695,7 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				if (Objects.equals(exec, Boolean.FALSE)) {
 					//
-					if (Modifier.isStatic(m.getModifiers())) {
+					if (isStatic) {
 						//
 						throwable = null;
 						//
@@ -726,26 +743,39 @@ class AivisSpeechRestApiJPanelTest {
 					//
 			} // if
 				//
-			if (Util.and(Objects.equals(OperatingSystem.WINDOWS, operatingSystem), isStatic,
-					Boolean.logicalAnd(Objects.equals(Util.getName(m), name),
-							Arrays.equals(parameterTypes, new Class<?>[] { CLASS_STYLE_INFO, Integer.TYPE })))) {
+			if (Util.and(Objects.equals(name, FieldOrMethodUtil.getName(method)),
+					Arrays.equals(parameterTypes, new Class<?>[] { CLASS_STYLE_INFO, Integer.TYPE }), isStatic)) {
 				//
-				throwable = null;
-				//
-				try {
+				if (Boolean.logicalOr(isWindows, Boolean.logicalAnd(
+						Objects.equals(OperatingSystem.LINUX, operatingSystem), Objects.equals(Boolean.FALSE, exec)))) {
 					//
-					Narcissus.invokeStaticMethod(m, arguments);
+					throwable = null;
 					//
-				} catch (final Throwable e) {
-					//
-					throwable = e;
+					try {
+						//
+						Narcissus.invokeStaticMethod(m, arguments);
+						//
+					} catch (final Throwable e) {
+						//
+						throwable = e;
+						//
+					} // if
+						//
+					if (isWindows) {
+						//
+						Assertions.assertEquals(playMethodThrowExceptionClassName,
+								Util.getName(Util.getClass(throwable)));
+						//
+					} else {
+						//
+						Assertions.assertEquals("java.io.IOException", Util.getName(Util.getClass(throwable)));
+						//
+					} // if
+						//
+					continue;
 					//
 				} // if
 					//
-				Assertions.assertEquals(playMethodThrowExceptionClassName, Util.getName(Util.getClass(throwable)));
-				//
-				continue;
-				//
 			} // if
 				//
 			invoke = isStatic ? Narcissus.invokeStaticMethod(m, arguments)
