@@ -27,7 +27,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -109,6 +108,8 @@ import org.apache.http.client.utils.URIBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.ElementUtil;
+import org.oxbow.swingbits.util.OperatingSystem;
+import org.oxbow.swingbits.util.OperatingSystemUtil;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -1083,7 +1084,9 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 		try {
 			//
-			if (Objects.equals(Util.getName(Util.getClass(FileSystems.getDefault())), "sun.nio.fs.LinuxFileSystem")) {
+			final OperatingSystem operatingSystem = OperatingSystemUtil.getOperatingSystem();
+			//
+			if (Objects.equals(OperatingSystem.LINUX, operatingSystem)) {
 				//
 				testAndAccept((a, b) -> b != null,
 						file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3),
@@ -1101,16 +1104,46 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 					//
 				return;
 				//
+			} else if (Objects.equals(OperatingSystem.WINDOWS, operatingSystem)) {
+				//
+				final ContentInfo contentInfo = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch,
+						null);
+				//
+				if (Objects.equals(ContentType.WAV, getContentType(contentInfo))) {
+					//
+					testAndAccept((a, b) -> b != null,
+							file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3),
+									StringUtils.join(".", Objects.toString(getFileExtension(contentInfo)))),
+							bs, FileUtils::writeByteArrayToFile);
+					//
+					final Process process = exec(Runtime.getRuntime(),
+							String.format("powershell -c (New-Object Media.SoundPlayer '%1$s').PlaySync();",
+									Util.getAbsolutePath(file)));
+					//
+					if (process != null) {
+						//
+						process.waitFor();
+						//
+					} // if
+						//
+					return;
+					//
+				} // if
+					//
 			} // if
 				//
-			throw new UnsupportedOperationException();
-			//
 		} finally {
 			//
 			FileUtils.deleteQuietly(file);
 			//
 		} // try
 			//
+		throw new UnsupportedOperationException();
+		//
+	}
+
+	private static ContentType getContentType(final ContentInfo instance) {
+		return instance != null ? instance.getContentType() : null;
 	}
 
 	@Nullable
@@ -1133,7 +1166,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 		} // if
 			//
-		if (contentInfo != null && Objects.equals(contentInfo.getContentType(), ContentType.OTHER)
+		if (contentInfo != null && Objects.equals(getContentType(contentInfo), ContentType.OTHER)
 				&& Objects.equals(contentInfo.getMimeType(), "audio/mp4")
 				&& Objects.equals(contentInfo.getName(), "ISO")) {
 			//

@@ -11,13 +11,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -49,7 +50,11 @@ import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.classfile.MethodUtil;
+import org.apache.bcel.generic.ATHROW;
 import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.FieldInstruction;
+import org.apache.bcel.generic.GETSTATIC;
+import org.apache.bcel.generic.INVOKESPECIAL;
 import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionList;
@@ -57,9 +62,11 @@ import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.InvokeInstructionUtil;
 import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.LDCUtil;
+import org.apache.bcel.generic.ReferenceType;
 import org.apache.bcel.generic.TypeUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -77,6 +84,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.oxbow.swingbits.util.OperatingSystem;
+import org.oxbow.swingbits.util.OperatingSystemUtil;
 import org.springframework.util.ReflectionUtils;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -90,7 +99,14 @@ import com.google.common.reflect.Reflection;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.j256.simplemagic.ContentInfo;
+import com.j256.simplemagic.ContentInfoUtil;
 import com.j256.simplemagic.ContentType;
+import com.sun.jna.Pointer;
+import com.sun.jna.platform.win32.KnownFolders;
+import com.sun.jna.platform.win32.Ole32;
+import com.sun.jna.platform.win32.Shell32;
+import com.sun.jna.platform.win32.COM.COMUtils;
+import com.sun.jna.ptr.PointerByReference;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
@@ -110,7 +126,7 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_SPEAKER_INFO_MAP, METHOD_DECODE, METHOD_GET_STYLE_INFO_BY_ID, METHOD_SET_STYLE_INFO, METHOD_LINES,
 			METHOD_TO_JSON, METHOD_FROM_JSON, METHOD_CREATE, METHOD_EXEC, METHOD_GET_CODE_METHOD, METHOD_GET_CODE_CODE,
 			METHOD_TEST_AND_APPLY, METHOD_REPLACE, METHOD_PLAY, METHOD_GET_FILE_EXTENSION_BYTE_ARRAY,
-			METHOD_GET_FILE_EXTENSION_CONTENT_INFO = null;
+			METHOD_GET_FILE_EXTENSION_CONTENT_INFO, METHOD_GET_CONTENT_TYPE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -210,6 +226,8 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_GET_FILE_EXTENSION_CONTENT_INFO = clz.getDeclaredMethod("getFileExtension", ContentInfo.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_CONTENT_TYPE = clz.getDeclaredMethod("getContentType", ContentInfo.class)).setAccessible(true);
 		//
 	}
 
@@ -335,8 +353,12 @@ class AivisSpeechRestApiJPanelTest {
 
 	private Decoder decoder = null;
 
+	private OperatingSystem operatingSystem = null;
+
+	private String playMethodThrowExceptionClassName = null;
+
 	@BeforeEach
-	void beforeEach() {
+	void beforeEach() throws Throwable {
 		//
 		instance = Util.cast(AivisSpeechRestApiJPanel.class,
 				Narcissus.allocateInstance(AivisSpeechRestApiJPanel.class));
@@ -355,12 +377,16 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		decoder = Base64.getDecoder();
 		//
-		if (Objects.equals(Util.getName(Util.getClass(FileSystems.getDefault())), "sun.nio.fs.LinuxFileSystem")) {
+		final Class<?> clz = AivisSpeechRestApiJPanel.class;
+		//
+		playMethodThrowExceptionClassName = getPlayMethodThrowExceptionClassName(clz);
+		//
+		if (IterableUtils.contains(Arrays.asList(OperatingSystem.LINUX, OperatingSystem.WINDOWS),
+				operatingSystem = OperatingSystemUtil.getOperatingSystem())) {
 			//
 			try {
 				//
-				final Entry<String, org.apache.bcel.classfile.Method> entry = getCommandAndMethod(
-						AivisSpeechRestApiJPanel.class);
+				final Entry<String, org.apache.bcel.classfile.Method> entry = getCommandAndMethod(clz);
 				//
 				method = Util.getValue(entry);
 				//
@@ -387,7 +413,7 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Assertions.assertNull(exec(runtime, EMPTY));
 		//
-		if (Objects.equals(Util.getName(Util.getClass(FileSystems.getDefault())), "sun.nio.fs.LinuxFileSystem")) {
+		if (Objects.equals(OperatingSystem.LINUX, operatingSystem)) {
 			//
 			Assertions.assertNotNull(exec(runtime, "uname"));
 			//
@@ -428,9 +454,13 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Object invoke = null;
 		//
-		String toString = null;
+		String name, toString = null;
 		//
 		Object[] arguments = null;
+		//
+		Throwable throwable = null;
+		//
+		boolean isStatic = false;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
@@ -466,18 +496,20 @@ class AivisSpeechRestApiJPanelTest {
 			//
 			toString = Util.toString(m);
 			//
-			if (Objects.equals(FieldOrMethodUtil.getName(method), Util.getName(m)) && method != null
+			isStatic = Modifier.isStatic(m.getModifiers());
+			//
+			if (Objects.equals(FieldOrMethodUtil.getName(method), name = Util.getName(m)) && method != null
 					&& Objects.equals(
+							Util.collect(Util.map(Arrays.stream(parameterTypes), Util::getName),
+									Collectors.joining(",")),
 							Util.collect(Util.map(Arrays.stream(method.getArgumentTypes()), TypeUtil::getClassName),
-									Collectors.joining()),
-							Util.collect(Util.map(Arrays.stream(method.getArgumentTypes()), TypeUtil::getClassName),
-									Collectors.joining()))) {
+									Collectors.joining(",")))) {
 				//
 				if (Objects.equals(exec, Boolean.FALSE)) {
 					//
 					if (Modifier.isStatic(m.getModifiers())) {
 						//
-						Throwable throwable = null;
+						throwable = null;
 						//
 						try {
 							//
@@ -501,9 +533,51 @@ class AivisSpeechRestApiJPanelTest {
 					//
 				} // if
 					//
+				if (Boolean.logicalAnd(Objects.equals(OperatingSystem.WINDOWS, operatingSystem), isStatic)) {
+					//
+					throwable = null;
+					//
+					try {
+						//
+						Narcissus.invokeStaticMethod(m, arguments);
+						//
+					} catch (final Throwable e) {
+						//
+						throwable = e;
+						//
+					} // if
+						//
+					Assertions.assertEquals(playMethodThrowExceptionClassName, Util.getName(Util.getClass(throwable)));
+					//
+					continue;
+					//
+				} // if
+					//
 			} // if
 				//
-			invoke = Modifier.isStatic(m.getModifiers()) ? Narcissus.invokeStaticMethod(m, arguments)
+			if (Util.and(Objects.equals(OperatingSystem.WINDOWS, operatingSystem), isStatic,
+					Boolean.logicalAnd(Objects.equals(Util.getName(m), name),
+							Arrays.equals(parameterTypes, new Class<?>[] { CLASS_STYLE_INFO, Integer.TYPE })))) {
+				//
+				throwable = null;
+				//
+				try {
+					//
+					Narcissus.invokeStaticMethod(m, arguments);
+					//
+				} catch (final Throwable e) {
+					//
+					throwable = e;
+					//
+				} // if
+					//
+				Assertions.assertEquals(playMethodThrowExceptionClassName, Util.getName(Util.getClass(throwable)));
+				//
+				continue;
+				//
+			} // if
+				//
+			invoke = isStatic ? Narcissus.invokeStaticMethod(m, arguments)
 					: Narcissus.invokeMethod(instance, m, arguments);
 			//
 			if (IterableUtils.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE, Long.TYPE), getReturnType(m))) {
@@ -539,9 +613,13 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Object invoke = null;
 		//
-		String toString = null;
-		//
 		Object[] arguments = null;
+		//
+		String name, toString = null;
+		//
+		boolean isStatic = false;
+		//
+		Throwable throwable = null;
 		//
 		if (ih != null) {
 			//
@@ -553,15 +631,15 @@ class AivisSpeechRestApiJPanelTest {
 			//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ms[i]) == null || m.isSynthetic()) {
+			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()
+					|| Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "main"),
+							Arrays.equals(parameterTypes = m.getParameterTypes(), new Class<?>[] { String[].class }))) {
 				//
 				continue;
 				//
 			} // if
 				//
 			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
-			//
-			parameterTypes = m.getParameterTypes();
 			//
 			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
 				//
@@ -589,18 +667,20 @@ class AivisSpeechRestApiJPanelTest {
 			//
 			toString = Util.toString(m);
 			//
-			if (Objects.equals(FieldOrMethodUtil.getName(method), Util.getName(m)) && method != null
+			isStatic = Modifier.isStatic(m.getModifiers());
+			//
+			if (Objects.equals(FieldOrMethodUtil.getName(method), name) && method != null
 					&& Objects.equals(
+							Util.collect(Util.map(Arrays.stream(parameterTypes), Util::getName),
+									Collectors.joining(",")),
 							Util.collect(Util.map(Arrays.stream(method.getArgumentTypes()), TypeUtil::getClassName),
-									Collectors.joining()),
-							Util.collect(Util.map(Arrays.stream(method.getArgumentTypes()), TypeUtil::getClassName),
-									Collectors.joining()))) {
+									Collectors.joining(",")))) {
 				//
 				if (Objects.equals(exec, Boolean.FALSE)) {
 					//
 					if (Modifier.isStatic(m.getModifiers())) {
 						//
-						Throwable throwable = null;
+						throwable = null;
 						//
 						try {
 							//
@@ -624,9 +704,51 @@ class AivisSpeechRestApiJPanelTest {
 					//
 				} // if
 					//
+				if (Objects.equals(OperatingSystem.WINDOWS, operatingSystem) && isStatic) {
+					//
+					throwable = null;
+					//
+					try {
+						//
+						Narcissus.invokeStaticMethod(m, arguments);
+						//
+					} catch (final Throwable e) {
+						//
+						throwable = e;
+						//
+					} // if
+						//
+					Assertions.assertEquals(playMethodThrowExceptionClassName, Util.getName(Util.getClass(throwable)));
+					//
+					continue;
+					//
+				} // if
+					//
 			} // if
 				//
-			invoke = Modifier.isStatic(m.getModifiers()) ? Narcissus.invokeStaticMethod(m, arguments)
+			if (Util.and(Objects.equals(OperatingSystem.WINDOWS, operatingSystem), isStatic,
+					Boolean.logicalAnd(Objects.equals(Util.getName(m), name),
+							Arrays.equals(parameterTypes, new Class<?>[] { CLASS_STYLE_INFO, Integer.TYPE })))) {
+				//
+				throwable = null;
+				//
+				try {
+					//
+					Narcissus.invokeStaticMethod(m, arguments);
+					//
+				} catch (final Throwable e) {
+					//
+					throwable = e;
+					//
+				} // if
+					//
+				Assertions.assertEquals(playMethodThrowExceptionClassName, Util.getName(Util.getClass(throwable)));
+				//
+				continue;
+				//
+			} // if
+				//
+			invoke = isStatic ? Narcissus.invokeStaticMethod(m, arguments)
 					: Narcissus.invokeMethod(instance, m, arguments);
 			//
 			if (Boolean.logicalOr(
@@ -760,8 +882,28 @@ class AivisSpeechRestApiJPanelTest {
 			//
 			FieldUtils.writeDeclaredField(instance, "btnPlay", btnPlay, true);
 			//
-			Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnPlay, 0, null)));
-			//
+			if (Objects.equals(OperatingSystem.WINDOWS, operatingSystem)) {
+				//
+				Throwable throwable = null;
+				//
+				try {
+					//
+					instance.actionPerformed(new ActionEvent(btnPlay, 0, null));
+					//
+				} catch (final Throwable e) {
+					//
+					throwable = e;
+					//
+				} // try
+					//
+				Assertions.assertEquals(playMethodThrowExceptionClassName, Util.getName(Util.getClass(throwable)));
+				//
+			} else {
+				//
+				Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnPlay, 0, null)));
+				//
+			} // if
+				//
 		} else if (!Objects.equals(exec, Boolean.FALSE)) {
 			//
 			throw new IllegalStateException();
@@ -1166,10 +1308,9 @@ class AivisSpeechRestApiJPanelTest {
 		//
 	}
 
-	private static Entry<String, org.apache.bcel.classfile.Method> getCommandAndMethod(final Class<?> clz)
-			throws Throwable {
+	private static String getPlayMethodThrowExceptionClassName(final Class<?> clz) throws Throwable {
 		//
-		IValue0<Entry<String, org.apache.bcel.classfile.Method>> ivalue0 = null;
+		IValue0<String> ivalue0 = null;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
 				StringUtils.join("/", replace(Strings.CS, Util.getName(clz), ".", "/"), ".class"))) {
@@ -1207,7 +1348,101 @@ class AivisSpeechRestApiJPanelTest {
 			//
 			for (int i = 0; instructions != null && i < instructions.length; i++) {
 				//
-				if (ArrayUtils.get(instructions, i) instanceof LDC ldc && i > 0
+				if (ArrayUtils.get(instructions, i) instanceof ATHROW athrow
+						&& ArrayUtils.get(instructions, i - 1) instanceof INVOKESPECIAL invokespecial) {
+					//
+					if (ivalue0 != null) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					ivalue0 = Unit.with(invokespecial.getClassName(
+							ObjectUtils.getIfNull(cpg, () -> new ConstantPoolGen(javaClass.getConstantPool()))));
+					//
+				} // if
+					//
+			} // for
+				//
+		} // try
+			//
+		return IValue0Util.getValue0(ivalue0);
+		//
+	}
+
+	private static Entry<String, org.apache.bcel.classfile.Method> getCommandAndMethod(final Class<?> clz)
+			throws Throwable {
+		//
+		IValue0<Entry<String, org.apache.bcel.classfile.Method>> ivalue0 = null;
+		//
+		try (final InputStream is = Util.getResourceAsStream(clz,
+				StringUtils.join("/", replace(Strings.CS, Util.getName(clz), ".", "/"), ".class"))) {
+			//
+			final JavaClass javaClass = ClassParserUtil
+					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
+			//
+			final Iterable<org.apache.bcel.classfile.Method> ms = Util
+					.collect(
+							Util.filter(
+									testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream,
+											null),
+									m -> m != null
+											&& Objects.equals(FieldOrMethodUtil.getName(m),
+													"play")
+											&& CollectionUtils.isEqualCollection(
+													Util.collect(Util.map(Arrays.stream(MethodUtil.getArgumentTypes(m)),
+															TypeUtil::getClassName), Collectors.toList()),
+													Collections.singleton("[B"))),
+							Collectors.toList());
+			//
+			if (IterableUtils.size(ms) > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			final org.apache.bcel.classfile.Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms,
+					x -> IterableUtils.get(x, 0), null);
+			//
+			final Instruction[] instructions = InstructionListUtil.getInstructions(
+					testAndApply(Objects::nonNull, getCode(getCode(method)), InstructionList::new, null));
+			//
+			Instruction instruction = null;
+			//
+			ConstantPoolGen cpg = null;
+			//
+			OperatingSystem operatingSystem = null;
+			//
+			boolean found = false;
+			//
+			for (int i = 0; instructions != null && i < instructions.length; i++) {
+				//
+				if ((instruction = ArrayUtils.get(instructions, i)) instanceof GETSTATIC gc && Objects.equals(
+						TypeUtil.getClassName(getReferenceType(gc,
+								cpg = ObjectUtils.getIfNull(cpg,
+										() -> new ConstantPoolGen(javaClass.getConstantPool())))),
+						"org.oxbow.swingbits.util.OperatingSystem")) {
+					//
+					if (Objects.equals(Util.name(operatingSystem = ObjectUtils.getIfNull(operatingSystem,
+							OperatingSystemUtil::getOperatingSystem)), getFieldName(gc, cpg))) {
+						//
+						found = true;
+						//
+					} else if (found) {
+						//
+						break;
+						//
+					} // if
+						//
+				} // if
+					//
+				if (!found) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (instruction instanceof LDC ldc && i > 0
 						&& ArrayUtils.get(instructions, i - 1) instanceof INVOKESTATIC invokeStatic
 						&& Objects.equals("java.lang.Runtime",
 								InvokeInstructionUtil.getClassName(invokeStatic, cpg = ObjectUtils.getIfNull(cpg,
@@ -1231,6 +1466,14 @@ class AivisSpeechRestApiJPanelTest {
 			//
 		return IValue0Util.getValue0(ivalue0);
 		//
+	}
+
+	private static String getFieldName(final FieldInstruction instance, final ConstantPoolGen cpg) {
+		return instance != null ? instance.getFieldName(cpg) : null;
+	}
+
+	private static ReferenceType getReferenceType(final GETSTATIC instance, final ConstantPoolGen cpg) {
+		return instance != null ? instance.getReferenceType(cpg) : null;
 	}
 
 	private static byte[] getCode(final Code instance) throws Throwable {
@@ -1287,8 +1530,78 @@ class AivisSpeechRestApiJPanelTest {
 	}
 
 	@Test
-	void testPlay() throws IllegalAccessException, InvocationTargetException {
+	void testPlay() throws Throwable {
 		//
+		if (Objects.equals(OperatingSystem.WINDOWS, operatingSystem)) {
+			//
+			final Method method = AivisSpeechRestApiJPanel.class.getDeclaredMethod("play", byte[].class);
+			//
+			if (method != null) {
+				//
+				method.setAccessible(true);
+				//
+			} // if
+				//
+			Assertions.assertNull(invoke(method, null,
+					decode(decoder, "UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=")));
+			//
+			final Iterable<File> iterable = Util.toList(Util.filter(
+					testAndApply(Objects::nonNull,
+							testAndApply(x -> x != null && x.exists() && x.isDirectory(), getWindowFolder(),
+									AivisSpeechRestApiJPanelTest::listFiles, null),
+							Arrays::stream, null),
+					x -> Objects.equals(Util.getName(x), "Media")));
+			//
+			if (IterableUtils.size(iterable) > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			final File[] fs = listFiles(
+					testAndApply(x -> IterableUtils.size(x) == 1, iterable, x -> IterableUtils.get(x, 0), null));
+			//
+			if (fs != null) {
+				//
+				Arrays.sort(fs, (a, b) -> {
+					//
+					if (a != null && b != null) {
+						//
+						return Long.compare(a.length(), b.length());
+						//
+					} else if (a != null) {
+						//
+						return 1;
+						//
+					} // if
+						//
+					return -1;
+					//
+				});
+				//
+			} // if
+				//
+			File f = null;
+			//
+			ContentInfoUtil ciu = null;
+			//
+			for (int i = 0; fs != null && i < fs.length; i++) {
+				//
+				if ((f = ArrayUtils.get(fs, i)) == null || !f.isFile() || !Objects.equals(ContentType.WAV,
+						getContentType(findMatch(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), f)))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				Assertions.assertNull(invoke(method, null, FileUtils.readFileToByteArray(f)));
+				//
+				break;
+				//
+			} // for
+				//
+		} // if
+			//
 		if (Objects.equals(exec, Boolean.FALSE)) {
 			//
 			Throwable targetException = null;
@@ -1303,18 +1616,115 @@ class AivisSpeechRestApiJPanelTest {
 				//
 			} // try
 				//
-			Assertions.assertEquals("java.io.IOException", Util.getName(Util.getClass(targetException)));
+			final String className = Util.getName(Util.getClass(targetException));
 			//
+			if (Objects.equals(OperatingSystem.LINUX, operatingSystem)) {
+				//
+				Assertions.assertEquals("java.io.IOException", className);
+				//
+			} else if (Objects.equals(OperatingSystem.WINDOWS, operatingSystem)) {
+				//
+				Assertions.assertEquals("java.lang.UnsupportedOperationException", className);
+				//
+			} else {
+				//
+				throw new IllegalStateException();
+				//
+			} //
+				//
 		} else if (Objects.equals(exec, Boolean.TRUE)) {
 			//
-			Assertions.assertNull(invoke(METHOD_PLAY, null, styleInfo, 0));
+			if (Objects.equals(OperatingSystem.WINDOWS, operatingSystem)) {
+				//
+				Throwable throwable = null;
+				//
+				try {
+					//
+					invoke(METHOD_PLAY, null, styleInfo, 0);
+					//
+				} catch (final InvocationTargetException e) {
+					//
+					throwable = e != null ? e.getTargetException() : null;
+					//
+				} // try
+					//
+				Assertions.assertEquals(playMethodThrowExceptionClassName, Util.getName(Util.getClass(throwable)));
+				//
+			} else {
+				//
+				Assertions.assertNull(invoke(METHOD_PLAY, null, styleInfo, 0));
+				//
+				FieldUtils.writeDeclaredField(styleInfo, "voiceSamples", Collections.singletonList(null), true);
+				//
+				Assertions.assertNull(invoke(METHOD_PLAY, null, styleInfo, 0));
+				//
+			} // if
+				//
+		} // if
 			//
-			FieldUtils.writeDeclaredField(styleInfo, "voiceSamples", Collections.singletonList(null), true);
+	}
+
+	private static File getWindowFolder() {
+		//
+		if (!Objects.equals(OperatingSystem.WINDOWS, OperatingSystemUtil.getOperatingSystem())) {
 			//
-			Assertions.assertNull(invoke(METHOD_PLAY, null, styleInfo, 0));
+			return null;
 			//
 		} // if
 			//
+		final PointerByReference pbr = new PointerByReference();
+		//
+		final Shell32 shell32 = Shell32.INSTANCE;
+		//
+		if (COMUtils.SUCCEEDED(
+				shell32 != null ? shell32.SHGetKnownFolderPath(KnownFolders.FOLDERID_Windows, 0, null, pbr) : null)) {
+			//
+			try {
+				//
+				return new File(getWideString(pbr.getValue(), 0));
+				//
+			} finally {
+				//
+				final Ole32 ole32 = Ole32.INSTANCE;
+				//
+				if (ole32 != null) {
+					//
+					ole32.CoTaskMemFree(pbr.getValue());
+					//
+				} // if
+					//
+			} // try
+				//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static ContentInfo findMatch(final ContentInfoUtil instnace, final File file) throws IOException {
+		return instnace != null ? instnace.findMatch(file) : null;
+	}
+
+	private static ContentType getContentType(final ContentInfo instance) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_GET_CONTENT_TYPE, null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ContentType) {
+				return (ContentType) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static File[] listFiles(final File instance) {
+		return instance != null ? instance.listFiles() : null;
+	}
+
+	private static String getWideString(final Pointer instance, final long offset) {
+		return instance != null ? instance.getWideString(offset) : null;
 	}
 
 	@Test
