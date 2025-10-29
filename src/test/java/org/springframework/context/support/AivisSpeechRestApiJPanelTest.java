@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -96,7 +97,6 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
-import com.google.common.io.Files;
 import com.google.common.net.HostAndPort;
 import com.google.common.reflect.Reflection;
 import com.google.gson.Gson;
@@ -1629,7 +1629,8 @@ class AivisSpeechRestApiJPanelTest {
 					//
 				} // if
 					//
-				Assertions.assertNull(invoke(method, null, Files.toByteArray(f)));
+
+				Assertions.assertNull(invoke(method, null, Files.readAllBytes(Util.toPath(f))));
 				//
 				break;
 				//
