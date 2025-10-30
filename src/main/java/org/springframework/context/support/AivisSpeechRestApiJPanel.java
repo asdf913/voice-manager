@@ -1203,7 +1203,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		return instance != null ? instance.length : 0;
 	}
 
-	private static AudioFormat getFormat(final AudioInputStream instance) {
+	private static AudioFormat getFormat(@Nullable final AudioInputStream instance) {
 		return instance != null ? instance.getFormat() : null;
 	}
 
