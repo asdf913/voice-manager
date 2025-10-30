@@ -1199,7 +1199,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static int length(final Object[] instance) {
+	private static int length(@Nullable final Object[] instance) {
 		return instance != null ? instance.length : 0;
 	}
 
@@ -1207,7 +1207,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		return instance != null ? instance.getFormat() : null;
 	}
 
-	private static boolean isSupportedAudioFormat(final byte[] bs) {
+	private static boolean isSupportedAudioFormat(@Nullable final byte[] bs) {
 		//
 		try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null);
 				final AudioInputStream ais = testAndApply(Objects::nonNull, is, AudioSystem::getAudioInputStream,
