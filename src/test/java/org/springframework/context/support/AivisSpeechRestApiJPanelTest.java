@@ -37,6 +37,9 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Line;
+import javax.sound.sampled.SourceDataLine;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -123,11 +126,12 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_REMOVE_ALL_ELEMENTS, METHOD_GET_SCREEN_SIZE, METHOD_GET_HOST, METHOD_TEST_AND_ACCEPT,
 			METHOD_SET_VISIBLE, METHOD_PACK, METHOD_ADD, METHOD_SET_DEFAULT_CLOSE_OPERATION,
 			METHOD_SPEAKERS_HOST_AND_PORT, METHOD_SPEAKERS_ITERABLE, METHOD_AUDIO_QUERY, METHOD_SYNTHESIS,
-			METHOD_LENGTH, METHOD_TEST_AND_RUN, METHOD_ADD_ITEM_LISTENER, METHOD_SPEAKER_INFO_HOST_AND_PORT,
-			METHOD_SPEAKER_INFO_MAP, METHOD_DECODE, METHOD_GET_STYLE_INFO_BY_ID, METHOD_SET_STYLE_INFO, METHOD_LINES,
-			METHOD_TO_JSON, METHOD_FROM_JSON, METHOD_CREATE, METHOD_EXEC, METHOD_GET_CODE_METHOD, METHOD_GET_CODE_CODE,
-			METHOD_TEST_AND_APPLY, METHOD_REPLACE, METHOD_PLAY, METHOD_GET_FILE_EXTENSION_BYTE_ARRAY,
-			METHOD_GET_FILE_EXTENSION_CONTENT_INFO, METHOD_GET_CONTENT_TYPE, METHOD_IS_SUPPORTED_AUDIO_FORMAT = null;
+			METHOD_LENGTH_BYTE_ARRAY, METHOD_LENGTH_OBJECT_ARRAY, METHOD_TEST_AND_RUN, METHOD_ADD_ITEM_LISTENER,
+			METHOD_SPEAKER_INFO_HOST_AND_PORT, METHOD_SPEAKER_INFO_MAP, METHOD_DECODE, METHOD_GET_STYLE_INFO_BY_ID,
+			METHOD_SET_STYLE_INFO, METHOD_LINES, METHOD_TO_JSON, METHOD_FROM_JSON, METHOD_CREATE, METHOD_EXEC,
+			METHOD_GET_CODE_METHOD, METHOD_GET_CODE_CODE, METHOD_TEST_AND_APPLY, METHOD_REPLACE, METHOD_PLAY,
+			METHOD_GET_FILE_EXTENSION_BYTE_ARRAY, METHOD_GET_FILE_EXTENSION_CONTENT_INFO, METHOD_GET_CONTENT_TYPE,
+			METHOD_IS_SUPPORTED_AUDIO_FORMAT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -174,7 +178,9 @@ class AivisSpeechRestApiJPanelTest {
 		(METHOD_SYNTHESIS = clz.getDeclaredMethod("synthesis", HostAndPort.class, CLASS_STYLE, String.class))
 				.setAccessible(true);
 		//
-		(METHOD_LENGTH = clz.getDeclaredMethod("length", byte[].class)).setAccessible(true);
+		(METHOD_LENGTH_BYTE_ARRAY = clz.getDeclaredMethod("length", byte[].class)).setAccessible(true);
+		//
+		(METHOD_LENGTH_OBJECT_ARRAY = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_RUN = clz.getDeclaredMethod("testAndRun", Boolean.TYPE, Runnable.class)).setAccessible(true);
 		//
@@ -1225,7 +1231,7 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testLength() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertEquals(Integer.valueOf(0), invoke(METHOD_LENGTH, null, new byte[] {}));
+		Assertions.assertEquals(Integer.valueOf(0), invoke(METHOD_LENGTH_BYTE_ARRAY, null, new byte[] {}));
 		//
 	}
 
@@ -1585,9 +1591,13 @@ class AivisSpeechRestApiJPanelTest {
 			//
 			// wav.wav
 			//
-		Assertions.assertNull(
-				invoke(play, null, decode(decoder, "UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=")));
-		//
+		if (length(AudioSystem.getSourceLineInfo(new Line.Info(SourceDataLine.class))) > 0) {
+			//
+			Assertions.assertNull(invoke(play, null,
+					decode(decoder, "UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=")));
+			//
+		} // if
+			//
 		if (Objects.equals(OperatingSystem.WINDOWS, operatingSystem)) {
 			//
 			final Iterable<File> iterable = Util.toList(Util.filter(
@@ -1708,6 +1718,18 @@ class AivisSpeechRestApiJPanelTest {
 				//
 		} // if
 			//
+	}
+
+	private static int length(final Object[] instance) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_LENGTH_OBJECT_ARRAY, null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static Path getWindowPath() {
