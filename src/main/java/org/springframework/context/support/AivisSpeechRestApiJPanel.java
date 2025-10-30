@@ -53,6 +53,7 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine.Info;
+import javax.sound.sampled.Line;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -1089,7 +1090,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	private static void play(@Nullable final byte[] bs)
 			throws IOException, InterruptedException, UnsupportedAudioFileException, LineUnavailableException {
 		//
-		if (isSupportedAudioFormat(bs)) {
+		if (Boolean.logicalAnd(isSupportedAudioFormat(bs),
+				length(AudioSystem.getSourceLineInfo(new Line.Info(SourceDataLine.class))) > 0)) {
 			//
 			try (final InputStream is = new ByteArrayInputStream(bs);
 					final AudioInputStream ais = AudioSystem.getAudioInputStream(is)) {
@@ -1197,6 +1199,10 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
+	private static int length(final Object[] instance) {
+		return instance != null ? instance.length : 0;
+	}
+
 	private static AudioFormat getFormat(final AudioInputStream instance) {
 		return instance != null ? instance.getFormat() : null;
 	}
@@ -1235,7 +1241,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 		final String[] fileExtensions = contentInfo != null ? contentInfo.getFileExtensions() : null;
 		//
-		if (fileExtensions != null && fileExtensions.length == 1) {
+		if (length(fileExtensions) == 1) {
 			//
 			return ArrayUtils.get(fileExtensions, 0);
 			//
