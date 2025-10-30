@@ -1188,7 +1188,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static void write(final SourceDataLine instance, final byte[] bs, final int off, final int len) {
+	private static void write(@Nullable final SourceDataLine instance, final byte[] bs, final int off, final int len) {
 		if (instance != null) {
 			instance.write(bs, off, len);
 		}
