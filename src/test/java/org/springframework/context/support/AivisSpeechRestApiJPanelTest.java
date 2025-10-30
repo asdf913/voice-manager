@@ -1722,7 +1722,7 @@ class AivisSpeechRestApiJPanelTest {
 
 	private static int length(final Object[] instance) throws Throwable {
 		try {
-			final Object obj = invoke(METHOD_LENGTH_OBJECT_ARRAY, null, instance);
+			final Object obj = invoke(METHOD_LENGTH_OBJECT_ARRAY, null, (Object) instance);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
 			}
