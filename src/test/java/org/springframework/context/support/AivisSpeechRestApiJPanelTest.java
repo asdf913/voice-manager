@@ -127,7 +127,7 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_SPEAKER_INFO_MAP, METHOD_DECODE, METHOD_GET_STYLE_INFO_BY_ID, METHOD_SET_STYLE_INFO, METHOD_LINES,
 			METHOD_TO_JSON, METHOD_FROM_JSON, METHOD_CREATE, METHOD_EXEC, METHOD_GET_CODE_METHOD, METHOD_GET_CODE_CODE,
 			METHOD_TEST_AND_APPLY, METHOD_REPLACE, METHOD_PLAY, METHOD_GET_FILE_EXTENSION_BYTE_ARRAY,
-			METHOD_GET_FILE_EXTENSION_CONTENT_INFO, METHOD_GET_CONTENT_TYPE = null;
+			METHOD_GET_FILE_EXTENSION_CONTENT_INFO, METHOD_GET_CONTENT_TYPE, METHOD_IS_SUPPORTED_AUDIO_FORMAT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -229,6 +229,9 @@ class AivisSpeechRestApiJPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_CONTENT_TYPE = clz.getDeclaredMethod("getContentType", ContentInfo.class)).setAccessible(true);
+		//
+		(METHOD_IS_SUPPORTED_AUDIO_FORMAT = clz.getDeclaredMethod("isSupportedAudioFormat", byte[].class))
+				.setAccessible(true);
 		//
 	}
 
@@ -1062,10 +1065,24 @@ class AivisSpeechRestApiJPanelTest {
 	}
 
 	@Test
-	void testGetBytes() throws IllegalAccessException, InvocationTargetException {
+	void testGetBytes() throws Throwable {
 		//
-		Assertions.assertTrue(Objects.deepEquals(new byte[] {}, invoke(METHOD_GET_BYTES, null, EMPTY)));
+		Assertions.assertArrayEquals(new byte[] {}, getBytes(EMPTY));
 		//
+	}
+
+	private static byte[] getBytes(final String instance) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_GET_BYTES, null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof byte[]) {
+				return (byte[]) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
@@ -1558,18 +1575,20 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testPlay() throws Throwable {
 		//
+		final Method play = AivisSpeechRestApiJPanel.class.getDeclaredMethod("play", byte[].class);
+		//
+		if (play != null) {
+			//
+			play.setAccessible(true);
+			//
+		} // if
+			//
+			// wav.wav
+			//
+		Assertions.assertNull(
+				invoke(play, null, decode(decoder, "UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=")));
+		//
 		if (Objects.equals(OperatingSystem.WINDOWS, operatingSystem)) {
-			//
-			final Method m = AivisSpeechRestApiJPanel.class.getDeclaredMethod("play", byte[].class);
-			//
-			if (m != null) {
-				//
-				m.setAccessible(true);
-				//
-			} // if
-				//
-			Assertions.assertNull(
-					invoke(m, null, decode(decoder, "UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=")));
 			//
 			final Iterable<File> iterable = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull,
@@ -1621,7 +1640,7 @@ class AivisSpeechRestApiJPanelTest {
 				} // if
 					//
 
-				Assertions.assertNull(invoke(m, null, Files.readAllBytes(Util.toPath(f))));
+				Assertions.assertNull(invoke(play, null, Files.readAllBytes(Util.toPath(f))));
 				//
 				break;
 				//
@@ -1820,6 +1839,13 @@ class AivisSpeechRestApiJPanelTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testIsSupportedAudioFormat() throws Throwable {
+		//
+		Assertions.assertEquals(Boolean.FALSE, invoke(METHOD_IS_SUPPORTED_AUDIO_FORMAT, null, getBytes(EMPTY)));
+		//
 	}
 
 }

@@ -49,6 +49,13 @@ import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine.Info;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.AbstractButton;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
@@ -1056,7 +1063,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				play(synthesis(instance.createHostAndPort(),
 						Util.cast(Style.class, Util.getSelectedItem(instance.dcbmStyle)), instance.audioQuery));
 				//
-			} catch (final IOException | URISyntaxException | InterruptedException e) {
+			} catch (final IOException | URISyntaxException | InterruptedException | UnsupportedAudioFileException
+					| LineUnavailableException e) {
 				//
 				throw new RuntimeException(e);
 				//
@@ -1071,15 +1079,62 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	}
 
 	private static void play(@Nullable final StyleInfo instance, final int index)
-			throws IOException, InterruptedException {
+			throws IOException, InterruptedException, UnsupportedAudioFileException, LineUnavailableException {
 		//
 		play(testAndApply(x -> IterableUtils.size(x) > index, instance != null ? instance.voiceSamples : null,
 				x -> IterableUtils.get(x, index), null));
 		//
 	}
 
-	private static void play(@Nullable final byte[] bs) throws IOException, InterruptedException {
+	private static void play(@Nullable final byte[] bs)
+			throws IOException, InterruptedException, UnsupportedAudioFileException, LineUnavailableException {
 		//
+		if (isSupportedAudioFormat(bs)) {
+			//
+			try (final InputStream is = new ByteArrayInputStream(bs);
+					final AudioInputStream ais = AudioSystem.getAudioInputStream(is)) {
+				//
+				final AudioFormat audioFormat = getFormat(ais);
+				//
+				final SourceDataLine sourceDataLine = Util.cast(SourceDataLine.class,
+						AudioSystem.getLine(new Info(SourceDataLine.class, audioFormat)));
+				//
+				if (sourceDataLine != null) {
+					//
+					sourceDataLine.open(audioFormat);
+					//
+					sourceDataLine.start();
+					//
+				} // if
+					//
+				int read = 0;
+				//
+				final byte[] buffer = new byte[1024];
+				//
+				while (ais != null && sourceDataLine != null && read != -1) {
+					//
+					if ((read = ais.read(buffer, 0, buffer.length)) >= 0) {
+						//
+						sourceDataLine.write(buffer, 0, read);
+						//
+					} // if
+						//
+				} // while
+					//
+				if (sourceDataLine != null) {
+					//
+					sourceDataLine.drain();
+					//
+					sourceDataLine.close();
+					//
+				} // if
+					//
+				return;
+				//
+			} // try
+				//
+		} // if
+			//
 		File file = null;
 		//
 		try {
@@ -1140,6 +1195,26 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 		throw new UnsupportedOperationException();
 		//
+	}
+
+	private static AudioFormat getFormat(final AudioInputStream instance) {
+		return instance != null ? instance.getFormat() : null;
+	}
+
+	private static boolean isSupportedAudioFormat(final byte[] bs) {
+		//
+		try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null);
+				final AudioInputStream ais = testAndApply(Objects::nonNull, is, AudioSystem::getAudioInputStream,
+						null)) {
+			//
+			return ais != null;
+			//
+		} catch (final Exception e) {
+			//
+			return false;
+			//
+		} // try
+			//
 	}
 
 	private static ContentType getContentType(final ContentInfo instance) {
