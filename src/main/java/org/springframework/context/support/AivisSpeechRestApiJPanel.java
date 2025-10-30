@@ -40,6 +40,8 @@ import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.IntConsumer;
+import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1108,12 +1110,9 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 				while (ais != null && read != -1) {
 					//
-					if ((read = ais.read(buffer, 0, buffer.length)) >= 0) {
-						//
-						write(sourceDataLine, buffer, 0, read);
-						//
-					} // if
-						//
+					testAndAccept(x -> x >= 0, read = ais.read(buffer, 0, buffer.length),
+							x -> write(sourceDataLine, buffer, 0, x));
+					//
 				} // while
 					//
 				drain(sourceDataLine);
@@ -1186,6 +1185,12 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 		throw new UnsupportedOperationException();
 		//
+	}
+
+	private static void testAndAccept(final IntPredicate predicate, final int value, final IntConsumer consumer) {
+		if (predicate != null && predicate.test(value) && consumer != null) {
+			consumer.accept(value);
+		}
 	}
 
 	private static void write(@Nullable final SourceDataLine instance, final byte[] bs, final int off, final int len) {
