@@ -323,14 +323,10 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return count;
 				//
-			} else if (proxy instanceof SourceDataLine) {
+			} else if (proxy instanceof SourceDataLine && Objects.equals(name, "open")) {
 				//
-				if (Objects.equals(name, "open")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
