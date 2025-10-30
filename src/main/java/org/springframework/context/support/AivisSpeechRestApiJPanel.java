@@ -1188,14 +1188,14 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static void open(final SourceDataLine instance, @Nullable final AudioFormat audioFormat)
+	private static void open(@Nullable final SourceDataLine instance, @Nullable final AudioFormat audioFormat)
 			throws LineUnavailableException {
 		if (instance != null) {
 			instance.open(audioFormat);
 		}
 	}
 
-	private static void start(final DataLine instance) {
+	private static void start(@Nullable final DataLine instance) {
 		if (instance != null) {
 			instance.start();
 		}
