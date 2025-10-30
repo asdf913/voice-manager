@@ -357,7 +357,7 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				if (Objects.equals(name, "accept")) {
 					//
-					return test;
+					return null;
 					//
 				} // if
 					//
