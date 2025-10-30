@@ -55,6 +55,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.DataLine.Info;
 import javax.sound.sampled.Line;
+import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.swing.AbstractButton;
 import javax.swing.DefaultComboBoxModel;
@@ -1097,14 +1098,10 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				final SourceDataLine sourceDataLine = Util.cast(SourceDataLine.class,
 						AudioSystem.getLine(new Info(SourceDataLine.class, audioFormat)));
 				//
-				if (sourceDataLine != null) {
-					//
-					sourceDataLine.open(audioFormat);
-					//
-					sourceDataLine.start();
-					//
-				} // if
-					//
+				open(sourceDataLine, audioFormat);
+				//
+				start(sourceDataLine);
+				//
 				int read = 0;
 				//
 				final byte[] buffer = new byte[1024];
@@ -1189,6 +1186,19 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 		throw new UnsupportedOperationException();
 		//
+	}
+
+	private static void open(final SourceDataLine instance, final AudioFormat audioFormat)
+			throws LineUnavailableException {
+		if (instance != null) {
+			instance.open(audioFormat);
+		}
+	}
+
+	private static void start(final DataLine instance) {
+		if (instance != null) {
+			instance.start();
+		}
 	}
 
 	private static void close(final AutoCloseable instance) throws Exception {

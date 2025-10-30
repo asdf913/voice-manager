@@ -263,6 +263,10 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof DataLine && IterableUtils.contains(Arrays.asList("drain", "start"), name)) {
+				//
+				return null;
+				//
 			} // if
 				//
 			if (proxy instanceof Predicate) {
@@ -321,10 +325,14 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return count;
 				//
-			} else if (proxy instanceof DataLine && Objects.equals(name, "drain")) {
+			} else if (proxy instanceof SourceDataLine) {
 				//
-				return null;
-				//
+				if (Objects.equals(name, "open")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
