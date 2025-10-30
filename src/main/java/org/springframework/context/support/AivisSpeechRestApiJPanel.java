@@ -1197,7 +1197,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		}
 	}
 
-	private static void drain(final DataLine instance) {
+	private static void drain(@Nullable final DataLine instance) {
 		if (instance != null) {
 			instance.drain();
 		}
