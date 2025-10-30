@@ -258,12 +258,10 @@ class AivisSpeechRestApiJPanelTest {
 				//
 			final String name = Util.getName(method);
 			//
-			if (proxy instanceof AutoCloseable && Objects.equals(name, "close") && method != null
-					&& method.getParameterCount() == 0) {
-				//
-				return null;
-				//
-			} else if (proxy instanceof DataLine && IterableUtils.contains(Arrays.asList("drain", "start"), name)) {
+			if (Boolean.logicalOr(
+					proxy instanceof AutoCloseable && Objects.equals(name, "close") && method != null
+							&& method.getParameterCount() == 0,
+					proxy instanceof DataLine && IterableUtils.contains(Arrays.asList("drain", "start"), name))) {
 				//
 				return null;
 				//
