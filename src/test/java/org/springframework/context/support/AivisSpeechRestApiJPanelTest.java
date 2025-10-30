@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.SourceDataLine;
 import javax.swing.ComboBoxModel;
@@ -257,6 +258,16 @@ class AivisSpeechRestApiJPanelTest {
 				//
 			final String name = Util.getName(method);
 			//
+			if (proxy instanceof AutoCloseable) {
+				//
+				if (Objects.equals(name, "close") && method != null && method.getParameterCount() == 0) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
+				//
 			if (proxy instanceof Predicate) {
 				//
 				if (Objects.equals(name, "test")) {
@@ -313,6 +324,14 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return count;
 				//
+			} else if (proxy instanceof DataLine) {
+				//
+				if (Objects.equals(name, "drain")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);

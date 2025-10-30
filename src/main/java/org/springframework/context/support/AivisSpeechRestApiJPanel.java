@@ -52,11 +52,10 @@ import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
 import javax.sound.sampled.DataLine.Info;
 import javax.sound.sampled.Line;
-import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.AbstractButton;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
@@ -1064,10 +1063,9 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				play(synthesis(instance.createHostAndPort(),
 						Util.cast(Style.class, Util.getSelectedItem(instance.dcbmStyle)), instance.audioQuery));
 				//
-			} catch (final IOException | URISyntaxException | InterruptedException | UnsupportedAudioFileException
-					| LineUnavailableException e) {
+			} catch (final Exception e) {
 				//
-				throw new RuntimeException(e);
+				throw ObjectUtils.getIfNull(Util.cast(RuntimeException.class, e), () -> new RuntimeException(e));
 				//
 			} // try
 				//
@@ -1079,16 +1077,14 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static void play(@Nullable final StyleInfo instance, final int index)
-			throws IOException, InterruptedException, UnsupportedAudioFileException, LineUnavailableException {
+	private static void play(@Nullable final StyleInfo instance, final int index) throws Exception {
 		//
 		play(testAndApply(x -> IterableUtils.size(x) > index, instance != null ? instance.voiceSamples : null,
 				x -> IterableUtils.get(x, index), null));
 		//
 	}
 
-	private static void play(@Nullable final byte[] bs)
-			throws IOException, InterruptedException, UnsupportedAudioFileException, LineUnavailableException {
+	private static void play(@Nullable final byte[] bs) throws Exception {
 		//
 		if (Boolean.logicalAnd(isSupportedAudioFormat(bs),
 				length(AudioSystem.getSourceLineInfo(new Line.Info(SourceDataLine.class))) > 0)) {
@@ -1123,14 +1119,10 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 						//
 				} // while
 					//
-				if (sourceDataLine != null) {
-					//
-					sourceDataLine.drain();
-					//
-					sourceDataLine.close();
-					//
-				} // if
-					//
+				drain(sourceDataLine);
+				//
+				close(sourceDataLine);
+				//
 				return;
 				//
 			} // try
@@ -1197,6 +1189,18 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 		throw new UnsupportedOperationException();
 		//
+	}
+
+	private static void close(final AutoCloseable instance) throws Exception {
+		if (instance != null) {
+			instance.close();
+		}
+	}
+
+	private static void drain(final DataLine instance) {
+		if (instance != null) {
+			instance.drain();
+		}
 	}
 
 	private static int length(@Nullable final Object[] instance) {
