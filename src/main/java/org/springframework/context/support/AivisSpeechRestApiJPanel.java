@@ -1223,6 +1223,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 	}
 
+	@Nullable
 	private static ContentType getContentType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getContentType() : null;
 	}
