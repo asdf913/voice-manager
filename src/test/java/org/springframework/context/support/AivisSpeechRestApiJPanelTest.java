@@ -258,14 +258,11 @@ class AivisSpeechRestApiJPanelTest {
 				//
 			final String name = Util.getName(method);
 			//
-			if (proxy instanceof AutoCloseable) {
+			if (proxy instanceof AutoCloseable && Objects.equals(name, "close") && method != null
+					&& method.getParameterCount() == 0) {
 				//
-				if (Objects.equals(name, "close") && method != null && method.getParameterCount() == 0) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			if (proxy instanceof Predicate) {
@@ -324,14 +321,10 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return count;
 				//
-			} else if (proxy instanceof DataLine) {
+			} else if (proxy instanceof DataLine && Objects.equals(name, "drain")) {
 				//
-				if (Objects.equals(name, "drain")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
