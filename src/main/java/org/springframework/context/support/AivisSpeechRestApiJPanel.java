@@ -1106,11 +1106,11 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 				final byte[] buffer = new byte[1024];
 				//
-				while (ais != null && sourceDataLine != null && read != -1) {
+				while (ais != null && read != -1) {
 					//
 					if ((read = ais.read(buffer, 0, buffer.length)) >= 0) {
 						//
-						sourceDataLine.write(buffer, 0, read);
+						write(sourceDataLine, buffer, 0, read);
 						//
 					} // if
 						//
@@ -1186,6 +1186,12 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 		throw new UnsupportedOperationException();
 		//
+	}
+
+	private static void write(final SourceDataLine instance, final byte[] bs, final int off, final int len) {
+		if (instance != null) {
+			instance.write(bs, off, len);
+		}
 	}
 
 	private static void open(@Nullable final SourceDataLine instance, @Nullable final AudioFormat audioFormat)

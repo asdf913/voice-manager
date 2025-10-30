@@ -248,6 +248,8 @@ class AivisSpeechRestApiJPanelTest {
 
 		private Long count = null;
 
+		private Integer write = null;
+
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
 			if (ReflectionUtils.isEqualsMethod(method)) {
@@ -323,10 +325,18 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return count;
 				//
-			} else if (proxy instanceof SourceDataLine && Objects.equals(name, "open")) {
+			} else if (proxy instanceof SourceDataLine) {
 				//
-				return null;
-				//
+				if (Objects.equals(name, "open")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(name, "write")) {
+					//
+					return write;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -662,6 +672,8 @@ class AivisSpeechRestApiJPanelTest {
 			ih.test = Boolean.FALSE;
 			//
 			ih.count = Long.valueOf(0);
+			//
+			ih.write = Integer.valueOf(0);
 			//
 		} // if
 			//
