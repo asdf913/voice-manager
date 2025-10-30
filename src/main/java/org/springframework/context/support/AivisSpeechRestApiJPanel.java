@@ -1201,7 +1201,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		}
 	}
 
-	private static void close(final AutoCloseable instance) throws Exception {
+	private static void close(@Nullable final AutoCloseable instance) throws Exception {
 		if (instance != null) {
 			instance.close();
 		}
