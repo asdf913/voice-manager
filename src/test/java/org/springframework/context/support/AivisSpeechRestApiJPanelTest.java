@@ -112,6 +112,7 @@ import com.j256.simplemagic.ContentType;
 import com.sun.jna.platform.win32.Guid.GUID;
 import com.sun.jna.platform.win32.KnownFolders;
 import com.sun.jna.platform.win32.Ole32;
+import com.sun.jna.win32.StdCallLibrary;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
@@ -732,7 +733,10 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				if (isInterface(parameterType = ArrayUtils.get(parameterTypes, j))) {
 					//
-					Util.add(collection, Reflection.newProxy(parameterType, ih));
+					Util.add(collection,
+							Boolean.logicalAnd(Util.isAssignableFrom(StdCallLibrary.class, parameterType),
+									!Objects.equals(OperatingSystem.WINDOWS, operatingSystem)) ? null
+											: Reflection.newProxy(parameterType, ih));
 					//
 				} else if (Objects.equals(parameterType, Boolean.TYPE)) {
 					//
