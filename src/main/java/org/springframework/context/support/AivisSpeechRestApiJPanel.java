@@ -1157,14 +1157,87 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 					//
 				return;
 				//
-			} else if (Objects.equals(OperatingSystem.WINDOWS, operatingSystem)) {
+			} // if
 				//
-				final ContentInfo contentInfo = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch,
+		} finally {
+			//
+			FileUtils.deleteQuietly(file);
+			//
+		} // try
+			//
+		if (playWindows(bs)) {
+			//
+			return;
+			//
+		} // if
+			//
+		throw new UnsupportedOperationException();
+		//
+	}
+
+	private static boolean playWindows(final byte[] bs) throws Exception {
+		//
+		if (!Objects.equals(OperatingSystem.WINDOWS, OperatingSystemUtil.getOperatingSystem())) {
+			//
+			return false;
+			//
+		} // if
+			//
+		File file = null;
+		//
+		try {
+			//
+			final ContentInfo contentInfo = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
+			//
+			final ContentType contentType = getContentType(contentInfo);
+			//
+			if (Objects.equals(ContentType.WAV, contentType)) {
+				//
+				testAndAccept((a, b) -> b != null,
+						file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3),
+								StringUtils.join(".", Objects.toString(getFileExtension(contentInfo)))),
+						bs, FileUtils::writeByteArrayToFile);
+				//
+				final Process process = exec(Runtime.getRuntime(), String.format(
+						"powershell -c (New-Object Media.SoundPlayer '%1$s').PlaySync();", Util.getAbsolutePath(file)));
+				//
+				if (process != null) {
+					//
+					process.waitFor();
+					//
+				} // if
+					//
+				return true;
+				//
+			} else if (Objects.equals(ContentType.MICROSOFT_ASF, contentType)) {
+				//
+				Iterable<File> fs = Util
+						.toList(Util.filter(
+								testAndApply(Objects::nonNull,
+										listFiles(
+												Util.toFile(SHGetKnownFolderPath(KnownFolders.FOLDERID_ProgramFiles))),
+										Arrays::stream, null),
+								x -> Objects.equals(Util.getName(x), "Windows Media Player")));
+				//
+				final Runnable runnable = () -> {
+					//
+					throw new IllegalStateException();
+					//
+				};
+				//
+				testAndRun(IterableUtils.size(fs) > 1, runnable);
+				//
+				testAndRun(IterableUtils.size(fs = Util.toList(Util.filter(
+						testAndApply(Objects::nonNull,
+								listFiles(testAndApply(x -> IterableUtils.size(x) == 1, fs,
+										x -> IterableUtils.get(x, 0), null)),
+								Arrays::stream, null),
+						x -> Objects.equals(Util.getName(x), "wmplayer.exe")))) > 1, runnable);
+				//
+				final File wmplayer = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0),
 						null);
 				//
-				final ContentType contentType = getContentType(contentInfo);
-				//
-				if (Objects.equals(ContentType.WAV, contentType)) {
+				if (Boolean.logicalAnd(Util.exists(wmplayer), Util.isFile(wmplayer))) {
 					//
 					testAndAccept((a, b) -> b != null,
 							file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3),
@@ -1172,8 +1245,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 							bs, FileUtils::writeByteArrayToFile);
 					//
 					final Process process = exec(Runtime.getRuntime(),
-							String.format("powershell -c (New-Object Media.SoundPlayer '%1$s').PlaySync();",
-									Util.getAbsolutePath(file)));
+							String.format("%1$s \"%2$s\"", Util.getAbsoluteFile(wmplayer), Util.getAbsolutePath(file)));
 					//
 					if (process != null) {
 						//
@@ -1181,56 +1253,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 						//
 					} // if
 						//
-					return;
+					return true;
 					//
-				} else if (Objects.equals(ContentType.MICROSOFT_ASF, contentType)) {
-					//
-					Iterable<File> fs = Util
-							.toList(Util.filter(
-									testAndApply(Objects::nonNull,
-											listFiles(Util
-													.toFile(SHGetKnownFolderPath(KnownFolders.FOLDERID_ProgramFiles))),
-											Arrays::stream, null),
-									x -> Objects.equals(Util.getName(x), "Windows Media Player")));
-					//
-					final Runnable runnable = () -> {
-						//
-						throw new IllegalStateException();
-						//
-					};
-					//
-					testAndRun(IterableUtils.size(fs) > 1, runnable);
-					//
-					testAndRun(IterableUtils.size(fs = Util.toList(Util.filter(
-							testAndApply(Objects::nonNull,
-									listFiles(testAndApply(x -> IterableUtils.size(x) == 1, fs,
-											x -> IterableUtils.get(x, 0), null)),
-									Arrays::stream, null),
-							x -> Objects.equals(Util.getName(x), "wmplayer.exe")))) > 1, runnable);
-					//
-					final File wmplayer = testAndApply(x -> IterableUtils.size(x) == 1, fs,
-							x -> IterableUtils.get(x, 0), null);
-					//
-					if (Boolean.logicalAnd(Util.exists(wmplayer), Util.isFile(wmplayer))) {
-						//
-						testAndAccept((a, b) -> b != null,
-								file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3),
-										StringUtils.join(".", Objects.toString(getFileExtension(contentInfo)))),
-								bs, FileUtils::writeByteArrayToFile);
-						//
-						final Process process = exec(Runtime.getRuntime(), String.format("%1$s \"%2$s\"",
-								Util.getAbsoluteFile(wmplayer), Util.getAbsolutePath(file)));
-						//
-						if (process != null) {
-							//
-							process.waitFor();
-							//
-						} // if
-							//
-						return;
-						//
-					} // if
-						//
 				} // if
 					//
 			} // if
@@ -1241,7 +1265,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 		} // try
 			//
-		throw new UnsupportedOperationException();
+		return false;
 		//
 	}
 

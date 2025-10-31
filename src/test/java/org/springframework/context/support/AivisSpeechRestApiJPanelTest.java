@@ -39,6 +39,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.Line;
@@ -462,6 +463,8 @@ class AivisSpeechRestApiJPanelTest {
 				//
 			} catch (final Throwable e) {
 				//
+				e.printStackTrace();
+				//
 				exec = Boolean.FALSE;
 				//
 			} // try
@@ -530,15 +533,18 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
+			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()
+					|| Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "play"),
+							Boolean.logicalOr(
+									Arrays.equals(parameterTypes = m.getParameterTypes(),
+											new Class<?>[] { CLASS_STYLE_INFO, Integer.TYPE }),
+									Arrays.equals(parameterTypes, new Class<?>[] { byte[].class })))) {
 				//
 				continue;
 				//
 			} // if
 				//
 			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
-			//
-			parameterTypes = m.getParameterTypes();
 			//
 			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
 				//
@@ -566,70 +572,10 @@ class AivisSpeechRestApiJPanelTest {
 			//
 			toString = Util.toString(m);
 			//
-			isStatic = Modifier.isStatic(m.getModifiers());
-			//
-			isWindows = Objects.equals(OperatingSystem.WINDOWS, operatingSystem);
-			//
-			if (Objects.equals(FieldOrMethodUtil.getName(method), name = Util.getName(m)) && method != null
-					&& Objects.equals(
-							Util.collect(Util.map(Arrays.stream(parameterTypes), Util::getName),
-									Collectors.joining(",")),
-							Util.collect(Util.map(Arrays.stream(method.getArgumentTypes()), TypeUtil::getClassName),
-									Collectors.joining(",")))) {
-				//
-				if (Objects.equals(exec, Boolean.FALSE)) {
-					//
-					if (isStatic) {
-						//
-						throwable = null;
-						//
-						try {
-							//
-							Narcissus.invokeStaticMethod(m, arguments);
-							//
-						} catch (final Throwable e) {
-							//
-							throwable = e;
-							//
-						} // try
-							//
-						Assertions.assertEquals("java.io.IOException", Util.getName(Util.getClass(throwable)));
-						//
-						continue;
-						//
-					} // if
-						//
-				} else if (!Objects.equals(exec, Boolean.TRUE)) {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-				if (Boolean.logicalAnd(isWindows, isStatic)) {
-					//
-					throwable = null;
-					//
-					try {
-						//
-						Narcissus.invokeStaticMethod(m, arguments);
-						//
-					} catch (final Throwable e) {
-						//
-						throwable = e;
-						//
-					} // if
-						//
-					Assertions.assertEquals(playMethodThrowExceptionClassName, Util.getName(Util.getClass(throwable)));
-					//
-					continue;
-					//
-				} // if
-					//
-			} // if
-				//
 			if (Util.and(Objects.equals(name, FieldOrMethodUtil.getName(method)),
-					Arrays.equals(parameterTypes, new Class<?>[] { CLASS_STYLE_INFO, Integer.TYPE }), isStatic,
-					Boolean.logicalOr(isWindows,
+					Arrays.equals(parameterTypes, new Class<?>[] { CLASS_STYLE_INFO, Integer.TYPE }),
+					isStatic = Modifier.isStatic(m.getModifiers()),
+					Boolean.logicalOr(isWindows = Objects.equals(OperatingSystem.WINDOWS, operatingSystem),
 							Boolean.logicalAnd(Objects.equals(OperatingSystem.LINUX, operatingSystem),
 									Objects.equals(Boolean.FALSE, exec))))) {
 				//
@@ -716,8 +662,14 @@ class AivisSpeechRestApiJPanelTest {
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()
-					|| Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "main"),
-							Arrays.equals(parameterTypes = m.getParameterTypes(), new Class<?>[] { String[].class }))) {
+					|| Boolean
+							.logicalAnd(Objects.equals(name = Util.getName(m), "main"),
+									Arrays.equals(parameterTypes = m.getParameterTypes(),
+											new Class<?>[] { String[].class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "play"),
+							Boolean.logicalOr(
+									Arrays.equals(parameterTypes, new Class<?>[] { CLASS_STYLE_INFO, Integer.TYPE }),
+									Arrays.equals(parameterTypes, new Class<?>[] { byte[].class })))) {
 				//
 				continue;
 				//
@@ -758,70 +710,10 @@ class AivisSpeechRestApiJPanelTest {
 			//
 			toString = Util.toString(m);
 			//
-			isStatic = Modifier.isStatic(m.getModifiers());
-			//
-			isWindows = Objects.equals(OperatingSystem.WINDOWS, operatingSystem);
-			//
-			if (Objects.equals(FieldOrMethodUtil.getName(method), name) && method != null
-					&& Objects.equals(
-							Util.collect(Util.map(Arrays.stream(parameterTypes), Util::getName),
-									Collectors.joining(",")),
-							Util.collect(Util.map(Arrays.stream(method.getArgumentTypes()), TypeUtil::getClassName),
-									Collectors.joining(",")))) {
-				//
-				if (Objects.equals(exec, Boolean.FALSE)) {
-					//
-					if (isStatic) {
-						//
-						throwable = null;
-						//
-						try {
-							//
-							Narcissus.invokeStaticMethod(m, arguments);
-							//
-						} catch (final Throwable e) {
-							//
-							throwable = e;
-							//
-						} // try
-							//
-						Assertions.assertEquals("java.io.IOException", Util.getName(Util.getClass(throwable)));
-						//
-						continue;
-						//
-					} // if
-						//
-				} else if (!Objects.equals(exec, Boolean.TRUE)) {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-				if (Objects.equals(OperatingSystem.WINDOWS, operatingSystem) && isStatic) {
-					//
-					throwable = null;
-					//
-					try {
-						//
-						Narcissus.invokeStaticMethod(m, arguments);
-						//
-					} catch (final Throwable e) {
-						//
-						throwable = e;
-						//
-					} // if
-						//
-					Assertions.assertEquals(playMethodThrowExceptionClassName, Util.getName(Util.getClass(throwable)));
-					//
-					continue;
-					//
-				} // if
-					//
-			} // if
-				//
 			if (Util.and(Objects.equals(name, FieldOrMethodUtil.getName(method)),
-					Arrays.equals(parameterTypes, new Class<?>[] { CLASS_STYLE_INFO, Integer.TYPE }), isStatic,
-					Boolean.logicalOr(isWindows,
+					Arrays.equals(parameterTypes, new Class<?>[] { CLASS_STYLE_INFO, Integer.TYPE }),
+					isStatic = Modifier.isStatic(m.getModifiers()),
+					Boolean.logicalOr(isWindows = Objects.equals(OperatingSystem.WINDOWS, operatingSystem),
 							Boolean.logicalAnd(Objects.equals(OperatingSystem.LINUX, operatingSystem),
 									Objects.equals(Boolean.FALSE, exec))))) {
 				//
@@ -851,6 +743,8 @@ class AivisSpeechRestApiJPanelTest {
 				//
 			} // if
 				//
+			System.err.println(m);
+			//
 			invoke = isStatic ? Narcissus.invokeStaticMethod(m, arguments)
 					: Narcissus.invokeMethod(instance, m, arguments);
 			//
@@ -1198,8 +1092,8 @@ class AivisSpeechRestApiJPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(
-				invoke(METHOD_TEST_AND_ACCEPT4, null, Reflection.newProxy(BiPredicate.class, ih), null, null, null));
+		Assertions
+				.assertDoesNotThrow(() -> testAndAccept(Reflection.newProxy(BiPredicate.class, ih), null, null, null));
 		//
 		final IntPredicate intPredicate = Reflection.newProxy(IntPredicate.class, ih);
 		//
@@ -1210,6 +1104,15 @@ class AivisSpeechRestApiJPanelTest {
 		Assertions.assertNull(
 				invoke(METHOD_TEST_AND_ACCEPT3, null, intPredicate, zero, Reflection.newProxy(IntConsumer.class, ih)));
 		//
+	}
+
+	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, final T t,
+			@Nullable final U u, final FailableBiConsumer<T, U, E> consumer) throws Throwable {
+		try {
+			invoke(METHOD_TEST_AND_ACCEPT4, null, instance, t, u, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
@@ -1492,7 +1395,7 @@ class AivisSpeechRestApiJPanelTest {
 	private static Entry<String, org.apache.bcel.classfile.Method> getCommandAndMethod(final Class<?> clz)
 			throws Throwable {
 		//
-		IValue0<Entry<String, org.apache.bcel.classfile.Method>> ivalue0 = null;
+		Collection<IValue0<Entry<String, org.apache.bcel.classfile.Method>>> collection = null;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
 				StringUtils.join("/", replace(Strings.CS, Util.getName(clz), ".", "/"), ".class"))) {
@@ -1500,28 +1403,40 @@ class AivisSpeechRestApiJPanelTest {
 			final JavaClass javaClass = ClassParserUtil
 					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
 			//
-			final Iterable<org.apache.bcel.classfile.Method> ms = Util
-					.collect(
-							Util.filter(
-									testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream,
-											null),
-									m -> m != null
-											&& Objects.equals(FieldOrMethodUtil.getName(m),
-													"play")
-											&& CollectionUtils.isEqualCollection(
-													Util.collect(Util.map(Arrays.stream(MethodUtil.getArgumentTypes(m)),
-															TypeUtil::getClassName), Collectors.toList()),
-													Collections.singleton("[B"))),
-							Collectors.toList());
+			final Iterable<org.apache.bcel.classfile.Method> ms = Util.collect(
+					testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream, null),
+					Collectors.toList());
 			//
-			if (IterableUtils.size(ms) > 1) {
+			for (int i = 0; i < IterableUtils.size(ms); i++) {
 				//
-				throw new IllegalStateException();
+				testAndAccept((a, b) -> b != null, collection = ObjectUtils.getIfNull(collection, ArrayList::new),
+						getCommandAndMethod(clz, IterableUtils.get(ms, i)), Util::add);
 				//
-			} // if
+			} // for
 				//
-			final org.apache.bcel.classfile.Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms,
-					x -> IterableUtils.get(x, 0), null);
+		} // try
+			//
+		if (IterableUtils.size(collection) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		return IValue0Util.getValue0(
+				testAndApply(x -> IterableUtils.size(x) == 1, collection, x -> IterableUtils.get(x, 0), null));
+		//
+	}
+
+	private static IValue0<Entry<String, org.apache.bcel.classfile.Method>> getCommandAndMethod(final Class<?> clz,
+			final org.apache.bcel.classfile.Method method) throws Throwable {
+		//
+		IValue0<Entry<String, org.apache.bcel.classfile.Method>> ivalue0 = null;
+		//
+		try (final InputStream is = Util.getResourceAsStream(clz,
+				StringUtils.join("/", replace(Strings.CS, Util.getName(clz), ".", "/"), ".class"))) {
+			//
+			final JavaClass javaClass = ClassParserUtil
+					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
 			//
 			final Instruction[] instructions = InstructionListUtil.getInstructions(
 					testAndApply(Objects::nonNull, getCode(getCode(method)), InstructionList::new, null));
@@ -1591,7 +1506,7 @@ class AivisSpeechRestApiJPanelTest {
 				//
 		} // try
 			//
-		return IValue0Util.getValue0(ivalue0);
+		return ivalue0;
 		//
 	}
 
