@@ -110,6 +110,7 @@ import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.function.FailableRunnable;
 import org.apache.commons.lang3.function.ToBooleanBiFunction;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -1193,23 +1194,21 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 											Arrays::stream, null),
 									x -> Objects.equals(Util.getName(x), "Windows Media Player")));
 					//
-					if (IterableUtils.size(fs) > 1) {
+					final Runnable runnable = () -> {
 						//
 						throw new IllegalStateException();
 						//
-					} // if
-						//
-					if (IterableUtils.size(fs = Util.toList(Util.filter(
+					};
+					//
+					testAndRun(IterableUtils.size(fs) > 1, runnable);
+					//
+					testAndRun(IterableUtils.size(fs = Util.toList(Util.filter(
 							testAndApply(Objects::nonNull,
 									listFiles(testAndApply(x -> IterableUtils.size(x) == 1, fs,
 											x -> IterableUtils.get(x, 0), null)),
 									Arrays::stream, null),
-							x -> Objects.equals(Util.getName(x), "wmplayer.exe")))) > 1) {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
+							x -> Objects.equals(Util.getName(x), "wmplayer.exe")))) > 1, runnable);
+					//
 					final File wmplayer = testAndApply(x -> IterableUtils.size(x) == 1, fs,
 							x -> IterableUtils.get(x, 0), null);
 					//
