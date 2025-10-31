@@ -1213,7 +1213,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 					final File wmplayer = testAndApply(x -> IterableUtils.size(x) == 1, fs,
 							x -> IterableUtils.get(x, 0), null);
 					//
-					if (wmplayer != null && wmplayer.exists() && wmplayer.isFile()) {
+					if (Boolean.logicalAnd(Util.exists(wmplayer), Util.isFile(wmplayer))) {
 						//
 						testAndAccept((a, b) -> b != null,
 								file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3),
