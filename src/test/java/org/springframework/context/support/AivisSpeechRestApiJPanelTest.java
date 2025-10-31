@@ -1587,9 +1587,7 @@ class AivisSpeechRestApiJPanelTest {
 						//
 					} // if
 						//
-					ivalue0 = Unit.with(Pair.of(testAndApply(x -> x != null && x.length > 0,
-							StringUtils.split(Util.toString(LDCUtil.getValue(ldc, cpg)), ' '),
-							x -> ArrayUtils.get(x, 0), null), method));
+					ivalue0 = Unit.with(Pair.of(key, method));
 					//
 				} // if
 					//
