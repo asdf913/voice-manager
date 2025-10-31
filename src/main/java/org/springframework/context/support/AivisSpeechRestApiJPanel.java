@@ -1247,6 +1247,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
+	@Nullable
 	private static File[] listFiles(@Nullable final File instance) {
 		return instance != null ? instance.listFiles() : null;
 	}
@@ -1295,6 +1296,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		return test(predicateA, value) && test(predicateB, value);
 	}
 
+	@Nullable
 	private static String getWideString(@Nullable final Pointer instance, final long offset) {
 		return instance != null ? instance.getWideString(offset) : null;
 	}
