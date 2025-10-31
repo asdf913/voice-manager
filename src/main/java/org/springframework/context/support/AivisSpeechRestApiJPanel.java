@@ -1251,6 +1251,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		return instance != null ? instance.listFiles() : null;
 	}
 
+	@Nullable
 	private static Path SHGetKnownFolderPath(final GUID guid) {
 		//
 		if (!Objects.equals(OperatingSystem.WINDOWS, OperatingSystemUtil.getOperatingSystem())) {
