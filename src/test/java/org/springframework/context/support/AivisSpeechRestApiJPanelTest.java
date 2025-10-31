@@ -365,14 +365,10 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof Ole32) {
+			} else if (proxy instanceof Ole32 && Objects.equals(name, "CoTaskMemFree")) {
 				//
-				if (Objects.equals(name, "CoTaskMemFree")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
