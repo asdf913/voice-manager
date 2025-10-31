@@ -1175,7 +1175,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static boolean playWindows(final byte[] bs) throws Exception {
+	private static boolean playWindows(@Nullable final byte[] bs) throws Exception {
 		//
 		if (!Objects.equals(OperatingSystem.WINDOWS, OperatingSystemUtil.getOperatingSystem())) {
 			//
