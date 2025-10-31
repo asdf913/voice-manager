@@ -1289,7 +1289,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		}
 	}
 
-	private static <T> boolean testAndTest(final Predicate<T> predicateA, final T value,
+	private static <T> boolean testAndTest(final Predicate<T> predicateA, @Nullable final T value,
 			final Predicate<T> predicateB) {
 		return test(predicateA, value) && test(predicateB, value);
 	}
