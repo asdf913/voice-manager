@@ -101,6 +101,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.google.common.base.Predicates;
 import com.google.common.net.HostAndPort;
 import com.google.common.reflect.Reflection;
 import com.google.gson.Gson;
@@ -108,12 +109,9 @@ import com.google.gson.GsonBuilder;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.j256.simplemagic.ContentType;
-import com.sun.jna.Pointer;
+import com.sun.jna.platform.win32.Guid.GUID;
 import com.sun.jna.platform.win32.KnownFolders;
 import com.sun.jna.platform.win32.Ole32;
-import com.sun.jna.platform.win32.Shell32;
-import com.sun.jna.platform.win32.COM.COMUtils;
-import com.sun.jna.ptr.PointerByReference;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
@@ -134,7 +132,8 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_SET_STYLE_INFO, METHOD_LINES, METHOD_TO_JSON, METHOD_FROM_JSON, METHOD_CREATE, METHOD_EXEC,
 			METHOD_GET_CODE_METHOD, METHOD_GET_CODE_CODE, METHOD_TEST_AND_APPLY, METHOD_REPLACE, METHOD_PLAY,
 			METHOD_GET_FILE_EXTENSION_BYTE_ARRAY, METHOD_GET_FILE_EXTENSION_CONTENT_INFO, METHOD_GET_CONTENT_TYPE,
-			METHOD_IS_SUPPORTED_AUDIO_FORMAT = null;
+			METHOD_IS_SUPPORTED_AUDIO_FORMAT, METHOD_TEST_AND_TEST, METHOD_SH_GET_KNOWN_FOLDER_PATH,
+			METHOD_LIST_FILES = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -248,6 +247,14 @@ class AivisSpeechRestApiJPanelTest {
 		(METHOD_IS_SUPPORTED_AUDIO_FORMAT = clz.getDeclaredMethod("isSupportedAudioFormat", byte[].class))
 				.setAccessible(true);
 		//
+		(METHOD_TEST_AND_TEST = clz.getDeclaredMethod("testAndTest", Predicate.class, Object.class, Predicate.class))
+				.setAccessible(true);
+		//
+		(METHOD_SH_GET_KNOWN_FOLDER_PATH = clz.getDeclaredMethod("SHGetKnownFolderPath", GUID.class))
+				.setAccessible(true);
+		//
+		(METHOD_LIST_FILES = clz.getDeclaredMethod("listFiles", File.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -357,7 +364,14 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return null;
 				//
-
+			} else if (proxy instanceof Ole32) {
+				//
+				if (Objects.equals(name, "CoTaskMemFree")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -538,6 +552,10 @@ class AivisSpeechRestApiJPanelTest {
 				} else if (Objects.equals(parameterType, Integer.TYPE)) {
 					//
 					Util.add(collection, Integer.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Long.TYPE)) {
+					//
+					Util.add(collection, Long.valueOf(0));
 					//
 				} else {
 					//
@@ -723,6 +741,10 @@ class AivisSpeechRestApiJPanelTest {
 				} else if (Objects.equals(parameterType, Integer.TYPE)) {
 					//
 					Util.add(collection, Integer.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Long.TYPE)) {
+					//
+					Util.add(collection, Long.valueOf(0));
 					//
 				} else {
 					//
@@ -1451,23 +1473,15 @@ class AivisSpeechRestApiJPanelTest {
 			//
 			ConstantPoolGen cpg = null;
 			//
-			for (int i = 0; instructions != null && i < instructions.length; i++) {
+			final int length = length(instructions);
+			//
+			if (length > 1 && ArrayUtils.get(instructions, length - 1) instanceof ATHROW
+					&& ArrayUtils.get(instructions, length - 2) instanceof INVOKESPECIAL invokespecial) {
 				//
-				if (ArrayUtils.get(instructions, i) instanceof ATHROW
-						&& ArrayUtils.get(instructions, i - 1) instanceof INVOKESPECIAL invokespecial) {
-					//
-					if (ivalue0 != null) {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-					ivalue0 = Unit.with(invokespecial.getClassName(
-							ObjectUtils.getIfNull(cpg, () -> new ConstantPoolGen(javaClass.getConstantPool()))));
-					//
-				} // if
-					//
-			} // for
+				ivalue0 = Unit.with(invokespecial.getClassName(
+						ObjectUtils.getIfNull(cpg, () -> new ConstantPoolGen(javaClass.getConstantPool()))));
+				//
+			} // if
 				//
 		} // try
 			//
@@ -1520,6 +1534,8 @@ class AivisSpeechRestApiJPanelTest {
 			//
 			boolean found = false;
 			//
+			String key = null;
+			//
 			for (int i = 0; instructions != null && i < instructions.length; i++) {
 				//
 				if ((instruction = ArrayUtils.get(instructions, i)) instanceof GETSTATIC gc && Objects.equals(
@@ -1553,6 +1569,14 @@ class AivisSpeechRestApiJPanelTest {
 								InvokeInstructionUtil.getClassName(invokeStatic, cpg = ObjectUtils.getIfNull(cpg,
 										() -> new ConstantPoolGen(javaClass.getConstantPool()))))) {
 					//
+					if (Objects.equals(key = testAndApply(x -> x != null && x.length > 0,
+							StringUtils.split(Util.toString(LDCUtil.getValue(ldc, cpg)), ' '),
+							x -> ArrayUtils.get(x, 0), null), "%1$s")) {
+						//
+						continue;
+						//
+					} // if
+						//
 					if (ivalue0 != null) {
 						//
 						throw new IllegalStateException();
@@ -1652,16 +1676,25 @@ class AivisSpeechRestApiJPanelTest {
 			Assertions.assertNull(invoke(play, null,
 					decode(decoder, "UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=")));
 			//
+			// Windows Navigation Start.wma
+			//
+			Assertions.assertNull(invoke(play, null, decode(decoder,
+					"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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")));
+			//
 		} // if
 			//
 		if (Objects.equals(OperatingSystem.WINDOWS, operatingSystem)) {
 			//
-			final Iterable<File> iterable = Util.toList(Util.filter(
-					testAndApply(Objects::nonNull,
-							testAndApply(x -> x != null && x.exists() && x.isDirectory(), Util.toFile(getWindowPath()),
-									AivisSpeechRestApiJPanelTest::listFiles, null),
-							Arrays::stream, null),
-					x -> Objects.equals(Util.getName(x), "Media")));
+			final Iterable<File> iterable = Util
+					.toList(Util.filter(
+							testAndApply(Objects::nonNull,
+									testAndApply(x -> x != null && x.exists() && x.isDirectory(),
+											Util.toFile(Util.cast(Path.class,
+													invoke(METHOD_SH_GET_KNOWN_FOLDER_PATH, null,
+															KnownFolders.FOLDERID_Windows))),
+											AivisSpeechRestApiJPanelTest::listFiles, null),
+									Arrays::stream, null),
+							x -> Objects.equals(Util.getName(x), "Media")));
 			//
 			if (IterableUtils.size(iterable) > 1) {
 				//
@@ -1788,43 +1821,6 @@ class AivisSpeechRestApiJPanelTest {
 		}
 	}
 
-	private static Path getWindowPath() {
-		//
-		if (!Objects.equals(OperatingSystem.WINDOWS, OperatingSystemUtil.getOperatingSystem())) {
-			//
-			return null;
-			//
-		} // if
-			//
-		final PointerByReference pbr = new PointerByReference();
-		//
-		final Shell32 shell32 = Shell32.INSTANCE;
-		//
-		if (COMUtils.SUCCEEDED(
-				shell32 != null ? shell32.SHGetKnownFolderPath(KnownFolders.FOLDERID_Windows, 0, null, pbr) : null)) {
-			//
-			try {
-				//
-				return Path.of(getWideString(pbr.getValue(), 0));
-				//
-			} finally {
-				//
-				final Ole32 ole32 = Ole32.INSTANCE;
-				//
-				if (ole32 != null) {
-					//
-					ole32.CoTaskMemFree(pbr.getValue());
-					//
-				} // if
-					//
-			} // try
-				//
-		} // if
-			//
-		return null;
-		//
-	}
-
 	private static ContentInfo findMatch(final ContentInfoUtil instnace, final File file) throws IOException {
 		return instnace != null ? instnace.findMatch(file) : null;
 	}
@@ -1843,12 +1839,18 @@ class AivisSpeechRestApiJPanelTest {
 		}
 	}
 
-	private static File[] listFiles(final File instance) {
-		return instance != null ? instance.listFiles() : null;
-	}
-
-	private static String getWideString(final Pointer instance, final long offset) {
-		return instance != null ? instance.getWideString(offset) : null;
+	private static File[] listFiles(final File instance) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_LIST_FILES, null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof File[]) {
+				return (File[]) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
@@ -1923,6 +1925,14 @@ class AivisSpeechRestApiJPanelTest {
 	void testIsSupportedAudioFormat() throws Throwable {
 		//
 		Assertions.assertEquals(Boolean.FALSE, invoke(METHOD_IS_SUPPORTED_AUDIO_FORMAT, null, getBytes(EMPTY)));
+		//
+	}
+
+	@Test
+	void testTestAndTest() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertEquals(Boolean.FALSE,
+				invoke(METHOD_TEST_AND_TEST, null, Predicates.alwaysTrue(), null, Predicates.alwaysFalse()));
 		//
 	}
 

@@ -27,6 +27,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -130,6 +131,13 @@ import com.google.gson.GsonBuilder;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.j256.simplemagic.ContentType;
+import com.sun.jna.Pointer;
+import com.sun.jna.platform.win32.Guid.GUID;
+import com.sun.jna.platform.win32.KnownFolders;
+import com.sun.jna.platform.win32.Ole32;
+import com.sun.jna.platform.win32.Shell32;
+import com.sun.jna.platform.win32.COM.COMUtils;
+import com.sun.jna.ptr.PointerByReference;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
@@ -1154,7 +1162,9 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				final ContentInfo contentInfo = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch,
 						null);
 				//
-				if (Objects.equals(ContentType.WAV, getContentType(contentInfo))) {
+				final ContentType contentType = getContentType(contentInfo);
+				//
+				if (Objects.equals(ContentType.WAV, contentType)) {
 					//
 					testAndAccept((a, b) -> b != null,
 							file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3),
@@ -1173,6 +1183,56 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 						//
 					return;
 					//
+				} else if (Objects.equals(ContentType.MICROSOFT_ASF, contentType)) {
+					//
+					Iterable<File> fs = Util
+							.toList(Util.filter(
+									testAndApply(Objects::nonNull,
+											listFiles(Util
+													.toFile(SHGetKnownFolderPath(KnownFolders.FOLDERID_ProgramFiles))),
+											Arrays::stream, null),
+									x -> Objects.equals(Util.getName(x), "Windows Media Player")));
+					//
+					if (IterableUtils.size(fs) > 1) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					if (IterableUtils.size(fs = Util.toList(Util.filter(
+							testAndApply(Objects::nonNull,
+									listFiles(testAndApply(x -> IterableUtils.size(x) == 1, fs,
+											x -> IterableUtils.get(x, 0), null)),
+									Arrays::stream, null),
+							x -> Objects.equals(Util.getName(x), "wmplayer.exe")))) > 1) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					final File wmplayer = testAndApply(x -> IterableUtils.size(x) == 1, fs,
+							x -> IterableUtils.get(x, 0), null);
+					//
+					if (wmplayer != null && wmplayer.exists() && wmplayer.isFile()) {
+						//
+						testAndAccept((a, b) -> b != null,
+								file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3),
+										StringUtils.join(".", Objects.toString(getFileExtension(contentInfo)))),
+								bs, FileUtils::writeByteArrayToFile);
+						//
+						final Process process = exec(Runtime.getRuntime(), String.format("%1$s \"%2$s\"",
+								Util.getAbsoluteFile(wmplayer), Util.getAbsolutePath(file)));
+						//
+						if (process != null) {
+							//
+							process.waitFor();
+							//
+						} // if
+							//
+						return;
+						//
+					} // if
+						//
 				} // if
 					//
 			} // if
@@ -1185,6 +1245,57 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 		throw new UnsupportedOperationException();
 		//
+	}
+
+	private static File[] listFiles(final File instance) {
+		return instance != null ? instance.listFiles() : null;
+	}
+
+	private static Path SHGetKnownFolderPath(final GUID guid) {
+		//
+		if (!Objects.equals(OperatingSystem.WINDOWS, OperatingSystemUtil.getOperatingSystem())) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final PointerByReference pbr = new PointerByReference();
+		//
+		final Shell32 shell32 = Shell32.INSTANCE;
+		//
+		if (testAndTest(Objects::nonNull,
+				shell32 != null && guid != null ? shell32.SHGetKnownFolderPath(guid, 0, null, pbr) : null,
+				COMUtils::SUCCEEDED)) {
+			//
+			try {
+				//
+				return Path.of(getWideString(pbr.getValue(), 0));
+				//
+			} finally {
+				//
+				CoTaskMemFree(Ole32.INSTANCE, pbr.getValue());
+				//
+			} // try
+				//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static void CoTaskMemFree(final Ole32 instance, final Pointer pointer) {
+		if (instance != null) {
+			instance.CoTaskMemFree(pointer);
+		}
+	}
+
+	private static <T> boolean testAndTest(final Predicate<T> predicateA, final T value,
+			final Predicate<T> predicateB) {
+		return test(predicateA, value) && test(predicateB, value);
+	}
+
+	private static String getWideString(final Pointer instance, final long offset) {
+		return instance != null ? instance.getWideString(offset) : null;
 	}
 
 	private static void testAndAccept(@Nullable final IntPredicate predicate, final int value,
