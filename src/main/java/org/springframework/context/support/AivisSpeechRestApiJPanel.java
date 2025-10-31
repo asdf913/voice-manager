@@ -1253,7 +1253,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	}
 
 	@Nullable
-	private static Path SHGetKnownFolderPath(final GUID guid) {
+	private static Path SHGetKnownFolderPath(@Nullable final GUID guid) {
 		//
 		if (!Objects.equals(OperatingSystem.WINDOWS, OperatingSystemUtil.getOperatingSystem())) {
 			//
@@ -1285,7 +1285,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static void CoTaskMemFree(final Ole32 instance, final Pointer pointer) {
+	private static void CoTaskMemFree(@Nullable final Ole32 instance, final Pointer pointer) {
 		if (instance != null) {
 			instance.CoTaskMemFree(pointer);
 		}
