@@ -1187,7 +1187,8 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 	}
 
-	private static void testAndAccept(final IntPredicate predicate, final int value, final IntConsumer consumer) {
+	private static void testAndAccept(@Nullable final IntPredicate predicate, final int value,
+			@Nullable final IntConsumer consumer) {
 		if (predicate != null && predicate.test(value) && consumer != null) {
 			consumer.accept(value);
 		}
