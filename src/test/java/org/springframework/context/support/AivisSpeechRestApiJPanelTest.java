@@ -1900,10 +1900,10 @@ class AivisSpeechRestApiJPanelTest {
 	void testGetContentType() throws Throwable {
 		//
 		Assert.assertThrows(IllegalArgumentException.class,
-				() -> Narcissus.invokeStaticMethod(METHOD_GET_CONTENT_TYPE_FILE, Util.toFile(Paths.get("."))));
+				() -> Narcissus.invokeStaticMethod(METHOD_GET_CONTENT_TYPE_FILE, Util.toFile(Path.of("."))));
 		//
 		Assert.assertThrows(IllegalArgumentException.class,
-				() -> Narcissus.invokeStaticMethod(METHOD_GET_CONTENT_TYPE_FILE, Util.toFile(Paths.get("pom.xml"))));
+				() -> Narcissus.invokeStaticMethod(METHOD_GET_CONTENT_TYPE_FILE, Util.toFile(Path.of("pom.xml"))));
 		//
 		// Windows Navigation Start.wma
 		//
