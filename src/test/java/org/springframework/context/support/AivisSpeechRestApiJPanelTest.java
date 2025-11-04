@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -1899,10 +1900,10 @@ class AivisSpeechRestApiJPanelTest {
 	void testGetContentType() throws Throwable {
 		//
 		Assert.assertThrows(IllegalArgumentException.class,
-				() -> Narcissus.invokeStaticMethod(METHOD_GET_CONTENT_TYPE_FILE, new File(".")));
+				() -> Narcissus.invokeStaticMethod(METHOD_GET_CONTENT_TYPE_FILE, Util.toFile(Paths.get("."))));
 		//
 		Assert.assertThrows(IllegalArgumentException.class,
-				() -> Narcissus.invokeStaticMethod(METHOD_GET_CONTENT_TYPE_FILE, new File("pom.xml")));
+				() -> Narcissus.invokeStaticMethod(METHOD_GET_CONTENT_TYPE_FILE, Util.toFile(Paths.get("pom.xml"))));
 		//
 		// Windows Navigation Start.wma
 		//
