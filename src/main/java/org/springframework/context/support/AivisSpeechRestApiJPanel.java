@@ -247,7 +247,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	private AivisSpeechRestApiJPanel() {
 	}
 
-	private static String getMessage(final Throwable instance) {
+	private static String getMessage(@Nullable final Throwable instance) {
 		return instance != null ? instance.getMessage() : null;
 	}
 
@@ -1351,7 +1351,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
-	private static ContentType getContentType(final File file) {
+	private static ContentType getContentType(@Nullable final File file) {
 		//
 		AVFormatContext fmtCtx = null;
 		//
@@ -1434,7 +1434,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
-	private static AVCodecParameters codecpar(final AVStream instance) {
+	private static AVCodecParameters codecpar(@Nullable final AVStream instance) {
 		return instance != null ? instance.codecpar() : null;
 	}
 
