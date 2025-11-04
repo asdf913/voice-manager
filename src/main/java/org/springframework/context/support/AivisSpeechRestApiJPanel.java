@@ -1617,6 +1617,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static String[] getFileExtensions(@Nullable final ContentType instance) {
 		return instance != null ? instance.getFileExtensions() : null;
 	}
