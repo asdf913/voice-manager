@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Spliterator;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.IntConsumer;
@@ -116,11 +117,21 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.http.client.utils.URIBuilder;
+import org.bytedeco.ffmpeg.avcodec.AVCodecParameters;
+import org.bytedeco.ffmpeg.avformat.AVFormatContext;
+import org.bytedeco.ffmpeg.avformat.AVStream;
+import org.bytedeco.ffmpeg.global.avformat;
+import org.bytedeco.ffmpeg.global.avutil;
+import org.bytedeco.javacpp.PointerPointer;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.ElementUtil;
 import org.oxbow.swingbits.util.OperatingSystem;
 import org.oxbow.swingbits.util.OperatingSystemUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerUtil;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -142,9 +153,30 @@ import com.sun.jna.ptr.PointerByReference;
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
-public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean, ActionListener, ItemListener {
+public class AivisSpeechRestApiJPanel extends JPanel
+		implements InitializingBean, ActionListener, ItemListener, DisposableBean {
 
 	private static final long serialVersionUID = -1383116618784980170L;
+
+	private static final Logger LOG = LoggerFactory.getLogger(AivisSpeechRestApiJPanel.class);
+
+	private static final AtomicBoolean INITIALIZED = new AtomicBoolean(false);
+
+	static {
+		//
+		try {
+			//
+			avformat.avformat_network_init();
+			//
+			set(INITIALIZED, true);
+			//
+		} catch (final Exception e) {
+			//
+			LoggerUtil.error(LOG, getMessage(e), e);
+			//
+		} // try
+			//
+	}
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -215,9 +247,33 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	private AivisSpeechRestApiJPanel() {
 	}
 
+	private static String getMessage(final Throwable instance) {
+		return instance != null ? instance.getMessage() : null;
+	}
+
+	private static void set(final AtomicBoolean instance, final boolean value) {
+		if (instance != null) {
+			instance.set(value);
+		}
+	}
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
+		if (INITIALIZED == null) {
+			//
+			FieldUtils.writeDeclaredStaticField(getClass(), "INITIALIZED", new AtomicBoolean(false), true);
+			//
+		} // if
+			//
+		if (INITIALIZED != null && !INITIALIZED.get()) {
+			//
+			avformat.avformat_network_init();
+			//
+			set(INITIALIZED, true);
+			//
+		} // if
+			//
 		setLayout(new MigLayout());
 		//
 		if (Narcissus.getField(this, Narcissus.findField(getClass(), "component")) == null) {
@@ -340,6 +396,17 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 								x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 						x -> Util.cast(AbstractButton.class, Narcissus.getField(this, x)))));
 		//
+	}
+
+	@Override
+	public void destroy() throws Exception {
+		//
+		if (INITIALIZED != null && INITIALIZED.get()) {
+			//
+			avformat.avformat_network_deinit();
+			//
+		} // if
+			//
 	}
 
 	private static void addItemListener(final ItemListener itemListener, @Nullable final ItemSelectable... iss) {
@@ -1187,7 +1254,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 		//
 		try {
 			//
-			final ContentInfo contentInfo = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
+			final ContentInfo contentInfo = testAndApply(x -> x != null, bs, new ContentInfoUtil()::findMatch, null);
 			//
 			final ContentType contentType = getContentType(contentInfo);
 			//
@@ -1239,9 +1306,24 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 				//
 				if (Boolean.logicalAnd(Util.exists(wmplayer), Util.isFile(wmplayer))) {
 					//
+					String fileExtension = getFileExtension(contentInfo);
+					//
+					if (fileExtension == null) {
+						//
+						testAndAccept((a, b) -> b != null,
+								file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3), null),
+								bs, FileUtils::writeByteArrayToFile);
+						//
+						fileExtension = testAndApply(x -> length(x) == 1, getFileExtensions(getContentType(file)),
+								x -> ArrayUtils.get(x, 0), null);
+						//
+						FileUtils.deleteQuietly(file);
+						//
+					} // if
+						//
 					testAndAccept((a, b) -> b != null,
 							file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3),
-									StringUtils.join(".", Objects.toString(getFileExtension(contentInfo)))),
+									StringUtils.join(".", fileExtension)),
 							bs, FileUtils::writeByteArrayToFile);
 					//
 					final Process process = exec(Runtime.getRuntime(),
@@ -1267,6 +1349,93 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 		return false;
 		//
+	}
+
+	private static ContentType getContentType(final File file) {
+		//
+		AVFormatContext fmtCtx = null;
+		//
+		boolean hasVideo = false;
+		//
+		boolean hasAudio = false;
+		//
+		try {
+			//
+			if (file == null) {
+				//
+				throw new IllegalArgumentException("File is null");
+				//
+			} else if (!file.isFile()) {
+				//
+				throw new IllegalArgumentException("Not a file");
+				//
+			} // if
+				//
+			if (avformat.avformat_open_input(fmtCtx = avformat.avformat_alloc_context(), Util.getAbsolutePath(file),
+					null, null) != 0) {
+				//
+				throw new IllegalArgumentException("Cannot open file");
+				//
+			} // if
+				//
+			if (avformat.avformat_find_stream_info(fmtCtx, (PointerPointer<?>) null) < 0) {
+				//
+				avformat.avformat_close_input(fmtCtx);
+				//
+				throw new IllegalArgumentException("Cannot read stream info");
+				//
+			} // if
+				//
+			AVCodecParameters codecpar = null;
+			//
+			int codecType;
+			//
+			for (int i = 0; fmtCtx != null && i < fmtCtx.nb_streams(); i++) {
+				//
+				if ((codecpar = codecpar(fmtCtx.streams(i))) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if ((codecType = codecpar.codec_type()) == avutil.AVMEDIA_TYPE_VIDEO) {
+					//
+					hasVideo = true;
+					//
+				} // if
+					//
+				if (codecType == avutil.AVMEDIA_TYPE_AUDIO) {
+					//
+					hasAudio = true;
+					//
+				} // if
+					//
+			} // for
+				//
+		} finally {
+			//
+			avformat.avformat_close_input(fmtCtx);
+			//
+		} // try
+			//
+		if (hasVideo) {
+			//
+			return ContentType.WMV;
+			//
+		} // if
+			//
+		if (hasAudio) {
+			//
+			return ContentType.WMA;
+			//
+		} // if
+			//
+		return ContentType.MICROSOFT_ASF;
+		//
+	}
+
+	private static AVCodecParameters codecpar(final AVStream instance) {
+		return instance != null ? instance.codecpar() : null;
 	}
 
 	@Nullable
@@ -1403,7 +1572,9 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 	@Nullable
 	private static String getFileExtension(@Nullable final ContentInfo contentInfo) throws IOException {
 		//
-		final String[] fileExtensions = contentInfo != null ? contentInfo.getFileExtensions() : null;
+		final ContentType contentType = getContentType(contentInfo);
+		//
+		final String[] fileExtensions = getFileExtensions(contentType);
 		//
 		if (length(fileExtensions) == 1) {
 			//
@@ -1411,7 +1582,7 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 		} // if
 			//
-		if (contentInfo != null && Objects.equals(getContentType(contentInfo), ContentType.OTHER)
+		if (contentInfo != null && Objects.equals(contentType, ContentType.OTHER)
 				&& Objects.equals(contentInfo.getMimeType(), "audio/mp4")
 				&& Objects.equals(contentInfo.getName(), "ISO")) {
 			//
@@ -1444,6 +1615,10 @@ public class AivisSpeechRestApiJPanel extends JPanel implements InitializingBean
 			//
 		return null;
 		//
+	}
+
+	private static String[] getFileExtensions(final ContentType instance) {
+		return instance != null ? instance.getFileExtensions() : null;
 	}
 
 	private static boolean find(@Nullable final Matcher instance) {

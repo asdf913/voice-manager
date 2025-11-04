@@ -59,10 +59,12 @@ import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.classfile.MethodUtil;
+import org.apache.bcel.generic.ALOAD;
 import org.apache.bcel.generic.ATHROW;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.FieldInstruction;
 import org.apache.bcel.generic.GETSTATIC;
+import org.apache.bcel.generic.IFNONNULL;
 import org.apache.bcel.generic.INVOKESPECIAL;
 import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.Instruction;
@@ -71,12 +73,16 @@ import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.InvokeInstructionUtil;
 import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.LDCUtil;
+import org.apache.bcel.generic.NEW;
 import org.apache.bcel.generic.ReferenceType;
+import org.apache.bcel.generic.Type;
 import org.apache.bcel.generic.TypeUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.function.FailableBiConsumer;
@@ -88,6 +94,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -133,9 +140,10 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_SPEAKER_INFO_HOST_AND_PORT, METHOD_SPEAKER_INFO_MAP, METHOD_DECODE, METHOD_GET_STYLE_INFO_BY_ID,
 			METHOD_SET_STYLE_INFO, METHOD_LINES, METHOD_TO_JSON, METHOD_FROM_JSON, METHOD_CREATE, METHOD_EXEC,
 			METHOD_GET_CODE_METHOD, METHOD_GET_CODE_CODE, METHOD_TEST_AND_APPLY, METHOD_REPLACE, METHOD_PLAY,
-			METHOD_GET_FILE_EXTENSION_BYTE_ARRAY, METHOD_GET_FILE_EXTENSION_CONTENT_INFO, METHOD_GET_CONTENT_TYPE,
-			METHOD_IS_SUPPORTED_AUDIO_FORMAT, METHOD_TEST_AND_TEST, METHOD_SH_GET_KNOWN_FOLDER_PATH,
-			METHOD_LIST_FILES = null;
+			METHOD_GET_FILE_EXTENSION_BYTE_ARRAY, METHOD_GET_FILE_EXTENSION_CONTENT_INFO,
+			METHOD_GET_CONTENT_TYPE_CONTENT_INFO, METHOD_GET_CONTENT_TYPE_FILE, METHOD_IS_SUPPORTED_AUDIO_FORMAT,
+			METHOD_TEST_AND_TEST, METHOD_SH_GET_KNOWN_FOLDER_PATH, METHOD_LIST_FILES, METHOD_NEXT_ALPHA_NUMERIC,
+			METHOD_GET_MESSAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -241,7 +249,10 @@ class AivisSpeechRestApiJPanelTest {
 		(METHOD_GET_FILE_EXTENSION_CONTENT_INFO = clz.getDeclaredMethod("getFileExtension", ContentInfo.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_CONTENT_TYPE = clz.getDeclaredMethod("getContentType", ContentInfo.class)).setAccessible(true);
+		(METHOD_GET_CONTENT_TYPE_CONTENT_INFO = clz.getDeclaredMethod("getContentType", ContentInfo.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_CONTENT_TYPE_FILE = clz.getDeclaredMethod("getContentType", File.class)).setAccessible(true);
 		//
 		(METHOD_IS_SUPPORTED_AUDIO_FORMAT = clz.getDeclaredMethod("isSupportedAudioFormat", byte[].class))
 				.setAccessible(true);
@@ -256,6 +267,11 @@ class AivisSpeechRestApiJPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_LIST_FILES = clz.getDeclaredMethod("listFiles", File.class)).setAccessible(true);
+		//
+		(METHOD_NEXT_ALPHA_NUMERIC = clz.getDeclaredMethod("nextAlphanumeric", RandomStringUtils.class, Integer.TYPE))
+				.setAccessible(true);
+		//
+		(METHOD_GET_MESSAGE = clz.getDeclaredMethod("getMessage", Throwable.class)).setAccessible(true);
 		//
 	}
 
@@ -424,6 +440,8 @@ class AivisSpeechRestApiJPanelTest {
 
 	private String playMethodThrowExceptionClassName = null;
 
+	private Entry<org.apache.bcel.classfile.Method, Class<?>> methodThrowExceptionIfOnlyOneParameterIsNull = null;
+
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
@@ -471,6 +489,8 @@ class AivisSpeechRestApiJPanelTest {
 				//
 		} // if
 			//
+		methodThrowExceptionIfOnlyOneParameterIsNull = getMethodThrowExceptionIfOnlyOneParameterIsNull(clz);
+		//
 	}
 
 	@Test
@@ -509,7 +529,7 @@ class AivisSpeechRestApiJPanelTest {
 	}
 
 	@Test
-	void testNull() {
+	void testNull() throws Throwable {
 		//
 		final Method[] ms = AivisSpeechRestApiJPanel.class.getDeclaredMethods();
 		//
@@ -530,6 +550,10 @@ class AivisSpeechRestApiJPanelTest {
 		Throwable throwable = null;
 		//
 		boolean isStatic, isWindows;
+		//
+		org.apache.bcel.classfile.Method clMethod = null;
+		//
+		Type[] argumentTypes = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
@@ -605,6 +629,36 @@ class AivisSpeechRestApiJPanelTest {
 				//
 			} // if
 				//
+			if (Objects
+					.equals(FieldOrMethodUtil.getName(
+							clMethod = Util.getKey(methodThrowExceptionIfOnlyOneParameterIsNull)), Util.getName(m))
+					&& length(argumentTypes = clMethod.getArgumentTypes()) == m.getParameterCount()
+					&& length(argumentTypes) == 1 && Objects.equals(Util.toString(ArrayUtils.get(argumentTypes, 0)),
+							Util.getName(ArrayUtils.get(Util.getParameterTypes(m), 0)))) {
+				//
+				throwable = null;
+				//
+				try {
+					//
+					if (isStatic) {
+						//
+						Narcissus.invokeStaticMethod(m, arguments);
+						//
+					} // if
+						//
+				} catch (final Throwable e) {
+					//
+					throwable = e;
+					//
+				} // try
+					//
+				Assertions.assertEquals(Util.getValue(methodThrowExceptionIfOnlyOneParameterIsNull),
+						Util.getClass(throwable));
+				//
+				continue;
+				//
+			} // if
+				//
 			invoke = isStatic ? Narcissus.invokeStaticMethod(m, arguments)
 					: Narcissus.invokeMethod(instance, m, arguments);
 			//
@@ -627,7 +681,7 @@ class AivisSpeechRestApiJPanelTest {
 	}
 
 	@Test
-	void testMethodWithInterfaceParameter() {
+	void testMethodWithInterfaceParameter() throws Throwable {
 		//
 		final Method[] ms = AivisSpeechRestApiJPanel.class.getDeclaredMethods();
 		//
@@ -648,6 +702,10 @@ class AivisSpeechRestApiJPanelTest {
 		Throwable throwable = null;
 		//
 		boolean isStatic, isWindows;
+		//
+		org.apache.bcel.classfile.Method clMethod = null;
+		//
+		Type[] argumentTypes = null;
 		//
 		if (ih != null) {
 			//
@@ -743,8 +801,37 @@ class AivisSpeechRestApiJPanelTest {
 				//
 			} // if
 				//
-			System.err.println(m);
-			//
+
+			if (Objects
+					.equals(FieldOrMethodUtil.getName(
+							clMethod = Util.getKey(methodThrowExceptionIfOnlyOneParameterIsNull)), Util.getName(m))
+					&& length(argumentTypes = clMethod.getArgumentTypes()) == m.getParameterCount()
+					&& length(argumentTypes) == 1 && Objects.equals(Util.toString(ArrayUtils.get(argumentTypes, 0)),
+							Util.getName(ArrayUtils.get(Util.getParameterTypes(m), 0)))) {
+				//
+				throwable = null;
+				//
+				try {
+					//
+					if (isStatic) {
+						//
+						Narcissus.invokeStaticMethod(m, arguments);
+						//
+					} // if
+						//
+				} catch (final Throwable e) {
+					//
+					throwable = e;
+					//
+				} // try
+					//
+				Assertions.assertEquals(Util.getValue(methodThrowExceptionIfOnlyOneParameterIsNull),
+						Util.getClass(throwable));
+				//
+				continue;
+				//
+			} // if
+				//
 			invoke = isStatic ? Narcissus.invokeStaticMethod(m, arguments)
 					: Narcissus.invokeMethod(instance, m, arguments);
 			//
@@ -1338,6 +1425,76 @@ class AivisSpeechRestApiJPanelTest {
 		//
 	}
 
+	private static Entry<org.apache.bcel.classfile.Method, Class<?>> getMethodThrowExceptionIfOnlyOneParameterIsNull(
+			final Class<?> clz) throws Throwable {
+		//
+		Entry<org.apache.bcel.classfile.Method, Class<?>> entry = null;
+		//
+		try (final InputStream is = Util.getResourceAsStream(clz,
+				StringUtils.join("/", replace(Strings.CS, Util.getName(clz), ".", "/"), ".class"))) {
+			//
+			final JavaClass javaClass = ClassParserUtil
+					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
+			//
+			final Iterable<org.apache.bcel.classfile.Method> ms = Util.collect(
+					testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream, null),
+					Collectors.toList());
+			//
+			ConstantPoolGen cpg = null;
+			//
+			org.apache.bcel.classfile.Method m = null;
+			//
+			Class<?> c = null;
+			//
+			for (int i = 0; i < IterableUtils.size(ms); i++) {
+				//
+				if ((c = getMethodThrowExceptionIfOnlyOneParameterIsNull(
+						cpg = ObjectUtils.getIfNull(cpg, () -> new ConstantPoolGen(javaClass.getConstantPool())),
+						m = IterableUtils.get(ms, i))) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (entry != null) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				entry = Pair.of(m, c);
+				//
+			} // for
+				//
+		} // try
+			//
+		return entry;
+		//
+	}
+
+	private static Class<?> getMethodThrowExceptionIfOnlyOneParameterIsNull(final ConstantPoolGen cpg,
+			final org.apache.bcel.classfile.Method method) throws Throwable {
+		//
+		final Instruction[] instructions = InstructionListUtil
+				.getInstructions(testAndApply(Objects::nonNull, getCode(getCode(method)), InstructionList::new, null));
+		//
+		for (int i = 0; i <= length(instructions); i++) {
+			//
+			if (ArrayUtils.get(instructions, i) instanceof ATHROW && i > 6
+					&& ArrayUtils.get(instructions, i - 4) instanceof NEW NEW
+					&& ArrayUtils.get(instructions, i - 5) instanceof IFNONNULL
+					&& ArrayUtils.get(instructions, i - 6) instanceof ALOAD) {
+				//
+				return Util.forName(TypeUtil.getClassName(NEW.getType(cpg)));
+				//
+			} // if
+				//
+		} // for
+			//
+		return null;
+		//
+	}
+
 	private static String getPlayMethodThrowExceptionClassName(final Class<?> clz) throws Throwable {
 		//
 		IValue0<String> ivalue0 = null;
@@ -1738,9 +1895,52 @@ class AivisSpeechRestApiJPanelTest {
 		return instnace != null ? instnace.findMatch(file) : null;
 	}
 
+	@Test
+	void testGetContentType() throws Throwable {
+		//
+		Assert.assertThrows(IllegalArgumentException.class,
+				() -> Narcissus.invokeStaticMethod(METHOD_GET_CONTENT_TYPE_FILE, new File(".")));
+		//
+		Assert.assertThrows(IllegalArgumentException.class,
+				() -> Narcissus.invokeStaticMethod(METHOD_GET_CONTENT_TYPE_FILE, new File("pom.xml")));
+		//
+		// Windows Navigation Start.wma
+		//
+		final File file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3), null);
+		//
+		try {
+			//
+			testAndAccept((a, b) -> b != null, file, decode(decoder,
+					"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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"),
+					FileUtils::writeByteArrayToFile);
+			//
+			Assert.assertEquals(ContentType.WMA, Narcissus.invokeStaticMethod(METHOD_GET_CONTENT_TYPE_FILE, file));
+			//
+		} finally {
+			//
+			FileUtils.deleteQuietly(file);
+			//
+		} // try
+			//
+	}
+
+	private static String nextAlphanumeric(final RandomStringUtils instance, final int count) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_NEXT_ALPHA_NUMERIC, null, instance, count);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 	private static ContentType getContentType(final ContentInfo instance) throws Throwable {
 		try {
-			final Object obj = invoke(METHOD_GET_CONTENT_TYPE, null, instance);
+			final Object obj = invoke(METHOD_GET_CONTENT_TYPE_CONTENT_INFO, null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof ContentType) {
@@ -1846,6 +2046,13 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Assertions.assertEquals(Boolean.FALSE,
 				invoke(METHOD_TEST_AND_TEST, null, Predicates.alwaysTrue(), null, Predicates.alwaysFalse()));
+		//
+	}
+
+	@Test
+	void testGetMessage() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_GET_MESSAGE, null, new Throwable()));
 		//
 	}
 
