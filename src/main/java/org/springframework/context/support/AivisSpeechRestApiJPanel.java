@@ -251,7 +251,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		return instance != null ? instance.getMessage() : null;
 	}
 
-	private static void set(final AtomicBoolean instance, final boolean value) {
+	private static void set(@Nullable final AtomicBoolean instance, final boolean value) {
 		if (instance != null) {
 			instance.set(value);
 		}
