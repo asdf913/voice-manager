@@ -247,6 +247,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	private AivisSpeechRestApiJPanel() {
 	}
 
+	@Nullable
 	private static String getMessage(@Nullable final Throwable instance) {
 		return instance != null ? instance.getMessage() : null;
 	}
@@ -1434,6 +1435,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static AVCodecParameters codecpar(@Nullable final AVStream instance) {
 		return instance != null ? instance.codecpar() : null;
 	}
