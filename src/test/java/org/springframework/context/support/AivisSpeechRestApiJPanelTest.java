@@ -21,7 +21,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -1899,11 +1898,9 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testGetContentType() throws Throwable {
 		//
-		Assert.assertThrows(IllegalArgumentException.class,
-				() -> Narcissus.invokeStaticMethod(METHOD_GET_CONTENT_TYPE_FILE, Util.toFile(Path.of("."))));
+		Assert.assertThrows(IllegalArgumentException.class, () -> getContentType(Util.toFile(Path.of("."))));
 		//
-		Assert.assertThrows(IllegalArgumentException.class,
-				() -> Narcissus.invokeStaticMethod(METHOD_GET_CONTENT_TYPE_FILE, Util.toFile(Path.of("pom.xml"))));
+		Assert.assertThrows(IllegalArgumentException.class, () -> getContentType(Util.toFile(Path.of("pom.xml"))));
 		//
 		// Windows Navigation Start.wma
 		//
@@ -1923,6 +1920,20 @@ class AivisSpeechRestApiJPanelTest {
 			//
 		} // try
 			//
+	}
+
+	private static ContentType getContentType(final File file) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_GET_CONTENT_TYPE_FILE, null, file);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ContentType) {
+				return (ContentType) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static String nextAlphanumeric(final RandomStringUtils instance, final int count) throws Throwable {
