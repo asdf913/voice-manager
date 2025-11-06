@@ -422,6 +422,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static Object invoke(@Nullable final java.lang.reflect.Method method, final Object instance,
 			final Object... args) throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
