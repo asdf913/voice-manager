@@ -22,6 +22,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -412,15 +413,18 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		} // if
 			//
-		final java.lang.reflect.Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms,
-				x -> IterableUtils.get(x, 0), null);
-		//
-		if (m != null && Objects.equals(Boolean.TRUE, m.invoke(INITIALIZED))) {
+		if (Objects.equals(Boolean.TRUE, invoke(
+				testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null), INITIALIZED))) {
 			//
 			avformat.avformat_network_deinit();
 			//
 		} // if
 			//
+	}
+
+	private static Object invoke(final java.lang.reflect.Method method, final Object instance, final Object... args)
+			throws IllegalAccessException, InvocationTargetException {
+		return method != null ? method.invoke(instance, args) : null;
 	}
 
 	private static void addItemListener(final ItemListener itemListener, @Nullable final ItemSelectable... iss) {
