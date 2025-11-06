@@ -402,7 +402,20 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	@Override
 	public void destroy() throws Exception {
 		//
-		if (INITIALIZED != null && INITIALIZED.get()) {
+		final Iterable<java.lang.reflect.Method> ms = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(INITIALIZED)), Arrays::stream, null),
+				x -> Objects.equals(Util.getName(x), "get")));
+		//
+		if (IterableUtils.size(ms) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final java.lang.reflect.Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms,
+				x -> IterableUtils.get(x, 0), null);
+		//
+		if (m != null && Objects.equals(Boolean.TRUE, m.invoke(INITIALIZED))) {
 			//
 			avformat.avformat_network_deinit();
 			//
