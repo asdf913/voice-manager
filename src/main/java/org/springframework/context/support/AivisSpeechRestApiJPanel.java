@@ -276,7 +276,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		} // if
 			//
-		setLayout(new MigLayout());
+		setLayout(new MigLayout("debug"));
 		//
 		if (Narcissus.getField(this, Narcissus.findField(getClass(), "component")) == null) {
 			//
@@ -319,7 +319,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		add(new JLabel());
 		//
-		add(btnSpeakers = new JButton("Speakers"), wrap);
+		add(btnSpeakers = new JButton("Speakers"), String.format("span %1$s,%2$s", 3, wrap));
 		//
 		add(new JLabel("Speaker"));
 		//
@@ -338,7 +338,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		});
 		//
-		add(jcbSpeaker);
+		add(jcbSpeaker, String.format("span %1$s", 3));
 		//
 		add(jLabelPortrait = new JLabel(), String.format("span %1$s", 2));
 		//
@@ -361,13 +361,13 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		});
 		//
-		add(jcbStyle);
+		add(jcbStyle, String.format("span %1$s", 3));
 		//
 		add(jLabelIcon = new JLabel(), String.format("span %1$s", 2));
 		//
 		add(btnViewIcon = new JButton("View"), wrap);
 		//
-		add(new JLabel("Voice Sample Transcript"), String.format("span %1$s", 3));
+		add(new JLabel("Voice Sample Transcript"), String.format("span %1$s", 4));
 		//
 		add(jcbVoiceSampleTranscript = new JComboBox<>(dcbmVoiceSampleTranscript = new DefaultComboBoxModel<>()),
 				String.format("span %1$s", 3));
@@ -378,7 +378,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		add(new JLabel("Text"));
 		//
-		add(tfText = new JTextField(), String.format("growx,span %1$s", 5));
+		add(tfText = new JTextField(), String.format("growx,span %1$s", 6));
 		//
 		add(btnAudioQuery = new JButton("Audio Query"), String.format("span %1$s", 3));
 		//
@@ -388,11 +388,11 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		add(btnSynthesis = new JButton("Synthesis"));
 		//
-		add(btnPlay = new JButton("Play"), String.format("span %1$s", 3));
+		add(btnPlay = new JButton("Play"), String.format("span %1$s", 5));
 		//
 		addItemListener(this, jcbSpeaker, jcbStyle, jcbVoiceSampleTranscript);
 		//
-		addActionListener(this,
+		addActionListener(this,	
 				Util.toList(Util.map(
 						Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
 								x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
