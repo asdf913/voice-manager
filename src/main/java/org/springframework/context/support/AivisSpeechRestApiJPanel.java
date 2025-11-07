@@ -727,6 +727,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 			} // try
 				//
+			pack(window);
+			//
 		} // if
 			//
 		final Iterable<ToBooleanBiFunction<AivisSpeechRestApiJPanel, Object>> functions = Arrays.asList(
