@@ -758,7 +758,8 @@ class UtilTest {
 								"org.h2.jdbc.JdbcSQLTransactionRollbackException",
 								"org.h2.jdbc.JdbcSQLTransientException",
 								"org.springframework.jdbc.core.AggregatedBatchUpdateException",
-								"org.htmlunit.corejs.javascript.CompoundOperationMap"), name)) {
+								"org.htmlunit.corejs.javascript.CompoundOperationMap",
+								"org.apache.commons.collections4.list.AbstractLinkedListJava21$LinkedSubList"), name)) {
 					//
 					final Iterable<?> iterable = Util.cast(Iterable.class, Narcissus.allocateInstance(clz));
 					//

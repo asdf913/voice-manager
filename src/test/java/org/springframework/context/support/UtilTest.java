@@ -584,8 +584,9 @@ class UtilTest {
 							"org.d2ab.collection.doubles.RawDoubleSet", "org.d2ab.collection.ints.BitIntSet",
 							"org.d2ab.collection.ints.ChainingIntIterable", "org.d2ab.collection.ints.IntList$SubList",
 							"org.d2ab.collection.longs.ChainingLongIterable",
-							"org.d2ab.collection.longs.LongList$SubList", "org.d2ab.sequence.EquivalentSizeSequence"),
-							name)) {
+							"org.d2ab.collection.longs.LongList$SubList", "org.d2ab.sequence.EquivalentSizeSequence",
+							"org.apache.commons.collections4.list.AbstractLinkedListJava21$LinkedSubList",
+							"org.apache.commons.compress.compressors.gzip.ExtraField"), name)) {
 						//
 						Assertions.assertThrows(NullPointerException.class, () -> Util.iterator(it), name);
 						//
