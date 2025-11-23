@@ -16,12 +16,14 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.geom.Dimension2D;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
@@ -53,11 +55,23 @@ import javax.swing.ListCellRenderer;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.text.JTextComponent;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.INVOKESPECIAL;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -101,6 +115,8 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.MapAccessor;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.common.collect.TableUtil;
@@ -437,9 +453,57 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 
 	@Nullable
 	private static Dimension getScreenSize(@Nullable final Toolkit instance) {
-		return instance != null && Boolean.logicalOr(!GraphicsEnvironment.isHeadless(), isJavassistProxy(instance))
-				? instance.getScreenSize()
-				: null;
+		//
+		if (instance == null || !Boolean.logicalOr(!GraphicsEnvironment.isHeadless(), isJavassistProxy(instance))) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Class<?> clz = Util.getClass(instance);
+		//
+		try (final InputStream is = Util.getResourceAsStream(clz,
+				String.format("/%1$s.class", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
+			//
+			// java.awt.Toolkit.getScreenSize()
+			//
+			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
+					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),
+					getMethod(clz, "getScreenSize"));
+			//
+			final Instruction[] instructions = InstructionListUtil.getInstructions(MethodGenUtil
+					.getInstructionList(testAndApply(Objects::nonNull, m, x -> new MethodGen(x, null, null), null)));
+			//
+			final ObjectMapper objectMapper = new ObjectMapper();
+			//
+			if (length(instructions) > 2
+					&& Objects.equals(ObjectMapperUtil.writeValueAsString(objectMapper,
+							Util.toList(Util.map(testAndApply(Objects::nonNull, instructions, Arrays::stream, null),
+									x -> Util.getName(Util.getClass(x))))),
+							ObjectMapperUtil.writeValueAsString(objectMapper,
+									Util.toList(Stream.of("NEW", "DUP", "INVOKESPECIAL", "ATHROW")
+											.map(x -> StringUtils.joinWith(".", "org.apache.bcel.generic", x)))))
+					&& ArrayUtils.get(instructions, 2) instanceof INVOKESPECIAL invokeSpecial
+					&& Util.isAssignableFrom(Throwable.class,
+							Util.forName(invokeSpecial.getClassName(new ConstantPoolGen(m.getConstantPool()))))) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} catch (final IOException | NoSuchMethodException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+		return instance.getScreenSize();
+		//
+	}
+
+	private static Method getMethod(final Class<?> instance, final String name, final Class<?>... parameterTypes)
+			throws NoSuchMethodException {
+		return instance != null ? instance.getMethod(name, parameterTypes) : null;
 	}
 
 	private static boolean isJavassistProxy(final Object instance) {
