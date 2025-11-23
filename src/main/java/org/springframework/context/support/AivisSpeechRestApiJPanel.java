@@ -429,7 +429,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
-	private static boolean startsWith(final Strings instance, final CharSequence str, final CharSequence prefix) {
+	private static boolean startsWith(@Nullable final Strings instance, final CharSequence str,
+			final CharSequence prefix) {
 		return instance != null && instance.startsWith(str, prefix);
 	}
 
