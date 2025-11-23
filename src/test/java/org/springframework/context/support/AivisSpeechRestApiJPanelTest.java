@@ -125,6 +125,7 @@ import com.sun.jna.win32.StdCallLibrary;
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyUtil;
+import net.miginfocom.swing.MigLayout;
 
 class AivisSpeechRestApiJPanelTest {
 
@@ -143,7 +144,7 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_GET_FILE_EXTENSION_BYTE_ARRAY, METHOD_GET_FILE_EXTENSION_CONTENT_INFO,
 			METHOD_GET_CONTENT_TYPE_CONTENT_INFO, METHOD_GET_CONTENT_TYPE_FILE, METHOD_IS_SUPPORTED_AUDIO_FORMAT,
 			METHOD_TEST_AND_TEST, METHOD_SH_GET_KNOWN_FOLDER_PATH, METHOD_LIST_FILES, METHOD_NEXT_ALPHA_NUMERIC,
-			METHOD_GET_MESSAGE = null;
+			METHOD_GET_MESSAGE, METHOD_SET = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -272,6 +273,8 @@ class AivisSpeechRestApiJPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_MESSAGE = clz.getDeclaredMethod("getMessage", Throwable.class)).setAccessible(true);
+		//
+		(METHOD_SET = clz.getDeclaredMethod("set", Object.class, Map.class)).setAccessible(true);
 		//
 	}
 
@@ -2065,6 +2068,19 @@ class AivisSpeechRestApiJPanelTest {
 	void testGetMessage() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_GET_MESSAGE, null, new Throwable()));
+		//
+	}
+
+	@Test
+	void testSet() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(
+				invoke(METHOD_SET, null, new MigLayout(), Collections.singletonMap("layoutConstraints", null)));
+		//
+		Assertions.assertNull(
+				invoke(METHOD_SET, null, new MigLayout(), Collections.singletonMap("layoutConstraints", "")));
+		//
+		Assertions.assertNull(invoke(METHOD_SET, null, new MigLayout(), Collections.singletonMap("constraintMap", "")));
 		//
 	}
 

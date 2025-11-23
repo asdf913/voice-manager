@@ -117,6 +117,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.apache.commons.text.WordUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.bytedeco.ffmpeg.avcodec.AVCodecParameters;
 import org.bytedeco.ffmpeg.avformat.AVFormatContext;
@@ -276,7 +277,11 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		} // if
 			//
-		setLayout(new MigLayout("debug"));
+		final MigLayout migLayout = new MigLayout();
+		//
+		set(migLayout, System.getProperties());
+		//
+		setLayout(migLayout);
 		//
 		if (Narcissus.getField(this, Narcissus.findField(getClass(), "component")) == null) {
 			//
@@ -392,12 +397,40 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		addItemListener(this, jcbSpeaker, jcbStyle, jcbVoiceSampleTranscript);
 		//
-		addActionListener(this,	
+		addActionListener(this,
 				Util.toList(Util.map(
 						Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
 								x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 						x -> Util.cast(AbstractButton.class, Narcissus.getField(this, x)))));
 		//
+	}
+
+	private static void set(final Object object, final Map<?, ?> properties) {
+		//
+		Util.forEach(Util.filter(
+				testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(object)), Arrays::stream, null),
+				m -> Boolean.logicalAnd(startsWith(Strings.CS, Util.getName(m), "set"),
+						length(Util.getParameterTypes(m)) == 1)),
+				m -> {
+					//
+					final String name = WordUtils.uncapitalize(StringUtils.substringAfter(Util.getName(m), "set"));
+					//
+					final Object value = Util.get(properties, name);
+					//
+					if (Boolean.logicalAnd(Util.containsKey(properties, name), length(Util.getParameterTypes(m)) == 1)
+							&& Boolean.logicalOr(value == null, Util.isAssignableFrom(
+									ArrayUtils.get(Util.getParameterTypes(m), 0), Util.getClass(value)))) {
+						//
+						Narcissus.invokeMethod(object, m, value);
+						//
+					} // if
+						//
+				});
+		//
+	}
+
+	private static boolean startsWith(final Strings instance, final CharSequence str, final CharSequence prefix) {
+		return instance != null && instance.startsWith(str, prefix);
 	}
 
 	@Override
