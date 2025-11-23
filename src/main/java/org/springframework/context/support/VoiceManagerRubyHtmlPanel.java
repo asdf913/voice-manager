@@ -476,10 +476,12 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 			final ObjectMapper objectMapper = new ObjectMapper();
 			//
+			final Stream<Instruction> stream = testAndApply(Objects::nonNull, instructions, Arrays::stream, null);
+			//
 			if (length(instructions) > 2
-					&& Objects.equals(ObjectMapperUtil.writeValueAsString(objectMapper,
-							Util.toList(Util.map(testAndApply(Objects::nonNull, instructions, Arrays::stream, null),
-									x -> Util.getName(Util.getClass(x))))),
+					&& Objects.equals(
+							ObjectMapperUtil.writeValueAsString(objectMapper,
+									Util.toList(Util.map(stream, x -> Util.getName(Util.getClass(x))))),
 							ObjectMapperUtil.writeValueAsString(objectMapper,
 									Util.toList(Stream.of("NEW", "DUP", "INVOKESPECIAL", "ATHROW")
 											.map(x -> StringUtils.joinWith(".", "org.apache.bcel.generic", x)))))
