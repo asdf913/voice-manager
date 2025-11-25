@@ -824,7 +824,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		} // if
 			//
-		return testAndApply(x -> IterableUtils.size(iterable) == 1, iterable, x -> IterableUtils.get(x, 0), null);
+		return testAndApply(x -> IterableUtils.size(x) == 1, iterable, x -> IterableUtils.get(x, 0), null);
 		//
 	}
 
