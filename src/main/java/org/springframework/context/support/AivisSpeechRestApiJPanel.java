@@ -1805,6 +1805,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static String getFileExtension(final ContentInfo contentInfo) throws URISyntaxException, IOException {
 		//
 		return getFileExtension(contentInfo, URL);
