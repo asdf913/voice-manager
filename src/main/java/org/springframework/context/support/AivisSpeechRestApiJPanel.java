@@ -174,6 +174,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 
 	private static final AtomicBoolean INITIALIZED = new AtomicBoolean(false);
 
+	private static final String URL = "https://www.ftyps.com";
+
 	static {
 		//
 		try {
@@ -1775,8 +1777,13 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
-	@Nullable
-	private static String getFileExtension(@Nullable final ContentInfo contentInfo)
+	private static String getFileExtension(final ContentInfo contentInfo) throws URISyntaxException, IOException {
+		//
+		return getFileExtension(contentInfo, URL);
+		//
+	}
+
+	private static String getFileExtension(final ContentInfo contentInfo, final String urlString)
 			throws URISyntaxException, IOException {
 		//
 		final ContentType contentType = getContentType(contentInfo);
@@ -1793,7 +1800,9 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				&& Objects.equals(contentInfo.getMimeType(), "audio/mp4")
 				&& Objects.equals(contentInfo.getName(), "ISO")) {
 			//
-			final Document document = Jsoup.parse(Util.toURL(new URI("https://www.ftyps.com")), 0);
+			final Document document = testAndApply(Objects::nonNull,
+					Util.toURL(testAndApply(Objects::nonNull, urlString, URI::new, null)), x -> Jsoup.parse(x, 0),
+					null);
 			//
 			final String messsage = contentInfo.getMessage();
 			//
