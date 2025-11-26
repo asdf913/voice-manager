@@ -8,6 +8,10 @@ import java.awt.Image;
 import java.awt.ItemSelectable;
 import java.awt.Toolkit;
 import java.awt.Window;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -22,6 +26,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -139,6 +144,7 @@ import org.springframework.beans.factory.InitializingBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.net.HostAndPort;
+import com.google.common.reflect.Reflection;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.j256.simplemagic.ContentInfo;
@@ -223,7 +229,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	@Note("Play Voice Sample Transcript")
 	private AbstractButton btnPlayVoiceSampleTranscript = null;
 
-	private AbstractButton btnPlay = null;
+	private AbstractButton btnPlay, btnCopyPortrait = null;
 
 	private JComboBox<Speaker> jcbSpeaker = null;
 
@@ -347,7 +353,9 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		add(jLabelPortrait = new JLabel(), String.format("span %1$s", 2));
 		//
-		add(btnViewPortrait = new JButton("View"), wrap);
+		add(btnViewPortrait = new JButton("View"));
+		//
+		add(btnCopyPortrait = new JButton("Copy"), wrap);
 		//
 		add(new JLabel("Style"));
 		//
@@ -1155,6 +1163,36 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
+	private static class IH implements InvocationHandler {
+
+		private Image image = null;
+
+		@Override
+		public Object invoke(final Object proxy, final java.lang.reflect.Method method, final Object[] args)
+				throws Throwable {
+			//
+			final String name = Util.getName(method);
+			//
+			if (proxy instanceof Transferable) {
+				//
+				if (Objects.equals(name, "getTransferDataFlavors")) {
+					//
+					return new DataFlavor[] { DataFlavor.imageFlavor };
+					//
+				} else if (Objects.equals(name, "getTransferData")) {
+					//
+					return image;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(name);
+			//
+		}
+
+	}
+
 	private static boolean actionPerformed3(@Nullable final AivisSpeechRestApiJPanel instance, final Object source) {
 		//
 		if (instance == null) {
@@ -1204,10 +1242,47 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 			return true;
 			//
+		} else if (Objects.equals(source, instance.btnCopyPortrait)) {
+			//
+			final Speaker speaker = Util.cast(Speaker.class, Util.getSelectedItem(instance.jcbSpeaker));
+			//
+			if (speaker != null && speaker.speakerInfo != null) {
+				//
+				final IH ih = new IH();
+				//
+				try (final InputStream is = testAndApply(Objects::nonNull, speaker.speakerInfo.portrait,
+						ByteArrayInputStream::new, null)) {
+					//
+					ih.image = testAndApply(Objects::nonNull, is, ImageIO::read, null);
+					//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
+				setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+						Reflection.newProxy(Transferable.class, ih), null);
+				//
+			} // if
+				//
+			return true;
+			//
 		} // if
 			//
 		return false;
 		//
+	}
+
+	private static void setContents(final Clipboard instance, final Transferable transferable,
+			final ClipboardOwner clipboardOwner) {
+		if (instance != null) {
+			instance.setContents(transferable, clipboardOwner);
+		}
+	}
+
+	private static Clipboard getSystemClipboard(final Toolkit instance) {
+		return instance != null ? instance.getSystemClipboard() : null;
 	}
 
 	private static void play(@Nullable final StyleInfo instance, final int index) throws Exception {

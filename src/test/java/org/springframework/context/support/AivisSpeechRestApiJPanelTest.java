@@ -6,6 +6,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.ItemSelectable;
 import java.awt.Toolkit;
 import java.awt.Window;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -919,6 +920,24 @@ class AivisSpeechRestApiJPanelTest {
 				true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnViewPortrait));
+		//
+		// btnCopyPortrait
+		//
+		final Object btnCopyPortrait = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnCopyPortrait", btnCopyPortrait, true);
+		//
+		final ActionEvent actionEventBtnCopyPortrait = new ActionEvent(btnCopyPortrait, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopyPortrait));
+		//
+		FieldUtils.writeDeclaredField(speaker, "speakerInfo", null, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopyPortrait));
+		//
+		invoke(Util.getDeclaredMethod(Util.getClass(cbm), "removeElementAt", Integer.TYPE), cbm, 0);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopyPortrait));
 		//
 		// btnViewIcon
 		//
@@ -2082,6 +2101,26 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Assertions.assertNull(invoke(METHOD_SET, null, new MigLayout(), Collections.singletonMap("constraintMap", "")));
 		//
+	}
+
+	@Test
+	void testIh() throws Throwable {
+		//
+		final Class<?> clz = Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$IH");
+		//
+		final InvocationHandler invocationHandler = Util.cast(InvocationHandler.class, Narcissus.allocateInstance(clz));
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(invocationHandler,
+				Reflection.newProxy(Transferable.class, invocationHandler), null, null));
+		//
+		Assertions.assertThrows(Throwable.class,
+				() -> invoke(invocationHandler, Reflection.newProxy(Iterable.class, invocationHandler), null, null));
+		//
+	}
+
+	private static Object invoke(final InvocationHandler instance, final Object proxy, final Method method,
+			final Object[] args) throws Throwable {
+		return instance != null ? instance.invoke(proxy, method, args) : null;
 	}
 
 }
