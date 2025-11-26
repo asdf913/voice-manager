@@ -2106,9 +2106,8 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testIh() throws Throwable {
 		//
-		final Class<?> clz = Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$IH");
-		//
-		final InvocationHandler invocationHandler = Util.cast(InvocationHandler.class, Narcissus.allocateInstance(clz));
+		final InvocationHandler invocationHandler = Util.cast(InvocationHandler.class, Narcissus
+				.allocateInstance(Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$IH")));
 		//
 		Assertions.assertThrows(Throwable.class, () -> invoke(invocationHandler,
 				Reflection.newProxy(Transferable.class, invocationHandler), null, null));
