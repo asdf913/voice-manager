@@ -24,8 +24,8 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -1617,7 +1617,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	}
 
 	@Nullable
-	private static String getFileExtension(@Nullable final byte[] bs) throws IOException {
+	private static String getFileExtension(@Nullable final byte[] bs) throws URISyntaxException, IOException {
 		//
 		final ContentInfo contentInfo = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
 		//
@@ -1626,7 +1626,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	}
 
 	@Nullable
-	private static String getFileExtension(@Nullable final ContentInfo contentInfo) throws IOException {
+	private static String getFileExtension(@Nullable final ContentInfo contentInfo)
+			throws URISyntaxException, IOException {
 		//
 		final ContentType contentType = getContentType(contentInfo);
 		//
@@ -1642,7 +1643,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				&& Objects.equals(contentInfo.getMimeType(), "audio/mp4")
 				&& Objects.equals(contentInfo.getName(), "ISO")) {
 			//
-			final Document document = Jsoup.parse(new URL("https://www.ftyps.com"), 0);
+			final Document document = Jsoup.parse(Util.toURL(new URI("https://www.ftyps.com")), 0);
 			//
 			final String messsage = contentInfo.getMessage();
 			//
