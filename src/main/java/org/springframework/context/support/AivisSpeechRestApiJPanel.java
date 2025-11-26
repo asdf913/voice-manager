@@ -1279,7 +1279,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	}
 
 	private static void setContents(final Clipboard instance, final Transferable transferable,
-			final ClipboardOwner clipboardOwner) {
+			@Nullable final ClipboardOwner clipboardOwner) {
 		if (instance != null) {
 			instance.setContents(transferable, clipboardOwner);
 		}
