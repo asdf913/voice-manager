@@ -782,7 +782,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		final Iterable<ToBooleanBiFunction<AivisSpeechRestApiJPanel, Object>> functions = Arrays.asList(
 				AivisSpeechRestApiJPanel::actionPerformed1, AivisSpeechRestApiJPanel::actionPerformed2,
-				AivisSpeechRestApiJPanel::actionPerformed3);
+				AivisSpeechRestApiJPanel::actionPerformed3, AivisSpeechRestApiJPanel::actionPerformed4);
 		//
 		ToBooleanBiFunction<AivisSpeechRestApiJPanel, Object> function = null;
 		//
@@ -1249,7 +1249,21 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 			return true;
 			//
-		} else if (Objects.equals(source, instance.btnCopyPortrait)) {
+		} // if
+			//
+		return false;
+		//
+	}
+
+	private static boolean actionPerformed4(final AivisSpeechRestApiJPanel instance, final Object source) {
+		//
+		if (instance == null) {
+			//
+			return false;
+			//
+		} // if
+			//
+		if (Objects.equals(source, instance.btnCopyPortrait)) {
 			//
 			final Speaker speaker = Util.cast(Speaker.class, Util.getSelectedItem(instance.jcbSpeaker));
 			//
