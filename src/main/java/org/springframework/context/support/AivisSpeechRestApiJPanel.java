@@ -98,11 +98,14 @@ import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.MethodUtil;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.IFLT;
+import org.apache.bcel.generic.INVOKESPECIAL;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.LDCUtil;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.TypeUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
@@ -113,6 +116,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -1282,7 +1286,59 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	}
 
 	private static Clipboard getSystemClipboard(final Toolkit instance) {
-		return instance != null ? instance.getSystemClipboard() : null;
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Class<?> clz = Util.getClass(instance);
+		//
+		try (final InputStream is = Util.getResourceAsStream(clz,
+				String.format("/%1$s.class", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
+			//
+			// java.awt.Toolkit.getSystemClipboard()
+			//
+			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
+					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),
+					getMethod(clz, "getSystemClipboard"));
+			//
+			final Instruction[] instructions = InstructionListUtil.getInstructions(MethodGenUtil
+					.getInstructionList(testAndApply(Objects::nonNull, m, x -> new MethodGen(x, null, null), null)));
+			//
+			final ObjectMapper objectMapper = new ObjectMapper();
+			//
+			final Stream<Instruction> stream = testAndApply(Objects::nonNull, instructions, Arrays::stream, null);
+			//
+			if (length(instructions) > 2
+					&& Objects.equals(
+							ObjectMapperUtil.writeValueAsString(objectMapper,
+									Util.toList(Util.map(stream, x -> Util.getName(Util.getClass(x))))),
+							ObjectMapperUtil.writeValueAsString(objectMapper,
+									Util.toList(Stream.of("NEW", "DUP", "INVOKESPECIAL", "ATHROW")
+											.map(x -> StringUtils.joinWith(".", "org.apache.bcel.generic", x)))))
+					&& ArrayUtils.get(instructions, 2) instanceof INVOKESPECIAL invokeSpecial
+					&& Util.isAssignableFrom(Throwable.class,
+							Util.forName(invokeSpecial.getClassName(new ConstantPoolGen(m.getConstantPool()))))) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} catch (final IOException | NoSuchMethodException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+		return instance.getSystemClipboard();
+		//
+	}
+
+	private static java.lang.reflect.Method getMethod(final Class<?> instance, final String name,
+			final Class<?>... parameterTypes) throws NoSuchMethodException {
+		return instance != null ? instance.getMethod(name, parameterTypes) : null;
 	}
 
 	private static void play(@Nullable final StyleInfo instance, final int index) throws Exception {
