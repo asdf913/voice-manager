@@ -1288,7 +1288,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		}
 	}
 
-	private static Clipboard getSystemClipboard(final Toolkit instance) {
+	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		//
 		if (instance == null) {
 			//
@@ -1339,7 +1339,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
-	private static java.lang.reflect.Method getMethod(final Class<?> instance, final String name,
+	private static java.lang.reflect.Method getMethod(@Nullable final Class<?> instance, final String name,
 			final Class<?>... parameterTypes) throws NoSuchMethodException {
 		return instance != null ? instance.getMethod(name, parameterTypes) : null;
 	}
