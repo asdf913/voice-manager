@@ -238,7 +238,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	@Note("Play Voice Sample Transcript")
 	private AbstractButton btnPlayVoiceSampleTranscript = null;
 
-	private AbstractButton btnPlay = null;
+	private AbstractButton btnPlay, btnCopyIcon = null;
 
 	private JComboBox<Speaker> jcbSpeaker = null;
 
@@ -387,7 +387,9 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		add(jLabelIcon = new JLabel(), String.format("span %1$s", 2));
 		//
-		add(btnViewIcon = new JButton("View"), wrap);
+		add(btnViewIcon = new JButton("View"));
+		//
+		add(btnCopyIcon = new JButton("Copy"), wrap);
 		//
 		add(new JLabel("Voice Sample Transcript"), String.format("span %1$s", 4));
 		//
@@ -1274,6 +1276,32 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				final IH ih = new IH();
 				//
 				try (final InputStream is = testAndApply(Objects::nonNull, speaker.speakerInfo.portrait,
+						ByteArrayInputStream::new, null)) {
+					//
+					ih.image = testAndApply(Objects::nonNull, is, ImageIO::read, null);
+					//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
+				setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+						Reflection.newProxy(Transferable.class, ih), null);
+				//
+			} // if
+				//
+			return true;
+			//
+		} else if (Objects.equals(source, instance.btnCopyIcon)) {
+			//
+			final Style style = Util.cast(Style.class, Util.getSelectedItem(instance.jcbStyle));
+			//
+			if (style != null && style.styleInfo != null) {
+				//
+				final IH ih = new IH();
+				//
+				try (final InputStream is = testAndApply(Objects::nonNull, style.styleInfo.icon,
 						ByteArrayInputStream::new, null)) {
 					//
 					ih.image = testAndApply(Objects::nonNull, is, ImageIO::read, null);

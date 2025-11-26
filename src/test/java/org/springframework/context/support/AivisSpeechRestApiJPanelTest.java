@@ -962,6 +962,24 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnViewIcon));
 		//
+		// btnCopyIcon
+		//
+		final Object btnCopyIcon = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnCopyIcon", btnCopyIcon, true);
+		//
+		final ActionEvent actionEventBtnCopyIcon = new ActionEvent(btnCopyIcon, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopyIcon));
+		//
+		FieldUtils.writeDeclaredField(style, "styleInfo", null, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopyIcon));
+		//
+		invoke(Util.getDeclaredMethod(Util.getClass(jcbStyle.getModel()), "removeElementAt", Integer.TYPE), jcbStyle.getModel(), 0);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopyIcon));
+		//
 		// btnCopyVoiceSampleTranscriptToText
 		//
 		final Object btnCopyVoiceSampleTranscriptToText = new JButton();
