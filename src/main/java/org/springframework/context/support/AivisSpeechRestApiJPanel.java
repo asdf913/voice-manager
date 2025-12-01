@@ -229,6 +229,9 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	@Note("Copy Portrait")
 	private AbstractButton btnCopyPortrait = null;
 
+	@Note("Save Portrait")
+	private AbstractButton btnSavePortrait = null;
+
 	@Note("View Icon")
 	private AbstractButton btnViewIcon = null;
 
@@ -241,7 +244,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	@Note("Play Voice Sample Transcript")
 	private AbstractButton btnPlayVoiceSampleTranscript = null;
 
-	private AbstractButton btnPlay, btnSavePortrait = null;
+	private AbstractButton btnPlay = null;
 
 	private JComboBox<Speaker> jcbSpeaker = null;
 
