@@ -1309,21 +1309,21 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				final byte[] bs = speaker.speakerInfo.portrait;
 				//
-				final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
-				//
 				final StringBuilder sb = new StringBuilder(StringUtils.defaultString(speaker.name));
 				//
-				testAndAccept((a, b) -> length(b) == 1, sb, ci != null ? ci.getFileExtensions() : null, (a, b) -> {
-					//
-					if (a != null) {
-						//
-						a.append('.');
-						//
-						a.append(ArrayUtils.get(b, 0));
-						//
-					} // if
-						//
-				});
+				testAndAccept((a, b) -> length(b) == 1, sb,
+						getFileExtensions(testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null)),
+						(a, b) -> {
+							//
+							if (a != null) {
+								//
+								a.append('.');
+								//
+								a.append(ArrayUtils.get(b, 0));
+								//
+							} // if
+								//
+						});
 				//
 				final JFileChooser jfc = new JFileChooser();
 				//
@@ -1377,6 +1377,10 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		return false;
 		//
+	}
+
+	private static String[] getFileExtensions(final ContentInfo instance) {
+		return instance != null ? instance.getFileExtensions() : null;
 	}
 
 	private static void setContents(@Nullable final Clipboard instance, final Transferable transferable,
