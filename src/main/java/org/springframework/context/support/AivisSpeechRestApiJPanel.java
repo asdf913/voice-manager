@@ -1311,19 +1311,19 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				final StringBuilder sb = new StringBuilder(StringUtils.defaultString(speaker.name));
 				//
-				testAndAccept((a, b) -> length(b) == 1, sb,
-						getFileExtensions(testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null)),
-						(a, b) -> {
-							//
-							if (a != null) {
-								//
-								a.append('.');
-								//
-								a.append(ArrayUtils.get(b, 0));
-								//
-							} // if
-								//
-						});
+				final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
+				//
+				testAndAccept((a, b) -> length(b) == 1, sb, getFileExtensions(ci), (a, b) -> {
+					//
+					if (a != null) {
+						//
+						a.append('.');
+						//
+						a.append(ArrayUtils.get(b, 0));
+						//
+					} // if
+						//
+				});
 				//
 				final JFileChooser jfc = new JFileChooser();
 				//
