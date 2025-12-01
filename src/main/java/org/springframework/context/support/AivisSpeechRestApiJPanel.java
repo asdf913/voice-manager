@@ -241,7 +241,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	@Note("Play Voice Sample Transcript")
 	private AbstractButton btnPlayVoiceSampleTranscript = null;
 
-	private AbstractButton btnPlay = null;
+	private AbstractButton btnPlay, btnSavePortrait = null;
 
 	private JComboBox<Speaker> jcbSpeaker = null;
 
@@ -367,7 +367,9 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		add(btnViewPortrait = new JButton("View"));
 		//
-		add(btnCopyPortrait = new JButton("Copy"), wrap);
+		add(btnCopyPortrait = new JButton("Copy"));
+		//
+		add(btnSavePortrait = new JButton("Save"), wrap);
 		//
 		add(new JLabel("Style"));
 		//
@@ -1292,6 +1294,52 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 						Reflection.newProxy(Transferable.class, ih), null);
 				//
+			} // if
+				//
+			return true;
+			//
+		} else if (Objects.equals(source, instance.btnSavePortrait)) {
+			//
+			final Speaker speaker = Util.cast(Speaker.class, Util.getSelectedItem(instance.jcbSpeaker));
+			//
+			if (speaker != null && speaker.speakerInfo != null) {
+				//
+				final byte[] bs = speaker.speakerInfo.portrait;
+				//
+				final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
+				//
+				final StringBuilder sb = new StringBuilder(StringUtils.defaultString(speaker.name));
+				//
+				testAndAccept((a, b) -> length(b) == 1, sb, ci != null ? ci.getFileExtensions() : null, (a, b) -> {
+					//
+					if (a != null) {
+						//
+						a.append('.');
+						//
+						a.append(ArrayUtils.get(b, 0));
+						//
+					} // if
+						//
+				});
+				//
+				final JFileChooser jfc = new JFileChooser();
+				//
+				jfc.setSelectedFile(new File(Util.toString(sb)));
+				//
+				if (!GraphicsEnvironment.isHeadless() && jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+					//
+					try {
+						//
+						FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
+						//
+					} catch (final IOException e) {
+						//
+						throw new RuntimeException(e);
+						//
+					} // try
+						//
+				} // if
+					//
 			} // if
 				//
 			return true;

@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +42,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.Line;
@@ -914,10 +916,10 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnViewPortrait));
 		//
-		FieldUtils.writeDeclaredField(speaker, "speakerInfo",
-				Narcissus.allocateInstance(
-						Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$SpeakerInfo")),
-				true);
+		final Object speakerInfo = Narcissus.allocateInstance(
+				Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$SpeakerInfo"));
+		//
+		FieldUtils.writeDeclaredField(speaker, "speakerInfo", speakerInfo, true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnViewPortrait));
 		//
@@ -938,6 +940,36 @@ class AivisSpeechRestApiJPanelTest {
 		invoke(Util.getDeclaredMethod(Util.getClass(cbm), "removeElementAt", Integer.TYPE), cbm, 0);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopyPortrait));
+		//
+		// btnSavePortrait
+		//
+		final Object btnSavePortrait = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnSavePortrait", btnSavePortrait, true);
+		//
+		final ActionEvent actionEventBtnSavePortrait = new ActionEvent(btnSavePortrait, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnSavePortrait));
+		//
+		invoke(Util.getDeclaredMethod(Util.getClass(cbm), "addElement", Object.class), cbm, speaker);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnSavePortrait));
+		//
+		FieldUtils.writeDeclaredField(speaker, "speakerInfo", speakerInfo, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnSavePortrait));
+		//
+		final BufferedImage bi = new BufferedImage(1, 1, BufferedImage.TYPE_3BYTE_BGR);
+		//
+		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			ImageIO.write(bi, "png", baos);
+			//
+			FieldUtils.writeDeclaredField(speakerInfo, "portrait", baos.toByteArray(), true);
+			//
+		} // try
+			//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnSavePortrait));
 		//
 		// btnViewIcon
 		//
@@ -976,7 +1008,8 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopyIcon));
 		//
-		invoke(Util.getDeclaredMethod(Util.getClass(jcbStyle.getModel()), "removeElementAt", Integer.TYPE), jcbStyle.getModel(), 0);
+		invoke(Util.getDeclaredMethod(Util.getClass(jcbStyle.getModel()), "removeElementAt", Integer.TYPE),
+				jcbStyle.getModel(), 0);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopyIcon));
 		//
