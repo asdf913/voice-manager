@@ -34,6 +34,7 @@ import java.net.URISyntaxException;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1324,7 +1325,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				final JFileChooser jfc = new JFileChooser();
 				//
-				jfc.setSelectedFile(new File(Util.toString(sb)));
+				jfc.setSelectedFile(Util.toFile(Paths.get(Util.toString(sb))));
 				//
 				if (!GraphicsEnvironment.isHeadless() && jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 					//
