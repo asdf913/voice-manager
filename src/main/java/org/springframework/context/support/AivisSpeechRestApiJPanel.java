@@ -1337,7 +1337,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
-	private static boolean actionPerformed5(final AivisSpeechRestApiJPanel instance, final Object source) {
+	private static boolean actionPerformed5(@Nullable final AivisSpeechRestApiJPanel instance, final Object source) {
 		//
 		if (instance == null) {
 			//
