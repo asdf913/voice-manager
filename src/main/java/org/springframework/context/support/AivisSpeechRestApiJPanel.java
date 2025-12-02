@@ -1383,6 +1383,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		return instance != null ? instance.append(c) : instance;
 	}
 
+	@Nullable
 	private static String[] getFileExtensions(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getFileExtensions() : null;
 	}
