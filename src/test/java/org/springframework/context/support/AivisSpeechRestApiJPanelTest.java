@@ -872,7 +872,7 @@ class AivisSpeechRestApiJPanelTest {
 	}
 
 	@Test
-	void testActionPerformed() throws Exception {
+	void testActionPerformed1() throws Exception {
 		//
 		if (instance == null) {
 			//
@@ -1063,8 +1063,19 @@ class AivisSpeechRestApiJPanelTest {
 		Assertions.assertDoesNotThrow(
 				() -> instance.actionPerformed(new ActionEvent(btnPlayVoiceSampleTranscript, 0, null)));
 		//
-		// btnPlay
+	}
+
+	@Test
+	void testActionPerformed2() throws Exception {
 		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+			// btnPlay
+			//
 		if (Objects.equals(exec, Boolean.TRUE)) {
 			//
 			final Object btnPlay = new JButton();
