@@ -1316,23 +1316,15 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				testAndAccept((a, b) -> length(b) == 1, sb, getFileExtensions(ci),
 						(a, b) -> append(append(a, '.'), ArrayUtils.get(b, 0)));
 				//
-				final JFileChooser jfc = new JFileChooser();
-				//
-				jfc.setSelectedFile(Util.toFile(Path.of(Util.toString(sb))));
-				//
-				if (!GraphicsEnvironment.isHeadless() && jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				try {
 					//
-					try {
-						//
-						FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
-						//
-					} catch (final IOException e) {
-						//
-						throw new RuntimeException(e);
-						//
-					} // try
-						//
-				} // if
+					showSaveDialogAndWriteByteArrayToFile(Util.toFile(Path.of(Util.toString(sb))), bs);
+					//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
 					//
 			} // if
 				//
@@ -1368,6 +1360,20 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		return false;
 		//
+	}
+
+	private static void showSaveDialogAndWriteByteArrayToFile(final File file, final byte[] bs) throws IOException {
+		//
+		final JFileChooser jfc = new JFileChooser();
+		//
+		jfc.setSelectedFile(file);
+		//
+		if (!GraphicsEnvironment.isHeadless() && jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			//
+			FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
+			//
+		} // if
+			//
 	}
 
 	private static void append(@Nullable final StringBuilder instance, final String string) {
