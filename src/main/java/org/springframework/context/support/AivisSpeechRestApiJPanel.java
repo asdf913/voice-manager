@@ -1313,11 +1313,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
 				//
-				testAndAccept((a, b) -> length(b) == 1, sb, getFileExtensions(ci), (a, b) -> {
-					//
-					append(append(a, '.'), ArrayUtils.get(b, 0));
-					//
-				});
+				testAndAccept((a, b) -> length(b) == 1, sb, getFileExtensions(ci),
+						(a, b) -> append(append(a, '.'), ArrayUtils.get(b, 0)));
 				//
 				final JFileChooser jfc = new JFileChooser();
 				//
