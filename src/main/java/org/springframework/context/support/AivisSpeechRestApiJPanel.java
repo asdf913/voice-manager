@@ -1370,7 +1370,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
-	private static void append(final StringBuilder instance, final String string) {
+	private static void append(@Nullable final StringBuilder instance, final String string) {
 		if (instance != null) {
 			instance.append(string);
 		}
