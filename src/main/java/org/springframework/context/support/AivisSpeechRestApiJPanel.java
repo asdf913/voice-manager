@@ -244,7 +244,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	@Note("Play Voice Sample Transcript")
 	private AbstractButton btnPlayVoiceSampleTranscript = null;
 
-	private AbstractButton btnPlay = null;
+	private AbstractButton btnPlay, btnSaveIcon = null;
 
 	private JComboBox<Speaker> jcbSpeaker = null;
 
@@ -397,7 +397,9 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		add(btnViewIcon = new JButton("View"));
 		//
-		add(btnCopyIcon = new JButton("Copy"), wrap);
+		add(btnCopyIcon = new JButton("Copy"));
+		//
+		add(btnSaveIcon = new JButton("Save"), wrap);
 		//
 		add(new JLabel("Voice Sample Transcript"), String.format("span %1$s", 4));
 		//
@@ -1367,6 +1369,44 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 						Reflection.newProxy(Transferable.class, ih), null);
 				//
+			} // if
+				//
+			return true;
+			//
+		} else if (Objects.equals(source, instance.btnSaveIcon)) {
+			//
+			final Style style = Util.cast(Style.class, Util.getSelectedItem(instance.jcbStyle));
+			//
+			if (style != null && style.styleInfo != null) {
+				//
+				final byte[] bs = style.styleInfo.icon;
+				//
+				final Speaker speaker = Util.cast(Speaker.class, Util.getSelectedItem(instance.jcbSpeaker));
+				//
+				final StringBuilder sb = new StringBuilder(
+						StringUtils.defaultString(speaker != null ? speaker.name : null));
+				//
+				testAndAccept((a, b) -> StringUtils.isNotBlank(b), sb, style.name, (a, b) -> {
+					//
+					append(a, String.format("(%1$s)", b));
+					//
+				});
+				//
+				final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
+				//
+				testAndAccept((a, b) -> length(b) == 1, sb, getFileExtensions(ci),
+						(a, b) -> append(append(a, '.'), ArrayUtils.get(b, 0)));
+				//
+				try {
+					//
+					showSaveDialogAndWriteByteArrayToFile(Util.toFile(Path.of(Util.toString(sb))), bs);
+					//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
 			} // if
 				//
 			return true;
