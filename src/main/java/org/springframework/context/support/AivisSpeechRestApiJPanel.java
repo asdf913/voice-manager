@@ -1389,11 +1389,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				final StringBuilder sb = new StringBuilder(
 						StringUtils.defaultString(speaker != null ? speaker.name : null));
 				//
-				testAndAccept((a, b) -> StringUtils.isNotBlank(b), sb, style.name, (a, b) -> {
-					//
-					append(a, String.format("(%1$s)", b));
-					//
-				});
+				testAndAccept((a, b) -> StringUtils.isNotBlank(b), sb, style.name,
+						(a, b) -> append(a, String.format("(%1$s)", b)));
 				//
 				final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
 				//
