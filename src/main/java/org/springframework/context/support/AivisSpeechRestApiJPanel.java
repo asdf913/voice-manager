@@ -1315,14 +1315,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				testAndAccept((a, b) -> length(b) == 1, sb, getFileExtensions(ci), (a, b) -> {
 					//
-					if (a != null) {
-						//
-						a.append('.');
-						//
-						a.append(ArrayUtils.get(b, 0));
-						//
-					} // if
-						//
+					append(append(a, '.'), ArrayUtils.get(b, 0));
+					//
 				});
 				//
 				final JFileChooser jfc = new JFileChooser();
@@ -1377,6 +1371,16 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		return false;
 		//
+	}
+
+	private static void append(final StringBuilder instance, final String string) {
+		if (instance != null) {
+			instance.append(string);
+		}
+	}
+
+	private static StringBuilder append(final StringBuilder instance, final char c) {
+		return instance != null ? instance.append(c) : instance;
 	}
 
 	private static String[] getFileExtensions(@Nullable final ContentInfo instance) {

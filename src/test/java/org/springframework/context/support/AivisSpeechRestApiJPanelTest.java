@@ -590,6 +590,10 @@ class AivisSpeechRestApiJPanelTest {
 					//
 					Util.add(collection, Long.valueOf(0));
 					//
+				} else if (Objects.equals(parameterType, Character.TYPE)) {
+					//
+					Util.add(collection, Character.valueOf(' '));
+					//
 				} else {
 					//
 					Util.add(collection, null);
@@ -761,6 +765,10 @@ class AivisSpeechRestApiJPanelTest {
 				} else if (Objects.equals(parameterType, Long.TYPE)) {
 					//
 					Util.add(collection, Long.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Character.TYPE)) {
+					//
+					Util.add(collection, Character.valueOf(' '));
 					//
 				} else {
 					//
