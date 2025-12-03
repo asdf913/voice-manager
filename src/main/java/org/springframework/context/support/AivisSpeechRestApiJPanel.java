@@ -758,6 +758,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 
 		private SpeakerInfo speakerInfo;
 
+		@Nullable
 		private static String getName(@Nullable final Speaker instance) {
 			return instance != null ? instance.getName() : null;
 		}
