@@ -758,6 +758,14 @@ public class AivisSpeechRestApiJPanel extends JPanel
 
 		private SpeakerInfo speakerInfo;
 
+		private static String getName(final Speaker instance) {
+			return instance != null ? instance.getName() : null;
+		}
+
+		private String getName() {
+			return name;
+		}
+
 	}
 
 	private static class Style {
@@ -1315,7 +1323,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				final byte[] bs = speaker.speakerInfo.portrait;
 				//
-				final StringBuilder sb = new StringBuilder(StringUtils.defaultString(speaker.name));
+				final StringBuilder sb = new StringBuilder(StringUtils.defaultString(Speaker.getName(speaker)));
 				//
 				final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
 				//
@@ -1384,10 +1392,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				final byte[] bs = style.styleInfo.icon;
 				//
-				final Speaker speaker = Util.cast(Speaker.class, Util.getSelectedItem(instance.jcbSpeaker));
-				//
-				final StringBuilder sb = new StringBuilder(
-						StringUtils.defaultString(speaker != null ? speaker.name : null));
+				final StringBuilder sb = new StringBuilder(StringUtils.defaultString(
+						Speaker.getName(Util.cast(Speaker.class, Util.getSelectedItem(instance.jcbSpeaker)))));
 				//
 				testAndAccept((a, b) -> StringUtils.isNotBlank(b), sb, style.name,
 						(a, b) -> append(a, String.format("(%1$s)", b)));

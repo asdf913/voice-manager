@@ -1,5 +1,7 @@
 package org.springframework.context.support;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.GraphicsEnvironment;
@@ -2213,6 +2215,15 @@ class AivisSpeechRestApiJPanelTest {
 	private static Object invoke(final InvocationHandler instance, final Object proxy, final Method method,
 			final Object[] args) throws Throwable {
 		return instance != null ? instance.invoke(proxy, method, args) : null;
+	}
+
+	@Test
+	void testSpeaker() throws NoSuchMethodException {
+		//
+		final Class<?> clz = Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$Speaker");
+		//
+		Assertions.assertNull(Narcissus.invokeStaticMethod(Util.getDeclaredMethod(clz, "getName", clz), (Object) null));
+		//
 	}
 
 }
