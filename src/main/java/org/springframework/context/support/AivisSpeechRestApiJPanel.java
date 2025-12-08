@@ -2122,18 +2122,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		} // try
 			//
-		if (httpURLConnection != null
-				&& Narcissus.getBooleanField(httpURLConnection,
-						testAndApply(x -> IterableUtils.size(x) == 1,
-								Util.toList(Util.filter(
-										Util.stream(FieldUtils.getAllFieldsList(Util.getClass(httpURLConnection))),
-										x -> Objects.equals(Util.getName(x), "connected"))),
-								x -> IterableUtils.get(x, 0), x -> {
-									//
-									throw new RuntimeException(Integer.toString(IterableUtils.size(x)));
-									//
-								}))
-				&& HttpStatus.isClientError(httpURLConnection.getResponseCode())) {
+		if (isConnected(httpURLConnection) && isClientError(httpURLConnection)) {
 			//
 			try (final InputStream is = httpURLConnection.getErrorStream()) {
 				//
@@ -2154,7 +2143,34 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 		} // if
 			//
+	}
 
+	private static boolean isClientError(final HttpURLConnection instance) throws IOException {
+		//
+		return instance != null && HttpStatus.isClientError(instance.getResponseCode());
+		//
+	}
+
+	private static boolean isConnected(final Object instance) {
+		//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), "connected")));
+		//
+		if (IterableUtils.isEmpty(fs)) {
+			//
+			return false;
+			//
+		} // if
+			//
+		return Narcissus.getBooleanField(instance,
+				testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), x -> {
+					//
+					throw new RuntimeException(Integer.toString(IterableUtils.size(x)));
+					//
+				}));
+		//
 	}
 
 	private HostAndPort createHostAndPort() {
@@ -2239,11 +2255,26 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		} // try
 			//
-		try (final InputStream is = Util.getInputStream(httpURLConnection)) {
+		if (isConnected(httpURLConnection) && isClientError(httpURLConnection)) {
 			//
-			return testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
+			try (final InputStream is = httpURLConnection.getErrorStream()) {
+				//
+				final String string = testAndApply(Objects::nonNull, is,
+						x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
+				//
+				throw new RuntimeException(string);
+				//
+			} // try
+				//
+		} else {
 			//
-		} // try
+			try (final InputStream is = Util.getInputStream(httpURLConnection)) {
+				//
+				return testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
+				//
+			} // try
+				//
+		} // if
 			//
 	}
 

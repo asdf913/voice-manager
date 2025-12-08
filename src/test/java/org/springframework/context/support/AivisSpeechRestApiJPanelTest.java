@@ -17,10 +17,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -94,6 +97,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.htmlunit.http.HttpStatus;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -147,7 +151,7 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_GET_FILE_EXTENSION_BYTE_ARRAY, METHOD_GET_FILE_EXTENSION_CONTENT_INFO,
 			METHOD_GET_CONTENT_TYPE_CONTENT_INFO, METHOD_GET_CONTENT_TYPE_FILE, METHOD_IS_SUPPORTED_AUDIO_FORMAT,
 			METHOD_TEST_AND_TEST, METHOD_SH_GET_KNOWN_FOLDER_PATH, METHOD_LIST_FILES, METHOD_NEXT_ALPHA_NUMERIC,
-			METHOD_GET_MESSAGE, METHOD_SET = null;
+			METHOD_GET_MESSAGE, METHOD_SET, METHOD_IS_CLIENT_ERROR = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -279,6 +283,8 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_SET = clz.getDeclaredMethod("set", Object.class, Map.class)).setAccessible(true);
 		//
+		(METHOD_IS_CLIENT_ERROR = clz.getDeclaredMethod("isClientError", HttpURLConnection.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -402,6 +408,8 @@ class AivisSpeechRestApiJPanelTest {
 
 	private static class MH implements MethodHandler {
 
+		private Integer responseCode;
+
 		@Override
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
@@ -418,6 +426,14 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return null;
 				//
+			} else if (self instanceof HttpURLConnection) {
+				//
+				if (Objects.equals(name, "getResponseCode")) {
+					//
+					return responseCode;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -2222,6 +2238,47 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Assertions.assertNull(Narcissus.invokeStaticMethod(Util.getDeclaredMethod(clz, "getName", clz), (Object) null));
 		//
+	}
+
+	@Test
+	void testIsClientError() throws Throwable {
+		//
+		if (mh != null) {
+			//
+			mh.responseCode = HttpStatus.BAD_REQUEST_400;
+			//
+		} // if
+			//
+		final HttpURLConnection httpURLConnection = ProxyUtil.createProxy(HttpURLConnection.class, mh, x -> {
+			//
+			final Constructor<?> constructor = x != null ? x.getConstructor(URL.class) : null;
+			//
+			return constructor != null ? constructor.newInstance((Object) null) : null;
+			//
+		});
+		//
+		Assertions.assertTrue(isClientError(httpURLConnection));
+		//
+		if (mh != null) {
+			//
+			mh.responseCode = HttpStatus.OK_200;
+			//
+		} // if
+			//
+		Assertions.assertFalse(isClientError(httpURLConnection));
+		//
+	}
+
+	private static boolean isClientError(final HttpURLConnection instance) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_IS_CLIENT_ERROR, null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }
