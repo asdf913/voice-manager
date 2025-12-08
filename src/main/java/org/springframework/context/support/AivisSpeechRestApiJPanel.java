@@ -2145,7 +2145,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 	}
 
-	private static boolean isClientError(final HttpURLConnection instance) throws IOException {
+	private static boolean isClientError(@Nullable final HttpURLConnection instance) throws IOException {
 		//
 		return instance != null && HttpStatus.isClientError(instance.getResponseCode());
 		//
