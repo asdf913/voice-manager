@@ -426,14 +426,10 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return null;
 				//
-			} else if (self instanceof HttpURLConnection) {
+			} else if (self instanceof HttpURLConnection && Objects.equals(name, "getResponseCode")) {
 				//
-				if (Objects.equals(name, "getResponseCode")) {
-					//
-					return responseCode;
-					//
-				} // if
-					//
+				return responseCode;
+				//
 			} // if
 				//
 			throw new Throwable(name);
