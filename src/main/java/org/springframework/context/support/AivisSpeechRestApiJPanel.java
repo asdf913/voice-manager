@@ -134,9 +134,11 @@ import org.bytedeco.ffmpeg.avformat.AVStream;
 import org.bytedeco.ffmpeg.global.avformat;
 import org.bytedeco.ffmpeg.global.avutil;
 import org.bytedeco.javacpp.PointerPointer;
+import org.eclipse.jetty.http.HttpStatus;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.ElementUtil;
+import org.oxbow.swingbits.dialog.task.TaskDialogs;
 import org.oxbow.swingbits.util.OperatingSystem;
 import org.oxbow.swingbits.util.OperatingSystemUtil;
 import org.slf4j.Logger;
@@ -815,11 +817,19 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		for (int i = 0; i < IterableUtils.size(functions); i++) {
 			//
-			if ((function = IterableUtils.get(functions, i)) != null && function.applyAsBoolean(this, source)) {
+			try {
 				//
-				break;
+				if ((function = IterableUtils.get(functions, i)) != null && function.applyAsBoolean(this, source)) {
+					//
+					break;
+					//
+				} // if
+					//
+			} catch (final Exception ex) {
 				//
-			} // if
+				TaskDialogs.showException(ex);
+				//
+			} // try
 				//
 		} // for
 			//
@@ -2112,12 +2122,39 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		} // try
 			//
-		try (final InputStream is = Util.getInputStream(httpURLConnection)) {
+		if (httpURLConnection != null
+				&& Narcissus.getBooleanField(httpURLConnection,
+						testAndApply(x -> IterableUtils.size(x) == 1,
+								Util.toList(Util.filter(
+										Util.stream(FieldUtils.getAllFieldsList(Util.getClass(httpURLConnection))),
+										x -> Objects.equals(Util.getName(x), "connected"))),
+								x -> IterableUtils.get(x, 0), x -> {
+									//
+									throw new RuntimeException(Integer.toString(IterableUtils.size(x)));
+									//
+								}))
+				&& HttpStatus.isClientError(httpURLConnection.getResponseCode())) {
 			//
-			return testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
+			try (final InputStream is = httpURLConnection.getErrorStream()) {
+				//
+				final String string = testAndApply(Objects::nonNull, is,
+						x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
+				//
+				throw new RuntimeException(string);
+				//
+			} // try
+				//
+		} else {
 			//
-		} // try
+			try (final InputStream is = Util.getInputStream(httpURLConnection)) {
+				//
+				return testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
+				//
+			} // try
+				//
+		} // if
 			//
+
 	}
 
 	private HostAndPort createHostAndPort() {
