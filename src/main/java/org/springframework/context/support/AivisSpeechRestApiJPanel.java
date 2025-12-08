@@ -2151,7 +2151,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
-	private static boolean isConnected(final Object instance) {
+	private static boolean isConnected(@Nullable final Object instance) {
 		//
 		final Iterable<Field> fs = Util.toList(Util.filter(
 				Util.stream(
