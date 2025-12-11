@@ -415,15 +415,11 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		add(btnPlayVoiceSampleTranscript = new JButton("Play"), String.format("%1$s,span %2$s", wrap, 3));
 		//
-		Util.setEnabled(btnPlayVoiceSampleTranscript, false);
-		//
 		add(new JLabel("Text"));
 		//
 		add(tfText = new JTextField(), String.format("growx,span %1$s", 6));
 		//
 		add(btnAudioQuery = new JButton("Audio Query"), String.format("span %1$s", 3));
-		//
-		Util.setEnabled(btnAudioQuery, false);
 		//
 		add(btnViewAudioQuery = new JButton("View"), wrap);
 		//
@@ -441,6 +437,22 @@ public class AivisSpeechRestApiJPanel extends JPanel
 								x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 						x -> Util.cast(AbstractButton.class, Narcissus.getField(this, x)))));
 		//
+		setEnabled(false, btnPlayVoiceSampleTranscript, btnAudioQuery, btnSynthesis);
+		//
+	}
+
+	private static void setEnabled(final boolean enabled, final Component a, final Component b, final Component... cs) {
+		//
+		Util.setEnabled(a, enabled);
+		//
+		Util.setEnabled(b, enabled);
+		//
+		for (int i = 0; i < length(cs); i++) {
+			//
+			Util.setEnabled(ArrayUtils.get(cs, i), enabled);
+			//
+		} // for
+			//
 	}
 
 	private static void set(final Object object, final Map<?, ?> properties) {
@@ -2469,7 +2481,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 					//
 				Util.forEach(speaker.styles, x -> Util.addElement(dcbmStyle, x));
 				//
-				Util.setEnabled(btnAudioQuery, Util.getSize(dcbmStyle) > 0);
+				setEnabled(Util.getSize(dcbmStyle) > 0, btnAudioQuery, btnSynthesis);
 				//
 			} // if
 				//
