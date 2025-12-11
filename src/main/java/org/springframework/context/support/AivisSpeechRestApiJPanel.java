@@ -437,7 +437,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 								x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 						x -> Util.cast(AbstractButton.class, Narcissus.getField(this, x)))));
 		//
-		setEnabled(false, btnPlayVoiceSampleTranscript, btnAudioQuery, btnSynthesis);
+		setEnabled(false, btnPlayVoiceSampleTranscript, btnAudioQuery, btnSynthesis, btnPlay);
 		//
 	}
 
@@ -2481,7 +2481,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 					//
 				Util.forEach(speaker.styles, x -> Util.addElement(dcbmStyle, x));
 				//
-				setEnabled(Util.getSize(dcbmStyle) > 0, btnAudioQuery, btnSynthesis);
+				setEnabled(Util.getSize(dcbmStyle) > 0, btnAudioQuery, btnSynthesis, btnPlay);
 				//
 			} // if
 				//
