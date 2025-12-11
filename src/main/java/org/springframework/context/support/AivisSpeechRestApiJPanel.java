@@ -423,6 +423,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		add(btnAudioQuery = new JButton("Audio Query"), String.format("span %1$s", 3));
 		//
+		Util.setEnabled(btnAudioQuery, false);
+		//
 		add(btnViewAudioQuery = new JButton("View"), wrap);
 		//
 		add(new JLabel());
@@ -2466,6 +2468,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				} // if
 					//
 				Util.forEach(speaker.styles, x -> Util.addElement(dcbmStyle, x));
+				//
+				Util.setEnabled(btnAudioQuery, Util.getSize(dcbmStyle) > 0);
 				//
 			} // if
 				//
