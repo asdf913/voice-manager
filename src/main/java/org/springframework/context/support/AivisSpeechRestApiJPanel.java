@@ -415,6 +415,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		add(btnPlayVoiceSampleTranscript = new JButton("Play"), String.format("%1$s,span %2$s", wrap, 3));
 		//
+		Util.setEnabled(btnPlayVoiceSampleTranscript, false);
+		//
 		add(new JLabel("Text"));
 		//
 		add(tfText = new JTextField(), String.format("growx,span %1$s", 6));
@@ -2509,6 +2511,9 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				Util.forEach(Util.stream(style.styleInfo.voiceSampleTranscripts),
 						x -> Util.addElement(instance.dcbmVoiceSampleTranscript, x));
+				//
+				Util.setEnabled(instance.btnPlayVoiceSampleTranscript,
+						Util.getSize(instance.dcbmVoiceSampleTranscript) > 0);
 				//
 				pack(instance.window);
 				//
