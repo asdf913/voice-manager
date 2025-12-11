@@ -1029,9 +1029,12 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			try {
 				//
-				instance.audioQuery = audioQuery(instance.createHostAndPort(),
-						Util.cast(Style.class, Util.getSelectedItem(instance.dcbmStyle)),
-						Util.getText(instance.tfText));
+				setEnabled(
+						Boolean.logicalAnd(Util.getSize(instance.dcbmStyle) > 0,
+								(instance.audioQuery = audioQuery(instance.createHostAndPort(),
+										Util.cast(Style.class, Util.getSelectedItem(instance.dcbmStyle)),
+										Util.getText(instance.tfText))) != null),
+						instance.btnSynthesis, instance.btnPlay);
 				//
 			} catch (final IOException | URISyntaxException e) {
 				//
@@ -2481,7 +2484,11 @@ public class AivisSpeechRestApiJPanel extends JPanel
 					//
 				Util.forEach(speaker.styles, x -> Util.addElement(dcbmStyle, x));
 				//
-				setEnabled(Util.getSize(dcbmStyle) > 0, btnAudioQuery, btnSynthesis, btnPlay);
+				final boolean enabled = Util.getSize(dcbmStyle) > 0;
+				//
+				Util.setEnabled(btnAudioQuery, enabled);
+				//
+				setEnabled(Boolean.logicalAnd(enabled, audioQuery != null), btnSynthesis, btnPlay);
 				//
 			} // if
 				//
