@@ -864,7 +864,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 	}
 
-	private static String version(final HostAndPort hostAndPort) throws IOException, URISyntaxException {
+	private static String version(@Nullable final HostAndPort hostAndPort) throws IOException, URISyntaxException {
 		//
 		final URIBuilder uriBuilder = new URIBuilder();
 		//
