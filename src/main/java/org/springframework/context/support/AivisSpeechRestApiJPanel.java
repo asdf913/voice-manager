@@ -814,9 +814,9 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				FailableStreamUtil.forEach(new FailableStream<>(Util.stream(speakers(hostAndPort))),
 						x -> setStyleInfo(x, hostAndPort, dcbmSpeaker));
 				//
-			} catch (final IOException | URISyntaxException e) {
+			} catch (final IOException | URISyntaxException ex) {
 				//
-				throw new RuntimeException(e);
+				TaskDialogs.showException(ex);
 				//
 			} // try
 				//
