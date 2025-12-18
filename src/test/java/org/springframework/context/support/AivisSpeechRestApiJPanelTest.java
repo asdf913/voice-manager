@@ -152,7 +152,7 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_GET_FILE_EXTENSION_BYTE_ARRAY, METHOD_GET_FILE_EXTENSION_CONTENT_INFO,
 			METHOD_GET_CONTENT_TYPE_CONTENT_INFO, METHOD_GET_CONTENT_TYPE_FILE, METHOD_IS_SUPPORTED_AUDIO_FORMAT,
 			METHOD_TEST_AND_TEST, METHOD_SH_GET_KNOWN_FOLDER_PATH, METHOD_LIST_FILES, METHOD_NEXT_ALPHA_NUMERIC,
-			METHOD_GET_MESSAGE, METHOD_SET, METHOD_IS_CLIENT_ERROR = null;
+			METHOD_GET_MESSAGE, METHOD_SET, METHOD_IS_CLIENT_ERROR, METHOD_VERSION = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -282,6 +282,8 @@ class AivisSpeechRestApiJPanelTest {
 		(METHOD_SET = clz.getDeclaredMethod("set", Object.class, Map.class)).setAccessible(true);
 		//
 		(METHOD_IS_CLIENT_ERROR = clz.getDeclaredMethod("isClientError", HttpURLConnection.class)).setAccessible(true);
+		//
+		(METHOD_VERSION = clz.getDeclaredMethod("version", HostAndPort.class)).setAccessible(true);
 		//
 	}
 
@@ -2253,6 +2255,29 @@ class AivisSpeechRestApiJPanelTest {
 			final Object obj = invoke(METHOD_IS_CLIENT_ERROR, null, instance);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testVersion() throws Throwable {
+		//
+		Assertions.assertNull(version(HostAndPort.fromHost("")));
+		//
+		Assertions.assertNull(version(HostAndPort.fromParts("", 0)));
+		//
+	}
+
+	private static String version(final HostAndPort hostAndPort) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_VERSION, null, hostAndPort);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -43,6 +43,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Spliterator;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -126,6 +127,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.WordUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.bytedeco.ffmpeg.avcodec.AVCodecParameters;
@@ -270,6 +272,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 
 	private JLabel jLabelIcon = null;
 
+	private Entry<JLabel, JLabel> entryJLabelVersion = null;
+
 	private Window window = null;
 
 	private AivisSpeechRestApiJPanel() {
@@ -343,10 +347,16 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		} // if
 			//
+		add(tfPort = new JFormattedTextField(numberFormatter), String.format("wmin %1$spx,span %2$s", 42, 3));
+		//
+		add(Util.getKey(entryJLabelVersion = Pair.of(new JLabel("Version"), new JLabel())));
+		//
 		final String wrap = "wrap";
 		//
-		add(tfPort = new JFormattedTextField(numberFormatter),
-				String.format("%1$s,wmin %2$spx,span %3$s", wrap, 42, 2));
+		add(Util.getValue(entryJLabelVersion), wrap);
+		//
+		Util.forEach(Stream.of(Util.getKey(entryJLabelVersion), Util.getValue(entryJLabelVersion)),
+				x -> setVisible(x, false));
 		//
 		add(new JLabel());
 		//
@@ -801,12 +811,21 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			removeAllElements(dcbmSpeaker);
 			//
+			final Iterable<Component> cs = Arrays.asList(Util.getKey(entryJLabelVersion),
+					Util.getValue(entryJLabelVersion));
+			//
+			Util.forEach(cs, x -> setVisible(x, false));
+			//
 			try {
 				//
 				final HostAndPort hostAndPort = createHostAndPort();
 				//
 				FailableStreamUtil.forEach(new FailableStream<>(Util.stream(speakers(hostAndPort))),
 						x -> setStyleInfo(x, hostAndPort, dcbmSpeaker));
+				//
+				Util.forEach(cs, x -> setVisible(x, true));
+				//
+				Util.setText(Util.getValue(entryJLabelVersion), version(hostAndPort));
 				//
 			} catch (final IOException | URISyntaxException ex) {
 				//
@@ -842,6 +861,30 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			} // try
 				//
 		} // for
+			//
+	}
+
+	private static String version(final HostAndPort hostAndPort) throws IOException, URISyntaxException {
+		//
+		final URIBuilder uriBuilder = new URIBuilder();
+		//
+		uriBuilder.setScheme("http");
+		//
+		uriBuilder.setHost(getHost(hostAndPort));
+		//
+		if (hostAndPort != null && hostAndPort.hasPort()) {
+			//
+			uriBuilder.setPort(hostAndPort.getPort());
+			//
+		} // if
+			//
+		uriBuilder.setPath("version");
+		//
+		try (final InputStream is = Util.openStream(Util.toURL(uriBuilder.build()))) {
+			//
+			return Util.toString(ObjectMapperUtil.readValue(new ObjectMapper(), is, Object.class));
+			//
+		} // try
 			//
 	}
 
