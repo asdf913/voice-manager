@@ -272,7 +272,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 
 	private JLabel jLabelIcon = null;
 
-	private Entry<JLabel, JLabel> entryJLabelVersion = null;
+	private transient Entry<JLabel, JLabel> entryJLabelVersion = null;
 
 	private Window window = null;
 
