@@ -563,7 +563,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		int[] ints = null;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				StringUtils.join("/", replace(Strings.CS, Util.getName(clz), ".", "/"), ".class"))) {
+				StringUtils.join("/", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/"), ".class"))) {
 			//
 			final JavaClass javaClass = ClassParserUtil
 					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
@@ -757,12 +757,6 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		if (Util.test(instance, t, u)) {
 			FailableBiConsumerUtil.accept(consumer, t, u);
 		} // if
-	}
-
-	@Nullable
-	private static String replace(@Nullable final Strings instance, final String text, final String searchString,
-			final String replacement) {
-		return instance != null ? instance.replace(text, searchString, replacement) : null;
 	}
 
 	private static class Speaker {

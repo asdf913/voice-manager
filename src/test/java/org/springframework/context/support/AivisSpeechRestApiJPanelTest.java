@@ -91,6 +91,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -147,7 +148,7 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_LENGTH_BYTE_ARRAY, METHOD_LENGTH_OBJECT_ARRAY, METHOD_TEST_AND_RUN, METHOD_ADD_ITEM_LISTENER,
 			METHOD_SPEAKER_INFO_HOST_AND_PORT, METHOD_SPEAKER_INFO_MAP, METHOD_DECODE, METHOD_GET_STYLE_INFO_BY_ID,
 			METHOD_SET_STYLE_INFO, METHOD_LINES, METHOD_TO_JSON, METHOD_FROM_JSON, METHOD_CREATE, METHOD_EXEC,
-			METHOD_GET_CODE_METHOD, METHOD_GET_CODE_CODE, METHOD_TEST_AND_APPLY, METHOD_REPLACE, METHOD_PLAY,
+			METHOD_GET_CODE_METHOD, METHOD_GET_CODE_CODE, METHOD_TEST_AND_APPLY, METHOD_PLAY,
 			METHOD_GET_FILE_EXTENSION_BYTE_ARRAY, METHOD_GET_FILE_EXTENSION_CONTENT_INFO,
 			METHOD_GET_CONTENT_TYPE_CONTENT_INFO, METHOD_GET_CONTENT_TYPE_FILE, METHOD_IS_SUPPORTED_AUDIO_FORMAT,
 			METHOD_TEST_AND_TEST, METHOD_SH_GET_KNOWN_FOLDER_PATH, METHOD_LIST_FILES, METHOD_NEXT_ALPHA_NUMERIC,
@@ -242,9 +243,6 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
-		//
-		(METHOD_REPLACE = clz.getDeclaredMethod("replace", Strings.class, String.class, String.class, String.class))
-				.setAccessible(true);
 		//
 		(METHOD_PLAY = clz.getDeclaredMethod("play",
 				CLASS_STYLE_INFO = Util
@@ -1558,7 +1556,7 @@ class AivisSpeechRestApiJPanelTest {
 		Entry<org.apache.bcel.classfile.Method, Class<?>> entry = null;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				StringUtils.join("/", replace(Strings.CS, Util.getName(clz), ".", "/"), ".class"))) {
+				StringUtils.join("/", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/"), ".class"))) {
 			//
 			final JavaClass javaClass = ClassParserUtil
 					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
@@ -1627,7 +1625,7 @@ class AivisSpeechRestApiJPanelTest {
 		IValue0<String> ivalue0 = null;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				StringUtils.join("/", replace(Strings.CS, Util.getName(clz), ".", "/"), ".class"))) {
+				StringUtils.join("/", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/"), ".class"))) {
 			//
 			final JavaClass javaClass = ClassParserUtil
 					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
@@ -1682,7 +1680,7 @@ class AivisSpeechRestApiJPanelTest {
 		Collection<IValue0<Entry<String, org.apache.bcel.classfile.Method>>> collection = null;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				StringUtils.join("/", replace(Strings.CS, Util.getName(clz), ".", "/"), ".class"))) {
+				StringUtils.join("/", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/"), ".class"))) {
 			//
 			final JavaClass javaClass = ClassParserUtil
 					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
@@ -1717,7 +1715,7 @@ class AivisSpeechRestApiJPanelTest {
 		IValue0<Entry<String, org.apache.bcel.classfile.Method>> ivalue0 = null;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				StringUtils.join("/", replace(Strings.CS, Util.getName(clz), ".", "/"), ".class"))) {
+				StringUtils.join("/", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/"), ".class"))) {
 			//
 			final JavaClass javaClass = ClassParserUtil
 					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
@@ -1835,21 +1833,6 @@ class AivisSpeechRestApiJPanelTest {
 			throws Throwable {
 		try {
 			return (R) invoke(METHOD_TEST_AND_APPLY, null, predicate, value, functionTrue, functionFalse);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static String replace(final Strings instance, final String text, final String searchString,
-			final String replacement) throws Throwable {
-		try {
-			final Object obj = invoke(METHOD_REPLACE, null, instance, text, searchString, replacement);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
