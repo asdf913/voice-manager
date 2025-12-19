@@ -862,13 +862,11 @@ public class AivisSpeechRestApiJPanel extends JPanel
 					//
 				} // if
 					//
-				Util.forEach(coreVersions(hostAndPort), x -> {
-					//
-					Narcissus.invokeStaticMethod(
-							testAndApply(y -> IterableUtils.size(y) == 1, ms, y -> IterableUtils.get(y, 0), null),
-							Util.cast(MutableComboBoxModel.class, getModel(Util.getValue(entryJLabelCoreVersion))), x);
-					//
-				});
+				Util.forEach(coreVersions(hostAndPort),
+						x -> Narcissus.invokeStaticMethod(
+								testAndApply(y -> IterableUtils.size(y) == 1, ms, y -> IterableUtils.get(y, 0), null),
+								Util.cast(MutableComboBoxModel.class, getModel(Util.getValue(entryJLabelCoreVersion))),
+								x));
 				//
 			} catch (final IOException | URISyntaxException ex) {
 				//
