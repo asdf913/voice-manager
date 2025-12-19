@@ -936,7 +936,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		return instance != null ? instance.getModel() : null;
 	}
 
-	private static Iterable<?> coreVersions(final HostAndPort hostAndPort) throws IOException, URISyntaxException {
+	private static Iterable<?> coreVersions(@Nullable final HostAndPort hostAndPort)
+			throws IOException, URISyntaxException {
 		//
 		final URIBuilder uriBuilder = new URIBuilder();
 		//
