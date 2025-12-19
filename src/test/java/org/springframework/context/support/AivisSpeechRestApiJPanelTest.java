@@ -324,14 +324,10 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof ListModel) {
+			} else if (proxy instanceof ListModel && Objects.equals(name, "getSize")) {
 				//
-				if (Objects.equals(name, "getSize")) {
-					//
-					return Integer.valueOf(0);
-					//
-				} // if
-					//
+				return Integer.valueOf(0);
+				//
 			} // if
 				//
 			if (proxy instanceof Predicate) {
@@ -2378,7 +2374,7 @@ class AivisSpeechRestApiJPanelTest {
 	void testToIterable() throws Throwable {
 		//
 		Assertions.assertThrows(IllegalStateException.class, () -> toIterable(Collections.emptyMap()));
-		//s
+		// s
 		final Iterable<?> iterable = Collections.emptyList();
 		//
 		Assertions.assertSame(iterable, toIterable(iterable));
