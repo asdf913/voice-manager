@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -57,6 +58,8 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
+import javax.swing.MutableComboBoxModel;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
@@ -152,7 +155,8 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_GET_FILE_EXTENSION_BYTE_ARRAY, METHOD_GET_FILE_EXTENSION_CONTENT_INFO,
 			METHOD_GET_CONTENT_TYPE_CONTENT_INFO, METHOD_GET_CONTENT_TYPE_FILE, METHOD_IS_SUPPORTED_AUDIO_FORMAT,
 			METHOD_TEST_AND_TEST, METHOD_SH_GET_KNOWN_FOLDER_PATH, METHOD_LIST_FILES, METHOD_NEXT_ALPHA_NUMERIC,
-			METHOD_GET_MESSAGE, METHOD_SET, METHOD_IS_CLIENT_ERROR, METHOD_VERSION = null;
+			METHOD_GET_MESSAGE, METHOD_SET, METHOD_IS_CLIENT_ERROR, METHOD_VERSION, METHOD_REMOVE_ALL_ITEMS,
+			METHOD_GET_MODEL, METHOD_CORE_VERSIONS, METHOD_TO_ITERABLE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -285,6 +289,14 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_VERSION = clz.getDeclaredMethod("version", HostAndPort.class)).setAccessible(true);
 		//
+		(METHOD_REMOVE_ALL_ITEMS = clz.getDeclaredMethod("removeAllItems", JComboBox.class)).setAccessible(true);
+		//
+		(METHOD_GET_MODEL = clz.getDeclaredMethod("getModel", JComboBox.class)).setAccessible(true);
+		//
+		(METHOD_CORE_VERSIONS = clz.getDeclaredMethod("coreVersions", HostAndPort.class)).setAccessible(true);
+		//
+		(METHOD_TO_ITERABLE = clz.getDeclaredMethod("toIterable", Object.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -312,6 +324,14 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof ListModel) {
+				//
+				if (Objects.equals(name, "getSize")) {
+					//
+					return Integer.valueOf(0);
+					//
+				} // if
+					//
 			} // if
 				//
 			if (proxy instanceof Predicate) {
@@ -460,6 +480,8 @@ class AivisSpeechRestApiJPanelTest {
 
 	private Entry<org.apache.bcel.classfile.Method, Class<?>> methodThrowExceptionIfOnlyOneParameterIsNull = null;
 
+	private JComboBox<?> jComboBox = null;
+
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
@@ -508,6 +530,8 @@ class AivisSpeechRestApiJPanelTest {
 		} // if
 			//
 		methodThrowExceptionIfOnlyOneParameterIsNull = getMethodThrowExceptionIfOnlyOneParameterIsNull(clz);
+		//
+		jComboBox = Util.cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class));
 		//
 	}
 
@@ -2278,6 +2302,111 @@ class AivisSpeechRestApiJPanelTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testRemoveAllItems() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> removeAllItems(jComboBox));
+		//
+		if (jComboBox != null) {
+			//
+			final Iterable<Field> fs = Util
+					.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(jComboBox))),
+							x -> Objects.equals(Util.getType(x), ComboBoxModel.class)));
+			//
+			if (IterableUtils.size(fs) > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			Narcissus.setField(jComboBox,
+					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
+					Reflection.newProxy(MutableComboBoxModel.class, ih));
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> removeAllItems(jComboBox));
+		//
+	}
+
+	private static void removeAllItems(final JComboBox<?> instance) throws Throwable {
+		try {
+			invoke(METHOD_REMOVE_ALL_ITEMS, null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetModel() throws Throwable {
+		//
+		Assertions.assertNull(invoke(METHOD_GET_MODEL, null, jComboBox));
+		//
+	}
+
+	@Test
+	void testCoreVersions() throws Throwable {
+		//
+		Assertions.assertNull(coreVersions(HostAndPort.fromHost("")));
+		//
+		Assertions.assertNull(coreVersions(HostAndPort.fromParts("", 0)));
+		//
+	}
+
+	private static Iterable<?> coreVersions(final HostAndPort hostAndPort) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_CORE_VERSIONS, null, hostAndPort);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Iterable) {
+				return (Iterable<?>) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToIterable() throws Throwable {
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> toIterable(Collections.emptyMap()));
+		//s
+		final Iterable<?> iterable = Collections.emptyList();
+		//
+		Assertions.assertSame(iterable, toIterable(iterable));
+		//
+		final String string = "a";
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(Arrays.asList(string), IterableUtils.toList(
+				toIterable(ObjectMapperUtil.readValue(objectMapper, StringUtils.wrap(string, '"'), Object.class)))));
+		//
+		final Number number = Integer.valueOf(1);
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(Arrays.asList(number), IterableUtils
+				.toList(toIterable(ObjectMapperUtil.readValue(objectMapper, Util.toString(number), Object.class)))));
+		//
+		final Boolean b = Boolean.TRUE;
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(Arrays.asList(b), IterableUtils
+				.toList(toIterable(ObjectMapperUtil.readValue(objectMapper, Util.toString(b), Object.class)))));
+		//
+	}
+
+	private static Iterable<?> toIterable(final Object instance) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_TO_ITERABLE, null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Iterable) {
+				return (Iterable<?>) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

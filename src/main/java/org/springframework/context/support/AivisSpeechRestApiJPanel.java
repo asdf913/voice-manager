@@ -69,6 +69,7 @@ import javax.sound.sampled.Line;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -85,6 +86,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.MutableComboBoxModel;
 import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.NumberFormatter;
@@ -274,6 +276,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 
 	private transient Entry<JLabel, JLabel> entryJLabelVersion = null;
 
+	private Entry<JLabel, JComboBox<?>> entryJLabelCoreVersion = null;
+
 	private Window window = null;
 
 	private AivisSpeechRestApiJPanel() {
@@ -349,14 +353,26 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		add(tfPort = new JFormattedTextField(numberFormatter), String.format("wmin %1$spx,span %2$s", 42, 3));
 		//
+		// Version
+		//
 		add(Util.getKey(entryJLabelVersion = Pair.of(new JLabel("Version"), new JLabel())));
-		//
-		final String wrap = "wrap";
-		//
-		add(Util.getValue(entryJLabelVersion), wrap);
 		//
 		Util.forEach(Stream.of(Util.getKey(entryJLabelVersion), Util.getValue(entryJLabelVersion)),
 				x -> setVisible(x, false));
+		//
+		add(Util.getValue(entryJLabelVersion));
+		//
+		// Core Version
+		//
+		add(Util.getKey(entryJLabelCoreVersion = Pair.of(new JLabel("Core Version"), new JComboBox<>())),
+				String.format("span %1$s", 3));
+		//
+		final String wrap = "wrap";
+		//
+		Util.forEach(Stream.of(Util.getKey(entryJLabelCoreVersion), Util.getValue(entryJLabelCoreVersion)),
+				x -> setVisible(x, false));
+		//
+		add(Util.getValue(entryJLabelCoreVersion), String.format("%1$s,span %2$s", wrap, 2));
 		//
 		add(new JLabel());
 		//
@@ -431,7 +447,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		add(btnAudioQuery = new JButton("Audio Query"), String.format("span %1$s", 3));
 		//
-		add(btnViewAudioQuery = new JButton("View"), wrap);
+		add(btnViewAudioQuery = new JButton("View"), String.format("%1$s,span %2$s", wrap, 2));
 		//
 		add(new JLabel());
 		//
@@ -811,10 +827,17 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			removeAllElements(dcbmSpeaker);
 			//
-			final Iterable<Component> cs = Arrays.asList(Util.getKey(entryJLabelVersion),
-					Util.getValue(entryJLabelVersion));
+			final Iterable<Component> cs = Arrays.asList(
+					//
+					Util.getKey(entryJLabelVersion), Util.getValue(entryJLabelVersion)
+					//
+					, Util.getKey(entryJLabelCoreVersion), Util.getValue(entryJLabelCoreVersion)
+			//
+			);
 			//
 			Util.forEach(cs, x -> setVisible(x, false));
+			//
+			removeAllItems(Util.getValue(entryJLabelCoreVersion));
 			//
 			try {
 				//
@@ -826,6 +849,26 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				Util.forEach(cs, x -> setVisible(x, true));
 				//
 				Util.setText(Util.getValue(entryJLabelVersion), version(hostAndPort));
+				//
+				final Iterable<java.lang.reflect.Method> ms = Util.toList(Util.filter(
+						testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.class), Arrays::stream, null),
+						x -> Boolean.logicalAnd(Objects.equals(Util.getName(x), "addElement"),
+								Arrays.equals(Util.getParameterTypes(x),
+										new Class<?>[] { MutableComboBoxModel.class, Object.class }))));
+				//
+				if (IterableUtils.size(ms) > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				Util.forEach(coreVersions(hostAndPort), x -> {
+					//
+					Narcissus.invokeStaticMethod(
+							testAndApply(y -> IterableUtils.size(y) == 1, ms, y -> IterableUtils.get(y, 0), null),
+							Util.cast(MutableComboBoxModel.class, getModel(Util.getValue(entryJLabelCoreVersion))), x);
+					//
+				});
 				//
 			} catch (final IOException | URISyntaxException ex) {
 				//
@@ -862,6 +905,81 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 		} // for
 			//
+	}
+
+	private static void removeAllItems(final JComboBox<?> instance) {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final Iterable<Field> fs = Util
+				.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(instance))),
+						x -> Objects.equals(Util.getType(x), ComboBoxModel.class)));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		if (Narcissus.getField(instance, testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0),
+				null)) instanceof MutableComboBoxModel) {
+			//
+			instance.removeAllItems();
+			//
+		} // if
+			//
+	}
+
+	private static <T> ComboBoxModel<T> getModel(final JComboBox<T> instance) {
+		return instance != null ? instance.getModel() : null;
+	}
+
+	private static Iterable<?> coreVersions(final HostAndPort hostAndPort) throws IOException, URISyntaxException {
+		//
+		final URIBuilder uriBuilder = new URIBuilder();
+		//
+		uriBuilder.setScheme("http");
+		//
+		uriBuilder.setHost(getHost(hostAndPort));
+		//
+		if (hostAndPort != null && hostAndPort.hasPort()) {
+			//
+			uriBuilder.setPort(hostAndPort.getPort());
+			//
+		} // if
+			//
+		uriBuilder.setPath("core_versions");
+		//
+		try (final InputStream is = Util.openStream(Util.toURL(uriBuilder.build()))) {
+			//
+			return toIterable(ObjectMapperUtil.readValue(new ObjectMapper(), is, Object.class));
+			//
+		} // try
+			//
+	}
+
+	private static Iterable<?> toIterable(final Object obj) {
+		//
+		if (obj == null) {
+			//
+			return null;
+			//
+		} else if (obj instanceof Iterable<?> iterable) {
+			//
+			return iterable;
+			//
+		} else if (obj instanceof CharSequence || obj instanceof Number || obj instanceof Boolean) {
+			//
+			return Collections.singleton(obj);
+			//
+		} // if
+			//
+		throw new IllegalStateException(Util.toString(Util.getClass(obj)));
+		//
 	}
 
 	private static String version(@Nullable final HostAndPort hostAndPort) throws IOException, URISyntaxException {
