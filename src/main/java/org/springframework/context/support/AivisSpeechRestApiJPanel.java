@@ -276,7 +276,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 
 	private transient Entry<JLabel, JLabel> entryJLabelVersion = null;
 
-	private Entry<JLabel, JComboBox<?>> entryJLabelCoreVersion = null;
+	private transient Entry<JLabel, JComboBox<?>> entryJLabelCoreVersion = null;
 
 	private Window window = null;
 
