@@ -905,7 +905,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 	}
 
-	private static void removeAllItems(final JComboBox<?> instance) {
+	private static void removeAllItems(@Nullable final JComboBox<?> instance) {
 		//
 		if (instance == null) {
 			//
@@ -932,7 +932,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 	}
 
-	private static <T> ComboBoxModel<T> getModel(final JComboBox<T> instance) {
+	private static <T> ComboBoxModel<T> getModel(@Nullable final JComboBox<T> instance) {
 		return instance != null ? instance.getModel() : null;
 	}
 
@@ -961,7 +961,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 	}
 
-	private static Iterable<?> toIterable(final Object obj) {
+	private static Iterable<?> toIterable(@Nullable final Object obj) {
 		//
 		if (obj == null) {
 			//
