@@ -932,6 +932,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static <T> ComboBoxModel<T> getModel(@Nullable final JComboBox<T> instance) {
 		return instance != null ? instance.getModel() : null;
 	}
@@ -961,6 +962,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static Iterable<?> toIterable(@Nullable final Object obj) {
 		//
 		if (obj == null) {
