@@ -148,9 +148,9 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_TEST_AND_ACCEPT_INT_PREDICATE, METHOD_TEST_AND_ACCEPT4, METHOD_SET_VISIBLE, METHOD_PACK, METHOD_ADD,
 			METHOD_SET_DEFAULT_CLOSE_OPERATION, METHOD_SPEAKERS_HOST_AND_PORT, METHOD_SPEAKERS_ITERABLE,
 			METHOD_AUDIO_QUERY, METHOD_SYNTHESIS, METHOD_LENGTH_BYTE_ARRAY, METHOD_LENGTH_OBJECT_ARRAY,
-			METHOD_TEST_AND_RUN, METHOD_ADD_ITEM_LISTENER, METHOD_SPEAKER_INFO_HOST_AND_PORT, METHOD_SPEAKER_INFO_MAP,
-			METHOD_DECODE, METHOD_GET_STYLE_INFO_BY_ID, METHOD_SET_STYLE_INFO, METHOD_LINES, METHOD_TO_JSON,
-			METHOD_FROM_JSON, METHOD_CREATE, METHOD_EXEC, METHOD_GET_CODE_METHOD, METHOD_GET_CODE_CODE,
+			METHOD_TEST_AND_RUN2, METHOD_TEST_AND_RUN3, METHOD_ADD_ITEM_LISTENER, METHOD_SPEAKER_INFO_HOST_AND_PORT,
+			METHOD_SPEAKER_INFO_MAP, METHOD_DECODE, METHOD_GET_STYLE_INFO_BY_ID, METHOD_SET_STYLE_INFO, METHOD_LINES,
+			METHOD_TO_JSON, METHOD_FROM_JSON, METHOD_CREATE, METHOD_EXEC, METHOD_GET_CODE_METHOD, METHOD_GET_CODE_CODE,
 			METHOD_TEST_AND_APPLY, METHOD_PLAY, METHOD_GET_FILE_EXTENSION_BYTE_ARRAY,
 			METHOD_GET_FILE_EXTENSION_CONTENT_INFO, METHOD_GET_CONTENT_TYPE_CONTENT_INFO, METHOD_GET_CONTENT_TYPE_FILE,
 			METHOD_IS_SUPPORTED_AUDIO_FORMAT, METHOD_TEST_AND_TEST, METHOD_SH_GET_KNOWN_FOLDER_PATH, METHOD_LIST_FILES,
@@ -212,7 +212,10 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_LENGTH_OBJECT_ARRAY = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_RUN = clz.getDeclaredMethod("testAndRun", Boolean.TYPE, Runnable.class)).setAccessible(true);
+		(METHOD_TEST_AND_RUN2 = clz.getDeclaredMethod("testAndRun", Boolean.TYPE, Runnable.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_RUN3 = clz.getDeclaredMethod("testAndRun", Boolean.TYPE, Runnable.class, Runnable.class))
+				.setAccessible(true);
 		//
 		(METHOD_ADD_ITEM_LISTENER = clz.getDeclaredMethod("addItemListener", ItemListener.class,
 				ItemSelectable[].class)).setAccessible(true);
@@ -418,6 +421,14 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof Runnable) {
+				//
+				if (Objects.equals(name, "run")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -1480,7 +1491,9 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testTestAndRun() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(invoke(METHOD_TEST_AND_RUN, null, Boolean.TRUE, null));
+		Assertions.assertNull(invoke(METHOD_TEST_AND_RUN2, null, Boolean.TRUE, null));
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_RUN3, null, Boolean.TRUE, null, null));
 		//
 	}
 
@@ -2366,7 +2379,7 @@ class AivisSpeechRestApiJPanelTest {
 	void testToIterable() throws Throwable {
 		//
 		Assertions.assertThrows(IllegalStateException.class, () -> toIterable(Collections.emptyMap()));
-		// s
+		//
 		final Iterable<?> iterable = Collections.emptyList();
 		//
 		Assertions.assertSame(iterable, toIterable(iterable));

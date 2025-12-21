@@ -852,19 +852,29 @@ public class AivisSpeechRestApiJPanel extends JPanel
 					//
 			} catch (final Exception ex) {
 				//
-				if (!GraphicsEnvironment.isHeadless()) {
-					//
-					TaskDialogs.showException(ex);
-					//
-				} else {
+				testAndRun(!GraphicsEnvironment.isHeadless(), () -> TaskDialogs.showException(ex), () -> {
 					//
 					throw ex instanceof RuntimeException ? (RuntimeException) ex : new RuntimeException(ex);
 					//
-				} // if
-					//
+				});
+				//
 			} // try
 				//
 		} // for
+			//
+	}
+
+	private static void testAndRun(final boolean condition, final Runnable a, final Runnable b) {
+		//
+		if (condition) {
+			//
+			Util.run(a);
+			//
+		} else {
+			//
+			Util.run(b);
+			//
+		} // if
 			//
 	}
 
