@@ -1599,6 +1599,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			testAndRun(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), isTestMode()),
 					() -> JOptionPane.showMessageDialog(null, panel, "Version", JOptionPane.PLAIN_MESSAGE));
 			//
+			return true;
+			//
 		} // if
 			//
 		return false;
