@@ -43,7 +43,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Spliterator;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -86,7 +85,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
-import javax.swing.MutableComboBoxModel;
 import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.NumberFormatter;
@@ -129,7 +127,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.WordUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.bytedeco.ffmpeg.avcodec.AVCodecParameters;
@@ -153,6 +150,7 @@ import org.springframework.beans.factory.InitializingBean;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.google.common.collect.Iterables;
 import com.google.common.net.HostAndPort;
 import com.google.common.reflect.Reflection;
 import com.google.gson.Gson;
@@ -253,7 +251,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	@Note("Play Voice Sample Transcript")
 	private AbstractButton btnPlayVoiceSampleTranscript = null;
 
-	private AbstractButton btnPlay = null;
+	private AbstractButton btnPlay, btnVersion = null;
 
 	private JComboBox<Speaker> jcbSpeaker = null;
 
@@ -273,10 +271,6 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	private JLabel jLabelPortrait = null;
 
 	private JLabel jLabelIcon = null;
-
-	private transient Entry<JLabel, JLabel> entryJLabelVersion = null;
-
-	private transient Entry<JLabel, JComboBox<?>> entryJLabelCoreVersion = null;
 
 	private Window window = null;
 
@@ -355,24 +349,11 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		// Version
 		//
-		add(Util.getKey(entryJLabelVersion = Pair.of(new JLabel("Version"), new JLabel())));
-		//
-		Util.forEach(Stream.of(Util.getKey(entryJLabelVersion), Util.getValue(entryJLabelVersion)),
-				x -> setVisible(x, false));
-		//
-		add(Util.getValue(entryJLabelVersion));
-		//
-		// Core Version
-		//
-		add(Util.getKey(entryJLabelCoreVersion = Pair.of(new JLabel("Core Version"), new JComboBox<>())),
-				String.format("span %1$s", 3));
-		//
 		final String wrap = "wrap";
 		//
-		Util.forEach(Stream.of(Util.getKey(entryJLabelCoreVersion), Util.getValue(entryJLabelCoreVersion)),
-				x -> setVisible(x, false));
+		add(btnVersion = new JButton("Version"), String.format("%1$s,span %2$s", wrap, 2));
 		//
-		add(Util.getValue(entryJLabelCoreVersion), String.format("%1$s,span %2$s", wrap, 2));
+		setVisible(btnVersion, false);
 		//
 		add(new JLabel());
 		//
@@ -827,17 +808,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			removeAllElements(dcbmSpeaker);
 			//
-			final Iterable<Component> cs = Arrays.asList(
-					//
-					Util.getKey(entryJLabelVersion), Util.getValue(entryJLabelVersion)
-					//
-					, Util.getKey(entryJLabelCoreVersion), Util.getValue(entryJLabelCoreVersion)
-			//
-			);
-			//
-			Util.forEach(cs, x -> setVisible(x, false));
-			//
-			removeAllItems(Util.getValue(entryJLabelCoreVersion));
+			setVisible(btnVersion, false);
 			//
 			try {
 				//
@@ -846,27 +817,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				FailableStreamUtil.forEach(new FailableStream<>(Util.stream(speakers(hostAndPort))),
 						x -> setStyleInfo(x, hostAndPort, dcbmSpeaker));
 				//
-				Util.forEach(cs, x -> setVisible(x, true));
-				//
-				Util.setText(Util.getValue(entryJLabelVersion), version(hostAndPort));
-				//
-				final Iterable<java.lang.reflect.Method> ms = Util.toList(Util.filter(
-						testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.class), Arrays::stream, null),
-						x -> Boolean.logicalAnd(Objects.equals(Util.getName(x), "addElement"),
-								Arrays.equals(Util.getParameterTypes(x),
-										new Class<?>[] { MutableComboBoxModel.class, Object.class }))));
-				//
-				if (IterableUtils.size(ms) > 1) {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-				Util.forEach(coreVersions(hostAndPort),
-						x -> Narcissus.invokeStaticMethod(
-								testAndApply(y -> IterableUtils.size(y) == 1, ms, y -> IterableUtils.get(y, 0), null),
-								Util.cast(MutableComboBoxModel.class, getModel(Util.getValue(entryJLabelCoreVersion))),
-								x));
+				setVisible(btnVersion, true);
 				//
 			} catch (final IOException | URISyntaxException ex) {
 				//
@@ -902,33 +853,6 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			} // try
 				//
 		} // for
-			//
-	}
-
-	private static void removeAllItems(@Nullable final JComboBox<?> instance) {
-		//
-		if (instance == null) {
-			//
-			return;
-			//
-		} // if
-			//
-		final Iterable<Field> fs = Util
-				.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(instance))),
-						x -> Objects.equals(Util.getType(x), ComboBoxModel.class)));
-		//
-		if (IterableUtils.size(fs) > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		if (Narcissus.getField(instance, testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0),
-				null)) instanceof MutableComboBoxModel) {
-			//
-			instance.removeAllItems();
-			//
-		} // if
 			//
 	}
 
@@ -1603,6 +1527,36 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			} // if
 				//
 			return true;
+			//
+		} else if (Objects.equals(source, instance.btnVersion)) {
+			//
+			final HostAndPort hostAndPort = instance.createHostAndPort();
+			//
+			final JPanel panel = new JPanel();
+			//
+			panel.setLayout(new MigLayout());
+			//
+			try {
+				//
+				panel.add(new JLabel("Version"));
+				//
+				final JTextField tfVersion = new JTextField(version(hostAndPort));
+				//
+				tfVersion.setEditable(false);
+				//
+				panel.add(tfVersion, "growx,wrap");
+				//
+				panel.add(new JLabel("Core Version"));
+				//
+				panel.add(new JComboBox<>(Iterables.toArray(coreVersions(hostAndPort), Object.class)));
+				//
+			} catch (final IOException | URISyntaxException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+			JOptionPane.showMessageDialog(null, panel, "Version", JOptionPane.PLAIN_MESSAGE);
 			//
 		} // if
 			//
