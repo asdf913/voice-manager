@@ -421,14 +421,10 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof Runnable) {
+			} else if (proxy instanceof Runnable && Objects.equals(name, "run")) {
 				//
-				if (Objects.equals(name, "run")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
