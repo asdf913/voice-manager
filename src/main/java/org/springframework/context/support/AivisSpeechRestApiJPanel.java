@@ -854,7 +854,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				testAndRun(!GraphicsEnvironment.isHeadless(), () -> TaskDialogs.showException(ex), () -> {
 					//
-					throw ex instanceof RuntimeException ? (RuntimeException) ex : new RuntimeException(ex);
+					throw ex instanceof RuntimeException re ? re : new RuntimeException(ex);
 					//
 				});
 				//
