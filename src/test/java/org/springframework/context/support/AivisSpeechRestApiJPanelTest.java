@@ -38,6 +38,7 @@ import java.util.Objects;
 import java.util.Vector;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
@@ -143,18 +144,18 @@ class AivisSpeechRestApiJPanelTest {
 	private static Class<?> CLASS_STYLE, CLASS_STYLE_INFO, CLASS_SPEAKER = null;
 
 	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_CREATE_HOST_AND_PORT, METHOD_WRITE, METHOD_GET_BYTES,
-			METHOD_REMOVE_ALL_ELEMENTS, METHOD_GET_SCREEN_SIZE, METHOD_GET_HOST, METHOD_TEST_AND_ACCEPT3,
-			METHOD_TEST_AND_ACCEPT4, METHOD_SET_VISIBLE, METHOD_PACK, METHOD_ADD, METHOD_SET_DEFAULT_CLOSE_OPERATION,
-			METHOD_SPEAKERS_HOST_AND_PORT, METHOD_SPEAKERS_ITERABLE, METHOD_AUDIO_QUERY, METHOD_SYNTHESIS,
-			METHOD_LENGTH_BYTE_ARRAY, METHOD_LENGTH_OBJECT_ARRAY, METHOD_TEST_AND_RUN, METHOD_ADD_ITEM_LISTENER,
-			METHOD_SPEAKER_INFO_HOST_AND_PORT, METHOD_SPEAKER_INFO_MAP, METHOD_DECODE, METHOD_GET_STYLE_INFO_BY_ID,
-			METHOD_SET_STYLE_INFO, METHOD_LINES, METHOD_TO_JSON, METHOD_FROM_JSON, METHOD_CREATE, METHOD_EXEC,
-			METHOD_GET_CODE_METHOD, METHOD_GET_CODE_CODE, METHOD_TEST_AND_APPLY, METHOD_PLAY,
-			METHOD_GET_FILE_EXTENSION_BYTE_ARRAY, METHOD_GET_FILE_EXTENSION_CONTENT_INFO,
-			METHOD_GET_CONTENT_TYPE_CONTENT_INFO, METHOD_GET_CONTENT_TYPE_FILE, METHOD_IS_SUPPORTED_AUDIO_FORMAT,
-			METHOD_TEST_AND_TEST, METHOD_SH_GET_KNOWN_FOLDER_PATH, METHOD_LIST_FILES, METHOD_NEXT_ALPHA_NUMERIC,
-			METHOD_GET_MESSAGE, METHOD_SET, METHOD_IS_CLIENT_ERROR, METHOD_VERSION, METHOD_GET_MODEL,
-			METHOD_CORE_VERSIONS, METHOD_TO_ITERABLE = null;
+			METHOD_REMOVE_ALL_ELEMENTS, METHOD_GET_SCREEN_SIZE, METHOD_GET_HOST, METHOD_TEST_AND_ACCEPT_PREDICATE,
+			METHOD_TEST_AND_ACCEPT_INT_PREDICATE, METHOD_TEST_AND_ACCEPT4, METHOD_SET_VISIBLE, METHOD_PACK, METHOD_ADD,
+			METHOD_SET_DEFAULT_CLOSE_OPERATION, METHOD_SPEAKERS_HOST_AND_PORT, METHOD_SPEAKERS_ITERABLE,
+			METHOD_AUDIO_QUERY, METHOD_SYNTHESIS, METHOD_LENGTH_BYTE_ARRAY, METHOD_LENGTH_OBJECT_ARRAY,
+			METHOD_TEST_AND_RUN, METHOD_ADD_ITEM_LISTENER, METHOD_SPEAKER_INFO_HOST_AND_PORT, METHOD_SPEAKER_INFO_MAP,
+			METHOD_DECODE, METHOD_GET_STYLE_INFO_BY_ID, METHOD_SET_STYLE_INFO, METHOD_LINES, METHOD_TO_JSON,
+			METHOD_FROM_JSON, METHOD_CREATE, METHOD_EXEC, METHOD_GET_CODE_METHOD, METHOD_GET_CODE_CODE,
+			METHOD_TEST_AND_APPLY, METHOD_PLAY, METHOD_GET_FILE_EXTENSION_BYTE_ARRAY,
+			METHOD_GET_FILE_EXTENSION_CONTENT_INFO, METHOD_GET_CONTENT_TYPE_CONTENT_INFO, METHOD_GET_CONTENT_TYPE_FILE,
+			METHOD_IS_SUPPORTED_AUDIO_FORMAT, METHOD_TEST_AND_TEST, METHOD_SH_GET_KNOWN_FOLDER_PATH, METHOD_LIST_FILES,
+			METHOD_NEXT_ALPHA_NUMERIC, METHOD_GET_MESSAGE, METHOD_SET, METHOD_IS_CLIENT_ERROR, METHOD_VERSION,
+			METHOD_GET_MODEL, METHOD_CORE_VERSIONS, METHOD_TO_ITERABLE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -178,7 +179,10 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_GET_HOST = clz.getDeclaredMethod("getHost", HostAndPort.class)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_ACCEPT3 = clz.getDeclaredMethod("testAndAccept", IntPredicate.class, Integer.TYPE,
+		(METHOD_TEST_AND_ACCEPT_PREDICATE = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
+				Consumer.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT_INT_PREDICATE = clz.getDeclaredMethod("testAndAccept", IntPredicate.class, Integer.TYPE,
 				IntConsumer.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT4 = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
@@ -410,6 +414,14 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof Consumer) {
+				//
+				if (Objects.equals(name, "accept")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -1138,6 +1150,12 @@ class AivisSpeechRestApiJPanelTest {
 			//
 		} // if
 			//
+		final Object btnVersion = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnVersion", btnVersion, true);
+		//
+		instance.actionPerformed(new ActionEvent(btnVersion, 0, null));
+		//
 	}
 
 	@Test
@@ -1325,14 +1343,31 @@ class AivisSpeechRestApiJPanelTest {
 		Assertions
 				.assertDoesNotThrow(() -> testAndAccept(Reflection.newProxy(BiPredicate.class, ih), null, null, null));
 		//
+		// testAndAccept(java.util.function.IntPredicate,int,java.util.function.IntConsumer)
+		//
 		final IntPredicate intPredicate = Reflection.newProxy(IntPredicate.class, ih);
 		//
 		final Integer zero = Integer.valueOf(0);
 		//
-		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT3, null, intPredicate, zero, null));
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT_INT_PREDICATE, null, intPredicate, zero, null));
 		//
-		Assertions.assertNull(
-				invoke(METHOD_TEST_AND_ACCEPT3, null, intPredicate, zero, Reflection.newProxy(IntConsumer.class, ih)));
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT_INT_PREDICATE, null, intPredicate, zero,
+				Reflection.newProxy(IntConsumer.class, ih)));
+		//
+		// testAndAccept(java.util.function.Predicate,java.lang.Object, Consumer<T>)
+		//
+		final Predicate<?> predicate = Reflection.newProxy(Predicate.class, ih);
+		//
+		if (ih != null) {
+			//
+			ih.test = Boolean.TRUE;
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT_PREDICATE, null, predicate, null, null));
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT_PREDICATE, null, predicate, null,
+				Reflection.newProxy(Consumer.class, ih)));
 		//
 	}
 

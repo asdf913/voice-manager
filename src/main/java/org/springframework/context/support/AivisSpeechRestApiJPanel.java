@@ -48,6 +48,7 @@ import java.util.Spliterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
@@ -848,8 +849,16 @@ public class AivisSpeechRestApiJPanel extends JPanel
 					//
 			} catch (final Exception ex) {
 				//
-				TaskDialogs.showException(ex);
-				//
+				if (!GraphicsEnvironment.isHeadless()) {
+					//
+					TaskDialogs.showException(ex);
+					//
+				} else {
+					//
+					throw ex instanceof RuntimeException ? (RuntimeException) ex : new RuntimeException(ex);
+					//
+				} // if
+					//
 			} // try
 				//
 		} // for
@@ -1548,7 +1557,11 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				panel.add(new JLabel("Core Version"));
 				//
-				panel.add(new JComboBox<>(Iterables.toArray(coreVersions(hostAndPort), Object.class)));
+				final Iterable<?> iterable = coreVersions(hostAndPort);
+				//
+				testAndAccept(Objects::nonNull, testAndApply(Objects::nonNull,
+						iterable != null ? Iterables.toArray(iterable, Object.class) : null, JComboBox::new, null),
+						panel::add);
 				//
 			} catch (final IOException | URISyntaxException e) {
 				//
@@ -1556,12 +1569,19 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 			} // try
 				//
-			JOptionPane.showMessageDialog(null, panel, "Version", JOptionPane.PLAIN_MESSAGE);
+			testAndRun(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), isTestMode()),
+					() -> JOptionPane.showMessageDialog(null, panel, "Version", JOptionPane.PLAIN_MESSAGE));
 			//
 		} // if
 			//
 		return false;
 		//
+	}
+
+	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
+		if (test(predicate, value) && consumer != null) {
+			consumer.accept(value);
+		}
 	}
 
 	private static void showSaveDialogAndWriteByteArrayToFile(final File file, final byte[] bs) throws IOException {
