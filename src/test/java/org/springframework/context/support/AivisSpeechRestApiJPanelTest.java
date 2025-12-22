@@ -2376,7 +2376,9 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testToIterable() throws Throwable {
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> toIterable(Collections.emptyMap()));
+		final Map<?, ?> emptyMap = Collections.emptyMap();
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> toIterable(emptyMap));
 		//
 		final Iterable<?> iterable = Collections.emptyList();
 		//
