@@ -181,6 +181,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 
 	private static final String URL = "https://www.ftyps.com";
 
+	private static final String VERSION = "Version";
+
 	static {
 		//
 		try {
@@ -355,7 +357,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		final String wrap = "wrap";
 		//
-		add(btnVersion = new JButton("Version"), String.format("%1$s,span %2$s", wrap, 2));
+		add(btnVersion = new JButton(VERSION), String.format("%1$s,span %2$s", wrap, 2));
 		//
 		setVisible(btnVersion, false);
 		//
@@ -1574,7 +1576,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			try {
 				//
-				panel.add(new JLabel("Version"));
+				panel.add(new JLabel(VERSION));
 				//
 				final JTextField tfVersion = new JTextField(version(hostAndPort));
 				//
@@ -1597,7 +1599,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			} // try
 				//
 			testAndRun(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), isTestMode()),
-					() -> JOptionPane.showMessageDialog(null, panel, "Version", JOptionPane.PLAIN_MESSAGE));
+					() -> JOptionPane.showMessageDialog(null, panel, VERSION, JOptionPane.PLAIN_MESSAGE));
 			//
 			return true;
 			//
