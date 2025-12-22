@@ -155,7 +155,7 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_GET_FILE_EXTENSION_CONTENT_INFO, METHOD_GET_CONTENT_TYPE_CONTENT_INFO, METHOD_GET_CONTENT_TYPE_FILE,
 			METHOD_IS_SUPPORTED_AUDIO_FORMAT, METHOD_TEST_AND_TEST, METHOD_SH_GET_KNOWN_FOLDER_PATH, METHOD_LIST_FILES,
 			METHOD_NEXT_ALPHA_NUMERIC, METHOD_GET_MESSAGE, METHOD_SET, METHOD_IS_CLIENT_ERROR, METHOD_VERSION,
-			METHOD_GET_MODEL, METHOD_CORE_VERSIONS, METHOD_TO_ITERABLE = null;
+			METHOD_GET_MODEL, METHOD_CORE_VERSIONS, METHOD_TO_ITERABLE, METHOD_SUPPORTED_DEVICES = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -299,6 +299,8 @@ class AivisSpeechRestApiJPanelTest {
 		(METHOD_CORE_VERSIONS = clz.getDeclaredMethod("coreVersions", HostAndPort.class)).setAccessible(true);
 		//
 		(METHOD_TO_ITERABLE = clz.getDeclaredMethod("toIterable", Object.class)).setAccessible(true);
+		//
+		(METHOD_SUPPORTED_DEVICES = clz.getDeclaredMethod("supportedDevices", HostAndPort.class)).setAccessible(true);
 		//
 	}
 
@@ -1153,11 +1155,11 @@ class AivisSpeechRestApiJPanelTest {
 			//
 		} // if
 			//
-		final Object btnVersion = new JButton();
+		final Object btnInfo = new JButton();
 		//
-		FieldUtils.writeDeclaredField(instance, "btnVersion", btnVersion, true);
+		FieldUtils.writeDeclaredField(instance, "btnInfo", btnInfo, true);
 		//
-		instance.actionPerformed(new ActionEvent(btnVersion, 0, null));
+		instance.actionPerformed(new ActionEvent(btnInfo, 0, null));
 		//
 	}
 
@@ -2404,6 +2406,29 @@ class AivisSpeechRestApiJPanelTest {
 				return null;
 			} else if (obj instanceof Iterable) {
 				return (Iterable<?>) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSupportedDevices() throws Throwable {
+		//
+		Assertions.assertNull(supportedDevices(HostAndPort.fromHost("")));
+		//
+		Assertions.assertNull(supportedDevices(HostAndPort.fromParts("", 0)));
+		//
+	}
+
+	private static Map<?, ?> supportedDevices(final HostAndPort hostAndPort) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_SUPPORTED_DEVICES, null, hostAndPort);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map) {
+				return (Map<?, ?>) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -43,6 +43,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Spliterator;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -69,6 +70,7 @@ import javax.sound.sampled.Line;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
@@ -110,6 +112,7 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.TypeUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -180,8 +183,6 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	private static final AtomicBoolean INITIALIZED = new AtomicBoolean(false);
 
 	private static final String URL = "https://www.ftyps.com";
-
-	private static final String VERSION = "Version";
 
 	static {
 		//
@@ -257,7 +258,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	@Note("Play")
 	private AbstractButton btnPlay = null;
 
-	private AbstractButton btnVersion = null;
+	private AbstractButton btnInfo = null;
 
 	private JComboBox<Speaker> jcbSpeaker = null;
 
@@ -353,13 +354,13 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		add(tfPort = new JFormattedTextField(numberFormatter), String.format("wmin %1$spx,span %2$s", 42, 3));
 		//
-		// Version
+		// Info
 		//
 		final String wrap = "wrap";
 		//
-		add(btnVersion = new JButton(VERSION), String.format("%1$s,span %2$s", wrap, 2));
+		add(btnInfo = new JButton("Info"), String.format("%1$s,span %2$s", wrap, 2));
 		//
-		setVisible(btnVersion, false);
+		setVisible(btnInfo, false);
 		//
 		add(new JLabel());
 		//
@@ -814,7 +815,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			removeAllElements(dcbmSpeaker);
 			//
-			setVisible(btnVersion, false);
+			setVisible(btnInfo, false);
 			//
 			try {
 				//
@@ -823,7 +824,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				FailableStreamUtil.forEach(new FailableStream<>(Util.stream(speakers(hostAndPort))),
 						x -> setStyleInfo(x, hostAndPort, dcbmSpeaker));
 				//
-				setVisible(btnVersion, true);
+				setVisible(btnInfo, true);
 				//
 			} catch (final IOException | URISyntaxException ex) {
 				//
@@ -883,6 +884,42 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	@Nullable
 	private static <T> ComboBoxModel<T> getModel(@Nullable final JComboBox<T> instance) {
 		return instance != null ? instance.getModel() : null;
+	}
+
+	private static Map<?, ?> supportedDevices(final HostAndPort hostAndPort) throws IOException, URISyntaxException {
+		//
+		final URIBuilder uriBuilder = new URIBuilder();
+		//
+		uriBuilder.setScheme("http");
+		//
+		uriBuilder.setHost(getHost(hostAndPort));
+		//
+		if (hostAndPort != null && hostAndPort.hasPort()) {
+			//
+			uriBuilder.setPort(hostAndPort.getPort());
+			//
+		} // if
+			//
+		uriBuilder.setPath("supported_devices");
+		//
+		try (final InputStream is = Util.openStream(Util.toURL(uriBuilder.build()))) {
+			//
+			final Object object = ObjectMapperUtil.readValue(new ObjectMapper(), is, Object.class);
+			//
+			if (object == null) {
+				//
+				return null;
+				//
+			} else if (object instanceof Map map) {
+				//
+				return map;
+				//
+			} // if
+				//
+			throw new IllegalStateException(Util.toString(Util.getClass(object)));
+			//
+		} // try
+			//
 	}
 
 	@Nullable
@@ -1566,7 +1603,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		} // if
 			//
-		if (Objects.equals(source, instance.btnVersion)) {
+		if (Objects.equals(source, instance.btnInfo)) {
 			//
 			final HostAndPort hostAndPort = instance.createHostAndPort();
 			//
@@ -1576,7 +1613,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			try {
 				//
-				panel.add(new JLabel(VERSION));
+				panel.add(new JLabel("Version"));
 				//
 				final JTextField tfVersion = new JTextField(version(hostAndPort));
 				//
@@ -1588,10 +1625,39 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				final Iterable<?> iterable = coreVersions(hostAndPort);
 				//
+				final String wrap = "wrap";
+				//
 				testAndAccept(Objects::nonNull, testAndApply(Objects::nonNull,
 						iterable != null ? Iterables.toArray(iterable, Object.class) : null, JComboBox::new, null),
-						panel::add);
+						x -> panel.add(x, wrap));
 				//
+				final Map<?, ?> map = supportedDevices(hostAndPort);
+				//
+				if (MapUtils.isNotEmpty(map)) {
+
+					final JPanel panel1 = new JPanel();
+					//
+					panel1.setLayout(new MigLayout());
+					//
+					panel1.setBorder(BorderFactory.createTitledBorder("Supported Devices"));
+					//
+					JTextComponent jTextComponent = null;
+					//
+					for (final Entry<?, ?> entry : Util.entrySet(map)) {
+						//
+						panel1.add(new JLabel(Util.toString(Util.getKey(entry))));
+						//
+						panel1.add(jTextComponent = new JTextField(Util.toString(Util.getValue(entry))),
+								String.format("growx,%1$s", wrap));
+						//
+						jTextComponent.setEditable(false);
+						//
+					} // for
+						//
+					panel.add(panel1, String.format("growx,span %1$s", 2));
+					//
+				} // if
+					//
 			} catch (final IOException | URISyntaxException e) {
 				//
 				throw new RuntimeException(e);
@@ -1599,7 +1665,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			} // try
 				//
 			testAndRun(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), isTestMode()),
-					() -> JOptionPane.showMessageDialog(null, panel, VERSION, JOptionPane.PLAIN_MESSAGE));
+					() -> JOptionPane.showMessageDialog(null, panel, "Info", JOptionPane.PLAIN_MESSAGE));
 			//
 			return true;
 			//
