@@ -886,6 +886,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		return instance != null ? instance.getModel() : null;
 	}
 
+	@Nullable
 	private static Map<?, ?> supportedDevices(@Nullable final HostAndPort hostAndPort)
 			throws IOException, URISyntaxException {
 		//
