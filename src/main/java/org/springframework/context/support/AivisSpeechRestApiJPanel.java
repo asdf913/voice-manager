@@ -2516,6 +2516,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private HostAndPort createHostAndPort() {
 		//
 		return createHostAndPort(Util.getText(tfHost), Util.getText(tfPort));
