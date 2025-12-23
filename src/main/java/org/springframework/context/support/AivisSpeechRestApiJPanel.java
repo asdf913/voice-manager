@@ -1714,18 +1714,14 @@ public class AivisSpeechRestApiJPanel extends JPanel
 					//
 				});
 				//
-				testAndAccept(Objects::nonNull, createJPanel("Supported Devices", supportedDevices(hostAndPort)), x -> {
-					//
-					panel.add(x, String.format("%1$s,span %2$s", growx, 2));
-					//
-				});
+				testAndAccept(Objects::nonNull, createJPanel("Supported Devices", supportedDevices(hostAndPort)),
+						x -> panel.add(x, String.format("%1$s,span %2$s", growx, 2)));
 				//
-				testAndAccept(Objects::nonNull, createJPanel("Supported Features", testAndApply(Util::containsKey,
-						engineManifest, "supported_features", (a, b) -> toMap(Util.get(a, b)), null)), x -> {
-							//
-							panel.add(x, String.format("%1$s,span %2$s", growx, 2));
-							//
-						});
+				testAndAccept(Objects::nonNull,
+						createJPanel("Supported Features",
+								testAndApply(Util::containsKey, engineManifest, "supported_features",
+										(a, b) -> toMap(Util.get(a, b)), null)),
+						x -> panel.add(x, String.format("%1$s,span %2$s", growx, 2)));
 				//
 			} catch (final IOException | URISyntaxException e) {
 				//
