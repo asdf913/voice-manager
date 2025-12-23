@@ -2522,6 +2522,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static HostAndPort createHostAndPort(final String host, final String port) {
 		//
 		return testAndApply((a, b) -> Util.matches(b), host, Util.matcher(Pattern.compile("\\d{1,5}"), port),
