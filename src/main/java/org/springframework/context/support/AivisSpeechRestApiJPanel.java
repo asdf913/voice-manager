@@ -936,6 +936,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static Map<?, ?> toMap(@Nullable final Object obj) {
 		//
 		if (obj == null) {
