@@ -766,7 +766,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		}
 	}
 
-	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, final T t,
+	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, @Nullable final T t,
 			@Nullable final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
 		if (Util.test(instance, t, u)) {
 			FailableBiConsumerUtil.accept(consumer, t, u);
@@ -1742,7 +1742,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	}
 
 	@Nullable
-	private static JPanel createJPanel(final String title, final Map<?, ?> map) {
+	private static JPanel createJPanel(final String title, @Nullable final Map<?, ?> map) {
 		//
 		JPanel panel = null;
 		//
