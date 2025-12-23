@@ -2545,7 +2545,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	}
 
 	@Nullable
-	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
+	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, @Nullable final T t, final U u,
 			final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse) {
 		return test(predicate, t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
 	}
