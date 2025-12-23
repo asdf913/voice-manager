@@ -912,7 +912,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				return null;
 				//
-			} else if (object instanceof Map map) {
+			} else if (object instanceof Map<?, ?> map) {
 				//
 				return map;
 				//
