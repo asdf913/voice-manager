@@ -1772,7 +1772,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
-	private static <T> void testAndAccept(final Predicate<T> predicate, final T value,
+	private static <T> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
 			@Nullable final Consumer<T> consumer) {
 		if (test(predicate, value) && consumer != null) {
 			consumer.accept(value);
@@ -2545,7 +2545,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	}
 
 	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
-			final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) {
+			final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse) {
 		return test(predicate, t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
 	}
 
