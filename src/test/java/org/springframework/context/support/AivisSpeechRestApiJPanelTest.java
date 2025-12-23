@@ -155,7 +155,7 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_GET_FILE_EXTENSION_CONTENT_INFO, METHOD_GET_CONTENT_TYPE_CONTENT_INFO, METHOD_GET_CONTENT_TYPE_FILE,
 			METHOD_IS_SUPPORTED_AUDIO_FORMAT, METHOD_TEST_AND_TEST, METHOD_SH_GET_KNOWN_FOLDER_PATH, METHOD_LIST_FILES,
 			METHOD_NEXT_ALPHA_NUMERIC, METHOD_GET_MESSAGE, METHOD_SET, METHOD_IS_CLIENT_ERROR, METHOD_VERSION,
-			METHOD_GET_MODEL, METHOD_CORE_VERSIONS, METHOD_TO_ITERABLE, METHOD_SUPPORTED_DEVICES = null;
+			METHOD_GET_MODEL, METHOD_CORE_VERSIONS, METHOD_TO_ITERABLE, METHOD_SUPPORTED_DEVICES, METHOD_TO_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -301,6 +301,8 @@ class AivisSpeechRestApiJPanelTest {
 		(METHOD_TO_ITERABLE = clz.getDeclaredMethod("toIterable", Object.class)).setAccessible(true);
 		//
 		(METHOD_SUPPORTED_DEVICES = clz.getDeclaredMethod("supportedDevices", HostAndPort.class)).setAccessible(true);
+		//
+		(METHOD_TO_MAP = clz.getDeclaredMethod("toMap", Object.class)).setAccessible(true);
 		//
 	}
 
@@ -2436,6 +2438,31 @@ class AivisSpeechRestApiJPanelTest {
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Map) {
+				return (Map<?, ?>) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToMap() throws Throwable {
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> toMap(""));
+		//
+		final Map<?, ?> map = Collections.emptyMap();
+		//
+		Assertions.assertSame(map, toMap(map));
+		//
+	}
+
+	private static Map<?, ?> toMap(final Object instance) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_TO_MAP, null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map<?, ?>) {
 				return (Map<?, ?>) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));

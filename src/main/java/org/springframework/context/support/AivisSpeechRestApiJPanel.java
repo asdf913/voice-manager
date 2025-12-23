@@ -906,22 +906,26 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		try (final InputStream is = Util.openStream(Util.toURL(uriBuilder.build()))) {
 			//
-			final Object object = ObjectMapperUtil.readValue(new ObjectMapper(), is, Object.class);
-			//
-			if (object == null) {
-				//
-				return null;
-				//
-			} else if (object instanceof Map<?, ?> map) {
-				//
-				return map;
-				//
-			} // if
-				//
-			throw new IllegalStateException(Util.toString(Util.getClass(object)));
+			return toMap(ObjectMapperUtil.readValue(new ObjectMapper(), is, Object.class));
 			//
 		} // try
 			//
+	}
+
+	private static Map<?, ?> toMap(final Object obj) {
+		//
+		if (obj == null) {
+			//
+			return null;
+			//
+		} else if (obj instanceof Map<?, ?> iterable) {
+			//
+			return iterable;
+			//
+		} // if
+			//
+		throw new IllegalStateException(Util.toString(Util.getClass(obj)));
+		//
 	}
 
 	@Nullable
