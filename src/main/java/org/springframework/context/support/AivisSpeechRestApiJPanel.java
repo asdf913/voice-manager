@@ -886,6 +886,30 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		return instance != null ? instance.getModel() : null;
 	}
 
+	private static Map<?, ?> engineManifest(final HostAndPort hostAndPort) throws IOException, URISyntaxException {
+		//
+		final URIBuilder uriBuilder = new URIBuilder();
+		//
+		uriBuilder.setScheme("http");
+		//
+		uriBuilder.setHost(getHost(hostAndPort));
+		//
+		if (hostAndPort != null && hostAndPort.hasPort()) {
+			//
+			uriBuilder.setPort(hostAndPort.getPort());
+			//
+		} // if
+			//
+		uriBuilder.setPath("engine_manifest");
+		//
+		try (final InputStream is = Util.openStream(Util.toURL(uriBuilder.build()))) {
+			//
+			return toMap(ObjectMapperUtil.readValue(new ObjectMapper(), is, Object.class));
+			//
+		} // try
+			//
+	}
+
 	@Nullable
 	private static Map<?, ?> supportedDevices(@Nullable final HostAndPort hostAndPort)
 			throws IOException, URISyntaxException {
@@ -1619,51 +1643,88 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			try {
 				//
+				final Map<?, ?> engineManifest = engineManifest(hostAndPort);
+				//
+				final String wrap = "wrap";
+				//
+				final String growx = "growx";
+				//
+				JTextField tf = null;
+				//
+				if (MapUtils.isNotEmpty(engineManifest)) {
+					//
+					panel.add(new JLabel("Name"));
+					//
+					(tf = new JTextField(Util.toString(Util.get(engineManifest, "name")))).setEditable(false);
+					//
+					panel.add(tf);
+					//
+					Image image = null;
+					//
+					final byte[] bs = decode(Base64.getDecoder(), Util.toString(Util.get(engineManifest, "icon")));
+					//
+					try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
+						//
+						image = Util.getScaledInstance(testAndApply(Objects::nonNull, is, ImageIO::read, null), 25, 25,
+								Image.SCALE_SMOOTH);
+						//
+					} catch (final IOException e) {
+						//
+						throw new RuntimeException(e);
+						//
+					} // try
+						//
+					panel.add(
+							testAndApply(Objects::nonNull, image, x -> new JLabel(new ImageIcon(x)), x -> new JLabel()),
+							wrap);
+					//
+					panel.add(new JLabel("Brand Name"));
+					//
+					(tf = new JTextField(Util.toString(Util.get(engineManifest, "brand_name")))).setEditable(false);
+					//
+					panel.add(tf, StringUtils.joinWith(",", growx, wrap));
+					//
+				} // if
+					//
 				panel.add(new JLabel("Version"));
 				//
-				final JTextField tfVersion = new JTextField(version(hostAndPort));
+				(tf = new JTextField(version(hostAndPort))).setEditable(false);
 				//
-				tfVersion.setEditable(false);
-				//
-				panel.add(tfVersion, "growx,wrap");
+				panel.add(tf, StringUtils.joinWith(",", growx, wrap));
 				//
 				panel.add(new JLabel("Core Version"));
 				//
 				final Iterable<?> iterable = coreVersions(hostAndPort);
 				//
-				final String wrap = "wrap";
-				//
 				testAndAccept(Objects::nonNull, testAndApply(Objects::nonNull,
 						iterable != null ? Iterables.toArray(iterable, Object.class) : null, JComboBox::new, null),
 						x -> panel.add(x, wrap));
 				//
-				final Map<?, ?> map = supportedDevices(hostAndPort);
+				testAndAccept(Util::containsKey, engineManifest, "manifest_version", (a, b) -> {
+					//
+					panel.add(new JLabel("Manifest Version"));
+					//
+					final JTextComponent jtf = new JTextField(Util.toString(Util.get(a, b)));
+					//
+					jtf.setEditable(false);
+					//
+					panel.add(jtf, StringUtils.joinWith(",", growx, wrap));
+					//
+				});
 				//
-				if (MapUtils.isNotEmpty(map)) {
-
-					final JPanel panel1 = new JPanel();
+				testAndAccept(Objects::nonNull, createJPanel("Supported Devices", supportedDevices(hostAndPort)), x -> {
 					//
-					panel1.setLayout(new MigLayout());
+					panel.add(x, String.format("%1$s,span %2$s", growx, 2));
 					//
-					panel1.setBorder(BorderFactory.createTitledBorder("Supported Devices"));
-					//
-					JTextComponent jTextComponent = null;
-					//
-					for (final Entry<?, ?> entry : Util.entrySet(map)) {
-						//
-						panel1.add(new JLabel(Util.toString(Util.getKey(entry))));
-						//
-						panel1.add(jTextComponent = new JTextField(Util.toString(Util.getValue(entry))),
-								String.format("growx,%1$s", wrap));
-						//
-						jTextComponent.setEditable(false);
-						//
-					} // for
-						//
-					panel.add(panel1, String.format("growx,span %1$s", 2));
-					//
-				} // if
-					//
+				});
+				//
+				testAndAccept(Objects::nonNull, createJPanel("Supported Features", testAndApply(Util::containsKey,
+						engineManifest, "supported_features", (a, b) -> toMap(Util.get(a, b)), null)), x -> {
+							//
+							panel.add(x, String.format("%1$s,span %2$s", growx, 2));
+							//
+						});
+				//
 			} catch (final IOException | URISyntaxException e) {
 				//
 				throw new RuntimeException(e);
@@ -1678,6 +1739,34 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		} // if
 			//
 		return false;
+		//
+	}
+
+	private static JPanel createJPanel(final String title, final Map<?, ?> map) {
+		//
+		JPanel panel = null;
+		//
+		if (MapUtils.isNotEmpty(map) && Util.iterator(Util.entrySet(map)) != null) {
+			//
+			(panel = new JPanel()).setLayout(new MigLayout());
+			//
+			panel.setBorder(BorderFactory.createTitledBorder(title));
+			//
+			JTextComponent tf = null;
+			//
+			for (final Entry<?, ?> entry : Util.entrySet(map)) {
+				//
+				panel.add(new JLabel(Util.toString(Util.getKey(entry))));
+				//
+				panel.add(tf = new JTextField(Util.toString(Util.getValue(entry))), "growx,wrap");
+				//
+				tf.setEditable(false);
+				//
+			} // for
+				//
+		} // if
+			//
+		return panel;
 		//
 	}
 

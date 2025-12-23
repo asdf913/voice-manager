@@ -155,7 +155,8 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_GET_FILE_EXTENSION_CONTENT_INFO, METHOD_GET_CONTENT_TYPE_CONTENT_INFO, METHOD_GET_CONTENT_TYPE_FILE,
 			METHOD_IS_SUPPORTED_AUDIO_FORMAT, METHOD_TEST_AND_TEST, METHOD_SH_GET_KNOWN_FOLDER_PATH, METHOD_LIST_FILES,
 			METHOD_NEXT_ALPHA_NUMERIC, METHOD_GET_MESSAGE, METHOD_SET, METHOD_IS_CLIENT_ERROR, METHOD_VERSION,
-			METHOD_GET_MODEL, METHOD_CORE_VERSIONS, METHOD_TO_ITERABLE, METHOD_SUPPORTED_DEVICES, METHOD_TO_MAP = null;
+			METHOD_GET_MODEL, METHOD_CORE_VERSIONS, METHOD_TO_ITERABLE, METHOD_SUPPORTED_DEVICES, METHOD_TO_MAP,
+			METHOD_ENGINE_MANIFEST, METHOD_CREATE_JPANEL = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -304,11 +305,15 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_TO_MAP = clz.getDeclaredMethod("toMap", Object.class)).setAccessible(true);
 		//
+		(METHOD_ENGINE_MANIFEST = clz.getDeclaredMethod("engineManifest", HostAndPort.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_JPANEL = clz.getDeclaredMethod("createJPanel", String.class, Map.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
 
-		private Boolean test, equals = null;
+		private Boolean test, equals, isEmpty = null;
 
 		private Long count = null;
 
@@ -385,10 +390,18 @@ class AivisSpeechRestApiJPanelTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Map && Objects.equals(name, "get")) {
+			} else if (proxy instanceof Map) {
 				//
-				return null;
-				//
+				if (IterableUtils.contains(Arrays.asList("get", "entrySet"), name)) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(name, "isEmpty")) {
+					//
+					return isEmpty;
+					//
+				} // if
+					//
 			} else if (proxy instanceof Stream && Objects.equals(name, "count")) {
 				//
 				return count;
@@ -766,7 +779,7 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		if (ih != null) {
 			//
-			ih.test = Boolean.FALSE;
+			ih.test = ih.isEmpty = Boolean.FALSE;
 			//
 			ih.count = Long.valueOf(0);
 			//
@@ -911,7 +924,6 @@ class AivisSpeechRestApiJPanelTest {
 				//
 		} // for
 			//
-
 	}
 
 	private static boolean isInterface(final Class<?> instance) {
@@ -2469,6 +2481,36 @@ class AivisSpeechRestApiJPanelTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testEngineManifest() throws Throwable {
+		//
+		Assertions.assertNull(engineManifest(HostAndPort.fromHost("")));
+		//
+		Assertions.assertNull(engineManifest(HostAndPort.fromParts("", 0)));
+		//
+	}
+
+	private static Map<?, ?> engineManifest(final HostAndPort hostAndPort) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_ENGINE_MANIFEST, null, hostAndPort);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map<?, ?>) {
+				return (Map<?, ?>) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateJPanel() throws Throwable {
+		//
+		Assertions.assertNotNull(invoke(METHOD_CREATE_JPANEL, null, null, Collections.singletonMap(null, null)));
+		//
 	}
 
 }
