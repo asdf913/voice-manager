@@ -1666,8 +1666,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 					//
 					try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
 						//
-						image = Util.getScaledInstance(testAndApply(Objects::nonNull, is, ImageIO::read, null), 25, 25,
-								Image.SCALE_SMOOTH);
+						image = Util.getScaledInstance(testAndApply(Objects::nonNull, is, ImageIO::read, null), 135,
+								135, Image.SCALE_SMOOTH);
 						//
 					} catch (final IOException e) {
 						//
@@ -1677,7 +1677,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 						//
 					panel.add(
 							testAndApply(Objects::nonNull, image, x -> new JLabel(new ImageIcon(x)), x -> new JLabel()),
-							wrap);
+							String.format("%1$s,span %2$s %3$s", wrap, 1, 5));
 					//
 					panel.add(new JLabel("Brand Name"));
 					//
