@@ -886,6 +886,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		return instance != null ? instance.getModel() : null;
 	}
 
+	@Nullable
 	private static Map<?, ?> engineManifest(@Nullable final HostAndPort hostAndPort)
 			throws IOException, URISyntaxException {
 		//
@@ -1740,6 +1741,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static JPanel createJPanel(final String title, final Map<?, ?> map) {
 		//
 		JPanel panel = null;
