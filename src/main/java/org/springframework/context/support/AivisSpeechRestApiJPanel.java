@@ -140,6 +140,7 @@ import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.text.WordUtils;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.client.utils.URIBuilderUtil;
 import org.bytedeco.ffmpeg.avcodec.AVCodecParameters;
 import org.bytedeco.ffmpeg.avformat.AVFormatContext;
 import org.bytedeco.ffmpeg.avformat.AVStream;
@@ -938,7 +939,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		uriBuilder.setPath("engine_manifest");
 		//
-		try (final InputStream is = Util.openStream(Util.toURL(uriBuilder.build()))) {
+		try (final InputStream is = Util.openStream(Util.toURL(URIBuilderUtil.build(uriBuilder)))) {
 			//
 			return toMap(ObjectMapperUtil.readValue(objectMapper, is, Object.class));
 			//
@@ -964,7 +965,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		uriBuilder.setPath("supported_devices");
 		//
-		try (final InputStream is = Util.openStream(Util.toURL(uriBuilder.build()))) {
+		try (final InputStream is = Util.openStream(Util.toURL(URIBuilderUtil.build(uriBuilder)))) {
 			//
 			return toMap(ObjectMapperUtil.readValue(objectMapper, is, Object.class));
 			//
@@ -1007,7 +1008,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		uriBuilder.setPath("core_versions");
 		//
-		try (final InputStream is = Util.openStream(Util.toURL(uriBuilder.build()))) {
+		try (final InputStream is = Util.openStream(Util.toURL(URIBuilderUtil.build(uriBuilder)))) {
 			//
 			return toIterable(ObjectMapperUtil.readValue(objectMapper, is, Object.class));
 			//
@@ -1053,7 +1054,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		uriBuilder.setPath("version");
 		//
-		try (final InputStream is = Util.openStream(Util.toURL(uriBuilder.build()))) {
+		try (final InputStream is = Util.openStream(Util.toURL(URIBuilderUtil.build(uriBuilder)))) {
 			//
 			return Util.toString(ObjectMapperUtil.readValue(objectMapper, is, Object.class));
 			//
@@ -1150,7 +1151,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		uriBuilder.addParameter("speaker_uuid", speakerUuid);
 		//
-		try (final InputStream is = Util.openStream(Util.toURL(uriBuilder.build()))) {
+		try (final InputStream is = Util.openStream(Util.toURL(URIBuilderUtil.build(uriBuilder)))) {
 			//
 			speakerInfo = speakerInfo(Util.cast(Map.class, ObjectMapperUtil.readValue(objectMapper, is, Object.class)));
 			//
@@ -2608,7 +2609,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		uriBuilder.addParameter("speaker", style != null ? style.id : null);
 		//
 		final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class,
-				Util.openConnection(Util.toURL(uriBuilder.build())));
+				Util.openConnection(Util.toURL(URIBuilderUtil.build(uriBuilder))));
 		//
 		if (httpURLConnection != null) {
 			//
@@ -2736,7 +2737,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		uriBuilder.addParameter("text", text);
 		//
 		final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class,
-				Util.openConnection(Util.toURL(uriBuilder.build())));
+				Util.openConnection(Util.toURL(URIBuilderUtil.build(uriBuilder))));
 		//
 		if (httpURLConnection != null) {
 			//
@@ -2856,7 +2857,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		uriBuilder.setPath("speakers");
 		//
-		try (final InputStream is = Util.openStream(Util.toURL(uriBuilder.build()))) {
+		try (final InputStream is = Util.openStream(Util.toURL(URIBuilderUtil.build(uriBuilder)))) {
 			//
 			list = speakers(Util.cast(Iterable.class, ObjectMapperUtil.readValue(objectMapper, is, Object.class)));
 			//
