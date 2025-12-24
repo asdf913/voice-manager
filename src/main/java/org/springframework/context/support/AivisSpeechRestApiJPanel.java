@@ -2562,16 +2562,12 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	@Nullable
 	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, @Nullable final T t, final U u,
 			final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse) {
-		return test(predicate, t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
+		return Util.test(predicate, t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
 	}
 
 	@Nullable
 	private static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, @Nullable final T t, final U u) {
 		return instance != null ? instance.apply(t, u) : null;
-	}
-
-	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, @Nullable final T t, final U u) {
-		return instance != null && instance.test(t, u);
 	}
 
 	private static String audioQuery(@Nullable final HostAndPort hostAndPort, @Nullable final Style style,
