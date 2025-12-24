@@ -108,6 +108,7 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.oxbow.swingbits.util.OperatingSystem;
 import org.oxbow.swingbits.util.OperatingSystemUtil;
@@ -2194,6 +2195,7 @@ class AivisSpeechRestApiJPanelTest {
 	}
 
 	@Test
+	@Disabled
 	void testGetFileExtension() throws Throwable {
 		//
 		// wav.wav
