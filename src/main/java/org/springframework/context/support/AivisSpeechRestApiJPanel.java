@@ -857,7 +857,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		final Iterable<ToBooleanBiFunction<AivisSpeechRestApiJPanel, Object>> functions = Arrays.asList(
 				AivisSpeechRestApiJPanel::actionPerformed1, AivisSpeechRestApiJPanel::actionPerformed2,
 				AivisSpeechRestApiJPanel::actionPerformed3, AivisSpeechRestApiJPanel::actionPerformed4,
-				AivisSpeechRestApiJPanel::actionPerformed5, AivisSpeechRestApiJPanel::actionPerformed6);
+				AivisSpeechRestApiJPanel::actionPerformed5, AivisSpeechRestApiJPanel::actionPerformed6,
+				AivisSpeechRestApiJPanel::actionPerformed7);
 		//
 		ToBooleanBiFunction<AivisSpeechRestApiJPanel, Object> function = null;
 		//
@@ -1779,7 +1780,21 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			return true;
 			//
-		} else if (Objects.equals(source, instance.btnEngineManifest)) {
+		} // if
+			//
+		return false;
+		//
+	}
+
+	private static boolean actionPerformed7(final AivisSpeechRestApiJPanel instance, final Object source) {
+		//
+		if (instance == null) {
+			//
+			return false;
+			//
+		} // if
+			//
+		if (Objects.equals(source, instance.btnEngineManifest)) {
 			//
 			try (final Writer writer = Files.newBufferedWriter(Path.of("voicevox_engine_mainfest.html"))) {
 				//
@@ -1814,6 +1829,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				TemplateUtil.process(ConfigurationUtil.getTemplate(configuration, "voicevox_engine_mainfest.ftl"),
 						engineManifest, writer);
+				//
+				return true;
 				//
 			} catch (final IOException | URISyntaxException | TemplateException | ReflectiveOperationException e) {
 				//
