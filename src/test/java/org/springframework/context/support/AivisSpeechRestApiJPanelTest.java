@@ -196,7 +196,8 @@ class AivisSpeechRestApiJPanelTest {
 		(METHOD_SET_DEFAULT_CLOSE_OPERATION = clz.getDeclaredMethod("setDefaultCloseOperation", JFrame.class,
 				Integer.TYPE)).setAccessible(true);
 		//
-		(METHOD_SPEAKERS_HOST_AND_PORT = clz.getDeclaredMethod("speakers", HostAndPort.class)).setAccessible(true);
+		(METHOD_SPEAKERS_HOST_AND_PORT = clz.getDeclaredMethod("speakers", HostAndPort.class, ObjectMapper.class))
+				.setAccessible(true);
 		//
 		(METHOD_SPEAKERS_ITERABLE = clz.getDeclaredMethod("speakers", Iterable.class)).setAccessible(true);
 		//
@@ -219,8 +220,8 @@ class AivisSpeechRestApiJPanelTest {
 		(METHOD_ADD_ITEM_LISTENER = clz.getDeclaredMethod("addItemListener", ItemListener.class,
 				ItemSelectable[].class)).setAccessible(true);
 		//
-		(METHOD_SPEAKER_INFO_HOST_AND_PORT = clz.getDeclaredMethod("speakerInfo", HostAndPort.class, String.class))
-				.setAccessible(true);
+		(METHOD_SPEAKER_INFO_HOST_AND_PORT = clz.getDeclaredMethod("speakerInfo", HostAndPort.class, String.class,
+				ObjectMapper.class)).setAccessible(true);
 		//
 		(METHOD_SPEAKER_INFO_MAP = clz.getDeclaredMethod("speakerInfo", Map.class)).setAccessible(true);
 		//
@@ -231,7 +232,7 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_SET_STYLE_INFO = clz.getDeclaredMethod("setStyleInfo",
 				CLASS_SPEAKER = Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$Speaker"),
-				HostAndPort.class, DefaultComboBoxModel.class)).setAccessible(true);
+				HostAndPort.class, DefaultComboBoxModel.class, ObjectMapper.class)).setAccessible(true);
 		//
 		(METHOD_LINES = clz.getDeclaredMethod("lines", String.class)).setAccessible(true);
 		//
@@ -291,19 +292,22 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_IS_CLIENT_ERROR = clz.getDeclaredMethod("isClientError", HttpURLConnection.class)).setAccessible(true);
 		//
-		(METHOD_VERSION = clz.getDeclaredMethod("version", HostAndPort.class)).setAccessible(true);
+		(METHOD_VERSION = clz.getDeclaredMethod("version", HostAndPort.class, ObjectMapper.class)).setAccessible(true);
 		//
 		(METHOD_GET_MODEL = clz.getDeclaredMethod("getModel", JComboBox.class)).setAccessible(true);
 		//
-		(METHOD_CORE_VERSIONS = clz.getDeclaredMethod("coreVersions", HostAndPort.class)).setAccessible(true);
+		(METHOD_CORE_VERSIONS = clz.getDeclaredMethod("coreVersions", HostAndPort.class, ObjectMapper.class))
+				.setAccessible(true);
 		//
 		(METHOD_TO_ITERABLE = clz.getDeclaredMethod("toIterable", Object.class)).setAccessible(true);
 		//
-		(METHOD_SUPPORTED_DEVICES = clz.getDeclaredMethod("supportedDevices", HostAndPort.class)).setAccessible(true);
+		(METHOD_SUPPORTED_DEVICES = clz.getDeclaredMethod("supportedDevices", HostAndPort.class, ObjectMapper.class))
+				.setAccessible(true);
 		//
 		(METHOD_TO_MAP = clz.getDeclaredMethod("toMap", Object.class)).setAccessible(true);
 		//
-		(METHOD_ENGINE_MANIFEST = clz.getDeclaredMethod("engineManifest", HostAndPort.class)).setAccessible(true);
+		(METHOD_ENGINE_MANIFEST = clz.getDeclaredMethod("engineManifest", HostAndPort.class, ObjectMapper.class))
+				.setAccessible(true);
 		//
 		(METHOD_CREATE_JPANEL = clz.getDeclaredMethod("createJPanel", String.class, Map.class)).setAccessible(true);
 		//
@@ -1425,9 +1429,10 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testSpeakers() throws IllegalAccessException, InvocationTargetException, JsonProcessingException {
 		//
-		Assertions.assertNull(invoke(METHOD_SPEAKERS_HOST_AND_PORT, null, HostAndPort.fromHost(EMPTY)));
+		Assertions.assertNull(invoke(METHOD_SPEAKERS_HOST_AND_PORT, null, HostAndPort.fromHost(EMPTY), objectMapper));
 		//
-		Assertions.assertNull(invoke(METHOD_SPEAKERS_HOST_AND_PORT, null, HostAndPort.fromParts(EMPTY, 1)));
+		Assertions
+				.assertNull(invoke(METHOD_SPEAKERS_HOST_AND_PORT, null, HostAndPort.fromParts(EMPTY, 1), objectMapper));
 		//
 		Assertions.assertNull(invoke(METHOD_SPEAKERS_ITERABLE, null, Collections.singleton(null)));
 		//
@@ -1496,9 +1501,11 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testSpeakInfo() throws Throwable {
 		//
-		Assertions.assertNull(invoke(METHOD_SPEAKER_INFO_HOST_AND_PORT, null, HostAndPort.fromHost(EMPTY), null));
+		Assertions.assertNull(
+				invoke(METHOD_SPEAKER_INFO_HOST_AND_PORT, null, HostAndPort.fromHost(EMPTY), null, objectMapper));
 		//
-		Assertions.assertNull(invoke(METHOD_SPEAKER_INFO_HOST_AND_PORT, null, HostAndPort.fromParts(EMPTY, 1), null));
+		Assertions.assertNull(
+				invoke(METHOD_SPEAKER_INFO_HOST_AND_PORT, null, HostAndPort.fromParts(EMPTY, 1), null, objectMapper));
 		//
 		if (objectMapper != null) {
 			//
@@ -1561,7 +1568,7 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testSetStyleInfo() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(invoke(METHOD_SET_STYLE_INFO, null, speaker, null, null));
+		Assertions.assertNull(invoke(METHOD_SET_STYLE_INFO, null, speaker, null, null, objectMapper));
 		//
 	}
 
@@ -2320,15 +2327,15 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testVersion() throws Throwable {
 		//
-		Assertions.assertNull(version(HostAndPort.fromHost("")));
+		Assertions.assertNull(version(HostAndPort.fromHost(""), objectMapper));
 		//
-		Assertions.assertNull(version(HostAndPort.fromParts("", 0)));
+		Assertions.assertNull(version(HostAndPort.fromParts("", 0), objectMapper));
 		//
 	}
 
-	private static String version(final HostAndPort hostAndPort) throws Throwable {
+	private static String version(final HostAndPort hostAndPort, final ObjectMapper objectMapper) throws Throwable {
 		try {
-			final Object obj = invoke(METHOD_VERSION, null, hostAndPort);
+			final Object obj = invoke(METHOD_VERSION, null, hostAndPort, objectMapper);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
@@ -2350,15 +2357,16 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testCoreVersions() throws Throwable {
 		//
-		Assertions.assertNull(coreVersions(HostAndPort.fromHost("")));
+		Assertions.assertNull(coreVersions(HostAndPort.fromHost(""), objectMapper));
 		//
-		Assertions.assertNull(coreVersions(HostAndPort.fromParts("", 0)));
+		Assertions.assertNull(coreVersions(HostAndPort.fromParts("", 0), objectMapper));
 		//
 	}
 
-	private static Iterable<?> coreVersions(final HostAndPort hostAndPort) throws Throwable {
+	private static Iterable<?> coreVersions(final HostAndPort hostAndPort, final ObjectMapper objectMapper)
+			throws Throwable {
 		try {
-			final Object obj = invoke(METHOD_CORE_VERSIONS, null, hostAndPort);
+			final Object obj = invoke(METHOD_CORE_VERSIONS, null, hostAndPort, objectMapper);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Iterable) {
@@ -2415,15 +2423,16 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testSupportedDevices() throws Throwable {
 		//
-		Assertions.assertNull(supportedDevices(HostAndPort.fromHost("")));
+		Assertions.assertNull(supportedDevices(HostAndPort.fromHost(""), objectMapper));
 		//
-		Assertions.assertNull(supportedDevices(HostAndPort.fromParts("", 0)));
+		Assertions.assertNull(supportedDevices(HostAndPort.fromParts("", 0), objectMapper));
 		//
 	}
 
-	private static Map<?, ?> supportedDevices(final HostAndPort hostAndPort) throws Throwable {
+	private static Map<?, ?> supportedDevices(final HostAndPort hostAndPort, final ObjectMapper objectMapper)
+			throws Throwable {
 		try {
-			final Object obj = invoke(METHOD_SUPPORTED_DEVICES, null, hostAndPort);
+			final Object obj = invoke(METHOD_SUPPORTED_DEVICES, null, hostAndPort, objectMapper);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Map) {
@@ -2463,15 +2472,16 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testEngineManifest() throws Throwable {
 		//
-		Assertions.assertNull(engineManifest(HostAndPort.fromHost("")));
+		Assertions.assertNull(engineManifest(HostAndPort.fromHost(""), objectMapper));
 		//
-		Assertions.assertNull(engineManifest(HostAndPort.fromParts("", 0)));
+		Assertions.assertNull(engineManifest(HostAndPort.fromParts("", 0), objectMapper));
 		//
 	}
 
-	private static Map<?, ?> engineManifest(final HostAndPort hostAndPort) throws Throwable {
+	private static Map<?, ?> engineManifest(final HostAndPort hostAndPort, final ObjectMapper objectMapper)
+			throws Throwable {
 		try {
-			final Object obj = invoke(METHOD_ENGINE_MANIFEST, null, hostAndPort);
+			final Object obj = invoke(METHOD_ENGINE_MANIFEST, null, hostAndPort, objectMapper);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Map<?, ?>) {
