@@ -1772,7 +1772,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 
 	private static <T> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
 			@Nullable final Consumer<T> consumer) {
-		if (test(predicate, value) && consumer != null) {
+		if (Util.test(predicate, value) && consumer != null) {
 			consumer.accept(value);
 		}
 	}
@@ -2202,7 +2202,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 
 	private static <T> boolean testAndTest(final Predicate<T> predicateA, @Nullable final T value,
 			final Predicate<T> predicateB) {
-		return test(predicateA, value) && test(predicateB, value);
+		return Util.test(predicateA, value) && Util.test(predicateB, value);
 	}
 
 	@Nullable
@@ -2536,12 +2536,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
-		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
-	}
-
-	private static <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
-		return instance != null && instance.test(value);
 	}
 
 	@Nullable
