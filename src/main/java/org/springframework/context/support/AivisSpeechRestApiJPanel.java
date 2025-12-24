@@ -823,10 +823,10 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				final HostAndPort hostAndPort = createHostAndPort();
 				//
-				final ObjectMapper objectMapper = getObjectMapper();
+				final ObjectMapper om = getObjectMapper();
 				//
-				FailableStreamUtil.forEach(new FailableStream<>(Util.stream(speakers(hostAndPort, objectMapper))),
-						x -> setStyleInfo(x, hostAndPort, dcbmSpeaker, objectMapper));
+				FailableStreamUtil.forEach(new FailableStream<>(Util.stream(speakers(hostAndPort, om))),
+						x -> setStyleInfo(x, hostAndPort, dcbmSpeaker, om));
 				//
 				setVisible(btnInfo, true);
 				//
