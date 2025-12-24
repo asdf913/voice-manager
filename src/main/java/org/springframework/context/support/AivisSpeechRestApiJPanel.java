@@ -35,6 +35,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.NumberFormat;
@@ -1779,9 +1780,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		} else if (Objects.equals(source, instance.btnEngineManifest)) {
 			//
-			final File file = Util.toFile(Path.of("voicevox_engine_mainfest.html"));
-			//
-			try (final Writer writer = new FileWriter(file)) {
+			try (final Writer writer = Files.newBufferedWriter(Path.of("voicevox_engine_mainfest.html"))) {
 				//
 				final Configuration configuration = new Configuration(Configuration.getVersion());
 				//
