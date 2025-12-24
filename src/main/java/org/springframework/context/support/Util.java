@@ -2332,4 +2332,8 @@ public abstract class Util {
 		//
 	}
 
+	static byte[] getBytes(final String instance) {
+		return instance != null ? instance.getBytes() : null;
+	}
+
 }

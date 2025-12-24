@@ -143,7 +143,7 @@ class AivisSpeechRestApiJPanelTest {
 
 	private static Class<?> CLASS_STYLE, CLASS_STYLE_INFO, CLASS_SPEAKER = null;
 
-	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_CREATE_HOST_AND_PORT, METHOD_WRITE, METHOD_GET_BYTES,
+	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_CREATE_HOST_AND_PORT, METHOD_WRITE,
 			METHOD_REMOVE_ALL_ELEMENTS, METHOD_GET_SCREEN_SIZE, METHOD_GET_HOST, METHOD_TEST_AND_ACCEPT_PREDICATE,
 			METHOD_TEST_AND_ACCEPT_INT_PREDICATE, METHOD_TEST_AND_ACCEPT4, METHOD_SET_VISIBLE, METHOD_PACK, METHOD_ADD,
 			METHOD_SET_DEFAULT_CLOSE_OPERATION, METHOD_SPEAKERS_HOST_AND_PORT, METHOD_SPEAKERS_ITERABLE,
@@ -170,8 +170,6 @@ class AivisSpeechRestApiJPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_WRITE = clz.getDeclaredMethod("write", OutputStream.class, byte[].class)).setAccessible(true);
-		//
-		(METHOD_GET_BYTES = clz.getDeclaredMethod("getBytes", String.class)).setAccessible(true);
 		//
 		(METHOD_REMOVE_ALL_ELEMENTS = clz.getDeclaredMethod("removeAllElements", DefaultComboBoxModel.class))
 				.setAccessible(true);
@@ -1301,27 +1299,6 @@ class AivisSpeechRestApiJPanelTest {
 	}
 
 	@Test
-	void testGetBytes() throws Throwable {
-		//
-		Assertions.assertArrayEquals(new byte[] {}, getBytes(EMPTY));
-		//
-	}
-
-	private static byte[] getBytes(final String instance) throws Throwable {
-		try {
-			final Object obj = invoke(METHOD_GET_BYTES, null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof byte[]) {
-				return (byte[]) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testRemoveAllElements() throws IllegalAccessException, InvocationTargetException, NoSuchFieldException,
 			InstantiationException, NoSuchMethodException {
 		//
@@ -2239,7 +2216,7 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testIsSupportedAudioFormat() throws Throwable {
 		//
-		Assertions.assertEquals(Boolean.FALSE, invoke(METHOD_IS_SUPPORTED_AUDIO_FORMAT, null, getBytes(EMPTY)));
+		Assertions.assertEquals(Boolean.FALSE, invoke(METHOD_IS_SUPPORTED_AUDIO_FORMAT, null, Util.getBytes(EMPTY)));
 		//
 	}
 

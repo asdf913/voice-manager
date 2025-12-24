@@ -2461,7 +2461,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		try (final OutputStream os = getOutputStream(httpURLConnection)) {
 			//
-			write(os, getBytes(audioQuery));
+			write(os, Util.getBytes(audioQuery));
 			//
 		} // try
 			//
@@ -2597,7 +2597,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		try (final OutputStream os = getOutputStream(httpURLConnection)) {
 			//
-			write(os, getBytes(text));
+			write(os, Util.getBytes(text));
 			//
 		} // try
 			//
@@ -2649,11 +2649,6 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		return instance != null && StringUtils.isNotBlank(Util.getHost(instance.getURL())) ? instance.getOutputStream()
 				: null;
 		//
-	}
-
-	@Nullable
-	private static byte[] getBytes(@Nullable final String instance) {
-		return instance != null ? instance.getBytes() : null;
 	}
 
 	private static void removeAllElements(@Nullable final DefaultComboBoxModel<?> instance) {

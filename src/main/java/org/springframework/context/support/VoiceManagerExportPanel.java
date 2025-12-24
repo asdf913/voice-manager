@@ -1601,7 +1601,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 						//
 						targetExceptionRootCause.printStackTrace(ps);
 						//
-						final String hex = testAndApply(Objects::nonNull, getBytes(Util.toString(w)),
+						final String hex = testAndApply(Objects::nonNull, Util.getBytes(Util.toString(w)),
 								DigestUtils::sha512Hex, null);
 						//
 						if (!Util.contains(throwableStackTraceHexs, hex)) {
@@ -1818,11 +1818,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			return instance != null && instance.isArray();
 		}
 
-	}
-
-	@Nullable
-	private static byte[] getBytes(@Nullable final String instance) {
-		return instance != null ? instance.getBytes() : null;
 	}
 
 	@Nullable
@@ -4293,7 +4288,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				if (newOdfPresentationDocument != null) {
 					//
-					ZipUtil.replaceEntry(file, "content.xml", getBytes(string));
+					ZipUtil.replaceEntry(file, "content.xml", Util.getBytes(string));
 					//
 					if (embedAudioInPresentation) {
 						//
@@ -4431,9 +4426,8 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			final String key = Collections.min(Arrays.asList(
 					//
 					textContent,
-					testAndApply(Objects::nonNull,
-							Util.digest(ObjectMap.getObject(objectMap, MessageDigest.class), getBytes(textContent)),
-							Hex::encodeHexString, null)
+					testAndApply(Objects::nonNull, Util.digest(ObjectMap.getObject(objectMap, MessageDigest.class),
+							Util.getBytes(textContent)), Hex::encodeHexString, null)
 			//
 			), (a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b)));
 			//

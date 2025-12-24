@@ -2364,7 +2364,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 						//
 						targetExceptionRootCause.printStackTrace(ps);
 						//
-						final String hex = testAndApply(Objects::nonNull, getBytes(Util.toString(w)),
+						final String hex = testAndApply(Objects::nonNull, Util.getBytes(Util.toString(w)),
 								DigestUtils::sha512Hex, null);
 						//
 						if (!Util.contains(throwableStackTraceHexs, hex)) {
@@ -2393,11 +2393,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 			return null;
 			//
-		}
-
-		@Nullable
-		private static byte[] getBytes(@Nullable final String instance) {
-			return instance != null ? instance.getBytes() : null;
 		}
 
 		private static void printStackTrace(final Throwable throwable) {
