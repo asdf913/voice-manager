@@ -2332,7 +2332,7 @@ public abstract class Util {
 		//
 	}
 
-	static byte[] getBytes(final String instance) {
+	static byte[] getBytes(@Nullable final String instance) {
 		return instance != null ? instance.getBytes() : null;
 	}
 
