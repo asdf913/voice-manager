@@ -2498,7 +2498,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
-	private static <T> Optional<T> min(final Stream<T> instance, final Comparator<? super T> comparator) {
+	private static <T> Optional<T> min(@Nullable final Stream<T> instance,
+			@Nullable final Comparator<? super T> comparator) {
 		//
 		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || comparator != null)
 				? instance.min(comparator)
