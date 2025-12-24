@@ -269,7 +269,10 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	@Note("Play")
 	private AbstractButton btnPlay = null;
 
-	private AbstractButton btnInfo, btnEngineManifest = null;
+	@Note("Info")
+	private AbstractButton btnInfo = null;
+
+	private AbstractButton btnEngineManifest = null;
 
 	private JComboBox<Speaker> jcbSpeaker = null;
 
