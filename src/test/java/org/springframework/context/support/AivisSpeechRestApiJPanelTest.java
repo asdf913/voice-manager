@@ -466,14 +466,11 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return null;
 				//
-			} else if (Util.isAssignableFrom(CLASS_DOCUMENT_SUPPLIER, Util.getClass(proxy))) {
+			} else if (Util.isAssignableFrom(CLASS_DOCUMENT_SUPPLIER, Util.getClass(proxy))
+					&& Objects.equals(name, "get")) {
 				//
-				if (Objects.equals(name, "get")) {
-					//
-					return document;
-					//
-				} // if
-					//
+				return document;
+				//
 			} // if
 				//
 			throw new Throwable(name);
