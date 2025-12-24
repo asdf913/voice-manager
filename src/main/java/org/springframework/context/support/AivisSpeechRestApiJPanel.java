@@ -29,6 +29,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -43,10 +44,12 @@ import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Spliterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiFunction;
@@ -2433,6 +2436,20 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	private static String getFileExtension(@Nullable final ContentInfo contentInfo, final String urlString)
 			throws URISyntaxException, IOException {
 		//
+		return getFileExtension(contentInfo, () -> testAndApply(Objects::nonNull,
+				Util.toURL(testAndApply(Objects::nonNull, urlString, URI::new, null)), x -> Jsoup.parse(x, 0), null));
+		//
+	}
+
+	private static interface DocumentSupplier {
+
+		Document get() throws URISyntaxException, IOException;
+
+	}
+
+	private static String getFileExtension(final ContentInfo contentInfo, final DocumentSupplier documentSupplier)
+			throws URISyntaxException, IOException {
+		//
 		final ContentType contentType = getContentType(contentInfo);
 		//
 		final String[] fileExtensions = getFileExtensions(contentType);
@@ -2447,9 +2464,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				&& Objects.equals(getMimeType(contentInfo), "audio/mp4")
 				&& Objects.equals(contentInfo.getName(), "ISO")) {
 			//
-			final Document document = testAndApply(Objects::nonNull,
-					Util.toURL(testAndApply(Objects::nonNull, urlString, URI::new, null)), x -> Jsoup.parse(x, 0),
-					null);
+			final Document document = documentSupplier != null ? documentSupplier.get() : null;
 			//
 			final String messsage = contentInfo.getMessage();
 			//
@@ -2458,12 +2473,14 @@ public class AivisSpeechRestApiJPanel extends JPanel
 							x -> longestCommonSubstring(ElementUtil.text(x), messsage)),
 					(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null);
 			//
-			final String string = Util.orElse(Util
-					.map(Util.filter(Util.stream(ElementUtil.getElementsByTag(document, "td")),
-							x -> equals(Strings.CI, longestCommonSubstring,
-									longestCommonSubstring(ElementUtil.text(x), messsage))),
-							ElementUtil::text)
-					.min((a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null);
+			final String string = Util
+					.orElse(min(
+							Util.map(
+									Util.filter(Util.stream(ElementUtil.getElementsByTag(document, "td")),
+											x -> equals(Strings.CI, longestCommonSubstring,
+													longestCommonSubstring(ElementUtil.text(x), messsage))),
+									ElementUtil::text),
+							(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null);
 			//
 			final Matcher matcher = Util.matcher(PATTERN_FILE_EXTENSION = ObjectUtils.getIfNull(PATTERN_FILE_EXTENSION,
 					() -> Pattern.compile("\\(\\.([^\\.]+)\\)")), string);
@@ -2477,6 +2494,14 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		} // if
 			//
 		return null;
+		//
+	}
+
+	private static <T> Optional<T> min(final Stream<T> instance, final Comparator<? super T> comparator) {
+		//
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || comparator != null)
+				? instance.min(comparator)
+				: null;
 		//
 	}
 

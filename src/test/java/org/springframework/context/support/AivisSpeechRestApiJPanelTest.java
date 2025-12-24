@@ -32,6 +32,7 @@ import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -104,11 +105,12 @@ import org.htmlunit.http.HttpStatus;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.oxbow.swingbits.util.OperatingSystem;
 import org.oxbow.swingbits.util.OperatingSystemUtil;
@@ -142,7 +144,7 @@ class AivisSpeechRestApiJPanelTest {
 
 	private static final String EMPTY = "";
 
-	private static Class<?> CLASS_STYLE, CLASS_STYLE_INFO, CLASS_SPEAKER = null;
+	private static Class<?> CLASS_STYLE, CLASS_STYLE_INFO, CLASS_SPEAKER, CLASS_DOCUMENT_SUPPLIER = null;
 
 	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_CREATE_HOST_AND_PORT, METHOD_WRITE,
 			METHOD_REMOVE_ALL_ELEMENTS, METHOD_GET_SCREEN_SIZE, METHOD_GET_HOST, METHOD_TEST_AND_ACCEPT_PREDICATE,
@@ -153,11 +155,12 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_SPEAKER_INFO_MAP, METHOD_DECODE, METHOD_GET_STYLE_INFO_BY_ID, METHOD_SET_STYLE_INFO, METHOD_LINES,
 			METHOD_TO_JSON, METHOD_FROM_JSON, METHOD_CREATE, METHOD_EXEC, METHOD_GET_CODE_METHOD, METHOD_GET_CODE_CODE,
 			METHOD_TEST_AND_APPLY, METHOD_PLAY, METHOD_GET_FILE_EXTENSION_BYTE_ARRAY,
-			METHOD_GET_FILE_EXTENSION_CONTENT_INFO, METHOD_GET_CONTENT_TYPE_CONTENT_INFO, METHOD_GET_CONTENT_TYPE_FILE,
-			METHOD_IS_SUPPORTED_AUDIO_FORMAT, METHOD_TEST_AND_TEST, METHOD_SH_GET_KNOWN_FOLDER_PATH, METHOD_LIST_FILES,
-			METHOD_NEXT_ALPHA_NUMERIC, METHOD_GET_MESSAGE, METHOD_SET, METHOD_IS_CLIENT_ERROR, METHOD_VERSION,
-			METHOD_GET_MODEL, METHOD_CORE_VERSIONS, METHOD_TO_ITERABLE, METHOD_SUPPORTED_DEVICES, METHOD_TO_MAP,
-			METHOD_ENGINE_MANIFEST, METHOD_CREATE_JPANEL, METHOD_IS_IMAGE, METHOD_TO_BYTES = null;
+			METHOD_GET_FILE_EXTENSION_DOCUMENT_SUPPLIER, METHOD_GET_CONTENT_TYPE_CONTENT_INFO,
+			METHOD_GET_CONTENT_TYPE_FILE, METHOD_IS_SUPPORTED_AUDIO_FORMAT, METHOD_TEST_AND_TEST,
+			METHOD_SH_GET_KNOWN_FOLDER_PATH, METHOD_LIST_FILES, METHOD_NEXT_ALPHA_NUMERIC, METHOD_GET_MESSAGE,
+			METHOD_SET, METHOD_IS_CLIENT_ERROR, METHOD_VERSION, METHOD_GET_MODEL, METHOD_CORE_VERSIONS,
+			METHOD_TO_ITERABLE, METHOD_SUPPORTED_DEVICES, METHOD_TO_MAP, METHOD_ENGINE_MANIFEST, METHOD_CREATE_JPANEL,
+			METHOD_IS_IMAGE, METHOD_TO_BYTES, METHOD_MIN = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -262,7 +265,9 @@ class AivisSpeechRestApiJPanelTest {
 		(METHOD_GET_FILE_EXTENSION_BYTE_ARRAY = clz.getDeclaredMethod("getFileExtension", byte[].class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_FILE_EXTENSION_CONTENT_INFO = clz.getDeclaredMethod("getFileExtension", ContentInfo.class))
+		(METHOD_GET_FILE_EXTENSION_DOCUMENT_SUPPLIER = clz.getDeclaredMethod("getFileExtension", ContentInfo.class,
+				CLASS_DOCUMENT_SUPPLIER = Util
+						.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$DocumentSupplier")))
 				.setAccessible(true);
 		//
 		(METHOD_GET_CONTENT_TYPE_CONTENT_INFO = clz.getDeclaredMethod("getContentType", ContentInfo.class))
@@ -316,6 +321,8 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_TO_BYTES = clz.getDeclaredMethod("toBytes", String.class)).setAccessible(true);
 		//
+		(METHOD_MIN = clz.getDeclaredMethod("min", Stream.class, Comparator.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -325,6 +332,8 @@ class AivisSpeechRestApiJPanelTest {
 		private Long count = null;
 
 		private Integer write = null;
+
+		private Document document = null;
 
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -409,10 +418,18 @@ class AivisSpeechRestApiJPanelTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Stream && Objects.equals(name, "count")) {
+			} else if (proxy instanceof Stream) {
 				//
-				return count;
-				//
+				if (Objects.equals(name, "count")) {
+					//
+					return count;
+					//
+				} else if (Objects.equals(name, "min")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} else if (proxy instanceof SourceDataLine) {
 				//
 				if (Objects.equals(name, "open")) {
@@ -449,6 +466,14 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return null;
 				//
+			} else if (Util.isAssignableFrom(CLASS_DOCUMENT_SUPPLIER, Util.getClass(proxy))) {
+				//
+				if (Objects.equals(name, "get")) {
+					//
+					return document;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -2195,7 +2220,6 @@ class AivisSpeechRestApiJPanelTest {
 	}
 
 	@Test
-	@Disabled
 	void testGetFileExtension() throws Throwable {
 		//
 		// wav.wav
@@ -2211,23 +2235,30 @@ class AivisSpeechRestApiJPanelTest {
 			//
 		} // try
 			//
-		Assertions.assertNull(getFileExtension(new ContentInfo(ContentType.HTML)));
+		Assertions.assertNull(getFileExtension(new ContentInfo(ContentType.HTML), null));
 		//
 		final ContentInfo contentInfo = new ContentInfo(ContentType.OTHER);
 		//
-		Assertions.assertNull(getFileExtension(contentInfo));
+		Assertions.assertNull(getFileExtension(contentInfo, null));
 		//
 		FieldUtils.writeDeclaredField(contentInfo, "mimeType", "audio/mp4", true);
 		//
-		Assertions.assertNull(getFileExtension(contentInfo));
+		Assertions.assertNull(getFileExtension(contentInfo, null));
 		//
 		FieldUtils.writeDeclaredField(contentInfo, "name", "ISO", true);
 		//
-		Assertions.assertNull(getFileExtension(contentInfo));
+		Assertions.assertNull(getFileExtension(contentInfo, null));
 		//
 		FieldUtils.writeDeclaredField(contentInfo, "message", "ISO Media, MPEG v4 system, iTunes AAC-LC", true);
 		//
-		Assertions.assertNotNull(getFileExtension(contentInfo));
+		if (ih != null) {
+			//
+			ih.document = Jsoup.parse(
+					"<html><body><table><tr><td>Apple iTunes AAC-LC (.M4A) Audio</td></tr></table></body></html>");
+			//
+		} // if
+			//
+		Assertions.assertNotNull(getFileExtension(contentInfo, Reflection.newProxy(CLASS_DOCUMENT_SUPPLIER, ih)));
 		//
 	}
 
@@ -2249,9 +2280,10 @@ class AivisSpeechRestApiJPanelTest {
 		}
 	}
 
-	private static String getFileExtension(final ContentInfo contentInfo) throws Throwable {
+	private static String getFileExtension(final ContentInfo contentInfo, final Object documentSupplier)
+			throws Throwable {
 		try {
-			final Object obj = invoke(METHOD_GET_FILE_EXTENSION_CONTENT_INFO, null, contentInfo);
+			final Object obj = invoke(METHOD_GET_FILE_EXTENSION_DOCUMENT_SUPPLIER, null, contentInfo, documentSupplier);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
@@ -2562,6 +2594,13 @@ class AivisSpeechRestApiJPanelTest {
 		Assertions.assertNotNull(invoke(METHOD_TO_BYTES, null, ""));
 		//
 		Assertions.assertNull(invoke(METHOD_TO_BYTES, null, "一"));
+		//
+	}
+
+	@Test
+	void testMin() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_MIN, null, Stream.empty(), null));
 		//
 	}
 
