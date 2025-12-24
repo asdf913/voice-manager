@@ -38,7 +38,6 @@ import java.util.Objects;
 import java.util.Vector;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
@@ -95,6 +94,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableBiConsumer;
+import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -156,7 +156,7 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_IS_SUPPORTED_AUDIO_FORMAT, METHOD_TEST_AND_TEST, METHOD_SH_GET_KNOWN_FOLDER_PATH, METHOD_LIST_FILES,
 			METHOD_NEXT_ALPHA_NUMERIC, METHOD_GET_MESSAGE, METHOD_SET, METHOD_IS_CLIENT_ERROR, METHOD_VERSION,
 			METHOD_GET_MODEL, METHOD_CORE_VERSIONS, METHOD_TO_ITERABLE, METHOD_SUPPORTED_DEVICES, METHOD_TO_MAP,
-			METHOD_ENGINE_MANIFEST, METHOD_CREATE_JPANEL = null;
+			METHOD_ENGINE_MANIFEST, METHOD_CREATE_JPANEL, METHOD_IS_IMAGE, METHOD_TO_BYTES = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -179,7 +179,7 @@ class AivisSpeechRestApiJPanelTest {
 		(METHOD_GET_HOST = clz.getDeclaredMethod("getHost", HostAndPort.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT_PREDICATE = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
-				Consumer.class)).setAccessible(true);
+				FailableConsumer.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT_INT_PREDICATE = clz.getDeclaredMethod("testAndAccept", IntPredicate.class, Integer.TYPE,
 				IntConsumer.class)).setAccessible(true);
@@ -311,6 +311,10 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_CREATE_JPANEL = clz.getDeclaredMethod("createJPanel", String.class, Map.class)).setAccessible(true);
 		//
+		(METHOD_IS_IMAGE = clz.getDeclaredMethod("isImage", byte[].class)).setAccessible(true);
+		//
+		(METHOD_TO_BYTES = clz.getDeclaredMethod("toBytes", String.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -436,7 +440,7 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof Consumer && Objects.equals(name, "accept")) {
+			} else if (proxy instanceof FailableConsumer && Objects.equals(name, "accept")) {
 				//
 				return null;
 				//
@@ -1198,11 +1202,21 @@ class AivisSpeechRestApiJPanelTest {
 			//
 		} // if
 			//
+			// btnInfo
+			//
 		final Object btnInfo = new JButton();
 		//
 		FieldUtils.writeDeclaredField(instance, "btnInfo", btnInfo, true);
 		//
 		instance.actionPerformed(new ActionEvent(btnInfo, 0, null));
+		//
+		// btnEngineManifest
+		//
+		final Object btnEngineManifest = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnEngineManifest", btnEngineManifest, true);
+		//
+		instance.actionPerformed(new ActionEvent(btnEngineManifest, 0, null));
 		//
 	}
 
@@ -1394,7 +1408,7 @@ class AivisSpeechRestApiJPanelTest {
 		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT_PREDICATE, null, predicate, null, null));
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT_PREDICATE, null, predicate, null,
-				Reflection.newProxy(Consumer.class, ih)));
+				Reflection.newProxy(FailableConsumer.class, ih)));
 		//
 	}
 
@@ -2524,6 +2538,28 @@ class AivisSpeechRestApiJPanelTest {
 	void testCreateJPanel() throws Throwable {
 		//
 		Assertions.assertNotNull(invoke(METHOD_CREATE_JPANEL, null, null, Collections.singletonMap(null, null)));
+		//
+	}
+
+	@Test
+	void testIsImage() throws IOException, IllegalAccessException, InvocationTargetException {
+		//
+		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			ImageIO.write(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), "png", baos);
+			//
+			Assertions.assertEquals(Boolean.TRUE, invoke(METHOD_IS_IMAGE, null, baos.toByteArray()));
+			//
+		} // try
+			//
+	}
+
+	@Test
+	void testToBytes() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNotNull(invoke(METHOD_TO_BYTES, null, ""));
+		//
+		Assertions.assertNull(invoke(METHOD_TO_BYTES, null, "一"));
 		//
 	}
 

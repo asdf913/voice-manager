@@ -18,9 +18,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -49,7 +51,6 @@ import java.util.Spliterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
@@ -124,11 +125,14 @@ import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiConsumerUtil;
+import org.apache.commons.lang3.function.FailableConsumer;
+import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.ToBooleanBiFunction;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.text.WordUtils;
@@ -170,7 +174,14 @@ import com.sun.jna.platform.win32.Shell32;
 import com.sun.jna.platform.win32.COM.COMUtils;
 import com.sun.jna.ptr.PointerByReference;
 
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.template.Configuration;
+import freemarker.template.ConfigurationUtil;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateUtil;
 import io.github.toolfactory.narcissus.Narcissus;
+import j2html.tags.specialized.ImgTag;
 import net.miginfocom.swing.MigLayout;
 
 public class AivisSpeechRestApiJPanel extends JPanel
@@ -258,7 +269,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	@Note("Play")
 	private AbstractButton btnPlay = null;
 
-	private AbstractButton btnInfo = null;
+	private AbstractButton btnInfo, btnEngineManifest = null;
 
 	private JComboBox<Speaker> jcbSpeaker = null;
 
@@ -1743,8 +1754,17 @@ public class AivisSpeechRestApiJPanel extends JPanel
 						createJPanel("Supported Features",
 								testAndApply(Util::containsKey, engineManifest, "supported_features",
 										(a, b) -> toMap(Util.get(a, b)), null)),
-						x -> panel.add(x, String.format("%1$s,span %2$s", growx, 2)));
+						x -> panel.add(x, String.format("%1$s,span %2$s,%3$s", growx, 2, wrap)));
 				//
+				panel.add(instance.btnEngineManifest = ObjectUtils.getIfNull(instance.btnEngineManifest,
+						() -> new JButton("Engine Manifest")), String.format("span %1$s,align center", 3));
+				//
+				if (instance.btnEngineManifest != null) {
+					//
+					instance.btnEngineManifest.addActionListener(instance);
+					//
+				} // if
+					//
 			} catch (final IOException | URISyntaxException e) {
 				//
 				throw new RuntimeException(e);
@@ -1756,10 +1776,86 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			return true;
 			//
+		} else if (Objects.equals(source, instance.btnEngineManifest)) {
+			//
+			final File file = new File("voicevox_engine_mainfest.html");
+			//
+			try (final Writer writer = new FileWriter(file)) {
+				//
+				final Configuration configuration = new Configuration(Configuration.getVersion());
+				//
+				configuration.setTemplateLoader(new ClassTemplateLoader(AivisSpeechRestApiJPanel.class, "/"));
+				//
+				final Map<?, ?> engineManifest = engineManifest(instance.createHostAndPort(),
+						instance.getObjectMapper());
+				//
+				if (Util.iterator(Util.entrySet(engineManifest)) != null) {
+					//
+					byte[] bs = null;
+					//
+					for (final Entry<?, ?> entry : Util.entrySet(engineManifest)) {
+						//
+						if (Util.getValue(entry) instanceof CharSequence cs && (bs = toBytes(Util.toString(cs))) != null
+								&& isImage(bs)) {
+							//
+							MethodUtils.invokeMethod(entry, "setValue",
+									new ImgTag().attr("src", String.format("data:%1$s;base64,%2$s",
+											getMimeType(new ContentInfoUtil().findMatch(bs)), Util.getValue(entry))));
+							//
+						} // if
+							//
+					} // for
+						//
+				} // if
+					//
+				testAndAccept(Objects::nonNull, engineManifest, x -> MethodUtils.invokeMethod(x, "put", "statics",
+						new BeansWrapper(Configuration.getVersion()).getStaticModels()));
+				//
+				TemplateUtil.process(ConfigurationUtil.getTemplate(configuration, "voicevox_engine_mainfest.ftl"),
+						engineManifest, writer);
+				//
+			} catch (final IOException | URISyntaxException | TemplateException | ReflectiveOperationException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
 		} // if
 			//
 		return false;
 		//
+	}
+
+	private static String getMimeType(final ContentInfo instance) {
+		return instance != null ? instance.getMimeType() : null;
+	}
+
+	private static boolean isImage(final byte[] bs) {
+		//
+		try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
+			//
+			return ImageIO.read(is) != null;
+			//
+		} catch (final Exception e) {
+			//
+			return false;
+			//
+		} // try
+			//
+	}
+
+	private static byte[] toBytes(final String string) {
+		//
+		try {
+			//
+			return decode(Base64.getDecoder(), string);
+			//
+		} catch (final Exception e) {
+			//
+			return null;
+			//
+		} // try
+			//
 	}
 
 	@Nullable
@@ -1791,10 +1887,10 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
-	private static <T> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
-			@Nullable final Consumer<T> consumer) {
-		if (Util.test(predicate, value) && consumer != null) {
-			consumer.accept(value);
+	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
+			@Nullable final FailableConsumer<T, E> consumer) throws E {
+		if (Util.test(predicate, value)) {
+			FailableConsumerUtil.accept(consumer, value);
 		}
 	}
 
@@ -2328,7 +2424,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		} // if
 			//
 		if (contentInfo != null && Objects.equals(contentType, ContentType.OTHER)
-				&& Objects.equals(contentInfo.getMimeType(), "audio/mp4")
+				&& Objects.equals(getMimeType(contentInfo), "audio/mp4")
 				&& Objects.equals(contentInfo.getName(), "ISO")) {
 			//
 			final Document document = testAndApply(Objects::nonNull,
