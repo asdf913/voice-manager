@@ -1842,6 +1842,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static byte[] toBytes(final String string) {
 		//
 		try {
