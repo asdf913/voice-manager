@@ -734,7 +734,10 @@ class AivisSpeechRestApiJPanelTest {
 			invoke = isStatic ? Narcissus.invokeStaticMethod(m, arguments)
 					: Narcissus.invokeMethod(instance, m, arguments);
 			//
-			if (IterableUtils.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE, Long.TYPE), getReturnType(m))) {
+			if (Boolean.logicalOr(
+					IterableUtils.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE, Long.TYPE), getReturnType(m)),
+					Boolean.logicalAnd(Objects.equals(Util.getName(m), "getObjectMapper"),
+							m.getParameterCount() == 0))) {
 				//
 				Assertions.assertNotNull(invoke, toString);
 				//
@@ -911,10 +914,10 @@ class AivisSpeechRestApiJPanelTest {
 			invoke = isStatic ? Narcissus.invokeStaticMethod(m, arguments)
 					: Narcissus.invokeMethod(instance, m, arguments);
 			//
-			if (Boolean.logicalOr(
-					IterableUtils.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE, Long.TYPE), getReturnType(m)),
-					Boolean.logicalAnd(Objects.equals(Util.getName(m), "speakerInfo"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Map.class })))) {
+			if (or(IterableUtils.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE, Long.TYPE), getReturnType(m)),
+					Boolean.logicalAnd(Objects.equals(name, "speakerInfo"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Map.class })),
+					Boolean.logicalAnd(Objects.equals(name, "getObjectMapper"), m.getParameterCount() == 0))) {
 				//
 				Assertions.assertNotNull(invoke, toString);
 				//
@@ -926,6 +929,30 @@ class AivisSpeechRestApiJPanelTest {
 				//
 		} // for
 			//
+	}
+
+	private static boolean or(final boolean a, final boolean b, @Nullable final boolean... bs) {
+		//
+		boolean result = a || b;
+		//
+		if (result) {
+			//
+			return result;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (result |= bs[i]) {
+				//
+				return result;
+				//
+			} // if
+				//
+		} // for
+			//
+		return result;
+		//
 	}
 
 	private static boolean isInterface(final Class<?> instance) {

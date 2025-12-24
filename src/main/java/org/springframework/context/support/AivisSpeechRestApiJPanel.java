@@ -281,6 +281,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 
 	private Window window = null;
 
+	private ObjectMapper objectMapper = null;
+
 	private AivisSpeechRestApiJPanel() {
 	}
 
@@ -821,7 +823,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				final HostAndPort hostAndPort = createHostAndPort();
 				//
-				final ObjectMapper objectMapper = new ObjectMapper();
+				final ObjectMapper objectMapper = getObjectMapper();
 				//
 				FailableStreamUtil.forEach(new FailableStream<>(Util.stream(speakers(hostAndPort, objectMapper))),
 						x -> setStyleInfo(x, hostAndPort, dcbmSpeaker, objectMapper));
@@ -867,6 +869,18 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 		} // for
 			//
+	}
+
+	private ObjectMapper getObjectMapper() {
+		//
+		if (objectMapper == null) {
+			//
+			objectMapper = new ObjectMapper();
+			//
+		} // if
+			//
+		return objectMapper;
+		//
 	}
 
 	private static void testAndRun(final boolean condition, final Runnable a, final Runnable b) {
@@ -1517,7 +1531,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 					//
 				} // try
 					//
-				setContents(getSystemClipboard(Toolkit.getDefaultToolkit(), new ObjectMapper()),
+				setContents(getSystemClipboard(Toolkit.getDefaultToolkit(), instance.getObjectMapper()),
 						Reflection.newProxy(Transferable.class, ih), null);
 				//
 			} // if
@@ -1586,7 +1600,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 					//
 				} // try
 					//
-				setContents(getSystemClipboard(Toolkit.getDefaultToolkit(), new ObjectMapper()),
+				setContents(getSystemClipboard(Toolkit.getDefaultToolkit(), instance.getObjectMapper()),
 						Reflection.newProxy(Transferable.class, ih), null);
 				//
 			} // if
@@ -1648,7 +1662,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			panel.setLayout(new MigLayout());
 			//
-			final ObjectMapper objectMapper = new ObjectMapper();
+			final ObjectMapper objectMapper = instance.getObjectMapper();
 			//
 			try {
 				//
