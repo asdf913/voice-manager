@@ -273,7 +273,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		final JComboBox<Entry<String, Object>> jcbPDRectangle = new JComboBox<>(
 				cbmPDRectangle = new DefaultComboBoxModel<>());
 		//
-		final ListCellRenderer<?> lcr = jcbPDRectangle.getRenderer();
+		final ListCellRenderer<?> lcr1 = jcbPDRectangle.getRenderer();
 		//
 		jcbPDRectangle.setRenderer(new ListCellRenderer() {
 
@@ -281,7 +281,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			public Component getListCellRendererComponent(final JList list, final Object value, final int index,
 					final boolean isSelected, final boolean cellHasFocus) {
 				//
-				return Util.getListCellRendererComponent((ListCellRenderer) lcr, list,
+				return Util.getListCellRendererComponent((ListCellRenderer) lcr1, list,
 						Util.getKey(Util.cast(Entry.class, value)), index, isSelected, cellHasFocus);
 				//
 			}
@@ -362,11 +362,10 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
 				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
 			//
-			testAndAccept(Objects::nonNull,
-					ConverterUtil.convert(voiceIdListCellRendererConverter,
-							Util.getRenderer(Util.cast(JComboBox.class,
-									jcbVoiceId = new JComboBox<>(Util.cast(ComboBoxModel.class, cbmVoiceId))))),
-					x -> jcbVoiceId.setRenderer(x));
+			final ListCellRenderer lcr2 = ConverterUtil.convert(voiceIdListCellRendererConverter, Util.getRenderer(Util
+					.cast(JComboBox.class, jcbVoiceId = new JComboBox<>(Util.cast(ComboBoxModel.class, cbmVoiceId)))));
+			//
+			testAndAccept(Objects::nonNull, lcr2, x -> jcbVoiceId.setRenderer(x));
 			//
 			jcbVoiceId.addItemListener(this);
 			//
