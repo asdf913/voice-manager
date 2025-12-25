@@ -273,10 +273,10 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 			} // if
 				//
-			testAndAccept((a, b) -> a != null && b != null, jcbVoiceId,
-					ConverterUtil.convert(voiceIdListCellRendererConverter,
-							Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceId))),
-					(a, b) -> setRenderer(a, b));
+			final ListCellRenderer<?> lcr1 = ConverterUtil.convert(voiceIdListCellRendererConverter,
+					Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceId)));
+			//
+			testAndAccept((a, b) -> a != null && b != null, jcbVoiceId, lcr1, (a, b) -> setRenderer(a, b));
 			//
 			final String wrap = "wrap";
 			//
@@ -290,7 +290,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			final JComboBox<Entry<String, Object>> jcbPDRectangle = new JComboBox<>(
 					cbmPDRectangle = new DefaultComboBoxModel<>());
 			//
-			final ListCellRenderer<?> lcr = jcbPDRectangle.getRenderer();
+			final ListCellRenderer<?> lcr2 = jcbPDRectangle.getRenderer();
 			//
 			jcbPDRectangle.setRenderer(new ListCellRenderer() {
 
@@ -298,7 +298,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				public Component getListCellRendererComponent(final JList list, final Object value, final int index,
 						final boolean isSelected, final boolean cellHasFocus) {
 					//
-					return Util.getListCellRendererComponent((ListCellRenderer) lcr, list,
+					return Util.getListCellRendererComponent((ListCellRenderer) lcr2, list,
 							Util.getKey(Util.cast(Entry.class, value)), index, isSelected, cellHasFocus);
 					//
 				}
