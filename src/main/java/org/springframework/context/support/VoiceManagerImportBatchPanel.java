@@ -565,8 +565,10 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			(jcbVoiceId = new JComboBox(cbmVoiceId)).addItemListener(this);
 			//
-			testAndAccept((a, b) -> b != null, jcbVoiceId, ConverterUtil.convert(voiceIdListCellRendererConverter,
-					Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceId))), (a, b) -> setRenderer(a, b));
+			final ListCellRenderer lcr = ConverterUtil.convert(voiceIdListCellRendererConverter,
+					Util.cast(ListCellRenderer.class, Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceId))));
+			//
+			testAndAccept((a, b) -> b != null, jcbVoiceId, lcr, (a, b) -> setRenderer(a, b));
 			//
 			final JPanel jPanel = new JPanel();
 			//
@@ -2749,10 +2751,10 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 				(jcbVoiceIdLocal = new JComboBox<>(cbmVoiceIdLocal)).addItemListener(this);
 				//
-				testAndAccept((a, b) -> b != null, jcbVoiceIdLocal,
-						ConverterUtil.convert(voiceIdListCellRendererConverter,
-								Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceIdLocal))),
-						(a, b) -> setRenderer(a, b));
+				final ListCellRenderer lcr = ConverterUtil.convert(voiceIdListCellRendererConverter,
+						Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceIdLocal)));
+				//
+				testAndAccept((a, b) -> b != null, jcbVoiceIdLocal, lcr, (a, b) -> setRenderer(a, b));
 				//
 			} // if
 				//
