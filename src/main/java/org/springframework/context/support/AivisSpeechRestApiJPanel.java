@@ -3126,7 +3126,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 	}
 
-	private static void setIcon(@Nullable final JLabel instance, final Icon icon) {
+	private static void setIcon(@Nullable final JLabel instance, @Nullable final Icon icon) {
 		if (instance != null) {
 			instance.setIcon(icon);
 		}
