@@ -514,10 +514,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		try (final InputStream is = Util
 				.getInputStream(Util.openConnection(Util.toURL(testAndApply(Objects::nonNull, url, URI::new, null))))) {
 			//
-			final String string = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8),
-					null);
-			//
-			final Matcher matcher = Util.matcher(Pattern.compile("\\|\\s([a-z]+)\\s+\\|\\sH"), string);
+			final Matcher matcher = Util.matcher(Pattern.compile("\\|\\s([a-z]+)\\s+\\|\\sH"),
+					testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null));
 			//
 			while (find(matcher)) {
 				//
