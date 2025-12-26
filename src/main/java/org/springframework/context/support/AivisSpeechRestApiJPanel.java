@@ -2999,6 +2999,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			removeAllElements(dcbmStyle);
 			//
+			setIcon(jLabelPortrait, null);
+			//
 			final Speaker speaker = Util.cast(Speaker.class, Util.getSelectedItem(jcbSpeaker));
 			//
 			if (speaker != null) {
@@ -3051,6 +3053,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		} // if
 			//
 		if (Objects.equals(source, instance.jcbStyle)) {
+			//
+			setIcon(instance.jLabelIcon, null);
 			//
 			final Style style = Util.cast(Style.class, Util.getSelectedItem(instance.jcbStyle));
 			//
