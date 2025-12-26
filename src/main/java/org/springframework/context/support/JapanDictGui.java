@@ -23,7 +23,6 @@ import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.function.FailableSupplierUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -110,7 +109,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 			//
 			if (!IterableUtils.isEmpty(ss)) {
 				//
-				Util.setText(tfHiragana, StringUtils.join(ss, ""));
+				Util.setText(tfHiragana, String.join("", ss));
 				//
 			} else if (Util.matches(Util.matcher(patten, text))) {
 				//
