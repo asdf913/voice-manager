@@ -165,7 +165,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		}
 	}
 
-	private static void pack(final Window instance) {
+	private static void pack(@Nullable final Window instance) {
 		//
 		if (instance == null) {
 			//
@@ -194,7 +194,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 			//
 	}
 
-	private static void add(final Container instance, final Component component) {
+	private static void add(@Nullable final Container instance, final Component component) {
 		//
 		if (instance == null) {
 			//
