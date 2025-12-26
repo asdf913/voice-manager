@@ -524,6 +524,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static Collection<String> getSchemes(final String string) {
 		//
 		Collection<String> collection = null;
