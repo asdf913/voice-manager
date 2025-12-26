@@ -51,7 +51,6 @@ import java.util.stream.Stream;
 import javax.swing.AbstractButton;
 import javax.swing.CellEditor;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -149,12 +148,11 @@ class VoiceManagerOjadAccentPanelTest {
 	private static Class<?> CLASS_TEXT_AND_IMAGE, CLASS_IMAGE_DIMENSION_POSITION = null;
 
 	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL_PAGE,
-			METHOD_QUERY_SELECTOR_ALL_ELEMENT_HANDLE, METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK,
-			METHOD_GET_KANJI, METHOD_GET_HEIGHT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_LENGTH_OBJECT_ARRAY,
-			METHOD_LENGTH_DOUBLE_ARRAY, METHOD_TO_TEXT_AND_IMAGES, METHOD_TO_TEXT_AND_IMAGES1,
-			METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY, METHOD_TO_BYTE_ARRAY, METHOD_GET_IF_NULL,
-			METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER, METHOD_SAVE_IMAGE,
-			METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS,
+			METHOD_QUERY_SELECTOR_ALL_ELEMENT_HANDLE, METHOD_QUERY_SELECTOR, METHOD_PACK, METHOD_GET_KANJI,
+			METHOD_GET_HEIGHT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_LENGTH_OBJECT_ARRAY, METHOD_LENGTH_DOUBLE_ARRAY,
+			METHOD_TO_TEXT_AND_IMAGES, METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY,
+			METHOD_TO_BYTE_ARRAY, METHOD_GET_IF_NULL, METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER,
+			METHOD_SAVE_IMAGE, METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS,
 			METHOD_GET_PROPERTY, METHOD_GET_ATTRIBUTE, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES, METHOD_MATCHES,
 			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT_INT_PREDICATE,
 			METHOD_TEST_AND_ACCEPT_PREDICATE3, METHOD_TEST_AND_ACCEPT_PREDICATE5, METHOD_GET_MOST_OCCURENCE_COLOR,
@@ -191,8 +189,6 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_QUERY_SELECTOR = clz.getDeclaredMethod("querySelector", ElementHandle.class, String.class))
 				.setAccessible(true);
-		//
-		(METHOD_SET_ICON = clz.getDeclaredMethod("setIcon", JLabel.class, Icon.class)).setAccessible(true);
 		//
 		(METHOD_PACK = clz.getDeclaredMethod("pack", Window.class)).setAccessible(true);
 		//
@@ -1047,22 +1043,6 @@ class VoiceManagerOjadAccentPanelTest {
 				return (ElementHandle) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetIcon() {
-		//
-		Assertions.assertDoesNotThrow(
-				() -> setIcon(Util.cast(JLabel.class, Narcissus.allocateInstance(JLabel.class)), null));
-		//
-	}
-
-	private static void setIcon(final JLabel instance, final Icon icon) throws Throwable {
-		try {
-			METHOD_SET_ICON.invoke(null, instance, icon);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

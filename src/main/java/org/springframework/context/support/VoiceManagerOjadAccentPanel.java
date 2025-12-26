@@ -83,7 +83,6 @@ import javax.swing.BorderFactory;
 import javax.swing.CellEditor;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -992,7 +991,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			if (preferredSize != null) {
 				//
-				setIcon(jLabel, testAndApply(Objects::nonNull,
+				Util.setIcon(jLabel, testAndApply(Objects::nonNull,
 						Util.getScaledInstance(Util.getValue(value), Math.min((int) preferredSize.getWidth(), 17),
 								Math.min((int) preferredSize.getHeight(), 17), Image.SCALE_DEFAULT),
 						ImageIcon::new, null));
@@ -1465,7 +1464,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.accept(image -> {
 				//
-				setIcon(lblAccent, testAndApply(Objects::nonNull, image, ImageIcon::new, x -> new ImageIcon()));
+				Util.setIcon(lblAccent, testAndApply(Objects::nonNull, image, ImageIcon::new, x -> new ImageIcon()));
 				//
 				Util.forEach(Stream.of(btnCopyAccentImage, btnSaveAccentImage), x -> Util.setEnabled(x, image != null));
 				//
@@ -1475,7 +1474,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.accept(image -> {
 				//
-				setIcon(lblCurve, testAndApply(Objects::nonNull, image, ImageIcon::new, x -> new ImageIcon()));
+				Util.setIcon(lblCurve, testAndApply(Objects::nonNull, image, ImageIcon::new, x -> new ImageIcon()));
 				//
 				Util.forEach(Stream.of(btnCopyCurveImage, btnSaveCurveImage), x -> Util.setEnabled(x, image != null));
 				//
@@ -4077,23 +4076,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Nullable
 	private static ElementHandle querySelector(@Nullable final ElementHandle instance, final String selector) {
 		return instance != null ? instance.querySelector(selector) : null;
-	}
-
-	private static void setIcon(@Nullable final JLabel instance, final Icon icon) {
-		//
-		if (instance == null) {
-			//
-			return;
-			//
-		} // if
-			//
-		final Field f = getFieldByName(Util.getClass(instance), "objectLock");
-		//
-		if (f == null || Narcissus.getField(instance, f) != null) {
-			//
-			instance.setIcon(icon);
-		} // if
-			//
 	}
 
 	public static void main(final String[] args) throws Exception {

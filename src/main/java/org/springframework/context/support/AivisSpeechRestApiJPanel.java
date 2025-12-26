@@ -3,7 +3,6 @@ package org.springframework.context.support;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.net.URL;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.ItemSelectable;
@@ -34,6 +33,7 @@ import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -79,7 +79,6 @@ import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -3043,7 +3042,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			removeAllElements(dcbmStyle);
 			//
-			setIcon(jLabelPortrait, null);
+			Util.setIcon(jLabelPortrait, null);
 			//
 			final Speaker speaker = Util.cast(Speaker.class, Util.getSelectedItem(jcbSpeaker));
 			//
@@ -3067,7 +3066,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 						//
 					} // try
 						//
-					setIcon(jLabelPortrait, testAndApply(Objects::nonNull, image, ImageIcon::new,
+					Util.setIcon(jLabelPortrait, testAndApply(Objects::nonNull, image, ImageIcon::new,
 							x -> testAndApply(Objects::nonNull, portrait, ImageIcon::new, null)));
 					//
 				} // if
@@ -3098,7 +3097,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		if (Objects.equals(source, instance.jcbStyle)) {
 			//
-			setIcon(instance.jLabelIcon, null);
+			Util.setIcon(instance.jLabelIcon, null);
 			//
 			final Style style = Util.cast(Style.class, Util.getSelectedItem(instance.jcbStyle));
 			//
@@ -3119,7 +3118,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 					//
 				} // try
 					//
-				setIcon(instance.jLabelIcon, testAndApply(Objects::nonNull, image, ImageIcon::new,
+				Util.setIcon(instance.jLabelIcon, testAndApply(Objects::nonNull, image, ImageIcon::new,
 						x -> testAndApply(Objects::nonNull, icon, ImageIcon::new, null)));
 				//
 				removeAllElements(instance.dcbmVoiceSampleTranscript);
@@ -3136,12 +3135,6 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 		} // if
 			//
-	}
-
-	private static void setIcon(@Nullable final JLabel instance, @Nullable final Icon icon) {
-		if (instance != null) {
-			instance.setIcon(icon);
-		}
 	}
 
 }

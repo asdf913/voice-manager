@@ -32,7 +32,6 @@ import java.util.function.Supplier;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -94,10 +93,10 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private static Method METHOD_GET_FIELD_BY_NAME, METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE,
 			METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL,
-			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_OR, METHOD_SET_ICON, METHOD_TEST_AND_APPLY,
-			METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY, METHOD_TO_DATA,
-			METHOD_GET_LAYOUT_MANAGER, METHOD_SET_PREFERRED_SIZE, METHOD_WRITE_VOICE_TO_FILE, METHOD_FOR_EACH_REMAINING,
-			METHOD_GET_HEIGHT, METHOD_GET_SELECTED_INDEX, METHOD_IS_ALL_FIELDS_NULL_OR_BLANK = null;
+			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_OR, METHOD_TEST_AND_APPLY, METHOD_TEST_AND_GET,
+			METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY, METHOD_TO_DATA, METHOD_GET_LAYOUT_MANAGER,
+			METHOD_SET_PREFERRED_SIZE, METHOD_WRITE_VOICE_TO_FILE, METHOD_FOR_EACH_REMAINING, METHOD_GET_HEIGHT,
+			METHOD_GET_SELECTED_INDEX, METHOD_IS_ALL_FIELDS_NULL_OR_BLANK = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -129,8 +128,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				BiConsumer.class)).setAccessible(true);
 		//
 		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
-		//
-		(METHOD_SET_ICON = clz.getDeclaredMethod("setIcon", JLabel.class, Icon.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", BiPredicate.class, Object.class, Object.class,
 				BiFunction.class, BiFunction.class)).setAccessible(true);
@@ -799,22 +796,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			final BiConsumer<T, U> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT4.invoke(null, predicate, t, u, consumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetIcon() {
-		//
-		Assertions.assertDoesNotThrow(
-				() -> setIcon(Util.cast(JLabel.class, Narcissus.allocateInstance(JLabel.class)), null));
-		//
-	}
-
-	private static void setIcon(final JLabel instance, final Icon icon) throws Throwable {
-		try {
-			METHOD_SET_ICON.invoke(null, instance, icon);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

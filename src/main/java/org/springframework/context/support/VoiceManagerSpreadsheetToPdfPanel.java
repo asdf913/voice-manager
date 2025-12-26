@@ -56,7 +56,6 @@ import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -550,7 +549,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		testAndRunThrows(Boolean.logicalAnd(Objects.equals(Util.getText(tfException), MESSAGE_PLEASE_SELECT_A_SHEET),
 				getSelectedIndex(jcbSheet) > 0), () -> Util.setText(tfException, null));
 		//
-		setIcon(lblThumbnail, new ImageIcon());
+		Util.setIcon(lblThumbnail, new ImageIcon());
 		//
 		for (int i = Util.getRowCount(tableModel); i >= 0; i--) {
 			//
@@ -602,7 +601,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 				if (ratioMin != 0) {
 					//
-					setIcon(lblThumbnail,
+					Util.setIcon(lblThumbnail,
 							testAndApply(Objects::nonNull,
 									Util.getScaledInstance(bufferedImage,
 											Math.max((int) (getWidth(bufferedImage) / ratioMin), 1),
@@ -677,7 +676,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 		Util.forEach(Stream.of(tfFile, tfException), x -> Util.setText(x, null));
 		//
-		setIcon(lblThumbnail, new ImageIcon());
+		Util.setIcon(lblThumbnail, new ImageIcon());
 		//
 		lastImageHeight = null;
 		//
@@ -930,29 +929,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		return Pair.of(IValue0Util.getValue0(method), list);
 		//
-	}
-
-	private static void setIcon(final JLabel instance, final Icon icon) {
-		//
-		final Iterable<Field> fs = Util.toList(Util.filter(
-				Util.stream(
-						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
-				x -> Objects.equals(Util.getName(x), "objectLock")));
-		//
-		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
-			//
-			throw new IllegalStateException();
-			//
-		});
-		//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-		//
-		if (f != null && Narcissus.getField(instance, f) != null) {
-			//
-			instance.setIcon(icon);
-			//
-		} // if
-			//
 	}
 
 	private static <T> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
