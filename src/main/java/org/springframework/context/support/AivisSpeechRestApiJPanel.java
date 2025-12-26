@@ -493,7 +493,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
-	private static <E> E[] toArray(final Collection<E> instance, final IntFunction<E[]> intFunction) {
+	private static <E> E[] toArray(@Nullable final Collection<E> instance,
+			@Nullable final IntFunction<E[]> intFunction) {
 		return instance != null && intFunction != null ? instance.toArray(intFunction) : null;
 
 	}
