@@ -736,7 +736,9 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		testAndAccept(Util::containsKey, properties, "text",
 				(a, b) -> Util.setText(instance.tfText, Util.toString(Util.get(a, b))));
 		//
-		final JFrame jFrame = Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), isTestMode()) ? new JFrame() : null;
+		final JFrame jFrame = Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(),
+				!isTestMode()) ? new JFrame()
+				: null;
 		//
 		instance.window = jFrame;
 		//
@@ -1360,7 +1362,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			jPanel.add(new JScrollPane(jTextArea),
 					String.format("wmax %1$s", screenSize != null ? screenSize.getWidth() - 30 : "100%"));
 			//
-			testAndRun(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), isTestMode()),
+			testAndRun(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 					() -> JOptionPane.showMessageDialog(null, jPanel, "Audio Query", JOptionPane.PLAIN_MESSAGE));
 			//
 			return true;
@@ -1460,7 +1462,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			final Speaker speaker = Util.cast(Speaker.class, Util.getSelectedItem(instance.jcbSpeaker));
 			//
 			if (Util.and(speaker != null && speaker.speakerInfo != null, !GraphicsEnvironment.isHeadless(),
-					isTestMode())) {
+					!isTestMode())) {
 				//
 				JOptionPane.showMessageDialog(null,
 						testAndApply(Objects::nonNull, speaker.speakerInfo.portrait, ImageIcon::new, null), null,
@@ -1474,7 +1476,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			final Style style = Util.cast(Style.class, Util.getSelectedItem(instance.jcbStyle));
 			//
-			if (Util.and(style != null && style.styleInfo != null, !GraphicsEnvironment.isHeadless(), isTestMode())) {
+			if (Util.and(style != null && style.styleInfo != null, !GraphicsEnvironment.isHeadless(),!isTestMode())) {
 				//
 				JOptionPane.showMessageDialog(null,
 						testAndApply(Objects::nonNull, style.styleInfo.icon, ImageIcon::new, null), null,
@@ -1839,7 +1841,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 			} // try
 				//
-			testAndRun(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), isTestMode()),
+			testAndRun(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 					() -> JOptionPane.showMessageDialog(null, panel, "Info", JOptionPane.PLAIN_MESSAGE));
 			//
 			return true;
