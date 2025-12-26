@@ -136,7 +136,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 	}
 
 	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
-			final Function<T, R> functionFalse) {
+			@Nullable final Function<T, R> functionFalse) {
 		return Util.test(predicate, value) ? Util.apply(functionTrue, value) : Util.apply(functionFalse, value);
 	}
 
