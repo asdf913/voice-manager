@@ -6,6 +6,10 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.util.Objects;
 import java.util.function.Function;
@@ -40,7 +44,16 @@ public class JapanDictGui extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = -4598144203806679104L;
 
-	private JTextComponent tfText, tfHiragana = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("Text")
+	private JTextComponent tfText = null;
+
+	private JTextComponent tfHiragana = null;
 
 	private AbstractButton btnExecute = null;
 
