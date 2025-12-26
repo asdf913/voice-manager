@@ -364,14 +364,11 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return Integer.valueOf(0);
 				//
-			} else if (proxy instanceof Iterable) {
+			} else if (proxy instanceof Iterable
+					&& IterableUtils.contains(Arrays.asList("iterator", "spliterator"), name)) {
 				//
-				if (IterableUtils.contains(Arrays.asList("iterator", "spliterator"), name)) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			if (proxy instanceof Predicate) {
@@ -479,14 +476,10 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return document;
 				//
-			} else if (proxy instanceof Collection) {
+			} else if (proxy instanceof Collection && Objects.equals(name, "toArray")) {
 				//
-				if (Objects.equals(name, "toArray")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
