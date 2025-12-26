@@ -515,8 +515,10 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		try (final InputStream is = Util.getInputStream(Util.openConnection(url))) {
 			//
-			return getSchemes(
-					testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null));
+			final String string = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8),
+					null);
+			//
+			return getSchemes(string);
 			//
 		} // try
 			//
