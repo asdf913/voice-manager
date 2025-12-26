@@ -732,6 +732,38 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		final Map<Object, Object> properties = System.getProperties();
 		//
+		testAndAccept(Util::containsKey, properties, "scheme", (a, b) -> {
+			//
+			int[] ints = null;
+			//
+			final DefaultComboBoxModel<?> dcbm = instance.dcbmScheme;
+			//
+			for (int i = 0; i < Util.getSize(dcbm); i++) {
+				//
+				if (Objects.equals(Util.get(a, b), Util.getElementAt(dcbm, i))) {
+					//
+					ints = ArrayUtils.add(ints, i);
+					//
+				} // if
+					//
+			} // for
+				//
+			if (ints != null) {
+				//
+				if (ints.length > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} else if (ints.length == 1) {
+					//
+					Util.setSelectedItem(dcbm, Util.getElementAt(dcbm, ints[0]));
+					//
+				} // if
+					//
+			} // if
+				//
+		});
+		//
 		testAndAccept(Util::containsKey, properties, "host",
 				(a, b) -> Util.setText(instance.tfHost, Util.toString(Util.get(a, b))));
 		//
