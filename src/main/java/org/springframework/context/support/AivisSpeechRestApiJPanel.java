@@ -55,6 +55,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.IntConsumer;
+import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -132,6 +133,8 @@ import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.function.FailableSupplier;
+import org.apache.commons.lang3.function.FailableSupplierUtil;
 import org.apache.commons.lang3.function.ToBooleanBiFunction;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -288,7 +291,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 
 	private JComboBox<String> jcbVoiceSampleTranscript = null;
 
-	private DefaultComboBoxModel<String> dcbmVoiceSampleTranscript = null;
+	private DefaultComboBoxModel<String> dcbmScheme, dcbmVoiceSampleTranscript = null;
 
 	private String audioQuery = null;
 
@@ -346,9 +349,19 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		add(new JLabel("Host"));
 		//
-		add(tfHost = new JTextField(), String.format("wmin %1$spx", 100));
+		final JPanel panel = new JPanel();
 		//
-		add(new JLabel(":"));
+		panel.setLayout(new MigLayout());
+		//
+		panel.add(
+				new JComboBox<>(dcbmScheme = testAndApply(Objects::nonNull,
+						toArray(testAndGet(!isTestMode(),
+								() -> getSchemes("https://www.rfc-editor.org/rfc/rfc9110.txt")), String[]::new),
+						DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>())));
+		//
+		panel.add(tfHost = new JTextField(), String.format("wmin %1$spx", 100));
+		//
+		panel.add(new JLabel(":"));
 		//
 		final NumberFormat numberFormat = NumberFormat.getIntegerInstance();
 		//
@@ -372,13 +385,15 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		} // if
 			//
-		add(tfPort = new JFormattedTextField(numberFormatter), String.format("wmin %1$spx,span %2$s", 42, 3));
+		panel.add(tfPort = new JFormattedTextField(numberFormatter), String.format("wmin %1$spx", 42));
+		//
+		add(panel, String.format("span %1$s", 3));
 		//
 		// Info
 		//
 		final String wrap = "wrap";
 		//
-		add(btnInfo = new JButton("Info"), String.format("%1$s,span %2$s", wrap, 2));
+		add(btnInfo = new JButton("Info"), String.format("%1$s,span %2$s", wrap, 3));
 		//
 		setVisible(btnInfo, false);
 		//
@@ -403,9 +418,9 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		});
 		//
-		add(jcbSpeaker, String.format("span %1$s", 3));
+		add(jcbSpeaker, String.format("span %1$s", 2));
 		//
-		add(jLabelPortrait = new JLabel(), String.format("span %1$s", 2));
+		add(jLabelPortrait = new JLabel());
 		//
 		add(btnViewPortrait = new JButton("View"));
 		//
@@ -430,9 +445,9 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		});
 		//
-		add(jcbStyle, String.format("span %1$s", 3));
+		add(jcbStyle, String.format("span %1$s", 2));
 		//
-		add(jLabelIcon = new JLabel(), String.format("span %1$s", 2));
+		add(jLabelIcon = new JLabel());
 		//
 		add(btnViewIcon = new JButton("View"));
 		//
@@ -440,20 +455,20 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		add(btnSaveIcon = new JButton("Save"), wrap);
 		//
-		add(new JLabel("Voice Sample Transcript"), String.format("span %1$s", 4));
+		add(new JLabel("Voice Sample Transcript"), String.format("span %1$s", 3));
 		//
 		add(jcbVoiceSampleTranscript = new JComboBox<>(dcbmVoiceSampleTranscript = new DefaultComboBoxModel<>()),
-				String.format("span %1$s", 3));
+				String.format("span %1$s", 1));
 		//
 		add(btnCopyVoiceSampleTranscriptToText = new JButton("Copy"));
 		//
-		add(btnPlayVoiceSampleTranscript = new JButton("Play"), String.format("%1$s,span %2$s", wrap, 3));
+		add(btnPlayVoiceSampleTranscript = new JButton("Play"), String.format("%1$s,span %2$s", wrap, 2));
 		//
 		add(new JLabel("Text"));
 		//
-		add(tfText = new JTextField(), String.format("growx,span %1$s", 6));
+		add(tfText = new JTextField(), String.format("growx,span %1$s", 3));
 		//
-		add(btnAudioQuery = new JButton("Audio Query"), String.format("span %1$s", 3));
+		add(btnAudioQuery = new JButton("Audio Query"), String.format("span %1$s", 2));
 		//
 		add(btnViewAudioQuery = new JButton("View"), String.format("%1$s,span %2$s", wrap, 2));
 		//
@@ -461,7 +476,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		add(btnSynthesis = new JButton("Synthesis"));
 		//
-		add(btnPlay = new JButton("Play"), String.format("span %1$s", 5));
+		add(btnPlay = new JButton("Play"));
 		//
 		addItemListener(this, jcbSpeaker, jcbStyle, jcbVoiceSampleTranscript);
 		//
@@ -472,6 +487,44 @@ public class AivisSpeechRestApiJPanel extends JPanel
 						x -> Util.cast(AbstractButton.class, Narcissus.getField(this, x)))));
 		//
 		setEnabled(false, btnPlayVoiceSampleTranscript, btnAudioQuery, btnSynthesis, btnPlay);
+		//
+	}
+
+	private static <E> E[] toArray(final Collection<E> instance, final IntFunction<E[]> intFunction) {
+		return instance != null && intFunction != null ? instance.toArray(intFunction) : null;
+
+	}
+
+	private static <T, E extends Exception> T testAndGet(final boolean condition, final FailableSupplier<T, E> supplier)
+			throws E {
+		return condition ? FailableSupplierUtil.get(supplier) : null;
+	}
+
+	private static Collection<String> getSchemes(final String url) throws URISyntaxException, IOException {
+		//
+		Collection<String> collection = null;
+		//
+		try (final InputStream is = Util
+				.getInputStream(Util.openConnection(Util.toURL(testAndApply(Objects::nonNull, url, URI::new, null))))) {
+			//
+			final String string = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8),
+					null);
+			//
+			final Matcher matcher = Util.matcher(Pattern.compile("\\|\\s([a-z]+)\\s+\\|\\sH"), string);
+			//
+			while (find(matcher)) {
+				//
+				if (Util.groupCount(matcher) > 0) {
+					//
+					Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), Util.group(matcher, 1));
+					//
+				} // if
+					//
+			} // while
+				//
+		} // try
+			//
+		return collection;
 		//
 	}
 
@@ -699,7 +752,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 
 	private static boolean isTestMode() {
 		//
-		return Util.forName("org.junit.jupiter.api.Test") == null;
+		return Util.forName("org.junit.jupiter.api.Test") != null;
 		//
 	}
 
@@ -839,12 +892,14 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			try {
 				//
+				final String scheme = Util.toString(Util.getSelectedItem(dcbmScheme));
+				//
 				final HostAndPort hostAndPort = createHostAndPort();
 				//
 				final ObjectMapper om = getObjectMapper();
 				//
-				FailableStreamUtil.forEach(new FailableStream<>(Util.stream(speakers("http", hostAndPort, om))),
-						x -> setStyleInfo(x, hostAndPort, dcbmSpeaker, om));
+				FailableStreamUtil.forEach(new FailableStream<>(Util.stream(speakers(scheme, hostAndPort, om))),
+						x -> setStyleInfo(x, scheme, hostAndPort, dcbmSpeaker, om));
 				//
 				setVisible(btnInfo, true);
 				//
@@ -1062,9 +1117,9 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 	}
 
-	private static void setStyleInfo(@Nullable final Speaker speaker, final HostAndPort hostAndPort,
-			final DefaultComboBoxModel<Speaker> dcbmSpeaker, final ObjectMapper objectMapper)
-			throws IOException, URISyntaxException {
+	private static void setStyleInfo(@Nullable final Speaker speaker, final String scheme,
+			final HostAndPort hostAndPort, final DefaultComboBoxModel<Speaker> dcbmSpeaker,
+			final ObjectMapper objectMapper) throws IOException, URISyntaxException {
 		//
 		if (speaker == null) {
 			//
@@ -1072,7 +1127,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		} // if
 			//
-		final SpeakerInfo speakerInfo = speaker.speakerInfo = speakerInfo("http", hostAndPort, speaker.speakerUuid,
+		final SpeakerInfo speakerInfo = speaker.speakerInfo = speakerInfo(scheme, hostAndPort, speaker.speakerUuid,
 				objectMapper);
 		//
 		if (speakerInfo != null) {
@@ -1243,7 +1298,9 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				setEnabled(
 						Boolean.logicalAnd(Util.getSize(instance.dcbmStyle) > 0,
-								(instance.audioQuery = audioQuery("http", instance.createHostAndPort(),
+								(instance.audioQuery = audioQuery(
+										Util.toString(Util.getSelectedItem(instance.dcbmScheme)),
+										instance.createHostAndPort(),
 										Util.cast(Style.class, Util.getSelectedItem(instance.dcbmStyle)),
 										Util.getText(instance.tfText))) != null),
 						instance.btnSynthesis, instance.btnPlay);
@@ -1260,8 +1317,9 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			try {
 				//
-				final byte[] bs = synthesis("http", instance.createHostAndPort(),
-						Util.cast(Style.class, Util.getSelectedItem(instance.dcbmStyle)), instance.audioQuery);
+				final byte[] bs = synthesis(Util.toString(Util.getSelectedItem(instance.dcbmScheme)),
+						instance.createHostAndPort(), Util.cast(Style.class, Util.getSelectedItem(instance.dcbmStyle)),
+						instance.audioQuery);
 				//
 				if (length(bs) > 0) {
 					//
@@ -1506,7 +1564,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			try {
 				//
-				play(synthesis("http", instance.createHostAndPort(),
+				play(synthesis(Util.toString(Util.getSelectedItem(instance.dcbmScheme)), instance.createHostAndPort(),
 						Util.cast(Style.class, Util.getSelectedItem(instance.dcbmStyle)), instance.audioQuery));
 				//
 			} catch (final Exception e) {
@@ -1685,7 +1743,9 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			try {
 				//
-				final Map<?, ?> engineManifest = engineManifest("http", hostAndPort, objectMapper);
+				final String scheme = Util.toString(Util.getSelectedItem(instance.dcbmScheme));
+				//
+				final Map<?, ?> engineManifest = engineManifest(scheme, hostAndPort, objectMapper);
 				//
 				final String wrap = "wrap";
 				//
@@ -1730,13 +1790,13 @@ public class AivisSpeechRestApiJPanel extends JPanel
 					//
 				panel.add(new JLabel("Version"));
 				//
-				(tf = new JTextField(version("http", hostAndPort, objectMapper))).setEditable(false);
+				(tf = new JTextField(version(scheme, hostAndPort, objectMapper))).setEditable(false);
 				//
 				panel.add(tf, StringUtils.joinWith(",", growx, wrap));
 				//
 				panel.add(new JLabel("Core Version"));
 				//
-				final Iterable<?> iterable = coreVersions("http", hostAndPort, objectMapper);
+				final Iterable<?> iterable = coreVersions(scheme, hostAndPort, objectMapper);
 				//
 				testAndAccept(Objects::nonNull, testAndApply(Objects::nonNull,
 						iterable != null ? Iterables.toArray(iterable, Object.class) : null, JComboBox::new, null),
@@ -1755,7 +1815,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				});
 				//
 				testAndAccept(Objects::nonNull,
-						createJPanel("Supported Devices", supportedDevices("http", hostAndPort, objectMapper)),
+						createJPanel("Supported Devices", supportedDevices(scheme, hostAndPort, objectMapper)),
 						x -> panel.add(x, String.format("%1$s,span %2$s", growx, 2)));
 				//
 				testAndAccept(Objects::nonNull,
@@ -1806,7 +1866,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				configuration.setTemplateLoader(new ClassTemplateLoader(AivisSpeechRestApiJPanel.class, "/"));
 				//
-				final Map<?, ?> engineManifest = engineManifest("http", instance.createHostAndPort(),
+				final Map<?, ?> engineManifest = engineManifest(
+						Util.toString(Util.getSelectedItem(instance.dcbmScheme)), instance.createHostAndPort(),
 						instance.getObjectMapper());
 				//
 				if (Util.iterator(Util.entrySet(engineManifest)) != null) {

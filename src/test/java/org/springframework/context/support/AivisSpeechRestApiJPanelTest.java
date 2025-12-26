@@ -40,6 +40,7 @@ import java.util.Vector;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.IntConsumer;
+import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -97,6 +98,7 @@ import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -160,7 +162,7 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_SH_GET_KNOWN_FOLDER_PATH, METHOD_LIST_FILES, METHOD_NEXT_ALPHA_NUMERIC, METHOD_GET_MESSAGE,
 			METHOD_SET, METHOD_IS_CLIENT_ERROR, METHOD_VERSION, METHOD_GET_MODEL, METHOD_CORE_VERSIONS,
 			METHOD_TO_ITERABLE, METHOD_SUPPORTED_DEVICES, METHOD_TO_MAP, METHOD_ENGINE_MANIFEST, METHOD_CREATE_JPANEL,
-			METHOD_IS_IMAGE, METHOD_TO_BYTES, METHOD_MIN = null;
+			METHOD_IS_IMAGE, METHOD_TO_BYTES, METHOD_MIN, METHOD_TO_ARRAY, METHOD_TEST_AND_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -236,7 +238,7 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_SET_STYLE_INFO = clz.getDeclaredMethod("setStyleInfo",
 				CLASS_SPEAKER = Util.forName("org.springframework.context.support.AivisSpeechRestApiJPanel$Speaker"),
-				HostAndPort.class, DefaultComboBoxModel.class, ObjectMapper.class)).setAccessible(true);
+				String.class, HostAndPort.class, DefaultComboBoxModel.class, ObjectMapper.class)).setAccessible(true);
 		//
 		(METHOD_LINES = clz.getDeclaredMethod("lines", String.class)).setAccessible(true);
 		//
@@ -324,6 +326,11 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_MIN = clz.getDeclaredMethod("min", Stream.class, Comparator.class)).setAccessible(true);
 		//
+		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class, IntFunction.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_GET = clz.getDeclaredMethod("testAndGet", Boolean.TYPE, FailableSupplier.class))
+				.setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -357,6 +364,14 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return Integer.valueOf(0);
 				//
+			} else if (proxy instanceof Iterable) {
+				//
+				if (IterableUtils.contains(Arrays.asList("iterator", "spliterator"), name)) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			if (proxy instanceof Predicate) {
@@ -394,14 +409,6 @@ class AivisSpeechRestApiJPanelTest {
 			} else if (proxy instanceof FailableFunction) {
 				//
 				if (Objects.equals(name, "apply")) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Iterable) {
-				//
-				if (IterableUtils.contains(Arrays.asList("iterator", "spliterator"), name)) {
 					//
 					return null;
 					//
@@ -472,6 +479,14 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				return document;
 				//
+			} else if (proxy instanceof Collection) {
+				//
+				if (Objects.equals(name, "toArray")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -1634,7 +1649,7 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testSetStyleInfo() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(invoke(METHOD_SET_STYLE_INFO, null, speaker, null, null, objectMapper));
+		Assertions.assertNull(invoke(METHOD_SET_STYLE_INFO, null, speaker, null, null, null, objectMapper));
 		//
 	}
 
@@ -2601,6 +2616,20 @@ class AivisSpeechRestApiJPanelTest {
 	void testMin() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_MIN, null, Stream.empty(), null));
+		//
+	}
+
+	@Test
+	void testToArray() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_TO_ARRAY, null, Collections.emptyList(), null));
+		//
+	}
+
+	@Test
+	void testTestAndGet() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_GET, null, Boolean.TRUE, null));
 		//
 	}
 
