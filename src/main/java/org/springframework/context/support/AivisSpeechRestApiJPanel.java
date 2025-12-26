@@ -843,7 +843,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				final ObjectMapper om = getObjectMapper();
 				//
-				FailableStreamUtil.forEach(new FailableStream<>(Util.stream(speakers(hostAndPort, om))),
+				FailableStreamUtil.forEach(new FailableStream<>(Util.stream(speakers("http", hostAndPort, om))),
 						x -> setStyleInfo(x, hostAndPort, dcbmSpeaker, om));
 				//
 				setVisible(btnInfo, true);
@@ -922,12 +922,12 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	}
 
 	@Nullable
-	private static Map<?, ?> engineManifest(@Nullable final HostAndPort hostAndPort, final ObjectMapper objectMapper)
-			throws IOException, URISyntaxException {
+	private static Map<?, ?> engineManifest(final String scheme, @Nullable final HostAndPort hostAndPort,
+			final ObjectMapper objectMapper) throws IOException, URISyntaxException {
 		//
 		final URIBuilder uriBuilder = new URIBuilder();
 		//
-		uriBuilder.setScheme("http");
+		uriBuilder.setScheme(scheme);
 		//
 		uriBuilder.setHost(getHost(hostAndPort));
 		//
@@ -948,12 +948,12 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	}
 
 	@Nullable
-	private static Map<?, ?> supportedDevices(@Nullable final HostAndPort hostAndPort, final ObjectMapper objectMapper)
-			throws IOException, URISyntaxException {
+	private static Map<?, ?> supportedDevices(final String scheme, @Nullable final HostAndPort hostAndPort,
+			final ObjectMapper objectMapper) throws IOException, URISyntaxException {
 		//
 		final URIBuilder uriBuilder = new URIBuilder();
 		//
-		uriBuilder.setScheme("http");
+		uriBuilder.setScheme(scheme);
 		//
 		uriBuilder.setHost(getHost(hostAndPort));
 		//
@@ -991,12 +991,12 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	}
 
 	@Nullable
-	private static Iterable<?> coreVersions(@Nullable final HostAndPort hostAndPort, final ObjectMapper objectMapper)
-			throws IOException, URISyntaxException {
+	private static Iterable<?> coreVersions(final String scheme, @Nullable final HostAndPort hostAndPort,
+			final ObjectMapper objectMapper) throws IOException, URISyntaxException {
 		//
 		final URIBuilder uriBuilder = new URIBuilder();
 		//
-		uriBuilder.setScheme("http");
+		uriBuilder.setScheme(scheme);
 		//
 		uriBuilder.setHost(getHost(hostAndPort));
 		//
@@ -1037,12 +1037,12 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
-	private static String version(@Nullable final HostAndPort hostAndPort, final ObjectMapper objectMapper)
-			throws IOException, URISyntaxException {
+	private static String version(final String scheme, @Nullable final HostAndPort hostAndPort,
+			final ObjectMapper objectMapper) throws IOException, URISyntaxException {
 		//
 		final URIBuilder uriBuilder = new URIBuilder();
 		//
-		uriBuilder.setScheme("http");
+		uriBuilder.setScheme(scheme);
 		//
 		uriBuilder.setHost(getHost(hostAndPort));
 		//
@@ -1072,7 +1072,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		} // if
 			//
-		final SpeakerInfo speakerInfo = speaker.speakerInfo = speakerInfo(hostAndPort, speaker.speakerUuid,
+		final SpeakerInfo speakerInfo = speaker.speakerInfo = speakerInfo("http", hostAndPort, speaker.speakerUuid,
 				objectMapper);
 		//
 		if (speakerInfo != null) {
@@ -1130,14 +1130,14 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	}
 
 	@Nullable
-	private static SpeakerInfo speakerInfo(@Nullable final HostAndPort hostAndPort, final String speakerUuid,
-			final ObjectMapper objectMapper) throws IOException, URISyntaxException {
+	private static SpeakerInfo speakerInfo(final String scheme, @Nullable final HostAndPort hostAndPort,
+			final String speakerUuid, final ObjectMapper objectMapper) throws IOException, URISyntaxException {
 		//
 		SpeakerInfo speakerInfo = null;
 		//
 		final URIBuilder uriBuilder = new URIBuilder();
 		//
-		uriBuilder.setScheme("http");
+		uriBuilder.setScheme(scheme);
 		//
 		uriBuilder.setHost(getHost(hostAndPort));
 		//
@@ -1243,7 +1243,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				setEnabled(
 						Boolean.logicalAnd(Util.getSize(instance.dcbmStyle) > 0,
-								(instance.audioQuery = audioQuery(instance.createHostAndPort(),
+								(instance.audioQuery = audioQuery("http", instance.createHostAndPort(),
 										Util.cast(Style.class, Util.getSelectedItem(instance.dcbmStyle)),
 										Util.getText(instance.tfText))) != null),
 						instance.btnSynthesis, instance.btnPlay);
@@ -1260,7 +1260,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			try {
 				//
-				final byte[] bs = synthesis(instance.createHostAndPort(),
+				final byte[] bs = synthesis("http", instance.createHostAndPort(),
 						Util.cast(Style.class, Util.getSelectedItem(instance.dcbmStyle)), instance.audioQuery);
 				//
 				if (length(bs) > 0) {
@@ -1506,7 +1506,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			try {
 				//
-				play(synthesis(instance.createHostAndPort(),
+				play(synthesis("http", instance.createHostAndPort(),
 						Util.cast(Style.class, Util.getSelectedItem(instance.dcbmStyle)), instance.audioQuery));
 				//
 			} catch (final Exception e) {
@@ -1685,7 +1685,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			try {
 				//
-				final Map<?, ?> engineManifest = engineManifest(hostAndPort, objectMapper);
+				final Map<?, ?> engineManifest = engineManifest("http", hostAndPort, objectMapper);
 				//
 				final String wrap = "wrap";
 				//
@@ -1730,13 +1730,13 @@ public class AivisSpeechRestApiJPanel extends JPanel
 					//
 				panel.add(new JLabel("Version"));
 				//
-				(tf = new JTextField(version(hostAndPort, objectMapper))).setEditable(false);
+				(tf = new JTextField(version("http", hostAndPort, objectMapper))).setEditable(false);
 				//
 				panel.add(tf, StringUtils.joinWith(",", growx, wrap));
 				//
 				panel.add(new JLabel("Core Version"));
 				//
-				final Iterable<?> iterable = coreVersions(hostAndPort, objectMapper);
+				final Iterable<?> iterable = coreVersions("http", hostAndPort, objectMapper);
 				//
 				testAndAccept(Objects::nonNull, testAndApply(Objects::nonNull,
 						iterable != null ? Iterables.toArray(iterable, Object.class) : null, JComboBox::new, null),
@@ -1755,7 +1755,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				});
 				//
 				testAndAccept(Objects::nonNull,
-						createJPanel("Supported Devices", supportedDevices(hostAndPort, objectMapper)),
+						createJPanel("Supported Devices", supportedDevices("http", hostAndPort, objectMapper)),
 						x -> panel.add(x, String.format("%1$s,span %2$s", growx, 2)));
 				//
 				testAndAccept(Objects::nonNull,
@@ -1806,7 +1806,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				configuration.setTemplateLoader(new ClassTemplateLoader(AivisSpeechRestApiJPanel.class, "/"));
 				//
-				final Map<?, ?> engineManifest = engineManifest(instance.createHostAndPort(),
+				final Map<?, ?> engineManifest = engineManifest("http", instance.createHostAndPort(),
 						instance.getObjectMapper());
 				//
 				if (Util.iterator(Util.entrySet(engineManifest)) != null) {
@@ -2589,12 +2589,12 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
-	private static byte[] synthesis(@Nullable final HostAndPort hostAndPort, @Nullable final Style style,
-			final String audioQuery) throws IOException, URISyntaxException {
+	private static byte[] synthesis(final String scheme, @Nullable final HostAndPort hostAndPort,
+			@Nullable final Style style, final String audioQuery) throws IOException, URISyntaxException {
 		//
 		final URIBuilder uriBuilder = new URIBuilder();
 		//
-		uriBuilder.setScheme("http");
+		uriBuilder.setScheme(scheme);
 		//
 		uriBuilder.setHost(getHost(hostAndPort));
 		//
@@ -2715,12 +2715,12 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		return instance != null ? instance.apply(t, u) : null;
 	}
 
-	private static String audioQuery(@Nullable final HostAndPort hostAndPort, @Nullable final Style style,
-			final String text) throws IOException, URISyntaxException {
+	private static String audioQuery(final String scheme, @Nullable final HostAndPort hostAndPort,
+			@Nullable final Style style, final String text) throws IOException, URISyntaxException {
 		//
 		final URIBuilder uriBuilder = new URIBuilder();
 		//
-		uriBuilder.setScheme("http");
+		uriBuilder.setScheme(scheme);
 		//
 		uriBuilder.setHost(getHost(hostAndPort));
 		//
@@ -2838,14 +2838,14 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	}
 
 	@Nullable
-	private static List<Speaker> speakers(@Nullable final HostAndPort hostAndPort, final ObjectMapper objectMapper)
-			throws IOException, URISyntaxException {
+	private static List<Speaker> speakers(final String scheme, @Nullable final HostAndPort hostAndPort,
+			final ObjectMapper objectMapper) throws IOException, URISyntaxException {
 		//
 		List<Speaker> list = null;
 		//
 		final URIBuilder uriBuilder = new URIBuilder();
 		//
-		uriBuilder.setScheme("http");
+		uriBuilder.setScheme(scheme);
 		//
 		uriBuilder.setHost(getHost(hostAndPort));
 		//

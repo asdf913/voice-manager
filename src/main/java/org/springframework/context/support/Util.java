@@ -2274,7 +2274,7 @@ public abstract class Util {
 
 	@Nullable
 	static URL toURL(@Nullable final URI instance) throws MalformedURLException {
-		return instance != null ? instance.toURL() : null;
+		return instance != null && instance.isAbsolute() ? instance.toURL() : null;
 	}
 
 	static void setSelectedIndex(final JComboBox<?> instance, final int index) {
