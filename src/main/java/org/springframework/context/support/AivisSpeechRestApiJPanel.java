@@ -499,11 +499,13 @@ public class AivisSpeechRestApiJPanel extends JPanel
 
 	}
 
+	@Nullable
 	private static <T, E extends Exception> T testAndGet(final boolean condition, final FailableSupplier<T, E> supplier)
 			throws E {
 		return condition ? FailableSupplierUtil.get(supplier) : null;
 	}
 
+	@Nullable
 	private static Collection<String> getSchemes(final String url) throws URISyntaxException, IOException {
 		//
 		Collection<String> collection = null;
