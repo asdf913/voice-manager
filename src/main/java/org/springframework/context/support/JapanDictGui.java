@@ -17,6 +17,7 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -228,6 +229,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		}
 	}
 
+	@Nullable
 	private static <T, E extends Throwable> T testAndGet(final boolean condition, final FailableSupplier<T, E> supplier)
 			throws E {
 		return condition ? FailableSupplierUtil.get(supplier) : null;
