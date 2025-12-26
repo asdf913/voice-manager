@@ -291,7 +291,10 @@ public class AivisSpeechRestApiJPanel extends JPanel
 
 	private JComboBox<String> jcbVoiceSampleTranscript = null;
 
-	private DefaultComboBoxModel<String> dcbmScheme, dcbmVoiceSampleTranscript = null;
+	@Note("Scheme")
+	private DefaultComboBoxModel<String> dcbmScheme = null;
+
+	private DefaultComboBoxModel<String> dcbmVoiceSampleTranscript = null;
 
 	private String audioQuery = null;
 
@@ -736,8 +739,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		testAndAccept(Util::containsKey, properties, "text",
 				(a, b) -> Util.setText(instance.tfText, Util.toString(Util.get(a, b))));
 		//
-		final JFrame jFrame = Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(),
-				!isTestMode()) ? new JFrame()
+		final JFrame jFrame = Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()) ? new JFrame()
 				: null;
 		//
 		instance.window = jFrame;
@@ -1476,7 +1478,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			final Style style = Util.cast(Style.class, Util.getSelectedItem(instance.jcbStyle));
 			//
-			if (Util.and(style != null && style.styleInfo != null, !GraphicsEnvironment.isHeadless(),!isTestMode())) {
+			if (Util.and(style != null && style.styleInfo != null, !GraphicsEnvironment.isHeadless(), !isTestMode())) {
 				//
 				JOptionPane.showMessageDialog(null,
 						testAndApply(Objects::nonNull, style.styleInfo.icon, ImageIcon::new, null), null,
