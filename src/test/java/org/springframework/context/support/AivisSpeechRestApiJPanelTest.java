@@ -162,7 +162,8 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_SH_GET_KNOWN_FOLDER_PATH, METHOD_LIST_FILES, METHOD_NEXT_ALPHA_NUMERIC, METHOD_GET_MESSAGE,
 			METHOD_SET, METHOD_IS_CLIENT_ERROR, METHOD_VERSION, METHOD_GET_MODEL, METHOD_CORE_VERSIONS,
 			METHOD_TO_ITERABLE, METHOD_SUPPORTED_DEVICES, METHOD_TO_MAP, METHOD_ENGINE_MANIFEST, METHOD_CREATE_JPANEL,
-			METHOD_IS_IMAGE, METHOD_TO_BYTES, METHOD_MIN, METHOD_TO_ARRAY, METHOD_TEST_AND_GET = null;
+			METHOD_IS_IMAGE, METHOD_TO_BYTES, METHOD_MIN, METHOD_TO_ARRAY, METHOD_TEST_AND_GET,
+			METHOD_GET_SCHEMES = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -330,6 +331,8 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_TEST_AND_GET = clz.getDeclaredMethod("testAndGet", Boolean.TYPE, FailableSupplier.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_SCHEMES = clz.getDeclaredMethod("getSchemes", String.class)).setAccessible(true);
 		//
 	}
 
@@ -2623,6 +2626,17 @@ class AivisSpeechRestApiJPanelTest {
 	void testTestAndGet() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_GET, null, Boolean.TRUE, null));
+		//
+	}
+
+	@Test
+	void testGetSchemes() throws IllegalAccessException, InvocationTargetException, JsonProcessingException {
+		//
+		final String http = "http";
+		//
+		Assertions.assertEquals(ObjectMapperUtil.writeValueAsString(objectMapper, Collections.singleton(http)),
+				ObjectMapperUtil.writeValueAsString(objectMapper,
+						invoke(METHOD_GET_SCHEMES, null, String.format("| %1$s       | H", http))));
 		//
 	}
 

@@ -3,6 +3,7 @@ package org.springframework.context.support;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.net.URL;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.ItemSelectable;
@@ -357,10 +358,14 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		panel.setLayout(new MigLayout());
 		//
 		panel.add(
-				new JComboBox<>(dcbmScheme = testAndApply(Objects::nonNull,
-						toArray(testAndGet(!isTestMode(),
-								() -> getSchemes("https://www.rfc-editor.org/rfc/rfc9110.txt")), String[]::new),
-						DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>())));
+				new JComboBox<>(
+						dcbmScheme = testAndApply(
+								Objects::nonNull, toArray(
+										testAndGet(!isTestMode(),
+												() -> getSchemes(Util
+														.toURL(new URI("https://www.rfc-editor.org/rfc/rfc9110.txt")))),
+										String[]::new),
+								DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>())));
 		//
 		panel.add(tfHost = new JTextField(), String.format("wmin %1$spx", 100));
 		//
@@ -506,28 +511,32 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		return condition ? FailableSupplierUtil.get(supplier) : null;
 	}
 
-	@Nullable
-	private static Collection<String> getSchemes(final String url) throws URISyntaxException, IOException {
+	private static Collection<String> getSchemes(final URL url) throws URISyntaxException, IOException {
+		//
+		try (final InputStream is = Util.getInputStream(Util.openConnection(url))) {
+			//
+			return getSchemes(
+					testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null));
+			//
+		} // try
+			//
+	}
+
+	private static Collection<String> getSchemes(final String string) {
 		//
 		Collection<String> collection = null;
 		//
-		try (final InputStream is = Util
-				.getInputStream(Util.openConnection(Util.toURL(testAndApply(Objects::nonNull, url, URI::new, null))))) {
+		final Matcher matcher = Util.matcher(Pattern.compile("\\|\\s([a-z]+)\\s+\\|\\sH"), string);
+		//
+		while (find(matcher)) {
 			//
-			final Matcher matcher = Util.matcher(Pattern.compile("\\|\\s([a-z]+)\\s+\\|\\sH"),
-					testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null));
-			//
-			while (find(matcher)) {
+			if (Util.groupCount(matcher) > 0) {
 				//
-				if (Util.groupCount(matcher) > 0) {
-					//
-					Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), Util.group(matcher, 1));
-					//
-				} // if
-					//
-			} // while
+				Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), Util.group(matcher, 1));
 				//
-		} // try
+			} // if
+				//
+		} // while
 			//
 		return collection;
 		//
