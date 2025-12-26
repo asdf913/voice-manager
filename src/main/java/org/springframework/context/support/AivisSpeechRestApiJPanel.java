@@ -511,7 +511,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		return condition ? FailableSupplierUtil.get(supplier) : null;
 	}
 
-	private static Collection<String> getSchemes(final URL url) throws URISyntaxException, IOException {
+	private static Collection<String> getSchemes(final URL url) throws IOException {
 		//
 		try (final InputStream is = Util.getInputStream(Util.openConnection(url))) {
 			//
