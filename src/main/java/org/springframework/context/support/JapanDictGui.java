@@ -159,7 +159,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		return Util.forName("org.junit.jupiter.api.Test") != null;
 	}
 
-	private static void setVisible(final Component instance, final boolean visible) {
+	private static void setVisible(@Nullable final Component instance, final boolean visible) {
 		if (instance != null) {
 			instance.setVisible(visible);
 		}
@@ -223,7 +223,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 			//
 	}
 
-	private static void setDefaultCloseOperation(final JFrame instance, final int defaultCloseOperation) {
+	private static void setDefaultCloseOperation(@Nullable final JFrame instance, final int defaultCloseOperation) {
 		if (instance != null) {
 			instance.setDefaultCloseOperation(defaultCloseOperation);
 		}
