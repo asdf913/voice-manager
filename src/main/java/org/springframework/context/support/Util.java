@@ -2338,7 +2338,7 @@ public abstract class Util {
 		return instance != null ? instance.getBytes() : null;
 	}
 
-	static void setIcon(final JLabel instance, final Icon icon) {
+	static void setIcon(final JLabel instance, @Nullable final Icon icon) {
 		//
 		final Iterable<Field> fs = toList(
 				filter(stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
