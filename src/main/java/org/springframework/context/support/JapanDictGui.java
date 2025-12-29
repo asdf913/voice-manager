@@ -397,7 +397,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
-			final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) {
+			final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse) {
 		return Util.test(predicate, t, u) ? Util.apply(functionTrue, t, u) : Util.apply(functionFalse, t, u);
 	}
 
@@ -652,7 +652,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static Field getFieldByName(final Object instance, final String name) {
+	private static Field getFieldByName(@Nullable final Object instance, final String name) {
 		//
 		final Iterable<Field> fs = Util.collect(Util.filter(
 				Util.stream(
