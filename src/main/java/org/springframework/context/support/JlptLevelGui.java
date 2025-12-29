@@ -6,9 +6,7 @@ import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -307,7 +305,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 		} else if (Objects.equals(source, btnCopy)) {
 			//
-			run(!isTestMode(), () -> setContents(getSystemClipboard(getToolkit()),
+			run(!isTestMode(), () -> Util.setContents(getSystemClipboard(getToolkit()),
 					new StringSelection(Util.getText(tfJson)), null));
 			//
 		} else if (Objects.equals(source, btnCompare)) {
@@ -612,13 +610,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	@Nullable
 	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		return instance != null ? instance.getSystemClipboard() : null;
-	}
-
-	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
-			final ClipboardOwner owner) {
-		if (instance != null) {
-			instance.setContents(contents, owner);
-		}
 	}
 
 	private static void run(final boolean b, @Nullable final Runnable runnable) {

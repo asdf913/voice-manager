@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
@@ -2372,6 +2375,12 @@ public abstract class Util {
 			//
 		} // if
 			//
+	}
+
+	static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner) {
+		if (instance != null) {
+			instance.setContents(contents, owner);
+		}
 	}
 
 }

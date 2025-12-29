@@ -11,7 +11,6 @@ import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
@@ -2082,7 +2081,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} else if (Objects.equals(source, btnCopyOutputFilePath)) {
 			//
-			setContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(), Toolkit.getDefaultToolkit(),
+			Util.setContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(), Toolkit.getDefaultToolkit(),
 					x -> getSystemClipboard(x), null), new StringSelection(Util.getText(tfOutputFile)), null);
 			//
 		} else if (Objects.equals(source, btnCopyTextToHtml)) {
@@ -2745,13 +2744,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private static void browse(@Nullable final Desktop instance, final URI uri) throws IOException {
 		if (instance != null) {
 			instance.browse(uri);
-		}
-	}
-
-	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
-			@Nullable final ClipboardOwner owner) {
-		if (instance != null) {
-			instance.setContents(contents, owner);
 		}
 	}
 

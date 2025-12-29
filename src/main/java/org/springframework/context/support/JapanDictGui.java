@@ -6,9 +6,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
@@ -259,12 +257,12 @@ public class JapanDictGui extends JPanel implements ActionListener {
 				//
 		} else if (Objects.equals(source, btnCopyHiragana)) {
 			//
-			testAndRun(!isTestMode(), () -> setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 					new StringSelection(Util.getText(tfHiragana)), null));
 			//
 		} else if (Objects.equals(source, btnCopyAudioUrl)) {
 			//
-			testAndRun(!isTestMode(), () -> setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 					new StringSelection(Util.getText(tfAudioUrl)), null));
 			//
 		} // if
@@ -275,13 +273,6 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		if (condition) {
 			Util.run(runnable);
 		} // if
-	}
-
-	private static void setContents(@Nullable final Clipboard instance, final Transferable transferable,
-			final ClipboardOwner clipboardOwner) {
-		if (instance != null) {
-			instance.setContents(transferable, clipboardOwner);
-		}
 	}
 
 	@Nullable

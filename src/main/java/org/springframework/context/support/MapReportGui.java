@@ -5,9 +5,7 @@ import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Dimension2D;
@@ -267,13 +265,6 @@ public class MapReportGui extends JFrame
 		return instance != null ? instance.getSystemClipboard() : null;
 	}
 
-	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
-			@Nullable final ClipboardOwner owner) {
-		if (instance != null && Util.forName("org.junit.jupiter.api.Assertions") == null) {
-			instance.setContents(contents, owner);
-		}
-	}
-
 	private void actionPerformedForBtnExecute() {
 		//
 		Object object = null;
@@ -368,7 +359,7 @@ public class MapReportGui extends JFrame
 				//
 			final ObjectMapper om = ObjectUtils.getIfNull(getObjectMapper(), ObjectMapper::new);
 			//
-			setContents(!GraphicsEnvironment.isHeadless() ? getSystemClipboard(Toolkit.getDefaultToolkit()) : null,
+			Util.setContents(!GraphicsEnvironment.isHeadless() ? getSystemClipboard(Toolkit.getDefaultToolkit()) : null,
 					new StringSelection(writeValueAsString(
 							Util.isSelected(cbPrettyJson) ? writerWithDefaultPrettyPrinter(om) : writer(om), lists)),
 					null);

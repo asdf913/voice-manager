@@ -9,9 +9,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -717,7 +715,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 			final String string = IValue0Util.getValue0(stringValue);
 			//
-			testAndRun(nonTest, () -> setContents(clipboard, new StringSelection(string), null));
+			testAndRun(nonTest, () -> Util.setContents(clipboard, new StringSelection(string), null));
 			//
 			return;
 			//
@@ -725,13 +723,6 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 		throw new IllegalStateException();
 		//
-	}
-
-	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
-			final ClipboardOwner owner) {
-		if (instance != null) {
-			instance.setContents(contents, owner);
-		}
 	}
 
 	@Nullable

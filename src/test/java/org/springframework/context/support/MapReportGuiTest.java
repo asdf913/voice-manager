@@ -5,8 +5,6 @@ import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
-import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
@@ -68,10 +66,9 @@ class MapReportGuiTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_PREFERRED_WIDTH, METHOD_AS_MAP,
-			METHOD_GET_VALUES, METHOD_CREATE_MULTI_MAP, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS,
-			METHOD_LENGTH, METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_TEST_AND_ACCEPT3,
-			METHOD_TEST_AND_ACCEPT4, METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER,
-			METHOD_WRITE_VALUE_AS_STRING = null;
+			METHOD_GET_VALUES, METHOD_CREATE_MULTI_MAP, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_LENGTH,
+			METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
+			METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER, METHOD_WRITE_VALUE_AS_STRING = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -91,9 +88,6 @@ class MapReportGuiTest {
 		(METHOD_CREATE_MULTI_MAP = clz.getDeclaredMethod("createMultimap", Iterable.class)).setAccessible(true);
 		//
 		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
-		//
-		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
-				ClipboardOwner.class)).setAccessible(true);
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
@@ -637,28 +631,6 @@ class MapReportGuiTest {
 				return (Clipboard) obj;
 			}
 			throw new Throwable(Util.toString(obj.getClass()));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetContents() throws Throwable {
-		//
-		Assertions.assertDoesNotThrow(() -> setContents(null, null, null));
-		//
-		if (GraphicsEnvironment.isHeadless()) {
-			//
-			Assertions.assertDoesNotThrow(() -> setContents(new Clipboard(null), null, null));
-			//
-		} // if
-			//
-	}
-
-	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner)
-			throws Throwable {
-		try {
-			METHOD_SET_CONTENTS.invoke(null, instance, contents, owner);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

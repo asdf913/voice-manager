@@ -10,7 +10,6 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
@@ -2471,7 +2470,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					ih.image = Util.apply(Util.getValue(entry), textAndImage);
 					//
-					setContents(Util.get(suppler), Reflection.newProxy(Transferable.class, ih), null);
+					Util.setContents(Util.get(suppler), Reflection.newProxy(Transferable.class, ih), null);
 					//
 					return;
 					//
@@ -2494,7 +2493,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				if (Objects.equals(source, Util.getKey(entry))) {
 					//
-					setContents(Util.get(suppler), new StringSelection(Util.getText(Util.getValue(entry))), null);
+					Util.setContents(Util.get(suppler), new StringSelection(Util.getText(Util.getValue(entry))), null);
 					//
 					return true;
 					//
@@ -2531,7 +2530,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		if (startsWith(strings, actionCommand, StringUtils.join(COPY, ','))) {
 			//
-			setContents(getClipboard(), new StringSelection(StringUtils.substringAfter(actionCommand, ',')), null);
+			Util.setContents(getClipboard(), new StringSelection(StringUtils.substringAfter(actionCommand, ',')), null);
 			//
 			return true;
 			//
@@ -4038,13 +4037,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Nullable
 	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		return instance != null ? instance.getSystemClipboard() : null;
-	}
-
-	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
-			@Nullable final ClipboardOwner owner) {
-		if (instance != null) {
-			instance.setContents(contents, owner);
-		}
 	}
 
 	private static boolean isTestMode() {

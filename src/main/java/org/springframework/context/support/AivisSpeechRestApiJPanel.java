@@ -9,7 +9,6 @@ import java.awt.ItemSelectable;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
@@ -1658,7 +1657,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 					//
 				} // try
 					//
-				setContents(getSystemClipboard(Toolkit.getDefaultToolkit(), instance.getObjectMapper()),
+				Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit(), instance.getObjectMapper()),
 						Reflection.newProxy(Transferable.class, ih), null);
 				//
 			} // if
@@ -1727,7 +1726,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 					//
 				} // try
 					//
-				setContents(getSystemClipboard(Toolkit.getDefaultToolkit(), instance.getObjectMapper()),
+				Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit(), instance.getObjectMapper()),
 						Reflection.newProxy(Transferable.class, ih), null);
 				//
 			} // if
@@ -2057,13 +2056,6 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	@Nullable
 	private static String[] getFileExtensions(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getFileExtensions() : null;
-	}
-
-	private static void setContents(@Nullable final Clipboard instance, final Transferable transferable,
-			@Nullable final ClipboardOwner clipboardOwner) {
-		if (instance != null) {
-			instance.setContents(transferable, clipboardOwner);
-		}
 	}
 
 	@Nullable

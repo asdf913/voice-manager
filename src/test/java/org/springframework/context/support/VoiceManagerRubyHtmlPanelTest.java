@@ -4,8 +4,6 @@ import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
-import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.io.InputStream;
@@ -73,9 +71,9 @@ import javassist.util.proxy.ProxyUtil;
 class VoiceManagerRubyHtmlPanelTest {
 
 	private static Method METHOD_LENGTH, METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
-			METHOD_GET_LAYOUT_MANAGER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD,
-			METHOD_AND, METHOD_GET_DESCRIPTION, METHOD_TEST_AND_RUN_THROWS, METHOD_CLEAR, METHOD_GET_VALUE,
-			METHOD_CREATE_MAP, METHOD_GET_AST, METHOD_GET_CHILD_COUNT, METHOD_GET_CHILD = null;
+			METHOD_GET_LAYOUT_MANAGER, METHOD_GET_SCREEN_SIZE, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_AND,
+			METHOD_GET_DESCRIPTION, METHOD_TEST_AND_RUN_THROWS, METHOD_CLEAR, METHOD_GET_VALUE, METHOD_CREATE_MAP,
+			METHOD_GET_AST, METHOD_GET_CHILD_COUNT, METHOD_GET_CHILD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -97,9 +95,6 @@ class VoiceManagerRubyHtmlPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_SCREEN_SIZE = clz.getDeclaredMethod("getScreenSize", Toolkit.class)).setAccessible(true);
-		//
-		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
-				ClipboardOwner.class)).setAccessible(true);
 		//
 		(METHOD_GET_SYSTEM_CLIPBOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
 		//
@@ -578,23 +573,6 @@ class VoiceManagerRubyHtmlPanelTest {
 				return (Dimension) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetContents() {
-		//
-		Assertions.assertDoesNotThrow(
-				() -> setContents(Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class)), null, null));
-		//
-	}
-
-	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner)
-			throws Throwable {
-		try {
-			METHOD_SET_CONTENTS.invoke(null, instance, contents, owner);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

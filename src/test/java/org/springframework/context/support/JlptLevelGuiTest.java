@@ -6,8 +6,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
-import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -91,9 +89,9 @@ class JlptLevelGuiTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_SET_PREFERRED_WIDTH, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_TEST_AND_APPLY,
-			METHOD_SET_CONTENTS, METHOD_INVOKE, METHOD_IIF, METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL,
-			METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE,
-			METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES, METHOD_TO_URI, METHOD_MAX = null;
+			METHOD_INVOKE, METHOD_IIF, METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL,
+			METHOD_FOR_EACH_STREAM, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE, METHOD_ADD_DOCUMENT_LISTENER,
+			METHOD_SET_SELECTED_INDICES, METHOD_TO_URI, METHOD_MAX = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -104,9 +102,6 @@ class JlptLevelGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
-		//
-		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
-				ClipboardOwner.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -687,24 +682,6 @@ class JlptLevelGuiTest {
 				return (Clipboard) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void tsetSetContents() {
-		//
-		Assertions.assertDoesNotThrow(() -> setContents(null, null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> setContents(new Clipboard(EMPTY), null, null));
-		//
-	}
-
-	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner)
-			throws Throwable {
-		try {
-			METHOD_SET_CONTENTS.invoke(null, instance, contents, owner);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
@@ -66,7 +65,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static final int ONE = 1;
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS,
+	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_GET_SYSTEM_CLIP_BOARD,
 			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_SAVE_PITCH_ACCENT_IMAGE,
 			METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_GET_FIELD, METHOD_SAVE_FILE,
 			METHOD_IIF, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_SET_PREFERRED_SIZE, METHOD_TEST_AND_RUN,
@@ -83,9 +82,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_GET_WIDTH = clz.getDeclaredMethod("getWidth", Dimension2D.class)).setAccessible(true);
 		//
 		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
-		//
-		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
-				ClipboardOwner.class)).setAccessible(true);
 		//
 		(METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS = clz
 				.getDeclaredMethod("setPitchAccentImageToSystemClipboardContents", Pronunciation.class))
@@ -569,24 +565,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return (Clipboard) obj;
 			}
 			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetContents() throws Throwable {
-		//
-		Assertions.assertDoesNotThrow(() -> setContents(null, null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> setContents(new Clipboard(null), null, null));
-		//
-	}
-
-	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner)
-			throws Throwable {
-		try {
-			METHOD_SET_CONTENTS.invoke(null, instance, contents, owner);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

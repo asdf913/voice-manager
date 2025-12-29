@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
@@ -804,7 +803,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 			if (Util.forName("org.junit.jupiter.api.Test") == null) {
 				//
-				setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+				Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 						Reflection.newProxy(Transferable.class, ih), null);
 				//
 			} // if
@@ -892,13 +891,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	@Nullable
 	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		return instance != null ? instance.getSystemClipboard() : null;
-	}
-
-	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
-			@Nullable final ClipboardOwner owner) {
-		if (instance != null) {
-			instance.setContents(contents, owner);
-		}
 	}
 
 	@Nullable

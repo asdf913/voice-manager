@@ -7,9 +7,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -641,7 +639,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				//
 		} else if (Objects.equals(source, btnCopy)) {
 			//
-			setContents(Boolean.logicalAnd(!isTestMode(), !GraphicsEnvironment.isHeadless())
+			Util.setContents(Boolean.logicalAnd(!isTestMode(), !GraphicsEnvironment.isHeadless())
 					? getSystemClipboard(Toolkit.getDefaultToolkit())
 					: null, new StringSelection(Util.getText(taHtml)), null);
 			//
@@ -680,13 +678,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 
 	private static boolean isTestMode() {
 		return Util.forName("org.junit.jupiter.api.Test") != null;
-	}
-
-	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
-			@Nullable final ClipboardOwner owner) {
-		if (instance != null) {
-			instance.setContents(contents, owner);
-		}
 	}
 
 	@Nullable
