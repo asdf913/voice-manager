@@ -316,10 +316,24 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 					new StringSelection(Util.getText(tfRomaji)), null));
 			//
-		} else if (Objects.equals(source, btnCopyAudioUrl)) {
+		} // if
+			//
+		actionPerformed1(this, source);
+		//
+	}
+
+	private static void actionPerformed1(final JapanDictGui instance, final Object source) {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		if (Objects.equals(source, instance.btnCopyAudioUrl)) {
 			//
 			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
-					new StringSelection(Util.getText(tfAudioUrl)), null));
+					new StringSelection(Util.getText(instance.tfAudioUrl)), null));
 			//
 		} // if
 			//
