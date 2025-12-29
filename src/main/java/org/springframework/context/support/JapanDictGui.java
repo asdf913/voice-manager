@@ -94,7 +94,10 @@ public class JapanDictGui extends JPanel implements ActionListener {
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
-	private AbstractButton btnCopyHiragana, btnCopyAudioUrl = null;
+	@Note("Copy Hiragana")
+	private AbstractButton btnCopyHiragana = null;
+
+	private AbstractButton btnCopyAudioUrl = null;
 
 	private JapanDictGui() {
 		//
