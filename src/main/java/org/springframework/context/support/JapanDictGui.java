@@ -111,7 +111,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		//
 	}
 
-	private static void setEditable(final boolean editable, final JTextComponent... jtcs) {
+	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
 		//
 		JTextComponent jtc = null;
 		//
@@ -264,7 +264,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 
 	}
 
-	private static void setText(@Nullable final String text, final JTextComponent... jtcs) {
+	private static void setText(@Nullable final String text, @Nullable final JTextComponent... jtcs) {
 		//
 		JTextComponent jtc = null;
 		//
@@ -302,7 +302,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		return instance != null ? instance.newDocumentBuilder() : null;
 	}
 
-	private static org.w3c.dom.Document parse(@Nullable final DocumentBuilder instance, final InputStream is)
+	private static org.w3c.dom.Document parse(@Nullable final DocumentBuilder instance, @Nullable final InputStream is)
 			throws SAXException, IOException {
 		//
 		if (Objects.equals("com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderImpl",
@@ -316,7 +316,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		//
 	}
 
-	private static boolean startsWith(final Strings instance, final String string, final String prefix) {
+	private static boolean startsWith(@Nullable final Strings instance, final String string, final String prefix) {
 		return instance != null && instance.startsWith(string, prefix);
 	}
 
