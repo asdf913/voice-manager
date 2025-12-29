@@ -276,8 +276,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					setEnabled(success, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl);
 					//
-					document = testAndApply(x -> Util.and(success, x != null, !isTestMode()),
-							is = getInputStream(httpURLConnection), x -> Jsoup.parse(x, "utf-8", ""), null);
+					document = testAndApply(x -> Util.and(x != null, !isTestMode()),
+							is = testAndApply(x -> success, httpURLConnection, x -> getInputStream(x), null),
+							x -> Jsoup.parse(x, "utf-8", ""), null);
 					//
 				} // if
 					//
