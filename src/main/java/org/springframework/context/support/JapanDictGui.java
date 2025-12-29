@@ -83,13 +83,16 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Text")
 	private JTextComponent tfText = null;
 
-	@Note("Hiragana")
-	private JTextComponent tfHiragana = null;
-
 	@Note("Response Code")
 	private JTextComponent tfResponseCode = null;
 
-	private JTextComponent tfRomaji, tfAudioUrl = null;
+	@Note("Hiragana")
+	private JTextComponent tfHiragana = null;
+
+	@Note("Romaji")
+	private JTextComponent tfRomaji = null;
+
+	private JTextComponent tfAudioUrl = null;
 
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
@@ -97,7 +100,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Copy Hiragana")
 	private AbstractButton btnCopyHiragana = null;
 
-	private AbstractButton btnCopyRomaji, btnCopyAudioUrl = null;
+	@Note("Copy Romaji")
+	private AbstractButton btnCopyRomaji = null;
+
+	private AbstractButton btnCopyAudioUrl = null;
 
 	private JapanDictGui() {
 	}
