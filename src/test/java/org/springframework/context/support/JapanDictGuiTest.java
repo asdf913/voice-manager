@@ -8,15 +8,19 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -29,7 +33,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class JapanDictGuiTest {
 
-	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET = null;
+	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT,
+			METHOD_STARTS_WITH = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -40,6 +45,15 @@ class JapanDictGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_TEST_AND_GET = Util.getDeclaredMethod(clz, "testAndGet", Boolean.TYPE, FailableSupplier.class))
+				.setAccessible(true);
+		//
+		(METHOD_SET_EDITABLE = Util.getDeclaredMethod(clz, "setEditable", Boolean.TYPE, JTextComponent[].class))
+				.setAccessible(true);
+		//
+		(METHOD_SET_TEXT = Util.getDeclaredMethod(clz, "setText", String.class, JTextComponent[].class))
+				.setAccessible(true);
+		//
+		(METHOD_STARTS_WITH = Util.getDeclaredMethod(clz, "startsWith", Strings.class, String.class, String.class))
 				.setAccessible(true);
 		//
 	}
@@ -190,7 +204,7 @@ class JapanDictGuiTest {
 		//
 		Object[] os = null;
 		//
-		String toString = null;
+		String name, toString = null;
 		//
 		Object result = null;
 		//
@@ -198,7 +212,12 @@ class JapanDictGuiTest {
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
+			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()
+					|| Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "setText"),
+							Arrays.equals(parameterTypes = Util.getParameterTypes(m),
+									new Class<?>[] { String.class, JTextComponent[].class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "setEditable"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Boolean.TYPE, JTextComponent[].class }))) {
 				//
 				continue;
 				//
@@ -249,6 +268,8 @@ class JapanDictGuiTest {
 			toString = Util.toString(m);
 			//
 			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				System.out.println(m);
 				//
 				result = Narcissus.invokeStaticMethod(m, os);
 				//
@@ -322,6 +343,33 @@ class JapanDictGuiTest {
 	void testTestAndGet() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_GET, null, Boolean.TRUE, null));
+		//
+	}
+
+	@Test
+	void testSetEditable() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_SET_EDITABLE, null, Boolean.TRUE, null));
+		//
+	}
+
+	@Test
+	void testSetText() throws Throwable {
+		//
+		Assertions.assertNull(invoke(METHOD_SET_TEXT, null, null, null));
+		//
+		Assertions.assertNull(invoke(METHOD_SET_TEXT, null, null, new JTextComponent[] { new JTextField() }));
+		//
+	}
+
+	@Test
+	void testStartsWith() throws Throwable {
+		//
+		final Strings strings = Strings.CS;
+		//
+		Assertions.assertEquals(Boolean.TRUE, invoke(METHOD_STARTS_WITH, null, strings, null, null));
+		//
+		Assertions.assertEquals(Boolean.FALSE, invoke(METHOD_STARTS_WITH, null, strings, "", null));
 		//
 	}
 

@@ -6,11 +6,16 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -26,17 +31,31 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.function.FailableSupplierUtil;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.client.utils.URIBuilderUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
 import org.oxbow.swingbits.dialog.task.TaskDialogs;
+import org.xml.sax.SAXException;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
@@ -54,7 +73,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 	@Note("Text")
 	private JTextComponent tfText = null;
 
-	private JTextComponent tfHiragana = null;
+	private JTextComponent tfHiragana, tfAudioUrl = null;
 
 	private AbstractButton btnExecute = null;
 
@@ -78,8 +97,30 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		//
 		add(tfHiragana = new JTextField(), String.format("%1$s,growx", wrap));
 		//
-		tfHiragana.setEditable(false);
+		add(new JLabel("Audio URL"));
 		//
+		add(tfAudioUrl = new JTextField(), String.format("%1$s,growx", wrap));
+		//
+		setEditable(false, tfHiragana, tfAudioUrl);
+		//
+	}
+
+	private static void setEditable(final boolean editable, final JTextComponent... jtcs) {
+		//
+		JTextComponent jtc = null;
+		//
+		for (int i = 0; jtcs != null && i < jtcs.length; i++) {
+			//
+			if ((jtc = ArrayUtils.get(jtcs, i)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			jtc.setEditable(editable);
+			//
+		} // for
+			//
 	}
 
 	@Override
@@ -87,11 +128,13 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		//
 		if (Objects.equals(Util.getSource(evt), btnExecute)) {
 			//
-			Util.setText(tfHiragana, null);
+			setText(null, tfHiragana, tfAudioUrl);
 			//
 			final URIBuilder uriBuilder = new URIBuilder();
 			//
-			uriBuilder.setScheme("https");
+			final String scheme = "https";
+			//
+			uriBuilder.setScheme(scheme);
 			//
 			uriBuilder.setHost("www.japandict.com");
 			//
@@ -103,7 +146,8 @@ public class JapanDictGui extends JPanel implements ActionListener {
 			//
 			try {
 				//
-				document = testAndGet(!isTestMode(), () -> Jsoup.parse(Util.toURL(uriBuilder.build()), 0));
+				document = testAndGet(!isTestMode(),
+						() -> Jsoup.parse(Util.toURL(URIBuilderUtil.build(uriBuilder)), 0));
 				//
 			} catch (final Exception e) {
 				//
@@ -131,8 +175,125 @@ public class JapanDictGui extends JPanel implements ActionListener {
 				//
 			} // if
 				//
+			final Element element = testAndApply(x -> IterableUtils.size(x) > 0,
+					ElementUtil.select(document, ".d-inline-block.align-middle.p-2 a"), x -> IterableUtils.get(x, 0),
+					null);
+			//
+			Iterable<?> iterable = null;
+			//
+			try {
+				//
+				iterable = Util.cast(Iterable.class, ObjectMapperUtil.readValue(new ObjectMapper(),
+						NodeUtil.attr(element, "data-reading"), Object.class));
+				//
+			} catch (final JsonProcessingException e) {
+				//
+				TaskDialogs.showException(e);
+				//
+			} // try
+				//
+			if (!IterableUtils.isEmpty(iterable)) {
+				//
+				final StringBuilder sb = new StringBuilder(StringUtils.defaultString(scheme));
+				//
+				String s = null;
+				//
+				for (int i = 0; i < IterableUtils.size(iterable); i++) {
+					//
+					sb.append(StringUtils.length(sb) == StringUtils.length(scheme) ? ":" : "");
+					//
+					if (startsWith(Strings.CS, s = Util.toString(IterableUtils.get(iterable, i)), "//")) {
+						//
+						sb.append(s);
+						//
+						sb.append("/read?outputFormat=mp3");
+						//
+						continue;
+						//
+					} // if
+						//
+					sb.append('&');
+					//
+					if (NumberUtils.isParsable(s)) {
+						//
+						sb.append(String.join("=", "vid", s));
+						//
+					} else if (isXml(s)) {
+						//
+						sb.append(String.join("=", "text", URLEncoder.encode(s, StandardCharsets.UTF_8)));
+						//
+					} else if (StringUtils.countMatches(s, '.') == 2) {
+						//
+						sb.append(String.join("=", "jwt", s));
+						//
+					} else {
+						//
+					} // if
+						//
+				} // for
+					//
+				Util.setText(tfAudioUrl, Util.toString(sb));
+				//
+			} // if
+				//
 		} // if
 			//
+	}
+
+	private static void setText(final String text, final JTextComponent... jtcs) {
+		//
+		JTextComponent jtc = null;
+		//
+		for (int i = 0; jtcs != null && i < jtcs.length; i++) {
+			//
+			if ((jtc = ArrayUtils.get(jtcs, i)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			jtc.setText(text);
+			//
+		} // for
+			//
+	}
+
+	private static boolean isXml(final String string) {
+		//
+		try (final InputStream is = testAndApply(Objects::nonNull, Util.getBytes(string), ByteArrayInputStream::new,
+				null)) {
+			//
+			return parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), is) != null;
+			//
+		} catch (final IOException | ParserConfigurationException | SAXException e) {
+			//
+			return false;
+			//
+		} // try
+			//
+	}
+
+	private static DocumentBuilder newDocumentBuilder(final DocumentBuilderFactory instance)
+			throws ParserConfigurationException {
+		return instance != null ? instance.newDocumentBuilder() : null;
+	}
+
+	private static org.w3c.dom.Document parse(final DocumentBuilder instance, final InputStream is)
+			throws SAXException, IOException {
+		//
+		if (Objects.equals("com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderImpl",
+				Util.getName(Util.getClass(instance))) && is == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance != null ? instance.parse(is) : null;
+		//
+	}
+
+	private static boolean startsWith(final Strings instance, final String string, final String prefix) {
+		return instance != null && instance.startsWith(string, prefix);
 	}
 
 	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,

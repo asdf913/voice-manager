@@ -2335,7 +2335,21 @@ public abstract class Util {
 
 	@Nullable
 	static byte[] getBytes(@Nullable final String instance) {
-		return instance != null ? instance.getBytes() : null;
+		//
+		final Iterable<Field> fs = toList(
+				filter(stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
+						x -> Objects.equals(getName(x), "val")));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		return f != null && instance != null && Narcissus.getField(instance, f) != null ? instance.getBytes() : null;
+		//
 	}
 
 	static void setIcon(final JLabel instance, @Nullable final Icon icon) {
