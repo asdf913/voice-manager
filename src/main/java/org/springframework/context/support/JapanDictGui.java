@@ -249,8 +249,6 @@ public class JapanDictGui extends JPanel implements ActionListener {
 						//
 						sb.append(String.join("=", "jwt", s));
 						//
-					} else {
-						//
 					} // if
 						//
 				} // for
