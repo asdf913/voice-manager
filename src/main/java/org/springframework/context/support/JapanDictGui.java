@@ -162,8 +162,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 						"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36");
 				//
 				document = testAndApply(x -> Boolean.logicalAnd(x != null, !isTestMode()),
-						is = httpURLConnection != null ? httpURLConnection.getInputStream() : null,
-						x -> Jsoup.parse(x, "utf-8", ""), null);
+						is = getInputStream(httpURLConnection), x -> Jsoup.parse(x, "utf-8", ""), null);
 				//
 			} catch (final Exception e) {
 				//
@@ -256,6 +255,10 @@ public class JapanDictGui extends JPanel implements ActionListener {
 				//
 		} // if
 			//
+	}
+
+	private static InputStream getInputStream(final URLConnection instance) throws IOException {
+		return instance != null ? instance.getInputStream() : null;
 	}
 
 	private static void setRequestProperty(final URLConnection instance, final String key, final String value) {
