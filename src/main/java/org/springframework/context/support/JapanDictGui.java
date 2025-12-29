@@ -120,7 +120,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private JComboBox<String> jcbJlptLevel = null;
 
-	private ComboBoxModel<String> cbmJlptLevel = null;
+	private transient ComboBoxModel<String> cbmJlptLevel = null;
 
 	private JapanDictGui() {
 	}
