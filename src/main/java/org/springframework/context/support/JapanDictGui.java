@@ -263,7 +263,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		//
 	}
 
-	private static void append(final StringBuilder instance, final char c) {
+	private static void append(@Nullable final StringBuilder instance, final char c) {
 		//
 		final Iterable<Field> fs = Util.toList(Util.filter(
 				Util.stream(
