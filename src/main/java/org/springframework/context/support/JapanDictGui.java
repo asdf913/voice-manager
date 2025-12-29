@@ -261,7 +261,8 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		return instance != null ? instance.getInputStream() : null;
 	}
 
-	private static void setRequestProperty(final URLConnection instance, final String key, final String value) {
+	private static void setRequestProperty(@Nullable final URLConnection instance, final String key,
+			final String value) {
 		if (instance != null) {
 			instance.setRequestProperty(key, value);
 		}
