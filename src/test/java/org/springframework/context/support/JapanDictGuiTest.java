@@ -296,8 +296,6 @@ class JapanDictGuiTest {
 			//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
-				System.out.println(m);
-				//
 				result = Narcissus.invokeStaticMethod(m, os);
 				//
 				if (Boolean.logicalAnd(isPrimitive(returnType = Util.getReturnType(m)),
