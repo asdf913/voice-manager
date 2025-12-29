@@ -164,7 +164,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 					//
 				} // if
 					//
-				document = testAndApply(x -> x != null && !isTestMode(),
+				document = testAndApply(x -> Boolean.logicalAnd(x != null, !isTestMode()),
 						is = httpURLConnection != null ? httpURLConnection.getInputStream() : null,
 						x -> Jsoup.parse(x, "utf-8", ""), null);
 				//
