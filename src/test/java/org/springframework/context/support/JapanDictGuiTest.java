@@ -44,6 +44,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
+import com.microsoft.playwright.Browser;
+import com.microsoft.playwright.Page;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
@@ -161,6 +163,22 @@ class JapanDictGuiTest {
 				//
 				return size;
 				//
+			} else if (proxy instanceof Page) {
+				//
+				if (Objects.equals(name, "evaluate")) {
+					//
+					return null;
+					//
+				} // if
+
+			} else if (proxy instanceof Browser) {
+				//
+				if (Objects.equals(name, "newPage")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);

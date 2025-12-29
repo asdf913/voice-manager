@@ -22,7 +22,10 @@ import java.net.HttpURLConnection;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -77,6 +80,11 @@ import org.xml.sax.SAXException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.microsoft.playwright.Browser;
+import com.microsoft.playwright.BrowserType;
+import com.microsoft.playwright.BrowserTypeUtil;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.Playwright;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
@@ -120,6 +128,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private transient ComboBoxModel<String> cbmJlptLevel = null;
 
+	private Map<String, String> userAgentMap = null;
+
+	private ComboBoxModel<String> cbmBrowserType = null;
+
 	private JapanDictGui() {
 	}
 
@@ -133,6 +145,44 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		final String growx = "growx";
 		//
 		add(this, tfText = new JTextField(), String.format("%1$s,%2$s", growx, wrap));
+		//
+		try (final Playwright playwright = Playwright.create()) {
+			//
+			final Iterable<BrowserType> browserTypes = Util.toList(Util.map(
+					Util.filter(
+							testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(playwright)),
+									Arrays::stream, null),
+							x -> Objects.equals(Util.getReturnType(x), BrowserType.class)),
+					x -> Util.cast(BrowserType.class, Narcissus.invokeMethod(playwright, x))));
+			//
+			BrowserType browserType = null;
+			//
+			for (int i = 0; i < IterableUtils.size(browserTypes); i++) {
+				//
+				if ((browserType = IterableUtils.get(browserTypes, i)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				try (final Browser browser = BrowserTypeUtil.launch(browserType); final Page page = newPage(browser)) {
+					//
+					Util.put(userAgentMap = ObjectUtils.getIfNull(userAgentMap, LinkedHashMap::new), browserType.name(),
+							Util.toString(evaluate(page, "window.navigator.userAgent")));
+					//
+				} // try
+					//
+			} // for
+				//
+		} // if
+			//
+		add(this, new JLabel("Browser"));
+		//
+		add(this,
+				new JComboBox<>(cbmBrowserType = new DefaultComboBoxModel<>(
+						toArray(Stream.concat(Stream.of((String) null), Util.stream(Util.keySet(userAgentMap))),
+								String[]::new))),
+				wrap);
 		//
 		add(this, new JLabel());
 		//
@@ -177,6 +227,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		addActionListener(this, btnExecute, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl);
 		//
+	}
+
+	private static Object evaluate(final Page instance, final String expression) {
+		return instance != null ? instance.evaluate(expression) : null;
+	}
+
+	private static Page newPage(final Browser instance) {
+		return instance != null ? instance.newPage() : null;
 	}
 
 	@Nullable
@@ -263,8 +321,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class,
 						Util.openConnection(Util.toURL(URIBuilderUtil.build(uriBuilder))));
 				//
-				setRequestProperty(httpURLConnection, "User-Agent",
-						"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36");
+				setRequestProperty(httpURLConnection, "User-Agent", Objects.toString(
+						testAndApply((a, b) -> Util.containsKey(a, b), userAgentMap,
+								Util.getSelectedItem(cbmBrowserType), (a, b) -> Util.get(a, b), null),
+						"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"));
 				//
 				if (httpURLConnection != null) {
 					//
