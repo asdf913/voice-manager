@@ -21,9 +21,12 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -37,6 +40,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 
@@ -49,7 +54,7 @@ class JapanDictGuiTest {
 	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT,
 			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_ADD_ACTION_LISTENER, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
-			METHOD_TO_ARRAY = null;
+			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -97,11 +102,16 @@ class JapanDictGuiTest {
 		//
 		(METHOD_TO_ARRAY = Util.getDeclaredMethod(clz, "toArray", Stream.class, IntFunction.class)).setAccessible(true);
 		//
+		(METHOD_GET_JLPT_LEVEL_INDICES = Util.getDeclaredMethod(clz, "getJlptLevelIndices", ComboBoxModel.class,
+				String.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
 
 		private Boolean test;
+
+		private Integer size;
 
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -147,6 +157,14 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof ListModel) {
+				//
+				if (Objects.equals(name, "getSize")) {
+					//
+					return size;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -350,6 +368,8 @@ class JapanDictGuiTest {
 					if ((ih = ObjectUtils.getIfNull(ih, IH::new)) != null) {
 						//
 						ih.test = Boolean.FALSE;
+						//
+						ih.size = Integer.valueOf(0);
 						//
 					} // if
 						//
@@ -615,6 +635,20 @@ class JapanDictGuiTest {
 		Assertions.assertNull(invoke(METHOD_TO_ARRAY, null, Reflection.newProxy(Stream.class, ih), null));
 		//
 		Assertions.assertNull(invoke(METHOD_TO_ARRAY, null, Stream.empty(), null));
+		//
+	}
+
+	@Test
+	void testGetJlptLevelIndices() throws Throwable {
+		//
+		Assertions.assertNull(
+				invoke(METHOD_GET_JLPT_LEVEL_INDICES, null, new DefaultComboBoxModel<>(new Object[] { null }), null));
+		//
+		final ObjectMapper objectMapper = new ObjectMapper();
+		//
+		Assertions.assertEquals(ObjectMapperUtil.writeValueAsString(objectMapper, new int[] { 1 }),
+				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_GET_JLPT_LEVEL_INDICES, null,
+						new DefaultComboBoxModel<>(new Object[] { null, "N1" }), "JLPT N1")));
 		//
 	}
 

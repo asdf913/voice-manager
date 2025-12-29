@@ -66,10 +66,8 @@ import org.apache.http.client.utils.URIBuilderUtil;
 import org.eclipse.jetty.http.HttpStatus;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
-import org.jsoup.select.Elements;
 import org.oxbow.swingbits.dialog.task.TaskDialogs;
 import org.springframework.beans.factory.FactoryBeanUtil;
 import org.springframework.beans.factory.InitializingBean;
@@ -295,25 +293,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				// JLPT
 				//
-			final Elements es = ElementUtil.select(document, "span.badge[title^='#jlpt'].me-1");
+			final int[] ints = getJlptLevelIndices(cbmJlptLevel,
+					ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+							ElementUtil.select(document, "span.badge[title^='#jlpt'].me-1"),
+							x -> IterableUtils.get(x, 0), null)));
 			//
-			final Element element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0),
-					null);
-			//
-			int[] ints = null;
-			//
-			for (int i = 0; i < Util.getSize(cbmJlptLevel); i++) {
-				//
-				if (StringUtils.isNotBlank(testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null),
-						Util.getElementAt(cbmJlptLevel, i), ElementUtil.text(element),
-						com.google.common.base.Strings::commonSuffix, null))) {
-					//
-					ints = ArrayUtils.add(ints, i);
-					//
-				} // if
-					//
-			} // for
-				//
 			if (ints != null) {
 				//
 				final int length = ints.length;
@@ -379,6 +363,25 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // if
 			//
 		actionPerformed1(this, source);
+		//
+	}
+
+	private static int[] getJlptLevelIndices(final ComboBoxModel<String> cbm, final String text) {
+		//
+		int[] ints = null;
+		//
+		for (int i = 0; i < Util.getSize(cbm); i++) {
+			//
+			if (StringUtils.isNotBlank(testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null),
+					Util.getElementAt(cbm, i), text, com.google.common.base.Strings::commonSuffix, null))) {
+				//
+				ints = ArrayUtils.add(ints, i);
+				//
+			} // if
+				//
+		} // for
+			//
+		return ints;
 		//
 	}
 
