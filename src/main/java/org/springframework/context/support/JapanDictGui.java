@@ -561,7 +561,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static void add(final Container instance, final Component component) {
+	private static void add(@Nullable final Container instance, final Component component) {
 		//
 		final Field f = getFieldByName(instance, "component");
 		//
