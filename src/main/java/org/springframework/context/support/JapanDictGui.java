@@ -60,6 +60,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
 import org.oxbow.swingbits.dialog.task.TaskDialogs;
+import org.springframework.beans.factory.InitializingBean;
 import org.xml.sax.SAXException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -69,7 +70,7 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
-public class JapanDictGui extends JPanel implements ActionListener {
+public class JapanDictGui extends JPanel implements ActionListener, InitializingBean {
 
 	private static final long serialVersionUID = -4598144203806679104L;
 
@@ -97,44 +98,46 @@ public class JapanDictGui extends JPanel implements ActionListener {
 	private AbstractButton btnCopyHiragana = null;
 
 	private AbstractButton btnCopyRomaji, btnCopyAudioUrl = null;
-	
+
 	private JapanDictGui() {
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
 		//
-		setLayout(new MigLayout());
-		//
-		add(new JLabel("Text"));
+		add(this, new JLabel("Text"));
 		//
 		final String wrap = "wrap";
 		//
 		final String growx = "growx";
 		//
-		add(tfText = new JTextField(), String.format("%1$s,%2$s", growx, wrap));
+		add(this, tfText = new JTextField(), String.format("%1$s,%2$s", growx, wrap));
 		//
-		add(new JLabel());
+		add(this, new JLabel());
 		//
-		add(btnExecute = new JButton("Execute"), wrap);
+		add(this, btnExecute = new JButton("Execute"), wrap);
 		//
-		add(new JLabel("Response Code"));
+		add(this, new JLabel("Response Code"));
 		//
-		add(tfResponseCode = new JTextField(), String.format("%1$s,%2$s", growx, wrap));
+		add(this, tfResponseCode = new JTextField(), String.format("%1$s,%2$s", growx, wrap));
 		//
-		add(new JLabel("Hiragana"));
+		add(this, new JLabel("Hiragana"));
 		//
-		add(tfHiragana = new JTextField(), growx);
+		add(this, tfHiragana = new JTextField(), growx);
 		//
-		add(btnCopyHiragana = new JButton("Copy"), wrap);
+		add(this, btnCopyHiragana = new JButton("Copy"), wrap);
 		//
-		add(new JLabel("Romaji"));
+		add(this, new JLabel("Romaji"));
 		//
-		add(tfRomaji = new JTextField(), growx);
+		add(this, tfRomaji = new JTextField(), growx);
 		//
-		add(btnCopyRomaji = new JButton("Copy"), wrap);
+		add(this, btnCopyRomaji = new JButton("Copy"), wrap);
 		//
-		add(new JLabel("Audio URL"));
+		add(this, new JLabel("Audio URL"));
 		//
-		add(tfAudioUrl = new JTextField(), growx);
+		add(this, tfAudioUrl = new JTextField(), growx);
 		//
-		add(btnCopyAudioUrl = new JButton("Copy"), wrap);
+		add(this, btnCopyAudioUrl = new JButton("Copy"), wrap);
 		//
 		setEditable(false, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl);
 		//
@@ -478,14 +481,20 @@ public class JapanDictGui extends JPanel implements ActionListener {
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	public static void main(final String[] args) {
+	public static void main(final String[] args) throws Exception {
 		//
 		final JFrame jFrame = testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 				JFrame::new);
 		//
 		setDefaultCloseOperation(jFrame, WindowConstants.EXIT_ON_CLOSE);
 		// ,
-		add(jFrame, new JapanDictGui());
+		final JapanDictGui instance = new JapanDictGui();
+		//
+		instance.setLayout(new MigLayout());
+		//
+		instance.afterPropertiesSet();
+		//
+		add(jFrame, instance);
 		//
 		pack(jFrame);
 		//
@@ -532,18 +541,24 @@ public class JapanDictGui extends JPanel implements ActionListener {
 			//
 	}
 
-	private static void add(@Nullable final Container instance, final Component component) {
+	private static void add(final Container instance, final Component component) {
 		//
-		if (instance == null) {
+		final Field f = getFieldByName(instance, "component");
+		//
+		if (f != null && Narcissus.getField(instance, f) != null) {
 			//
-			return;
+			instance.add(component);
 			//
 		} // if
 			//
+	}
+
+	private static Field getFieldByName(final Object instance, final String name) {
+		//
 		final Iterable<Field> fs = Util.collect(Util.filter(
 				Util.stream(
 						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
-				x -> Objects.equals(Util.getName(x), "component")), Collectors.toList());
+				x -> Objects.equals(Util.getName(x), name)), Collectors.toList());
 		//
 		if (IterableUtils.size(fs) > 1) {
 			//
@@ -551,11 +566,17 @@ public class JapanDictGui extends JPanel implements ActionListener {
 			//
 		} // if
 			//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		return testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+	}
+
+	private static void add(final Container instance, final Component component, final Object object) {
+		//
+		final Field f = getFieldByName(instance, "component");
 		//
 		if (f != null && Narcissus.getField(instance, f) != null) {
 			//
-			instance.add(component);
+			instance.add(component, object);
 			//
 		} // if
 			//
