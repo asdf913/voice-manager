@@ -126,14 +126,10 @@ class JapanDictGuiTest {
 			//
 			final String name = Util.getName(thisMethod);
 			//
-			if (self instanceof Toolkit) {
+			if (self instanceof Toolkit && Objects.equals(name, "getSystemClipboard")) {
 				//
-				if (Objects.equals(name, "getSystemClipboard")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
