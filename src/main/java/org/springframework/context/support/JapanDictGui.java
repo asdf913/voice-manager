@@ -261,7 +261,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 
 	}
 
-	private static void setText(final String text, final JTextComponent... jtcs) {
+	private static void setText(@Nullable final String text, final JTextComponent... jtcs) {
 		//
 		JTextComponent jtc = null;
 		//
