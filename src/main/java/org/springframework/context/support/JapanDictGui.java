@@ -139,7 +139,8 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		//
 	}
 
-	private static void setEnabled(final boolean enabled, final Component a, final Component b, final Component... cs) {
+	private static void setEnabled(final boolean enabled, final Component a, final Component b,
+			@Nullable final Component... cs) {
 		//
 		Util.setEnabled(a, enabled);
 		//
