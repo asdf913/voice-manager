@@ -284,6 +284,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		}
 	}
 
+	@Nullable
 	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		return instance != null ? instance.getSystemClipboard() : null;
 	}
