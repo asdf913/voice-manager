@@ -40,6 +40,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -212,50 +213,54 @@ public class JapanDictGui extends JPanel implements ActionListener {
 				//
 			} // try
 				//
-			if (!IterableUtils.isEmpty(iterable)) {
+			Util.setText(tfAudioUrl, getAudioUrl(scheme, Strings.CS, iterable));
+			//
+		} // if
+			//
+	}
+
+	private static String getAudioUrl(final String scheme, final Strings strings, final Iterable<?> iterable) {
+		//
+		StringBuilder sb = null;
+		//
+		String s = null;
+		//
+		for (int i = 0; i < IterableUtils.size(iterable); i++) {
+			//
+			testAndAccept(x -> StringUtils.length(x) == StringUtils.length(scheme),
+					sb = ObjectUtils.getIfNull(sb, () -> new StringBuilder(StringUtils.defaultString(scheme))),
+					x -> append(x, ':'));
+			//
+			if (startsWith(strings, s = Util.toString(IterableUtils.get(iterable, i)), "//")) {
 				//
-				final StringBuilder sb = new StringBuilder(StringUtils.defaultString(scheme));
+				sb.append(s);
 				//
-				String s = null;
+				sb.append("/read?outputFormat=mp3");
 				//
-				for (int i = 0; i < IterableUtils.size(iterable); i++) {
-					//
-					testAndAccept(x -> StringUtils.length(x) == StringUtils.length(scheme), sb, x -> append(x, ';'));
-					//
-					if (startsWith(Strings.CS, s = Util.toString(IterableUtils.get(iterable, i)), "//")) {
-						//
-						sb.append(s);
-						//
-						sb.append("/read?outputFormat=mp3");
-						//
-						continue;
-						//
-					} // if
-						//
-					sb.append('&');
-					//
-					if (NumberUtils.isParsable(s)) {
-						//
-						sb.append(String.join("=", "vid", s));
-						//
-					} else if (isXml(s)) {
-						//
-						sb.append(String.join("=", "text", URLEncoder.encode(s, StandardCharsets.UTF_8)));
-						//
-					} else if (StringUtils.countMatches(s, '.') == 2) {
-						//
-						sb.append(String.join("=", "jwt", s));
-						//
-					} // if
-						//
-				} // for
-					//
-				Util.setText(tfAudioUrl, Util.toString(sb));
+				continue;
 				//
 			} // if
 				//
-		} // if
+			sb.append('&');
 			//
+			if (NumberUtils.isParsable(s)) {
+				//
+				sb.append(String.join("=", "vid", s));
+				//
+			} else if (isXml(s)) {
+				//
+				sb.append(String.join("=", "text", URLEncoder.encode(s, StandardCharsets.UTF_8)));
+				//
+			} else if (StringUtils.countMatches(s, '.') == 2) {
+				//
+				sb.append(String.join("=", "jwt", s));
+				//
+			} // if
+				//
+		} // for
+			//
+		return Util.toString(sb);
+		//
 	}
 
 	private static void append(final StringBuilder instance, final char c) {

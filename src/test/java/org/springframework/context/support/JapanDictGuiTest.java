@@ -36,7 +36,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class JapanDictGuiTest {
 
 	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT,
-			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT = null;
+			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT, METHOD_GET_AUDIO_URL = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -64,6 +64,9 @@ class JapanDictGuiTest {
 		(METHOD_TEST_AND_ACCEPT = Util.getDeclaredMethod(clz, "testAndAccept", Predicate.class, Object.class,
 				Consumer.class)).setAccessible(true);
 		//
+		(METHOD_GET_AUDIO_URL = Util.getDeclaredMethod(clz, "getAudioUrl", String.class, Strings.class, Iterable.class))
+				.setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -86,6 +89,14 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof Iterable) {
+				//
+				if (Objects.equals(name, "iterator")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -407,6 +418,30 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT, null, Predicates.alwaysTrue(), null, null));
 		//
+	}
+
+	@Test
+	void testGetAudioUrl() throws Throwable {
+		//
+		Assertions.assertEquals(":///read?outputFormat=mp3&vid=1&jwt=1.2.3&text=%3Ca%2F%3E&",
+				getAudioUrl(null, Strings.CS, Arrays.asList("//", "1", "1.2.3", "<a/>", null)));
+		//
+	}
+
+	private static String getAudioUrl(final String scheme, final Strings strings, final Iterable<?> iterable)
+			throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_GET_AUDIO_URL, null, scheme, strings, iterable);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String s) {
+				return s;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+
 	}
 
 }
