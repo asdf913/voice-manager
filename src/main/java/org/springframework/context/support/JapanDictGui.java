@@ -133,8 +133,24 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		//
 		setEditable(false, tfHiragana, tfResponseCode, tfAudioUrl);
 		//
+		setEnabled(false, btnCopyHiragana, btnCopyAudioUrl);
+		//
 		addActionListener(this, btnExecute, btnCopyHiragana, btnCopyAudioUrl);
 		//
+	}
+
+	private static void setEnabled(final boolean enabled, final Component a, final Component b, final Component... cs) {
+		//
+		Util.setEnabled(a, enabled);
+		//
+		Util.setEnabled(b, enabled);
+		//
+		for (int i = 0; cs != null && i < cs.length; i++) {
+			//
+			Util.setEnabled(ArrayUtils.get(cs, i), enabled);
+			//
+		} // for
+			//
 	}
 
 	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
@@ -174,6 +190,8 @@ public class JapanDictGui extends JPanel implements ActionListener {
 			//
 			setText(null, tfHiragana, tfResponseCode, tfAudioUrl);
 			//
+			setEnabled(false, btnCopyHiragana, btnCopyAudioUrl);
+			//
 			final URIBuilder uriBuilder = new URIBuilder();
 			//
 			final String scheme = "https";
@@ -204,7 +222,11 @@ public class JapanDictGui extends JPanel implements ActionListener {
 					//
 					Util.setText(tfResponseCode, Integer.toString(responseCode));
 					//
-					if (HttpStatus.isSuccess(responseCode)) {
+					final boolean success = HttpStatus.isSuccess(responseCode);
+					//
+					setEnabled(success, btnCopyHiragana, btnCopyAudioUrl);
+					//
+					if (success) {
 						//
 						document = testAndApply(x -> Boolean.logicalAnd(x != null, !isTestMode()),
 								is = getInputStream(httpURLConnection), x -> Jsoup.parse(x, "utf-8", ""), null);

@@ -44,7 +44,7 @@ class JapanDictGuiTest {
 
 	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT,
 			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_ADD_ACTION_LISTENER = null;
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_ADD_ACTION_LISTENER, METHOD_SET_ENABLED = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -83,6 +83,9 @@ class JapanDictGuiTest {
 		//
 		(METHOD_ADD_ACTION_LISTENER = Util.getDeclaredMethod(clz, "addActionListener", ActionListener.class,
 				AbstractButton[].class)).setAccessible(true);
+		//
+		(METHOD_SET_ENABLED = Util.getDeclaredMethod(clz, "setEnabled", Boolean.TYPE, Component.class, Component.class,
+				Component[].class)).setAccessible(true);
 		//
 	}
 
@@ -274,8 +277,11 @@ class JapanDictGuiTest {
 									new Class<?>[] { String.class, JTextComponent[].class })),
 					Boolean.logicalAnd(Objects.equals(name, "setEditable"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Boolean.TYPE, JTextComponent[].class })),
-					Boolean.logicalAnd(Objects.equals(name, "addActionListener"), Arrays.equals(parameterTypes,
-							new Class<?>[] { ActionListener.class, AbstractButton[].class })))) {
+					Boolean.logicalAnd(Objects.equals(name, "addActionListener"),
+							Arrays.equals(parameterTypes,
+									new Class<?>[] { ActionListener.class, AbstractButton[].class })),
+					Boolean.logicalAnd(Objects.equals(name, "setEnabled"), Arrays.equals(parameterTypes,
+							new Class<?>[] { Boolean.TYPE, Component.class, Component.class, Component[].class })))) {
 				//
 				continue;
 				//
@@ -527,6 +533,13 @@ class JapanDictGuiTest {
 	void testAddActionListener() throws Throwable {
 		//
 		Assertions.assertNull(invoke(METHOD_ADD_ACTION_LISTENER, null, null, null));
+		//
+	}
+
+	@Test
+	void testSetEnabled() throws Throwable {
+		//
+		Assertions.assertNull(invoke(METHOD_SET_ENABLED, null, Boolean.TRUE, null, null, null));
 		//
 	}
 
