@@ -1,7 +1,9 @@
 package org.springframework.context.support;
 
 import java.awt.Component;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -14,6 +16,8 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
@@ -23,6 +27,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableSupplier;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,11 +37,14 @@ import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyUtil;
 
 class JapanDictGuiTest {
 
 	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT,
-			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT, METHOD_GET_AUDIO_URL = null;
+			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN,
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_ADD_ACTION_LISTENER = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -67,6 +75,15 @@ class JapanDictGuiTest {
 		(METHOD_GET_AUDIO_URL = Util.getDeclaredMethod(clz, "getAudioUrl", String.class, Strings.class, Iterable.class))
 				.setAccessible(true);
 		//
+		(METHOD_TEST_AND_RUN = Util.getDeclaredMethod(clz, "testAndRun", Boolean.TYPE, Runnable.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_SYSTEM_CLIP_BOARD = Util.getDeclaredMethod(clz, "getSystemClipboard", Toolkit.class))
+				.setAccessible(true);
+		//
+		(METHOD_ADD_ACTION_LISTENER = Util.getDeclaredMethod(clz, "addActionListener", ActionListener.class,
+				AbstractButton[].class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -93,6 +110,30 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
+			} // if
+				//
+			throw new Throwable(name);
+			//
+		}
+
+	}
+
+	private static class MH implements MethodHandler {
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			final String name = Util.getName(thisMethod);
+			//
+			if (self instanceof Toolkit) {
+				//
+				if (Objects.equals(name, "getSystemClipboard")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -231,12 +272,14 @@ class JapanDictGuiTest {
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()
-					|| Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "setText"),
+			if ((m = ArrayUtils.get(ms, i)) == null || or(m.isSynthetic(),
+					Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "setText"),
 							Arrays.equals(parameterTypes = Util.getParameterTypes(m),
-									new Class<?>[] { String.class, JTextComponent[].class }))
-					|| Boolean.logicalAnd(Objects.equals(name, "setEditable"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Boolean.TYPE, JTextComponent[].class }))) {
+									new Class<?>[] { String.class, JTextComponent[].class })),
+					Boolean.logicalAnd(Objects.equals(name, "setEditable"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Boolean.TYPE, JTextComponent[].class })),
+					Boolean.logicalAnd(Objects.equals(name, "addActionListener"), Arrays.equals(parameterTypes,
+							new Class<?>[] { ActionListener.class, AbstractButton[].class })))) {
 				//
 				continue;
 				//
@@ -323,6 +366,30 @@ class JapanDictGuiTest {
 			//
 	}
 
+	private static boolean or(final boolean a, final boolean b, final boolean... bs) {
+		//
+		boolean result = a || b;
+		//
+		if (result) {
+			//
+			return result;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (result |= bs[i]) {
+				//
+				return result;
+				//
+			} // if
+				//
+		} // for
+			//
+		return result;
+		//
+	}
+
 	private static Class<?> componentType(final Class<?> instance) {
 		return instance != null ? instance.componentType() : null;
 	}
@@ -336,7 +403,7 @@ class JapanDictGuiTest {
 	}
 
 	@Test
-	void testActionPerformed() {
+	void testActionPerformed() throws IllegalAccessException {
 		//
 		if (instance == null) {
 			//
@@ -345,6 +412,14 @@ class JapanDictGuiTest {
 		} // if
 			//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent("", 0, null)));
+		//
+		// btnCopyHiragana
+		//
+		final AbstractButton btnCopyHiragana = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnCopyHiragana", btnCopyHiragana, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyHiragana, 0, null)));
 		//
 	}
 
@@ -435,6 +510,28 @@ class JapanDictGuiTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testTestAndRun() throws Throwable {
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_RUN, null, Boolean.TRUE, null));
+		//
+	}
+
+	@Test
+	void testGetSystemClipboard() throws Throwable {
+		//
+		Assertions
+				.assertNull(invoke(METHOD_GET_SYSTEM_CLIP_BOARD, null, ProxyUtil.createProxy(Toolkit.class, new MH())));
+		//
+	}
+
+	@Test
+	void testAddActionListener() throws Throwable {
+		//
+		Assertions.assertNull(invoke(METHOD_ADD_ACTION_LISTENER, null, null, null));
+		//
 	}
 
 }

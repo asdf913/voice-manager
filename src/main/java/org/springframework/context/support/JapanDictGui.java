@@ -3,7 +3,12 @@ package org.springframework.context.support;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.awt.Window;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
@@ -84,7 +89,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 
 	private JTextComponent tfAudioUrl = null;
 
-	private AbstractButton btnExecute = null;
+	private AbstractButton btnExecute, btnCopyHiragana = null;
 
 	private JapanDictGui() {
 		//
@@ -100,18 +105,32 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		//
 		add(btnExecute = new JButton("Execute"), wrap);
 		//
-		btnExecute.addActionListener(this);
-		//
 		add(new JLabel("Hiragana"));
 		//
-		add(tfHiragana = new JTextField(), String.format("%1$s,growx", wrap));
+		final String growx = "growx";
+		//
+		add(tfHiragana = new JTextField(), growx);
+		//
+		add(btnCopyHiragana = new JButton("Copy"), wrap);
 		//
 		add(new JLabel("Audio URL"));
 		//
-		add(tfAudioUrl = new JTextField(), String.format("%1$s,growx", wrap));
+		add(tfAudioUrl = new JTextField(), String.format("%1$s,%2$s,", growx, wrap));
 		//
 		setEditable(false, tfHiragana, tfAudioUrl);
 		//
+		addActionListener(this, btnExecute, btnCopyHiragana);
+		//
+	}
+
+	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
+		//
+		for (int i = 0; abs != null && i < abs.length; i++) {
+			//
+			Util.addActionListener(ArrayUtils.get(abs, i), actionListener);
+			//
+		} // for
+			//
 	}
 
 	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
@@ -135,7 +154,9 @@ public class JapanDictGui extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		if (Objects.equals(Util.getSource(evt), btnExecute)) {
+		final Object source = Util.getSource(evt);
+		//
+		if (Objects.equals(source, btnExecute)) {
 			//
 			setText(null, tfHiragana, tfAudioUrl);
 			//
@@ -215,8 +236,30 @@ public class JapanDictGui extends JPanel implements ActionListener {
 				//
 			Util.setText(tfAudioUrl, getAudioUrl(scheme, Strings.CS, iterable));
 			//
+		} else if (Objects.equals(source, btnCopyHiragana)) {
+			//
+			testAndRun(!isTestMode(), () -> setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+					new StringSelection(Util.getText(tfHiragana)), null));
+			//
 		} // if
 			//
+	}
+
+	private static void testAndRun(final boolean condition, final Runnable runnable) {
+		if (condition) {
+			Util.run(runnable);
+		} // if
+	}
+
+	private static void setContents(final Clipboard instance, final Transferable transferable,
+			final ClipboardOwner clipboardOwner) {
+		if (instance != null) {
+			instance.setContents(transferable, clipboardOwner);
+		}
+	}
+
+	private static Clipboard getSystemClipboard(final Toolkit instance) {
+		return instance != null ? instance.getSystemClipboard() : null;
 	}
 
 	private static String getAudioUrl(final String scheme, final Strings strings,
