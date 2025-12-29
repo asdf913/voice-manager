@@ -369,6 +369,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	@Nullable
 	private static int[] getJlptLevelIndices(final ComboBoxModel<String> cbm, final String text) {
 		//
 		int[] ints = null;
