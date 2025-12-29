@@ -96,7 +96,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
-	private AbstractButton btnCopyHiragana = null;
+	private AbstractButton btnCopyHiragana, btnCopyAudioUrl = null;
 
 	private JapanDictGui() {
 		//
@@ -126,11 +126,13 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		//
 		add(new JLabel("Audio URL"));
 		//
-		add(tfAudioUrl = new JTextField(), String.format("%1$s,%2$s,", growx, wrap));
+		add(tfAudioUrl = new JTextField(), growx);
+		//
+		add(btnCopyAudioUrl = new JButton("Copy"), wrap);
 		//
 		setEditable(false, tfHiragana, tfResponseCode, tfAudioUrl);
 		//
-		addActionListener(this, btnExecute, btnCopyHiragana);
+		addActionListener(this, btnExecute, btnCopyHiragana, btnCopyAudioUrl);
 		//
 	}
 
@@ -259,6 +261,11 @@ public class JapanDictGui extends JPanel implements ActionListener {
 			//
 			testAndRun(!isTestMode(), () -> setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 					new StringSelection(Util.getText(tfHiragana)), null));
+			//
+		} else if (Objects.equals(source, btnCopyAudioUrl)) {
+			//
+			testAndRun(!isTestMode(), () -> setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+					new StringSelection(Util.getText(tfAudioUrl)), null));
 			//
 		} // if
 			//
