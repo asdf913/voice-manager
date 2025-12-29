@@ -376,16 +376,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			Util.setText(tfRomaji, StringUtils.trim(ElementUtil.text(testAndApply(x -> IterableUtils.size(x) > 0,
 					ElementUtil.select(document, ".xxsmall"), x -> IterableUtils.get(x, 0), null))));
 			//
-		} else if (Objects.equals(source, btnCopyHiragana)) {
-			//
-			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
-					new StringSelection(Util.getText(tfHiragana)), null));
-			//
-		} else if (Objects.equals(source, btnCopyRomaji)) {
-			//
-			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
-					new StringSelection(Util.getText(tfRomaji)), null));
-			//
 		} // if
 			//
 		actionPerformed1(this, source);
@@ -405,7 +395,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} // if
 			//
-		if (Objects.equals(source, instance.btnCopyAudioUrl)) {
+		if (Objects.equals(source, instance.btnCopyHiragana)) {
+			//
+			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+					new StringSelection(Util.getText(instance.tfHiragana)), null));
+			//
+		} else if (Objects.equals(source, instance.btnCopyRomaji)) {
+			//
+			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+					new StringSelection(Util.getText(instance.tfRomaji)), null));
+			//
+		} else if (Objects.equals(source, instance.btnCopyAudioUrl)) {
 			//
 			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 					new StringSelection(Util.getText(instance.tfAudioUrl)), null));
