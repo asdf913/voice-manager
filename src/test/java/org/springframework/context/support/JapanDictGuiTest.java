@@ -89,14 +89,10 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof Iterable) {
+			} else if (proxy instanceof Iterable && Objects.equals(name, "iterator")) {
 				//
-				if (Objects.equals(name, "iterator")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
