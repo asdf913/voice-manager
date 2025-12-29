@@ -287,7 +287,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		}
 	}
 
-	private static InputStream getInputStream(final URLConnection instance) throws IOException {
+	private static InputStream getInputStream(@Nullable final URLConnection instance) throws IOException {
 		return instance != null ? instance.getInputStream() : null;
 	}
 
