@@ -157,14 +157,10 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof ListModel) {
+			} else if (proxy instanceof ListModel && Objects.equals(name, "getSize")) {
 				//
-				if (Objects.equals(name, "getSize")) {
-					//
-					return size;
-					//
-				} // if
-					//
+				return size;
+				//
 			} // if
 				//
 			throw new Throwable(name);
