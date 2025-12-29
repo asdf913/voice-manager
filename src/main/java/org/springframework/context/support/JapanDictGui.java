@@ -297,12 +297,12 @@ public class JapanDictGui extends JPanel implements ActionListener {
 			//
 	}
 
-	private static DocumentBuilder newDocumentBuilder(final DocumentBuilderFactory instance)
+	private static DocumentBuilder newDocumentBuilder(@Nullable final DocumentBuilderFactory instance)
 			throws ParserConfigurationException {
 		return instance != null ? instance.newDocumentBuilder() : null;
 	}
 
-	private static org.w3c.dom.Document parse(final DocumentBuilder instance, final InputStream is)
+	private static org.w3c.dom.Document parse(@Nullable final DocumentBuilder instance, final InputStream is)
 			throws SAXException, IOException {
 		//
 		if (Objects.equals("com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderImpl",
