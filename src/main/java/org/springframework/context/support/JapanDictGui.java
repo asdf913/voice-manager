@@ -24,7 +24,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Objects;
-import java.util.Spliterator;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -33,7 +32,6 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
@@ -81,7 +79,6 @@ import org.xml.sax.SAXException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
-import com.google.common.collect.Iterables;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
@@ -153,15 +150,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		jlptLevelListFactoryBean.setUrl("https://www.jlpt.jp/about/levelsummary.html");
 		//
-		add(this,
-				jcbJlptLevel = new JComboBox<>(cbmJlptLevel = new DefaultComboBoxModel<>(toArray(
-						testAndApply(Objects::nonNull,
-								spliterator(Iterables.concat(Collections.singleton(null),
-										ObjectUtils.getIfNull(FactoryBeanUtil.getObject(jlptLevelListFactoryBean),
-												Collections::emptySet))),
-								x -> StreamSupport.stream(x, false), null),
-						String[]::new))),
-				wrap);
+		add(this, jcbJlptLevel = new JComboBox<>(cbmJlptLevel = new DefaultComboBoxModel<>(toArray(
+				Stream.concat(Stream.of((String) null), Util.stream(ObjectUtils
+						.getIfNull(FactoryBeanUtil.getObject(jlptLevelListFactoryBean), Collections::emptySet))),
+				String[]::new))), wrap);
 		//
 		add(this, new JLabel("Hiragana"));
 		//
@@ -187,10 +179,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		addActionListener(this, btnExecute, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl);
 		//
-	}
-
-	private static <E> Spliterator<E> spliterator(final Iterable<E> instance) {
-		return instance != null ? instance.spliterator() : null;
 	}
 
 	private static <T> T[] toArray(final Stream<T> instance, final IntFunction<T[]> function) {
