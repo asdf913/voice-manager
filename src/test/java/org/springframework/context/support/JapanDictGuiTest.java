@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import javax.swing.JLabel;
@@ -27,6 +28,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -34,7 +36,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class JapanDictGuiTest {
 
 	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT,
-			METHOD_STARTS_WITH = null;
+			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -55,6 +57,12 @@ class JapanDictGuiTest {
 		//
 		(METHOD_STARTS_WITH = Util.getDeclaredMethod(clz, "startsWith", Strings.class, String.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_APPEND = Util.getDeclaredMethod(clz, "append", StringBuilder.class, Character.TYPE))
+				.setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT = Util.getDeclaredMethod(clz, "testAndAccept", Predicate.class, Object.class,
+				Consumer.class)).setAccessible(true);
 		//
 	}
 
@@ -135,6 +143,10 @@ class JapanDictGuiTest {
 				} else if (Objects.equals(parameterType, Integer.TYPE)) {
 					//
 					Util.add(collection, Integer.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Character.TYPE)) {
+					//
+					Util.add(collection, Character.valueOf(' '));
 					//
 				} else {
 					//
@@ -236,6 +248,10 @@ class JapanDictGuiTest {
 				} else if (Objects.equals(parameterType, Integer.TYPE)) {
 					//
 					Util.add(collection, Integer.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Character.TYPE)) {
+					//
+					Util.add(collection, Character.valueOf(' '));
 					//
 				} else if (isArray(parameterType)) {
 					//
@@ -354,7 +370,7 @@ class JapanDictGuiTest {
 	}
 
 	@Test
-	void testSetText() throws Throwable {
+	void testSetText() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_SET_TEXT, null, null, null));
 		//
@@ -363,13 +379,33 @@ class JapanDictGuiTest {
 	}
 
 	@Test
-	void testStartsWith() throws Throwable {
+	void testStartsWith() throws IllegalAccessException, InvocationTargetException {
 		//
 		final Strings strings = Strings.CS;
-		//
+		// s
 		Assertions.assertEquals(Boolean.TRUE, invoke(METHOD_STARTS_WITH, null, strings, null, null));
 		//
 		Assertions.assertEquals(Boolean.FALSE, invoke(METHOD_STARTS_WITH, null, strings, "", null));
+		//
+	}
+
+	@Test
+	void testAppend() throws IllegalAccessException, InvocationTargetException {
+		//
+		final StringBuilder sb = new StringBuilder();
+		//
+		final char c = ' ';
+		//
+		Assertions.assertNull(invoke(METHOD_APPEND, null, sb, Character.valueOf(c)));
+		//
+		Assertions.assertEquals(String.valueOf(new char[] { c }), Util.toString(sb));
+		//
+	}
+
+	@Test
+	void testTestAndAccept() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT, null, Predicates.alwaysTrue(), null, null));
 		//
 	}
 

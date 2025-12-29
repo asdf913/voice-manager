@@ -19,6 +19,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -219,7 +220,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 				//
 				for (int i = 0; i < IterableUtils.size(iterable); i++) {
 					//
-					sb.append(StringUtils.length(sb) == StringUtils.length(scheme) ? ":" : "");
+					testAndAccept(x -> StringUtils.length(x) == StringUtils.length(scheme), sb, x -> append(x, ';'));
 					//
 					if (startsWith(Strings.CS, s = Util.toString(IterableUtils.get(iterable, i)), "//")) {
 						//
@@ -255,6 +256,35 @@ public class JapanDictGui extends JPanel implements ActionListener {
 				//
 		} // if
 			//
+	}
+
+	private static void append(final StringBuilder instance, final char c) {
+		//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), "value")));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f != null && instance != null && Narcissus.getField(instance, f) != null) {
+			//
+			instance.append(c);
+			//
+		} // if
+			//
+	}
+
+	private static <T> void testAndAccept(final Predicate<T> instance, final T value, final Consumer<T> consumer) {
+		if (Util.test(instance, value)) {
+			Util.accept(consumer, value);
+		}
 	}
 
 	private static InputStream getInputStream(final URLConnection instance) throws IOException {
