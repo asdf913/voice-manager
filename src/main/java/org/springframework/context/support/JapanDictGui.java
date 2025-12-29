@@ -14,10 +14,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -36,9 +36,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.function.FailableSupplierUtil;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -144,16 +147,33 @@ public class JapanDictGui extends JPanel implements ActionListener {
 			//
 			Document document = null;
 			//
+			InputStream is = null;
+			//
 			try {
 				//
-				document = testAndGet(!isTestMode(),
-						() -> Jsoup.parse(Util.toURL(URIBuilderUtil.build(uriBuilder)), 0));
+				final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class,
+						Util.openConnection(Util.toURL(URIBuilderUtil.build(uriBuilder))));
+				//
+				if (httpURLConnection != null) {
+					//
+					httpURLConnection.setRequestProperty("User-Agent",
+							"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36");
+					//
+				} // if
+					//
+				document = testAndApply(x -> x != null && !isTestMode(),
+						is = httpURLConnection != null ? httpURLConnection.getInputStream() : null,
+						x -> Jsoup.parse(x, "utf-8", ""), null);
 				//
 			} catch (final Exception e) {
 				//
 				TaskDialogs.showException(e);
 				//
-			} // try
+			} finally {
+				//
+				IOUtils.closeQuietly(is);
+				//
+			} // if
 				//
 			final Pattern patten = Pattern.compile("^\\p{InHiragana}+$");
 			//
@@ -238,6 +258,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 				//
 		} // if
 			//
+
 	}
 
 	private static void setText(final String text, final JTextComponent... jtcs) {
@@ -296,9 +317,11 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		return instance != null && instance.startsWith(string, prefix);
 	}
 
-	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
-			@Nullable final Function<T, R> functionFalse) {
-		return Util.test(predicate, value) ? Util.apply(functionTrue, value) : Util.apply(functionFalse, value);
+	private static <T, R, E extends Exception> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
+		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
 	public static void main(final String[] args) {

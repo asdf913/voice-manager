@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import javax.swing.JLabel;
@@ -21,6 +20,7 @@ import javax.swing.text.JTextComponent;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -74,7 +74,7 @@ class JapanDictGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Function && Objects.equals(name, "apply")) {
+			} else if (proxy instanceof FailableFunction && Objects.equals(name, "apply")) {
 				//
 				return null;
 				//
