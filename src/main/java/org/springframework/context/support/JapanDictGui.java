@@ -181,6 +181,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	@Nullable
 	private static <T> T[] toArray(final Stream<T> instance, final IntFunction<T[]> function) {
 		return instance != null && Boolean.logicalOr(function != null, Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.toArray(function)
