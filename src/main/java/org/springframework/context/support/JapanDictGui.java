@@ -221,12 +221,10 @@ public class JapanDictGui extends JPanel implements ActionListener {
 					ElementUtil.select(document, ".d-inline-block.align-middle.p-2 a"), x -> IterableUtils.get(x, 0),
 					null);
 			//
-			Iterable<?> iterable = null;
-			//
 			try {
 				//
-				iterable = Util.cast(Iterable.class, ObjectMapperUtil.readValue(new ObjectMapper(),
-						NodeUtil.attr(element, "data-reading"), Object.class));
+				Util.setText(tfAudioUrl, getAudioUrl(scheme, Strings.CS, Util.cast(Iterable.class, ObjectMapperUtil
+						.readValue(new ObjectMapper(), NodeUtil.attr(element, "data-reading"), Object.class))));
 				//
 			} catch (final JsonProcessingException e) {
 				//
@@ -234,8 +232,6 @@ public class JapanDictGui extends JPanel implements ActionListener {
 				//
 			} // try
 				//
-			Util.setText(tfAudioUrl, getAudioUrl(scheme, Strings.CS, iterable));
-			//
 		} else if (Objects.equals(source, btnCopyHiragana)) {
 			//
 			testAndRun(!isTestMode(), () -> setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
