@@ -56,6 +56,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URIBuilderUtil;
+import org.eclipse.jetty.http.HttpStatus;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -87,7 +88,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 	@Note("Hiragana")
 	private JTextComponent tfHiragana = null;
 
-	private JTextComponent tfAudioUrl = null;
+	private JTextComponent tfResponseCode, tfAudioUrl = null;
 
 	private AbstractButton btnExecute, btnCopyHiragana = null;
 
@@ -99,15 +100,19 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		//
 		final String wrap = "wrap";
 		//
-		add(tfText = new JTextField(), String.format("%1$s,growx", wrap));
+		final String growx = "growx";
+		//
+		add(tfText = new JTextField(), String.format("%1$s,%2$s", growx, wrap));
 		//
 		add(new JLabel());
 		//
 		add(btnExecute = new JButton("Execute"), wrap);
 		//
-		add(new JLabel("Hiragana"));
+		add(new JLabel("Response Code"));
 		//
-		final String growx = "growx";
+		add(tfResponseCode = new JTextField(), String.format("%1$s,%2$s", growx, wrap));
+		//
+		add(new JLabel("Hiragana"));
 		//
 		add(tfHiragana = new JTextField(), growx);
 		//
@@ -117,7 +122,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		//
 		add(tfAudioUrl = new JTextField(), String.format("%1$s,%2$s,", growx, wrap));
 		//
-		setEditable(false, tfHiragana, tfAudioUrl);
+		setEditable(false, tfHiragana, tfResponseCode, tfAudioUrl);
 		//
 		addActionListener(this, btnExecute, btnCopyHiragana);
 		//
@@ -158,7 +163,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		//
 		if (Objects.equals(source, btnExecute)) {
 			//
-			setText(null, tfHiragana, tfAudioUrl);
+			setText(null, tfHiragana, tfResponseCode, tfAudioUrl);
 			//
 			final URIBuilder uriBuilder = new URIBuilder();
 			//
@@ -184,9 +189,21 @@ public class JapanDictGui extends JPanel implements ActionListener {
 				setRequestProperty(httpURLConnection, "User-Agent",
 						"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36");
 				//
-				document = testAndApply(x -> Boolean.logicalAnd(x != null, !isTestMode()),
-						is = getInputStream(httpURLConnection), x -> Jsoup.parse(x, "utf-8", ""), null);
-				//
+				if (httpURLConnection != null) {
+					//
+					final int responseCode = httpURLConnection.getResponseCode();
+					//
+					Util.setText(tfResponseCode, Integer.toString(responseCode));
+					//
+					if (HttpStatus.isSuccess(responseCode)) {
+						//
+						document = testAndApply(x -> Boolean.logicalAnd(x != null, !isTestMode()),
+								is = getInputStream(httpURLConnection), x -> Jsoup.parse(x, "utf-8", ""), null);
+						//
+					} // if
+						//
+				} // if
+					//
 			} catch (final Exception e) {
 				//
 				TaskDialogs.showException(e);
