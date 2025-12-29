@@ -406,7 +406,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		return instance != null && instance.startsWith(string, prefix);
 	}
 
-	private static <T, R, E extends Exception> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Exception> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
