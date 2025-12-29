@@ -143,14 +143,10 @@ class JapanDictGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Stream) {
+			} else if (proxy instanceof Stream && Objects.equals(name, "toArray")) {
 				//
-				if (Objects.equals(name, "toArray")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
