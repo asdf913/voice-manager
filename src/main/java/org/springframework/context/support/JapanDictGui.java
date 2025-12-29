@@ -88,7 +88,10 @@ public class JapanDictGui extends JPanel implements ActionListener {
 	@Note("Hiragana")
 	private JTextComponent tfHiragana = null;
 
-	private JTextComponent tfResponseCode, tfAudioUrl = null;
+	@Note("Response Code")
+	private JTextComponent tfResponseCode = null;
+
+	private JTextComponent tfAudioUrl = null;
 
 	private AbstractButton btnExecute, btnCopyHiragana = null;
 
