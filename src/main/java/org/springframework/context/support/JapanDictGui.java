@@ -303,11 +303,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				final int length = ints.length;
 				//
-				if (length > 1) {
+				testAndRun(length > 1, () -> {
 					//
 					throw new IllegalStateException();
 					//
-				} else if (length == 1) {
+				});
+				//
+				if (length == 1) {
 					//
 					Util.setSelectedIndex(jcbJlptLevel, ints[0]);
 					//
