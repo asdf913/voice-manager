@@ -307,9 +307,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			for (int i = 0; i < Util.getSize(cbmJlptLevel) && element != null; i++) {
 				//
-				if (StringUtils.isNotBlank(testAndApply((a, b) -> a != null && b != null,
-						Util.getElementAt(cbmJlptLevel, i), ElementUtil.text(element),
-						(a, b) -> com.google.common.base.Strings.commonSuffix(a, b), null))) {
+				if (StringUtils
+						.isNotBlank(testAndApply((a, b) -> a != null && b != null, Util.getElementAt(cbmJlptLevel, i),
+								ElementUtil.text(element), com.google.common.base.Strings::commonSuffix, null))) {
 					//
 					ints = ArrayUtils.add(ints, i);
 					//
