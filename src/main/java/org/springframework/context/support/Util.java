@@ -2338,7 +2338,7 @@ public abstract class Util {
 		//
 		final Iterable<Field> fs = toList(
 				filter(stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
-						x -> Objects.equals(getName(x), "val")));
+						x -> Objects.equals(getName(x), "value")));
 		//
 		if (IterableUtils.size(fs) > 1) {
 			//
