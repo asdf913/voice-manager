@@ -57,7 +57,6 @@ import org.apache.http.client.utils.URIBuilderUtil;
 import org.eclipse.jetty.http.HttpStatus;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
 import org.oxbow.swingbits.dialog.task.TaskDialogs;
@@ -89,7 +88,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 	@Note("Response Code")
 	private JTextComponent tfResponseCode = null;
 
-	private JTextComponent tfAudioUrl = null;
+	private JTextComponent tfRomaji, tfAudioUrl = null;
 
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
@@ -97,8 +96,8 @@ public class JapanDictGui extends JPanel implements ActionListener {
 	@Note("Copy Hiragana")
 	private AbstractButton btnCopyHiragana = null;
 
-	private AbstractButton btnCopyAudioUrl = null;
-
+	private AbstractButton btnCopyRomaji, btnCopyAudioUrl = null;
+	
 	private JapanDictGui() {
 		//
 		setLayout(new MigLayout());
@@ -125,17 +124,23 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		//
 		add(btnCopyHiragana = new JButton("Copy"), wrap);
 		//
+		add(new JLabel("Romaji"));
+		//
+		add(tfRomaji = new JTextField(), growx);
+		//
+		add(btnCopyRomaji = new JButton("Copy"), wrap);
+		//
 		add(new JLabel("Audio URL"));
 		//
 		add(tfAudioUrl = new JTextField(), growx);
 		//
 		add(btnCopyAudioUrl = new JButton("Copy"), wrap);
 		//
-		setEditable(false, tfHiragana, tfResponseCode, tfAudioUrl);
+		setEditable(false, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl);
 		//
-		setEnabled(false, btnCopyHiragana, btnCopyAudioUrl);
+		setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl);
 		//
-		addActionListener(this, btnExecute, btnCopyHiragana, btnCopyAudioUrl);
+		addActionListener(this, btnExecute, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl);
 		//
 	}
 
@@ -189,9 +194,9 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		//
 		if (Objects.equals(source, btnExecute)) {
 			//
-			setText(null, tfHiragana, tfResponseCode, tfAudioUrl);
+			setText(null, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl);
 			//
-			setEnabled(false, btnCopyHiragana, btnCopyAudioUrl);
+			setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl);
 			//
 			final URIBuilder uriBuilder = new URIBuilder();
 			//
@@ -225,7 +230,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 					//
 					final boolean success = HttpStatus.isSuccess(responseCode);
 					//
-					setEnabled(success, btnCopyHiragana, btnCopyAudioUrl);
+					setEnabled(success, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl);
 					//
 					if (success) {
 						//
@@ -266,14 +271,20 @@ public class JapanDictGui extends JPanel implements ActionListener {
 				//
 			} // if
 				//
-			final Element element = testAndApply(x -> IterableUtils.size(x) > 0,
-					ElementUtil.select(document, ".d-inline-block.align-middle.p-2 a"), x -> IterableUtils.get(x, 0),
-					null);
-			//
 			try {
 				//
-				Util.setText(tfAudioUrl, getAudioUrl(scheme, Strings.CS, Util.cast(Iterable.class, ObjectMapperUtil
-						.readValue(new ObjectMapper(), NodeUtil.attr(element, "data-reading"), Object.class))));
+				Util.setText(tfAudioUrl,
+						getAudioUrl(
+								scheme, Strings.CS, Util
+										.cast(Iterable.class,
+												ObjectMapperUtil.readValue(new ObjectMapper(),
+														NodeUtil.attr(
+																testAndApply(x -> IterableUtils.size(x) > 0,
+																		ElementUtil.select(document,
+																				".d-inline-block.align-middle.p-2 a"),
+																		x -> IterableUtils.get(x, 0), null),
+																"data-reading"),
+														Object.class))));
 				//
 			} catch (final JsonProcessingException e) {
 				//
@@ -281,10 +292,20 @@ public class JapanDictGui extends JPanel implements ActionListener {
 				//
 			} // try
 				//
+				// romaji
+				//
+			Util.setText(tfRomaji, StringUtils.trim(ElementUtil.text(testAndApply(x -> IterableUtils.size(x) > 0,
+					ElementUtil.select(document, ".xxsmall"), x -> IterableUtils.get(x, 0), null))));
+			//
 		} else if (Objects.equals(source, btnCopyHiragana)) {
 			//
 			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 					new StringSelection(Util.getText(tfHiragana)), null));
+			//
+		} else if (Objects.equals(source, btnCopyRomaji)) {
+			//
+			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+					new StringSelection(Util.getText(tfRomaji)), null));
 			//
 		} else if (Objects.equals(source, btnCopyAudioUrl)) {
 			//

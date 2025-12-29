@@ -423,6 +423,22 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyHiragana, 0, null)));
 		//
+		// btnCopyHiragana
+		//
+		final AbstractButton btnCopyRomaji = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnCopyRomaji", btnCopyRomaji, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyRomaji, 0, null)));
+		//
+		// btnCopyAudioUrl
+		//
+		final AbstractButton btnCopyAudioUrl = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnCopyAudioUrl", btnCopyAudioUrl, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyAudioUrl, 0, null)));
+		//
 	}
 
 	@Test
