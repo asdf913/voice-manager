@@ -17,19 +17,30 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.Objects;
+import java.util.Spliterator;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -57,15 +68,20 @@ import org.apache.http.client.utils.URIBuilderUtil;
 import org.eclipse.jetty.http.HttpStatus;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
+import org.jsoup.select.Elements;
 import org.oxbow.swingbits.dialog.task.TaskDialogs;
+import org.springframework.beans.factory.FactoryBeanUtil;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.JlptLevelListFactoryBean;
 import org.xml.sax.SAXException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.google.common.collect.Iterables;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
@@ -105,6 +121,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private AbstractButton btnCopyAudioUrl = null;
 
+	private JComboBox<String> jcbJlptLevel = null;
+
+	private ComboBoxModel<String> cbmJlptLevel = null;
+
 	private JapanDictGui() {
 	}
 
@@ -126,6 +146,22 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		add(this, new JLabel("Response Code"));
 		//
 		add(this, tfResponseCode = new JTextField(), String.format("%1$s,%2$s", growx, wrap));
+		//
+		add(this, new JLabel("JLPT Level"));
+		//
+		final JlptLevelListFactoryBean jlptLevelListFactoryBean = new JlptLevelListFactoryBean();
+		//
+		jlptLevelListFactoryBean.setUrl("https://www.jlpt.jp/about/levelsummary.html");
+		//
+		add(this,
+				jcbJlptLevel = new JComboBox<>(cbmJlptLevel = new DefaultComboBoxModel<>(toArray(
+						testAndApply(Objects::nonNull,
+								spliterator(Iterables.concat(Collections.singleton(null),
+										ObjectUtils.getIfNull(FactoryBeanUtil.getObject(jlptLevelListFactoryBean),
+												Collections::emptySet))),
+								x -> StreamSupport.stream(x, false), null),
+						String[]::new))),
+				wrap);
 		//
 		add(this, new JLabel("Hiragana"));
 		//
@@ -151,6 +187,16 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		addActionListener(this, btnExecute, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl);
 		//
+	}
+
+	private static <E> Spliterator<E> spliterator(final Iterable<E> instance) {
+		return instance != null ? instance.spliterator() : null;
+	}
+
+	private static <T> T[] toArray(final Stream<T> instance, final IntFunction<T[]> function) {
+		return instance != null && Boolean.logicalOr(function != null, Proxy.isProxyClass(Util.getClass(instance)))
+				? instance.toArray(function)
+				: null;
 	}
 
 	private static void setEnabled(final boolean enabled, final Component a, final Component b,
@@ -207,6 +253,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl);
 			//
+			Util.setSelectedItem(cbmJlptLevel, "");
+			//
 			final URIBuilder uriBuilder = new URIBuilder();
 			//
 			final String scheme = "https";
@@ -258,6 +306,43 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				IOUtils.closeQuietly(is);
 				//
+			} // if
+				//
+				// JLPT
+				//
+			final Elements es = ElementUtil.select(document, "span.badge[title^='#jlpt'].me-1");
+			//
+			final Element element = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0),
+					null);
+			//
+			int[] ints = null;
+			//
+			for (int i = 0; i < Util.getSize(cbmJlptLevel) && element != null; i++) {
+				//
+				if (StringUtils.isNotBlank(testAndApply((a, b) -> a != null && b != null,
+						Util.getElementAt(cbmJlptLevel, i), ElementUtil.text(element),
+						(a, b) -> com.google.common.base.Strings.commonSuffix(a, b), null))) {
+					//
+					ints = ArrayUtils.add(ints, i);
+					//
+				} // if
+					//
+			} // for
+				//
+			if (ints != null) {
+				//
+				final int length = ints.length;
+				//
+				if (length > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} else if (length == 1) {
+					//
+					Util.setSelectedIndex(jcbJlptLevel, ints[0]);
+					//
+				} // if
+					//
 			} // if
 				//
 			final Pattern patten = Pattern.compile("^\\p{InHiragana}+$");
@@ -320,6 +405,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		actionPerformed1(this, source);
 		//
+	}
+
+	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) {
+		return Util.test(predicate, t, u) ? Util.apply(functionTrue, t, u) : Util.apply(functionFalse, t, u);
 	}
 
 	private static void actionPerformed1(@Nullable final JapanDictGui instance, final Object source) {

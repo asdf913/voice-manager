@@ -13,8 +13,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.IntFunction;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -44,7 +48,8 @@ class JapanDictGuiTest {
 
 	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT,
 			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_ADD_ACTION_LISTENER, METHOD_SET_ENABLED = null;
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_ADD_ACTION_LISTENER, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
+			METHOD_TO_ARRAY = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -87,6 +92,11 @@ class JapanDictGuiTest {
 		(METHOD_SET_ENABLED = Util.getDeclaredMethod(clz, "setEnabled", Boolean.TYPE, Component.class, Component.class,
 				Component[].class)).setAccessible(true);
 		//
+		(METHOD_TEST_AND_APPLY = Util.getDeclaredMethod(clz, "testAndApply", BiPredicate.class, Object.class,
+				Object.class, BiFunction.class, BiFunction.class)).setAccessible(true);
+		//
+		(METHOD_TO_ARRAY = Util.getDeclaredMethod(clz, "toArray", Stream.class, IntFunction.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -105,14 +115,42 @@ class JapanDictGuiTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof BiPredicate) {
+				//
+				if (Objects.equals(name, "test")) {
+					//
+					return test;
+					//
+				} // if
+					//
 			} else if (proxy instanceof FailableFunction && Objects.equals(name, "apply")) {
 				//
 				return null;
 				//
-			} else if (proxy instanceof Iterable && Objects.equals(name, "iterator")) {
+			} else if (proxy instanceof BiFunction) {
 				//
-				return null;
+				if (Objects.equals(name, "apply")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Iterable) {
 				//
+				if (Util.anyMatch(Stream.of("iterator", "spliterator"), x -> Objects.equals(name, x))) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Stream) {
+				//
+				if (Objects.equals(name, "toArray")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -143,10 +181,14 @@ class JapanDictGuiTest {
 
 	private JapanDictGui instance = null;
 
+	private IH ih = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = Util.cast(JapanDictGui.class, Narcissus.allocateInstance(JapanDictGui.class));
+		//
+		ih = new IH();
 		//
 	}
 
@@ -267,8 +309,6 @@ class JapanDictGuiTest {
 		//
 		Object result = null;
 		//
-		IH ih = null;
-		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ArrayUtils.get(ms, i)) == null || or(m.isSynthetic(),
@@ -311,9 +351,9 @@ class JapanDictGuiTest {
 					//
 				} else if (isInterface(parameterType)) {
 					//
-					if (ih == null) {
+					if ((ih = ObjectUtils.getIfNull(ih, IH::new)) != null) {
 						//
-						(ih = new IH()).test = Boolean.FALSE;
+						ih.test = Boolean.FALSE;
 						//
 					} // if
 						//
@@ -556,6 +596,29 @@ class JapanDictGuiTest {
 	void testSetEnabled() throws Throwable {
 		//
 		Assertions.assertNull(invoke(METHOD_SET_ENABLED, null, Boolean.TRUE, null, null, null));
+		//
+	}
+
+	@Test
+	void testTestAndApply() throws Throwable {
+		//
+		if (ih != null) {
+			//
+			ih.test = Boolean.TRUE;
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_APPLY, null, Reflection.newProxy(BiPredicate.class, ih), null,
+				null, null, null));
+		//
+	}
+
+	@Test
+	void testToArray() throws Throwable {
+		//
+		Assertions.assertNull(invoke(METHOD_TO_ARRAY, null, Reflection.newProxy(Stream.class, ih), null));
+		//
+		Assertions.assertNull(invoke(METHOD_TO_ARRAY, null, Stream.empty(), null));
 		//
 	}
 
