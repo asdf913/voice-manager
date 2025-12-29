@@ -219,7 +219,8 @@ public class JapanDictGui extends JPanel implements ActionListener {
 			//
 	}
 
-	private static String getAudioUrl(final String scheme, final Strings strings, final Iterable<?> iterable) {
+	private static String getAudioUrl(final String scheme, final Strings strings,
+			@Nullable final Iterable<?> iterable) {
 		//
 		StringBuilder sb = null;
 		//
