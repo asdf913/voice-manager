@@ -15,6 +15,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -157,13 +158,9 @@ public class JapanDictGui extends JPanel implements ActionListener {
 				final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class,
 						Util.openConnection(Util.toURL(URIBuilderUtil.build(uriBuilder))));
 				//
-				if (httpURLConnection != null) {
-					//
-					httpURLConnection.setRequestProperty("User-Agent",
-							"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36");
-					//
-				} // if
-					//
+				setRequestProperty(httpURLConnection, "User-Agent",
+						"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36");
+				//
 				document = testAndApply(x -> Boolean.logicalAnd(x != null, !isTestMode()),
 						is = httpURLConnection != null ? httpURLConnection.getInputStream() : null,
 						x -> Jsoup.parse(x, "utf-8", ""), null);
@@ -259,7 +256,12 @@ public class JapanDictGui extends JPanel implements ActionListener {
 				//
 		} // if
 			//
+	}
 
+	private static void setRequestProperty(final URLConnection instance, final String key, final String value) {
+		if (instance != null) {
+			instance.setRequestProperty(key, value);
+		}
 	}
 
 	private static void setText(@Nullable final String text, @Nullable final JTextComponent... jtcs) {
