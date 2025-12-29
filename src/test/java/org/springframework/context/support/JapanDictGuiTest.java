@@ -435,7 +435,6 @@ class JapanDictGuiTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
-
 	}
 
 }
