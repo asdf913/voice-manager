@@ -128,7 +128,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		//
 	}
 
-	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
+	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
 		//
 		for (int i = 0; abs != null && i < abs.length; i++) {
 			//
@@ -264,7 +264,7 @@ public class JapanDictGui extends JPanel implements ActionListener {
 		} // if
 	}
 
-	private static void setContents(final Clipboard instance, final Transferable transferable,
+	private static void setContents(@Nullable final Clipboard instance, final Transferable transferable,
 			final ClipboardOwner clipboardOwner) {
 		if (instance != null) {
 			instance.setContents(transferable, clipboardOwner);
