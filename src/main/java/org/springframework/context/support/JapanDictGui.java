@@ -236,7 +236,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return instance != null && instance.equals(str1, str2);
 	}
 
-	private static Object evaluate(final Page instance, final String expression) {
+	private static Object evaluate(@Nullable final Page instance, final String expression) {
 		return instance != null ? instance.evaluate(expression) : null;
 	}
 
