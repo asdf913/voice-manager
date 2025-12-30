@@ -175,14 +175,10 @@ class JapanDictGuiTest {
 					//
 				} // if
 
-			} else if (proxy instanceof Browser) {
+			} else if (proxy instanceof Browser && Objects.equals(name, "newPage")) {
 				//
-				if (Objects.equals(name, "newPage")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
