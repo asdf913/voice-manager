@@ -40,6 +40,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.base.Predicates;
@@ -56,7 +57,7 @@ class JapanDictGuiTest {
 	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT,
 			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_ADD_ACTION_LISTENER, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
-			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES = null;
+			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_EQUALS = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -106,6 +107,9 @@ class JapanDictGuiTest {
 		//
 		(METHOD_GET_JLPT_LEVEL_INDICES = Util.getDeclaredMethod(clz, "getJlptLevelIndices", ComboBoxModel.class,
 				String.class)).setAccessible(true);
+		//
+		(METHOD_EQUALS = Util.getDeclaredMethod(clz, "equals", Strings.class, String.class, String.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -601,7 +605,7 @@ class JapanDictGuiTest {
 	}
 
 	@Test
-	void testTestAndRun() throws Throwable {
+	void testTestAndRun() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_RUN, null, Boolean.TRUE, null));
 		//
@@ -616,21 +620,21 @@ class JapanDictGuiTest {
 	}
 
 	@Test
-	void testAddActionListener() throws Throwable {
+	void testAddActionListener() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_ADD_ACTION_LISTENER, null, null, null));
 		//
 	}
 
 	@Test
-	void testSetEnabled() throws Throwable {
+	void testSetEnabled() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_SET_ENABLED, null, Boolean.TRUE, null, null, null));
 		//
 	}
 
 	@Test
-	void testTestAndApply() throws Throwable {
+	void testTestAndApply() throws IllegalAccessException, InvocationTargetException {
 		//
 		if (ih != null) {
 			//
@@ -644,7 +648,7 @@ class JapanDictGuiTest {
 	}
 
 	@Test
-	void testToArray() throws Throwable {
+	void testToArray() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_TO_ARRAY, null, Reflection.newProxy(Stream.class, ih), null));
 		//
@@ -653,7 +657,7 @@ class JapanDictGuiTest {
 	}
 
 	@Test
-	void testGetJlptLevelIndices() throws Throwable {
+	void testGetJlptLevelIndices() throws IllegalAccessException, InvocationTargetException, JsonProcessingException {
 		//
 		Assertions.assertNull(
 				invoke(METHOD_GET_JLPT_LEVEL_INDICES, null, new DefaultComboBoxModel<>(new Object[] { null }), null));
@@ -663,6 +667,13 @@ class JapanDictGuiTest {
 		Assertions.assertEquals(ObjectMapperUtil.writeValueAsString(objectMapper, new int[] { 1 }),
 				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_GET_JLPT_LEVEL_INDICES, null,
 						new DefaultComboBoxModel<>(new Object[] { null, "N1" }), "JLPT N1")));
+		//
+	}
+
+	@Test
+	void testEquals() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertEquals(Boolean.TRUE, invoke(METHOD_EQUALS, null, Strings.CI, null, null));
 		//
 	}
 

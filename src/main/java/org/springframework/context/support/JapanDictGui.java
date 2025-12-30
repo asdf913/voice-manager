@@ -157,6 +157,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			BrowserType browserType = null;
 			//
+			final boolean runningInGitHubActions = equals(Strings.CI, "true", System.getenv("GITHUB_ACTIONS"));
+			//
 			for (int i = 0; i < IterableUtils.size(browserTypes); i++) {
 				//
 				if ((browserType = IterableUtils.get(browserTypes, i)) == null) {
@@ -165,7 +167,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 				} // if
 					//
-				try (final Browser browser = BrowserTypeUtil.launch(browserType); final Page page = newPage(browser)) {
+				try (final Browser browser = !runningInGitHubActions ? BrowserTypeUtil.launch(browserType) : null;
+						final Page page = newPage(browser)) {
 					//
 					Util.put(userAgentMap = ObjectUtils.getIfNull(userAgentMap, LinkedHashMap::new), browserType.name(),
 							Util.toString(evaluate(page, "window.navigator.userAgent")));
@@ -227,6 +230,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		addActionListener(this, btnExecute, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl);
 		//
+	}
+
+	private static boolean equals(final Strings instance, final String str1, final String str2) {
+		return instance != null && instance.equals(str1, str2);
 	}
 
 	private static Object evaluate(final Page instance, final String expression) {
