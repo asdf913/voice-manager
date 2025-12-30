@@ -240,7 +240,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return instance != null ? instance.evaluate(expression) : null;
 	}
 
-	private static Page newPage(final Browser instance) {
+	private static Page newPage(@Nullable final Browser instance) {
 		return instance != null ? instance.newPage() : null;
 	}
 
