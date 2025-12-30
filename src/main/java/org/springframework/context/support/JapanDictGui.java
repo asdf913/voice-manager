@@ -329,8 +329,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						Util.openConnection(Util.toURL(URIBuilderUtil.build(uriBuilder))));
 				//
 				setRequestProperty(httpURLConnection, "User-Agent", Objects.toString(
-						testAndApply((a, b) -> Util.containsKey(a, b), userAgentMap,
-								Util.getSelectedItem(cbmBrowserType), (a, b) -> Util.get(a, b), null),
+						testAndApply(Util::containsKey, userAgentMap, Util.getSelectedItem(cbmBrowserType), Util::get,
+								null),
 						"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"));
 				//
 				if (httpURLConnection != null) {
