@@ -232,7 +232,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static boolean equals(final Strings instance, final String str1, final String str2) {
+	private static boolean equals(@Nullable final Strings instance, final String str1, final String str2) {
 		return instance != null && instance.equals(str1, str2);
 	}
 
