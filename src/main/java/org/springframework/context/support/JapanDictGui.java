@@ -130,7 +130,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private Map<String, String> userAgentMap = null;
 
-	private ComboBoxModel<String> cbmBrowserType = null;
+	private transient ComboBoxModel<String> cbmBrowserType = null;
 
 	private JapanDictGui() {
 	}
