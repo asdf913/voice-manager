@@ -139,7 +139,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Copy Audio URL")
 	private AbstractButton btnCopyAudioUrl = null;
 
-	private AbstractButton btnDownloadAudioUrl = null;
+	private AbstractButton btnDownloadAudio = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
@@ -245,7 +245,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, btnCopyAudioUrl = new JButton("Copy"));
 		//
-		add(this, btnDownloadAudioUrl = new JButton("Download"), wrap);
+		add(this, btnDownloadAudio = new JButton("Download"), wrap);
 		//
 		add(this, new JLabel("Pitch Accent"));
 		//
@@ -253,9 +253,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		setEditable(false, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl);
 		//
-		setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudioUrl);
+		setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio);
 		//
-		addActionListener(this, btnExecute, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudioUrl);
+		addActionListener(this, btnExecute, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio);
 		//
 	}
 
@@ -332,7 +332,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			setText(null, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl);
 			//
-			setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudioUrl);
+			setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio);
 			//
 			Util.setSelectedItem(cbmJlptLevel, "");
 			//
@@ -374,7 +374,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					final boolean success = HttpStatus.isSuccess(responseCode);
 					//
-					setEnabled(success, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudioUrl);
+					setEnabled(success, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio);
 					//
 					document = testAndApply(x -> Util.and(x != null, !isTestMode()),
 							is = testAndApply(x -> success, httpURLConnection, x -> getInputStream(x), null),
@@ -576,7 +576,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 					new StringSelection(Util.getText(instance.tfAudioUrl)), null));
 			//
-		} else if (Objects.equals(source, instance.btnDownloadAudioUrl)) {
+		} else if (Objects.equals(source, instance.btnDownloadAudio)) {
 			//
 			InputStream is = null;
 			//

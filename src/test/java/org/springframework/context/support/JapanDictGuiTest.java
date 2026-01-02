@@ -533,13 +533,13 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyAudioUrl, 0, null)));
 		//
-		// btnDownloadAudioUrl
+		// btnDownloadAudio
 		//
-		final AbstractButton btnDownloadAudioUrl = new JButton();
+		final AbstractButton btnDownloadAudio = new JButton();
 		//
-		FieldUtils.writeDeclaredField(instance, "btnDownloadAudioUrl", btnDownloadAudioUrl, true);
+		FieldUtils.writeDeclaredField(instance, "btnDownloadAudio", btnDownloadAudio, true);
 		//
-		final ActionEvent actionEvent = new ActionEvent(btnDownloadAudioUrl, 0, null);
+		final ActionEvent actionEvent = new ActionEvent(btnDownloadAudio, 0, null);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
 		//
