@@ -632,7 +632,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static StringBuilder append(final StringBuilder instance, final String s) {
+	private static StringBuilder append(@Nullable final StringBuilder instance, final String s) {
 		//
 		final Iterable<Field> fs = Util.toList(Util.filter(
 				Util.stream(
