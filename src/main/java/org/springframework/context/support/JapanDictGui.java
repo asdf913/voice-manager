@@ -472,9 +472,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				final boolean isSuccess = isSuccess(PageUtil.navigate(page, Util.toString(uri)));
 				//
 				testAndAccept(
-						x -> isSuccess && startsWith(Strings.CS,
-								getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)),
-								"image/"),
+						x -> Boolean.logicalAnd(isSuccess,
+								startsWith(Strings.CS,
+										getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch,
+												null)),
+										"image/")),
 						testAndApply((a, b) -> !IterableUtils.isEmpty(ElementUtil.select(a, b)), document,
 								".d-flex.justify-content-between.align-items-center",
 								(a, b) -> screenshot(locator(page, b)), null),
