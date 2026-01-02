@@ -60,7 +60,7 @@ class JapanDictGuiTest {
 	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT,
 			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_ADD_ACTION_LISTENER, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
-			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_EQUALS = null;
+			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_EQUALS, METHOD_SET_JCB_JLPT_LEVEL = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -113,6 +113,8 @@ class JapanDictGuiTest {
 		//
 		(METHOD_EQUALS = Util.getDeclaredMethod(clz, "equals", Strings.class, String.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_SET_JCB_JLPT_LEVEL = Util.getDeclaredMethod(clz, "setJcbJlptLevel", int[].class)).setAccessible(true);
 		//
 	}
 
@@ -717,6 +719,28 @@ class JapanDictGuiTest {
 	void testEquals() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertEquals(Boolean.TRUE, invoke(METHOD_EQUALS, null, Strings.CI, null, null));
+		//
+	}
+
+	@Test
+	void testSetJcbJlptLevel() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_SET_JCB_JLPT_LEVEL, instance, new int[] { 0 }));
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			//
+			try {
+				//
+				invoke(METHOD_SET_JCB_JLPT_LEVEL, instance, new int[] { 0, 1 });
+				//
+			} catch (final InvocationTargetException e) {
+				//
+				throw e.getTargetException();
+				//
+			} // tsry
+				//
+		});
+		//
 		//
 	}
 

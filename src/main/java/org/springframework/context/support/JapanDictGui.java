@@ -394,29 +394,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				// JLPT
 				//
-			final int[] ints = getJlptLevelIndices(cbmJlptLevel,
+			setJcbJlptLevel(getJlptLevelIndices(cbmJlptLevel,
 					ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
 							ElementUtil.select(document, "span.badge[title^='#jlpt'].me-1"),
-							x -> IterableUtils.get(x, 0), null)));
+							x -> IterableUtils.get(x, 0), null))));
 			//
-			if (ints != null) {
-				//
-				final int length = ints.length;
-				//
-				testAndRun(length > 1, () -> {
-					//
-					throw new IllegalStateException();
-					//
-				});
-				//
-				if (length == 1) {
-					//
-					Util.setSelectedIndex(jcbJlptLevel, ints[0]);
-					//
-				} // if
-					//
-			} // if
-				//
 			final Pattern patten = Pattern.compile("^\\p{InHiragana}+$");
 			//
 			final Iterable<String> ss = Util.toList(Util.map(Util.filter(
@@ -502,6 +484,24 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		actionPerformed1(this, source);
 		//
+	}
+
+	private void setJcbJlptLevel(final int[] ints) {
+		//
+		final int length = ints != null ? ints.length : 0;
+		//
+		testAndRun(length > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		if (length == 1) {
+			//
+			Util.setSelectedIndex(jcbJlptLevel, ints[0]);
+			//
+		} // if
+			//
 	}
 
 	private static boolean isSuccess(@Nullable final Response instance) {
