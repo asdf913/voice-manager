@@ -131,7 +131,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Copy Romaji")
 	private AbstractButton btnCopyRomaji = null;
 
-	private AbstractButton btnCopyAudioUrl, btnDownloadAudioUrl = null;
+	@Note("Copy Audio URL")
+	private AbstractButton btnCopyAudioUrl = null;
+
+	private AbstractButton btnDownloadAudioUrl = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
