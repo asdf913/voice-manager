@@ -49,6 +49,7 @@ import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.Response;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
@@ -119,7 +120,7 @@ class JapanDictGuiTest {
 
 		private Boolean test;
 
-		private Integer size;
+		private Integer size, status;
 
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -193,6 +194,14 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof Response) {
+				//
+				if (Objects.equals(name, "status")) {
+					//
+					return status;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -397,7 +406,7 @@ class JapanDictGuiTest {
 						//
 						ih.test = Boolean.FALSE;
 						//
-						ih.size = Integer.valueOf(0);
+						ih.size = ih.status = Integer.valueOf(0);
 						//
 					} // if
 						//

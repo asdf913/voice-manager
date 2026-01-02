@@ -469,9 +469,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					final Browser browser = BrowserTypeUtil.launch(chromium(playwright));
 					final Page page = newPage(browser)) {
 				//
-				final Response response = PageUtil.navigate(page, Util.toString(uri));
-				//
-				if (response != null && HttpStatus.isSuccess(response.status())) {
+				if (isSuccess(PageUtil.navigate(page, Util.toString(uri)))) {
 					//
 					testAndAccept(
 							x -> startsWith(Strings.CS,
@@ -505,6 +503,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		actionPerformed1(this, source);
 		//
+	}
+
+	private static boolean isSuccess(final Response instance) {
+		return instance != null && HttpStatus.isSuccess(instance.status());
 	}
 
 	private static String getMimeType(@Nullable final ContentInfo instance) {
