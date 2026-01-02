@@ -409,8 +409,11 @@ class JapanDictGuiTest {
 				//
 				result = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Boolean.logicalAnd(isPrimitive(returnType = Util.getReturnType(m)),
-						!Objects.equals(returnType, Void.TYPE))) {
+				if (Boolean.logicalOr(
+						Boolean.logicalAnd(isPrimitive(returnType = Util.getReturnType(m)),
+								!Objects.equals(returnType, Void.TYPE)),
+						Boolean.logicalAnd(Objects.equals(name, "append"), Arrays.equals(parameterTypes,
+								new Class<?>[] { StringBuilder.class, Character.TYPE })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -509,6 +512,32 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyAudioUrl, 0, null)));
 		//
+		// btnDownloadAudioUrl
+		//
+		final AbstractButton btnDownloadAudioUrl = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnDownloadAudioUrl", btnDownloadAudioUrl, true);
+		//
+		final ActionEvent actionEvent = new ActionEvent(btnDownloadAudioUrl, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
+		final JTextComponent tfAudioUrl = new JTextField();
+		//
+		FieldUtils.writeDeclaredField(instance, "tfAudioUrl", tfAudioUrl, true);
+		//
+		Util.setText(tfAudioUrl, "");
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
+		Util.setText(tfAudioUrl, " ");
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
+		Util.setText(tfAudioUrl, "1");
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
 	}
 
 	@Test
@@ -550,7 +579,7 @@ class JapanDictGuiTest {
 	void testStartsWith() throws IllegalAccessException, InvocationTargetException {
 		//
 		final Strings strings = Strings.CS;
-		// s
+		//
 		Assertions.assertEquals(Boolean.TRUE, invoke(METHOD_STARTS_WITH, null, strings, null, null));
 		//
 		Assertions.assertEquals(Boolean.FALSE, invoke(METHOD_STARTS_WITH, null, strings, "", null));
@@ -564,9 +593,8 @@ class JapanDictGuiTest {
 		//
 		final char c = ' ';
 		//
-		Assertions.assertNull(invoke(METHOD_APPEND, null, sb, Character.valueOf(c)));
-		//
-		Assertions.assertEquals(String.valueOf(new char[] { c }), Util.toString(sb));
+		Assertions.assertEquals(String.valueOf(new char[] { c }),
+				Util.toString(invoke(METHOD_APPEND, null, sb, Character.valueOf(c))));
 		//
 	}
 

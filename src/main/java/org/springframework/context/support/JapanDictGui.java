@@ -19,9 +19,12 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -42,6 +45,7 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -53,6 +57,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -64,6 +69,8 @@ import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.function.FailableSupplierUtil;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.validator.routines.UrlValidator;
+import org.apache.commons.validator.routines.UrlValidatorUtil;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URIBuilderUtil;
 import org.eclipse.jetty.http.HttpStatus;
@@ -80,6 +87,8 @@ import org.xml.sax.SAXException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.j256.simplemagic.ContentInfo;
+import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.BrowserTypeUtil;
@@ -122,7 +131,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Copy Romaji")
 	private AbstractButton btnCopyRomaji = null;
 
-	private AbstractButton btnCopyAudioUrl = null;
+	private AbstractButton btnCopyAudioUrl, btnDownloadAudioUrl = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
@@ -222,13 +231,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, tfAudioUrl = new JTextField(), growx);
 		//
-		add(this, btnCopyAudioUrl = new JButton("Copy"), wrap);
+		add(this, btnCopyAudioUrl = new JButton("Copy"));
+		//
+		add(this, btnDownloadAudioUrl = new JButton("Download"), wrap);
 		//
 		setEditable(false, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl);
 		//
-		setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl);
+		setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudioUrl);
 		//
-		addActionListener(this, btnExecute, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl);
+		addActionListener(this, btnExecute, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudioUrl);
 		//
 	}
 
@@ -305,7 +316,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			setText(null, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl);
 			//
-			setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl);
+			setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudioUrl);
 			//
 			Util.setSelectedItem(cbmJlptLevel, "");
 			//
@@ -343,7 +354,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					final boolean success = HttpStatus.isSuccess(responseCode);
 					//
-					setEnabled(success, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl);
+					setEnabled(success, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudioUrl);
 					//
 					document = testAndApply(x -> Util.and(x != null, !isTestMode()),
 							is = testAndApply(x -> success, httpURLConnection, x -> getInputStream(x), null),
@@ -486,8 +497,63 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 					new StringSelection(Util.getText(instance.tfAudioUrl)), null));
 			//
+		} else if (Objects.equals(source, instance.btnDownloadAudioUrl)) {
+			//
+			InputStream is = null;
+			//
+			try {
+				//
+				final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class,
+						Util.openConnection(
+								Util.toURL(testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
+										Util.getText(instance.tfAudioUrl), URI::new, null))));
+				//
+				setRequestProperty(httpURLConnection, "User-Agent", Objects.toString(
+						testAndApply(Util::containsKey, instance.userAgentMap,
+								Util.getSelectedItem(instance.cbmBrowserType), Util::get, null),
+						"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"));
+				//
+				final byte[] bs = testAndApply(Objects::nonNull, is = Util.getInputStream(httpURLConnection),
+						IOUtils::toByteArray, null);
+				//
+				final StringBuilder sb = testAndApply(Objects::nonNull, Util.getText(instance.tfText),
+						StringBuilder::new, null);
+				//
+				if (Objects.equals(
+						getMessage(testAndApply(Objects::nonNull, bs, x -> new ContentInfoUtil().findMatch(x), null)),
+						"Audio file with ID3 version 2.4, MP3 encoding")) {
+					//
+					append(append(sb, '.'), "mp3");
+					//
+				} // if
+					//
+				final JFileChooser jfc = new JFileChooser();
+				//
+				jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.toString(sb), Path::of, null)));
+				//
+				if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
+						&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+					//
+					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
+					//
+				} // if
+					//
+			} catch (final URISyntaxException | IOException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} finally {
+				//
+				IOUtils.closeQuietly(is);
+				//
+			} // try
+				//
 		} // if
 			//
+	}
+
+	private static String getMessage(final ContentInfo instance) {
+		return instance != null ? instance.getMessage() : null;
 	}
 
 	private static void testAndRun(final boolean condition, final Runnable runnable) {
@@ -516,27 +582,25 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			if (startsWith(strings, s = Util.toString(IterableUtils.get(iterable, i)), "//")) {
 				//
-				sb.append(s);
-				//
-				sb.append("/read?outputFormat=mp3");
+				append(append(sb, s), "/read?outputFormat=mp3");
 				//
 				continue;
 				//
 			} // if
 				//
-			sb.append('&');
+			append(sb, '&');
 			//
 			if (NumberUtils.isParsable(s)) {
 				//
-				sb.append(String.join("=", "vid", s));
+				append(sb, String.join("=", "vid", s));
 				//
 			} else if (isXml(s)) {
 				//
-				sb.append(String.join("=", "text", URLEncoder.encode(s, StandardCharsets.UTF_8)));
+				append(sb, String.join("=", "text", URLEncoder.encode(s, StandardCharsets.UTF_8)));
 				//
 			} else if (StringUtils.countMatches(s, '.') == 2) {
 				//
-				sb.append(String.join("=", "jwt", s));
+				append(sb, String.join("=", "jwt", s));
 				//
 			} // if
 				//
@@ -546,7 +610,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static void append(@Nullable final StringBuilder instance, final char c) {
+	private static StringBuilder append(@Nullable final StringBuilder instance, final char c) {
 		//
 		final Iterable<Field> fs = Util.toList(Util.filter(
 				Util.stream(
@@ -561,12 +625,27 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
-		if (f != null && instance != null && Narcissus.getField(instance, f) != null) {
+		return f != null && instance != null && Narcissus.getField(instance, f) != null ? instance.append(c) : instance;
+		//
+	}
+
+	private static StringBuilder append(final StringBuilder instance, final String s) {
+		//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), "value")));
+		//
+		if (IterableUtils.size(fs) > 1) {
 			//
-			instance.append(c);
+			throw new IllegalStateException();
 			//
 		} // if
 			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		return f != null && instance != null && Narcissus.getField(instance, f) != null ? instance.append(s) : null;
+		//
 	}
 
 	private static <T> void testAndAccept(final Predicate<T> instance, final T value, final Consumer<T> consumer) {
