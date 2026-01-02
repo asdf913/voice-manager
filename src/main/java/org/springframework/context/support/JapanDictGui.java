@@ -509,6 +509,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return instance != null && HttpStatus.isSuccess(instance.status());
 	}
 
+	@Nullable
 	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
