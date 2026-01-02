@@ -473,26 +473,28 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				if (response != null && HttpStatus.isSuccess(response.status())) {
 					//
-					final byte[] bs = testAndApply((a, b) -> !IterableUtils.isEmpty(ElementUtil.select(a, b)), document,
-							".d-flex.justify-content-between.align-items-center",
-							(a, b) -> screenshot(locator(page, b)), null);
+					testAndAccept(
+							x -> startsWith(Strings.CS,
+									getMimeType(
+											testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)),
+									"image/"),
+							testAndApply((a, b) -> !IterableUtils.isEmpty(ElementUtil.select(a, b)), document,
+									".d-flex.justify-content-between.align-items-center",
+									(a, b) -> screenshot(locator(page, b)), null),
+							x -> {
+								//
+								try (final InputStream is2 = new ByteArrayInputStream(x)) {
+									//
+									Util.setIcon(pitchAccentImage, new ImageIcon(ImageIO.read(is2)));
+									//
+								} catch (final IOException e) {
+									//
+									TaskDialogs.showException(e);
+									//
+								} // try
+									//
+							});
 					//
-					if (startsWith(Strings.CS,
-							getMimeType(testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null)),
-							"image/")) {
-						//
-						try (final InputStream is2 = new ByteArrayInputStream(bs)) {
-							//
-							Util.setIcon(pitchAccentImage, new ImageIcon(ImageIO.read(is2)));
-							//
-						} catch (final IOException e) {
-							//
-							TaskDialogs.showException(e);
-							//
-						} // try
-							//
-					} // if
-						//
 				} // if
 					//
 				pack(window);
