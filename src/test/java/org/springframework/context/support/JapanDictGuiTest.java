@@ -46,7 +46,9 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 import com.microsoft.playwright.Browser;
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.Playwright;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
@@ -169,16 +171,32 @@ class JapanDictGuiTest {
 				//
 			} else if (proxy instanceof Page) {
 				//
-				if (Objects.equals(name, "evaluate")) {
+				if (Util.anyMatch(Stream.of("evaluate", "locator"), x -> Objects.equals(name, x))) {
 					//
 					return null;
 					//
 				} // if
-
+					//
 			} else if (proxy instanceof Browser && Objects.equals(name, "newPage")) {
 				//
 				return null;
 				//
+			} else if (proxy instanceof Playwright) {
+				//
+				if (Objects.equals(name, "chromium")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Locator) {
+				//
+				if (Objects.equals(name, "screenshot")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);

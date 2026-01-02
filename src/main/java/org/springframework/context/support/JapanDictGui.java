@@ -40,9 +40,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
+import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -92,8 +94,11 @@ import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.BrowserTypeUtil;
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.PageUtil;
 import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.Response;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
@@ -143,6 +148,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	private Map<String, String> userAgentMap = null;
 
 	private transient ComboBoxModel<String> cbmBrowserType = null;
+
+	private JLabel pitchAccentImage = null;
+
+	private Window window = null;
 
 	private JapanDictGui() {
 	}
@@ -238,6 +247,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, btnDownloadAudioUrl = new JButton("Download"), wrap);
 		//
+		add(this, new JLabel("Pitch Accent"));
+		//
+		add(this, pitchAccentImage = new JLabel(), wrap);
+		//
 		setEditable(false, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl);
 		//
 		setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudioUrl);
@@ -323,6 +336,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			Util.setSelectedItem(cbmJlptLevel, "");
 			//
+			Util.setIcon(pitchAccentImage, null);
+			//
 			final URIBuilder uriBuilder = new URIBuilder();
 			//
 			final String scheme = "https";
@@ -339,10 +354,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			InputStream is = null;
 			//
+			URI uri = null;
+			//
 			try {
 				//
 				final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class,
-						Util.openConnection(Util.toURL(URIBuilderUtil.build(uriBuilder))));
+						Util.openConnection(Util.toURL(uri = URIBuilderUtil.build(uriBuilder))));
 				//
 				setRequestProperty(httpURLConnection, "User-Agent", Objects.toString(
 						testAndApply(Util::containsKey, userAgentMap, Util.getSelectedItem(cbmBrowserType), Util::get,
@@ -446,10 +463,58 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			Util.setText(tfRomaji, StringUtils.trim(ElementUtil.text(testAndApply(x -> IterableUtils.size(x) > 0,
 					ElementUtil.select(document, ".xxsmall"), x -> IterableUtils.get(x, 0), null))));
 			//
+			// Pitch Accent Image
+			//
+			try (final Playwright playwright = Playwright.create();
+					final Browser browser = BrowserTypeUtil.launch(chromium(playwright));
+					final Page page = newPage(browser)) {
+				//
+				final Response response = PageUtil.navigate(page, Util.toString(uri));
+				//
+				if (response != null && HttpStatus.isSuccess(response.status())) {
+					//
+					final byte[] bs = testAndApply((a, b) -> !IterableUtils.isEmpty(ElementUtil.select(a, b)), document,
+							".d-flex.justify-content-between.align-items-center",
+							(a, b) -> screenshot(locator(page, b)), null);
+					//
+					final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
+					//
+					if (ci != null && startsWith(Strings.CS, ci.getMimeType(), "image/")) {
+						//
+						try (final InputStream is2 = new ByteArrayInputStream(bs)) {
+							//
+							Util.setIcon(pitchAccentImage, new ImageIcon(ImageIO.read(is2)));
+							//
+						} catch (final IOException e) {
+							//
+							TaskDialogs.showException(e);
+							//
+						} // try
+							//
+					} // if
+						//
+				} // if
+					//
+				pack(window);
+				//
+			} // try
+				//
 		} // if
 			//
 		actionPerformed1(this, source);
 		//
+	}
+
+	private static byte[] screenshot(final Locator instance) {
+		return instance != null ? instance.screenshot() : null;
+	}
+
+	private static Locator locator(final Page instance, final String selector) {
+		return instance != null ? instance.locator(selector) : null;
+	}
+
+	private static BrowserType chromium(final Playwright instance) {
+		return instance != null ? instance.chromium() : null;
 	}
 
 	@Nullable
@@ -752,7 +817,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(jFrame, instance);
 		//
-		pack(jFrame);
+		pack(instance.window = jFrame);
 		//
 		setVisible(jFrame, true);
 		//
