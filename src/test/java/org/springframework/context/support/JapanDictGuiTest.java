@@ -194,14 +194,10 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof Response) {
+			} else if (proxy instanceof Response && Objects.equals(name, "status")) {
 				//
-				if (Objects.equals(name, "status")) {
-					//
-					return status;
-					//
-				} // if
-					//
+				return status;
+				//
 			} // if
 				//
 			throw new Throwable(name);
