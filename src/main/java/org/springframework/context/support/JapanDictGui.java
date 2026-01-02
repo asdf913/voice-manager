@@ -505,15 +505,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static byte[] screenshot(final Locator instance) {
+	private static byte[] screenshot(@Nullable final Locator instance) {
 		return instance != null ? instance.screenshot() : null;
 	}
 
-	private static Locator locator(final Page instance, final String selector) {
+	private static Locator locator(@Nullable final Page instance, final String selector) {
 		return instance != null ? instance.locator(selector) : null;
 	}
 
-	private static BrowserType chromium(final Playwright instance) {
+	private static BrowserType chromium(@Nullable final Playwright instance) {
 		return instance != null ? instance.chromium() : null;
 	}
 
