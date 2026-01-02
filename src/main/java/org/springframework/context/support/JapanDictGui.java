@@ -613,6 +613,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	@Nullable
 	private static StringBuilder append(@Nullable final StringBuilder instance, final char c) {
 		//
 		final Iterable<Field> fs = Util.toList(Util.filter(
@@ -632,6 +633,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	@Nullable
 	private static StringBuilder append(@Nullable final StringBuilder instance, final String s) {
 		//
 		final Iterable<Field> fs = Util.toList(Util.filter(
