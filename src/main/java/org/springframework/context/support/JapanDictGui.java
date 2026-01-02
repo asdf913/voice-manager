@@ -477,9 +477,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							".d-flex.justify-content-between.align-items-center",
 							(a, b) -> screenshot(locator(page, b)), null);
 					//
-					final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
-					//
-					if (ci != null && startsWith(Strings.CS, ci.getMimeType(), "image/")) {
+					if (startsWith(Strings.CS,
+							getMimeType(testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null)),
+							"image/")) {
 						//
 						try (final InputStream is2 = new ByteArrayInputStream(bs)) {
 							//
@@ -503,6 +503,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		actionPerformed1(this, source);
 		//
+	}
+
+	private static String getMimeType(final ContentInfo instance) {
+		return instance != null ? instance.getMimeType() : null;
 	}
 
 	private static byte[] screenshot(@Nullable final Locator instance) {
