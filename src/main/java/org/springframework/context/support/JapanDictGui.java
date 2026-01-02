@@ -505,7 +505,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static boolean isSuccess(final Response instance) {
+	private static boolean isSuccess(@Nullable final Response instance) {
 		return instance != null && HttpStatus.isSuccess(instance.status());
 	}
 
