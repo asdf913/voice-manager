@@ -486,7 +486,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private void setJcbJlptLevel(final int[] ints) {
+	private void setJcbJlptLevel(@Nullable final int[] ints) {
 		//
 		final int length = ints != null ? ints.length : 0;
 		//
