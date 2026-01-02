@@ -189,14 +189,10 @@ class JapanDictGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Locator) {
+			} else if (proxy instanceof Locator && Objects.equals(name, "screenshot")) {
 				//
-				if (Objects.equals(name, "screenshot")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
