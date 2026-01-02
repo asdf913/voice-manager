@@ -469,32 +469,29 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					final Browser browser = BrowserTypeUtil.launch(chromium(playwright));
 					final Page page = newPage(browser)) {
 				//
-				if (isSuccess(PageUtil.navigate(page, Util.toString(uri)))) {
-					//
-					testAndAccept(
-							x -> startsWith(Strings.CS,
-									getMimeType(
-											testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)),
-									"image/"),
-							testAndApply((a, b) -> !IterableUtils.isEmpty(ElementUtil.select(a, b)), document,
-									".d-flex.justify-content-between.align-items-center",
-									(a, b) -> screenshot(locator(page, b)), null),
-							x -> {
+				final boolean isSuccess = isSuccess(PageUtil.navigate(page, Util.toString(uri)));
+				//
+				testAndAccept(
+						x -> isSuccess && startsWith(Strings.CS,
+								getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)),
+								"image/"),
+						testAndApply((a, b) -> !IterableUtils.isEmpty(ElementUtil.select(a, b)), document,
+								".d-flex.justify-content-between.align-items-center",
+								(a, b) -> screenshot(locator(page, b)), null),
+						x -> {
+							//
+							try (final InputStream is2 = new ByteArrayInputStream(x)) {
 								//
-								try (final InputStream is2 = new ByteArrayInputStream(x)) {
-									//
-									Util.setIcon(pitchAccentImage, new ImageIcon(ImageIO.read(is2)));
-									//
-								} catch (final IOException e) {
-									//
-									TaskDialogs.showException(e);
-									//
-								} // try
-									//
-							});
-					//
-				} // if
-					//
+								Util.setIcon(pitchAccentImage, new ImageIcon(ImageIO.read(is2)));
+								//
+							} catch (final IOException e) {
+								//
+								TaskDialogs.showException(e);
+								//
+							} // try
+								//
+						});
+				//
 				pack(window);
 				//
 			} // try
