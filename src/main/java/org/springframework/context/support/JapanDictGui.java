@@ -753,7 +753,21 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			return true;
 			//
-		} else if (Objects.equals(source, instance.btnDownloadAudio)) {
+		} // if
+			//
+		return false;
+		//
+	}
+
+	private static boolean actionPerformed2(@Nullable final JapanDictGui instance, final Object source) {
+		//
+		if (instance == null) {
+			//
+			return false;
+			//
+		} // if
+			//
+		if (Objects.equals(source, instance.btnDownloadAudio)) {
 			//
 			try {
 				//
@@ -787,21 +801,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			return true;
 			//
-		} // if
-			//
-		return false;
-		//
-	}
-
-	private static boolean actionPerformed2(@Nullable final JapanDictGui instance, final Object source) {
-		//
-		if (instance == null) {
-			//
-			return false;
-			//
-		} // if
-			//
-		if (Objects.equals(source, instance.btnPlayAudio)) {
+		} else if (Objects.equals(source, instance.btnPlayAudio)) {
 			//
 			byte[] bs = null;
 			//
