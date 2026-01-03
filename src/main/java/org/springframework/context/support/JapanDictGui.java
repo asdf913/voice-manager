@@ -547,8 +547,19 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // if
 			//
-		actionPerformed1(this, source);
+		final Iterable<BiPredicate<JapanDictGui, Object>> predicates = Arrays.asList(JapanDictGui::actionPerformed1,
+				JapanDictGui::actionPerformed2);
 		//
+		for (int i = 0; i < IterableUtils.size(predicates); i++) {
+			//
+			if (Util.test(IterableUtils.get(predicates, i), this, source)) {
+				//
+				return;
+				//
+			} // if
+				//
+		} // for
+			//
 	}
 
 	private static BufferedImage chopImage(final byte[] bs, @Nullable final BoundingBox boundingBox)
@@ -672,11 +683,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	}
 
-	private static void actionPerformed1(@Nullable final JapanDictGui instance, final Object source) {
+	private static boolean actionPerformed1(@Nullable final JapanDictGui instance, final Object source) {
 		//
 		if (instance == null) {
 			//
-			return;
+			return false;
 			//
 		} // if
 			//
@@ -685,15 +696,21 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 					new StringSelection(Util.getText(instance.tfHiragana)), null));
 			//
+			return true;
+			//
 		} else if (Objects.equals(source, instance.btnCopyRomaji)) {
 			//
 			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 					new StringSelection(Util.getText(instance.tfRomaji)), null));
 			//
+			return true;
+			//
 		} else if (Objects.equals(source, instance.btnCopyAudioUrl)) {
 			//
 			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 					new StringSelection(Util.getText(instance.tfAudioUrl)), null));
+			//
+			return true;
 			//
 		} else if (Objects.equals(source, instance.btnCopyPitchAccentImage)) {
 			//
@@ -703,6 +720,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 					Reflection.newProxy(Transferable.class, ih), null));
+			//
+			return true;
 			//
 		} else if (Objects.equals(source, instance.btnSavePitchAccentImage)) {
 			//
@@ -732,6 +751,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 			} // if
 				//
+			return true;
+			//
 		} else if (Objects.equals(source, instance.btnDownloadAudio)) {
 			//
 			try {
@@ -764,7 +785,23 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			} // try
 				//
-		} else if (Objects.equals(source, instance.btnPlayAudio)) {
+			return true;
+			//
+		} // if
+			//
+		return false;
+		//
+	}
+
+	private static boolean actionPerformed2(final JapanDictGui instance, final Object source) {
+		//
+		if (instance == null) {
+			//
+			return false;
+			//
+		} // if
+			//
+		if (Objects.equals(source, instance.btnPlayAudio)) {
 			//
 			byte[] bs = null;
 			//
@@ -784,8 +821,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			} // try
 				//
+			return true;
+			//
 		} // if
 			//
+		return false;
+		//
 	}
 
 	private String getUserAgent() {
