@@ -480,7 +480,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				final boolean isSuccess = isSuccess(PageUtil.navigate(page, Util.toString(uri)));
 				//
-				final BoundingBox boundingBox = isSuccess && !isTestMode()
+				final BoundingBox boundingBox = Boolean.logicalAnd(isSuccess, !isTestMode())
 						? boundingBox(
 								locator(page, ".d-flex.justify-content-between.align-items-center div:first-child"))
 						: null;
