@@ -495,8 +495,23 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			// Pitch Accent Image
 			//
+			final Iterable<Method> ms = Util.toList(Util.filter(
+					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Playwright.class), Arrays::stream, null),
+					x -> Objects.equals(Util.getName(x), Util.getSelectedItem(cbmBrowserType))));
+			//
+			if (IterableUtils.size(ms) > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
 			try (final Playwright playwright = Playwright.create();
-					final Browser browser = BrowserTypeUtil.launch(chromium(playwright));
+					final Browser browser = BrowserTypeUtil.launch(ObjectUtils.getIfNull(
+							Util.cast(BrowserType.class, testAndApply(Objects::nonNull,
+									testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0),
+											null),
+									x -> Narcissus.invokeMethod(playwright, x), null)),
+							() -> chromium(playwright)));
 					final Page page = newPage(browser)) {
 				//
 				final boolean isSuccess = isSuccess(PageUtil.navigate(page, Util.toString(uri)));
