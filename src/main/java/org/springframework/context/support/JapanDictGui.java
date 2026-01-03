@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -65,6 +64,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.function.FailableConsumer;
+import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.FailableSupplier;
@@ -625,14 +626,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					bs = download(Util.getText(instance.tfAudioUrl), instance.getUserAgent()),
 					ByteArrayInputStream::new, null)) {
 				//
-				if (Objects.equals(
-						getMessage(testAndApply(Objects::nonNull, bs, x -> new ContentInfoUtil().findMatch(x), null)),
-						"Audio file with ID3 version 2.4, MP3 encoding")) {
-					//
-					PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
-					//
-				} // if
-					//
+				testAndAccept(
+						x -> Objects.equals(getMessage(
+								testAndApply(Objects::nonNull, x, y -> new ContentInfoUtil().findMatch(y), null)),
+								"Audio file with ID3 version 2.4, MP3 encoding"),
+						bs, x -> PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null)));
+				//
 			} catch (final URISyntaxException | IOException | JavaLayerException e) {
 				//
 				throw new RuntimeException(e);
@@ -765,9 +764,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static <T> void testAndAccept(final Predicate<T> instance, final T value, final Consumer<T> consumer) {
+	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> instance, final T value,
+			final FailableConsumer<T, E> consumer) throws E {
 		if (Util.test(instance, value)) {
-			Util.accept(consumer, value);
+			FailableConsumerUtil.accept(consumer, value);
 		}
 	}
 
