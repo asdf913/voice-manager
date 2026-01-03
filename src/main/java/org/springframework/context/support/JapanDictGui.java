@@ -526,7 +526,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							//
 							try {
 								//
-								Util.setIcon(pitchAccentImage, new ImageIcon(chopImage(x, boundingBox)));
+								Util.setIcon(pitchAccentImage,
+										new ImageIcon(pitchAccentBufferedImage = chopImage(x, boundingBox)));
 								//
 							} catch (final IOException e) {
 								//
