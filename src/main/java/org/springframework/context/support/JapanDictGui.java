@@ -496,12 +496,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Playwright.class), Arrays::stream, null),
 					x -> Objects.equals(Util.getName(x), Util.getSelectedItem(cbmBrowserType))));
 			//
-			if (IterableUtils.size(ms) > 1) {
+			testAndRun(IterableUtils.size(ms) > 1, () -> {
 				//
 				throw new IllegalStateException();
 				//
-			} // if
-				//
+			});
+			//
 			try (final Playwright playwright = Playwright.create();
 					final Browser browser = BrowserTypeUtil.launch(ObjectUtils.getIfNull(
 							Util.cast(BrowserType.class, testAndApply(Objects::nonNull,
