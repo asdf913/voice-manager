@@ -551,7 +551,7 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyAudioUrl, 0, null)));
 		//
-		// btnCopyAudioUrl
+		// btnCopyPitchAccentImage
 		//
 		final AbstractButton btnCopyPitchAccentImage = new JButton();
 		//
@@ -559,6 +559,15 @@ class JapanDictGuiTest {
 		//
 		Assertions
 				.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyPitchAccentImage, 0, null)));
+		//
+		// btnCopyPitchAccentImage
+		//
+		final AbstractButton btnSavePitchAccentImage = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnSavePitchAccentImage", btnSavePitchAccentImage, true);
+		//
+		Assertions
+				.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnSavePitchAccentImage, 0, null)));
 		//
 		// btnDownloadAudio
 		//
