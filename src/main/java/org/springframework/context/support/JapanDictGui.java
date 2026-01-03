@@ -513,7 +513,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				final boolean isSuccess = isSuccess(PageUtil.navigate(page, Util.toString(uri)));
 				//
-				final BoundingBox boundingBox = testAndGet(Boolean.logicalAnd(isSuccess, !isTestMode()),
+				final boolean hasPitchAccentImage = IterableUtils
+						.size(ElementUtil.select(document, ".d-flex.justify-content-between.align-items-center")) == 1;
+				//
+				final BoundingBox boundingBox = testAndGet(Util.and(isSuccess, !isTestMode(), hasPitchAccentImage),
 						() -> boundingBox(
 								locator(page, ".d-flex.justify-content-between.align-items-center div:first-child")));
 				//
@@ -523,8 +526,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 										getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch,
 												null)),
 										"image/")),
-						testAndApply((a, b) -> !IterableUtils.isEmpty(ElementUtil.select(a, b)), document,
-								".d-flex.justify-content-between.align-items-center",
+						testAndApply((a, b) -> !IterableUtils.isEmpty(ElementUtil.select(a, b)) && hasPitchAccentImage,
+								document, ".d-flex.justify-content-between.align-items-center",
 								(a, b) -> screenshot(locator(page, b)), null),
 						x -> {
 							//
