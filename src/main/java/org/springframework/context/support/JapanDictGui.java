@@ -19,6 +19,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
@@ -101,6 +102,9 @@ import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.Response;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
+import javazoom.jl.player.PlayerUtil;
 import net.miginfocom.swing.MigLayout;
 
 public class JapanDictGui extends JPanel implements ActionListener, InitializingBean {
@@ -139,7 +143,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Copy Audio URL")
 	private AbstractButton btnCopyAudioUrl = null;
 
-	private AbstractButton btnDownloadAudio = null;
+	private AbstractButton btnDownloadAudio, btnPlayAudio = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
@@ -245,7 +249,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, btnCopyAudioUrl = new JButton("Copy"));
 		//
-		add(this, btnDownloadAudio = new JButton("Download"), wrap);
+		add(this, btnDownloadAudio = new JButton("Download"));
+		//
+		add(this, btnPlayAudio = new JButton("Play"), wrap);
 		//
 		add(this, new JLabel("Pitch Accent"));
 		//
@@ -253,9 +259,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		setEditable(false, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl);
 		//
-		setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio);
+		setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio);
 		//
-		addActionListener(this, btnExecute, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio);
+		addActionListener(this, btnExecute, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio,
+				btnPlayAudio);
 		//
 	}
 
@@ -332,7 +339,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			setText(null, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl);
 			//
-			setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio);
+			setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio);
 			//
 			Util.setSelectedItem(cbmJlptLevel, "");
 			//
@@ -361,10 +368,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class,
 						Util.openConnection(Util.toURL(uri = URIBuilderUtil.build(uriBuilder))));
 				//
-				setRequestProperty(httpURLConnection, "User-Agent", Objects.toString(
-						testAndApply(Util::containsKey, userAgentMap, Util.getSelectedItem(cbmBrowserType), Util::get,
-								null),
-						"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"));
+				setRequestProperty(httpURLConnection, "User-Agent", getUserAgent());
 				//
 				if (httpURLConnection != null) {
 					//
@@ -374,7 +378,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					final boolean success = HttpStatus.isSuccess(responseCode);
 					//
-					setEnabled(success, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio);
+					setEnabled(success, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio,
+							btnPlayAudio);
 					//
 					document = testAndApply(x -> Util.and(x != null, !isTestMode()),
 							is = testAndApply(x -> success, httpURLConnection, x -> getInputStream(x), null),
@@ -578,22 +583,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} else if (Objects.equals(source, instance.btnDownloadAudio)) {
 			//
-			InputStream is = null;
-			//
 			try {
 				//
-				final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class,
-						Util.openConnection(
-								Util.toURL(testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
-										Util.getText(instance.tfAudioUrl), URI::new, null))));
-				//
-				setRequestProperty(httpURLConnection, "User-Agent", Objects.toString(
-						testAndApply(Util::containsKey, instance.userAgentMap,
-								Util.getSelectedItem(instance.cbmBrowserType), Util::get, null),
-						"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"));
-				//
-				final byte[] bs = testAndApply(Objects::nonNull, is = Util.getInputStream(httpURLConnection),
-						IOUtils::toByteArray, null);
+				final byte[] bs = download(Util.getText(instance.tfAudioUrl), instance.getUserAgent());
 				//
 				final StringBuilder sb = testAndApply(Objects::nonNull, Util.getText(instance.tfText),
 						StringBuilder::new, null);
@@ -621,13 +613,55 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				throw new RuntimeException(e);
 				//
-			} finally {
+			} // try
 				//
-				IOUtils.closeQuietly(is);
+		} else if (Objects.equals(source, instance.btnPlayAudio)) {
+			//
+			byte[] bs = null;
+			//
+			try (final InputStream is = testAndApply(Objects::nonNull,
+					bs = download(Util.getText(instance.tfAudioUrl), instance.getUserAgent()),
+					ByteArrayInputStream::new, null)) {
+				//
+				if (Objects.equals(
+						getMessage(testAndApply(Objects::nonNull, bs, x -> new ContentInfoUtil().findMatch(x), null)),
+						"Audio file with ID3 version 2.4, MP3 encoding")) {
+					//
+					PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
+					//
+				} // if
+					//
+			} catch (final URISyntaxException | IOException | JavaLayerException e) {
+				//
+				throw new RuntimeException(e);
 				//
 			} // try
 				//
 		} // if
+			//
+	}
+
+	private String getUserAgent() {
+		//
+		return Objects.toString(
+				testAndApply(Util::containsKey, userAgentMap, Util.getSelectedItem(cbmBrowserType), Util::get, null),
+				"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36");
+		//
+	}
+
+	private static byte[] download(final String url, final String userAgent)
+			throws MalformedURLException, IOException, URISyntaxException {
+		//
+		final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class, Util.openConnection(Util.toURL(
+				testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x), url, URI::new, null))));
+		//
+		setRequestProperty(httpURLConnection, "User-Agent", userAgent);
+		//
+		try (final InputStream is = Util.getInputStream(httpURLConnection)) {
+			//
+			return testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
+			//
+		} // try
 			//
 	}
 

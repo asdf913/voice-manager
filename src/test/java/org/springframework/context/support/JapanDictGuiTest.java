@@ -315,16 +315,21 @@ class JapanDictGuiTest {
 					//
 			} else {
 				//
-				Assertions
-						.assertNull(
-								Narcissus
-										.invokeMethod(
-												instance = ObjectUtils.getIfNull(instance,
-														() -> Util.cast(JapanDictGui.class,
-																Narcissus.allocateInstance(JapanDictGui.class))),
-												m, os),
-								toString);
+				result = Narcissus.invokeMethod(
+						instance = ObjectUtils.getIfNull(instance,
+								() -> Util.cast(JapanDictGui.class, Narcissus.allocateInstance(JapanDictGui.class))),
+						m, os);
 				//
+				if (Boolean.logicalAnd(Objects.equals(Util.getName(m), "getUserAgent"), m.getParameterCount() == 0)) {
+					//
+					Assertions.assertNotNull(result, toString);
+					//
+				} else {
+					//
+					Assertions.assertNull(result, toString);
+					//
+				} // if
+					//
 			} // if
 				//
 		} // for
@@ -446,16 +451,21 @@ class JapanDictGuiTest {
 					//
 			} else {
 				//
-				Assertions
-						.assertNull(
-								Narcissus
-										.invokeMethod(
-												instance = ObjectUtils.getIfNull(instance,
-														() -> Util.cast(JapanDictGui.class,
-																Narcissus.allocateInstance(JapanDictGui.class))),
-												m, os),
-								toString);
+				result = Narcissus.invokeMethod(
+						instance = ObjectUtils.getIfNull(instance,
+								() -> Util.cast(JapanDictGui.class, Narcissus.allocateInstance(JapanDictGui.class))),
+						m, os);
 				//
+				if (Boolean.logicalAnd(Objects.equals(name, "getUserAgent"), m.getParameterCount() == 0)) {
+					//
+					Assertions.assertNotNull(result, toString);
+					//
+				} else {
+					//
+					Assertions.assertNull(result, toString);
+					//
+				} // if
+					//
 			} // if
 				//
 		} // for
@@ -558,6 +568,14 @@ class JapanDictGuiTest {
 		Util.setText(tfAudioUrl, "1");
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
+		// btnPlayAudio
+		//
+		final AbstractButton btnPlayAudio = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnPlayAudio", btnPlayAudio, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnPlayAudio, 0, null)));
 		//
 	}
 
