@@ -6,6 +6,9 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -21,6 +24,7 @@ import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -52,6 +56,7 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.Response;
+import com.microsoft.playwright.options.BoundingBox;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
@@ -62,7 +67,8 @@ class JapanDictGuiTest {
 	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT,
 			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_ADD_ACTION_LISTENER, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
-			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_EQUALS, METHOD_SET_JCB_JLPT_LEVEL = null;
+			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_EQUALS, METHOD_SET_JCB_JLPT_LEVEL,
+			METHOD_CHOP_IMAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -117,6 +123,9 @@ class JapanDictGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_SET_JCB_JLPT_LEVEL = Util.getDeclaredMethod(clz, "setJcbJlptLevel", int[].class)).setAccessible(true);
+		//
+		(METHOD_CHOP_IMAGE = Util.getDeclaredMethod(clz, "chopImage", byte[].class, BoundingBox.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -797,6 +806,31 @@ class JapanDictGuiTest {
 	private static Object invoke(final InvocationHandler instance, final Object proxy, final Method method,
 			final Object[] args) throws Throwable {
 		return instance != null ? instance.invoke(proxy, method, args) : null;
+	}
+
+	@Test
+	void testChopImage() throws IllegalAccessException, InvocationTargetException, IOException {
+		//
+		Assertions.assertNull(invoke(METHOD_CHOP_IMAGE, null, new byte[] {}, null));
+		//
+		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			ImageIO.write(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), "png", baos);
+			//
+			final byte[] bs = baos.toByteArray();
+			//
+			Assertions.assertNotNull(invoke(METHOD_CHOP_IMAGE, null, bs, null));
+			//
+			final Object boundingBox = Narcissus.allocateInstance(BoundingBox.class);
+			//
+			Assertions.assertNotNull(invoke(METHOD_CHOP_IMAGE, null, bs, boundingBox));
+			//
+			FieldUtils.writeField(boundingBox, "width", 1);
+			//
+			Assertions.assertNotNull(invoke(METHOD_CHOP_IMAGE, null, bs, boundingBox));
+			//
+		} // try
+			//
 	}
 
 }

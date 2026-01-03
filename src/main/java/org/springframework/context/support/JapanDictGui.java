@@ -495,16 +495,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 								(a, b) -> screenshot(locator(page, b)), null),
 						x -> {
 							//
-							try (final InputStream is2 = new ByteArrayInputStream(x)) {
+							try {
 								//
-								if ((pitchAccentBufferedImage = ImageIO.read(is2)) != null && boundingBox != null) {
-									//
-									pitchAccentBufferedImage = pitchAccentBufferedImage.getSubimage(0, 0,
-											(int) boundingBox.width, pitchAccentBufferedImage.getHeight());
-									//
-								} // if
-									//
-								Util.setIcon(pitchAccentImage, new ImageIcon(pitchAccentBufferedImage));
+								Util.setIcon(pitchAccentImage, new ImageIcon(chopImage(x, boundingBox)));
 								//
 							} catch (final IOException e) {
 								//
@@ -521,6 +514,25 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // if
 			//
 		actionPerformed1(this, source);
+		//
+	}
+
+	private static BufferedImage chopImage(final byte[] bs, final BoundingBox boundingBox) throws IOException {
+		//
+		BufferedImage bufferedImage = null;
+		//
+		try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
+			//
+			if ((bufferedImage = testAndApply(Objects::nonNull, is, ImageIO::read, null)) != null && boundingBox != null
+					&& boundingBox.width > 0) {
+				//
+				bufferedImage = bufferedImage.getSubimage(0, 0, (int) boundingBox.width, bufferedImage.getHeight());
+				//
+			} // if
+				//
+		} // try
+			//
+		return bufferedImage;
 		//
 	}
 
