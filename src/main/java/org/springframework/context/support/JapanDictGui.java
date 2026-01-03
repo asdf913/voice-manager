@@ -287,11 +287,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio,
 				btnCopyPitchAccentImage, btnSavePitchAccentImage);
 		//
-		Util.forEach(Util.filter(
-				testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream, null),
-				x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))), x -> {
-					Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this);
-				});
+		Util.forEach(
+				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream,
+						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
+				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
 		//
 	}
 
