@@ -66,9 +66,8 @@ class JapanDictGuiTest {
 
 	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT,
 			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_ADD_ACTION_LISTENER, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
-			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_EQUALS, METHOD_SET_JCB_JLPT_LEVEL,
-			METHOD_CHOP_IMAGE = null;
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY,
+			METHOD_GET_JLPT_LEVEL_INDICES, METHOD_EQUALS, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -104,9 +103,6 @@ class JapanDictGuiTest {
 		//
 		(METHOD_GET_SYSTEM_CLIP_BOARD = Util.getDeclaredMethod(clz, "getSystemClipboard", Toolkit.class))
 				.setAccessible(true);
-		//
-		(METHOD_ADD_ACTION_LISTENER = Util.getDeclaredMethod(clz, "addActionListener", ActionListener.class,
-				AbstractButton[].class)).setAccessible(true);
 		//
 		(METHOD_SET_ENABLED = Util.getDeclaredMethod(clz, "setEnabled", Boolean.TYPE, Component.class, Component.class,
 				Component[].class)).setAccessible(true);
@@ -700,13 +696,6 @@ class JapanDictGuiTest {
 		//
 		Assertions
 				.assertNull(invoke(METHOD_GET_SYSTEM_CLIP_BOARD, null, ProxyUtil.createProxy(Toolkit.class, new MH())));
-		//
-	}
-
-	@Test
-	void testAddActionListener() throws IllegalAccessException, InvocationTargetException {
-		//
-		Assertions.assertNull(invoke(METHOD_ADD_ACTION_LISTENER, null, null, null));
 		//
 	}
 
