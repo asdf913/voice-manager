@@ -650,14 +650,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				final StringBuilder sb = testAndApply(Objects::nonNull, Util.getText(instance.tfText),
 						StringBuilder::new, null);
 				//
-				if (Objects.equals(
-						getMessage(testAndApply(Objects::nonNull, bs, x -> new ContentInfoUtil().findMatch(x), null)),
-						"Audio file with ID3 version 2.4, MP3 encoding")) {
-					//
-					append(append(sb, '.'), "mp3");
-					//
-				} // if
-					//
+				testAndAccept(
+						x -> Objects.equals(getMessage(
+								testAndApply(Objects::nonNull, x, y -> new ContentInfoUtil().findMatch(y), null)),
+								"Audio file with ID3 version 2.4, MP3 encoding"),
+						bs, x -> append(append(sb, '.'), "mp3"));
+				//
 				final JFileChooser jfc = new JFileChooser();
 				//
 				jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.toString(sb), Path::of, null)));
