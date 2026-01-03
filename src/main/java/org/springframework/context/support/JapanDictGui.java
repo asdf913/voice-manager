@@ -107,6 +107,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.PageUtil;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.Response;
+import com.microsoft.playwright.options.BoundingBox;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javazoom.jl.decoder.JavaLayerException;
@@ -260,7 +261,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, new JLabel("Audio URL"));
 		//
-		add(this, tfAudioUrl = new JTextField(), String.format("%1$s,span %2$s,wmax %3$spx", growx, 2, 233));
+		add(this, tfAudioUrl = new JTextField(), String.format("%1$s,span %2$s,wmax %3$spx", growx, 2, 180));
 		//
 		add(this, btnCopyAudioUrl = new JButton("Copy"));
 		//
@@ -479,6 +480,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				final boolean isSuccess = isSuccess(PageUtil.navigate(page, Util.toString(uri)));
 				//
+				final BoundingBox boundingBox = isSuccess && !isTestMode()
+						? boundingBox(
+								locator(page, ".d-flex.justify-content-between.align-items-center div:first-child"))
+						: null;
+				//
 				testAndAccept(
 						x -> Boolean.logicalAnd(isSuccess,
 								startsWith(Strings.CS,
@@ -492,8 +498,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							//
 							try (final InputStream is2 = new ByteArrayInputStream(x)) {
 								//
-								Util.setIcon(pitchAccentImage,
-										new ImageIcon(pitchAccentBufferedImage = ImageIO.read(is2)));
+								if ((pitchAccentBufferedImage = ImageIO.read(is2)) != null && boundingBox != null) {
+									//
+									pitchAccentBufferedImage = pitchAccentBufferedImage.getSubimage(0, 0,
+											(int) boundingBox.width, pitchAccentBufferedImage.getHeight());
+									//
+								} // if
+									//
+								Util.setIcon(pitchAccentImage, new ImageIcon(pitchAccentBufferedImage));
 								//
 							} catch (final IOException e) {
 								//
@@ -511,6 +523,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		actionPerformed1(this, source);
 		//
+	}
+
+	private static BoundingBox boundingBox(final Locator instance) {
+		return instance != null ? instance.boundingBox() : null;
 	}
 
 	private void setJcbJlptLevel(@Nullable final int[] ints) {

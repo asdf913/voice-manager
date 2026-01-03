@@ -194,7 +194,8 @@ class JapanDictGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Locator && Objects.equals(name, "screenshot")) {
+			} else if (proxy instanceof Locator
+					&& Util.anyMatch(Stream.of("screenshot", "boundingBox"), x -> Objects.equals(name, x))) {
 				//
 				return null;
 				//
