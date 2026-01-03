@@ -741,7 +741,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.toString(sb), Path::of, null)));
 			//
-			if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
+			if (Util.and(!GraphicsEnvironment.isHeadless(), !isTestMode(), instance.pitchAccentBufferedImage != null)
 					&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
 				try {
@@ -791,7 +791,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.toString(sb), Path::of, null)));
 				//
-				if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
+				if (Util.and(!GraphicsEnvironment.isHeadless(), !isTestMode(), bs != null)
 						&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 					//
 					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
