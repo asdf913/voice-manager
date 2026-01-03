@@ -776,19 +776,19 @@ class JapanDictGuiTest {
 	@Test
 	void testIH() throws Throwable {
 		//
-		final InvocationHandler ih = Util.cast(InvocationHandler.class,
+		final InvocationHandler invocationHandler = Util.cast(InvocationHandler.class,
 				Narcissus.allocateInstance(Util.forName("org.springframework.context.support.JapanDictGui$IH")));
 		//
-		Assertions.assertThrows(Throwable.class, () -> invoke(ih, null, null, null));
+		Assertions.assertThrows(Throwable.class, () -> invoke(invocationHandler, null, null, null));
 		//
-		final Object object = Reflection.newProxy(Transferable.class, ih);
+		final Object object = Reflection.newProxy(Transferable.class, invocationHandler);
 		//
-		Assertions.assertThrows(Throwable.class, () -> invoke(ih, object, null, null));
+		Assertions.assertThrows(Throwable.class, () -> invoke(invocationHandler, object, null, null));
 		//
-		Assertions.assertNotNull(
-				invoke(ih, object, Util.getDeclaredMethod(Transferable.class, "getTransferDataFlavors"), null));
+		Assertions.assertNotNull(invoke(invocationHandler, object,
+				Util.getDeclaredMethod(Transferable.class, "getTransferDataFlavors"), null));
 		//
-		Assertions.assertNull(invoke(ih, object,
+		Assertions.assertNull(invoke(invocationHandler, object,
 				Util.getDeclaredMethod(Transferable.class, "getTransferData", DataFlavor.class), null));
 		//
 	}
