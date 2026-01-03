@@ -153,7 +153,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Download Audio")
 	private AbstractButton btnDownloadAudio = null;
 
-	private AbstractButton btnPlayAudio, btnCopyPitchAccentImage = null;
+	@Note("Play Audio")
+	private AbstractButton btnPlayAudio = null;
+
+	private AbstractButton btnCopyPitchAccentImage = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
