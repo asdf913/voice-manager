@@ -2,6 +2,8 @@ package org.springframework.context.support;
 
 import java.awt.Component;
 import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Array;
@@ -543,6 +545,15 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyAudioUrl, 0, null)));
 		//
+		// btnCopyAudioUrl
+		//
+		final AbstractButton btnCopyPitchAccentImage = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnCopyPitchAccentImage", btnCopyPitchAccentImage, true);
+		//
+		Assertions
+				.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyPitchAccentImage, 0, null)));
+		//
 		// btnDownloadAudio
 		//
 		final AbstractButton btnDownloadAudio = new JButton();
@@ -755,11 +766,36 @@ class JapanDictGuiTest {
 				//
 				throw e.getTargetException();
 				//
-			} // tsry
+			} // try
 				//
 		});
 		//
 		//
+	}
+
+	@Test
+	void testIH() throws Throwable {
+		//
+		final InvocationHandler ih = Util.cast(InvocationHandler.class,
+				Narcissus.allocateInstance(Util.forName("org.springframework.context.support.JapanDictGui$IH")));
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, null, null, null));
+		//
+		final Object object = Reflection.newProxy(Transferable.class, ih);
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, object, null, null));
+		//
+		Assertions.assertNotNull(
+				invoke(ih, object, Util.getDeclaredMethod(Transferable.class, "getTransferDataFlavors"), null));
+		//
+		Assertions.assertNull(invoke(ih, object,
+				Util.getDeclaredMethod(Transferable.class, "getTransferData", DataFlavor.class), null));
+		//
+	}
+
+	private static Object invoke(final InvocationHandler instance, final Object proxy, final Method method,
+			final Object[] args) throws Throwable {
+		return instance != null ? instance.invoke(proxy, method, args) : null;
 	}
 
 }

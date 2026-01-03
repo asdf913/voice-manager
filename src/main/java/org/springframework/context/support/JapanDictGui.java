@@ -3,12 +3,16 @@ package org.springframework.context.support;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +21,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -90,6 +96,7 @@ import org.xml.sax.SAXException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Browser;
@@ -146,7 +153,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Download Audio")
 	private AbstractButton btnDownloadAudio = null;
 
-	private AbstractButton btnPlayAudio = null;
+	private AbstractButton btnPlayAudio, btnCopyPitchAccentImage = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
@@ -157,6 +164,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	private transient ComboBoxModel<String> cbmBrowserType = null;
 
 	private JLabel pitchAccentImage = null;
+
+	private BufferedImage pitchAccentBufferedImage = null;
 
 	private Window window = null;
 
@@ -172,7 +181,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		final String growx = "growx";
 		//
-		add(this, tfText = new JTextField(), String.format("%1$s,%2$s", growx, wrap));
+		add(this, tfText = new JTextField(), String.format("%1$s,%2$s,span %3$s", growx, wrap, 2));
 		//
 		try (final Playwright playwright = Playwright.create()) {
 			//
@@ -221,7 +230,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, new JLabel("Response Code"));
 		//
-		add(this, tfResponseCode = new JTextField(), String.format("%1$s,%2$s", growx, wrap));
+		add(this, tfResponseCode = new JTextField(), String.format("%1$s,%2$s,span %3$s", growx, wrap, 2));
 		//
 		add(this, new JLabel("JLPT Level"));
 		//
@@ -236,19 +245,19 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, new JLabel("Hiragana"));
 		//
-		add(this, tfHiragana = new JTextField(), growx);
+		add(this, tfHiragana = new JTextField(), String.format("%1$s,span %2$s", growx, 2));
 		//
 		add(this, btnCopyHiragana = new JButton("Copy"), wrap);
 		//
 		add(this, new JLabel("Romaji"));
 		//
-		add(this, tfRomaji = new JTextField(), growx);
+		add(this, tfRomaji = new JTextField(), String.format("%1$s,span %2$s", growx, 2));
 		//
 		add(this, btnCopyRomaji = new JButton("Copy"), wrap);
 		//
 		add(this, new JLabel("Audio URL"));
 		//
-		add(this, tfAudioUrl = new JTextField(), growx);
+		add(this, tfAudioUrl = new JTextField(), String.format("%1$s,span %2$s,wmax %3$spx", growx, 2, 233));
 		//
 		add(this, btnCopyAudioUrl = new JButton("Copy"));
 		//
@@ -258,14 +267,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, new JLabel("Pitch Accent"));
 		//
-		add(this, pitchAccentImage = new JLabel(), wrap);
+		add(this, pitchAccentImage = new JLabel());
+		//
+		add(this, btnCopyPitchAccentImage = new JButton("Copy"), wrap);
 		//
 		setEditable(false, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl);
 		//
-		setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio);
+		setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio,
+				btnCopyPitchAccentImage);
 		//
 		addActionListener(this, btnExecute, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio,
-				btnPlayAudio);
+				btnPlayAudio, btnCopyPitchAccentImage);
 		//
 	}
 
@@ -342,11 +354,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			setText(null, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl);
 			//
-			setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio);
+			setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio,
+					btnCopyPitchAccentImage);
 			//
 			Util.setSelectedItem(cbmJlptLevel, "");
 			//
 			Util.setIcon(pitchAccentImage, null);
+			//
+			pitchAccentBufferedImage = null;
 			//
 			final URIBuilder uriBuilder = new URIBuilder();
 			//
@@ -381,8 +396,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					final boolean success = HttpStatus.isSuccess(responseCode);
 					//
-					setEnabled(success, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio,
-							btnPlayAudio);
+					setEnabled(success, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio,
+							btnCopyPitchAccentImage);
 					//
 					document = testAndApply(x -> Util.and(x != null, !isTestMode()),
 							is = testAndApply(x -> success, httpURLConnection, x -> getInputStream(x), null),
@@ -474,7 +489,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							//
 							try (final InputStream is2 = new ByteArrayInputStream(x)) {
 								//
-								Util.setIcon(pitchAccentImage, new ImageIcon(ImageIO.read(is2)));
+								Util.setIcon(pitchAccentImage,
+										new ImageIcon(pitchAccentBufferedImage = ImageIO.read(is2)));
 								//
 							} catch (final IOException e) {
 								//
@@ -561,6 +577,35 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return Util.test(predicate, t, u) ? Util.apply(functionTrue, t, u) : Util.apply(functionFalse, t, u);
 	}
 
+	private static class IH implements InvocationHandler {
+
+		private Image image = null;
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String name = Util.getName(method);
+			//
+			if (proxy instanceof Transferable) {
+				//
+				if (Objects.equals(name, "getTransferDataFlavors")) {
+					//
+					return new DataFlavor[] { DataFlavor.imageFlavor };
+					//
+				} else if (Objects.equals(name, "getTransferData")) {
+					//
+					return image;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(name);
+			//
+		}
+
+	}
+
 	private static void actionPerformed1(@Nullable final JapanDictGui instance, final Object source) {
 		//
 		if (instance == null) {
@@ -583,6 +628,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 					new StringSelection(Util.getText(instance.tfAudioUrl)), null));
+			//
+		} else if (Objects.equals(source, instance.btnCopyPitchAccentImage)) {
+			//
+			final IH ih = new IH();
+			//
+			ih.image = instance.pitchAccentBufferedImage;
+			//
+			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+					Reflection.newProxy(Transferable.class, ih), null));
 			//
 		} else if (Objects.equals(source, instance.btnDownloadAudio)) {
 			//
