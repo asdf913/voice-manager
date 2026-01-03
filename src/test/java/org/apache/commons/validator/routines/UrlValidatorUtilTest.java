@@ -43,14 +43,10 @@ class UrlValidatorUtilTest {
 			//
 			final String name = getName(method);
 			//
-			if (proxy instanceof Stream) {
+			if (proxy instanceof Stream && Objects.equals(name, "filter")) {
 				//
-				if (Objects.equals(name, "filter")) {
-					//
-					return proxy;
-					//
-				} // if
-					//
+				return proxy;
+				//
 			} // if
 				//
 			throw new Throwable(name);
