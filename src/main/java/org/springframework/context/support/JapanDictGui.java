@@ -137,7 +137,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Romaji")
 	private JTextComponent tfRomaji = null;
 
-	private JTextComponent tfAudioUrl, tfPitchAccent = null;
+	@Note("Audio URL")
+	private JTextComponent tfAudioUrl = null;
+
+	private JTextComponent tfPitchAccent = null;
 
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
