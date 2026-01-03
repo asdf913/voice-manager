@@ -524,6 +524,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	@Nullable
 	private static BoundingBox boundingBox(@Nullable final Locator instance) {
 		return instance != null ? instance.boundingBox() : null;
 	}
