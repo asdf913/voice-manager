@@ -168,7 +168,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private JLabel pitchAccentImage = null;
 
-	private BufferedImage pitchAccentBufferedImage = null;
+	private transient BufferedImage pitchAccentBufferedImage = null;
 
 	private Window window = null;
 
