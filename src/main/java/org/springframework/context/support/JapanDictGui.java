@@ -137,7 +137,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Romaji")
 	private JTextComponent tfRomaji = null;
 
-	private JTextComponent tfAudioUrl = null;
+	private JTextComponent tfAudioUrl, tfPitchAccent = null;
 
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
@@ -185,7 +185,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		final String growx = "growx";
 		//
-		add(this, tfText = new JTextField(), String.format("%1$s,%2$s,span %3$s", growx, wrap, 2));
+		add(this, tfText = new JTextField(), String.format("%1$s,%2$s,span %3$s", growx, wrap, 3));
 		//
 		try (final Playwright playwright = Playwright.create()) {
 			//
@@ -226,15 +226,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				new JComboBox<>(cbmBrowserType = new DefaultComboBoxModel<>(
 						toArray(Stream.concat(Stream.of((String) null), Util.stream(Util.keySet(userAgentMap))),
 								String[]::new))),
-				wrap);
+				String.format("%1$s,span %2$s", wrap, 2));
 		//
 		add(this, new JLabel());
 		//
-		add(this, btnExecute = new JButton("Execute"), wrap);
+		add(this, btnExecute = new JButton("Execute"), String.format("%1$s,span %2$s", wrap, 2));
 		//
 		add(this, new JLabel("Response Code"));
 		//
-		add(this, tfResponseCode = new JTextField(), String.format("%1$s,%2$s,span %3$s", growx, wrap, 2));
+		add(this, tfResponseCode = new JTextField(), String.format("%1$s,%2$s,span %3$s", growx, wrap, 3));
 		//
 		add(this, new JLabel("JLPT Level"));
 		//
@@ -249,19 +249,19 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, new JLabel("Hiragana"));
 		//
-		add(this, tfHiragana = new JTextField(), String.format("%1$s,span %2$s", growx, 2));
+		add(this, tfHiragana = new JTextField(), String.format("%1$s,span %2$s", growx, 3));
 		//
 		add(this, btnCopyHiragana = new JButton("Copy"), wrap);
 		//
 		add(this, new JLabel("Romaji"));
 		//
-		add(this, tfRomaji = new JTextField(), String.format("%1$s,span %2$s", growx, 2));
+		add(this, tfRomaji = new JTextField(), String.format("%1$s,span %2$s", growx, 3));
 		//
 		add(this, btnCopyRomaji = new JButton("Copy"), wrap);
 		//
 		add(this, new JLabel("Audio URL"));
 		//
-		add(this, tfAudioUrl = new JTextField(), String.format("%1$s,span %2$s,wmax %3$spx", growx, 2, 180));
+		add(this, tfAudioUrl = new JTextField(), String.format("%1$s,span %2$s,wmax %3$spx", growx, 3, 159));
 		//
 		add(this, btnCopyAudioUrl = new JButton("Copy"));
 		//
@@ -271,11 +271,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, new JLabel("Pitch Accent"));
 		//
-		add(this, pitchAccentImage = new JLabel());
+		add(this, tfPitchAccent = new JTextField(), growx);
+		//
+		add(this, pitchAccentImage = new JLabel(), String.format("span %1$s", 2));
 		//
 		add(this, btnCopyPitchAccentImage = new JButton("Copy"), wrap);
 		//
-		setEditable(false, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl);
+		setEditable(false, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl, tfPitchAccent);
 		//
 		setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio,
 				btnCopyPitchAccentImage);
@@ -356,7 +358,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		if (Objects.equals(source, btnExecute)) {
 			//
-			setText(null, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl);
+			setText(null, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl, tfPitchAccent);
 			//
 			setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio,
 					btnCopyPitchAccentImage);
@@ -471,6 +473,22 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			Util.setText(tfRomaji, StringUtils.trim(ElementUtil.text(testAndApply(x -> IterableUtils.size(x) > 0,
 					ElementUtil.select(document, ".xxsmall"), x -> IterableUtils.get(x, 0), null))));
+			//
+			// Pitch Accent
+			//
+			Util.setText(tfPitchAccent,
+					ElementUtil
+							.text(testAndApply(x -> IterableUtils.size(x) == 1,
+									ElementUtil.select(
+											testAndApply(Objects::nonNull,
+													NodeUtil.attr(
+															testAndApply(x -> IterableUtils.size(x) == 1,
+																	ElementUtil.select(document, "[data-bs-content]"),
+																	x -> IterableUtils.get(x, 0), null),
+															"data-bs-content"),
+													x -> Jsoup.parse(x, ""), null),
+											"p span[class='h5']"),
+									x -> IterableUtils.get(x, 0), null)));
 			//
 			// Pitch Accent Image
 			//
