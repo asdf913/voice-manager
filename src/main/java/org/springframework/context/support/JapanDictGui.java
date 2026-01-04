@@ -612,8 +612,32 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			if ((bufferedImage = testAndApply(Objects::nonNull, is, ImageIO::read, null)) != null && boundingBox != null
 					&& boundingBox.width > 0) {
 				//
-				bufferedImage = bufferedImage.getSubimage(0, 0, (int) boundingBox.width, bufferedImage.getHeight());
-				//
+				if ((bufferedImage = bufferedImage.getSubimage(0, 0, (int) boundingBox.width,
+						bufferedImage.getHeight())) != null) {
+					//
+					Integer first = null;
+					//
+					for (int y = 0; y < bufferedImage.getHeight(); y++) {
+						//
+						for (int x = 0; x < bufferedImage.getWidth(); x++) {
+							//
+							if (first == null) {
+								//
+								first = Integer.valueOf(bufferedImage.getRGB(x, y));
+								//
+							} else if (first.intValue() != bufferedImage.getRGB(x, y)) {
+								//
+								return bufferedImage = bufferedImage.getSubimage(0, y, bufferedImage.getWidth(),
+										bufferedImage.getHeight() - y);
+								//
+							} // if
+								//
+						} // for
+							//
+					} // for
+						//
+				} // if
+					//
 			} // if
 				//
 		} // try
