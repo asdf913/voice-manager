@@ -618,6 +618,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
+	@Nullable
 	private static BufferedImage getStrokeImage(final JapanDictGui instance, @Nullable final Page page)
 			throws IOException, InterruptedException {
 		//
@@ -723,6 +724,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
+	@Nullable
 	private static BufferedImage chopImage(@Nullable final BufferedImage bufferedImage) {
 		//
 		if (bufferedImage == null) {
