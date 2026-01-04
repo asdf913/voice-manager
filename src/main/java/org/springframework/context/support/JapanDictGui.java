@@ -663,7 +663,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		}
 	}
 
-	private static long toMillis(final Duration instance, final long defaultValue) {
+	private static long toMillis(@Nullable final Duration instance, final long defaultValue) {
 		return instance != null ? instance.toMillis() : defaultValue;
 	}
 
@@ -1302,7 +1302,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // if
 	}
 
-	private static Duration toDuration(final Object object) {
+	private static Duration toDuration(@Nullable final Object object) {
 		//
 		Duration value = null;
 		//
