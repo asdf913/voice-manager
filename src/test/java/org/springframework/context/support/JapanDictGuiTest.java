@@ -240,14 +240,10 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof CharSequence) {
+			} else if (proxy instanceof CharSequence && Objects.equals(name, "length")) {
 				//
-				if (Objects.equals(name, "length")) {
-					//
-					return length;
-					//
-				} // if
-					//
+				return length;
+				//
 			} // if
 				//
 			throw new Throwable(name);
