@@ -196,7 +196,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Pitch Accent Image")
 	private transient BufferedImage pitchAccentBufferedImage = null;
 
-	private BufferedImage strokeBufferedImage = null;
+	private transient BufferedImage strokeBufferedImage = null;
 
 	private Window window = null;
 
