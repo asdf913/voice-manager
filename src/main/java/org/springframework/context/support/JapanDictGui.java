@@ -622,7 +622,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // if
 			//
 		final Iterable<BiPredicate<JapanDictGui, Object>> predicates = Arrays.asList(JapanDictGui::actionPerformed1,
-				JapanDictGui::actionPerformed2);
+				JapanDictGui::actionPerformed2, JapanDictGui::actionPerformed3);
 		//
 		for (int i = 0; i < IterableUtils.size(predicates); i++) {
 			//
@@ -1129,7 +1129,21 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			return true;
 			//
-		} else if (Objects.equals(source, instance.btnSaveStrokeImage)) {
+		} // if
+			//
+		return false;
+		//
+	}
+
+	private static boolean actionPerformed3(final JapanDictGui instance, final Object source) {
+		//
+		if (instance == null) {
+			//
+			return false;
+			//
+		} // if
+			//
+		if (Objects.equals(source, instance.btnSaveStrokeImage)) {
 			//
 			final StringBuilder sb = testAndApply(Objects::nonNull, Util.getText(instance.tfText), StringBuilder::new,
 					null);
