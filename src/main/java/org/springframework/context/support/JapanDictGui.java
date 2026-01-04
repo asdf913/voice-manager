@@ -175,7 +175,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Copy Pitch Accent Image")
 	private AbstractButton btnCopyPitchAccentImage = null;
 
-	private AbstractButton btnSavePitchAccentImage = null;
+	private AbstractButton btnSavePitchAccentImage, btnCopyStrokeImage = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
@@ -190,7 +190,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private JLabel strokeImage = null;
 
-	private transient BufferedImage pitchAccentBufferedImage = null;
+	private transient BufferedImage pitchAccentBufferedImage, strokeBufferedImage = null;
 
 	private Window window = null;
 
@@ -309,10 +309,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, strokeImage = new JLabel(), String.format("span %1$s", 6));
 		//
+		add(this, btnCopyStrokeImage = new JButton("Copy"));
+		//
 		setEditable(false, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl, tfPitchAccent);
 		//
 		setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio,
-				btnCopyPitchAccentImage, btnSavePitchAccentImage);
+				btnCopyPitchAccentImage, btnSavePitchAccentImage, btnCopyStrokeImage);
 		//
 		Util.forEach(
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream,
@@ -385,13 +387,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			setText(null, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl, tfPitchAccent);
 			//
 			setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio,
-					btnCopyPitchAccentImage, btnSavePitchAccentImage);
+					btnCopyPitchAccentImage, btnSavePitchAccentImage, btnCopyStrokeImage);
 			//
 			Util.setSelectedItem(cbmJlptLevel, "");
 			//
 			Util.forEach(Stream.of(pitchAccentImage, strokeImage), x -> Util.setIcon(x, null));
 			//
-			pitchAccentBufferedImage = null;
+			pitchAccentBufferedImage = strokeBufferedImage = null;
 			//
 			final URIBuilder uriBuilder = new URIBuilder();
 			//
@@ -588,8 +590,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				try {
 					//
-					Util.setIcon(strokeImage, testAndApply(Objects::nonNull, chopImage(getStrokeImage(this, page)),
-							ImageIcon::new, null));
+					Util.setIcon(strokeImage, testAndApply(Objects::nonNull,
+							strokeBufferedImage = chopImage(getStrokeImage(this, page)), ImageIcon::new, null));
+					//
+					Util.setEnabled(btnCopyStrokeImage, strokeBufferedImage != null);
 					//
 				} catch (final IOException | InterruptedException e) {
 					//
@@ -1075,6 +1079,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			} // try
 				//
+			return true;
+			//
+		} else if (Objects.equals(source, instance.btnCopyStrokeImage)) {
+			//
+			final IH ih = new IH();
+			//
+			ih.image = instance.strokeBufferedImage;
+			//
+			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+					Reflection.newProxy(Transferable.class, ih), null));
+			//
 			return true;
 			//
 		} // if
