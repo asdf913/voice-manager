@@ -576,60 +576,53 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				// Stroke
 				//
-				ElementHandle eh = testAndApply(x -> IterableUtils.size(x) == 1,
+				click(testAndApply(x -> IterableUtils.size(x) == 1,
 						querySelectorAll(page, ".dmak-play.btn.btn-primary.btn-circle.px-5"),
-						x -> IterableUtils.get(x, 0), null);
+						x -> IterableUtils.get(x, 0), null));
 				//
-				if (eh != null) {
+				if ((testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, "div.card-body div.dmak"),
+						x -> IterableUtils.get(x, 0), null)) != null) {
 					//
-					eh.click();
-					//
-					if ((eh = testAndApply(x -> IterableUtils.size(x) == 1,
-							querySelectorAll(page, "div.card-body div.dmak"), x -> IterableUtils.get(x, 0),
-							null)) != null) {
+					try {
 						//
-						try {
+						final long currentTimeMillis = System.currentTimeMillis();
+						//
+						byte[] bs = null;
+						//
+						BufferedImage before = null, after = null;
+						//
+						while (System.currentTimeMillis() - currentTimeMillis < 20000) {// TODO
 							//
-							final long currentTimeMillis = System.currentTimeMillis();
-							//
-							byte[] bs = null;
-							//
-							BufferedImage before = null, after = null;
-							//
-							while (System.currentTimeMillis() - currentTimeMillis < 20000) {// TODO
+							if (before == null) {
 								//
-								if (before == null) {
+								before = toBufferedImage(bs = screenshot(locator(page, "div.card-body div.dmak")));
+								//
+							} else {
+								//
+								if (Objects.equals(getImageComparisonState(new ImageComparison(before,
+										after = toBufferedImage(
+												bs = screenshot(locator(page, "div.card-body div.dmak"))))
+										.compareImages()), ImageComparisonState.MATCH)) {
 									//
-									before = toBufferedImage(bs = screenshot(locator(page, "div.card-body div.dmak")));
-									//
-								} else {
-									//
-									if (Objects.equals(getImageComparisonState(new ImageComparison(before,
-											after = toBufferedImage(
-													bs = screenshot(locator(page, "div.card-body div.dmak"))))
-											.compareImages()), ImageComparisonState.MATCH)) {
-										//
-										break;
-										//
-									} // if
-										//
-									before = after;
+									break;
 									//
 								} // if
 									//
-								Thread.sleep(100);// TODO
+								before = after;
 								//
-							} // while
+							} // if
 								//
-							Util.setIcon(strokeImage, new ImageIcon(chopImage(bs)));
+							Thread.sleep(100);// TODO
 							//
-						} catch (final IOException | InterruptedException e) {
+						} // while
 							//
-							TaskDialogs.showException(e);
-							//
-						} // try
-							//
-					} // if
+						Util.setIcon(strokeImage, new ImageIcon(chopImage(bs)));
+						//
+					} catch (final IOException | InterruptedException e) {
+						//
+						TaskDialogs.showException(e);
+						//
+					} // try
 						//
 				} // if
 					//
@@ -652,6 +645,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // for
 			//
+	}
+
+	private static void click(final ElementHandle instance) {
+		if (instance != null) {
+			instance.click();
+		}
 	}
 
 	private static ImageComparisonState getImageComparisonState(@Nullable final ImageComparisonResult instance) {
