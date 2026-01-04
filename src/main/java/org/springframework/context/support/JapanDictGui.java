@@ -657,7 +657,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return instance != null ? instance.getImageComparisonState() : null;
 	}
 
-	private static BufferedImage toBufferedImage(final byte[] bs) throws IOException, RuntimeException {
+	private static BufferedImage toBufferedImage(@Nullable final byte[] bs) throws IOException, RuntimeException {
 		//
 		try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
 			//
@@ -690,7 +690,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static BufferedImage chopImage(final byte[] bs) throws IOException {
+	private static BufferedImage chopImage(@Nullable final byte[] bs) throws IOException {
 		//
 		BufferedImage bufferedImage = null;
 		//
