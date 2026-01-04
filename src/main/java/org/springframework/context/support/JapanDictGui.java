@@ -583,7 +583,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static boolean getAsBoolean(final BooleanSupplier instance) {
+	private static boolean getAsBoolean(@Nullable final BooleanSupplier instance) {
 		return instance != null && instance.getAsBoolean();
 	}
 
