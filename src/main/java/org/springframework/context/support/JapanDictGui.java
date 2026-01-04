@@ -1296,14 +1296,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		final Map<?, ?> properties = System.getProperties();
 		//
 		testAndAccept(Util::containsKey, properties,
-				"org.springframework.context.support.JapanDictGui.storkeImageDuration", (a, b) -> {
-					instance.storkeImageDuration = toDuration(Util.get(a, b));
-				});
+				"org.springframework.context.support.JapanDictGui.storkeImageDuration",
+				(a, b) -> instance.storkeImageDuration = toDuration(Util.get(a, b)));
 		//
 		testAndAccept(Util::containsKey, properties,
-				"org.springframework.context.support.JapanDictGui.storkeImageSleepDuration", (a, b) -> {
-					instance.storkeImageSleepDuration = toDuration(Util.get(a, b));
-				});
+				"org.springframework.context.support.JapanDictGui.storkeImageSleepDuration",
+				(a, b) -> instance.storkeImageSleepDuration = toDuration(Util.get(a, b)));
 		//
 		instance.setLayout(new MigLayout());
 		//
