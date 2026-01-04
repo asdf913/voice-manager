@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.BooleanSupplier;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -387,6 +388,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			URI uri = null;
 			//
+			final IH ih = new IH();
+			//
+			final BooleanSupplier booleanSupplier = Reflection.newProxy(BooleanSupplier.class, ih);
+			//
 			try {
 				//
 				final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class,
@@ -402,8 +407,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					final boolean success = HttpStatus.isSuccess(responseCode);
 					//
-					setEnabled(success, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio,
-							btnCopyPitchAccentImage, btnSavePitchAccentImage);
+					ih.booleanValue = Boolean.valueOf(success);
 					//
 					document = testAndApply(x -> Util.and(x != null, !isTestMode()),
 							is = testAndApply(x -> success, httpURLConnection, x -> getInputStream(x), null),
@@ -516,6 +520,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				final boolean hasPitchAccentImage = IterableUtils
 						.size(ElementUtil.select(document, ".d-flex.justify-content-between.align-items-center")) == 1;
 				//
+				ih.booleanValue = ih.booleanValue != null
+						? Boolean.valueOf(ih.booleanValue.booleanValue() && hasPitchAccentImage)
+						: Boolean.valueOf(isSuccess);
+				//
 				final BoundingBox boundingBox = testAndGet(Util.and(isSuccess, !isTestMode(), hasPitchAccentImage),
 						() -> boundingBox(
 								locator(page, ".d-flex.justify-content-between.align-items-center div:first-child")));
@@ -547,6 +555,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						});
 				//
 				pack(window);
+				//
+			} finally {
+				//
+				setEnabled(booleanSupplier != null && booleanSupplier.getAsBoolean(), btnCopyHiragana, btnCopyRomaji,
+						btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio, btnCopyPitchAccentImage,
+						btnSavePitchAccentImage);
 				//
 			} // try
 				//
@@ -663,6 +677,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private Image image = null;
 
+		private Boolean booleanValue = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -677,6 +693,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				} else if (Objects.equals(name, "getTransferData")) {
 					//
 					return image;
+					//
+				} // if
+					//
+			} else if (proxy instanceof BooleanSupplier) {
+				//
+				if (Objects.equals(name, "getAsBoolean")) {
+					//
+					return booleanValue;
 					//
 				} // if
 					//
