@@ -175,7 +175,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Copy Pitch Accent Image")
 	private AbstractButton btnCopyPitchAccentImage = null;
 
-	private AbstractButton btnSavePitchAccentImage, btnCopyStrokeImage = null;
+	@Note("Save Pitch Accent Image")
+	private AbstractButton btnSavePitchAccentImage = null;
+
+	private AbstractButton btnCopyStrokeImage = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
@@ -190,7 +193,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private JLabel strokeImage = null;
 
-	private transient BufferedImage pitchAccentBufferedImage, strokeBufferedImage = null;
+	@Note("Pitch Accent Image")
+	private transient BufferedImage pitchAccentBufferedImage = null;
+
+	private BufferedImage strokeBufferedImage = null;
 
 	private Window window = null;
 
