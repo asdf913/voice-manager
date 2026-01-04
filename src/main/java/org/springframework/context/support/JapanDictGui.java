@@ -307,7 +307,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, new JLabel("Stroke"));
 		//
-		add(this, strokeImage = new JLabel(), String.format("span %1$s", 5));
+		add(this, strokeImage = new JLabel(), String.format("span %1$s", 6));
 		//
 		setEditable(false, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl, tfPitchAccent);
 		//
