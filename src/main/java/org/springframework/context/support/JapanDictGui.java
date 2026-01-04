@@ -654,7 +654,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static ImageComparisonState getImageComparisonState(final ImageComparisonResult instance) {
+	private static ImageComparisonState getImageComparisonState(@Nullable final ImageComparisonResult instance) {
 		return instance != null ? instance.getImageComparisonState() : null;
 	}
 
@@ -668,7 +668,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static List<ElementHandle> querySelectorAll(final Page instance, final String selector) {
+	private static List<ElementHandle> querySelectorAll(@Nullable final Page instance, final String selector) {
 		return instance != null ? instance.querySelectorAll(selector) : null;
 	}
 
