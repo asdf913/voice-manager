@@ -14,10 +14,12 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
@@ -68,10 +70,11 @@ import javassist.util.proxy.ProxyUtil;
 class JapanDictGuiTest {
 
 	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT,
-			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT6, METHOD_GET_AUDIO_URL,
-			METHOD_TEST_AND_RUN, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
-			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_EQUALS, METHOD_SET_JCB_JLPT_LEVEL,
-			METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2, METHOD_GET_AS_BOOLEAN = null;
+			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
+			METHOD_TEST_AND_ACCEPT6, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN, METHOD_GET_SYSTEM_CLIP_BOARD,
+			METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_EQUALS,
+			METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2, METHOD_GET_AS_BOOLEAN,
+			METHOD_TO_DURATION = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -98,6 +101,9 @@ class JapanDictGuiTest {
 		//
 		(METHOD_TEST_AND_ACCEPT3 = Util.getDeclaredMethod(clz, "testAndAccept", Predicate.class, Object.class,
 				FailableConsumer.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT4 = Util.getDeclaredMethod(clz, "testAndAccept", BiPredicate.class, Object.class,
+				Object.class, BiConsumer.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT6 = Util.getDeclaredMethod(clz, "testAndAccept", Predicate.class, Object.class,
 				Consumer.class, Predicate.class, Object.class, Consumer.class)).setAccessible(true);
@@ -135,13 +141,15 @@ class JapanDictGuiTest {
 		(METHOD_GET_AS_BOOLEAN = Util.getDeclaredMethod(clz, "getAsBoolean", BooleanSupplier.class))
 				.setAccessible(true);
 		//
+		(METHOD_TO_DURATION = Util.getDeclaredMethod(clz, "toDuration", Object.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
 
 		private Boolean test, booleanValue;
 
-		private Integer size, status;
+		private Integer size, status, length;
 
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -232,6 +240,14 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof CharSequence) {
+				//
+				if (Objects.equals(name, "length")) {
+					//
+					return length;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -313,6 +329,10 @@ class JapanDictGuiTest {
 				} else if (Objects.equals(parameterType, Integer.TYPE)) {
 					//
 					Util.add(collection, Integer.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Long.TYPE)) {
+					//
+					Util.add(collection, Long.valueOf(0));
 					//
 				} else if (Objects.equals(parameterType, Character.TYPE)) {
 					//
@@ -427,6 +447,10 @@ class JapanDictGuiTest {
 					//
 					Util.add(collection, Integer.valueOf(0));
 					//
+				} else if (Objects.equals(parameterType, Long.TYPE)) {
+					//
+					Util.add(collection, Long.valueOf(0));
+					//
 				} else if (Objects.equals(parameterType, Character.TYPE)) {
 					//
 					Util.add(collection, Character.valueOf(' '));
@@ -441,7 +465,7 @@ class JapanDictGuiTest {
 						//
 						ih.test = ih.booleanValue = Boolean.FALSE;
 						//
-						ih.size = ih.status = Integer.valueOf(0);
+						ih.size = ih.status = ih.length = Integer.valueOf(0);
 						//
 					} // if
 						//
@@ -690,9 +714,12 @@ class JapanDictGuiTest {
 	@Test
 	void testTestAndAccept() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT3, null, Predicates.alwaysTrue(), null, null));
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT4, null, org.meeuw.functional.Predicates.biAlwaysTrue(),
+				null, null, null));
 		//
 		final Predicate<?> predicate = Predicates.alwaysTrue();
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT3, null, predicate, null, null));
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT6, null, predicate, null, null, null, null, null));
 		//
@@ -871,6 +898,55 @@ class JapanDictGuiTest {
 		Assertions.assertEquals(ih != null ? ih.booleanValue = Boolean.TRUE : null,
 				invoke(METHOD_GET_AS_BOOLEAN, null, Reflection.newProxy(BooleanSupplier.class, ih)));
 		//
+	}
+
+	@Test
+	void testToDuration() throws Throwable {
+		//
+		final int one = 1;
+		//
+		final Duration duration = toDuration(Integer.valueOf(one));
+		//
+		Assertions.assertNotNull(duration);
+		//
+		Assertions.assertSame(duration, toDuration(duration));
+		//
+		Assertions.assertEquals(duration, toDuration(toCharArray(Integer.toString(one))));
+		//
+		Assertions.assertEquals(Duration.ofSeconds(1), toDuration("PT1S"));
+		//
+	}
+
+	private static char[] toCharArray(final String instance) throws NoSuchFieldException {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		if (Narcissus.getField(instance, Util.getDeclaredField(String.class, "value")) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance.toCharArray();
+		//
+	}
+
+	private static Duration toDuration(final Object object) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_TO_DURATION, null, object);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Duration duration) {
+				return duration;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }

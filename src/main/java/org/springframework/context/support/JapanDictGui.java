@@ -31,12 +31,15 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
@@ -188,6 +191,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	private transient BufferedImage pitchAccentBufferedImage = null;
 
 	private Window window = null;
+
+	private Duration storkeImageDuration = null;
 
 	private JapanDictGui() {
 	}
@@ -591,7 +596,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						//
 						BufferedImage before = null, after = null;
 						//
-						while (System.currentTimeMillis() - currentTimeMillis < 20000) {// TODO
+						while (System.currentTimeMillis() - currentTimeMillis < Math
+								.max(toMillis(storkeImageDuration, 20000), 0)) {
 							//
 							if (before == null) {
 								//
@@ -645,6 +651,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // for
 			//
+	}
+
+	private static long toMillis(final Duration instance, final long defaultValue) {
+		return instance != null ? instance.toMillis() : defaultValue;
 	}
 
 	private static void click(final ElementHandle instance) {
@@ -1251,6 +1261,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		// ,
 		final JapanDictGui instance = new JapanDictGui();
 		//
+		testAndAccept(Util::containsKey, System.getProperties(),
+				"org.springframework.context.support.JapanDictGui.storkeImageDuration", (a, b) -> {
+					instance.storkeImageDuration = toDuration(Util.get(a, b));
+				});
+		//
 		instance.setLayout(new MigLayout());
 		//
 		instance.afterPropertiesSet();
@@ -1261,6 +1276,70 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		setVisible(jFrame, true);
 		//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (Util.test(instance, t, u)) {
+			Util.accept(consumer, t, u);
+		} // if
+	}
+
+	private static Duration toDuration(final Object object) {
+		//
+		Duration value = null;
+		//
+		if (object == null) {
+			//
+			value = null;
+			//
+		} else if (object instanceof Duration duration) {
+			//
+			value = duration;
+			//
+		} else if (object instanceof Number number) {
+			//
+			value = Duration.ofMillis(Util.intValue(number, 0));
+			//
+		} else if (object instanceof CharSequence) {
+			//
+			final String string = Util.toString(object);
+			//
+			DateTimeParseException dpe = null;
+			//
+			try {
+				//
+				return parse(string);
+				//
+			} catch (final DateTimeParseException e) {
+				//
+				dpe = e;
+				//
+			} // try
+				//
+			final Number number = testAndApply(NumberUtils::isParsable, string,
+					x -> Integer.valueOf(NumberUtils.toInt(x)), null);
+			//
+			if (number != null) {
+				//
+				return toDuration(number);
+				//
+			} // if
+				//
+			throw dpe;
+			//
+		} else if (object instanceof char[] cs) {
+			//
+			return toDuration(testAndApply(Objects::nonNull, cs, String::new, null));
+			//
+		} // if
+			//
+		return value;
+		//
+	}
+
+	private static Duration parse(final CharSequence text) {
+		return StringUtils.isNotEmpty(text) ? Duration.parse(text) : null;
 	}
 
 	private static boolean isTestMode() {
