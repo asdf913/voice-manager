@@ -653,6 +653,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		}
 	}
 
+	@Nullable
 	private static ImageComparisonState getImageComparisonState(@Nullable final ImageComparisonResult instance) {
 		return instance != null ? instance.getImageComparisonState() : null;
 	}
@@ -667,6 +668,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
+	@Nullable
 	private static List<ElementHandle> querySelectorAll(@Nullable final Page instance, final String selector) {
 		return instance != null ? instance.querySelectorAll(selector) : null;
 	}
