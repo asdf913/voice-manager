@@ -626,44 +626,44 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				null));
 		//
 		if ((testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, "div.card-body div.dmak"),
-				x -> IterableUtils.get(x, 0), null)) != null) {
+				x -> IterableUtils.get(x, 0), null)) == null) {
 			//
-			final long currentTimeMillis = System.currentTimeMillis();
-			//
-			BufferedImage before = null, after = null;
-			//
-			while (System.currentTimeMillis() - currentTimeMillis < Math
-					.max(toMillis(instance != null ? instance.storkeImageDuration : null, 20000), 0)) {
-				//
-				if (before == null) {
-					//
-					before = toBufferedImage(screenshot(locator(page, "div.card-body div.dmak")));
-					//
-				} else {
-					//
-					if (Objects.equals(getImageComparisonState(new ImageComparison(before,
-							after = toBufferedImage(screenshot(locator(page, "div.card-body div.dmak"))))
-							.compareImages()), ImageComparisonState.MATCH)) {
-						//
-						break;
-						//
-					} // if
-						//
-					before = after;
-					//
-				} // if
-					//
-				testAndAccept(x -> x >= 0,
-						Math.max(toMillis(instance != null ? instance.storkeImageSleepDuration : null, 100), 0),
-						Thread::sleep);
-				//
-			} // while
-				//
-			return after;
+			return null;
 			//
 		} // if
 			//
-		return null;
+		final long currentTimeMillis = System.currentTimeMillis();
+		//
+		BufferedImage before = null, after = null;
+		//
+		while (System.currentTimeMillis() - currentTimeMillis < Math
+				.max(toMillis(instance != null ? instance.storkeImageDuration : null, 20000), 0)) {
+			//
+			if (before == null) {
+				//
+				before = toBufferedImage(screenshot(locator(page, "div.card-body div.dmak")));
+				//
+			} else {
+				//
+				if (Objects.equals(getImageComparisonState(new ImageComparison(before,
+						after = toBufferedImage(screenshot(locator(page, "div.card-body div.dmak")))).compareImages()),
+						ImageComparisonState.MATCH)) {
+					//
+					break;
+					//
+				} // if
+					//
+				before = after;
+				//
+			} // if
+				//
+			testAndAccept(x -> x >= 0,
+					Math.max(toMillis(instance != null ? instance.storkeImageSleepDuration : null, 100), 0),
+					Thread::sleep);
+			//
+		} // while
+			//
+		return after;
 		//
 	}
 
