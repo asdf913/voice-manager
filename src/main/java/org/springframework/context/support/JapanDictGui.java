@@ -612,32 +612,39 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			if ((bufferedImage = testAndApply(Objects::nonNull, is, ImageIO::read, null)) != null && boundingBox != null
 					&& boundingBox.width > 0) {
 				//
-				if ((bufferedImage = bufferedImage.getSubimage(0, 0, (int) boundingBox.width,
-						bufferedImage.getHeight())) != null) {
+				Integer first = null;
+				//
+				Integer integerY = null;
+				//
+				for (int y = 0; y < bufferedImage.getHeight(); y++) {
 					//
-					Integer first = null;
-					//
-					for (int y = 0; y < bufferedImage.getHeight(); y++) {
+					if (integerY != null) {
 						//
-						for (int x = 0; x < bufferedImage.getWidth(); x++) {
+						break;
+						//
+					} // if
+						//
+					for (int x = 0; x < bufferedImage.getWidth(); x++) {
+						//
+						if (first == null) {
 							//
-							if (first == null) {
-								//
-								first = Integer.valueOf(bufferedImage.getRGB(x, y));
-								//
-							} else if (first.intValue() != bufferedImage.getRGB(x, y)) {
-								//
-								return bufferedImage = bufferedImage.getSubimage(0, y, bufferedImage.getWidth(),
-										bufferedImage.getHeight() - y);
-								//
-							} // if
-								//
-						} // for
+							first = Integer.valueOf(bufferedImage.getRGB(x, y));
+							//
+						} else if (first.intValue() != bufferedImage.getRGB(x, y)) {
+							//
+							integerY = Integer.valueOf(y);
+							//
+						} // if
 							//
 					} // for
 						//
-				} // if
+				} // for
 					//
+				final int intY = Util.intValue(integerY, 0);
+				//
+				bufferedImage = bufferedImage.getSubimage(0, intY, (int) boundingBox.width,
+						bufferedImage.getHeight() - intY);
+				//
 			} // if
 				//
 		} // try
