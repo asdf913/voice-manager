@@ -194,7 +194,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private Window window = null;
 
-	private Duration storkeImageDuration, storkeImageSleepDuration = null;
+	@Note("Stroke Image Duration")
+	private Duration storkeImageDuration = null;
+
+	private Duration storkeImageSleepDuration = null;
 
 	private JapanDictGui() {
 	}
