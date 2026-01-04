@@ -618,7 +618,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static BufferedImage getStrokeImage(final JapanDictGui instance, final Page page)
+	private static BufferedImage getStrokeImage(final JapanDictGui instance, @Nullable final Page page)
 			throws IOException, InterruptedException {
 		//
 		click(testAndApply(x -> IterableUtils.size(x) == 1,
