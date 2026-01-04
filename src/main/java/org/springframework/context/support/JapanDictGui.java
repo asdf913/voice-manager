@@ -670,24 +670,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						after = toBufferedImage(screenshot(locator(page, "div.card-body div.dmak")))).compareImages()),
 						ImageComparisonState.MATCH)) {
 					//
-					ints = null;
-					//
-					for (int x = 0; after != null && x < after.getWidth(); x++) {
-						//
-						for (int y = 0; y < after.getHeight(); y++) {
-							//
-							if (!ArrayUtils.contains(ints = ObjectUtils.getIfNull(ints, () -> new int[] { 0 }),
-									after.getRGB(x, y))) {
-								//
-								ints = ArrayUtils.add(ints, after.getRGB(x, y));
-								//
-							} // if
-								//
-						} // for
-							//
-					} // for
-						//
-					if (ints == null || ints.length < 500) {
+					if ((ints = getRGBs(after)) == null || ints.length < 500) {
 						//
 						break;
 						//
@@ -706,6 +689,44 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // while
 			//
 		return after;
+		//
+	}
+
+	private static int[] getRGBs(final BufferedImage instance) {
+		//
+		int[] ints = null;
+		//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), "raster")));
+		//
+		testAndRun(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final boolean condition = testAndApply(Objects::nonNull,
+				testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
+				x -> Narcissus.getField(instance, x), null) != null;
+		//
+		for (int x = 0; condition && instance != null && x < instance.getWidth(); x++) {
+			//
+			for (int y = 0; y < instance.getHeight(); y++) {
+				//
+				if (!ArrayUtils.contains(ints = ObjectUtils.getIfNull(ints, () -> new int[] { 0 }),
+						instance.getRGB(x, y))) {
+					//
+					ints = ArrayUtils.add(ints, instance.getRGB(x, y));
+					//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		return ints;
 		//
 	}
 
