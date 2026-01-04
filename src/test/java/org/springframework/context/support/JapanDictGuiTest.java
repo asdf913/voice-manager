@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
@@ -68,8 +69,8 @@ class JapanDictGuiTest {
 	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT,
 			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT6, METHOD_GET_AUDIO_URL,
 			METHOD_TEST_AND_RUN, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
-			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_EQUALS, METHOD_SET_JCB_JLPT_LEVEL,
-			METHOD_CHOP_IMAGE = null;
+			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_EQUALS, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE,
+			METHOD_GET_AS_BOOLEAN = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -128,11 +129,14 @@ class JapanDictGuiTest {
 		(METHOD_CHOP_IMAGE = Util.getDeclaredMethod(clz, "chopImage", byte[].class, BoundingBox.class))
 				.setAccessible(true);
 		//
+		(METHOD_GET_AS_BOOLEAN = Util.getDeclaredMethod(clz, "getAsBoolean", BooleanSupplier.class))
+				.setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
 
-		private Boolean test;
+		private Boolean test, booleanValue;
 
 		private Integer size, status;
 
@@ -213,6 +217,14 @@ class JapanDictGuiTest {
 				//
 				return status;
 				//
+			} else if (proxy instanceof BooleanSupplier) {
+				//
+				if (Objects.equals(name, "getAsBoolean")) {
+					//
+					return booleanValue;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -420,7 +432,7 @@ class JapanDictGuiTest {
 					//
 					if ((ih = ObjectUtils.getIfNull(ih, IH::new)) != null) {
 						//
-						ih.test = Boolean.FALSE;
+						ih.test = ih.booleanValue = Boolean.FALSE;
 						//
 						ih.size = ih.status = Integer.valueOf(0);
 						//
@@ -840,6 +852,14 @@ class JapanDictGuiTest {
 			//
 		} // try
 			//
+	}
+
+	@Test
+	void testGetAsBoolean() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertEquals(ih != null ? ih.booleanValue = Boolean.TRUE : null,
+				invoke(METHOD_GET_AS_BOOLEAN, null, Reflection.newProxy(BooleanSupplier.class, ih)));
+		//
 	}
 
 }

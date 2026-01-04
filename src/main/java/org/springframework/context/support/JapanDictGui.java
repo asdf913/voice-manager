@@ -459,8 +459,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					? Boolean.valueOf(Boolean.logicalAnd(ih.booleanValue.booleanValue(), isNotBlank))
 					: Boolean.valueOf(isNotBlank);
 			//
-			setEnabled(booleanSupplier != null && booleanSupplier.getAsBoolean(), btnCopyHiragana, btnCopyRomaji,
-					btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio);
+			setEnabled(getAsBoolean(booleanSupplier), btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio,
+					btnPlayAudio);
 			//
 			try {
 				//
@@ -581,6 +581,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // for
 			//
+	}
+
+	private static boolean getAsBoolean(final BooleanSupplier instance) {
+		return instance != null && instance.getAsBoolean();
 	}
 
 	private static <A, B> void testAndAccept(final Predicate<A> predicateA, final A a, final Consumer<A> consumerA,
