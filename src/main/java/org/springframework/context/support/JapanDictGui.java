@@ -652,21 +652,44 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		BufferedImage before = null, after = null;
 		//
+		int[] ints = null;
+		//
 		while (System.currentTimeMillis() - currentTimeMillis < Math
 				.max(toMillis(instance != null ? instance.storkeImageDuration : null, 20000), 0)) {
 			//
 			if (before == null) {
 				//
 				before = toBufferedImage(screenshot(locator(page, "div.card-body div.dmak")));
-				//
+				// s
 			} else {
 				//
 				if (Objects.equals(getImageComparisonState(new ImageComparison(before,
 						after = toBufferedImage(screenshot(locator(page, "div.card-body div.dmak")))).compareImages()),
 						ImageComparisonState.MATCH)) {
 					//
-					break;
+					ints = null;
 					//
+					for (int x = 0; after != null && x < after.getWidth(); x++) {
+						//
+						for (int y = 0; y < after.getHeight(); y++) {
+							//
+							if (!ArrayUtils.contains(ints = ObjectUtils.getIfNull(ints, () -> new int[] { 0 }),
+									after.getRGB(x, y))) {
+								//
+								ints = ArrayUtils.add(ints, after.getRGB(x, y));
+								//
+							} // if
+								//
+						} // for
+							//
+					} // for
+						//
+					if (ints == null || ints.length < 500) {
+						//
+						break;
+						//
+					} // if
+						//
 				} // if
 					//
 				before = after;
