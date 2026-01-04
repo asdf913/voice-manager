@@ -399,7 +399,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			Util.forEach(Stream.of(pitchAccentImage, strokeImage), x -> Util.setIcon(x, null));
 			//
-			pitchAccentBufferedImage = strokeBufferedImage = null;
+			Util.forEach(
+					Util.filter(Util.stream(FieldUtils.getAllFieldsList(JapanDictGui.class)),
+							x -> Objects.equals(Util.getType(x), BufferedImage.class)),
+					x -> Narcissus.setField(this, x, null));
 			//
 			final URIBuilder uriBuilder = new URIBuilder();
 			//
