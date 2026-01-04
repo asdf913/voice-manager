@@ -691,7 +691,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	@Nullable
-	private static int[] getRGBs(final BufferedImage instance) {
+	private static int[] getRGBs(@Nullable final BufferedImage instance) {
 		//
 		int[] ints = null;
 		//
