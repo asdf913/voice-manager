@@ -666,16 +666,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			} else {
 				//
-				if (Objects.equals(getImageComparisonState(new ImageComparison(before,
-						after = toBufferedImage(screenshot(locator(page, "div.card-body div.dmak")))).compareImages()),
-						ImageComparisonState.MATCH)) {
+				if (Objects
+						.equals(getImageComparisonState(new ImageComparison(before,
+								after = toBufferedImage(screenshot(locator(page, "div.card-body div.dmak"))))
+								.compareImages()), ImageComparisonState.MATCH)
+						&& ((ints = getRGBs(after)) == null || ints.length < 500)) {
 					//
-					if ((ints = getRGBs(after)) == null || ints.length < 500) {
-						//
-						break;
-						//
-					} // if
-						//
+					break;
+					//
 				} // if
 					//
 				before = after;
