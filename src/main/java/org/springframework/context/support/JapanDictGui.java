@@ -1302,6 +1302,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // if
 	}
 
+	@Nullable
 	private static Duration toDuration(@Nullable final Object object) {
 		//
 		Duration value = null;
@@ -1355,6 +1356,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	@Nullable
 	private static Duration parse(final CharSequence text) {
 		return StringUtils.isNotEmpty(text) ? Duration.parse(text) : null;
 	}
