@@ -668,8 +668,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static <E extends Throwable> void testAndAccept(final LongPredicate predicate, final long l,
-			final FailableLongConsumer<E> consumer) throws E {
+	private static <E extends Throwable> void testAndAccept(@Nullable final LongPredicate predicate, final long l,
+			@Nullable final FailableLongConsumer<E> consumer) throws E {
 		if (predicate != null && predicate.test(l) && consumer != null) {
 			consumer.accept(l);
 		}
