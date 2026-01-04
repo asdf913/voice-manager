@@ -45,6 +45,7 @@ import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
+import java.util.function.LongPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -80,6 +81,7 @@ import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.function.FailableLongConsumer;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.function.FailableSupplierUtil;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -192,7 +194,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private Window window = null;
 
-	private Duration storkeImageDuration = null;
+	private Duration storkeImageDuration, storkeImageSleepDuration = null;
 
 	private JapanDictGui() {
 	}
@@ -618,7 +620,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 								//
 							} // if
 								//
-							Thread.sleep(100);// TODO
+							testAndAccept(x -> x >= 0, Math.max(toMillis(storkeImageSleepDuration, 100), 0),
+									Thread::sleep);
 							//
 						} // while
 							//
@@ -651,6 +654,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // for
 			//
+	}
+
+	private static <E extends Throwable> void testAndAccept(final LongPredicate predicate, final long l,
+			final FailableLongConsumer<E> consumer) throws E {
+		if (predicate != null && predicate.test(l) && consumer != null) {
+			consumer.accept(l);
+		}
 	}
 
 	private static long toMillis(final Duration instance, final long defaultValue) {
@@ -1261,9 +1271,16 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		// ,
 		final JapanDictGui instance = new JapanDictGui();
 		//
-		testAndAccept(Util::containsKey, System.getProperties(),
+		final Map<?, ?> properties = System.getProperties();
+		//
+		testAndAccept(Util::containsKey, properties,
 				"org.springframework.context.support.JapanDictGui.storkeImageDuration", (a, b) -> {
 					instance.storkeImageDuration = toDuration(Util.get(a, b));
+				});
+		//
+		testAndAccept(Util::containsKey, properties,
+				"org.springframework.context.support.JapanDictGui.storkeImageSleepDuration", (a, b) -> {
+					instance.storkeImageSleepDuration = toDuration(Util.get(a, b));
 				});
 		//
 		instance.setLayout(new MigLayout());

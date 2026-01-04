@@ -25,6 +25,7 @@ import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
+import java.util.function.LongPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -43,6 +44,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableLongConsumer;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
@@ -70,11 +72,11 @@ import javassist.util.proxy.ProxyUtil;
 class JapanDictGuiTest {
 
 	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT,
-			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
-			METHOD_TEST_AND_ACCEPT6, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN, METHOD_GET_SYSTEM_CLIP_BOARD,
-			METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_EQUALS,
-			METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2, METHOD_GET_AS_BOOLEAN,
-			METHOD_TO_DURATION = null;
+			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG,
+			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT6, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN,
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY,
+			METHOD_GET_JLPT_LEVEL_INDICES, METHOD_EQUALS, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1,
+			METHOD_CHOP_IMAGE2, METHOD_GET_AS_BOOLEAN, METHOD_TO_DURATION = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -99,8 +101,11 @@ class JapanDictGuiTest {
 		(METHOD_APPEND = Util.getDeclaredMethod(clz, "append", StringBuilder.class, Character.TYPE))
 				.setAccessible(true);
 		//
-		(METHOD_TEST_AND_ACCEPT3 = Util.getDeclaredMethod(clz, "testAndAccept", Predicate.class, Object.class,
+		(METHOD_TEST_AND_ACCEPT3_OBJECT = Util.getDeclaredMethod(clz, "testAndAccept", Predicate.class, Object.class,
 				FailableConsumer.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT3_LONG = Util.getDeclaredMethod(clz, "testAndAccept", LongPredicate.class, Long.TYPE,
+				FailableLongConsumer.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT4 = Util.getDeclaredMethod(clz, "testAndAccept", BiPredicate.class, Object.class,
 				Object.class, BiConsumer.class)).setAccessible(true);
@@ -244,6 +249,14 @@ class JapanDictGuiTest {
 				//
 				return length;
 				//
+			} else if (proxy instanceof LongPredicate) {
+				//
+				if (Objects.equals(name, "test")) {
+					//
+					return test;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -710,12 +723,24 @@ class JapanDictGuiTest {
 	@Test
 	void testTestAndAccept() throws IllegalAccessException, InvocationTargetException {
 		//
+		final LongPredicate longPredicate = Reflection.newProxy(LongPredicate.class, ih);
+		//
+		if (ih != null) {
+			//
+			ih.test = Boolean.TRUE;
+			//
+		} // if
+			//
+		final Long l = Long.valueOf(1);
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT3_LONG, null, longPredicate, l, null));
+		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT4, null, org.meeuw.functional.Predicates.biAlwaysTrue(),
 				null, null, null));
 		//
 		final Predicate<?> predicate = Predicates.alwaysTrue();
 		//
-		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT3, null, predicate, null, null));
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT3_OBJECT, null, predicate, null, null));
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT6, null, predicate, null, null, null, null, null));
 		//
