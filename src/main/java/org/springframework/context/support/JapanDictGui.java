@@ -657,7 +657,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return instance != null ? instance.toMillis() : defaultValue;
 	}
 
-	private static void click(final ElementHandle instance) {
+	private static void click(@Nullable final ElementHandle instance) {
 		if (instance != null) {
 			instance.click();
 		}
