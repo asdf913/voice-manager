@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -65,9 +66,10 @@ import javassist.util.proxy.ProxyUtil;
 class JapanDictGuiTest {
 
 	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT,
-			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY,
-			METHOD_GET_JLPT_LEVEL_INDICES, METHOD_EQUALS, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE = null;
+			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT6, METHOD_GET_AUDIO_URL,
+			METHOD_TEST_AND_RUN, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
+			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_EQUALS, METHOD_SET_JCB_JLPT_LEVEL,
+			METHOD_CHOP_IMAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -92,8 +94,11 @@ class JapanDictGuiTest {
 		(METHOD_APPEND = Util.getDeclaredMethod(clz, "append", StringBuilder.class, Character.TYPE))
 				.setAccessible(true);
 		//
-		(METHOD_TEST_AND_ACCEPT = Util.getDeclaredMethod(clz, "testAndAccept", Predicate.class, Object.class,
+		(METHOD_TEST_AND_ACCEPT3 = Util.getDeclaredMethod(clz, "testAndAccept", Predicate.class, Object.class,
 				FailableConsumer.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT6 = Util.getDeclaredMethod(clz, "testAndAccept", Predicate.class, Object.class,
+				Consumer.class, Predicate.class, Object.class, Consumer.class)).setAccessible(true);
 		//
 		(METHOD_GET_AUDIO_URL = Util.getDeclaredMethod(clz, "getAudioUrl", String.class, Strings.class, Iterable.class))
 				.setAccessible(true);
@@ -666,7 +671,13 @@ class JapanDictGuiTest {
 	@Test
 	void testTestAndAccept() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT, null, Predicates.alwaysTrue(), null, null));
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT3, null, Predicates.alwaysTrue(), null, null));
+		//
+		final Predicate<?> predicate = Predicates.alwaysTrue();
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT6, null, predicate, null, null, null, null, null));
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT6, null, null, null, null, predicate, null, null));
 		//
 	}
 

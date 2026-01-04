@@ -39,6 +39,7 @@ import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -432,26 +433,26 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							ElementUtil.select(document, "span.badge[title^='#jlpt'].me-1"),
 							x -> IterableUtils.get(x, 0), null))));
 			//
+			// Hiragana
+			//
 			final Pattern patten = Pattern.compile("^\\p{InHiragana}+$");
 			//
-			final Iterable<String> ss = Util.toList(Util.map(Util.filter(
-					NodeUtil.nodeStream(testAndApply(x -> IterableUtils.size(x) > 0,
-							testAndApply(x -> IterableUtils.size(x) > 0,
-									ElementUtil.select(document, ".d-inline-block.align-middle.p-2"),
-									x -> IterableUtils.get(x, 0), null),
-							x -> IterableUtils.get(x, 0), null)),
-					x -> Util.matches(Util.matcher(patten, Util.toString(x)))), Util::toString));
+			testAndAccept(x -> !IterableUtils.isEmpty(x),
+					Util.toList(
+							Util.map(
+									Util.filter(
+											NodeUtil.nodeStream(testAndApply(x -> IterableUtils.size(x) > 0,
+													testAndApply(x -> IterableUtils.size(x) > 0,
+															ElementUtil.select(document,
+																	".d-inline-block.align-middle.p-2"),
+															x -> IterableUtils.get(x, 0), null),
+													x -> IterableUtils.get(x, 0), null)),
+											x -> Util.matches(Util.matcher(patten, Util.toString(x)))),
+									Util::toString)),
+					x -> Util.setText(tfHiragana, String.join("", x))
+					//
+					, x -> Util.matches(Util.matcher(patten, x)), text, x -> Util.setText(tfHiragana, x));
 			//
-			if (!IterableUtils.isEmpty(ss)) {
-				//
-				Util.setText(tfHiragana, String.join("", ss));
-				//
-			} else if (Util.matches(Util.matcher(patten, text))) {
-				//
-				Util.setText(tfHiragana, text);
-				//
-			} // if
-				//
 			try {
 				//
 				Util.setText(tfAudioUrl,
@@ -578,6 +579,21 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			} // if
 				//
 		} // for
+			//
+	}
+
+	private static <A, B> void testAndAccept(final Predicate<A> predicateA, final A a, final Consumer<A> consumerA,
+			final Predicate<B> predicateB, final B b, final Consumer<B> consumerB) {
+		//
+		if (Util.test(predicateA, a)) {
+			//
+			Util.accept(consumerA, a);
+			//
+		} else if (Util.test(predicateB, b)) {
+			//
+			Util.accept(consumerB, b);
+			//
+		} // if
 			//
 	}
 
