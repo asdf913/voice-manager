@@ -666,6 +666,14 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyStrokeImage, 0, null)));
 		//
+		// btnSaveStrokeImage
+		//
+		final AbstractButton btnSaveStrokeImage = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnSaveStrokeImage", btnSaveStrokeImage, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnSaveStrokeImage, 0, null)));
+		//
 	}
 
 	@Test
