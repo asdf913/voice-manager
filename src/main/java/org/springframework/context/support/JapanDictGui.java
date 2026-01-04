@@ -180,7 +180,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private transient ComboBoxModel<String> cbmBrowserType = null;
 
-	private JLabel pitchAccentImage, strokeImage = null;
+	@Note("Pitch Accent Image")
+	private JLabel pitchAccentImage = null;
+
+	private JLabel strokeImage = null;
 
 	private transient BufferedImage pitchAccentBufferedImage = null;
 
