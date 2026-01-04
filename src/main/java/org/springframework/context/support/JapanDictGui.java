@@ -723,7 +723,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static BufferedImage chopImage(@Nullable final BufferedImage bufferedImage) throws IOException {
+	private static BufferedImage chopImage(@Nullable final BufferedImage bufferedImage) {
 		//
 		if (bufferedImage == null) {
 			//

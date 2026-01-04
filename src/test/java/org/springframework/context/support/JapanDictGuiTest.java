@@ -883,7 +883,7 @@ class JapanDictGuiTest {
 	}
 
 	@Test
-	void testChopImage() throws IllegalAccessException, InvocationTargetException, IOException, NoSuchMethodException {
+	void testChopImage() throws IllegalAccessException, InvocationTargetException, IOException {
 		//
 		byte[] bs = new byte[] {};
 		//
