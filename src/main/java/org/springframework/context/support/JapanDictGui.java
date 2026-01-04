@@ -453,6 +453,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					, x -> Util.matches(Util.matcher(patten, x)), text, x -> Util.setText(tfHiragana, x));
 			//
+			final boolean isNotBlank = StringUtils.isNotBlank(Util.getText(tfHiragana));
+			//
+			ih.booleanValue = ih.booleanValue != null
+					? Boolean.valueOf(Boolean.logicalAnd(ih.booleanValue.booleanValue(), isNotBlank))
+					: Boolean.valueOf(isNotBlank);
+			//
+			setEnabled(booleanSupplier != null && booleanSupplier.getAsBoolean(), btnCopyHiragana, btnCopyRomaji,
+					btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio);
+			//
 			try {
 				//
 				Util.setText(tfAudioUrl,
@@ -521,9 +530,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				final boolean hasPitchAccentImage = IterableUtils
 						.size(ElementUtil.select(document, ".d-flex.justify-content-between.align-items-center")) == 1;
 				//
-				ih.booleanValue = ih.booleanValue != null
-						? Boolean.valueOf(ih.booleanValue.booleanValue() && hasPitchAccentImage)
-						: Boolean.valueOf(isSuccess);
+				setEnabled(hasPitchAccentImage, btnCopyPitchAccentImage, btnSavePitchAccentImage);
 				//
 				final BoundingBox boundingBox = testAndGet(Util.and(isSuccess, !isTestMode(), hasPitchAccentImage),
 						() -> boundingBox(
@@ -556,12 +563,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						});
 				//
 				pack(window);
-				//
-			} finally {
-				//
-				setEnabled(booleanSupplier != null && booleanSupplier.getAsBoolean(), btnCopyHiragana, btnCopyRomaji,
-						btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio, btnCopyPitchAccentImage,
-						btnSavePitchAccentImage);
 				//
 			} // try
 				//
