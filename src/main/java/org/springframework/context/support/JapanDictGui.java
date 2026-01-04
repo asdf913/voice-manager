@@ -663,7 +663,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			if (before == null) {
 				//
 				before = toBufferedImage(screenshot(locator(page, "div.card-body div.dmak")));
-				// s
+				//
 			} else {
 				//
 				if (Objects.equals(getImageComparisonState(new ImageComparison(before,
