@@ -1416,7 +1416,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		if (object == null) {
 			//
-			value = null;
+			return null;
 			//
 		} else if (object instanceof Duration duration) {
 			//
