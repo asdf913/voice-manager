@@ -76,7 +76,7 @@ class JapanDictGuiTest {
 			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT6, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY,
 			METHOD_GET_JLPT_LEVEL_INDICES, METHOD_EQUALS, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1,
-			METHOD_CHOP_IMAGE2, METHOD_GET_AS_BOOLEAN, METHOD_TO_DURATION = null;
+			METHOD_CHOP_IMAGE2, METHOD_GET_AS_BOOLEAN, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -138,7 +138,7 @@ class JapanDictGuiTest {
 		//
 		(METHOD_SET_JCB_JLPT_LEVEL = Util.getDeclaredMethod(clz, "setJcbJlptLevel", int[].class)).setAccessible(true);
 		//
-		(METHOD_CHOP_IMAGE1 = Util.getDeclaredMethod(clz, "chopImage", byte[].class)).setAccessible(true);
+		(METHOD_CHOP_IMAGE1 = Util.getDeclaredMethod(clz, "chopImage", BufferedImage.class)).setAccessible(true);
 		//
 		(METHOD_CHOP_IMAGE2 = Util.getDeclaredMethod(clz, "chopImage", byte[].class, BoundingBox.class))
 				.setAccessible(true);
@@ -147,6 +147,8 @@ class JapanDictGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_TO_DURATION = Util.getDeclaredMethod(clz, "toDuration", Object.class)).setAccessible(true);
+		//
+		(METHOD_TO_BUFFERED_IMAGE = Util.getDeclaredMethod(clz, "toBufferedImage", byte[].class)).setAccessible(true);
 		//
 	}
 
@@ -885,11 +887,11 @@ class JapanDictGuiTest {
 	}
 
 	@Test
-	void testChopImage() throws IllegalAccessException, InvocationTargetException, IOException {
+	void testChopImage() throws IllegalAccessException, InvocationTargetException, IOException, NoSuchMethodException {
 		//
 		byte[] bs = new byte[] {};
 		//
-		Assertions.assertNull(invoke(METHOD_CHOP_IMAGE1, null, bs));
+		Assertions.assertNull(invoke(METHOD_CHOP_IMAGE1, null, invoke(METHOD_TO_BUFFERED_IMAGE, instance, bs)));
 		//
 		Assertions.assertNull(invoke(METHOD_CHOP_IMAGE2, null, bs, null));
 		//
@@ -897,7 +899,8 @@ class JapanDictGuiTest {
 			//
 			ImageIO.write(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), "png", baos);
 			//
-			Assertions.assertNotNull(invoke(METHOD_CHOP_IMAGE1, null, bs = baos.toByteArray()));
+			Assertions.assertNotNull(invoke(METHOD_CHOP_IMAGE1, null,
+					invoke(METHOD_TO_BUFFERED_IMAGE, instance, bs = baos.toByteArray())));
 			//
 			Assertions.assertNotNull(invoke(METHOD_CHOP_IMAGE2, null, bs, null));
 			//

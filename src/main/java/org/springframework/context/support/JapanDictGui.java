@@ -581,59 +581,18 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 								//
 						});
 				//
-				// Stroke
+				// Stroke Image
 				//
-				click(testAndApply(x -> IterableUtils.size(x) == 1,
-						querySelectorAll(page, ".dmak-play.btn.btn-primary.btn-circle.px-5"),
-						x -> IterableUtils.get(x, 0), null));
-				//
-				if ((testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, "div.card-body div.dmak"),
-						x -> IterableUtils.get(x, 0), null)) != null) {
+				try {
 					//
-					try {
-						//
-						final long currentTimeMillis = System.currentTimeMillis();
-						//
-						byte[] bs = null;
-						//
-						BufferedImage before = null, after = null;
-						//
-						while (System.currentTimeMillis() - currentTimeMillis < Math
-								.max(toMillis(storkeImageDuration, 20000), 0)) {
-							//
-							if (before == null) {
-								//
-								before = toBufferedImage(bs = screenshot(locator(page, "div.card-body div.dmak")));
-								//
-							} else {
-								//
-								if (Objects.equals(getImageComparisonState(new ImageComparison(before,
-										after = toBufferedImage(
-												bs = screenshot(locator(page, "div.card-body div.dmak"))))
-										.compareImages()), ImageComparisonState.MATCH)) {
-									//
-									break;
-									//
-								} // if
-									//
-								before = after;
-								//
-							} // if
-								//
-							testAndAccept(x -> x >= 0, Math.max(toMillis(storkeImageSleepDuration, 100), 0),
-									Thread::sleep);
-							//
-						} // while
-							//
-						Util.setIcon(strokeImage, new ImageIcon(chopImage(bs)));
-						//
-					} catch (final IOException | InterruptedException e) {
-						//
-						TaskDialogs.showException(e);
-						//
-					} // try
-						//
-				} // if
+					Util.setIcon(strokeImage, testAndApply(Objects::nonNull, chopImage(getStrokeImage(this, page)),
+							ImageIcon::new, null));
+					//
+				} catch (final IOException | InterruptedException e) {
+					//
+					TaskDialogs.showException(e);
+					//
+				} // try
 					//
 				pack(window);
 				//
@@ -654,6 +613,55 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // for
 			//
+	}
+
+	private static BufferedImage getStrokeImage(final JapanDictGui instance, final Page page)
+			throws IOException, InterruptedException {
+		//
+		click(testAndApply(x -> IterableUtils.size(x) == 1,
+				querySelectorAll(page, ".dmak-play.btn.btn-primary.btn-circle.px-5"), x -> IterableUtils.get(x, 0),
+				null));
+		//
+		if ((testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, "div.card-body div.dmak"),
+				x -> IterableUtils.get(x, 0), null)) != null) {
+			//
+			final long currentTimeMillis = System.currentTimeMillis();
+			//
+			BufferedImage before = null, after = null;
+			//
+			while (System.currentTimeMillis() - currentTimeMillis < Math
+					.max(toMillis(instance != null ? instance.storkeImageDuration : null, 20000), 0)) {
+				//
+				if (before == null) {
+					//
+					before = toBufferedImage(screenshot(locator(page, "div.card-body div.dmak")));
+					//
+				} else {
+					//
+					if (Objects.equals(getImageComparisonState(new ImageComparison(before,
+							after = toBufferedImage(screenshot(locator(page, "div.card-body div.dmak"))))
+							.compareImages()), ImageComparisonState.MATCH)) {
+						//
+						break;
+						//
+					} // if
+						//
+					before = after;
+					//
+				} // if
+					//
+				testAndAccept(x -> x >= 0,
+						Math.max(toMillis(instance != null ? instance.storkeImageSleepDuration : null, 100), 0),
+						Thread::sleep);
+				//
+			} // while
+				//
+			return after;
+			//
+		} // if
+			//
+		return null;
+		//
 	}
 
 	private static <E extends Throwable> void testAndAccept(final LongPredicate predicate, final long l,
@@ -712,48 +720,62 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static BufferedImage chopImage(@Nullable final byte[] bs) throws IOException {
+	private static BufferedImage chopImage(@Nullable final BufferedImage bufferedImage) throws IOException {
 		//
-		BufferedImage bufferedImage = null;
-		//
-		if ((bufferedImage = toBufferedImage(bs)) != null) {
+		if (bufferedImage == null) {
 			//
-			Integer first = null;
-			//
-			Integer integerX = null;
-			//
-			for (int x = bufferedImage.getWidth() - 1; x >= 0; x--) {
-				//
-				if (integerX != null) {
-					//
-					break;
-					//
-				} // if
-					//
-				for (int y = 0; y < bufferedImage.getHeight(); y++) {
-					//
-					if (first == null) {
-						//
-						first = Integer.valueOf(bufferedImage.getRGB(x, y));
-						//
-					} else if (first.intValue() != bufferedImage.getRGB(x, y)) {
-						//
-						integerX = Integer.valueOf(x);
-						//
-					} // if
-						//
-				} // for
-					//
-			} // for
-				//
-			final int width = bufferedImage.getWidth();
-			//
-			bufferedImage = bufferedImage.getSubimage(0, 0, Math.min(Util.intValue(integerX, width), width),
-					bufferedImage.getHeight());
+			return bufferedImage;
 			//
 		} // if
 			//
-		return bufferedImage;
+		final Iterable<Field> fs = Util
+				.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(bufferedImage))),
+						x -> Objects.equals(Util.getName(x), "raster")));
+		//
+		testAndRun(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final boolean condition = testAndApply(Objects::nonNull,
+				testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
+				x -> Narcissus.getField(bufferedImage, x), null) != null;
+		//
+		final int width = Util.intValue(condition ? bufferedImage.getWidth() : null, 0);
+		//
+		Integer first = null;
+		//
+		Integer integerX = null;
+		//
+		for (int x = Util.intValue(width, 0) - 1; x >= 0; x--) {
+			//
+			if (integerX != null) {
+				//
+				break;
+				//
+			} // if
+				//
+			for (int y = 0; y < bufferedImage.getHeight(); y++) {
+				//
+				if (first == null) {
+					//
+					first = Integer.valueOf(bufferedImage.getRGB(x, y));
+					//
+				} else if (first.intValue() != bufferedImage.getRGB(x, y)) {
+					//
+					integerX = Integer.valueOf(x);
+					//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		final int height = Util.intValue(condition ? bufferedImage.getHeight() : null, 0);
+		//
+		return condition ? bufferedImage.getSubimage(0, 0, Math.min(Util.intValue(integerX, width), width), height)
+				: null;
 		//
 	}
 
