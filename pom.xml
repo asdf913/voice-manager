@@ -366,6 +366,12 @@
 			<artifactId>ffmpeg-platform</artifactId>
 			<version>7.1.1-1.5.12</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.romankh3/image-comparison -->
+		<dependency>
+		    <groupId>com.github.romankh3</groupId>
+		    <artifactId>image-comparison</artifactId>
+		    <version>4.4.0</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

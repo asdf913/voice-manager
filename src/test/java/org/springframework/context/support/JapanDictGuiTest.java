@@ -69,8 +69,8 @@ class JapanDictGuiTest {
 	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT,
 			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT6, METHOD_GET_AUDIO_URL,
 			METHOD_TEST_AND_RUN, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
-			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_EQUALS, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE,
-			METHOD_GET_AS_BOOLEAN = null;
+			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_EQUALS, METHOD_SET_JCB_JLPT_LEVEL,
+			METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2, METHOD_GET_AS_BOOLEAN = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -126,7 +126,9 @@ class JapanDictGuiTest {
 		//
 		(METHOD_SET_JCB_JLPT_LEVEL = Util.getDeclaredMethod(clz, "setJcbJlptLevel", int[].class)).setAccessible(true);
 		//
-		(METHOD_CHOP_IMAGE = Util.getDeclaredMethod(clz, "chopImage", byte[].class, BoundingBox.class))
+		(METHOD_CHOP_IMAGE1 = Util.getDeclaredMethod(clz, "chopImage", byte[].class)).setAccessible(true);
+		//
+		(METHOD_CHOP_IMAGE2 = Util.getDeclaredMethod(clz, "chopImage", byte[].class, BoundingBox.class))
 				.setAccessible(true);
 		//
 		(METHOD_GET_AS_BOOLEAN = Util.getDeclaredMethod(clz, "getAsBoolean", BooleanSupplier.class))
@@ -190,7 +192,7 @@ class JapanDictGuiTest {
 				//
 			} else if (proxy instanceof Page) {
 				//
-				if (Util.anyMatch(Stream.of("evaluate", "locator"), x -> Objects.equals(name, x))) {
+				if (Util.anyMatch(Stream.of("evaluate", "locator", "querySelectorAll"), x -> Objects.equals(name, x))) {
 					//
 					return null;
 					//
@@ -832,23 +834,27 @@ class JapanDictGuiTest {
 	@Test
 	void testChopImage() throws IllegalAccessException, InvocationTargetException, IOException {
 		//
-		Assertions.assertNull(invoke(METHOD_CHOP_IMAGE, null, new byte[] {}, null));
+		byte[] bs = new byte[] {};
+		//
+		Assertions.assertNull(invoke(METHOD_CHOP_IMAGE1, null, bs));
+		//
+		Assertions.assertNull(invoke(METHOD_CHOP_IMAGE2, null, bs, null));
 		//
 		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			//
 			ImageIO.write(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), "png", baos);
 			//
-			final byte[] bs = baos.toByteArray();
+			Assertions.assertNotNull(invoke(METHOD_CHOP_IMAGE1, null, bs = baos.toByteArray()));
 			//
-			Assertions.assertNotNull(invoke(METHOD_CHOP_IMAGE, null, bs, null));
+			Assertions.assertNotNull(invoke(METHOD_CHOP_IMAGE2, null, bs, null));
 			//
 			final Object boundingBox = Narcissus.allocateInstance(BoundingBox.class);
 			//
-			Assertions.assertNotNull(invoke(METHOD_CHOP_IMAGE, null, bs, boundingBox));
+			Assertions.assertNotNull(invoke(METHOD_CHOP_IMAGE2, null, bs, boundingBox));
 			//
 			FieldUtils.writeField(boundingBox, "width", 1);
 			//
-			Assertions.assertNotNull(invoke(METHOD_CHOP_IMAGE, null, bs, boundingBox));
+			Assertions.assertNotNull(invoke(METHOD_CHOP_IMAGE2, null, bs, boundingBox));
 			//
 		} // try
 			//

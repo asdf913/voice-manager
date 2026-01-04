@@ -34,6 +34,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -98,12 +99,16 @@ import org.xml.sax.SAXException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.github.romankh3.image.comparison.ImageComparison;
+import com.github.romankh3.image.comparison.model.ImageComparisonResult;
+import com.github.romankh3.image.comparison.model.ImageComparisonState;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.BrowserTypeUtil;
+import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.PageUtil;
@@ -175,7 +180,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private transient ComboBoxModel<String> cbmBrowserType = null;
 
-	private JLabel pitchAccentImage = null;
+	private JLabel pitchAccentImage, strokeImage = null;
 
 	private transient BufferedImage pitchAccentBufferedImage = null;
 
@@ -287,6 +292,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, btnSavePitchAccentImage = new JButton("Save"), wrap);
 		//
+		add(this, new JLabel("Stroke"));
+		//
+		add(this, strokeImage = new JLabel(), String.format("span %1$s", 5));
+		//
 		setEditable(false, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl, tfPitchAccent);
 		//
 		setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio,
@@ -367,7 +376,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			Util.setSelectedItem(cbmJlptLevel, "");
 			//
-			Util.setIcon(pitchAccentImage, null);
+			Util.forEach(Stream.of(pitchAccentImage, strokeImage), x -> Util.setIcon(x, null));
 			//
 			pitchAccentBufferedImage = null;
 			//
@@ -562,6 +571,65 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 								//
 						});
 				//
+				// Stroke
+				//
+				ElementHandle eh = testAndApply(x -> IterableUtils.size(x) == 1,
+						querySelectorAll(page, ".dmak-play.btn.btn-primary.btn-circle.px-5"),
+						x -> IterableUtils.get(x, 0), null);
+				//
+				if (eh != null) {
+					//
+					eh.click();
+					//
+					if ((eh = testAndApply(x -> IterableUtils.size(x) == 1,
+							querySelectorAll(page, "div.card-body div.dmak"), x -> IterableUtils.get(x, 0),
+							null)) != null) {
+						//
+						try {
+							//
+							final long currentTimeMillis = System.currentTimeMillis();
+							//
+							byte[] bs = null;
+							//
+							BufferedImage before = null, after = null;
+							//
+							while (System.currentTimeMillis() - currentTimeMillis < 20000) {// TODO
+								//
+								if (before == null) {
+									//
+									before = toBufferedImage(bs = screenshot(locator(page, "div.card-body div.dmak")));
+									//
+								} else {
+									//
+									if (Objects.equals(getImageComparisonState(new ImageComparison(before,
+											after = toBufferedImage(
+													bs = screenshot(locator(page, "div.card-body div.dmak"))))
+											.compareImages()), ImageComparisonState.MATCH)) {
+										//
+										break;
+										//
+									} // if
+										//
+									before = after;
+									//
+								} // if
+									//
+								Thread.sleep(100);// TODO
+								//
+							} // while
+								//
+							Util.setIcon(strokeImage, new ImageIcon(chopImage(bs)));
+							//
+						} catch (final IOException | InterruptedException e) {
+							//
+							TaskDialogs.showException(e);
+							//
+						} // try
+							//
+					} // if
+						//
+				} // if
+					//
 				pack(window);
 				//
 			} // try
@@ -583,6 +651,24 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
+	private static ImageComparisonState getImageComparisonState(final ImageComparisonResult instance) {
+		return instance != null ? instance.getImageComparisonState() : null;
+	}
+
+	private static BufferedImage toBufferedImage(final byte[] bs) throws IOException, RuntimeException {
+		//
+		try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
+			//
+			return testAndApply(Objects::nonNull, is, ImageIO::read, null);
+			//
+		} // try
+			//
+	}
+
+	private static List<ElementHandle> querySelectorAll(final Page instance, final String selector) {
+		return instance != null ? instance.querySelectorAll(selector) : null;
+	}
+
 	private static boolean getAsBoolean(@Nullable final BooleanSupplier instance) {
 		return instance != null && instance.getAsBoolean();
 	}
@@ -602,52 +688,92 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
+	private static BufferedImage chopImage(final byte[] bs) throws IOException {
+		//
+		BufferedImage bufferedImage = null;
+		//
+		if ((bufferedImage = toBufferedImage(bs)) != null) {
+			//
+			Integer first = null;
+			//
+			Integer integerX = null;
+			//
+			for (int x = bufferedImage.getWidth() - 1; x >= 0; x--) {
+				//
+				if (integerX != null) {
+					//
+					break;
+					//
+				} // if
+					//
+				for (int y = 0; y < bufferedImage.getHeight(); y++) {
+					//
+					if (first == null) {
+						//
+						first = Integer.valueOf(bufferedImage.getRGB(x, y));
+						//
+					} else if (first.intValue() != bufferedImage.getRGB(x, y)) {
+						//
+						integerX = Integer.valueOf(x);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // for
+				//
+			final int width = bufferedImage.getWidth();
+			//
+			bufferedImage = bufferedImage.getSubimage(0, 0, Math.min(Util.intValue(integerX, width), width),
+					bufferedImage.getHeight());
+			//
+		} // if
+			//
+		return bufferedImage;
+		//
+	}
+
 	private static BufferedImage chopImage(final byte[] bs, @Nullable final BoundingBox boundingBox)
 			throws IOException {
 		//
 		BufferedImage bufferedImage = null;
 		//
-		try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
+		if ((bufferedImage = toBufferedImage(bs)) != null && boundingBox != null && boundingBox.width > 0) {
 			//
-			if ((bufferedImage = testAndApply(Objects::nonNull, is, ImageIO::read, null)) != null && boundingBox != null
-					&& boundingBox.width > 0) {
+			Integer first = null;
+			//
+			Integer integerY = null;
+			//
+			for (int y = 0; y < bufferedImage.getHeight(); y++) {
 				//
-				Integer first = null;
-				//
-				Integer integerY = null;
-				//
-				for (int y = 0; y < bufferedImage.getHeight(); y++) {
+				if (integerY != null) {
 					//
-					if (integerY != null) {
+					break;
+					//
+				} // if
+					//
+				for (int x = 0; x < bufferedImage.getWidth(); x++) {
+					//
+					if (first == null) {
 						//
-						break;
+						first = Integer.valueOf(bufferedImage.getRGB(x, y));
+						//
+					} else if (first.intValue() != bufferedImage.getRGB(x, y)) {
+						//
+						integerY = Integer.valueOf(y);
 						//
 					} // if
 						//
-					for (int x = 0; x < bufferedImage.getWidth(); x++) {
-						//
-						if (first == null) {
-							//
-							first = Integer.valueOf(bufferedImage.getRGB(x, y));
-							//
-						} else if (first.intValue() != bufferedImage.getRGB(x, y)) {
-							//
-							integerY = Integer.valueOf(y);
-							//
-						} // if
-							//
-					} // for
-						//
 				} // for
 					//
-				final int intY = Util.intValue(integerY, 0);
+			} // for
 				//
-				bufferedImage = bufferedImage.getSubimage(0, intY, (int) boundingBox.width,
-						bufferedImage.getHeight() - intY);
-				//
-			} // if
-				//
-		} // try
+			final int intY = Util.intValue(integerY, 0);
+			//
+			bufferedImage = bufferedImage.getSubimage(0, intY, (int) boundingBox.width,
+					bufferedImage.getHeight() - intY);
+			//
+		} // if
 			//
 		return bufferedImage;
 		//
