@@ -228,14 +228,10 @@ class JapanDictGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof ElementHandle) {
+			} else if (proxy instanceof ElementHandle && Objects.equals(name, "click")) {
 				//
-				if (Objects.equals(name, "click")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
