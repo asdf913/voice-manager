@@ -287,6 +287,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		add(this, new JScrollPane(jTable = new JTable(dtm = new DefaultTableModel(
 				new Object[] { "", "JLPT Level", "Hiragana", "Romaji", "Pitch Accent" }, 0) {
 
+			@Override
 			public boolean isCellEditable(final int row, final int column) {
 				return false;
 			};
