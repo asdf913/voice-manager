@@ -493,7 +493,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		@Note("JLPT Level")
 		private String jlptLevel = null;
 
-		private String hiragana, romaji, pitchAccent, audioUrl = null;
+		@Note("Hiragana")
+		private String hiragana = null;
+
+		private String romaji, pitchAccent, audioUrl = null;
 
 	}
 
