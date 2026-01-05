@@ -276,7 +276,7 @@ class JapanDictGuiTest {
 				//
 			} else if (proxy instanceof TableCellRenderer && Objects.equals(name, "getTableCellRendererComponent")) {
 				//
-				return booleanValue;
+				return null;
 				//
 			} // if
 				//
