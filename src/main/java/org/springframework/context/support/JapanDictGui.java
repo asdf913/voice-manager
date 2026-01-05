@@ -589,9 +589,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						//
 					} // if
 						//
-					(entry = new JapanDictEntry()).hiragana = StringUtils
-							.join(Util
-									.toList(Util.map(
+					(entry = new JapanDictEntry()).hiragana = String
+							.join("",
+									Util.toList(Util.map(
 											Util.filter(
 													NodeUtil.nodeStream(testAndApply(x -> IterableUtils.size(x) > 0,
 															testAndApply(x -> IterableUtils.size(x) > 0,
@@ -600,8 +600,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 																	x -> IterableUtils.get(x, 0), null),
 															x -> IterableUtils.get(x, 0), null)),
 													x -> Util.matches(Util.matcher(patten, Util.toString(x)))),
-											Util::toString)),
-									"");
+											Util::toString)));
 					//
 					entry.jlptLevel = jlptLevel;
 					//
