@@ -695,7 +695,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				jTable.setPreferredScrollableViewportSize(new Dimension((int) getWidth(preferredSize),
 						(int) Math.min(Util.map(IntStream.range(0, Util.getRowCount(dtm)), x -> {
 							//
-							int rowHeight = jTable != null ? jTable.getRowHeight() : 0;
+							int rowHeight = getRowHeight(jTable);
 							//
 							for (int column = 0; jTable != null && column < jTable.getColumnCount(); column++) {
 								//
@@ -880,6 +880,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // for
 			//
+	}
+
+	private static int getRowHeight(final JTable instance) {
+		return instance != null ? instance.getRowHeight() : 0;
 	}
 
 	private static double getWidth(final Dimension instance) {
