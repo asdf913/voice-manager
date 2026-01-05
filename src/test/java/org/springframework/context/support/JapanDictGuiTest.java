@@ -35,8 +35,10 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -76,8 +78,8 @@ class JapanDictGuiTest {
 			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT6, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY,
 			METHOD_GET_JLPT_LEVEL_INDICES, METHOD_GET_JLPT_LEVEL, METHOD_EQUALS, METHOD_SET_JCB_JLPT_LEVEL,
-			METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2, METHOD_GET_AS_BOOLEAN, METHOD_TO_DURATION,
-			METHOD_TO_BUFFERED_IMAGE = null;
+			METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2, METHOD_GET_AS_BOOLEAN, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE,
+			METHOD_GET_COLUMN_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -153,6 +155,9 @@ class JapanDictGuiTest {
 		(METHOD_TO_DURATION = Util.getDeclaredMethod(clz, "toDuration", Object.class)).setAccessible(true);
 		//
 		(METHOD_TO_BUFFERED_IMAGE = Util.getDeclaredMethod(clz, "toBufferedImage", byte[].class)).setAccessible(true);
+		//
+		(METHOD_GET_COLUMN_NAME = Util.getDeclaredMethod(clz, "getColumnName", JTable.class, Integer.TYPE))
+				.setAccessible(true);
 		//
 	}
 
@@ -1000,6 +1005,16 @@ class JapanDictGuiTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testGetColumnName() throws IllegalAccessException, InvocationTargetException {
+		//
+		final String columnName = "";
+		//
+		Assertions.assertSame(columnName, invoke(METHOD_GET_COLUMN_NAME, null,
+				new JTable(new DefaultTableModel(new Object[] { columnName }, 0)), 0));
+		//
 	}
 
 }
