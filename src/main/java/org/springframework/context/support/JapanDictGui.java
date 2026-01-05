@@ -411,8 +411,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static Component getTableCellRendererComponent(final TableCellRenderer instance, final JTable table,
-			final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column) {
+	private static Component getTableCellRendererComponent(@Nullable final TableCellRenderer instance,
+			final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row,
+			final int column) {
 		return instance != null
 				? instance.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
 				: null;
