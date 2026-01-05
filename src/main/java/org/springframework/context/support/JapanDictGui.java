@@ -477,7 +477,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private static class JapanDictEntry {
 
-		private String text, jlptLevel, hiragana, romaji, pitchAccent, audioUrl = null;
+		@Note("Text")
+		private String text = null;
+
+		private String jlptLevel, hiragana, romaji, pitchAccent, audioUrl = null;
 
 	}
 
