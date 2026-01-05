@@ -84,6 +84,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -315,11 +316,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				final JLabel jLabel = Util.cast(JLabel.class, c);
 				//
-				final Iterable<Field> fs = Util
-						.toList(Util.filter(
-								Util.stream(testAndApply(Objects::nonNull, Util.getClass(entry),
-										FieldUtils::getAllFieldsList, null)),
-								x -> JapanDictGui.equals(Strings.CI, Util.getName(x), columnName)));
+				final Strings strings = Strings.CI;
+				//
+				final Iterable<Field> fs = Util.toList(Util.filter(
+						Util.stream(testAndApply(Objects::nonNull, Util.getClass(entry), FieldUtils::getAllFieldsList,
+								null)),
+						x -> StringsUtil.equals(strings, Util.getName(x),
+								StringsUtil.replace(strings, columnName, " ", ""))));
 				//
 				testAndRun(IterableUtils.size(fs) > 1, () -> {
 					//
@@ -336,14 +339,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				} else if (Objects.equals(columnName, "")) {
 					//
 					Util.setText(jLabel, entry != null ? entry.text : null);
-					//
-				} else if (Objects.equals(columnName, "JLPT Level")) {
-					//
-					Util.setText(jLabel, entry != null ? entry.jlptLevel : null);
-					//
-				} else if (Objects.equals(columnName, "Pitch Accent")) {
-					//
-					Util.setText(jLabel, entry != null ? entry.pitchAccent : null);
 					//
 				} // if
 					//
