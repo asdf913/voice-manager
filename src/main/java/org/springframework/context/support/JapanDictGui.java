@@ -315,21 +315,31 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				final JLabel jLabel = Util.cast(JLabel.class, c);
 				//
-				if (Objects.equals(columnName, "")) {
+				final Iterable<Field> fs = Util
+						.toList(Util.filter(
+								Util.stream(testAndApply(Objects::nonNull, Util.getClass(entry),
+										FieldUtils::getAllFieldsList, null)),
+								x -> JapanDictGui.equals(Strings.CI, Util.getName(x), columnName)));
+				//
+				testAndRun(IterableUtils.size(fs) > 1, () -> {
+					//
+					throw new IllegalStateException();
+					//
+				});
+				//
+				final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+				//
+				if (f != null && entry != null) {
+					//
+					Util.setText(jLabel, Util.toString(Narcissus.getField(entry, f)));
+					//
+				} else if (Objects.equals(columnName, "")) {
 					//
 					Util.setText(jLabel, entry != null ? entry.text : null);
 					//
 				} else if (Objects.equals(columnName, "JLPT Level")) {
 					//
 					Util.setText(jLabel, entry != null ? entry.jlptLevel : null);
-					//
-				} else if (Objects.equals(columnName, "Hiragana")) {
-					//
-					Util.setText(jLabel, entry != null ? entry.hiragana : null);
-					//
-				} else if (Objects.equals(columnName, "Romaji")) {
-					//
-					Util.setText(jLabel, entry != null ? entry.romaji : null);
 					//
 				} else if (Objects.equals(columnName, "Pitch Accent")) {
 					//
