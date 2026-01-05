@@ -501,7 +501,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		@Note("Hiragana")
 		private String hiragana = null;
 
-		private String romaji, pitchAccent, audioUrl = null;
+		@Note("Romaji")
+		private String romaji = null;
+
+		private String pitchAccent, audioUrl = null;
 
 	}
 
