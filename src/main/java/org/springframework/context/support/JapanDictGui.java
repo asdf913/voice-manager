@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -49,6 +50,7 @@ import java.util.function.LongPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -63,8 +65,12 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.text.JTextComponent;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -93,6 +99,7 @@ import org.apache.http.client.utils.URIBuilderUtil;
 import org.eclipse.jetty.http.HttpStatus;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
 import org.oxbow.swingbits.dialog.task.TaskDialogs;
@@ -208,6 +215,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private Duration storkeImageSleepDuration = null;
 
+	private JTable jTable = null;
+
+	private DefaultTableModel dtm = null;
+
 	private JapanDictGui() {
 	}
 
@@ -271,6 +282,70 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, tfResponseCode = new JTextField(), String.format("%1$s,%2$s,span %3$s", growx, wrap, 3));
 		//
+		add(this, new JLabel());
+		//
+		add(this, new JScrollPane(jTable = new JTable(dtm = new DefaultTableModel(
+				new Object[] { "", "JLPT Level", "Hiragana", "Romaji", "Pitch Accent" }, 0) {
+
+			public boolean isCellEditable(final int row, final int column) {
+				return false;
+			};
+
+		})), String.format("%1$s,wmin %2$s", wrap, 100));
+		//
+		final TableCellRenderer tcr = jTable.getDefaultRenderer(Object.class);
+		//
+		jTable.setDefaultRenderer(Object.class, new TableCellRenderer() {
+
+			@Override
+			public Component getTableCellRendererComponent(final JTable table, final Object value,
+					final boolean isSelected, final boolean hasFocus, final int row, final int column) {
+				//
+				final String columnName = table != null ? table.getColumnName(column) : null;
+				//
+				final JapanDictEntry entry = Util.cast(JapanDictEntry.class, ObjectUtils.getIfNull(value,
+						() -> table != null && table.getModel() != null ? table.getModel().getValueAt(row, 0) : null));
+				//
+				final Component c = tcr != null
+						? tcr.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+						: null;
+				//
+				final JLabel jLabel = Util.cast(JLabel.class, c);
+				//
+				if (Objects.equals(columnName, "")) {
+					//
+					Util.setText(jLabel, entry != null ? entry.text : null);
+					//
+				} else if (Objects.equals(columnName, "JLPT Level")) {
+					//
+					Util.setText(jLabel, entry != null ? entry.jlptLevel : null);
+					//
+				} else if (Objects.equals(columnName, "Hiragana")) {
+					//
+					Util.setText(jLabel, entry != null ? entry.hiragana : null);
+					//
+				} else if (Objects.equals(columnName, "Romaji")) {
+					//
+					Util.setText(jLabel, entry != null ? entry.romaji : null);
+					//
+				} else if (Objects.equals(columnName, "Pitch Accent")) {
+					//
+					Util.setText(jLabel, entry != null ? entry.pitchAccent : null);
+					//
+				} // if
+					//
+				return c;
+				//
+			}
+		});
+		//
+		if (Util.getPreferredSize(jTable) != null) {
+			//
+			jTable.setPreferredScrollableViewportSize(new Dimension((int) Util.getPreferredSize(jTable).getWidth(),
+					(int) Util.getPreferredSize(jTable).getHeight()));
+			//
+		} // if
+			//
 		add(this, new JLabel("JLPT Level"));
 		//
 		final JlptLevelListFactoryBean jlptLevelListFactoryBean = new JlptLevelListFactoryBean();
@@ -296,7 +371,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, new JLabel("Audio URL"));
 		//
-		add(this, tfAudioUrl = new JTextField(), String.format("%1$s,span %2$s,wmax %3$spx", growx, 3, 159));
+		add(this, tfAudioUrl = new JTextField(), String.format("%1$s,span %2$s,wmax %3$spx", growx, 3, 387));
 		//
 		add(this, btnCopyAudioUrl = new JButton("Copy"));
 		//
@@ -388,6 +463,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
+	private static class JapanDictEntry {
+
+		private String text, jlptLevel, hiragana, romaji, pitchAccent, audioUrl = null;
+
+	}
+
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
@@ -409,6 +490,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							x -> Objects.equals(Util.getType(x), BufferedImage.class)),
 					x -> Narcissus.setField(this, x, null));
 			//
+			for (int i = Util.getRowCount(dtm) - 1; i >= 0; i--) {
+				//
+				Util.removeRow(dtm, i);
+				//
+			} // for
+				//
 			final URIBuilder uriBuilder = new URIBuilder();
 			//
 			final String scheme = "https";
@@ -464,6 +551,133 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			} // if
 				//
+			final Iterable<Element> es1 = ElementUtil.select(document, ".container-fluid.bg-white.p-0");
+			//
+			Iterable<Element> es2 = null;
+			//
+			Element e1, e2 = null;
+			//
+			final Pattern patten = Pattern.compile("^\\p{InHiragana}+$");
+			//
+			String h1, jlptLevel = null;
+			//
+			JapanDictEntry entry = null;
+			//
+			for (int i = 0; i < IterableUtils.size(es1); i++) {
+				//
+				if ((e1 = IterableUtils.get(es1, i)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				h1 = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1, ElementUtil.select(e1, "h1"),
+						x -> IterableUtils.get(x, 0), null));
+				//
+				jlptLevel = getJlptLevel(cbmJlptLevel,
+						ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+								ElementUtil.select(e1, "span.badge[title^='#jlpt'].me-1"), x -> IterableUtils.get(x, 0),
+								null)));
+				//
+				es2 = ElementUtil.select(e1, "div[aria-labelledby^='modal-reading'] + ul li");
+				//
+				for (int j = 0; j < IterableUtils.size(es2); j++) {
+					//
+					if ((e2 = IterableUtils.get(es2, j)) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					(entry = new JapanDictEntry()).hiragana = StringUtils
+							.join(Util
+									.toList(Util.map(
+											Util.filter(
+													NodeUtil.nodeStream(testAndApply(x -> IterableUtils.size(x) > 0,
+															testAndApply(x -> IterableUtils.size(x) > 0,
+																	ElementUtil.select(e2,
+																			".d-inline-block.align-middle.p-2"),
+																	x -> IterableUtils.get(x, 0), null),
+															x -> IterableUtils.get(x, 0), null)),
+													x -> Util.matches(Util.matcher(patten, Util.toString(x)))),
+											Util::toString)),
+									"");
+					//
+					entry.jlptLevel = jlptLevel;
+					//
+					entry.pitchAccent = ElementUtil
+							.text(testAndApply(x -> IterableUtils.size(x) == 1,
+									ElementUtil.select(
+											testAndApply(Objects::nonNull,
+													NodeUtil.attr(
+															testAndApply(x -> IterableUtils.size(x) == 1,
+																	ElementUtil.select(e2, "[data-bs-content]"),
+																	x -> IterableUtils.get(x, 0), null),
+															"data-bs-content"),
+													x -> Jsoup.parse(x, ""), null),
+											"p span[class='h5']"),
+									x -> IterableUtils.get(x, 0), null));
+					//
+					entry.romaji = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+							ElementUtil.select(e2, ".xxsmall"), x -> IterableUtils.get(x, 0), null));
+					//
+					entry.text = h1;
+					//
+					try {
+						//
+						entry.audioUrl = getAudioUrl(
+								scheme, Strings.CS, Util
+										.cast(Iterable.class,
+												ObjectMapperUtil.readValue(new ObjectMapper(),
+														NodeUtil.attr(
+																testAndApply(x -> IterableUtils.size(x) > 0,
+																		ElementUtil.select(e2,
+																				".d-inline-block.align-middle.p-2 a"),
+																		x -> IterableUtils.get(x, 0), null),
+																"data-reading"),
+														Object.class)));
+						//
+					} catch (final JsonProcessingException e) {
+						//
+					} // try
+						//
+					Util.addRow(dtm, new Object[] { entry });
+					//
+				} // for
+					//
+			} // for
+				//
+			if (jTable != null) {
+				//
+				jTable.setVisible(jTable.getRowCount() > 0);
+				//
+			} // if
+				//
+			if (Util.getPreferredSize(jTable) != null) {
+				//
+				final Dimension preferredSize = Util.getPreferredSize(jTable);
+				//
+				jTable.setPreferredScrollableViewportSize(
+						new Dimension((int) (preferredSize != null ? preferredSize.getWidth() : 0),
+								(int) Math.min(Util.map(IntStream.range(0, Util.getRowCount(dtm)), x -> {
+									//
+									int rowHeight = jTable != null ? jTable.getRowHeight() : 0;
+									//
+									for (int column = 0; jTable != null && column < jTable.getColumnCount(); column++) {
+										//
+										final Dimension pd = Util.getPreferredSize(
+												jTable.prepareRenderer(jTable.getCellRenderer(x, column), x, column));
+										//
+										rowHeight = Math.max(rowHeight, pd != null ? pd.height : 0);
+										//
+									} // for
+										//
+									return rowHeight;
+									//
+								}).sum(), preferredSize != null ? preferredSize.getHeight() : null)));
+				//
+			} // if
+				//
 				// JLPT
 				//
 			setJcbJlptLevel(getJlptLevelIndices(cbmJlptLevel,
@@ -472,8 +686,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							x -> IterableUtils.get(x, 0), null))));
 			//
 			// Hiragana
-			//
-			final Pattern patten = Pattern.compile("^\\p{InHiragana}+$");
 			//
 			testAndAccept(x -> !IterableUtils.isEmpty(x),
 					Util.toList(
@@ -634,6 +846,39 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // for
 			//
+	}
+
+	private static String getJlptLevel(final ComboBoxModel<String> cbm, final String text) {
+		//
+		int[] ints = null;
+		//
+		for (int i = 0; i < Util.getSize(cbm); i++) {
+			//
+			if (StringUtils.isNotBlank(testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null),
+					Util.getElementAt(cbm, i), text, com.google.common.base.Strings::commonSuffix, null))) {
+				//
+				ints = ArrayUtils.add(ints, i);
+				//
+			} // if
+				//
+		} // for
+			//
+		if (ints != null) {
+			//
+			if (ints.length > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} else if (ints.length == 1 && cbm != null && ints[0] < cbm.getSize()) {
+				//
+				return cbm.getElementAt(ints[0]);
+				//
+			} // if
+				//
+		} // if
+			//
+		return null;
+		//
 	}
 
 	@Nullable

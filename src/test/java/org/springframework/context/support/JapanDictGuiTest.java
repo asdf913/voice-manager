@@ -75,8 +75,9 @@ class JapanDictGuiTest {
 			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG,
 			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT6, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY,
-			METHOD_GET_JLPT_LEVEL_INDICES, METHOD_EQUALS, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1,
-			METHOD_CHOP_IMAGE2, METHOD_GET_AS_BOOLEAN, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE = null;
+			METHOD_GET_JLPT_LEVEL_INDICES, METHOD_GET_JLPT_LEVEL, METHOD_EQUALS, METHOD_SET_JCB_JLPT_LEVEL,
+			METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2, METHOD_GET_AS_BOOLEAN, METHOD_TO_DURATION,
+			METHOD_TO_BUFFERED_IMAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -132,6 +133,9 @@ class JapanDictGuiTest {
 		//
 		(METHOD_GET_JLPT_LEVEL_INDICES = Util.getDeclaredMethod(clz, "getJlptLevelIndices", ComboBoxModel.class,
 				String.class)).setAccessible(true);
+		//
+		(METHOD_GET_JLPT_LEVEL = Util.getDeclaredMethod(clz, "getJlptLevel", ComboBoxModel.class, String.class))
+				.setAccessible(true);
 		//
 		(METHOD_EQUALS = Util.getDeclaredMethod(clz, "equals", Strings.class, String.class, String.class))
 				.setAccessible(true);
@@ -841,6 +845,19 @@ class JapanDictGuiTest {
 		Assertions.assertEquals(ObjectMapperUtil.writeValueAsString(objectMapper, new int[] { 1 }),
 				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_GET_JLPT_LEVEL_INDICES, null,
 						new DefaultComboBoxModel<>(new Object[] { null, "N1" }), "JLPT N1")));
+		//
+	}
+
+	@Test
+	void testGetJlptLevel() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(
+				invoke(METHOD_GET_JLPT_LEVEL, null, new DefaultComboBoxModel<>(new Object[] { null }), null));
+		//
+		final String n1 = "N1";
+		//
+		Assertions.assertEquals(n1,
+				invoke(METHOD_GET_JLPT_LEVEL, null, new DefaultComboBoxModel<>(new Object[] { null, n1 }), "JLPT N1"));
 		//
 	}
 
