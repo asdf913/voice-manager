@@ -274,14 +274,10 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof TableCellRenderer) {
+			} else if (proxy instanceof TableCellRenderer && Objects.equals(name, "getTableCellRendererComponent")) {
 				//
-				if (Objects.equals(name, "getTableCellRendererComponent")) {
-					//
-					return booleanValue;
-					//
-				} // if
-					//
+				return booleanValue;
+				//
 			} // if
 				//
 			throw new Throwable(name);
