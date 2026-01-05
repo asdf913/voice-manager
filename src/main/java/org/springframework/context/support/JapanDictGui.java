@@ -247,7 +247,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			BrowserType browserType = null;
 			//
-			final boolean runningInGitHubActions = equals(Strings.CI, "true", System.getenv("GITHUB_ACTIONS"));
+			final boolean runningInGitHubActions = StringsUtil.equals(Strings.CI, "true",
+					System.getenv("GITHUB_ACTIONS"));
 			//
 			for (int i = 0; i < IterableUtils.size(browserTypes); i++) {
 				//
@@ -443,10 +444,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Nullable
 	private static String getColumnName(@Nullable final JTable instance, final int column) {
 		return instance != null && getModel(instance) != null ? instance.getColumnName(column) : null;
-	}
-
-	private static boolean equals(@Nullable final Strings instance, final String str1, final String str2) {
-		return instance != null && instance.equals(str1, str2);
 	}
 
 	@Nullable

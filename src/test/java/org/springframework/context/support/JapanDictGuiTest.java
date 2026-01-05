@@ -79,8 +79,8 @@ class JapanDictGuiTest {
 			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG,
 			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT6, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY,
-			METHOD_GET_JLPT_LEVEL_INDICES, METHOD_GET_JLPT_LEVEL, METHOD_EQUALS, METHOD_SET_JCB_JLPT_LEVEL,
-			METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2, METHOD_GET_AS_BOOLEAN, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE,
+			METHOD_GET_JLPT_LEVEL_INDICES, METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1,
+			METHOD_CHOP_IMAGE2, METHOD_GET_AS_BOOLEAN, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE,
 			METHOD_GET_COLUMN_NAME, METHOD_GET_TABLE_CELL_RENDERER_COMPONENT = null;
 
 	@BeforeAll
@@ -139,9 +139,6 @@ class JapanDictGuiTest {
 				String.class)).setAccessible(true);
 		//
 		(METHOD_GET_JLPT_LEVEL = Util.getDeclaredMethod(clz, "getJlptLevel", ComboBoxModel.class, String.class))
-				.setAccessible(true);
-		//
-		(METHOD_EQUALS = Util.getDeclaredMethod(clz, "equals", Strings.class, String.class, String.class))
 				.setAccessible(true);
 		//
 		(METHOD_SET_JCB_JLPT_LEVEL = Util.getDeclaredMethod(clz, "setJcbJlptLevel", int[].class)).setAccessible(true);
@@ -880,13 +877,6 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertEquals(n1,
 				invoke(METHOD_GET_JLPT_LEVEL, null, new DefaultComboBoxModel<>(new Object[] { null, n1 }), "JLPT N1"));
-		//
-	}
-
-	@Test
-	void testEquals() throws IllegalAccessException, InvocationTargetException {
-		//
-		Assertions.assertEquals(Boolean.TRUE, invoke(METHOD_EQUALS, null, Strings.CI, null, null));
 		//
 	}
 
