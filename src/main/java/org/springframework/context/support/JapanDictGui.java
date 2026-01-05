@@ -342,13 +342,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			}
 		});
 		//
-		if (jTable != null) {
-			//
-			jTable.setPreferredScrollableViewportSize(new Dimension((int) getWidth(Util.getPreferredSize(jTable)),
-					(int) getHeight(Util.getPreferredSize(jTable))));
-			//
-		} // if
-			//
+		final Dimension preferredSize = Util.getPreferredSize(jTable);
+		//
+		setPreferredScrollableViewportSize(jTable,
+				new Dimension((int) getWidth(preferredSize), (int) getHeight(preferredSize)));
+		//
 		add(this, new JLabel("JLPT Level"));
 		//
 		final JlptLevelListFactoryBean jlptLevelListFactoryBean = new JlptLevelListFactoryBean();
@@ -410,6 +408,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
 		//
+	}
+
+	private static void setPreferredScrollableViewportSize(final JTable instance, final Dimension size) {
+		if (instance != null) {
+			instance.setPreferredScrollableViewportSize(size);
+		}
 	}
 
 	@Nullable
@@ -688,30 +692,26 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 			} // for
 				//
-			if (Util.getPreferredSize(jTable) != null) {
-				//
-				final Dimension preferredSize = Util.getPreferredSize(jTable);
-				//
-				jTable.setPreferredScrollableViewportSize(new Dimension((int) getWidth(preferredSize),
-						(int) Math.min(Util.map(IntStream.range(0, Util.getRowCount(dtm)), x -> {
+			final Dimension preferredSize = Util.getPreferredSize(jTable);
+			//
+			setPreferredScrollableViewportSize(jTable, new Dimension((int) getWidth(preferredSize),
+					(int) Math.min(Util.map(IntStream.range(0, Util.getRowCount(dtm)), x -> {
+						//
+						int rowHeight = getRowHeight(jTable);
+						//
+						for (int column = 0; jTable != null && column < jTable.getColumnCount(); column++) {
 							//
-							int rowHeight = getRowHeight(jTable);
+							rowHeight = Math.max(rowHeight, (int) getHeight(Util.getPreferredSize(
+									jTable.prepareRenderer(jTable.getCellRenderer(x, column), x, column))));
 							//
-							for (int column = 0; jTable != null && column < jTable.getColumnCount(); column++) {
-								//
-								rowHeight = Math.max(rowHeight, (int) getHeight(Util.getPreferredSize(
-										jTable.prepareRenderer(jTable.getCellRenderer(x, column), x, column))));
-								//
-							} // for
-								//
-							return rowHeight;
+						} // for
 							//
-						}).sum(), getHeight(preferredSize))));
-				//
-			} // if
-				//
-				// JLPT
-				//
+						return rowHeight;
+						//
+					}).sum(), getHeight(preferredSize))));
+			//
+			// JLPT
+			//
 			setJcbJlptLevel(getJlptLevelIndices(cbmJlptLevel,
 					ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
 							ElementUtil.select(document, "span.badge[title^='#jlpt'].me-1"),
