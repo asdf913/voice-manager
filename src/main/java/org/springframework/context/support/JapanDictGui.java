@@ -342,10 +342,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			}
 		});
 		//
-		if (Util.getPreferredSize(jTable) != null) {
+		if (jTable != null) {
 			//
 			jTable.setPreferredScrollableViewportSize(new Dimension((int) getWidth(Util.getPreferredSize(jTable)),
-					(int) Util.getPreferredSize(jTable).getHeight()));
+					(int) getHeight(Util.getPreferredSize(jTable))));
 			//
 		} // if
 			//
@@ -699,16 +699,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							//
 							for (int column = 0; jTable != null && column < jTable.getColumnCount(); column++) {
 								//
-								final Dimension pd = Util.getPreferredSize(
-										jTable.prepareRenderer(jTable.getCellRenderer(x, column), x, column));
-								//
-								rowHeight = Math.max(rowHeight, pd != null ? pd.height : 0);
+								rowHeight = Math.max(rowHeight, (int) getHeight(Util.getPreferredSize(
+										jTable.prepareRenderer(jTable.getCellRenderer(x, column), x, column))));
 								//
 							} // for
 								//
 							return rowHeight;
 							//
-						}).sum(), preferredSize != null ? preferredSize.getHeight() : null)));
+						}).sum(), getHeight(preferredSize))));
 				//
 			} // if
 				//
@@ -888,6 +886,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private static double getWidth(final Dimension instance) {
 		return instance != null ? instance.getWidth() : 0;
+	}
+
+	private static double getHeight(final Dimension instance) {
+		return instance != null ? instance.getHeight() : 0;
 	}
 
 	@Nullable
