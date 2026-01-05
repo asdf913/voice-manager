@@ -103,6 +103,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
+import org.meeuw.functional.Predicates;
 import org.oxbow.swingbits.dialog.task.TaskDialogs;
 import org.springframework.beans.factory.FactoryBeanUtil;
 import org.springframework.beans.factory.InitializingBean;
@@ -255,8 +256,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 				} // if
 					//
-				try (final Browser browser = !runningInGitHubActions ? BrowserTypeUtil.launch(browserType) : null;
-						final Page page = newPage(browser)) {
+				try (final Browser browser = testAndApply(Predicates.always(!runningInGitHubActions), browserType,
+						x -> BrowserTypeUtil.launch(x), null); final Page page = newPage(browser)) {
 					//
 					Util.put(userAgentMap = ObjectUtils.getIfNull(userAgentMap, LinkedHashMap::new), browserType.name(),
 							Util.toString(evaluate(page, "window.navigator.userAgent")));
