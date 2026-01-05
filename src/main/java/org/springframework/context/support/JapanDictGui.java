@@ -685,12 +685,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 			} // for
 				//
-			if (jTable != null) {
-				//
-				jTable.setVisible(jTable.getRowCount() > 0);
-				//
-			} // if
-				//
 			if (Util.getPreferredSize(jTable) != null) {
 				//
 				final Dimension preferredSize = Util.getPreferredSize(jTable);
