@@ -880,15 +880,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static int getRowHeight(final JTable instance) {
+	private static int getRowHeight(@Nullable final JTable instance) {
 		return instance != null ? instance.getRowHeight() : 0;
 	}
 
-	private static double getWidth(final Dimension instance) {
+	private static double getWidth(@Nullable final Dimension instance) {
 		return instance != null ? instance.getWidth() : 0;
 	}
 
-	private static double getHeight(final Dimension instance) {
+	private static double getHeight(@Nullable final Dimension instance) {
 		return instance != null ? instance.getHeight() : 0;
 	}
 
