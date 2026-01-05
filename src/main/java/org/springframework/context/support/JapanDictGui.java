@@ -257,7 +257,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				} // if
 					//
 				try (final Browser browser = testAndApply(Predicates.always(!runningInGitHubActions), browserType,
-						x -> BrowserTypeUtil.launch(x), null); final Page page = newPage(browser)) {
+						BrowserTypeUtil::launch, null); final Page page = newPage(browser)) {
 					//
 					Util.put(userAgentMap = ObjectUtils.getIfNull(userAgentMap, LinkedHashMap::new), browserType.name(),
 							Util.toString(evaluate(page, "window.navigator.userAgent")));
