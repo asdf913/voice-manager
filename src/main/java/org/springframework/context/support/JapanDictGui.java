@@ -309,8 +309,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				final JapanDictEntry entry = Util.cast(JapanDictEntry.class,
 						ObjectUtils.getIfNull(value, () -> getValueAt(getModel(table), row, 0)));
 				//
-				final Component c = JapanDictGui
-						.getTableCellRendererComponent(tcr, table, value, isSelected, hasFocus, row, column);
+				final Component c = JapanDictGui.getTableCellRendererComponent(tcr, table, value, isSelected, hasFocus,
+						row, column);
 				//
 				final JLabel jLabel = Util.cast(JLabel.class, c);
 				//
@@ -418,11 +418,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				: null;
 	}
 
-	private static TableModel getModel(final JTable instance) {
+	private static TableModel getModel(@Nullable final JTable instance) {
 		return instance != null ? instance.getModel() : null;
 	}
 
-	private static Object getValueAt(final TableModel instance, final int row, final int column) {
+	private static Object getValueAt(@Nullable final TableModel instance, final int row, final int column) {
 		return instance != null ? instance.getValueAt(row, column) : null;
 	}
 
