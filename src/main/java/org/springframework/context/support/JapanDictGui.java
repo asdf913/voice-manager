@@ -299,6 +299,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		jTable.setDefaultRenderer(Object.class, new TableCellRenderer() {
 
 			@Override
+			@Nullable
 			public Component getTableCellRendererComponent(final JTable table, final Object value,
 					final boolean isSelected, final boolean hasFocus, final int row, final int column) {
 				//
@@ -852,6 +853,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
+	@Nullable
 	private static String getJlptLevel(@Nullable final ComboBoxModel<String> cbm, final String text) {
 		//
 		int[] ints = null;
