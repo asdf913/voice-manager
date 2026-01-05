@@ -39,6 +39,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 
@@ -80,7 +81,7 @@ class JapanDictGuiTest {
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY,
 			METHOD_GET_JLPT_LEVEL_INDICES, METHOD_GET_JLPT_LEVEL, METHOD_EQUALS, METHOD_SET_JCB_JLPT_LEVEL,
 			METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2, METHOD_GET_AS_BOOLEAN, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE,
-			METHOD_GET_COLUMN_NAME = null;
+			METHOD_GET_COLUMN_NAME, METHOD_GET_TABLE_CELL_RENDERER_COMPONENT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -159,6 +160,10 @@ class JapanDictGuiTest {
 		//
 		(METHOD_GET_COLUMN_NAME = Util.getDeclaredMethod(clz, "getColumnName", JTable.class, Integer.TYPE))
 				.setAccessible(true);
+		//
+		(METHOD_GET_TABLE_CELL_RENDERER_COMPONENT = Util.getDeclaredMethod(clz, "getTableCellRendererComponent",
+				TableCellRenderer.class, JTable.class, Object.class, Boolean.TYPE, Boolean.TYPE, Integer.TYPE,
+				Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -269,6 +274,14 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof TableCellRenderer) {
+				//
+				if (Objects.equals(name, "getTableCellRendererComponent")) {
+					//
+					return booleanValue;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -448,7 +461,10 @@ class JapanDictGuiTest {
 							Arrays.equals(parameterTypes,
 									new Class<?>[] { ActionListener.class, AbstractButton[].class })),
 					Boolean.logicalAnd(Objects.equals(name, "setEnabled"), Arrays.equals(parameterTypes,
-							new Class<?>[] { Boolean.TYPE, Component.class, Component.class, Component[].class })))) {
+							new Class<?>[] { Boolean.TYPE, Component.class, Component.class, Component[].class })),
+					Boolean.logicalAnd(Objects.equals(name, "getTableCellRendererComponent"),
+							Arrays.equals(parameterTypes, new Class<?>[] { TableCellRenderer.class, JTable.class,
+									Object.class, Boolean.TYPE, Boolean.TYPE, Integer.TYPE, Integer.TYPE })))) {
 				//
 				continue;
 				//
@@ -1019,6 +1035,14 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertSame(columnName, invoke(METHOD_GET_COLUMN_NAME, null,
 				new JTable(new DefaultTableModel(new Object[] { columnName }, 0)), 0));
+		//
+	}
+
+	@Test
+	void testGetTableCellRendererComponent() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, null,
+				Reflection.newProxy(TableCellRenderer.class, ih), null, null, true, true, 0, 0));
 		//
 	}
 
