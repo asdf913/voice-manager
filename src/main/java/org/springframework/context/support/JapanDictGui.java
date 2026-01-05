@@ -344,7 +344,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		if (Util.getPreferredSize(jTable) != null) {
 			//
-			jTable.setPreferredScrollableViewportSize(new Dimension((int) Util.getPreferredSize(jTable).getWidth(),
+			jTable.setPreferredScrollableViewportSize(new Dimension((int) getWidth(Util.getPreferredSize(jTable)),
 					(int) Util.getPreferredSize(jTable).getHeight()));
 			//
 		} // if
@@ -689,24 +689,23 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				final Dimension preferredSize = Util.getPreferredSize(jTable);
 				//
-				jTable.setPreferredScrollableViewportSize(
-						new Dimension((int) (preferredSize != null ? preferredSize.getWidth() : 0),
-								(int) Math.min(Util.map(IntStream.range(0, Util.getRowCount(dtm)), x -> {
-									//
-									int rowHeight = jTable != null ? jTable.getRowHeight() : 0;
-									//
-									for (int column = 0; jTable != null && column < jTable.getColumnCount(); column++) {
-										//
-										final Dimension pd = Util.getPreferredSize(
-												jTable.prepareRenderer(jTable.getCellRenderer(x, column), x, column));
-										//
-										rowHeight = Math.max(rowHeight, pd != null ? pd.height : 0);
-										//
-									} // for
-										//
-									return rowHeight;
-									//
-								}).sum(), preferredSize != null ? preferredSize.getHeight() : null)));
+				jTable.setPreferredScrollableViewportSize(new Dimension((int) getWidth(preferredSize),
+						(int) Math.min(Util.map(IntStream.range(0, Util.getRowCount(dtm)), x -> {
+							//
+							int rowHeight = jTable != null ? jTable.getRowHeight() : 0;
+							//
+							for (int column = 0; jTable != null && column < jTable.getColumnCount(); column++) {
+								//
+								final Dimension pd = Util.getPreferredSize(
+										jTable.prepareRenderer(jTable.getCellRenderer(x, column), x, column));
+								//
+								rowHeight = Math.max(rowHeight, pd != null ? pd.height : 0);
+								//
+							} // for
+								//
+							return rowHeight;
+							//
+						}).sum(), preferredSize != null ? preferredSize.getHeight() : null)));
 				//
 			} // if
 				//
@@ -878,6 +877,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // for
 			//
+	}
+
+	private static double getWidth(final Dimension instance) {
+		return instance != null ? instance.getWidth() : 0;
 	}
 
 	@Nullable
