@@ -71,6 +71,7 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -306,7 +307,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				final String columnName = getColumnName(table, column);
 				//
 				final JapanDictEntry entry = Util.cast(JapanDictEntry.class, ObjectUtils.getIfNull(value,
-						() -> table != null && table.getModel() != null ? table.getModel().getValueAt(row, 0) : null));
+						() -> table != null ? getValueAt(table.getModel(), row, 0) : null));
 				//
 				final Component c = tcr != null
 						? tcr.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
@@ -409,6 +410,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
 		//
+	}
+
+	private static Object getValueAt(final TableModel instance, final int row, final int column) {
+		return instance != null ? instance.getValueAt(row, column) : null;
 	}
 
 	@Nullable

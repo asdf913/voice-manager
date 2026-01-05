@@ -39,6 +39,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -264,6 +265,14 @@ class JapanDictGuiTest {
 				//
 				return test;
 				//
+			} else if (proxy instanceof TableModel) {
+				//
+				if (Objects.equals(name, "getValueAt")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
