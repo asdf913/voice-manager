@@ -306,8 +306,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				final String columnName = getColumnName(table, column);
 				//
-				final JapanDictEntry entry = Util.cast(JapanDictEntry.class, ObjectUtils.getIfNull(value,
-						() -> table != null ? getValueAt(table.getModel(), row, 0) : null));
+				final JapanDictEntry entry = Util.cast(JapanDictEntry.class,
+						ObjectUtils.getIfNull(value, () -> getValueAt(getModel(table), row, 0)));
 				//
 				final Component c = tcr != null
 						? tcr.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
@@ -412,13 +412,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	private static TableModel getModel(final JTable instance) {
+		return instance != null ? instance.getModel() : null;
+	}
+
 	private static Object getValueAt(final TableModel instance, final int row, final int column) {
 		return instance != null ? instance.getValueAt(row, column) : null;
 	}
 
 	@Nullable
 	private static String getColumnName(@Nullable final JTable instance, final int column) {
-		return instance != null && instance.getModel() != null ? instance.getColumnName(column) : null;
+		return instance != null && getModel(instance) != null ? instance.getColumnName(column) : null;
 	}
 
 	private static boolean equals(@Nullable final Strings instance, final String str1, final String str2) {
