@@ -1892,8 +1892,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		int selectedIndex = 0;
 		//
 		if (Objects.equals(Util.getSource(evt), lsm) && evt != null && !evt.getValueIsAdjusting() && jTable != null
-				&& (selectedIndices = lsm != null ? lsm.getSelectedIndices() : null) != null
-				&& selectedIndices.length == 1 && (selectedIndex = selectedIndices[0]) < jTable.getRowCount()) {
+				&& (selectedIndices = getSelectedIndices(lsm)) != null && selectedIndices.length == 1
+				&& (selectedIndex = selectedIndices[0]) < jTable.getRowCount()) {
 			//
 			reset();
 			//
@@ -1996,6 +1996,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // if
 			//
+	}
+
+	private static int[] getSelectedIndices(final ListSelectionModel instance) {
+		return instance != null ? instance.getSelectedIndices() : null;
 	}
 
 	@Nullable
