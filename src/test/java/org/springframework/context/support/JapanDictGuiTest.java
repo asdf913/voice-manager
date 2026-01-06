@@ -82,7 +82,7 @@ class JapanDictGuiTest {
 			METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES,
 			METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2,
 			METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE, METHOD_GET_COLUMN_NAME,
-			METHOD_GET_TABLE_CELL_RENDERER_COMPONENT = null;
+			METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -156,6 +156,9 @@ class JapanDictGuiTest {
 		(METHOD_GET_TABLE_CELL_RENDERER_COMPONENT = Util.getDeclaredMethod(clz, "getTableCellRendererComponent",
 				TableCellRenderer.class, JTable.class, Object.class, Boolean.TYPE, Boolean.TYPE, Integer.TYPE,
 				Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_GET_STROKE_IMAGE = Util.getDeclaredMethod(clz, "getStrokeImage", clz, Page.class, String.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -274,7 +277,8 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof ElementHandle && Objects.equals(name, "boundingBox")) {
+			} else if (proxy instanceof ElementHandle
+					&& Util.anyMatch(Stream.of("boundingBox", "querySelectorAll"), x -> Objects.equals(name, x))) {
 				//
 				return null;
 				//
@@ -1094,6 +1098,13 @@ class JapanDictGuiTest {
 		FieldUtils.writeDeclaredField(japanDictEntry, "pageUrl", "1", true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.valueChanged(listSelectionEvent));
+		//
+	}
+
+	@Test
+	void testGetStrokeImage() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_GET_STROKE_IMAGE, null, null, null, ""));
 		//
 	}
 

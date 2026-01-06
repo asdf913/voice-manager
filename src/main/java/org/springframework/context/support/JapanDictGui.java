@@ -1736,7 +1736,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				TriConsumerUtil.accept(triConsumer, tfAudioUrl, entry.audioUrl,
 						Arrays.asList(btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio));
 				//
-
 				final Iterable<Method> ms = Util.toList(Util.filter(
 						testAndApply(Objects::nonNull, Util.getDeclaredMethods(Playwright.class), Arrays::stream, null),
 						x -> Objects.equals(Util.getName(x), Util.getSelectedItem(cbmBrowserType))));
@@ -1773,7 +1772,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 								entry.index) : null;
 						//
 						final ElementHandle eh2 = testAndApply(CollectionUtils::isNotEmpty,
-								eh1 != null ? eh1.querySelectorAll("div") : null, x -> IterableUtils.get(x, 0), null);
+								querySelectorAll(eh1, "div"), x -> IterableUtils.get(x, 0), null);
 						//
 						final BoundingBox boundingBox = boundingBox(eh2);
 						//
@@ -1831,8 +1830,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			throws IOException, InterruptedException {
 		//
 		final Iterable<Field> fs = Util.toList(Util.filter(
-				Util.stream(
-						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				Util.stream(testAndApply(Objects::nonNull, Util.getClass(id), FieldUtils::getAllFieldsList, null)),
 				x -> Objects.equals(Util.getName(x), "value")));
 		//
 		testAndRun(IterableUtils.size(fs) > 1, () -> {
@@ -1894,6 +1892,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return after;
 		//
+	}
+
+	private static List<ElementHandle> querySelectorAll(final ElementHandle instance, final String selector) {
+		return instance != null ? instance.querySelectorAll(selector) : null;
 	}
 
 	private static int[] getSelectedIndices(@Nullable final ListSelectionModel instance) {
