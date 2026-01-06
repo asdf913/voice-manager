@@ -620,18 +620,26 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			Iterable<Element> es2 = null;
 			//
-			Element e1, e2 = null;
+			Element e1 = null;
 			//
-			final Pattern p1 = Pattern.compile("^\\p{InHiragana}+$");
+			Pattern p1 = null, p2 = null;
 			//
 			String id, h1, jlptLevel = null;
 			//
-			JapanDictEntry entry = null;
-			//
 			ObjectMapper objectMapper = null;
 			//
-			Pattern p2 = null;
+			Map<?, ?> map = null;
 			//
+			Method put = null;
+			//
+			try {
+				//
+				put = Util.getDeclaredMethod(Map.class, "put", Object.class, Object.class);
+				//
+			} catch (final NoSuchMethodException ex) {
+				//
+			} // try
+				//
 			for (int i = 0; i < IterableUtils.size(es1); i++) {
 				//
 				if ((e1 = IterableUtils.get(es1, i)) == null) {
@@ -657,66 +665,23 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				for (int j = 0; j < IterableUtils.size(es2); j++) {
 					//
-					if ((e2 = IterableUtils.get(es2, j)) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					(entry = new JapanDictEntry()).hiragana = String
-							.join("",
-									Util.toList(Util.map(
-											Util.filter(
-													NodeUtil.nodeStream(testAndApply(x -> IterableUtils.size(x) > 0,
-															testAndApply(x -> IterableUtils.size(x) > 0,
-																	ElementUtil.select(e2,
-																			".d-inline-block.align-middle.p-2"),
-																	x -> IterableUtils.get(x, 0), null),
-															x -> IterableUtils.get(x, 0), null)),
-													x -> Util.matches(Util.matcher(p1, Util.toString(x)))),
-											Util::toString)));
+					clear(map = ObjectUtils.getIfNull(map, () -> Reflection.newProxy(Map.class, new IH())));
 					//
-					entry.jlptLevel = jlptLevel;
+					Narcissus.invokeMethod(map, put, "jlptLevel", jlptLevel);
 					//
-					entry.pitchAccent = ElementUtil
-							.text(testAndApply(x -> IterableUtils.size(x) == 1,
-									ElementUtil.select(
-											testAndApply(Objects::nonNull,
-													NodeUtil.attr(
-															testAndApply(x -> IterableUtils.size(x) == 1,
-																	ElementUtil.select(e2, "[data-bs-content]"),
-																	x -> IterableUtils.get(x, 0), null),
-															"data-bs-content"),
-													x -> Jsoup.parse(x, ""), null),
-											"p span[class='h5']"),
-									x -> IterableUtils.get(x, 0), null));
+					Narcissus.invokeMethod(map, put, "text", h1);
 					//
-					entry.romaji = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-							ElementUtil.select(e2, ".xxsmall"), x -> IterableUtils.get(x, 0), null));
+					Narcissus.invokeMethod(map, put, "pageUrl", pageUrl);
 					//
-					entry.text = h1;
+					Narcissus.invokeMethod(map, put, "id", id);
 					//
-					entry.index = Util.getRowCount(dtm);
+					Narcissus.invokeMethod(map, put, "scheme", scheme);
 					//
-					entry.pageUrl = pageUrl;
-					//
-					entry.id = id;
-					//
-					try {
-						//
-						entry.audioUrl = getAudioUrl(scheme, Strings.CS,
-								Util.cast(Iterable.class, ObjectMapperUtil.readValue(
-										objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new),
-										NodeUtil.attr(testAndApply(x -> IterableUtils.size(x) > 0,
-												ElementUtil.select(e2, ".d-inline-block.align-middle.p-2 a"),
-												x -> IterableUtils.get(x, 0), null), "data-reading"),
-										Object.class)));
-						//
-					} catch (final JsonProcessingException e) {
-						//
-					} // try
-						//
-					Util.addRow(dtm, new Object[] { entry });
+					Util.addRow(dtm,
+							new Object[] { getJapanDictEntry(IterableUtils.get(es2, j),
+									p1 = ObjectUtils.getIfNull(p1, () -> Pattern.compile("^\\p{InHiragana}+$")),
+									objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new),
+									Util.getRowCount(dtm), map) });
 					//
 				} // for
 					//
@@ -757,6 +722,72 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // for
 			//
+	}
+
+	private static void clear(final Map<?, ?> instance) {
+		if (instance != null) {
+			instance.clear();
+		}
+	}
+
+	private static JapanDictEntry getJapanDictEntry(final Element e, final Pattern pattern,
+			final ObjectMapper objectMapper, final int index, final Map<?, ?> map) {
+		//
+		final JapanDictEntry entry = new JapanDictEntry();
+		//
+		entry.hiragana = testAndApply(Objects::nonNull,
+				Util.toList(Util.map(Util.filter(
+						NodeUtil.nodeStream(testAndApply(x -> IterableUtils.size(x) > 0,
+								testAndApply(x -> IterableUtils.size(x) > 0,
+										ElementUtil.select(e, ".d-inline-block.align-middle.p-2"),
+										x -> IterableUtils.get(x, 0), null),
+								x -> IterableUtils.get(x, 0), null)),
+						x -> Util.matches(Util.matcher(pattern, Util.toString(x)))), Util::toString)),
+				x -> String.join("", x), null);
+		//
+		entry.jlptLevel = Util.toString(Util.get(map, "jlptLevel"));
+		//
+		entry.pitchAccent = ElementUtil
+				.text(testAndApply(x -> IterableUtils.size(x) == 1,
+						ElementUtil.select(testAndApply(Objects::nonNull,
+								NodeUtil.attr(testAndApply(x -> IterableUtils.size(x) == 1,
+										ElementUtil.select(e, "[data-bs-content]"), x -> IterableUtils.get(x, 0), null),
+										"data-bs-content"),
+								x -> Jsoup.parse(x, ""), null), "p span[class='h5']"),
+						x -> IterableUtils.get(x, 0), null));
+		//
+		entry.romaji = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1, ElementUtil.select(e, ".xxsmall"),
+				x -> IterableUtils.get(x, 0), null));
+		//
+		entry.text = Util.toString(Util.get(map, "text"));
+		//
+		entry.index = Integer.valueOf(index);
+		//
+		entry.pageUrl = Util.toString(Util.get(map, "pageUrl"));
+		//
+		entry.id = Util.toString(Util.get(map, "id"));
+		//
+		try {
+			//
+			entry.audioUrl = getAudioUrl(
+					Util.toString(Util.get(map, "scheme")), Strings.CS, Util
+							.cast(Iterable.class,
+									ObjectMapperUtil
+											.readValue(objectMapper,
+													NodeUtil.attr(
+															testAndApply(x -> IterableUtils.size(x) > 0,
+																	ElementUtil.select(e,
+																			".d-inline-block.align-middle.p-2 a"),
+																	x -> IterableUtils.get(x, 0), null),
+															"data-reading"),
+													Object.class)));
+			//
+		} catch (final JsonProcessingException ex) {
+			//
+		} // try
+			//
+		return entry;
+		//
 	}
 
 	private static <T> boolean and(final T value, final Predicate<T> a, final Predicate<T> b) {
@@ -1081,6 +1112,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private Image image = null;
 
+		private Map<?, ?> map = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -1095,6 +1128,34 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				} else if (Objects.equals(name, "getTransferData")) {
 					//
 					return image;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Map) {
+				//
+				if (Objects.equals(name, "clear")) {
+					//
+					Narcissus.invokeMethod(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), method);
+					//
+					return null;
+					//
+				} else if (Objects.equals(name, "put")) {
+					//
+					Narcissus.invokeMethod(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), method, args);
+					//
+					return null;
+					//
+				} else if (Objects.equals(name, "get")) {
+					//
+					final Object arg1 = ArrayUtils.get(args, 0);
+					//
+					if (!Util.containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), arg1)) {
+						//
+						throw new IllegalStateException(Util.toString(arg1));
+						//
+					} // if
+						//
+					return Util.get(map, arg1);
 					//
 				} // if
 					//

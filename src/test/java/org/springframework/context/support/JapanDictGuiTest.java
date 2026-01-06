@@ -18,6 +18,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -25,6 +26,7 @@ import java.util.function.BiPredicate;
 import java.util.function.IntFunction;
 import java.util.function.LongPredicate;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
@@ -51,6 +53,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableLongConsumer;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -275,6 +278,14 @@ class JapanDictGuiTest {
 				//
 				return selectedIndices;
 				//
+			} else if (proxy instanceof Map) {
+				//
+				if (Objects.equals(name, "get")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -381,8 +392,12 @@ class JapanDictGuiTest {
 				//
 				result = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Boolean.logicalAnd(isPrimitive(returnType = Util.getReturnType(m)),
-						!Objects.equals(returnType, Void.TYPE))) {
+				if (Boolean.logicalOr(
+						Boolean.logicalAnd(isPrimitive(returnType = Util.getReturnType(m)),
+								!Objects.equals(returnType, Void.TYPE)),
+						Boolean.logicalAnd(Objects.equals(Util.getName(m), "getJapanDictEntry"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Element.class, Pattern.class,
+										ObjectMapper.class, Integer.TYPE, Map.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -456,8 +471,12 @@ class JapanDictGuiTest {
 					Boolean.logicalAnd(Objects.equals(name, "setEnabled"), Arrays.equals(parameterTypes,
 							new Class<?>[] { Boolean.TYPE, Component.class, Component.class, Component[].class })),
 					Boolean.logicalAnd(Objects.equals(name, "getTableCellRendererComponent"),
-							Arrays.equals(parameterTypes, new Class<?>[] { TableCellRenderer.class, JTable.class,
-									Object.class, Boolean.TYPE, Boolean.TYPE, Integer.TYPE, Integer.TYPE })))) {
+							Arrays.equals(parameterTypes,
+									new Class<?>[] { TableCellRenderer.class, JTable.class, Object.class, Boolean.TYPE,
+											Boolean.TYPE, Integer.TYPE, Integer.TYPE })),
+					Boolean.logicalAnd(Objects.equals(name, "getJapanDictEntry"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Element.class, Pattern.class,
+									ObjectMapper.class, Integer.TYPE, Map.class })))) {
 				//
 				continue;
 				//
