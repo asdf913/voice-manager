@@ -80,7 +80,7 @@ class JapanDictGuiTest {
 			METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES,
 			METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2,
 			METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE, METHOD_GET_COLUMN_NAME,
-			METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE = null;
+			METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -156,6 +156,9 @@ class JapanDictGuiTest {
 				Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_STROKE_IMAGE = Util.getDeclaredMethod(clz, "getStrokeImage", clz, Page.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_AND = Util.getDeclaredMethod(clz, "and", Object.class, Predicate.class, Predicate.class))
 				.setAccessible(true);
 		//
 	}
@@ -1091,6 +1094,17 @@ class JapanDictGuiTest {
 	void testGetStrokeImage() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_GET_STROKE_IMAGE, null, null, null, ""));
+		//
+	}
+
+	@Test
+	void testAnd() throws IllegalAccessException, InvocationTargetException {
+		//
+		final Predicate<?> alwaysTrue = Predicates.alwaysTrue();
+		//
+		Assertions.assertEquals(Boolean.FALSE, invoke(METHOD_AND, null, null, alwaysTrue, null));
+		//
+		Assertions.assertEquals(Boolean.TRUE, invoke(METHOD_AND, null, null, alwaysTrue, alwaysTrue));
 		//
 	}
 

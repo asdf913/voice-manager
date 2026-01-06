@@ -638,7 +638,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 				} // if
 					//
-				id = testAndApply(x -> Util.matches(x) && Util.groupCount(x) > 0,
+				id = testAndApply(x -> and(x, Util::matches, y -> Util.groupCount(y) > 0),
 						Util.matcher(p2 = ObjectUtils.getIfNull(p2, () -> Pattern.compile("^[^\\d]+(\\d+)$")),
 								NodeUtil.attr(e1, "id")),
 						x -> Util.group(x, 1), null);
@@ -755,6 +755,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // for
 			//
+	}
+
+	private static <T> boolean and(final T value, final Predicate<T> a, final Predicate<T> b) {
+		return Util.test(a, value) && Util.test(b, value);
 	}
 
 	private void reset() {
