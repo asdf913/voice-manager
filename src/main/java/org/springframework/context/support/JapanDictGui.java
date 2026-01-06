@@ -512,6 +512,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private static class JapanDictEntry {
 
+		@Note("ID")
+		private String id = null;
+		
 		@Note("Text")
 		private String text = null;
 
@@ -530,7 +533,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		@Note("Audio URL")
 		private String audioUrl = null;
 
-		private String pageUrl, id = null;
+		private String pageUrl = null;
 
 		private Integer index = null;
 
