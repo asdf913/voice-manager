@@ -1611,7 +1611,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> instance, final T value,
+	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> instance, @Nullable final T value,
 			final FailableConsumer<T, E> consumer) throws E {
 		if (Util.test(instance, value)) {
 			FailableConsumerUtil.accept(consumer, value);
