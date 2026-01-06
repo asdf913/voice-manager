@@ -1842,15 +1842,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		});
 		//
-		final Object value = testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), id,
-				testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
-				Narcissus::getField, null);
+		final String idString = testAndApply((a, b) -> a != null,
+				testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), id,
+						testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
+						Narcissus::getField, null),
+				id, (a, b) -> b, null);
 		//
 		click(testAndApply(x -> IterableUtils.size(x) == 1,
-				querySelectorAll(page, String.format("#dmak-play-%1$s", value != null ? id : null)),
-				x -> IterableUtils.get(x, 0), null));
+				querySelectorAll(page, String.format("#dmak-play-%1$s", idString)), x -> IterableUtils.get(x, 0),
+				null));
 		//
-		final String dmakCssSelector = String.format("#dmak-%1$s", value != null ? id : null);
+		final String dmakCssSelector = String.format("#dmak-%1$s", idString);
 		//
 		if ((testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, dmakCssSelector),
 				x -> IterableUtils.get(x, 0), null)) == null) {
