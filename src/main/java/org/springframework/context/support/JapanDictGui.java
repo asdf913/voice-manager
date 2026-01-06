@@ -43,7 +43,6 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
-import java.util.function.BooleanSupplier;
 import java.util.function.IntFunction;
 import java.util.function.LongPredicate;
 import java.util.function.Predicate;
@@ -578,8 +577,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			String pageUrl = null;
 			//
-			final IH ih = new IH();
-			//
 			try {
 				//
 				pageUrl = Util.toString(uri = URIBuilderUtil.build(uriBuilder));
@@ -596,8 +593,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					Util.setText(tfResponseCode, Integer.toString(responseCode));
 					//
 					final boolean success = HttpStatus.isSuccess(responseCode);
-					//
-					ih.booleanValue = Boolean.valueOf(success);
+					Boolean.valueOf(success);
 					//
 					document = testAndApply(x -> Util.and(x != null, !isTestMode()),
 							is = testAndApply(x -> success, httpURLConnection, x -> getInputStream(x), null),
@@ -1076,8 +1072,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private Image image = null;
 
-		private Boolean booleanValue = null;
-
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -1095,10 +1089,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 				} // if
 					//
-			} else if (proxy instanceof BooleanSupplier && Objects.equals(name, "getAsBoolean")) {
-				//
-				return booleanValue;
-				//
 			} // if
 				//
 			throw new Throwable(name);
