@@ -285,14 +285,10 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof ListSelectionModel) {
+			} else if (proxy instanceof ListSelectionModel && Objects.equals(name, "getSelectedIndices")) {
 				//
-				if (Objects.equals(name, "getSelectedIndices")) {
-					//
-					return selectedIndices;
-					//
-				} // if
-					//
+				return selectedIndices;
+				//
 			} // if
 				//
 			throw new Throwable(name);
