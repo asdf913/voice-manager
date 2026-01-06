@@ -536,6 +536,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private Integer index = null;
 
+		private BufferedImage pitchAccentImage = null;
+
 	}
 
 	@Override
@@ -1929,51 +1931,62 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 				});
 				//
+				final String pageUrl = entry.pageUrl;
+				//
 				try (final Playwright playwright = Playwright.create();
-						final Browser browser = BrowserTypeUtil.launch(ObjectUtils.getIfNull(
-								Util.cast(BrowserType.class, testAndApply(Objects::nonNull,
-										testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0),
-												null),
-										x -> Narcissus.invokeMethod(playwright, x), null)),
-								() -> chromium(playwright)));
+						final Browser browser = testAndApply(
+								Predicates.always(UrlValidatorUtil.isValid(UrlValidator.getInstance(), pageUrl)),
+								playwright,
+								x -> BrowserTypeUtil
+										.launch(ObjectUtils.getIfNull(
+												Util.cast(BrowserType.class,
+														testAndApply(Objects::nonNull,
+																testAndApply(y -> IterableUtils.size(y) == 1, ms,
+																		y -> IterableUtils.get(y, 0), null),
+																y -> Narcissus.invokeMethod(x, y), null)),
+												() -> chromium(x))),
+								null);
 						final Page page = newPage(browser)) {
 					//
-					final boolean isSuccess = isSuccess(
-							testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x), entry.pageUrl,
-									x -> PageUtil.navigate(page, x), null));
+					final boolean isSuccess = isSuccess(PageUtil.navigate(page, pageUrl));
 					//
-					final ElementHandle eh1 = entry.index != null ? IterableUtils.get(querySelectorAll(page,
-							"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
-							entry.index) : null;
-					//
-					final ElementHandle eh2 = testAndApply(CollectionUtils::isNotEmpty,
-							eh1 != null ? eh1.querySelectorAll("div") : null, x -> IterableUtils.get(x, 0), null);
-					//
-					final BoundingBox boundingBox = boundingBox(eh2);
-					//
-					testAndAccept(
-							x -> Boolean.logicalAnd(isSuccess,
-									startsWith(Strings.CS,
-											getMimeType(testAndApply(Objects::nonNull, x,
-													new ContentInfoUtil()::findMatch, null)),
-											"image/")),
-							eh1 != null ? eh1.screenshot() : null, x -> {
-								//
-								try {
+					if (entry.pitchAccentImage == null) {
+						//
+						final ElementHandle eh1 = entry.index != null ? IterableUtils.get(querySelectorAll(page,
+								"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
+								entry.index) : null;
+						//
+						final ElementHandle eh2 = testAndApply(CollectionUtils::isNotEmpty,
+								eh1 != null ? eh1.querySelectorAll("div") : null, x -> IterableUtils.get(x, 0), null);
+						//
+						final BoundingBox boundingBox = boundingBox(eh2);
+						//
+						testAndAccept(
+								x -> Boolean.logicalAnd(isSuccess,
+										startsWith(Strings.CS,
+												getMimeType(testAndApply(Objects::nonNull, x,
+														new ContentInfoUtil()::findMatch, null)),
+												"image/")),
+								eh1 != null ? eh1.screenshot() : null, x -> {
 									//
-									Util.setIcon(pitchAccentImage,
-											new ImageIcon(pitchAccentBufferedImage = chopImage(x, boundingBox)));
-									//
-								} catch (final IOException e) {
-									//
-									TaskDialogs.showException(e);
-									//
-								} // try
-									//
-							});
+									try {
+										//
+										entry.pitchAccentImage = chopImage(x, boundingBox);
+										//
+									} catch (final IOException e) {
+										//
+										TaskDialogs.showException(e);
+										//
+									} // try
+										//
+								});
+						//
+					} // if
+						//
+					Util.setIcon(pitchAccentImage, testAndApply(Objects::nonNull,
+							pitchAccentBufferedImage = entry.pitchAccentImage, ImageIcon::new, null));
 					//
-					setEnabled(pitchAccentBufferedImage != null, btnCopyPitchAccentImage, btnSavePitchAccentImage);
-					//
+					setEnabled(entry.pitchAccentImage != null, btnCopyPitchAccentImage, btnSavePitchAccentImage);
 					//
 					pack(window);
 					//
