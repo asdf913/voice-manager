@@ -1980,7 +1980,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static BoundingBox boundingBox(final ElementHandle instance) {
+	private static BoundingBox boundingBox(@Nullable final ElementHandle instance) {
 		return instance != null ? instance.boundingBox() : null;
 	}
 
