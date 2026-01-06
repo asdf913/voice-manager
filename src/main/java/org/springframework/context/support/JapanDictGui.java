@@ -1938,14 +1938,16 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 								() -> chromium(playwright)));
 						final Page page = newPage(browser)) {
 					//
-					final boolean isSuccess = isSuccess(PageUtil.navigate(page, entry.pageUrl));
+					final boolean isSuccess = isSuccess(
+							testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x), entry.pageUrl,
+									x -> PageUtil.navigate(page, x), null));
 					//
 					final ElementHandle eh1 = entry.index != null ? IterableUtils.get(querySelectorAll(page,
 							"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
 							entry.index) : null;
 					//
-					final ElementHandle eh2 = testAndApply(CollectionUtils::isNotEmpty, eh1.querySelectorAll("div"),
-							x -> IterableUtils.get(x, 0), null);
+					final ElementHandle eh2 = testAndApply(CollectionUtils::isNotEmpty,
+							eh1 != null ? eh1.querySelectorAll("div") : null, x -> IterableUtils.get(x, 0), null);
 					//
 					final BoundingBox boundingBox = boundingBox(eh2);
 					//

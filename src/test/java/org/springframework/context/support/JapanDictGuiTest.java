@@ -38,6 +38,8 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
@@ -170,6 +172,8 @@ class JapanDictGuiTest {
 
 		private Integer size, status, length;
 
+		private int[] selectedIndices;
+
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
 			if (Objects.equals(Util.getReturnType(method), Void.TYPE)) {
@@ -281,6 +285,14 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof ListSelectionModel) {
+				//
+				if (Objects.equals(name, "getSelectedIndices")) {
+					//
+					return selectedIndices;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -1035,6 +1047,76 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertNull(invoke(METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, null,
 				Reflection.newProxy(TableCellRenderer.class, ih), null, null, true, true, 0, 0));
+		//
+	}
+
+	@Test
+	void testValueChanged() throws IllegalAccessException {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final ListSelectionModel lsm = Reflection.newProxy(ListSelectionModel.class, ih);
+		//
+		FieldUtils.writeDeclaredField(instance, "lsm", lsm, true);
+		//
+		final ListSelectionEvent listSelectionEvent = new ListSelectionEvent(lsm, 0, 0, false);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.valueChanged(listSelectionEvent));
+		//
+		final DefaultTableModel dtm = new DefaultTableModel(new Object[] { null }, 0);
+		//
+		FieldUtils.writeDeclaredField(instance, "dtm", dtm, true);
+		//
+		final JTable jTable = new JTable(dtm);
+		//
+		FieldUtils.writeDeclaredField(instance, "jTable", jTable, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.valueChanged(listSelectionEvent));
+		//
+		if (ih != null) {
+			//
+			ih.selectedIndices = new int[] {};
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> instance.valueChanged(listSelectionEvent));
+		//
+		if (ih != null) {
+			//
+			ih.selectedIndices = new int[] { 0 };
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> instance.valueChanged(listSelectionEvent));
+		//
+		dtm.addRow(new Object[] { null });
+		//
+		Assertions.assertDoesNotThrow(() -> instance.valueChanged(listSelectionEvent));
+		//
+		dtm.removeRow(0);
+		//
+		final Object japanDictEntry = Narcissus
+				.allocateInstance(Util.forName("org.springframework.context.support.JapanDictGui$JapanDictEntry"));
+		//
+		dtm.addRow(new Object[] { japanDictEntry });
+		//
+		Assertions.assertDoesNotThrow(() -> instance.valueChanged(listSelectionEvent));
+		//
+		FieldUtils.writeDeclaredField(japanDictEntry, "pageUrl", "", true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.valueChanged(listSelectionEvent));
+		//
+		FieldUtils.writeDeclaredField(japanDictEntry, "pageUrl", " ", true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.valueChanged(listSelectionEvent));
+		//
+		FieldUtils.writeDeclaredField(japanDictEntry, "pageUrl", "1", true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.valueChanged(listSelectionEvent));
 		//
 	}
 
