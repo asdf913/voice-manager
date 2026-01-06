@@ -431,7 +431,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static void setPreferredScrollableViewportSize(final JTable instance, final Dimension size) {
+	private static void setPreferredScrollableViewportSize(@Nullable final JTable instance, final Dimension size) {
 		if (instance != null) {
 			instance.setPreferredScrollableViewportSize(size);
 		}
