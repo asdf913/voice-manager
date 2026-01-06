@@ -1896,7 +1896,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static int[] getSelectedIndices(final ListSelectionModel instance) {
+	private static int[] getSelectedIndices(@Nullable final ListSelectionModel instance) {
 		return instance != null ? instance.getSelectedIndices() : null;
 	}
 
