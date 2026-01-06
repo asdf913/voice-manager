@@ -167,7 +167,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Audio URL")
 	private JTextComponent tfAudioUrl = null;
 
-	private JTextComponent tfPitchAccent = null;
+	private JTextComponent tfPitchAccent, tfKatakana = null;
 
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
@@ -296,7 +296,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		add(this, new JLabel());
 		//
 		add(this, new JScrollPane(jTable = new JTable(dtm = new DefaultTableModel(
-				new Object[] { "", "JLPT Level", "Hiragana", "Romaji", "Pitch Accent" }, 0) {
+				new Object[] { "", "JLPT Level", "Hiragana", "Katakana", "Romaji", "Pitch Accent" }, 0) {
 
 			@Override
 			public boolean isCellEditable(final int row, final int column) {
@@ -385,6 +385,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, btnCopyHiragana = new JButton("Copy"), wrap);
 		//
+		add(this, new JLabel("Katakana"));
+		//
+		add(this, tfKatakana = new JTextField(), String.format("%1$s,span %2$s,%3$s", growx, 3, wrap));
+		//
 		add(this, new JLabel("Romaji"));
 		//
 		add(this, tfRomaji = new JTextField(), String.format("%1$s,span %2$s", growx, 3));
@@ -419,7 +423,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, btnSaveStrokeImage = new JButton("Save"));
 		//
-		setEditable(false, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl, tfPitchAccent);
+		setEditable(false, tfResponseCode, tfHiragana, tfKatakana, tfRomaji, tfAudioUrl, tfPitchAccent);
 		//
 		setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio,
 				btnCopyPitchAccentImage, btnSavePitchAccentImage, btnCopyStrokeImage, btnSaveStrokeImage);
@@ -534,7 +538,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		@Note("Audio URL")
 		private String audioUrl = null;
 
-		private String pageUrl = null;
+		private String pageUrl, katakana = null;
 
 		private Integer index = null;
 
@@ -622,7 +626,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			Element e1 = null;
 			//
-			Pattern p1 = null, p2 = null;
+			Pattern patternHiragana = null, patternKatkana = null, p2 = null;
 			//
 			String id, h1, jlptLevel = null;
 			//
@@ -679,7 +683,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					Util.addRow(dtm,
 							new Object[] { getJapanDictEntry(IterableUtils.get(es2, j),
-									p1 = ObjectUtils.getIfNull(p1, () -> Pattern.compile("^\\p{InHiragana}+$")),
+									patternHiragana = ObjectUtils.getIfNull(patternHiragana,
+											() -> Pattern.compile("^\\p{InHiragana}+$")),
+									patternKatkana = ObjectUtils.getIfNull(patternKatkana,
+											() -> Pattern.compile("^\\p{InKatakana}+$")),
 									objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new),
 									Util.getRowCount(dtm), map) });
 					//
@@ -730,19 +737,30 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		}
 	}
 
-	private static JapanDictEntry getJapanDictEntry(final Element e, final Pattern pattern,
-			final ObjectMapper objectMapper, final int index, final Map<?, ?> map) {
+	private static JapanDictEntry getJapanDictEntry(final Element e, final Pattern patternHiragana,
+			final Pattern patternKatakana, final ObjectMapper objectMapper, final int index, final Map<?, ?> map) {
 		//
 		final JapanDictEntry entry = new JapanDictEntry();
 		//
+		final Element hiraganaOrKatakana = testAndApply(
+				x -> IterableUtils.size(x) > 0, testAndApply(x -> IterableUtils.size(x) > 0,
+						ElementUtil.select(e, ".d-inline-block.align-middle.p-2"), x -> IterableUtils.get(x, 0), null),
+				x -> IterableUtils.get(x, 0), null);
+		//
 		entry.hiragana = testAndApply(Objects::nonNull,
-				Util.toList(Util.map(Util.filter(
-						NodeUtil.nodeStream(testAndApply(x -> IterableUtils.size(x) > 0,
-								testAndApply(x -> IterableUtils.size(x) > 0,
-										ElementUtil.select(e, ".d-inline-block.align-middle.p-2"),
-										x -> IterableUtils.get(x, 0), null),
-								x -> IterableUtils.get(x, 0), null)),
-						x -> Util.matches(Util.matcher(pattern, Util.toString(x)))), Util::toString)),
+				Util.toList(
+						Util.map(
+								Util.filter(NodeUtil.nodeStream(hiraganaOrKatakana),
+										x -> Util.matches(Util.matcher(patternHiragana, Util.toString(x)))),
+								Util::toString)),
+				x -> String.join("", x), null);
+		//
+		entry.katakana = testAndApply(Objects::nonNull,
+				Util.toList(
+						Util.map(
+								Util.filter(NodeUtil.nodeStream(hiraganaOrKatakana),
+										x -> Util.matches(Util.matcher(patternKatakana, Util.toString(x)))),
+								Util::toString)),
 				x -> String.join("", x), null);
 		//
 		entry.jlptLevel = Util.toString(Util.get(map, "jlptLevel"));
@@ -796,7 +814,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private void reset() {
 		//
-		setText(null, tfHiragana, tfRomaji, tfAudioUrl, tfPitchAccent);
+		setText(null, tfHiragana, tfKatakana, tfRomaji, tfAudioUrl, tfPitchAccent);
 		//
 		setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio,
 				btnCopyPitchAccentImage, btnSavePitchAccentImage, btnCopyStrokeImage, btnSaveStrokeImage);
@@ -1793,6 +1811,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				setJcbJlptLevel(getJlptLevelIndices(cbmJlptLevel, entry.jlptLevel));
 				//
 				TriConsumerUtil.accept(triConsumer, tfHiragana, entry.hiragana, Collections.singleton(btnCopyHiragana));
+				//
+				TriConsumerUtil.accept(triConsumer, tfKatakana, entry.katakana, null);
 				//
 				TriConsumerUtil.accept(triConsumer, tfPitchAccent, entry.pitchAccent, null);
 				//

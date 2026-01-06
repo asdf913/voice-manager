@@ -393,7 +393,7 @@ class JapanDictGuiTest {
 								!Objects.equals(returnType, Void.TYPE)),
 						Boolean.logicalAnd(Objects.equals(Util.getName(m), "getJapanDictEntry"),
 								Arrays.equals(parameterTypes, new Class<?>[] { Element.class, Pattern.class,
-										ObjectMapper.class, Integer.TYPE, Map.class })))) {
+										Pattern.class, ObjectMapper.class, Integer.TYPE, Map.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -471,7 +471,7 @@ class JapanDictGuiTest {
 									new Class<?>[] { TableCellRenderer.class, JTable.class, Object.class, Boolean.TYPE,
 											Boolean.TYPE, Integer.TYPE, Integer.TYPE })),
 					Boolean.logicalAnd(Objects.equals(name, "getJapanDictEntry"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Element.class, Pattern.class,
+							Arrays.equals(parameterTypes, new Class<?>[] { Element.class, Pattern.class, Pattern.class,
 									ObjectMapper.class, Integer.TYPE, Map.class })))) {
 				//
 				continue;
