@@ -1903,6 +1903,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return instance != null ? instance.screenshot() : null;
 	}
 
+	@Nullable
 	private static List<ElementHandle> querySelectorAll(@Nullable final ElementHandle instance, final String selector) {
 		return instance != null ? instance.querySelectorAll(selector) : null;
 	}
