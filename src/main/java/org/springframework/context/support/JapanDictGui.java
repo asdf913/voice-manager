@@ -537,7 +537,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private Integer index = null;
 
-		private BufferedImage pitchAccentImage = null;
+		private BufferedImage pitchAccentImage, strokeImage = null;
 
 	}
 
@@ -1751,7 +1751,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				final String pageUrl = entry.pageUrl;
 				//
-				try (final Playwright playwright = Playwright.create();
+				try (final Playwright playwright = testAndGet(
+						Boolean.logicalOr(entry.pitchAccentImage == null, entry.strokeImage == null),
+						() -> Playwright.create());
 						final Browser browser = testAndApply(
 								Predicates.always(UrlValidatorUtil.isValid(UrlValidator.getInstance(), pageUrl)),
 								playwright,
@@ -1806,21 +1808,27 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					// Stroke Image
 					//
-					try {
+					if (entry.strokeImage == null) {
 						//
-						Util.setIcon(strokeImage,
-								testAndApply(Objects::nonNull,
-										strokeBufferedImage = chopImage(getStrokeImage(this, page, entry.id)),
-										ImageIcon::new, null));
+						try {
+							//
+							testAndApply(Objects::nonNull,
+									entry.strokeImage = chopImage(getStrokeImage(this, page, entry.id)), ImageIcon::new,
+									null);
+							//
+						} catch (final IOException | InterruptedException e) {
+							//
+							TaskDialogs.showException(e);
+							//
+						} // try
+							//
+					} // if
 						//
-						setEnabled(strokeBufferedImage != null, btnCopyStrokeImage, btnSaveStrokeImage);
-						//
-					} catch (final IOException | InterruptedException e) {
-						//
-						TaskDialogs.showException(e);
-						//
-					} // try
-						//
+					Util.setIcon(strokeImage, testAndApply(Objects::nonNull, strokeBufferedImage = entry.strokeImage,
+							ImageIcon::new, null));
+					//
+					setEnabled(entry.strokeImage != null, btnCopyStrokeImage, btnSaveStrokeImage);
+					//
 					pack(window);
 					//
 				} // try
