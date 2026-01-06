@@ -277,8 +277,8 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof ElementHandle
-					&& Util.anyMatch(Stream.of("boundingBox", "querySelectorAll"), x -> Objects.equals(name, x))) {
+			} else if (proxy instanceof ElementHandle && Util.anyMatch(
+					Stream.of("boundingBox", "querySelectorAll", "screenshot"), x -> Objects.equals(name, x))) {
 				//
 				return null;
 				//

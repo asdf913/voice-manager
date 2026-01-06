@@ -514,7 +514,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		@Note("ID")
 		private String id = null;
-		
+
 		@Note("Text")
 		private String text = null;
 
@@ -1781,7 +1781,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						//
 						testAndAccept(x -> startsWith(Strings.CS,
 								getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)),
-								"image/"), eh1 != null ? eh1.screenshot() : null, x -> {
+								"image/"), screenshot(eh1), x -> {
 									//
 									try {
 										//
@@ -1895,6 +1895,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return after;
 		//
+	}
+
+	private static byte[] screenshot(final ElementHandle instance) {
+		return instance != null ? instance.screenshot() : null;
 	}
 
 	private static List<ElementHandle> querySelectorAll(final ElementHandle instance, final String selector) {
