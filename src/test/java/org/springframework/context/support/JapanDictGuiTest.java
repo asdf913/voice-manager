@@ -23,7 +23,6 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.LongPredicate;
 import java.util.function.Predicate;
@@ -79,11 +78,11 @@ class JapanDictGuiTest {
 
 	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT,
 			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG,
-			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT6, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY,
-			METHOD_GET_JLPT_LEVEL_INDICES, METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1,
-			METHOD_CHOP_IMAGE2, METHOD_GET_AS_BOOLEAN, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE,
-			METHOD_GET_COLUMN_NAME, METHOD_GET_TABLE_CELL_RENDERER_COMPONENT = null;
+			METHOD_TEST_AND_ACCEPT4, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN, METHOD_GET_SYSTEM_CLIP_BOARD,
+			METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES,
+			METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2,
+			METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE, METHOD_GET_COLUMN_NAME,
+			METHOD_GET_TABLE_CELL_RENDERER_COMPONENT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -117,9 +116,6 @@ class JapanDictGuiTest {
 		(METHOD_TEST_AND_ACCEPT4 = Util.getDeclaredMethod(clz, "testAndAccept", BiPredicate.class, Object.class,
 				Object.class, BiConsumer.class)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_ACCEPT6 = Util.getDeclaredMethod(clz, "testAndAccept", Predicate.class, Object.class,
-				Consumer.class, Predicate.class, Object.class, Consumer.class)).setAccessible(true);
-		//
 		(METHOD_GET_AUDIO_URL = Util.getDeclaredMethod(clz, "getAudioUrl", String.class, Strings.class, Iterable.class))
 				.setAccessible(true);
 		//
@@ -148,9 +144,6 @@ class JapanDictGuiTest {
 		(METHOD_CHOP_IMAGE1 = Util.getDeclaredMethod(clz, "chopImage", BufferedImage.class)).setAccessible(true);
 		//
 		(METHOD_CHOP_IMAGE2 = Util.getDeclaredMethod(clz, "chopImage", byte[].class, BoundingBox.class))
-				.setAccessible(true);
-		//
-		(METHOD_GET_AS_BOOLEAN = Util.getDeclaredMethod(clz, "getAsBoolean", BooleanSupplier.class))
 				.setAccessible(true);
 		//
 		(METHOD_TO_DURATION = Util.getDeclaredMethod(clz, "toDuration", Object.class)).setAccessible(true);
@@ -793,10 +786,6 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT3_OBJECT, null, predicate, null, null));
 		//
-		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT6, null, predicate, null, null, null, null, null));
-		//
-		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT6, null, null, null, null, predicate, null, null));
-		//
 	}
 
 	@Test
@@ -969,14 +958,6 @@ class JapanDictGuiTest {
 			//
 		} // try
 			//
-	}
-
-	@Test
-	void testGetAsBoolean() throws IllegalAccessException, InvocationTargetException {
-		//
-		Assertions.assertEquals(ih != null ? ih.booleanValue = Boolean.TRUE : null,
-				invoke(METHOD_GET_AS_BOOLEAN, null, Reflection.newProxy(BooleanSupplier.class, ih)));
-		//
 	}
 
 	@Test

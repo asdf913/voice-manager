@@ -44,7 +44,6 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.LongPredicate;
 import java.util.function.Predicate;
@@ -134,7 +133,6 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.PageUtil;
 import com.microsoft.playwright.Playwright;
-import com.microsoft.playwright.Response;
 import com.microsoft.playwright.options.BoundingBox;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -304,7 +302,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				return false;
 			};
 
-		})), String.format("%1$s,wmin %2$s,span %3$s", wrap, 100, 2));
+		})), String.format("%1$s,wmin %2$s,span %3$s", wrap, 100, 6));
 		//
 		if ((lsm = jTable.getSelectionModel()) != null) {
 			//
@@ -394,7 +392,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, new JLabel("Audio URL"));
 		//
-		add(this, tfAudioUrl = new JTextField(), String.format("%1$s,span %2$s,wmax %3$spx", growx, 3, 387));
+		add(this, tfAudioUrl = new JTextField(), String.format("%1$s,span %2$s,wmax %3$spx", growx, 3, 150));
 		//
 		add(this, btnCopyAudioUrl = new JButton("Copy"));
 		//
@@ -532,7 +530,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		@Note("Audio URL")
 		private String audioUrl = null;
 
-		private String pageUrl = null;
+		private String pageUrl, id = null;
 
 		private Integer index = null;
 
@@ -579,8 +577,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			final IH ih = new IH();
 			//
-			final BooleanSupplier booleanSupplier = Reflection.newProxy(BooleanSupplier.class, ih);
-			//
 			try {
 				//
 				pageUrl = Util.toString(uri = URIBuilderUtil.build(uriBuilder));
@@ -622,13 +618,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			Element e1, e2 = null;
 			//
-			final Pattern patten = Pattern.compile("^\\p{InHiragana}+$");
+			final Pattern p1 = Pattern.compile("^\\p{InHiragana}+$");
 			//
-			String h1, jlptLevel = null;
+			String id, h1, jlptLevel = null;
 			//
 			JapanDictEntry entry = null;
 			//
 			ObjectMapper objectMapper = null;
+			//
+			Pattern p2 = null;
 			//
 			for (int i = 0; i < IterableUtils.size(es1); i++) {
 				//
@@ -638,6 +636,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 				} // if
 					//
+				id = testAndApply(x -> Util.matches(x) && Util.groupCount(x) > 0,
+						Util.matcher(p2 = ObjectUtils.getIfNull(p2, () -> Pattern.compile("^[^\\d]+(\\d+)$")),
+								NodeUtil.attr(e1, "id")),
+						x -> Util.group(x, 1), null);
+				//
 				h1 = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1, ElementUtil.select(e1, "h1"),
 						x -> IterableUtils.get(x, 0), null));
 				//
@@ -666,7 +669,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 																			".d-inline-block.align-middle.p-2"),
 																	x -> IterableUtils.get(x, 0), null),
 															x -> IterableUtils.get(x, 0), null)),
-													x -> Util.matches(Util.matcher(patten, Util.toString(x)))),
+													x -> Util.matches(Util.matcher(p1, Util.toString(x)))),
 											Util::toString)));
 					//
 					entry.jlptLevel = jlptLevel;
@@ -692,6 +695,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					entry.index = Util.getRowCount(dtm);
 					//
 					entry.pageUrl = pageUrl;
+					//
+					entry.id = id;
 					//
 					try {
 						//
@@ -731,120 +736,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						//
 					}).sum(), getHeight(preferredSize))));
 			//
-			// JLPT
+			pack(window);
 			//
-			setJcbJlptLevel(getJlptLevelIndices(cbmJlptLevel,
-					ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-							ElementUtil.select(document, "span.badge[title^='#jlpt'].me-1"),
-							x -> IterableUtils.get(x, 0), null))));
-			//
-			// Hiragana
-			//
-			testAndAccept(x -> !IterableUtils.isEmpty(x),
-					Util.toList(
-							Util.map(
-									Util.filter(
-											NodeUtil.nodeStream(testAndApply(x -> IterableUtils.size(x) > 0,
-													testAndApply(x -> IterableUtils.size(x) > 0,
-															ElementUtil.select(document,
-																	".d-inline-block.align-middle.p-2"),
-															x -> IterableUtils.get(x, 0), null),
-													x -> IterableUtils.get(x, 0), null)),
-											x -> Util.matches(Util.matcher(patten, Util.toString(x)))),
-									Util::toString)),
-					x -> Util.setText(tfHiragana, String.join("", x))
-					//
-					, x -> Util.matches(Util.matcher(patten, x)), text, x -> Util.setText(tfHiragana, x));
-			//
-			final boolean isNotBlank = StringUtils.isNotBlank(Util.getText(tfHiragana));
-			//
-			ih.booleanValue = ih.booleanValue != null
-					? Boolean.valueOf(Boolean.logicalAnd(ih.booleanValue.booleanValue(), isNotBlank))
-					: Boolean.valueOf(isNotBlank);
-			//
-			setEnabled(getAsBoolean(booleanSupplier), btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio,
-					btnPlayAudio);
-			//
-			try {
-				//
-				Util.setText(tfAudioUrl,
-						getAudioUrl(scheme, Strings.CS,
-								Util.cast(Iterable.class, ObjectMapperUtil.readValue(
-										objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new),
-										NodeUtil.attr(testAndApply(x -> IterableUtils.size(x) > 0,
-												ElementUtil.select(document, ".d-inline-block.align-middle.p-2 a"),
-												x -> IterableUtils.get(x, 0), null), "data-reading"),
-										Object.class))));
-				//
-			} catch (final JsonProcessingException e) {
-				//
-				TaskDialogs.showException(e);
-				//
-			} // try
-				//
-				// romaji
-				//
-			Util.setText(tfRomaji, StringUtils.trim(ElementUtil.text(testAndApply(x -> IterableUtils.size(x) > 0,
-					ElementUtil.select(document, ".xxsmall"), x -> IterableUtils.get(x, 0), null))));
-			//
-			// Pitch Accent
-			//
-			Util.setText(tfPitchAccent,
-					ElementUtil
-							.text(testAndApply(x -> IterableUtils.size(x) == 1,
-									ElementUtil.select(
-											testAndApply(Objects::nonNull,
-													NodeUtil.attr(
-															testAndApply(x -> IterableUtils.size(x) == 1,
-																	ElementUtil.select(document, "[data-bs-content]"),
-																	x -> IterableUtils.get(x, 0), null),
-															"data-bs-content"),
-													x -> Jsoup.parse(x, ""), null),
-											"p span[class='h5']"),
-									x -> IterableUtils.get(x, 0), null)));
-			//
-			// Pitch Accent Image
-			//
-			final Iterable<Method> ms = Util.toList(Util.filter(
-					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Playwright.class), Arrays::stream, null),
-					x -> Objects.equals(Util.getName(x), Util.getSelectedItem(cbmBrowserType))));
-			//
-			testAndRun(IterableUtils.size(ms) > 1, () -> {
-				//
-				throw new IllegalStateException();
-				//
-			});
-			//
-			try (final Playwright playwright = Playwright.create();
-					final Browser browser = BrowserTypeUtil.launch(ObjectUtils.getIfNull(
-							Util.cast(BrowserType.class, testAndApply(Objects::nonNull,
-									testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0),
-											null),
-									x -> Narcissus.invokeMethod(playwright, x), null)),
-							() -> chromium(playwright)));
-					final Page page = newPage(browser)) {
-				//
-				PageUtil.navigate(page, Util.toString(uri));
-				//
-				// Stroke Image
-				//
-				try {
-					//
-					Util.setIcon(strokeImage, testAndApply(Objects::nonNull,
-							strokeBufferedImage = chopImage(getStrokeImage(this, page)), ImageIcon::new, null));
-					//
-					setEnabled(strokeBufferedImage != null, btnCopyStrokeImage, btnSaveStrokeImage);
-					//
-				} catch (final IOException | InterruptedException e) {
-					//
-					TaskDialogs.showException(e);
-					//
-				} // try
-					//
-				pack(window);
-				//
-			} // try
-				//
 		} // if
 			//
 		final Iterable<BiPredicate<JapanDictGui, Object>> predicates = Arrays.asList(JapanDictGui::actionPerformed1,
@@ -927,60 +820,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	@Nullable
-	private static BufferedImage getStrokeImage(final JapanDictGui instance, @Nullable final Page page)
-			throws IOException, InterruptedException {
-		//
-		click(testAndApply(x -> IterableUtils.size(x) == 1,
-				querySelectorAll(page, ".dmak-play.btn.btn-primary.btn-circle.px-5"), x -> IterableUtils.get(x, 0),
-				null));
-		//
-		if ((testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, "div.card-body div.dmak"),
-				x -> IterableUtils.get(x, 0), null)) == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		final long currentTimeMillis = System.currentTimeMillis();
-		//
-		BufferedImage before = null, after = null;
-		//
-		int[] ints = null;
-		//
-		while (System.currentTimeMillis() - currentTimeMillis < Math
-				.max(toMillis(instance != null ? instance.storkeImageDuration : null, 20000), 0)) {
-			//
-			if (before == null) {
-				//
-				before = toBufferedImage(screenshot(locator(page, "div.card-body div.dmak")));
-				//
-			} else {
-				//
-				if (Objects
-						.equals(getImageComparisonState(new ImageComparison(before,
-								after = toBufferedImage(screenshot(locator(page, "div.card-body div.dmak"))))
-								.compareImages()), ImageComparisonState.MATCH)
-						&& ((ints = getRGBs(after)) == null || ints.length < 500)) {
-					//
-					break;
-					//
-				} // if
-					//
-				before = after;
-				//
-			} // if
-				//
-			testAndAccept(x -> x >= 0,
-					Math.max(toMillis(instance != null ? instance.storkeImageSleepDuration : null, 100), 0),
-					Thread::sleep);
-			//
-		} // while
-			//
-		return after;
-		//
-	}
-
-	@Nullable
 	private static int[] getRGBs(@Nullable final BufferedImage instance) {
 		//
 		int[] ints = null;
@@ -1054,25 +893,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Nullable
 	private static List<ElementHandle> querySelectorAll(@Nullable final Page instance, final String selector) {
 		return instance != null ? instance.querySelectorAll(selector) : null;
-	}
-
-	private static boolean getAsBoolean(@Nullable final BooleanSupplier instance) {
-		return instance != null && instance.getAsBoolean();
-	}
-
-	private static <A, B> void testAndAccept(final Predicate<A> predicateA, final A a, final Consumer<A> consumerA,
-			final Predicate<B> predicateB, final B b, final Consumer<B> consumerB) {
-		//
-		if (Util.test(predicateA, a)) {
-			//
-			Util.accept(consumerA, a);
-			//
-		} else if (Util.test(predicateB, b)) {
-			//
-			Util.accept(consumerB, b);
-			//
-		} // if
-			//
 	}
 
 	@Nullable
@@ -1202,10 +1022,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} // if
 			//
-	}
-
-	private static boolean isSuccess(@Nullable final Response instance) {
-		return instance != null && HttpStatus.isSuccess(instance.status());
 	}
 
 	@Nullable
@@ -1948,7 +1764,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 								null);
 						final Page page = newPage(browser)) {
 					//
-					final boolean isSuccess = isSuccess(PageUtil.navigate(page, pageUrl));
+					PageUtil.navigate(page, pageUrl);
 					//
 					if (entry.pitchAccentImage == null) {
 						//
@@ -1961,13 +1777,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						//
 						final BoundingBox boundingBox = boundingBox(eh2);
 						//
-						testAndAccept(
-								x -> Boolean.logicalAnd(isSuccess,
-										startsWith(Strings.CS,
-												getMimeType(testAndApply(Objects::nonNull, x,
-														new ContentInfoUtil()::findMatch, null)),
-												"image/")),
-								eh1 != null ? eh1.screenshot() : null, x -> {
+						testAndAccept(x -> startsWith(Strings.CS,
+								getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)),
+								"image/"), eh1 != null ? eh1.screenshot() : null, x -> {
 									//
 									try {
 										//
@@ -1988,6 +1800,23 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					setEnabled(entry.pitchAccentImage != null, btnCopyPitchAccentImage, btnSavePitchAccentImage);
 					//
+					// Stroke Image
+					//
+					try {
+						//
+						Util.setIcon(strokeImage,
+								testAndApply(Objects::nonNull,
+										strokeBufferedImage = chopImage(getStrokeImage(this, page, entry.id)),
+										ImageIcon::new, null));
+						//
+						setEnabled(strokeBufferedImage != null, btnCopyStrokeImage, btnSaveStrokeImage);
+						//
+					} catch (final IOException | InterruptedException e) {
+						//
+						TaskDialogs.showException(e);
+						//
+					} // try
+						//
 					pack(window);
 					//
 				} // try
@@ -1996,6 +1825,75 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // if
 			//
+	}
+
+	private static BufferedImage getStrokeImage(final JapanDictGui instance, final Page page, final String id)
+			throws IOException, InterruptedException {
+		//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), "value")));
+		//
+		testAndRun(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Object value = testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), id,
+				testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
+				Narcissus::getField, null);
+		//
+		click(testAndApply(x -> IterableUtils.size(x) == 1,
+				querySelectorAll(page, String.format("#dmak-play-%1$s", value != null ? id : null)),
+				x -> IterableUtils.get(x, 0), null));
+		//
+		final String dmakCssSelector = String.format("#dmak-%1$s", value != null ? id : null);
+		//
+		if ((testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, dmakCssSelector),
+				x -> IterableUtils.get(x, 0), null)) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final long currentTimeMillis = System.currentTimeMillis();
+		//
+		BufferedImage before = null, after = null;
+		//
+		int[] ints = null;
+		//
+		while (System.currentTimeMillis() - currentTimeMillis < Math
+				.max(toMillis(instance != null ? instance.storkeImageDuration : null, 20000), 0)) {
+			//
+			if (before == null) {
+				//
+				before = toBufferedImage(screenshot(locator(page, dmakCssSelector)));
+				//
+			} else {
+				//
+				if (Objects.equals(
+						getImageComparisonState(new ImageComparison(before,
+								after = toBufferedImage(screenshot(locator(page, dmakCssSelector)))).compareImages()),
+						ImageComparisonState.MATCH) && ((ints = getRGBs(after)) == null || ints.length < 500)) {
+					//
+					break;
+					//
+				} // if
+					//
+				before = after;
+				//
+			} // if
+				//
+			testAndAccept(x -> x >= 0,
+					Math.max(toMillis(instance != null ? instance.storkeImageSleepDuration : null, 100), 0),
+					Thread::sleep);
+			//
+		} // while
+			//
+		return after;
+		//
 	}
 
 	private static int[] getSelectedIndices(final ListSelectionModel instance) {
