@@ -1141,7 +1141,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 				} else if (Objects.equals(name, "put")) {
 					//
-					Narcissus.invokeMethod(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), method, args);
+					testAndAccept(Objects::nonNull, args, x -> Narcissus
+							.invokeMethod(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), method, x));
 					//
 					return null;
 					//

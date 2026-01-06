@@ -925,15 +925,39 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertThrows(Throwable.class, () -> invoke(invocationHandler, null, null, null));
 		//
-		final Object object = Reflection.newProxy(Transferable.class, invocationHandler);
+		// java.awt.datatransfer.Transferable
 		//
-		Assertions.assertThrows(Throwable.class, () -> invoke(invocationHandler, object, null, null));
+		final Transferable transferable = Reflection.newProxy(Transferable.class, invocationHandler);
 		//
-		Assertions.assertNotNull(invoke(invocationHandler, object,
+		Assertions.assertThrows(Throwable.class, () -> invoke(invocationHandler, transferable, null, null));
+		//
+		Assertions.assertNotNull(invoke(invocationHandler, transferable,
 				Util.getDeclaredMethod(Transferable.class, "getTransferDataFlavors"), null));
 		//
-		Assertions.assertNull(invoke(invocationHandler, object,
+		Assertions.assertNull(invoke(invocationHandler, transferable,
 				Util.getDeclaredMethod(Transferable.class, "getTransferData", DataFlavor.class), null));
+		//
+		// java.util.Map
+		//
+		final Map<?, ?> map = Reflection.newProxy(Map.class, invocationHandler);
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(invocationHandler, map, null, null));
+		//
+		Assertions.assertNull(invoke(invocationHandler, map, Util.getDeclaredMethod(Map.class, "clear"), null));
+		//
+		final Method put = Util.getDeclaredMethod(Map.class, "put", Object.class, Object.class);
+		//
+		Assertions.assertNull(invoke(invocationHandler, map, put, null));
+		//
+		final Method get = Util.getDeclaredMethod(Map.class, "get", Object.class);
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> invoke(invocationHandler, map, get, null));
+		//
+		final Object k = "k", v = "v";
+		//
+		Assertions.assertNull(invoke(invocationHandler, map, put, new Object[] { k, v }));
+		//
+		Assertions.assertSame(v, invoke(invocationHandler, map, get, new Object[] { k }));
 		//
 	}
 
