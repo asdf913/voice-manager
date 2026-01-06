@@ -602,7 +602,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					Util.setText(tfResponseCode, Integer.toString(responseCode));
 					//
 					final boolean success = HttpStatus.isSuccess(responseCode);
-					Boolean.valueOf(success);
 					//
 					document = testAndApply(x -> Util.and(x != null, !isTestMode()),
 							is = testAndApply(x -> success, httpURLConnection, x -> getInputStream(x), null),
