@@ -38,6 +38,7 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
@@ -172,6 +173,12 @@ class JapanDictGuiTest {
 
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
+			if (Objects.equals(Util.getReturnType(method), Void.TYPE)) {
+				//
+				return null;
+				//
+			} // if
+				//
 			final String name = Util.getName(method);
 			//
 			if (proxy instanceof Predicate) {
@@ -255,10 +262,6 @@ class JapanDictGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof ElementHandle && Objects.equals(name, "click")) {
-				//
-				return null;
-				//
 			} else if (proxy instanceof CharSequence && Objects.equals(name, "length")) {
 				//
 				return length;
@@ -275,6 +278,14 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof ListSelectionModel) {
+				//
+				if (Objects.equals(name, "addListSelectionListener")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);

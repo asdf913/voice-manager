@@ -68,7 +68,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
@@ -105,6 +108,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
 import org.meeuw.functional.Predicates;
+import org.meeuw.functional.TriConsumer;
+import org.meeuw.functional.TriConsumerUtil;
 import org.oxbow.swingbits.dialog.task.TaskDialogs;
 import org.springframework.beans.factory.FactoryBeanUtil;
 import org.springframework.beans.factory.InitializingBean;
@@ -137,7 +142,7 @@ import javazoom.jl.player.Player;
 import javazoom.jl.player.PlayerUtil;
 import net.miginfocom.swing.MigLayout;
 
-public class JapanDictGui extends JPanel implements ActionListener, InitializingBean {
+public class JapanDictGui extends JPanel implements ActionListener, InitializingBean, ListSelectionListener {
 
 	private static final long serialVersionUID = -4598144203806679104L;
 
@@ -222,6 +227,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private DefaultTableModel dtm = null;
 
+	private ListSelectionModel lsm = null;
+
 	private JapanDictGui() {
 	}
 
@@ -298,6 +305,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		})), String.format("%1$s,wmin %2$s", wrap, 100));
 		//
+		if ((lsm = jTable.getSelectionModel()) != null) {
+			//
+			lsm.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			//
+			lsm.addListSelectionListener(this);
+			//
+		} // if
+			//
 		final TableCellRenderer tcr = jTable.getDefaultRenderer(Object.class);
 		//
 		jTable.setDefaultRenderer(Object.class, new TableCellRenderer() {
@@ -524,19 +539,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		if (Objects.equals(source, btnExecute)) {
 			//
-			setText(null, tfResponseCode, tfHiragana, tfRomaji, tfAudioUrl, tfPitchAccent);
+			reset();
 			//
-			setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio,
-					btnCopyPitchAccentImage, btnSavePitchAccentImage, btnCopyStrokeImage, btnSaveStrokeImage);
-			//
-			Util.setSelectedItem(cbmJlptLevel, "");
-			//
-			Util.forEach(Stream.of(pitchAccentImage, strokeImage), x -> Util.setIcon(x, null));
-			//
-			Util.forEach(
-					Util.filter(Util.stream(FieldUtils.getAllFieldsList(JapanDictGui.class)),
-							x -> Objects.equals(Util.getType(x), BufferedImage.class)),
-					x -> Narcissus.setField(this, x, null));
+			Util.setText(tfResponseCode, "");
 			//
 			for (int i = Util.getRowCount(dtm) - 1; i >= 0; i--) {
 				//
@@ -880,6 +885,24 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // for
 			//
+	}
+
+	private void reset() {
+		//
+		setText(null, tfHiragana, tfRomaji, tfAudioUrl, tfPitchAccent);
+		//
+		setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio,
+				btnCopyPitchAccentImage, btnSavePitchAccentImage, btnCopyStrokeImage, btnSaveStrokeImage);
+		//
+		Util.setSelectedItem(cbmJlptLevel, "");
+		//
+		Util.forEach(Stream.of(pitchAccentImage, strokeImage), x -> Util.setIcon(x, null));
+		//
+		Util.forEach(
+				Util.filter(Util.stream(FieldUtils.getAllFieldsList(JapanDictGui.class)),
+						x -> Objects.equals(Util.getType(x), BufferedImage.class)),
+				x -> Narcissus.setField(this, x, null));
+		//
 	}
 
 	private static int getRowHeight(@Nullable final JTable instance) {
@@ -1884,6 +1907,48 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	private static <T, E extends Throwable> T testAndGet(final boolean condition, final FailableSupplier<T, E> supplier)
 			throws E {
 		return condition ? FailableSupplierUtil.get(supplier) : null;
+	}
+
+	@Override
+	public void valueChanged(final ListSelectionEvent evt) {
+		//
+		int[] selectedIndices = null;
+		//
+		int selectedIndex = 0;
+		//
+		if (Objects.equals(Util.getSource(evt), lsm) && evt != null && !evt.getValueIsAdjusting() && jTable != null
+				&& (selectedIndices = lsm != null ? lsm.getSelectedIndices() : null) != null
+				&& selectedIndices.length == 1 && (selectedIndex = selectedIndices[0]) < jTable.getRowCount()) {
+			//
+			reset();
+			//
+			final JapanDictEntry entry = Util.cast(JapanDictEntry.class, getValueAt(dtm, selectedIndex, 0));
+			//
+			if (entry != null) {
+				//
+				final TriConsumer<JTextComponent, String, Iterable<Component>> triConsumer = (a, b, c) -> {
+					//
+					Util.setText(a, b);
+					//
+					Util.forEach(c, x -> Util.setEnabled(x, StringUtils.isNotBlank(b)));
+					//
+				};
+				//
+				setJcbJlptLevel(getJlptLevelIndices(cbmJlptLevel, entry.jlptLevel));
+				//
+				TriConsumerUtil.accept(triConsumer, tfHiragana, entry.hiragana, Collections.singleton(btnCopyHiragana));
+				//
+				TriConsumerUtil.accept(triConsumer, tfPitchAccent, entry.pitchAccent, null);
+				//
+				TriConsumerUtil.accept(triConsumer, tfRomaji, entry.romaji, Collections.singleton(btnCopyRomaji));
+				//
+				TriConsumerUtil.accept(triConsumer, tfAudioUrl, entry.audioUrl,
+						Arrays.asList(btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio));
+				//
+			} // if
+				//
+		} // if
+			//
 	}
 
 }
