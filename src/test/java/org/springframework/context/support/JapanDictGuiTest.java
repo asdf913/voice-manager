@@ -22,7 +22,6 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
-import java.util.function.BooleanSupplier;
 import java.util.function.IntFunction;
 import java.util.function.LongPredicate;
 import java.util.function.Predicate;
@@ -67,7 +66,6 @@ import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
-import com.microsoft.playwright.Response;
 import com.microsoft.playwright.options.BoundingBox;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -164,9 +162,9 @@ class JapanDictGuiTest {
 
 	private static class IH implements InvocationHandler {
 
-		private Boolean test, booleanValue;
+		private Boolean test;
 
-		private Integer size, status, length;
+		private Integer size, length;
 
 		private int[] selectedIndices;
 
@@ -249,18 +247,6 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof Response && Objects.equals(name, "status")) {
-				//
-				return status;
-				//
-			} else if (proxy instanceof BooleanSupplier) {
-				//
-				if (Objects.equals(name, "getAsBoolean")) {
-					//
-					return booleanValue;
-					//
-				} // if
-					//
 			} else if (proxy instanceof CharSequence && Objects.equals(name, "length")) {
 				//
 				return length;
@@ -504,9 +490,9 @@ class JapanDictGuiTest {
 					//
 					if ((ih = ObjectUtils.getIfNull(ih, IH::new)) != null) {
 						//
-						ih.test = ih.booleanValue = Boolean.FALSE;
+						ih.test = Boolean.FALSE;
 						//
-						ih.size = ih.status = ih.length = Integer.valueOf(0);
+						ih.size = ih.length = Integer.valueOf(0);
 						//
 					} // if
 						//
