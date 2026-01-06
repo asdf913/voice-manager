@@ -1753,7 +1753,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				try (final Playwright playwright = testAndGet(
 						Boolean.logicalOr(entry.pitchAccentImage == null, entry.strokeImage == null),
-						() -> Playwright.create());
+						Playwright::create);
 						final Browser browser = testAndApply(
 								Predicates.always(UrlValidatorUtil.isValid(UrlValidator.getInstance(), pageUrl)),
 								playwright,
