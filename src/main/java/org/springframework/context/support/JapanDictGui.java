@@ -1937,12 +1937,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					final boolean isSuccess = isSuccess(PageUtil.navigate(page, entry.pageUrl));
 					//
-					final ElementHandle eh = entry.index != null ? IterableUtils.get(querySelectorAll(page,
+					final ElementHandle eh1 = entry.index != null ? IterableUtils.get(querySelectorAll(page,
 							"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
 							entry.index) : null;
 					//
-					final BoundingBox boundingBox = boundingBox(testAndApply(CollectionUtils::isNotEmpty,
-							eh.querySelectorAll("div"), x -> IterableUtils.get(x, 0), null));
+					final ElementHandle eh2 = testAndApply(CollectionUtils::isNotEmpty, eh1.querySelectorAll("div"),
+							x -> IterableUtils.get(x, 0), null);
+					//
+					final BoundingBox boundingBox = boundingBox(eh2);
 					//
 					testAndAccept(
 							x -> Boolean.logicalAnd(isSuccess,
@@ -1950,7 +1952,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 											getMimeType(testAndApply(Objects::nonNull, x,
 													new ContentInfoUtil()::findMatch, null)),
 											"image/")),
-							eh != null ? eh.screenshot() : null, x -> {
+							eh1 != null ? eh1.screenshot() : null, x -> {
 								//
 								try {
 									//
