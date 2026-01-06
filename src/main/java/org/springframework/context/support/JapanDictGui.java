@@ -199,7 +199,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Copy Stroke Image")
 	private AbstractButton btnCopyStrokeImage = null;
 
-	private AbstractButton btnSaveStrokeImage = null;
+	private AbstractButton btnSaveStrokeImage, btnCopyKatakana = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
@@ -390,7 +390,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, new JLabel("Katakana"));
 		//
-		add(this, tfKatakana = new JTextField(), String.format("%1$s,span %2$s,%3$s", growx, 3, wrap));
+		add(this, tfKatakana = new JTextField(), String.format("%1$s,span %2$s", growx, 3));
+		//
+		add(this, btnCopyKatakana = new JButton("Copy"), wrap);
 		//
 		add(this, new JLabel("Romaji"));
 		//
@@ -428,8 +430,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		setEditable(false, tfResponseCode, tfHiragana, tfKatakana, tfRomaji, tfAudioUrl, tfPitchAccent);
 		//
-		setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio,
-				btnCopyPitchAccentImage, btnSavePitchAccentImage, btnCopyStrokeImage, btnSaveStrokeImage);
+		setEnabled(false, btnCopyHiragana, btnCopyKatakana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio,
+				btnPlayAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage, btnCopyStrokeImage, btnSaveStrokeImage);
 		//
 		Util.forEach(
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream,
@@ -821,8 +823,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		setText(null, tfHiragana, tfKatakana, tfRomaji, tfAudioUrl, tfPitchAccent);
 		//
-		setEnabled(false, btnCopyHiragana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio,
-				btnCopyPitchAccentImage, btnSavePitchAccentImage, btnCopyStrokeImage, btnSaveStrokeImage);
+		setEnabled(false, btnCopyHiragana, btnCopyKatakana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio,
+				btnPlayAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage, btnCopyStrokeImage, btnSaveStrokeImage);
 		//
 		Util.setSelectedItem(cbmJlptLevel, "");
 		//
@@ -1387,9 +1389,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			return true;
 			//
+		} else if (Objects.equals(source, instance.btnCopyKatakana)) {
+			//
+			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+					new StringSelection(Util.getText(instance.tfKatakana)), null));
+			//
+			return true;
+			//
 		} // if
 			//
 		return false;
+
 		//
 	}
 
@@ -1817,7 +1827,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				TriConsumerUtil.accept(triConsumer, tfHiragana, entry.hiragana, Collections.singleton(btnCopyHiragana));
 				//
-				TriConsumerUtil.accept(triConsumer, tfKatakana, entry.katakana, null);
+				TriConsumerUtil.accept(triConsumer, tfKatakana, entry.katakana, Collections.singleton(btnCopyKatakana));
 				//
 				TriConsumerUtil.accept(triConsumer, tfPitchAccent, entry.pitchAccent, null);
 				//
