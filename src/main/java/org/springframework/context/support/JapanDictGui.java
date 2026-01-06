@@ -529,7 +529,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		@Note("Pitch Accent")
 		private String pitchAccent = null;
 
-		private String audioUrl, pageUrl = null;
+		@Note("Audio URL")
+		private String audioUrl = null;
+
+		private String pageUrl = null;
 
 		private Integer index = null;
 
