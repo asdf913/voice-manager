@@ -277,14 +277,10 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof ElementHandle) {
+			} else if (proxy instanceof ElementHandle && Objects.equals(name, "boundingBox")) {
 				//
-				if (Objects.equals(name, "boundingBox")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
