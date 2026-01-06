@@ -1770,9 +1770,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					if (entry.pitchAccentImage == null) {
 						//
-						final ElementHandle eh1 = entry.index != null ? IterableUtils.get(querySelectorAll(page,
-								"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
-								entry.index) : null;
+						final ElementHandle eh1 = testAndApply(Objects::nonNull, entry.index,
+								x -> IterableUtils.get(querySelectorAll(page,
+										"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
+										Util.intValue(x, 0)),
+								null);
 						//
 						final ElementHandle eh2 = testAndApply(CollectionUtils::isNotEmpty,
 								querySelectorAll(eh1, "div"), x -> IterableUtils.get(x, 0), null);
