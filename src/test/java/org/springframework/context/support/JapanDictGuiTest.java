@@ -62,6 +62,7 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 import com.microsoft.playwright.Browser;
+import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
@@ -276,6 +277,14 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof ElementHandle) {
+				//
+				if (Objects.equals(name, "boundingBox")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);

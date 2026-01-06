@@ -80,6 +80,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -303,7 +304,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				return false;
 			};
 
-		})), String.format("%1$s,wmin %2$s", wrap, 100));
+		})), String.format("%1$s,wmin %2$s,span %3$s", wrap, 100, 2));
 		//
 		if ((lsm = jTable.getSelectionModel()) != null) {
 			//
@@ -528,7 +529,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		@Note("Pitch Accent")
 		private String pitchAccent = null;
 
-		private String audioUrl = null;
+		private String audioUrl, pageUrl = null;
+
+		private Integer index = null;
 
 	}
 
@@ -567,14 +570,18 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			URI uri = null;
 			//
+			String pageUrl = null;
+			//
 			final IH ih = new IH();
 			//
 			final BooleanSupplier booleanSupplier = Reflection.newProxy(BooleanSupplier.class, ih);
 			//
 			try {
 				//
+				pageUrl = Util.toString(uri = URIBuilderUtil.build(uriBuilder));
+				//
 				final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class,
-						Util.openConnection(Util.toURL(uri = URIBuilderUtil.build(uriBuilder))));
+						Util.openConnection(Util.toURL(uri)));
 				//
 				setRequestProperty(httpURLConnection, "User-Agent", getUserAgent());
 				//
@@ -615,6 +622,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			String h1, jlptLevel = null;
 			//
 			JapanDictEntry entry = null;
+			//
+			ObjectMapper objectMapper = null;
 			//
 			for (int i = 0; i < IterableUtils.size(es1); i++) {
 				//
@@ -675,19 +684,19 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					entry.text = h1;
 					//
+					entry.index = Util.getRowCount(dtm);
+					//
+					entry.pageUrl = pageUrl;
+					//
 					try {
 						//
-						entry.audioUrl = getAudioUrl(
-								scheme, Strings.CS, Util
-										.cast(Iterable.class,
-												ObjectMapperUtil.readValue(new ObjectMapper(),
-														NodeUtil.attr(
-																testAndApply(x -> IterableUtils.size(x) > 0,
-																		ElementUtil.select(e2,
-																				".d-inline-block.align-middle.p-2 a"),
-																		x -> IterableUtils.get(x, 0), null),
-																"data-reading"),
-														Object.class)));
+						entry.audioUrl = getAudioUrl(scheme, Strings.CS,
+								Util.cast(Iterable.class, ObjectMapperUtil.readValue(
+										objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new),
+										NodeUtil.attr(testAndApply(x -> IterableUtils.size(x) > 0,
+												ElementUtil.select(e2, ".d-inline-block.align-middle.p-2 a"),
+												x -> IterableUtils.get(x, 0), null), "data-reading"),
+										Object.class)));
 						//
 					} catch (final JsonProcessingException e) {
 						//
@@ -754,17 +763,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			try {
 				//
 				Util.setText(tfAudioUrl,
-						getAudioUrl(
-								scheme, Strings.CS, Util
-										.cast(Iterable.class,
-												ObjectMapperUtil.readValue(new ObjectMapper(),
-														NodeUtil.attr(
-																testAndApply(x -> IterableUtils.size(x) > 0,
-																		ElementUtil.select(document,
-																				".d-inline-block.align-middle.p-2 a"),
-																		x -> IterableUtils.get(x, 0), null),
-																"data-reading"),
-														Object.class))));
+						getAudioUrl(scheme, Strings.CS,
+								Util.cast(Iterable.class, ObjectMapperUtil.readValue(
+										objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new),
+										NodeUtil.attr(testAndApply(x -> IterableUtils.size(x) > 0,
+												ElementUtil.select(document, ".d-inline-block.align-middle.p-2 a"),
+												x -> IterableUtils.get(x, 0), null), "data-reading"),
+										Object.class))));
 				//
 			} catch (final JsonProcessingException e) {
 				//
@@ -814,42 +819,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							() -> chromium(playwright)));
 					final Page page = newPage(browser)) {
 				//
-				final boolean isSuccess = isSuccess(PageUtil.navigate(page, Util.toString(uri)));
-				//
-				final boolean hasPitchAccentImage = IterableUtils
-						.size(ElementUtil.select(document, ".d-flex.justify-content-between.align-items-center")) == 1;
-				//
-				setEnabled(hasPitchAccentImage, btnCopyPitchAccentImage, btnSavePitchAccentImage);
-				//
-				final BoundingBox boundingBox = testAndGet(Util.and(isSuccess, !isTestMode(), hasPitchAccentImage),
-						() -> boundingBox(
-								locator(page, ".d-flex.justify-content-between.align-items-center div:first-child")));
-				//
-				testAndAccept(
-						x -> Boolean.logicalAnd(isSuccess,
-								startsWith(Strings.CS,
-										getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch,
-												null)),
-										"image/")),
-						testAndApply(
-								(a, b) -> Boolean.logicalAnd(!IterableUtils.isEmpty(ElementUtil.select(a, b)),
-										hasPitchAccentImage),
-								document, ".d-flex.justify-content-between.align-items-center",
-								(a, b) -> screenshot(locator(page, b)), null),
-						x -> {
-							//
-							try {
-								//
-								Util.setIcon(pitchAccentImage,
-										new ImageIcon(pitchAccentBufferedImage = chopImage(x, boundingBox)));
-								//
-							} catch (final IOException e) {
-								//
-								TaskDialogs.showException(e);
-								//
-							} // try
-								//
-						});
+				PageUtil.navigate(page, Util.toString(uri));
 				//
 				// Stroke Image
 				//
@@ -1945,10 +1915,71 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				TriConsumerUtil.accept(triConsumer, tfAudioUrl, entry.audioUrl,
 						Arrays.asList(btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio));
 				//
+
+				final Iterable<Method> ms = Util.toList(Util.filter(
+						testAndApply(Objects::nonNull, Util.getDeclaredMethods(Playwright.class), Arrays::stream, null),
+						x -> Objects.equals(Util.getName(x), Util.getSelectedItem(cbmBrowserType))));
+				//
+				testAndRun(IterableUtils.size(ms) > 1, () -> {
+					//
+					throw new IllegalStateException();
+					//
+				});
+				//
+				try (final Playwright playwright = Playwright.create();
+						final Browser browser = BrowserTypeUtil.launch(ObjectUtils.getIfNull(
+								Util.cast(BrowserType.class, testAndApply(Objects::nonNull,
+										testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0),
+												null),
+										x -> Narcissus.invokeMethod(playwright, x), null)),
+								() -> chromium(playwright)));
+						final Page page = newPage(browser)) {
+					//
+					final boolean isSuccess = isSuccess(PageUtil.navigate(page, entry.pageUrl));
+					//
+					final ElementHandle eh = entry.index != null ? IterableUtils.get(querySelectorAll(page,
+							"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
+							entry.index) : null;
+					//
+					final BoundingBox boundingBox = boundingBox(testAndApply(CollectionUtils::isNotEmpty,
+							eh.querySelectorAll("div"), x -> IterableUtils.get(x, 0), null));
+					//
+					testAndAccept(
+							x -> Boolean.logicalAnd(isSuccess,
+									startsWith(Strings.CS,
+											getMimeType(testAndApply(Objects::nonNull, x,
+													new ContentInfoUtil()::findMatch, null)),
+											"image/")),
+							eh != null ? eh.screenshot() : null, x -> {
+								//
+								try {
+									//
+									Util.setIcon(pitchAccentImage,
+											new ImageIcon(pitchAccentBufferedImage = chopImage(x, boundingBox)));
+									//
+								} catch (final IOException e) {
+									//
+									TaskDialogs.showException(e);
+									//
+								} // try
+									//
+							});
+					//
+					setEnabled(pitchAccentBufferedImage != null, btnCopyPitchAccentImage, btnSavePitchAccentImage);
+					//
+					//
+					pack(window);
+					//
+				} // try
+					//
 			} // if
 				//
 		} // if
 			//
+	}
+
+	private static BoundingBox boundingBox(final ElementHandle instance) {
+		return instance != null ? instance.boundingBox() : null;
 	}
 
 }
