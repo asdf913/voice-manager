@@ -1910,7 +1910,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	@Override
-	public void valueChanged(final ListSelectionEvent evt) {
+	public void valueChanged(@Nullable final ListSelectionEvent evt) {
 		//
 		int[] selectedIndices = null;
 		//
