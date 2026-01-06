@@ -1909,6 +1909,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	@Nullable
 	private static byte[] screenshot(@Nullable final ElementHandle instance) {
 		return instance != null ? instance.screenshot() : null;
 	}
