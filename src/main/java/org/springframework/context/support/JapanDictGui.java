@@ -144,6 +144,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private static final long serialVersionUID = -4598144203806679104L;
 
+	private static final String VALUE = "value";
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -1393,7 +1395,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		final Iterable<Field> fs = Util.toList(Util.filter(
 				Util.stream(
 						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
-				x -> Objects.equals(Util.getName(x), "value")));
+				x -> Objects.equals(Util.getName(x), VALUE)));
 		//
 		if (IterableUtils.size(fs) > 1) {
 			//
@@ -1413,7 +1415,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		final Iterable<Field> fs = Util.toList(Util.filter(
 				Util.stream(
 						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
-				x -> Objects.equals(Util.getName(x), "value")));
+				x -> Objects.equals(Util.getName(x), VALUE)));
 		//
 		if (IterableUtils.size(fs) > 1) {
 			//
@@ -1841,7 +1843,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		final Iterable<Field> fs = Util.toList(Util.filter(
 				Util.stream(testAndApply(Objects::nonNull, Util.getClass(id), FieldUtils::getAllFieldsList, null)),
-				x -> Objects.equals(Util.getName(x), "value")));
+				x -> Objects.equals(Util.getName(x), VALUE)));
 		//
 		testAndRun(IterableUtils.size(fs) > 1, () -> {
 			//
