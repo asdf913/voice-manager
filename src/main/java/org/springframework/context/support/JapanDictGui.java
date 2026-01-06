@@ -227,7 +227,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private DefaultTableModel dtm = null;
 
-	private ListSelectionModel lsm = null;
+	private transient ListSelectionModel lsm = null;
 
 	private JapanDictGui() {
 	}
