@@ -755,6 +755,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
+	@Nullable
 	private static Component prepareRenderer(final JTable instance, final TableCellRenderer tableCellRenderer,
 			final int row, final int column) {
 		return instance != null && instance.getColumnModel() != null && tableCellRenderer != null
@@ -762,6 +763,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				: null;
 	}
 
+	@Nullable
 	private static TableCellRenderer getCellRenderer(final JTable instance, final int row, final int column) {
 		return instance != null && instance.getColumnModel() != null ? instance.getCellRenderer(row, column) : null;
 	}
