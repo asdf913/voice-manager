@@ -728,16 +728,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			setPreferredScrollableViewportSize(jTable, new Dimension((int) getWidth(preferredSize),
 					(int) Math.min(Util.map(IntStream.range(0, Util.getRowCount(dtm)), x -> {
 						//
-						int rowHeight = getRowHeight(jTable);
-						//
-						for (int column = 0; column < getColumnCount(jTable); column++) {
-							//
-							rowHeight = Math.max(rowHeight, (int) getHeight(Util.getPreferredSize(
-									prepareRenderer(jTable, getCellRenderer(jTable, x, column), x, column))));
-							//
-						} // for
-							//
-						return rowHeight;
+						return Math.max(getRowHeight(jTable), Util.orElse(Util.max(Util.map(
+								IntStream.range(0, getColumnCount(jTable)),
+								column -> (int) getHeight(Util.getPreferredSize(
+										prepareRenderer(jTable, getCellRenderer(jTable, x, column), x, column))))),
+								0));
 						//
 					}).sum(), getHeight(preferredSize))));
 			//
