@@ -77,13 +77,18 @@ import javassist.util.proxy.ProxyUtil;
 
 class JapanDictGuiTest {
 
+	private static final int ZERO = 0;
+
+	private static final int ONE = 1;
+
 	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT,
 			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG,
 			METHOD_TEST_AND_ACCEPT4, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN, METHOD_GET_SYSTEM_CLIP_BOARD,
 			METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES,
 			METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2,
 			METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE, METHOD_GET_COLUMN_NAME,
-			METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND = null;
+			METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND, METHOD_PREPARE_RENDERER,
+			METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -163,6 +168,14 @@ class JapanDictGuiTest {
 		//
 		(METHOD_AND = Util.getDeclaredMethod(clz, "and", Object.class, Predicate.class, Predicate.class))
 				.setAccessible(true);
+		//
+		(METHOD_PREPARE_RENDERER = Util.getDeclaredMethod(clz, "prepareRenderer", JTable.class, TableCellRenderer.class,
+				Integer.TYPE, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_GET_CELL_RENDERER = Util.getDeclaredMethod(clz, "getCellRenderer", JTable.class, Integer.TYPE,
+				Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_GET_COLUMN_COUNT = Util.getDeclaredMethod(clz, "getColumnCount", JTable.class)).setAccessible(true);
 		//
 	}
 
@@ -692,7 +705,7 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
 		//
-		Util.setText(tfAudioUrl, "1");
+		Util.setText(tfAudioUrl, Integer.toString(ONE));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
 		//
@@ -800,7 +813,7 @@ class JapanDictGuiTest {
 			//
 		} // if
 			//
-		final Long l = Long.valueOf(1);
+		final Long l = Long.valueOf(ONE);
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT3_LONG, null, longPredicate, l, null));
 		//
@@ -817,7 +830,7 @@ class JapanDictGuiTest {
 	void testGetAudioUrl() throws Throwable {
 		//
 		Assertions.assertEquals(":///read?outputFormat=mp3&vid=1&jwt=1.2.3&text=%3Ca%2F%3E&",
-				getAudioUrl(null, Strings.CS, Arrays.asList("//", "1", "1.2.3", "<a/>", null)));
+				getAudioUrl(null, Strings.CS, Arrays.asList("//", Integer.toString(ONE), "1.2.3", "<a/>", null)));
 		//
 	}
 
@@ -889,7 +902,7 @@ class JapanDictGuiTest {
 		//
 		final ObjectMapper objectMapper = new ObjectMapper();
 		//
-		Assertions.assertEquals(ObjectMapperUtil.writeValueAsString(objectMapper, new int[] { 1 }),
+		Assertions.assertEquals(ObjectMapperUtil.writeValueAsString(objectMapper, new int[] { ONE }),
 				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_GET_JLPT_LEVEL_INDICES, null,
 						new DefaultComboBoxModel<>(new Object[] { null, "N1" }), "JLPT N1")));
 		//
@@ -917,7 +930,7 @@ class JapanDictGuiTest {
 			//
 			try {
 				//
-				invoke(METHOD_SET_JCB_JLPT_LEVEL, instance, new int[] { 0, 1 });
+				invoke(METHOD_SET_JCB_JLPT_LEVEL, instance, new int[] { ZERO, ONE });
 				//
 			} catch (final InvocationTargetException e) {
 				//
@@ -990,7 +1003,7 @@ class JapanDictGuiTest {
 		//
 		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			//
-			ImageIO.write(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), "png", baos);
+			ImageIO.write(new BufferedImage(ONE, ONE, BufferedImage.TYPE_INT_RGB), "png", baos);
 			//
 			Assertions.assertNotNull(invoke(METHOD_CHOP_IMAGE1, null,
 					invoke(METHOD_TO_BUFFERED_IMAGE, instance, bs = baos.toByteArray())));
@@ -1001,7 +1014,7 @@ class JapanDictGuiTest {
 			//
 			Assertions.assertNotNull(invoke(METHOD_CHOP_IMAGE2, null, bs, boundingBox));
 			//
-			FieldUtils.writeField(boundingBox, "width", 1);
+			FieldUtils.writeField(boundingBox, "width", ONE);
 			//
 			Assertions.assertNotNull(invoke(METHOD_CHOP_IMAGE2, null, bs, boundingBox));
 			//
@@ -1012,17 +1025,15 @@ class JapanDictGuiTest {
 	@Test
 	void testToDuration() throws Throwable {
 		//
-		final int one = 1;
-		//
-		final Duration duration = toDuration(Integer.valueOf(one));
+		final Duration duration = toDuration(Integer.valueOf(ONE));
 		//
 		Assertions.assertNotNull(duration);
 		//
 		Assertions.assertSame(duration, toDuration(duration));
 		//
-		Assertions.assertEquals(duration, toDuration(toCharArray(Integer.toString(one))));
+		Assertions.assertEquals(duration, toDuration(toCharArray(Integer.toString(ONE))));
 		//
-		Assertions.assertEquals(Duration.ofSeconds(1), toDuration("PT1S"));
+		Assertions.assertEquals(Duration.ofSeconds(ONE), toDuration("PT1S"));
 		//
 	}
 
@@ -1140,7 +1151,7 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.valueChanged(listSelectionEvent));
 		//
-		FieldUtils.writeDeclaredField(japanDictEntry, "pageUrl", "1", true);
+		FieldUtils.writeDeclaredField(japanDictEntry, "pageUrl", Integer.toString(ONE), true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.valueChanged(listSelectionEvent));
 		//
@@ -1161,6 +1172,36 @@ class JapanDictGuiTest {
 		Assertions.assertEquals(Boolean.FALSE, invoke(METHOD_AND, null, null, alwaysTrue, null));
 		//
 		Assertions.assertEquals(Boolean.TRUE, invoke(METHOD_AND, null, null, alwaysTrue, alwaysTrue));
+		//
+	}
+
+	@Test
+	void testPrepareRenderer() throws IllegalAccessException, InvocationTargetException {
+		//
+		final JTable jTable = new JTable(new DefaultTableModel(new Object[] { null }, ONE));
+		//
+		Assertions.assertNull(
+				invoke(METHOD_PREPARE_RENDERER, null, jTable, null, Integer.valueOf(ZERO), Integer.valueOf(ZERO)));
+		//
+		Assertions.assertNull(invoke(METHOD_PREPARE_RENDERER, null, jTable,
+				Reflection.newProxy(TableCellRenderer.class, ih), Integer.valueOf(ZERO), Integer.valueOf(ZERO)));
+		//
+	}
+
+	@Test
+	void testGetCellRenderer() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNotNull(
+				invoke(METHOD_GET_CELL_RENDERER, null, new JTable(new DefaultTableModel(new Object[] { null }, ONE)),
+						Integer.valueOf(ZERO), Integer.valueOf(ZERO)));
+		//
+	}
+
+	@Test
+	void testGetColumnCount() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertEquals(Integer.valueOf(ONE),
+				invoke(METHOD_GET_COLUMN_COUNT, null, new JTable(new DefaultTableModel(new Object[] { null }, ZERO))));
 		//
 	}
 

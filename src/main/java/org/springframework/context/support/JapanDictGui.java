@@ -727,10 +727,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						//
 						int rowHeight = getRowHeight(jTable);
 						//
-						for (int column = 0; jTable != null && column < jTable.getColumnCount(); column++) {
+						for (int column = 0; column < getColumnCount(jTable); column++) {
 							//
 							rowHeight = Math.max(rowHeight, (int) getHeight(Util.getPreferredSize(
-									jTable.prepareRenderer(jTable.getCellRenderer(x, column), x, column))));
+									prepareRenderer(jTable, getCellRenderer(jTable, x, column), x, column))));
 							//
 						} // for
 							//
@@ -755,6 +755,21 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // for
 			//
+	}
+
+	private static Component prepareRenderer(final JTable instance, final TableCellRenderer tableCellRenderer,
+			final int row, final int column) {
+		return instance != null && instance.getColumnModel() != null && tableCellRenderer != null
+				? instance.prepareRenderer(tableCellRenderer, row, column)
+				: null;
+	}
+
+	private static TableCellRenderer getCellRenderer(final JTable instance, final int row, final int column) {
+		return instance != null && instance.getColumnModel() != null ? instance.getCellRenderer(row, column) : null;
+	}
+
+	private static int getColumnCount(final JTable instance) {
+		return instance != null && instance.getColumnModel() != null ? instance.getColumnCount() : 0;
 	}
 
 	private static void clear(@Nullable final Map<?, ?> instance) {
