@@ -212,12 +212,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Pitch Accent Image")
 	private JLabel pitchAccentImage = null;
 
-	private JLabel strokeImage = null;
+	private JLabel strokeImage, strokeWithNumberImage = null;
 
 	@Note("Pitch Accent Image")
 	private transient BufferedImage pitchAccentBufferedImage = null;
 
-	private transient BufferedImage strokeBufferedImage = null;
+	private transient BufferedImage strokeBufferedImage, strokeWithNumberBufferedImage = null;
 
 	private Window window = null;
 
@@ -420,13 +420,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, btnSavePitchAccentImage = new JButton("Save"), wrap);
 		//
-		add(this, new JLabel("Stroke"));
+		add(this, new JLabel("Stroke"), String.format("span %1$s", 2));
 		//
 		add(this, strokeImage = new JLabel(), String.format("span %1$s", 6));
 		//
 		add(this, btnCopyStrokeImage = new JButton("Copy"), String.format("flowy,split %1$s", 2));
 		//
-		add(this, btnSaveStrokeImage = new JButton("Save"));
+		add(this, btnSaveStrokeImage = new JButton("Save"), wrap);
+		//
+		add(this, new JLabel("Stroke with Number"), String.format("span %1$s", 2));
+		//
+		add(this, strokeWithNumberImage = new JLabel(), String.format("span %1$s,%2$s", 6, wrap));
 		//
 		setEditable(false, tfResponseCode, tfHiragana, tfKatakana, tfRomaji, tfAudioUrl, tfPitchAccent);
 		//
@@ -553,7 +557,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		@Note("Pitch Accent Image")
 		private BufferedImage pitchAccentImage = null;
 
-		private BufferedImage strokeImage = null;
+		private BufferedImage strokeImage, strokeWithNumberImage = null;
 
 	}
 
@@ -828,7 +832,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		Util.setSelectedItem(cbmJlptLevel, "");
 		//
-		Util.forEach(Stream.of(pitchAccentImage, strokeImage), x -> Util.setIcon(x, null));
+		Util.forEach(Stream.of(pitchAccentImage, strokeImage, strokeWithNumberImage), x -> Util.setIcon(x, null));
 		//
 		Util.forEach(
 				Util.filter(Util.stream(FieldUtils.getAllFieldsList(JapanDictGui.class)),
@@ -1941,10 +1945,64 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			setEnabled(entry.strokeImage != null, instance.btnCopyStrokeImage, instance.btnSaveStrokeImage);
 			//
-			pack(instance.window);
+		} // try
+			//
+		try (final Playwright playwright = testAndGet(entry.strokeWithNumberImage == null, Playwright::create);
+				final Browser browser = testAndApply(
+						Predicates.always(UrlValidatorUtil.isValid(UrlValidator.getInstance(), pageUrl)), playwright,
+						x -> BrowserTypeUtil
+								.launch(ObjectUtils
+										.getIfNull(
+												Util.cast(BrowserType.class,
+														testAndApply(Objects::nonNull,
+																testAndApply(y -> IterableUtils.size(y) == 1, ms,
+																		y -> IterableUtils.get(y, 0), null),
+																y -> Narcissus.invokeMethod(x, y), null)),
+												() -> chromium(x))),
+						null);
+				final Page page = newPage(browser)) {
+			//
+			PageUtil.navigate(page, pageUrl);
+			//
+			// Stroke With Number Image
+			//
+			check(testAndApply(x -> IterableUtils.size(x) == 1,
+					querySelectorAll(page, String.format("#dmak-show-stroke-check-%1$s", entry.id)),
+					x -> IterableUtils.get(x, 0), null));
+			//
+			click(testAndApply(x -> IterableUtils.size(x) == 1,
+					querySelectorAll(page, String.format("#dmak-reset-%1$s", entry.id)), x -> IterableUtils.get(x, 0),
+					null));
+			//
+			if (entry.strokeWithNumberImage == null) {
+				//
+				try {
+					//
+					testAndApply(Objects::nonNull,
+							entry.strokeWithNumberImage = chopImage(getStrokeImage(instance, page, entry.id)),
+							ImageIcon::new, null);
+					//
+				} catch (final IOException | InterruptedException e) {
+					//
+					TaskDialogs.showException(e);
+					//
+				} // try
+					//
+			} // if
+				//
+			Util.setIcon(instance.strokeWithNumberImage, testAndApply(Objects::nonNull,
+					instance.strokeWithNumberBufferedImage = entry.strokeWithNumberImage, ImageIcon::new, null));
 			//
 		} // try
 			//
+		pack(instance.window);
+		//
+	}
+
+	private static void check(final ElementHandle instance) {
+		if (instance != null) {
+			instance.check();
+		}
 	}
 
 	private static BufferedImage getStrokeImage(final JapanDictGui instance, final Page page, final String id)
