@@ -1811,128 +1811,139 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			reset();
 			//
-			final JapanDictEntry entry = Util.cast(JapanDictEntry.class, getValueAt(dtm, selectedIndex, 0));
+			update(this, Util.cast(JapanDictEntry.class, getValueAt(dtm, selectedIndex, 0)));
 			//
-			if (entry != null) {
-				//
-				final TriConsumer<JTextComponent, String, Iterable<Component>> triConsumer = (a, b, c) -> {
-					//
-					Util.setText(a, b);
-					//
-					Util.forEach(c, x -> Util.setEnabled(x, StringUtils.isNotBlank(b)));
-					//
-				};
-				//
-				setJcbJlptLevel(getJlptLevelIndices(cbmJlptLevel, entry.jlptLevel));
-				//
-				TriConsumerUtil.accept(triConsumer, tfHiragana, entry.hiragana, Collections.singleton(btnCopyHiragana));
-				//
-				TriConsumerUtil.accept(triConsumer, tfKatakana, entry.katakana, Collections.singleton(btnCopyKatakana));
-				//
-				TriConsumerUtil.accept(triConsumer, tfPitchAccent, entry.pitchAccent, null);
-				//
-				TriConsumerUtil.accept(triConsumer, tfRomaji, entry.romaji, Collections.singleton(btnCopyRomaji));
-				//
-				TriConsumerUtil.accept(triConsumer, tfAudioUrl, entry.audioUrl,
-						Arrays.asList(btnCopyAudioUrl, btnDownloadAudio, btnPlayAudio));
-				//
-				final Iterable<Method> ms = Util.toList(Util.filter(
-						testAndApply(Objects::nonNull, Util.getDeclaredMethods(Playwright.class), Arrays::stream, null),
-						x -> Objects.equals(Util.getName(x), Util.getSelectedItem(cbmBrowserType))));
-				//
-				testAndRun(IterableUtils.size(ms) > 1, () -> {
-					//
-					throw new IllegalStateException();
-					//
-				});
-				//
-				final String pageUrl = entry.pageUrl;
-				//
-				try (final Playwright playwright = testAndGet(
-						Boolean.logicalOr(entry.pitchAccentImage == null, entry.strokeImage == null),
-						Playwright::create);
-						final Browser browser = testAndApply(
-								Predicates.always(UrlValidatorUtil.isValid(UrlValidator.getInstance(), pageUrl)),
-								playwright,
-								x -> BrowserTypeUtil
-										.launch(ObjectUtils.getIfNull(
+		} // if
+			//
+	}
+
+	private static void update(final JapanDictGui instance, final JapanDictEntry entry) {
+		//
+		if (instance == null || entry == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		instance.reset();
+		//
+		final TriConsumer<JTextComponent, String, Iterable<Component>> triConsumer = (a, b, c) -> {
+			//
+			Util.setText(a, b);
+			//
+			Util.forEach(c, x -> Util.setEnabled(x, StringUtils.isNotBlank(b)));
+			//
+		};
+		//
+		instance.setJcbJlptLevel(getJlptLevelIndices(instance.cbmJlptLevel, entry.jlptLevel));
+		//
+		TriConsumerUtil.accept(triConsumer, instance.tfHiragana, entry.hiragana,
+				Collections.singleton(instance.btnCopyHiragana));
+		//
+		TriConsumerUtil.accept(triConsumer, instance.tfKatakana, entry.katakana,
+				Collections.singleton(instance.btnCopyKatakana));
+		//
+		TriConsumerUtil.accept(triConsumer, instance.tfPitchAccent, entry.pitchAccent, null);
+		//
+		TriConsumerUtil.accept(triConsumer, instance.tfRomaji, entry.romaji,
+				Collections.singleton(instance.btnCopyRomaji));
+		//
+		TriConsumerUtil.accept(triConsumer, instance.tfAudioUrl, entry.audioUrl,
+				Arrays.asList(instance.btnCopyAudioUrl, instance.btnDownloadAudio, instance.btnPlayAudio));
+		//
+		final Iterable<Method> ms = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.getDeclaredMethods(Playwright.class), Arrays::stream, null),
+				x -> Objects.equals(Util.getName(x), Util.getSelectedItem(instance.cbmBrowserType))));
+		//
+		testAndRun(IterableUtils.size(ms) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final String pageUrl = entry.pageUrl;
+		//
+		try (final Playwright playwright = testAndGet(
+				Boolean.logicalOr(entry.pitchAccentImage == null, entry.strokeImage == null), Playwright::create);
+				final Browser browser = testAndApply(
+						Predicates.always(UrlValidatorUtil.isValid(UrlValidator.getInstance(), pageUrl)), playwright,
+						x -> BrowserTypeUtil
+								.launch(ObjectUtils
+										.getIfNull(
 												Util.cast(BrowserType.class,
 														testAndApply(Objects::nonNull,
 																testAndApply(y -> IterableUtils.size(y) == 1, ms,
 																		y -> IterableUtils.get(y, 0), null),
 																y -> Narcissus.invokeMethod(x, y), null)),
 												() -> chromium(x))),
-								null);
-						final Page page = newPage(browser)) {
-					//
-					PageUtil.navigate(page, pageUrl);
-					//
-					if (entry.pitchAccentImage == null) {
-						//
-						final ElementHandle eh1 = testAndApply(Objects::nonNull, entry.index,
-								x -> IterableUtils.get(querySelectorAll(page,
-										"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
-										Util.intValue(x, 0)),
-								null);
-						//
-						final ElementHandle eh2 = testAndApply(CollectionUtils::isNotEmpty,
-								querySelectorAll(eh1, "div"), x -> IterableUtils.get(x, 0), null);
-						//
-						final BoundingBox boundingBox = boundingBox(eh2);
-						//
-						testAndAccept(x -> startsWith(Strings.CS,
-								getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)),
-								"image/"), screenshot(eh1), x -> {
-									//
-									try {
-										//
-										entry.pitchAccentImage = chopImage(x, boundingBox);
-										//
-									} catch (final IOException e) {
-										//
-										TaskDialogs.showException(e);
-										//
-									} // try
-										//
-								});
-						//
-					} // if
-						//
-					Util.setIcon(pitchAccentImage, testAndApply(Objects::nonNull,
-							pitchAccentBufferedImage = entry.pitchAccentImage, ImageIcon::new, null));
-					//
-					setEnabled(entry.pitchAccentImage != null, btnCopyPitchAccentImage, btnSavePitchAccentImage);
-					//
-					// Stroke Image
-					//
-					if (entry.strokeImage == null) {
-						//
-						try {
+						null);
+				final Page page = newPage(browser)) {
+			//
+			PageUtil.navigate(page, pageUrl);
+			//
+			if (entry.pitchAccentImage == null) {
+				//
+				final ElementHandle eh1 = testAndApply(Objects::nonNull, entry.index,
+						x -> IterableUtils.get(querySelectorAll(page,
+								"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
+								Util.intValue(x, 0)),
+						null);
+				//
+				final ElementHandle eh2 = testAndApply(CollectionUtils::isNotEmpty, querySelectorAll(eh1, "div"),
+						x -> IterableUtils.get(x, 0), null);
+				//
+				final BoundingBox boundingBox = boundingBox(eh2);
+				//
+				testAndAccept(x -> startsWith(Strings.CS,
+						getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)),
+						"image/"), screenshot(eh1), x -> {
 							//
-							testAndApply(Objects::nonNull,
-									entry.strokeImage = chopImage(getStrokeImage(this, page, entry.id)), ImageIcon::new,
-									null);
-							//
-						} catch (final IOException | InterruptedException e) {
-							//
-							TaskDialogs.showException(e);
-							//
-						} // try
-							//
-					} // if
-						//
-					Util.setIcon(strokeImage, testAndApply(Objects::nonNull, strokeBufferedImage = entry.strokeImage,
-							ImageIcon::new, null));
+							try {
+								//
+								entry.pitchAccentImage = chopImage(x, boundingBox);
+								//
+							} catch (final IOException e) {
+								//
+								TaskDialogs.showException(e);
+								//
+							} // try
+								//
+						});
+				//
+			} // if
+				//
+			Util.setIcon(instance.pitchAccentImage, testAndApply(Objects::nonNull,
+					instance.pitchAccentBufferedImage = entry.pitchAccentImage, ImageIcon::new, null));
+			//
+			setEnabled(entry.pitchAccentImage != null, instance.btnCopyPitchAccentImage,
+					instance.btnSavePitchAccentImage);
+			//
+			// Stroke Image
+			//
+			if (entry.strokeImage == null) {
+				//
+				try {
 					//
-					setEnabled(entry.strokeImage != null, btnCopyStrokeImage, btnSaveStrokeImage);
+					testAndApply(Objects::nonNull,
+							entry.strokeImage = chopImage(getStrokeImage(instance, page, entry.id)), ImageIcon::new,
+							null);
 					//
-					pack(window);
+				} catch (final IOException | InterruptedException e) {
+					//
+					TaskDialogs.showException(e);
 					//
 				} // try
 					//
 			} // if
 				//
-		} // if
+			Util.setIcon(instance.strokeImage, testAndApply(Objects::nonNull,
+					instance.strokeBufferedImage = entry.strokeImage, ImageIcon::new, null));
+			//
+			setEnabled(entry.strokeImage != null, instance.btnCopyStrokeImage, instance.btnSaveStrokeImage);
+			//
+			pack(instance.window);
+			//
+		} // try
 			//
 	}
 
