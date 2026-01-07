@@ -202,7 +202,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Copy Stroke Image")
 	private AbstractButton btnCopyStrokeImage = null;
 
-	private AbstractButton btnSaveStrokeImage, btnCopyStrokeWithNumberImage = null;
+	@Note("Save Stroke Image")
+	private AbstractButton btnSaveStrokeImage = null;
+
+	private AbstractButton btnCopyStrokeWithNumberImage = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
