@@ -835,7 +835,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		Util.setSelectedItem(cbmJlptLevel, "");
 		//
-		Util.forEach(Stream.of(pitchAccentImage, strokeImage, strokeWithNumberImage), x -> Util.setIcon(x, null));
+		Util.forEach(
+				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream,
+						null), x -> Util.isAssignableFrom(JLabel.class, Util.getType(x))),
+				x -> Util.setIcon(Util.cast(JLabel.class, Narcissus.getField(this, x)), null));
 		//
 		Util.forEach(
 				Util.filter(Util.stream(FieldUtils.getAllFieldsList(JapanDictGui.class)),
