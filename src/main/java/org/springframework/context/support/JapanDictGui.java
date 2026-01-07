@@ -657,16 +657,19 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			Map<?, ?> map = null;
 			//
-			Method put = null;
+			final Iterable<Method> ms = Util.toList(Util.filter(
+					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Map.class), Arrays::stream, null),
+					x -> Boolean.logicalAnd(Objects.equals(Util.getName(x), "put"),
+							Arrays.equals(Util.getParameterTypes(x), new Class<?>[] { Object.class, Object.class }))));
 			//
-			try {
+			testAndRun(IterableUtils.size(ms) > 1, () -> {
 				//
-				put = Util.getDeclaredMethod(Map.class, "put", Object.class, Object.class);
+				throw new IllegalStateException();
 				//
-			} catch (final NoSuchMethodException ex) {
-				//
-			} // try
-				//
+			});
+			//
+			final Method put = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
+			//
 			for (int i = 0; i < IterableUtils.size(es1); i++) {
 				//
 				if ((e1 = IterableUtils.get(es1, i)) == null) {
