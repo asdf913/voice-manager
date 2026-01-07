@@ -2005,7 +2005,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static void check(final ElementHandle instance) {
+	private static void check(@Nullable final ElementHandle instance) {
 		if (instance != null) {
 			instance.check();
 		}
