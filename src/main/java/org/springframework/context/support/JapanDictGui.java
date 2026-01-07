@@ -313,7 +313,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			@Override
 			public boolean isCellEditable(final int row, final int column) {
 				return false;
-			};
+			}
 
 		})), String.format("%1$s,wmin %2$s,span %3$s", wrap, 100, 6));
 		//
