@@ -178,6 +178,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Copy Hiragana")
 	private AbstractButton btnCopyHiragana = null;
 
+	@Note("Copy Katakana")
+	private AbstractButton btnCopyKatakana = null;
+
 	@Note("Copy Romaji")
 	private AbstractButton btnCopyRomaji = null;
 
@@ -199,7 +202,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Copy Stroke Image")
 	private AbstractButton btnCopyStrokeImage = null;
 
-	private AbstractButton btnSaveStrokeImage, btnCopyKatakana = null;
+	private AbstractButton btnSaveStrokeImage = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
