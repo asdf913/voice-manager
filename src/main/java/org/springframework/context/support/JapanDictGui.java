@@ -202,7 +202,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Copy Stroke Image")
 	private AbstractButton btnCopyStrokeImage = null;
 
-	private AbstractButton btnSaveStrokeImage = null;
+	private AbstractButton btnSaveStrokeImage, btnCopyStrokeWithNumberImage = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
@@ -439,12 +439,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, new JLabel("Stroke with Number"), String.format("span %1$s", 2));
 		//
-		add(this, strokeWithNumberImage = new JLabel(), String.format("span %1$s,%2$s", 6, wrap));
+		add(this, strokeWithNumberImage = new JLabel(), String.format("span %1$s", 6));
+		//
+		add(this, btnCopyStrokeWithNumberImage = new JButton("Copy"), wrap);
 		//
 		setEditable(false, tfResponseCode, tfHiragana, tfKatakana, tfRomaji, tfAudioUrl, tfPitchAccent);
 		//
 		setEnabled(false, btnCopyHiragana, btnCopyKatakana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio,
-				btnPlayAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage, btnCopyStrokeImage, btnSaveStrokeImage);
+				btnPlayAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage, btnCopyStrokeImage, btnSaveStrokeImage,
+				btnCopyStrokeWithNumberImage);
 		//
 		Util.forEach(
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream,
@@ -840,7 +843,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		setText(null, tfHiragana, tfKatakana, tfRomaji, tfAudioUrl, tfPitchAccent);
 		//
 		setEnabled(false, btnCopyHiragana, btnCopyKatakana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio,
-				btnPlayAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage, btnCopyStrokeImage, btnSaveStrokeImage);
+				btnPlayAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage, btnCopyStrokeImage, btnSaveStrokeImage,
+				btnCopyStrokeWithNumberImage);
 		//
 		Util.setSelectedItem(cbmJlptLevel, "");
 		//
@@ -1412,6 +1416,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 					new StringSelection(Util.getText(instance.tfKatakana)), null));
+			//
+			return true;
+			//
+		} else if (Objects.equals(source, instance.btnCopyStrokeWithNumberImage)) {
+			//
+			final IH ih = new IH();
+			//
+			ih.image = instance.strokeWithNumberBufferedImage;
+			//
+			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+					Reflection.newProxy(Transferable.class, ih), null));
 			//
 			return true;
 			//
@@ -2007,6 +2022,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			Util.setIcon(instance.strokeWithNumberImage, testAndApply(Objects::nonNull,
 					instance.strokeWithNumberBufferedImage = entry.strokeWithNumberImage, ImageIcon::new, null));
+			//
+			Util.setEnabled(instance.btnCopyStrokeWithNumberImage, entry.strokeWithNumberImage != null);
 			//
 		} // try
 			//
