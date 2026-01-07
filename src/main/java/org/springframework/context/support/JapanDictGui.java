@@ -584,12 +584,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			Util.setText(tfResponseCode, "");
 			//
-			for (int i = Util.getRowCount(dtm) - 1; i >= 0; i--) {
-				//
-				Util.removeRow(dtm, i);
-				//
-			} // for
-				//
+			Util.forEach(IntStream.iterate(Util.getRowCount(dtm) - 1, i -> i >= 0, i -> i - 1),
+					i -> Util.removeRow(dtm, i));
+			//
 			final URIBuilder uriBuilder = new URIBuilder();
 			//
 			final String scheme = "https";
