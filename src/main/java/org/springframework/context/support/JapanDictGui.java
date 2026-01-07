@@ -1821,7 +1821,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static void update(final JapanDictGui instance, final JapanDictEntry entry) {
+	private static void update(@Nullable final JapanDictGui instance, @Nullable final JapanDictEntry entry) {
 		//
 		if (instance == null || entry == null) {
 			//
