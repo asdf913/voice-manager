@@ -2034,7 +2034,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 									getMimeType(
 											testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)),
 									"image/"),
-							ElementHandleUtil.screenshot(testAndApply(x -> CollectionUtils.isNotEmpty(x),
+							ElementHandleUtil.screenshot(testAndApply(CollectionUtils::isNotEmpty,
 									ElementHandleUtil.querySelectorAll(testAndApply(Objects::nonNull, entry.index,
 											x -> IterableUtils.get(PageUtil.querySelectorAll(page,
 													"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
