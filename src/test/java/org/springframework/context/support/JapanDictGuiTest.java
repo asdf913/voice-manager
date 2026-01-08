@@ -183,7 +183,7 @@ class JapanDictGuiTest {
 
 		private Boolean test;
 
-		private Integer size, length;
+		private Integer size, length, columnCount;
 
 		private int[] selectedIndices;
 
@@ -274,8 +274,18 @@ class JapanDictGuiTest {
 				//
 				return test;
 				//
-			} else if (proxy instanceof TableModel && Objects.equals(name, "getValueAt")) {
+			} else if (proxy instanceof TableModel) {
 				//
+				if (Objects.equals(name, "getValueAt")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(name, "getColumnCount")) {
+					//
+					return columnCount;
+					//
+				} // if
+					//
 				return null;
 				//
 			} else if (proxy instanceof TableCellRenderer && Objects.equals(name, "getTableCellRendererComponent")) {
@@ -523,7 +533,7 @@ class JapanDictGuiTest {
 						//
 						ih.test = Boolean.FALSE;
 						//
-						ih.size = ih.length = Integer.valueOf(0);
+						ih.size = ih.length = ih.columnCount = Integer.valueOf(0);
 						//
 					} // if
 						//
