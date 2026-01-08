@@ -37,7 +37,6 @@ import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -1962,8 +1961,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 								Util.intValue(x, 0)),
 						null);
 				//
-				final ElementHandle eh2 = testAndApply(CollectionUtils::isNotEmpty, querySelectorAll(eh1, "div"),
-						x -> IterableUtils.get(x, 0), null);
+				final ElementHandle eh2 = testAndApply(CollectionUtils::isNotEmpty,
+						ElementHandleUtil.querySelectorAll(eh1, "div"), x -> IterableUtils.get(x, 0), null);
 				//
 				final BoundingBox boundingBox = boundingBox(eh2);
 				//
@@ -2141,11 +2140,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return after;
 		//
-	}
-
-	@Nullable
-	private static List<ElementHandle> querySelectorAll(@Nullable final ElementHandle instance, final String selector) {
-		return instance != null ? instance.querySelectorAll(selector) : null;
 	}
 
 	@Nullable
