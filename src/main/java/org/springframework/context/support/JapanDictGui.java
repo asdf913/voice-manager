@@ -207,7 +207,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Save Stroke Image")
 	private AbstractButton btnSaveStrokeImage = null;
 
-	private AbstractButton btnCopyStrokeWithNumberImage = null;
+	private AbstractButton btnCopyStrokeWithNumberImage, btnSaveStrokeWithNumberImage = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
@@ -440,19 +440,21 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, btnCopyStrokeImage = new JButton("Copy"), String.format("flowy,split %1$s", 2));
 		//
-		add(this, btnSaveStrokeImage = new JButton("Save"), wrap);
+		add(this, btnSaveStrokeImage = new JButton("Save"), String.format("%1$s,%2$s", growx, wrap));
 		//
 		add(this, new JLabel("Stroke with Number"), String.format("span %1$s", 2));
 		//
 		add(this, strokeWithNumberImage = new JLabel(), String.format("span %1$s", 6));
 		//
-		add(this, btnCopyStrokeWithNumberImage = new JButton("Copy"), wrap);
+		add(this, btnCopyStrokeWithNumberImage = new JButton("Copy"), String.format("flowy,split %1$s", 2));
+		//
+		add(this, btnSaveStrokeWithNumberImage = new JButton("Save"), String.format("%1$s,%2$s", growx, wrap));
 		//
 		setEditable(false, tfResponseCode, tfHiragana, tfKatakana, tfRomaji, tfAudioUrl, tfPitchAccent);
 		//
 		setEnabled(false, btnCopyHiragana, btnCopyKatakana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio,
 				btnPlayAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage, btnCopyStrokeImage, btnSaveStrokeImage,
-				btnCopyStrokeWithNumberImage);
+				btnCopyStrokeWithNumberImage, btnSaveStrokeWithNumberImage);
 		//
 		Util.forEach(
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream,
@@ -895,7 +897,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		setEnabled(false, btnCopyHiragana, btnCopyKatakana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio,
 				btnPlayAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage, btnCopyStrokeImage, btnSaveStrokeImage,
-				btnCopyStrokeWithNumberImage);
+				btnCopyStrokeWithNumberImage, btnSaveStrokeWithNumberImage);
 		//
 		Util.setSelectedItem(cbmJlptLevel, "");
 		//
@@ -1469,6 +1471,37 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 					Reflection.newProxy(Transferable.class, ih), null));
 			//
+			return true;
+			//
+		} else if (Objects.equals(source, instance.btnSaveStrokeWithNumberImage)) {
+			//
+			final StringBuilder sb = testAndApply(Objects::nonNull, Util.getText(instance.tfText), StringBuilder::new,
+					null);
+			//
+			final String format = "png";
+			//
+			append(append(append(sb, "(Stroke With Number)"), '.'), format);
+			//
+			final JFileChooser jfc = new JFileChooser();
+			//
+			jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.toString(sb), Path::of, null)));
+			//
+			if (Util.and(!GraphicsEnvironment.isHeadless(), !isTestMode(),
+					instance.strokeWithNumberBufferedImage != null)
+					&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				//
+				try {
+					//
+					ImageIO.write(instance.strokeWithNumberBufferedImage, format, jfc.getSelectedFile());
+					//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
+			} // if
+				//
 			return true;
 			//
 		} // if
@@ -2052,7 +2085,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			Util.setIcon(instance.strokeWithNumberImage, testAndApply(Objects::nonNull,
 					instance.strokeWithNumberBufferedImage = entry.strokeWithNumberImage, ImageIcon::new, null));
 			//
-			Util.setEnabled(instance.btnCopyStrokeWithNumberImage, entry.strokeWithNumberImage != null);
+			setEnabled(entry.strokeWithNumberImage != null, instance.btnCopyStrokeWithNumberImage,
+					instance.btnSaveStrokeWithNumberImage);
 			//
 		} // try
 			//
