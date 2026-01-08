@@ -129,6 +129,7 @@ import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.BrowserTypeUtil;
 import com.microsoft.playwright.ElementHandle;
+import com.microsoft.playwright.ElementHandleUtil;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.PageUtil;
@@ -1968,7 +1969,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				testAndAccept(x -> startsWith(Strings.CS,
 						getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)),
-						"image/"), screenshot(eh1), x -> {
+						"image/"), ElementHandleUtil.screenshot(eh1), x -> {
 							//
 							try {
 								//
@@ -2140,11 +2141,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return after;
 		//
-	}
-
-	@Nullable
-	private static byte[] screenshot(@Nullable final ElementHandle instance) {
-		return instance != null ? instance.screenshot() : null;
 	}
 
 	@Nullable
