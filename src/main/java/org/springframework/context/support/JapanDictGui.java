@@ -739,7 +739,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					).sum(), getHeight(preferredSize))));
 			//
-			if (Util.getRowCount(dtm) == 1 && getColumnCount(dtm) > 0 && jTable != null) {
+			if (Boolean.logicalAnd(Util.getRowCount(dtm) == 1, getColumnCount(dtm) > 0) && jTable != null) {
 				//
 				jTable.setRowSelectionInterval(0, 0);
 				//
