@@ -1862,13 +1862,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			reset();
 			//
-			update(this, Util.cast(JapanDictEntry.class, getValueAt(dtm, selectedIndex, 0)));
+			valueChanged(this, Util.cast(JapanDictEntry.class, getValueAt(dtm, selectedIndex, 0)));
 			//
 		} // if
 			//
 	}
 
-	private static void update(@Nullable final JapanDictGui instance, @Nullable final JapanDictEntry entry) {
+	private static void valueChanged(@Nullable final JapanDictGui instance, @Nullable final JapanDictEntry entry) {
 		//
 		if (instance == null || entry == null) {
 			//
