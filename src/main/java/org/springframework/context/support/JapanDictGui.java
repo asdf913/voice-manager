@@ -1998,33 +1998,65 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			if (entry.pitchAccentImage == null) {
 				//
-				final ElementHandle eh1 = testAndApply(Objects::nonNull, entry.index,
-						x -> IterableUtils.get(PageUtil.querySelectorAll(page,
-								"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
-								Util.intValue(x, 0)),
-						null);
-				//
-				final ElementHandle eh2 = testAndApply(CollectionUtils::isNotEmpty,
-						ElementHandleUtil.querySelectorAll(eh1, "div"), x -> IterableUtils.get(x, 0), null);
-				//
-				final BoundingBox boundingBox = boundingBox(eh2);
-				//
-				testAndAccept(x -> startsWith(Strings.CS,
-						getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)),
-						"image/"), ElementHandleUtil.screenshot(eh1), x -> {
-							//
-							try {
+				if (StringUtils.isNotBlank(entry.pitchAccent)) {
+					//
+					final ElementHandle eh1 = testAndApply(Objects::nonNull, entry.index,
+							x -> IterableUtils.get(PageUtil.querySelectorAll(page,
+									"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
+									Util.intValue(x, 0)),
+							null);
+					//
+					final ElementHandle eh2 = testAndApply(CollectionUtils::isNotEmpty,
+							ElementHandleUtil.querySelectorAll(eh1, "div"), x -> IterableUtils.get(x, 0), null);
+					//
+					final BoundingBox boundingBox = boundingBox(eh2);
+					//
+					testAndAccept(x -> startsWith(Strings.CS,
+							getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)),
+							"image/"), ElementHandleUtil.screenshot(eh1), x -> {
 								//
-								entry.pitchAccentImage = chopImage(x, boundingBox);
+								try {
+									//
+									entry.pitchAccentImage = chopImage(x, boundingBox);
+									//
+								} catch (final IOException e) {
+									//
+									TaskDialogs.showException(e);
+									//
+								} // try
+									//
+							});
+					//
+				} else {
+					//
+					testAndAccept(
+							x -> startsWith(Strings.CS,
+									getMimeType(
+											testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)),
+									"image/"),
+							ElementHandleUtil.screenshot(testAndApply(x -> CollectionUtils.isNotEmpty(x),
+									ElementHandleUtil.querySelectorAll(testAndApply(Objects::nonNull, entry.index,
+											x -> IterableUtils.get(PageUtil.querySelectorAll(page,
+													"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
+													Util.intValue(x, 0)),
+											null), "div"),
+									x -> IterableUtils.get(x, 0), null)),
+							x -> {
 								//
-							} catch (final IOException e) {
-								//
-								TaskDialogs.showException(e);
-								//
-							} // try
-								//
-						});
-				//
+								try {
+									//
+									entry.pitchAccentImage = chopImage(x, null);
+									//
+								} catch (final IOException e) {
+									//
+									TaskDialogs.showException(e);
+									//
+								} // try
+									//
+							});
+					//
+				} // if
+					//
 			} // if
 				//
 			Util.setIcon(instance.pitchAccentImage, testAndApply(Objects::nonNull,
