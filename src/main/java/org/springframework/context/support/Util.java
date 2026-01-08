@@ -2391,6 +2391,7 @@ public abstract class Util {
 		}
 	}
 
+	@Nullable
 	static <T> Spliterator<T> spliterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.spliterator() : null;
 	}
