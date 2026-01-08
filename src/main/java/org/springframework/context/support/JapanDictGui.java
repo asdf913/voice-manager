@@ -50,6 +50,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
@@ -831,9 +832,28 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 								x -> Jsoup.parse(x, ""), null), "p span[class='h5']"),
 						x -> IterableUtils.get(x, 0), null));
 		//
-		entry.romaji = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1, ElementUtil.select(e, ".xxsmall"),
-				x -> IterableUtils.get(x, 0), null));
+		final Iterable<Element> es = ElementUtil.select(e, ".xxsmall");
 		//
+		if (IterableUtils.size(es) == 1) {
+			//
+			entry.romaji = ElementUtil.text(IterableUtils.get(es, 0));
+			//
+		} else {
+			//
+			final Iterable<String> ss = Util
+					.toList(Util.distinct(Util.map(testAndApply(Objects::nonNull, es != null ? es.spliterator() : null,
+							x -> StreamSupport.stream(x, false), null), ElementUtil::text)));
+			//
+			testAndRun(IterableUtils.size(ss) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			testAndAccept(x -> IterableUtils.size(x) == 1, ss, x -> entry.romaji = IterableUtils.get(x, 0));
+			//
+		} // if
+			//
 		entry.text = Util.toString(Util.get(map, "text"));
 		//
 		entry.index = Integer.valueOf(index);
