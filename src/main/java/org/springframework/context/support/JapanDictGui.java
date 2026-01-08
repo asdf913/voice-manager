@@ -1006,11 +1006,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	@Nullable
-	private static List<ElementHandle> querySelectorAll(@Nullable final Page instance, final String selector) {
-		return instance != null ? instance.querySelectorAll(selector) : null;
-	}
-
-	@Nullable
 	private static BufferedImage chopImage(@Nullable final BufferedImage bufferedImage) {
 		//
 		if (bufferedImage == null) {
@@ -1938,7 +1933,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			if (entry.pitchAccentImage == null) {
 				//
 				final ElementHandle eh1 = testAndApply(Objects::nonNull, entry.index,
-						x -> IterableUtils.get(querySelectorAll(page,
+						x -> IterableUtils.get(PageUtil.querySelectorAll(page,
 								"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
 								Util.intValue(x, 0)),
 						null);
@@ -2014,12 +2009,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			// Stroke With Number Image
 			//
 			check(testAndApply(x -> IterableUtils.size(x) == 1,
-					querySelectorAll(page, String.format("#dmak-show-stroke-check-%1$s", entry.id)),
+					PageUtil.querySelectorAll(page, String.format("#dmak-show-stroke-check-%1$s", entry.id)),
 					x -> IterableUtils.get(x, 0), null));
 			//
 			click(testAndApply(x -> IterableUtils.size(x) == 1,
-					querySelectorAll(page, String.format("#dmak-reset-%1$s", entry.id)), x -> IterableUtils.get(x, 0),
-					null));
+					PageUtil.querySelectorAll(page, String.format("#dmak-reset-%1$s", entry.id)),
+					x -> IterableUtils.get(x, 0), null));
 			//
 			if (entry.strokeWithNumberImage == null) {
 				//
@@ -2074,12 +2069,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				id, (a, b) -> b, null);
 		//
 		click(testAndApply(x -> IterableUtils.size(x) == 1,
-				querySelectorAll(page, String.format("#dmak-play-%1$s", idString)), x -> IterableUtils.get(x, 0),
-				null));
+				PageUtil.querySelectorAll(page, String.format("#dmak-play-%1$s", idString)),
+				x -> IterableUtils.get(x, 0), null));
 		//
 		final String dmakCssSelector = String.format("#dmak-%1$s", idString);
 		//
-		if ((testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, dmakCssSelector),
+		if ((testAndApply(x -> IterableUtils.size(x) == 1, PageUtil.querySelectorAll(page, dmakCssSelector),
 				x -> IterableUtils.get(x, 0), null)) == null) {
 			//
 			return null;

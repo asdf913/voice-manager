@@ -2736,15 +2736,23 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						browser = BrowserTypeUtil.launch(PlaywrightUtil.chromium(playwright = Playwright.create()))),
 						u);
 				//
-				final int size = IterableUtils.size(querySelectorAll(page, "#paginator a"));
+				final int size = IterableUtils.size(PageUtil.querySelectorAll(page, "#paginator a"));
 				//
 				if (size > 0) {
 					//
-					Util.put(map, "limit", NumberUtils
-							.toInt(Util.toString(jsonValue(getProperty(testAndApply(x -> IterableUtils.size(x) == 1,
-									querySelectorAll(page, "#search_limit"), x -> IterableUtils.get(x, 0), null),
-									VALUE))), 1)
-							* size);
+					Util.put(map, "limit",
+							NumberUtils
+									.toInt(Util
+											.toString(
+													jsonValue(
+															getProperty(
+																	testAndApply(x -> IterableUtils.size(x) == 1,
+																			PageUtil.querySelectorAll(page,
+																					"#search_limit"),
+																			x -> IterableUtils.get(x, 0), null),
+																	VALUE))),
+											1)
+									* size);
 					//
 					PageUtil.navigate(page = newPage(browser), u = createUrl(url, map));
 					//
@@ -2755,7 +2763,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			Util.forEach(Util.map(Util.sorted(Util.map(IntStream.range(1, Util.getSize(mcbmTextAndImage)), i -> -i)),
 					i -> -i), i -> Util.removeElementAt(mcbmTextAndImage, i));
 			//
-			final List<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
+			final List<ElementHandle> words = PageUtil.querySelectorAll(page, "tr[id^=\"word\"]");
 			//
 			final Collection<TextAndImage> textAndImages = getTextAndImages(url, textInput, map);
 			//
@@ -2849,15 +2857,23 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						browser = BrowserTypeUtil.launch(PlaywrightUtil.chromium(playwright = Playwright.create()))),
 						url);
 				//
-				final int size = IterableUtils.size(querySelectorAll(page, "#paginator a"));
+				final int size = IterableUtils.size(PageUtil.querySelectorAll(page, "#paginator a"));
 				//
 				if (size > 0) {
 					//
-					Util.put(map, "limit", NumberUtils
-							.toInt(Util.toString(jsonValue(getProperty(testAndApply(x -> IterableUtils.size(x) == 1,
-									querySelectorAll(page, "#search_limit"), x -> IterableUtils.get(x, 0), null),
-									VALUE))), 1)
-							* size);
+					Util.put(map, "limit",
+							NumberUtils
+									.toInt(Util
+											.toString(
+													jsonValue(
+															getProperty(
+																	testAndApply(x -> IterableUtils.size(x) == 1,
+																			PageUtil.querySelectorAll(page,
+																					"#search_limit"),
+																			x -> IterableUtils.get(x, 0), null),
+																	VALUE))),
+											1)
+									* size);
 					//
 					PageUtil.navigate(page = newPage(browser), url = createUrl(baseUrl, map));
 					//
@@ -2865,12 +2881,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 			} // if
 				//
-			final List<ElementHandle> ehs = querySelectorAll(page, ".katsuyo_accent");
+			final List<ElementHandle> ehs = PageUtil.querySelectorAll(page, ".katsuyo_accent");
 			//
-			final List<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
+			final List<ElementHandle> words = PageUtil.querySelectorAll(page, "tr[id^=\"word\"]");
 			//
 			final Iterable<String> partOfSpeeches = Util.toList(Util.map(
-					Util.filter(Util.stream(querySelectorAll(page, CSS_SELECTOR_MIDASHI)),
+					Util.filter(Util.stream(PageUtil.querySelectorAll(page, CSS_SELECTOR_MIDASHI)),
 							x -> IterableUtils.isEmpty(querySelectorAll(x, "div"))),
 					x -> StringUtils.trim(textContent(x))));
 			//
@@ -2900,7 +2916,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				Util.forEach(Util.stream(textAndImages), x -> setPartOfSpeech(x, IterableUtils.get(partOfSpeeches, 0)));
 				//
 				testAndAccept(items -> IterableUtils.size(items) == 1,
-						Util.toList(Util.filter(Util.stream(querySelectorAll(page, "thead tr th")),
+						Util.toList(Util.filter(Util.stream(PageUtil.querySelectorAll(page, "thead tr th")),
 								el -> Util.anyMatch(
 										testAndApply(Objects::nonNull, StringUtils.split(getAttribute(el, CLASS), " "),
 												Arrays::stream, null),
@@ -3007,8 +3023,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				// word
 				//
 			final Iterable<ElementHandle> words = testAndApply((a, b) -> StringUtils.isNotBlank(b), page, input.id,
-					(a, b) -> querySelectorAll(a, String.format("tr[id=\"%1$s\"]", b)),
-					(a, b) -> querySelectorAll(a, "tr[id^=\"word\"]"));
+					(a, b) -> PageUtil.querySelectorAll(a, String.format("tr[id=\"%1$s\"]", b)),
+					(a, b) -> PageUtil.querySelectorAll(a, "tr[id^=\"word\"]"));
 			//
 			testAndRunThrows(IterableUtils.size(words) > 1, () -> {
 				//
@@ -3059,8 +3075,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				ElementHandle eh = null;
 				//
-				final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, THEAD),
-						x -> IterableUtils.get(x, 0), null);
+				final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1,
+						PageUtil.querySelectorAll(page, THEAD), x -> IterableUtils.get(x, 0), null);
 				//
 				final Iterable<ElementHandle> ths = querySelectorAll(thead, "th");
 				//
@@ -3105,7 +3121,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			testAndAccept((a, b) -> IterableUtils.size(b) == 1, textAndImages,
 					Util.toList(Util.map(
-							Util.filter(Util.stream(querySelectorAll(page, CSS_SELECTOR_MIDASHI)),
+							Util.filter(Util.stream(PageUtil.querySelectorAll(page, CSS_SELECTOR_MIDASHI)),
 									x -> IterableUtils.isEmpty(querySelectorAll(x, "div"))),
 							x -> StringUtils.trim(textContent(x)))),
 					(a, b) -> Util.forEach(Util.stream(a), x -> setPartOfSpeech(x, IterableUtils.get(b, 0))));
@@ -3419,8 +3435,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			textAndImage.hiragana = StringUtils.trim(textContent(eh));
 			//
-			final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, THEAD),
-					x -> IterableUtils.get(x, 0), null);
+			final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1,
+					PageUtil.querySelectorAll(page, THEAD), x -> IterableUtils.get(x, 0), null);
 			//
 			textAndImage.conjugation = StringUtils.trim(textContent(testAndApply(x -> IterableUtils.size(x) > 2,
 					querySelectorAll(thead, "th"), x -> IterableUtils.get(x, 2), null)));
@@ -3489,8 +3505,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		final org.apache.commons.lang3.Strings strings = org.apache.commons.lang3.Strings.CS;
 		//
-		final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, THEAD),
-				x -> IterableUtils.get(x, 0), null);
+		final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1,
+				PageUtil.querySelectorAll(page, THEAD), x -> IterableUtils.get(x, 0), null);
 		//
 		final Iterable<ElementHandle> ths = querySelectorAll(thead, "th");
 		//
@@ -3589,8 +3605,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
-		final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1, querySelectorAll(page, THEAD),
-				x -> IterableUtils.get(x, 0), null);
+		final ElementHandle thead = testAndApply(x -> IterableUtils.size(x) == 1,
+				PageUtil.querySelectorAll(page, THEAD), x -> IterableUtils.get(x, 0), null);
 		//
 		final Iterable<ElementHandle> ths = querySelectorAll(thead, "th");
 		//
@@ -4132,11 +4148,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Nullable
 	private static Page newPage(@Nullable final Browser instance) {
 		return instance != null ? instance.newPage() : null;
-	}
-
-	@Nullable
-	private static List<ElementHandle> querySelectorAll(@Nullable final Page instance, final String selector) {
-		return instance != null ? instance.querySelectorAll(selector) : null;
 	}
 
 	@Nullable
