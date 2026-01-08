@@ -764,7 +764,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static void setRowSelectionInterval(final JTable instance, final int row, final int column) {
+	private static void setRowSelectionInterval(@Nullable final JTable instance, final int row, final int column) {
 		if (instance != null && instance.getModel() != null) {
 			instance.setRowSelectionInterval(row, column);
 		}
