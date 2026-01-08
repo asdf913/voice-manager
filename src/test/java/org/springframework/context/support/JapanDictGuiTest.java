@@ -88,7 +88,7 @@ class JapanDictGuiTest {
 			METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2,
 			METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE, METHOD_GET_COLUMN_NAME,
 			METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND, METHOD_PREPARE_RENDERER,
-			METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT = null;
+			METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT, METHOD_SET_ROW_SELECTION_INTERVAL = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -176,6 +176,9 @@ class JapanDictGuiTest {
 				Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_COLUMN_COUNT = Util.getDeclaredMethod(clz, "getColumnCount", JTable.class)).setAccessible(true);
+		//
+		(METHOD_SET_ROW_SELECTION_INTERVAL = Util.getDeclaredMethod(clz, "setRowSelectionInterval", JTable.class,
+				Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -1212,6 +1215,14 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertEquals(Integer.valueOf(ONE),
 				invoke(METHOD_GET_COLUMN_COUNT, null, new JTable(new DefaultTableModel(new Object[] { null }, ZERO))));
+		//
+	}
+
+	@Test
+	void testSetRowSelectionInterval() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_SET_ROW_SELECTION_INTERVAL, null,
+				new JTable(new DefaultTableModel(new Object[] { null }, ONE)), ZERO, ZERO));
 		//
 	}
 
