@@ -150,7 +150,7 @@ class AivisSpeechRestApiJPanelTest {
 
 	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_CREATE_HOST_AND_PORT, METHOD_WRITE,
 			METHOD_REMOVE_ALL_ELEMENTS, METHOD_GET_SCREEN_SIZE, METHOD_GET_HOST, METHOD_TEST_AND_ACCEPT_PREDICATE,
-			METHOD_TEST_AND_ACCEPT_INT_PREDICATE, METHOD_TEST_AND_ACCEPT4, METHOD_SET_VISIBLE, METHOD_PACK, METHOD_ADD,
+			METHOD_TEST_AND_ACCEPT_INT_PREDICATE, METHOD_TEST_AND_ACCEPT4, METHOD_PACK, METHOD_ADD,
 			METHOD_SET_DEFAULT_CLOSE_OPERATION, METHOD_SPEAKERS_HOST_AND_PORT, METHOD_SPEAKERS_ITERABLE,
 			METHOD_AUDIO_QUERY, METHOD_SYNTHESIS, METHOD_LENGTH_BYTE_ARRAY, METHOD_LENGTH_OBJECT_ARRAY,
 			METHOD_TEST_AND_RUN2, METHOD_TEST_AND_RUN3, METHOD_ADD_ITEM_LISTENER, METHOD_SPEAKER_INFO_HOST_AND_PORT,
@@ -193,8 +193,6 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_TEST_AND_ACCEPT4 = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
 				FailableBiConsumer.class)).setAccessible(true);
-		//
-		(METHOD_SET_VISIBLE = clz.getDeclaredMethod("setVisible", Component.class, Boolean.TYPE)).setAccessible(true);
 		//
 		(METHOD_PACK = clz.getDeclaredMethod("pack", Window.class)).setAccessible(true);
 		//
@@ -1454,14 +1452,6 @@ class AivisSpeechRestApiJPanelTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
-	}
-
-	@Test
-	void testSetVisible() throws Throwable {
-		//
-		Assertions
-				.assertNull(invoke(METHOD_SET_VISIBLE, null, ProxyUtil.createProxy(Component.class, mh), Boolean.TRUE));
-		//
 	}
 
 	@Test

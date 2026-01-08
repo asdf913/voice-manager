@@ -34,7 +34,6 @@ import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
@@ -81,22 +80,19 @@ class JapanDictGuiTest {
 
 	private static final int ONE = 1;
 
-	private static Method METHOD_SET_VISIBLE, METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT,
-			METHOD_STARTS_WITH, METHOD_APPEND, METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG,
-			METHOD_TEST_AND_ACCEPT4, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN, METHOD_GET_SYSTEM_CLIP_BOARD,
-			METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES,
-			METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2,
-			METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE, METHOD_GET_COLUMN_NAME,
-			METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND, METHOD_PREPARE_RENDERER,
-			METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT, METHOD_SET_ROW_SELECTION_INTERVAL = null;
+	private static Method METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT, METHOD_STARTS_WITH, METHOD_APPEND,
+			METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG, METHOD_TEST_AND_ACCEPT4, METHOD_GET_AUDIO_URL,
+			METHOD_TEST_AND_RUN, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
+			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL,
+			METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE,
+			METHOD_GET_COLUMN_NAME, METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND,
+			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
+			METHOD_SET_ROW_SELECTION_INTERVAL = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
 		//
 		final Class<?> clz = JapanDictGui.class;
-		//
-		(METHOD_SET_VISIBLE = Util.getDeclaredMethod(clz, "setVisible", Component.class, Boolean.TYPE))
-				.setAccessible(true);
 		//
 		(METHOD_TEST_AND_GET = Util.getDeclaredMethod(clz, "testAndGet", Boolean.TYPE, FailableSupplier.class))
 				.setAccessible(true);
@@ -754,13 +750,6 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertDoesNotThrow(
 				() -> instance.actionPerformed(new ActionEvent(btnCopyStrokeWithNumberImage, 0, null)));
-		//
-	}
-
-	@Test
-	void testSetVisible() throws IllegalAccessException, InvocationTargetException {
-		//
-		Assertions.assertNull(invoke(METHOD_SET_VISIBLE, null, new JLabel(), Boolean.TRUE));
 		//
 	}
 

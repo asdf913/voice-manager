@@ -4116,7 +4116,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		if (gui) {
 			//
-			jFrame.setVisible(true);
+			Util.setVisible(jFrame, true);
 			//
 		} // if
 			//

@@ -1,6 +1,5 @@
 package org.springframework.context.support;
 
-import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.Window;
 import java.io.ByteArrayOutputStream;
@@ -24,7 +23,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import javax.swing.JList;
-import javax.swing.JTextField;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
@@ -64,7 +62,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class MainTest {
 
 	private static Method METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_GET_BEAN_NAMES_FOR_TYPE,
-			METHOD_PACK, METHOD_SET_VISIBLE, METHOD_TEST_AND_APPLY, METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS3,
+			METHOD_PACK, METHOD_TEST_AND_APPLY, METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS3,
 			METHOD_IS_RAISE_THROWABLE_ONLY, METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_METHOD = null;
 
 	@BeforeAll
@@ -82,8 +80,6 @@ class MainTest {
 				Class.class)).setAccessible(true);
 		//
 		(METHOD_PACK = clz.getDeclaredMethod("pack", Window.class)).setAccessible(true);
-		//
-		(METHOD_SET_VISIBLE = clz.getDeclaredMethod("setVisible", Component.class, Boolean.TYPE)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -435,23 +431,6 @@ class MainTest {
 	private static void pack(final Window instance) throws Throwable {
 		try {
 			METHOD_PACK.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetVisible() {
-		//
-		Assertions.assertDoesNotThrow(() -> setVisible(null, false));
-		//
-		Assertions.assertDoesNotThrow(() -> setVisible(new JTextField(), false));
-		//
-	}
-
-	private static void setVisible(final Component instance, boolean b) throws Throwable {
-		try {
-			METHOD_SET_VISIBLE.invoke(null, instance, b);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

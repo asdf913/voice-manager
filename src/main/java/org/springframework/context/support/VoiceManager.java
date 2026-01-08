@@ -26,8 +26,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -633,7 +631,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				final boolean visible = jtp.getTabCount() > selectedIndex && selectedIndex >= 0
 						&& ArrayUtils.contains(importTabNames, jtp.getTitleAt(selectedIndex));
 				//
-				setVisible(component, visible);
+				Util.setVisible(component, visible);
 				//
 				final Dimension size = jtp.getSize();
 				//
@@ -1093,12 +1091,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	@Nullable
 	private static TemplateLoader getTemplateLoader(@Nullable final freemarker.template.Configuration instance) {
 		return instance != null ? instance.getTemplateLoader() : null;
-	}
-
-	private static void setVisible(@Nullable final Component instance, final boolean b) {
-		if (instance != null) {
-			instance.setVisible(b);
-		}
 	}
 
 	@Nullable
@@ -2365,7 +2357,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		instance.pack();
 		//
-		setVisible(instance, true);
+		Util.setVisible(instance, true);
 		//
 	}
 

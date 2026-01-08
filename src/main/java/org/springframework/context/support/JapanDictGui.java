@@ -1711,7 +1711,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		pack(instance.window = jFrame);
 		//
-		setVisible(jFrame, true);
+		Util.setVisible(jFrame, true);
 		//
 	}
 
@@ -1783,12 +1783,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private static boolean isTestMode() {
 		return Util.forName("org.junit.jupiter.api.Test") != null;
-	}
-
-	private static void setVisible(@Nullable final Component instance, final boolean visible) {
-		if (instance != null) {
-			instance.setVisible(visible);
-		}
 	}
 
 	private static void pack(@Nullable final Window instance) {

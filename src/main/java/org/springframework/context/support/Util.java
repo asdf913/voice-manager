@@ -2384,4 +2384,10 @@ public abstract class Util {
 		}
 	}
 
+	static void setVisible(final Component instance, final boolean visible) {
+		if (instance != null) {
+			instance.setVisible(visible);
+		}
+	}
+
 }

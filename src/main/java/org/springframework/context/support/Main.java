@@ -323,7 +323,7 @@ public class Main {
 			//
 			pack(Util.cast(Window.class, instance));
 			//
-			setVisible(Util.cast(Component.class, instance), true);
+			Util.setVisible(Util.cast(Component.class, instance), true);
 			//
 		} // try
 			//
@@ -534,12 +534,6 @@ public class Main {
 			//
 		return false;
 		//
-	}
-
-	private static void setVisible(@Nullable final Component instance, boolean b) {
-		if (instance != null) {
-			instance.setVisible(b);
-		}
 	}
 
 	@Nullable
