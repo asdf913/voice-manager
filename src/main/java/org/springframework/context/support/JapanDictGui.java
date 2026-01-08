@@ -132,6 +132,7 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.PageUtil;
 import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.PlaywrightUtil;
 import com.microsoft.playwright.options.BoundingBox;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -1154,11 +1155,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	@Nullable
-	private static BrowserType chromium(@Nullable final Playwright instance) {
-		return instance != null ? instance.chromium() : null;
-	}
-
-	@Nullable
 	private static int[] getJlptLevelIndices(final ComboBoxModel<String> cbm, final String text) {
 		//
 		int[] ints = null;
@@ -1928,15 +1924,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				Boolean.logicalOr(entry.pitchAccentImage == null, entry.strokeImage == null), Playwright::create);
 				final Browser browser = testAndApply(
 						Predicates.always(UrlValidatorUtil.isValid(UrlValidator.getInstance(), pageUrl)), playwright,
-						x -> BrowserTypeUtil
-								.launch(ObjectUtils
-										.getIfNull(
-												Util.cast(BrowserType.class,
-														testAndApply(Objects::nonNull,
-																testAndApply(y -> IterableUtils.size(y) == 1, ms,
-																		y -> IterableUtils.get(y, 0), null),
-																y -> Narcissus.invokeMethod(x, y), null)),
-												() -> chromium(x))),
+						x -> BrowserTypeUtil.launch(ObjectUtils.getIfNull(
+								Util.cast(BrowserType.class, testAndApply(Objects::nonNull,
+										testAndApply(y -> IterableUtils.size(y) == 1, ms, y -> IterableUtils.get(y, 0),
+												null),
+										y -> Narcissus.invokeMethod(x, y), null)),
+								() -> PlaywrightUtil.chromium(x))),
 						null);
 				final Page page = newPage(browser)) {
 			//
@@ -2007,15 +2000,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		try (final Playwright playwright = testAndGet(entry.strokeWithNumberImage == null, Playwright::create);
 				final Browser browser = testAndApply(
 						Predicates.always(UrlValidatorUtil.isValid(UrlValidator.getInstance(), pageUrl)), playwright,
-						x -> BrowserTypeUtil
-								.launch(ObjectUtils
-										.getIfNull(
-												Util.cast(BrowserType.class,
-														testAndApply(Objects::nonNull,
-																testAndApply(y -> IterableUtils.size(y) == 1, ms,
-																		y -> IterableUtils.get(y, 0), null),
-																y -> Narcissus.invokeMethod(x, y), null)),
-												() -> chromium(x))),
+						x -> BrowserTypeUtil.launch(ObjectUtils.getIfNull(
+								Util.cast(BrowserType.class, testAndApply(Objects::nonNull,
+										testAndApply(y -> IterableUtils.size(y) == 1, ms, y -> IterableUtils.get(y, 0),
+												null),
+										y -> Narcissus.invokeMethod(x, y), null)),
+								() -> PlaywrightUtil.chromium(x))),
 						null);
 				final Page page = newPage(browser)) {
 			//

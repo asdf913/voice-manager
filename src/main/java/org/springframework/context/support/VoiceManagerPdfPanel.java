@@ -250,6 +250,7 @@ import com.microsoft.playwright.BrowserTypeUtil;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.PageUtil;
 import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.PlaywrightUtil;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.WString;
@@ -888,7 +889,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			if (size == 0) {
 				//
-				return chromium(playWright);
+				return PlaywrightUtil.chromium(playWright);
 				//
 			} else if (size > 1) {
 				//
@@ -919,16 +920,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		this.voiceIdListCellRendererConverter = voiceIdListCellRendererConverter;
 	}
 
-	@Nullable
-	private static BrowserType chromium(@Nullable final Playwright instance) {
-		return instance != null ? instance.chromium() : null;
-	}
-
 	private FailableFunction<Playwright, BrowserType, ReflectiveOperationException> getPlaywrightBrowserTypeFunction() {
 		//
 		if (playwrightBrowserTypeFunction == null) {
 			//
-			playwrightBrowserTypeFunction = VoiceManagerPdfPanel::chromium;
+			playwrightBrowserTypeFunction = PlaywrightUtil::chromium;
 			//
 		} // if
 			//

@@ -180,13 +180,13 @@ import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Browser;
-import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.BrowserTypeUtil;
 import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.JSHandle;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.PageUtil;
 import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.PlaywrightUtil;
 
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.ext.beans.BeansWrapper;
@@ -1945,7 +1945,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			TemplateUtil.process(template, map, w);
 			//
-			final Page page = newPage(BrowserTypeUtil.launch(chromium(playwright)));
+			final Page page = newPage(BrowserTypeUtil.launch(PlaywrightUtil.chromium(playwright)));
 			//
 			setContent(page, Util.toString(w));
 			//
@@ -2732,8 +2732,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			if (!testMode) {
 				//
-				PageUtil.navigate(
-						page = newPage(browser = BrowserTypeUtil.launch(chromium(playwright = Playwright.create()))),
+				PageUtil.navigate(page = newPage(
+						browser = BrowserTypeUtil.launch(PlaywrightUtil.chromium(playwright = Playwright.create()))),
 						u);
 				//
 				final int size = IterableUtils.size(querySelectorAll(page, "#paginator a"));
@@ -2845,8 +2845,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			if (!testMode) {
 				//
-				PageUtil.navigate(
-						page = newPage(browser = BrowserTypeUtil.launch(chromium(playwright = Playwright.create()))),
+				PageUtil.navigate(page = newPage(
+						browser = BrowserTypeUtil.launch(PlaywrightUtil.chromium(playwright = Playwright.create()))),
 						url);
 				//
 				final int size = IterableUtils.size(querySelectorAll(page, "#paginator a"));
@@ -2998,8 +2998,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			if (!isTestMode()) {
 				//
-				PageUtil.navigate(
-						page = newPage(browser = BrowserTypeUtil.launch(chromium(playwright = Playwright.create()))),
+				PageUtil.navigate(page = newPage(
+						browser = BrowserTypeUtil.launch(PlaywrightUtil.chromium(playwright = Playwright.create()))),
 						url);
 				//
 			} // if
@@ -4127,11 +4127,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Nullable
 	private static ContentInfo findMatch(@Nullable final ContentInfoUtil instance, @Nullable final byte[] bytes) {
 		return instance != null && bytes != null ? instance.findMatch(bytes) : null;
-	}
-
-	@Nullable
-	private static BrowserType chromium(@Nullable final Playwright instance) {
-		return instance != null ? instance.chromium() : null;
 	}
 
 	@Nullable
