@@ -80,6 +80,8 @@ class JapanDictGuiTest {
 
 	private static final int ONE = 1;
 
+	private static Class<?> CLASS_JAPAN_DICT_ENTRY = null;
+
 	private static Method METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT, METHOD_STARTS_WITH, METHOD_APPEND,
 			METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG, METHOD_TEST_AND_ACCEPT4, METHOD_GET_AUDIO_URL,
 			METHOD_TEST_AND_RUN, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
@@ -87,7 +89,7 @@ class JapanDictGuiTest {
 			METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE,
 			METHOD_GET_COLUMN_NAME, METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND,
 			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
-			METHOD_SET_ROW_SELECTION_INTERVAL = null;
+			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_GET_PITCH_ACCENT_IMAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -175,6 +177,11 @@ class JapanDictGuiTest {
 		//
 		(METHOD_SET_ROW_SELECTION_INTERVAL = Util.getDeclaredMethod(clz, "setRowSelectionInterval", JTable.class,
 				Integer.TYPE, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_GET_PITCH_ACCENT_IMAGE = Util.getDeclaredMethod(clz, "getPitchAccentImage",
+				CLASS_JAPAN_DICT_ENTRY = Util
+						.forName("org.springframework.context.support.JapanDictGui$JapanDictEntry"),
+				Page.class)).setAccessible(true);
 		//
 	}
 
@@ -1221,6 +1228,17 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertNull(invoke(METHOD_SET_ROW_SELECTION_INTERVAL, null,
 				new JTable(new DefaultTableModel(new Object[] { null }, ONE)), ZERO, ZERO));
+		//
+	}
+
+	@Test
+	void testGetPitchAccentImage() throws IllegalAccessException, InvocationTargetException {
+		//
+		final Object JapanDictEntry = Narcissus.allocateInstance(CLASS_JAPAN_DICT_ENTRY);
+		//
+		FieldUtils.writeDeclaredField(JapanDictEntry, "pitchAccent", "a", true);
+		//
+		Assertions.assertNull(invoke(METHOD_GET_PITCH_ACCENT_IMAGE, null, JapanDictEntry, null));
 		//
 	}
 

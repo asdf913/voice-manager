@@ -1998,64 +1998,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			if (entry.pitchAccentImage == null) {
 				//
-				if (StringUtils.isNotBlank(entry.pitchAccent)) {
+				try {
 					//
-					final ElementHandle eh1 = testAndApply(Objects::nonNull, entry.index,
-							x -> IterableUtils.get(PageUtil.querySelectorAll(page,
-									"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
-									Util.intValue(x, 0)),
-							null);
+					entry.pitchAccentImage = getPitchAccentImage(entry, page);
 					//
-					final ElementHandle eh2 = testAndApply(CollectionUtils::isNotEmpty,
-							ElementHandleUtil.querySelectorAll(eh1, "div"), x -> IterableUtils.get(x, 0), null);
+				} catch (final IOException e) {
 					//
-					final BoundingBox boundingBox = boundingBox(eh2);
+					TaskDialogs.showException(e);
 					//
-					testAndAccept(x -> startsWith(Strings.CS,
-							getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)),
-							"image/"), ElementHandleUtil.screenshot(eh1), x -> {
-								//
-								try {
-									//
-									entry.pitchAccentImage = chopImage(x, boundingBox);
-									//
-								} catch (final IOException e) {
-									//
-									TaskDialogs.showException(e);
-									//
-								} // try
-									//
-							});
-					//
-				} else {
-					//
-					testAndAccept(
-							x -> startsWith(Strings.CS,
-									getMimeType(
-											testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)),
-									"image/"),
-							ElementHandleUtil.screenshot(testAndApply(CollectionUtils::isNotEmpty,
-									ElementHandleUtil.querySelectorAll(testAndApply(Objects::nonNull, entry.index,
-											x -> IterableUtils.get(PageUtil.querySelectorAll(page,
-													"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
-													Util.intValue(x, 0)),
-											null), "div"),
-									x -> IterableUtils.get(x, 0), null)),
-							x -> {
-								//
-								try {
-									//
-									entry.pitchAccentImage = chopImage(x, null);
-									//
-								} catch (final IOException e) {
-									//
-									TaskDialogs.showException(e);
-									//
-								} // try
-									//
-							});
-					//
-				} // if
+				} // try
 					//
 			} // if
 				//
@@ -2139,6 +2090,55 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // try
 			//
 		pack(instance.window);
+		//
+	}
+
+	private static BufferedImage getPitchAccentImage(final JapanDictEntry japanDictEntry, final Page page)
+			throws IOException {
+		//
+		if (japanDictEntry == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		if (StringUtils.isNotBlank(japanDictEntry.pitchAccent)) {
+			//
+			final ElementHandle eh1 = testAndApply(Objects::nonNull, japanDictEntry.index,
+					x -> IterableUtils.get(PageUtil.querySelectorAll(page,
+							"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
+							Util.intValue(x, 0)),
+					null);
+			//
+			final ElementHandle eh2 = testAndApply(CollectionUtils::isNotEmpty,
+					ElementHandleUtil.querySelectorAll(eh1, "div"), x -> IterableUtils.get(x, 0), null);
+			//
+			final BoundingBox boundingBox = boundingBox(eh2);
+			//
+			return testAndApply(x -> startsWith(Strings.CS,
+					getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)), "image/"),
+					ElementHandleUtil.screenshot(eh1), x -> {
+						//
+						return chopImage(x, boundingBox);
+						//
+					}, null);
+			//
+		} // if
+			//
+		return testAndApply(x -> startsWith(Strings.CS,
+				getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)), "image/"),
+				ElementHandleUtil.screenshot(testAndApply(CollectionUtils::isNotEmpty,
+						ElementHandleUtil.querySelectorAll(testAndApply(Objects::nonNull, japanDictEntry.index,
+								x -> IterableUtils.get(PageUtil.querySelectorAll(page,
+										"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
+										Util.intValue(x, 0)),
+								null), "div"),
+						x -> IterableUtils.get(x, 0), null)),
+				x -> {
+					//
+					return chopImage(x, null);
+					//
+				}, null);
 		//
 	}
 
