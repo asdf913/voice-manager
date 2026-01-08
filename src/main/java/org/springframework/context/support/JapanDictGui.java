@@ -2117,11 +2117,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			return testAndApply(x -> startsWith(Strings.CS,
 					getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)), "image/"),
-					ElementHandleUtil.screenshot(eh1), x -> {
-						//
-						return chopImage(x, boundingBox);
-						//
-					}, null);
+					ElementHandleUtil.screenshot(eh1), x -> chopImage(x, boundingBox), null);
 			//
 		} // if
 			//
@@ -2134,11 +2130,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 										Util.intValue(x, 0)),
 								null), "div"),
 						x -> IterableUtils.get(x, 0), null)),
-				x -> {
-					//
-					return chopImage(x, null);
-					//
-				}, null);
+				x -> chopImage(x, null), null);
 		//
 	}
 
