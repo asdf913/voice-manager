@@ -44,6 +44,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.Spliterator;
 import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -2388,6 +2389,10 @@ public abstract class Util {
 		if (instance != null) {
 			instance.setVisible(visible);
 		}
+	}
+
+	static <T> Spliterator<T> spliterator(final Iterable<T> instance) {
+		return instance != null ? instance.spliterator() : null;
 	}
 
 }

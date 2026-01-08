@@ -30,7 +30,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Spliterator;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -283,7 +282,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 				IOUtils.closeQuietly(workbook);
 				//
-				final IntStream intStream = Util.mapToInt(testAndApply(Objects::nonNull, spliterator(workbook),
+				final IntStream intStream = Util.mapToInt(testAndApply(Objects::nonNull, Util.spliterator(workbook),
 						x -> StreamSupport.stream(x, false), null), x -> Util.intValue(getPhysicalNumberOfRows(x), 0));
 				//
 				final Integer totalPhysicalNumberOfRows = intStream != null ? Integer.valueOf(intStream.sum()) : null;
@@ -602,11 +601,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		if (instance != null) {
 			instance.setFillPattern(fillPatternType);
 		}
-	}
-
-	@Nullable
-	private static <T> Spliterator<T> spliterator(@Nullable final Iterable<T> instance) {
-		return instance != null ? instance.spliterator() : null;
 	}
 
 	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,

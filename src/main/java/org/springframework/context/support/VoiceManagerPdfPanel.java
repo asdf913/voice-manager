@@ -671,7 +671,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		} else if (object instanceof Iterable) {
 			//
 			value = Unit.with(Util.toList(
-					Util.map(StreamSupport.stream(((Iterable<?>) object).spliterator(), false), Util::toString)));
+					Util.map(StreamSupport.stream(Util.spliterator(((Iterable<?>) object)), false), Util::toString)));
 			//
 		} else if (clz != null && clz.isArray()) {
 			//

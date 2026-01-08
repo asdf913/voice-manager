@@ -68,8 +68,8 @@ class JouYouKanjiGuiTest {
 			METHOD_GET_CSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY, METHOD_SET_PREFERRED_WIDTH,
 			METHOD_GET_BOOLEAN_VALUES, METHOD_GET_EXPRESSION_AS_CSS_STRING, METHOD_GET_INDEXED_COLORS,
 			METHOD_GET_STYLES_SOURCE, METHOD_GET_PROPERTY, METHOD_TO_MILLIS, METHOD_SET_FILL_BACK_GROUND_COLOR,
-			METHOD_SET_FILL_PATTERN, METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
-			METHOD_SET_AUTO_FILTER, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_PREPEND_IF_MISSING = null;
+			METHOD_SET_FILL_PATTERN, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_SET_AUTO_FILTER,
+			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_PREPEND_IF_MISSING = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -107,8 +107,6 @@ class JouYouKanjiGuiTest {
 		//
 		(METHOD_SET_FILL_PATTERN = clz.getDeclaredMethod("setFillPattern", CellStyle.class, FillPatternType.class))
 				.setAccessible(true);
-		//
-		(METHOD_SPLITERATOR = clz.getDeclaredMethod("spliterator", Iterable.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT3 = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
 				FailableConsumer.class)).setAccessible(true);
@@ -739,29 +737,6 @@ class JouYouKanjiGuiTest {
 			throws Throwable {
 		try {
 			METHOD_SET_FILL_PATTERN.invoke(null, instance, fillPatternType);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSpliterator() throws Throwable {
-		//
-		Assertions.assertNull(spliterator(null));
-		//
-		Assertions.assertNull(spliterator(Reflection.newProxy(Iterable.class, ih)));
-		//
-	}
-
-	private static <T> Spliterator<T> spliterator(final Iterable<T> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_SPLITERATOR.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Spliterator) {
-				return (Spliterator) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

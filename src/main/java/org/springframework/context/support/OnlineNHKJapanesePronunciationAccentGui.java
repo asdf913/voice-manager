@@ -258,8 +258,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		} else if (object instanceof Iterable) {
 			//
-			value = Unit.with(Util.toList(Util.map(StreamSupport.stream(((Iterable<?>) object).spliterator(), false),
-					x -> Util.toString(x))));
+			value = Unit
+					.with(Util.toList(Util.map(StreamSupport.stream(Util.spliterator(((Iterable<?>) object)), false),
+							x -> Util.toString(x))));
 			//
 		} else if (clz != null && clz.isArray()) {
 			//

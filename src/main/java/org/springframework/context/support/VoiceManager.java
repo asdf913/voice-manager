@@ -1278,8 +1278,9 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			try {
 				//
-				final Spliterator<?> spliterator = spliterator(Util.cast(Iterable.class, testAndApply(Objects::nonNull,
-						instance, x -> FieldUtils.readField(x, "children", true), null)));
+				final Spliterator<?> spliterator = Util
+						.spliterator(Util.cast(Iterable.class, testAndApply(Objects::nonNull, instance,
+								x -> FieldUtils.readField(x, "children", true), null)));
 				//
 				final Stream<?> stream = testAndApply(Objects::nonNull, spliterator,
 						x -> StreamSupport.stream(x, false), null);
@@ -1300,8 +1301,9 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			try {
 				//
-				final Spliterator<?> spliterator = spliterator(Util.cast(Iterable.class, testAndApply(Objects::nonNull,
-						instance, x -> FieldUtils.readField(x, "attributes", true), null)));
+				final Spliterator<?> spliterator = Util
+						.spliterator(Util.cast(Iterable.class, testAndApply(Objects::nonNull, instance,
+								x -> FieldUtils.readField(x, "attributes", true), null)));
 				//
 				final Stream<?> stream = testAndApply(Objects::nonNull, spliterator,
 						x -> StreamSupport.stream(x, false), null);
@@ -2259,11 +2261,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		Util.clear(instance != null ? instance.getDataVector() : null);
 		//
-	}
-
-	@Nullable
-	private static <T> Spliterator<T> spliterator(@Nullable final Iterable<T> instance) {
-		return instance != null ? instance.spliterator() : null;
 	}
 
 	private static <T, E extends Throwable> void forEach(@Nullable final Iterable<T> items,

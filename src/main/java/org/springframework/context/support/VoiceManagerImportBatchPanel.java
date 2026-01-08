@@ -50,7 +50,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.Spliterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -1777,7 +1776,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			final int maxSheetNameLength = Util
 					.orElse(Util.max(Util.mapToInt(
-							Util.map(testAndApply(Objects::nonNull, spliterator(workbook),
+							Util.map(testAndApply(Objects::nonNull, Util.spliterator(workbook),
 									x -> StreamSupport.stream(x, false), null), SheetUtil::getSheetName),
 							StringUtils::length)), 0);
 			//
@@ -2630,11 +2629,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 		return currentSheetIndex;
 		//
-	}
-
-	@Nullable
-	private static <T> Spliterator<T> spliterator(@Nullable final Iterable<T> instance) {
-		return instance != null ? instance.spliterator() : null;
 	}
 
 	@Nullable

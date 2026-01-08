@@ -840,9 +840,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} else {
 			//
-			final Iterable<String> ss = Util
-					.toList(Util.distinct(Util.map(testAndApply(Objects::nonNull, es != null ? es.spliterator() : null,
-							x -> StreamSupport.stream(x, false), null), ElementUtil::text)));
+			final Iterable<String> ss = Util.toList(Util.distinct(Util.map(
+					testAndApply(Objects::nonNull, Util.spliterator(es), x -> StreamSupport.stream(x, false), null),
+					ElementUtil::text)));
 			//
 			testAndRun(IterableUtils.size(ss) > 1, () -> {
 				//

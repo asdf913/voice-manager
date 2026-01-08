@@ -50,7 +50,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Spliterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -1193,9 +1192,10 @@ public class AivisSpeechRestApiJPanel extends JPanel
 
 	private static StyleInfo getStyleInfoById(final Iterable<StyleInfo> styleInfos, final String id) {
 		//
-		final Iterable<StyleInfo> iterable = Util.collect(Util.filter(
-				testAndApply(Objects::nonNull, spliterator(styleInfos), x -> StreamSupport.stream(x, false), null),
-				z -> z != null && Objects.equals(z.id, id)), Collectors.toList());
+		final Iterable<StyleInfo> iterable = Util.collect(
+				Util.filter(testAndApply(Objects::nonNull, Util.spliterator(styleInfos),
+						x -> StreamSupport.stream(x, false), null), z -> z != null && Objects.equals(z.id, id)),
+				Collectors.toList());
 		//
 		if (IterableUtils.size(iterable) > 1) {
 			//
@@ -1317,14 +1317,9 @@ public class AivisSpeechRestApiJPanel extends JPanel
 	private static Collection<?> toCollection(final Iterable<?> iterable) {
 		//
 		return Util.collect(
-				testAndApply(Objects::nonNull, spliterator(iterable), x -> StreamSupport.stream(x, false), null),
+				testAndApply(Objects::nonNull, Util.spliterator(iterable), x -> StreamSupport.stream(x, false), null),
 				Collectors.toList());
 		//
-	}
-
-	@Nullable
-	private static <E> Spliterator<E> spliterator(@Nullable final Iterable<E> instance) {
-		return instance != null ? instance.spliterator() : null;
 	}
 
 	private static boolean actionPerformed1(@Nullable final AivisSpeechRestApiJPanel instance, final Object source) {

@@ -420,8 +420,9 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 			try {
 				//
-				final Spliterator<?> spliterator = spliterator(Util.cast(Iterable.class, testAndApply(Objects::nonNull,
-						instance, x -> FieldUtils.readField(x, "children", true), null)));
+				final Spliterator<?> spliterator = Util
+						.spliterator(Util.cast(Iterable.class, testAndApply(Objects::nonNull, instance,
+								x -> FieldUtils.readField(x, "children", true), null)));
 				//
 				final Stream<?> stream = testAndApply(Objects::nonNull, spliterator,
 						x -> StreamSupport.stream(x, false), null);
@@ -438,17 +439,13 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		}
 
 		@Nullable
-		private static <T> Spliterator<T> spliterator(@Nullable final Iterable<T> instance) {
-			return instance != null ? instance.spliterator() : null;
-		}
-
-		@Nullable
 		private static Attribute getAttributeByName(final Tag<?> instance, final String name) {
 			//
 			try {
 				//
-				final Spliterator<?> spliterator = spliterator(Util.cast(Iterable.class, testAndApply(Objects::nonNull,
-						instance, x -> FieldUtils.readField(x, "attributes", true), null)));
+				final Spliterator<?> spliterator = Util
+						.spliterator(Util.cast(Iterable.class, testAndApply(Objects::nonNull, instance,
+								x -> FieldUtils.readField(x, "attributes", true), null)));
 				//
 				final Stream<?> stream = testAndApply(Objects::nonNull, spliterator,
 						x -> StreamSupport.stream(x, false), null);
