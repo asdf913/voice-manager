@@ -1234,11 +1234,11 @@ class JapanDictGuiTest {
 	@Test
 	void testGetPitchAccentImage() throws IllegalAccessException, InvocationTargetException {
 		//
-		final Object JapanDictEntry = Narcissus.allocateInstance(CLASS_JAPAN_DICT_ENTRY);
+		final Object japanDictEntry = Narcissus.allocateInstance(CLASS_JAPAN_DICT_ENTRY);
 		//
-		FieldUtils.writeDeclaredField(JapanDictEntry, "pitchAccent", "a", true);
+		FieldUtils.writeDeclaredField(japanDictEntry, "pitchAccent", "a", true);
 		//
-		Assertions.assertNull(invoke(METHOD_GET_PITCH_ACCENT_IMAGE, null, JapanDictEntry, null));
+		Assertions.assertNull(invoke(METHOD_GET_PITCH_ACCENT_IMAGE, null, japanDictEntry, null));
 		//
 	}
 
