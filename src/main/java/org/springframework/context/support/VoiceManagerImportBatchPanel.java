@@ -567,7 +567,10 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			final ListCellRenderer lcr = ConverterUtil.convert(voiceIdListCellRendererConverter,
 					Util.cast(ListCellRenderer.class, Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceId))));
 			//
-			testAndAccept((a, b) -> b != null, jcbVoiceId, lcr, (a, b) -> setRenderer(a, b));
+			final FailableBiConsumer<JComboBox<?>, ListCellRenderer<?>, RuntimeException> failableBiConsumer = (a,
+					b) -> setRenderer((JComboBox) a, b);
+			//
+			testAndAccept((a, b) -> b != null, jcbVoiceId, lcr, failableBiConsumer);
 			//
 			final JPanel jPanel = new JPanel();
 			//
@@ -2748,7 +2751,10 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				final ListCellRenderer lcr = ConverterUtil.convert(voiceIdListCellRendererConverter,
 						Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceIdLocal)));
 				//
-				testAndAccept((a, b) -> b != null, jcbVoiceIdLocal, lcr, (a, b) -> setRenderer(a, b));
+				final FailableBiConsumer<JComboBox<?>, ListCellRenderer<?>, RuntimeException> failableBiConsumer = (a,
+						b) -> setRenderer((JComboBox) a, b);
+				//
+				testAndAccept((a, b) -> b != null, jcbVoiceIdLocal, lcr, failableBiConsumer);
 				//
 			} // if
 				//
