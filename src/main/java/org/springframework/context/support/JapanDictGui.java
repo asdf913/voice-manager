@@ -347,55 +347,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} // if
 			//
-		final TableCellRenderer tcr = jTable.getDefaultRenderer(Object.class);
-		//
-		jTable.setDefaultRenderer(Object.class, new TableCellRenderer() {
-
-			@Override
-			@Nullable
-			public Component getTableCellRendererComponent(final JTable table, final Object value,
-					final boolean isSelected, final boolean hasFocus, final int row, final int column) {
-				//
-				final String columnName = getColumnName(table, column);
-				//
-				final JapanDictEntry entry = Util.cast(JapanDictEntry.class,
-						ObjectUtils.getIfNull(value, () -> getValueAt(getModel(table), row, 0)));
-				//
-				final Component c = JapanDictGui.getTableCellRendererComponent(tcr, table, value, isSelected, hasFocus,
-						row, column);
-				//
-				final JLabel jLabel = Util.cast(JLabel.class, c);
-				//
-				final Strings strings = Strings.CI;
-				//
-				final Iterable<Field> fs = Util.toList(Util.filter(
-						Util.stream(testAndApply(Objects::nonNull, Util.getClass(entry), FieldUtils::getAllFieldsList,
-								null)),
-						x -> StringsUtil.equals(strings, Util.getName(x),
-								StringsUtil.replace(strings, columnName, " ", ""))));
-				//
-				testAndRun(IterableUtils.size(fs) > 1, () -> {
-					//
-					throw new IllegalStateException();
-					//
-				});
-				//
-				final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-				//
-				if (f != null && entry != null) {
-					//
-					Util.setText(jLabel, Util.toString(Narcissus.getField(entry, f)));
-					//
-				} else if (Objects.equals(columnName, "")) {
-					//
-					Util.setText(jLabel, entry != null ? entry.text : null);
-					//
-				} // if
-					//
-				return c;
-				//
-			}
-		});
+		jTable.setDefaultRenderer(Object.class, createTableCellRenderer(jTable.getDefaultRenderer(Object.class)));
 		//
 		final Dimension preferredSize = Util.getPreferredSize(jTable);
 		//
@@ -508,6 +460,52 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
 		//
+	}
+
+	private static TableCellRenderer createTableCellRenderer(final TableCellRenderer tcr) {
+		//
+		return (table, value, isSelected, hasFocus, row, column) -> {
+			//
+			final String columnName = getColumnName(table, column);
+			//
+			final JapanDictEntry entry = Util.cast(JapanDictEntry.class,
+					ObjectUtils.getIfNull(value, () -> getValueAt(getModel(table), row, 0)));
+			//
+			final Component c = JapanDictGui.getTableCellRendererComponent(tcr, table, value, isSelected, hasFocus, row,
+					column);
+			//
+			final JLabel jLabel = Util.cast(JLabel.class, c);
+			//
+			final Strings strings = Strings.CI;
+			//
+			final Iterable<Field> fs = Util.toList(Util.filter(
+					Util.stream(
+							testAndApply(Objects::nonNull, Util.getClass(entry), FieldUtils::getAllFieldsList, null)),
+					x -> StringsUtil.equals(strings, Util.getName(x),
+							StringsUtil.replace(strings, columnName, " ", ""))));
+			//
+			testAndRun(IterableUtils.size(fs) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+			//
+			if (f != null && entry != null) {
+				//
+				Util.setText(jLabel, Util.toString(Narcissus.getField(entry, f)));
+				//
+			} else if (Objects.equals(columnName, "")) {
+				//
+				Util.setText(jLabel, entry != null ? entry.text : null);
+				//
+			} // if
+				//
+			return c;
+			//
+		};
+
 	}
 
 	private static void setPreferredScrollableViewportSize(@Nullable final JTable instance, final Dimension size) {

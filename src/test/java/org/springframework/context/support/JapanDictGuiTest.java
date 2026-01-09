@@ -89,7 +89,7 @@ class JapanDictGuiTest {
 			METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE,
 			METHOD_GET_COLUMN_NAME, METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND,
 			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
-			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_GET_PITCH_ACCENT_IMAGE = null;
+			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_GET_PITCH_ACCENT_IMAGE, METHOD_CREATE_TABLE_CELL_RENDERER = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -179,6 +179,9 @@ class JapanDictGuiTest {
 				CLASS_JAPAN_DICT_ENTRY = Util
 						.forName("org.springframework.context.support.JapanDictGui$JapanDictEntry"),
 				Page.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_TABLE_CELL_RENDERER = Util.getDeclaredMethod(clz, "createTableCellRenderer",
+				TableCellRenderer.class)).setAccessible(true);
 		//
 	}
 
@@ -364,7 +367,7 @@ class JapanDictGuiTest {
 		//
 		Object[] os = null;
 		//
-		String toString = null;
+		String toString, name = null;
 		//
 		Object result = null;
 		//
@@ -414,12 +417,14 @@ class JapanDictGuiTest {
 				//
 				result = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Boolean.logicalOr(
-						Boolean.logicalAnd(isPrimitive(returnType = Util.getReturnType(m)),
-								!Objects.equals(returnType, Void.TYPE)),
-						Boolean.logicalAnd(Objects.equals(Util.getName(m), "getJapanDictEntry"),
-								Arrays.equals(parameterTypes, new Class<?>[] { Element.class, Pattern.class,
-										Pattern.class, ObjectMapper.class, Integer.TYPE, Map.class })))) {
+				if (or(Boolean.logicalAnd(isPrimitive(returnType = Util.getReturnType(m)),
+						!Objects.equals(returnType, Void.TYPE)),
+						Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "getJapanDictEntry"),
+								Arrays.equals(parameterTypes,
+										new Class<?>[] { Element.class, Pattern.class, Pattern.class,
+												ObjectMapper.class, Integer.TYPE, Map.class })),
+						Boolean.logicalAnd(Objects.equals(name, "createTableCellRenderer"),
+								Arrays.equals(parameterTypes, new Class<?>[] { TableCellRenderer.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -497,8 +502,11 @@ class JapanDictGuiTest {
 									new Class<?>[] { TableCellRenderer.class, JTable.class, Object.class, Boolean.TYPE,
 											Boolean.TYPE, Integer.TYPE, Integer.TYPE })),
 					Boolean.logicalAnd(Objects.equals(name, "getJapanDictEntry"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Element.class, Pattern.class, Pattern.class,
-									ObjectMapper.class, Integer.TYPE, Map.class })))) {
+							Arrays.equals(parameterTypes,
+									new Class<?>[] { Element.class, Pattern.class, Pattern.class, ObjectMapper.class,
+											Integer.TYPE, Map.class })),
+					Boolean.logicalAnd(Objects.equals(name, "createTableCellRenderer"),
+							Arrays.equals(parameterTypes, new Class<?>[] { TableCellRenderer.class })))) {
 				//
 				continue;
 				//
@@ -1229,6 +1237,28 @@ class JapanDictGuiTest {
 		FieldUtils.writeDeclaredField(japanDictEntry, "pitchAccent", "a", true);
 		//
 		Assertions.assertNull(invoke(METHOD_GET_PITCH_ACCENT_IMAGE, null, japanDictEntry, null));
+		//
+	}
+
+	@Test
+	void testCreateTableCellRenderer() throws IllegalAccessException, InvocationTargetException {
+		//
+		final TableCellRenderer tcr = Util.cast(TableCellRenderer.class,
+				invoke(METHOD_CREATE_TABLE_CELL_RENDERER, null, (Object) null));
+		//
+		if (tcr == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		Assertions.assertNull(tcr.getTableCellRendererComponent(null, tcr, false, false, ZERO, ZERO));
+		//
+		final DefaultTableModel dtm = new DefaultTableModel(new Object[] { "", "Hiragana" }, ZERO);
+		//
+		dtm.addRow(new Object[] { Narcissus.allocateInstance(CLASS_JAPAN_DICT_ENTRY) });
+		//
+		Assertions.assertNull(tcr.getTableCellRendererComponent(new JTable(dtm), tcr, false, false, ZERO, ZERO));
 		//
 	}
 
