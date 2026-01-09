@@ -2107,6 +2107,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	@Nullable
 	private static BufferedImage getPitchAccentImage(@Nullable final JapanDictEntry japanDictEntry, final Page page)
 			throws IOException {
 		//
