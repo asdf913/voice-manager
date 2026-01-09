@@ -174,7 +174,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private JTextComponent tfPitchAccent = null;
 
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Execute {
+	}
+
 	@Note("Execute")
+	@Execute
 	private AbstractButton btnExecute = null;
 
 	@Note("Copy Hiragana")
@@ -455,9 +461,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		setEditable(false, tfResponseCode, tfHiragana, tfKatakana, tfRomaji, tfAudioUrl, tfPitchAccent);
 		//
-		setEnabled(false, btnCopyHiragana, btnCopyKatakana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio,
-				btnPlayAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage, btnCopyStrokeImage, btnSaveStrokeImage,
-				btnCopyStrokeWithNumberImage, btnSaveStrokeWithNumberImage);
+		Util.forEach(Util.map(Util.filter(
+				Util.stream(testAndApply(Objects::nonNull, JapanDictGui.class, FieldUtils::getAllFieldsList, null)),
+				x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))
+						&& !Util.isAnnotationPresent(x, Execute.class)),
+				x -> Util.cast(AbstractButton.class, Narcissus.getField(this, x))), x -> {
+					Util.setEnabled(x, false);
+				});
 		//
 		Util.forEach(
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream,
@@ -898,9 +908,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		setText(null, tfHiragana, tfKatakana, tfRomaji, tfAudioUrl, tfPitchAccent);
 		//
-		setEnabled(false, btnCopyHiragana, btnCopyKatakana, btnCopyRomaji, btnCopyAudioUrl, btnDownloadAudio,
-				btnPlayAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage, btnCopyStrokeImage, btnSaveStrokeImage,
-				btnCopyStrokeWithNumberImage, btnSaveStrokeWithNumberImage);
+		Util.forEach(Util.map(Util.filter(
+				Util.stream(testAndApply(Objects::nonNull, JapanDictGui.class, FieldUtils::getAllFieldsList, null)),
+				x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))
+						&& !Util.isAnnotationPresent(x, Execute.class)),
+				x -> Util.cast(AbstractButton.class, Narcissus.getField(this, x))), x -> {
+					Util.setEnabled(x, false);
+				});
 		//
 		Util.setSelectedItem(cbmJlptLevel, "");
 		//
