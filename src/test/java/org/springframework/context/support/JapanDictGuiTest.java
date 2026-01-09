@@ -82,7 +82,7 @@ class JapanDictGuiTest {
 
 	private static Class<?> CLASS_JAPAN_DICT_ENTRY = null;
 
-	private static Method METHOD_TEST_AND_GET, METHOD_SET_EDITABLE, METHOD_SET_TEXT, METHOD_STARTS_WITH, METHOD_APPEND,
+	private static Method METHOD_TEST_AND_GET, METHOD_SET_TEXT, METHOD_STARTS_WITH, METHOD_APPEND,
 			METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG, METHOD_TEST_AND_ACCEPT4, METHOD_GET_AUDIO_URL,
 			METHOD_TEST_AND_RUN, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
 			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL,
@@ -97,9 +97,6 @@ class JapanDictGuiTest {
 		final Class<?> clz = JapanDictGui.class;
 		//
 		(METHOD_TEST_AND_GET = Util.getDeclaredMethod(clz, "testAndGet", Boolean.TYPE, FailableSupplier.class))
-				.setAccessible(true);
-		//
-		(METHOD_SET_EDITABLE = Util.getDeclaredMethod(clz, "setEditable", Boolean.TYPE, JTextComponent[].class))
 				.setAccessible(true);
 		//
 		(METHOD_SET_TEXT = Util.getDeclaredMethod(clz, "setText", String.class, JTextComponent[].class))
@@ -778,13 +775,6 @@ class JapanDictGuiTest {
 	void testTestAndGet() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_GET, null, Boolean.TRUE, null));
-		//
-	}
-
-	@Test
-	void testSetEditable() throws IllegalAccessException, InvocationTargetException {
-		//
-		Assertions.assertNull(invoke(METHOD_SET_EDITABLE, null, Boolean.TRUE, null));
 		//
 	}
 
