@@ -67,6 +67,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.MutableComboBoxModel;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -402,14 +404,32 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, new JLabel("JLPT Level"));
 		//
-		final JlptLevelListFactoryBean jlptLevelListFactoryBean = new JlptLevelListFactoryBean();
+		final MutableComboBoxModel<String> mcbmJlptLevel = new DefaultComboBoxModel<>();
 		//
-		jlptLevelListFactoryBean.setUrl("https://www.jlpt.jp/about/levelsummary.html");
+		mcbmJlptLevel.addElement(null);
 		//
-		add(this, jcbJlptLevel = new JComboBox<>(cbmJlptLevel = new DefaultComboBoxModel<>(toArray(
-				Stream.concat(Stream.of((String) null), Util.stream(ObjectUtils
-						.getIfNull(FactoryBeanUtil.getObject(jlptLevelListFactoryBean), Collections::emptySet))),
-				String[]::new))), wrap);
+		add(this, jcbJlptLevel = new JComboBox<>(cbmJlptLevel = mcbmJlptLevel), wrap);
+		//
+		SwingUtilities.invokeLater(() -> {
+			//
+			final JlptLevelListFactoryBean jlptLevelListFactoryBean = new JlptLevelListFactoryBean();
+			//
+			jlptLevelListFactoryBean.setUrl("https://www.jlpt.jp/about/levelsummary.html");
+			//
+			try {
+				//
+				Util.forEach(Util.stream(ObjectUtils.getIfNull(FactoryBeanUtil.getObject(jlptLevelListFactoryBean),
+						Collections::emptySet)), x -> {
+							Util.addElement(mcbmJlptLevel, x);
+						});
+				//
+			} catch (final Exception e) {
+				//
+				throw e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException(e);
+				//
+			} // try
+				//
+		});
 		//
 		add(this, new JLabel("Hiragana"));
 		//
