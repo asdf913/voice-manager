@@ -419,9 +419,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			try {
 				//
 				Util.forEach(Util.stream(ObjectUtils.getIfNull(FactoryBeanUtil.getObject(jlptLevelListFactoryBean),
-						Collections::emptySet)), x -> {
-							Util.addElement(mcbmJlptLevel, x);
-						});
+						Collections::emptySet)), x -> Util.addElement(mcbmJlptLevel, x));
 				//
 			} catch (final Exception e) {
 				//
