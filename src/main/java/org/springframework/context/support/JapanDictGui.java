@@ -425,7 +425,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			} catch (final Exception e) {
 				//
-				throw e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException(e);
+				throw e instanceof RuntimeException runtimeException ? runtimeException : new RuntimeException(e);
 				//
 			} // try
 				//
