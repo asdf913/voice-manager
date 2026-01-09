@@ -856,18 +856,42 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		entry.jlptLevel = Util.toString(Util.get(map, "jlptLevel"));
 		//
-		entry.pitchAccent = ElementUtil
-				.text(testAndApply(x -> IterableUtils.size(x) == 1,
-						ElementUtil.select(testAndApply(Objects::nonNull,
-								NodeUtil.attr(testAndApply(x -> IterableUtils.size(x) == 1,
-										ElementUtil.select(e, "[data-bs-content]"), x -> IterableUtils.get(x, 0), null),
-										"data-bs-content"),
-								x -> Jsoup.parse(x, ""), null), "p span[class='h5']"),
-						x -> IterableUtils.get(x, 0), null));
+		// Pitch Accent
 		//
-		final Iterable<Element> es = ElementUtil.select(e, ".xxsmall");
+		Iterable<Element> es = ElementUtil.select(e, "[data-bs-content]");
 		//
 		if (IterableUtils.size(es) == 1) {
+			//
+			entry.pitchAccent = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+					ElementUtil.select(testAndApply(Objects::nonNull,
+							NodeUtil.attr(IterableUtils.get(es, 0), "data-bs-content"), x -> Jsoup.parse(x, ""), null),
+							"p span[class='h5']"),
+					x -> IterableUtils.get(x, 0), null));
+			//
+		} else {
+			//
+			final Iterable<String> ss = Util.toList(Util.distinct(Util.map(
+					testAndApply(Objects::nonNull, Util.spliterator(es), x -> StreamSupport.stream(x, false), null),
+					x -> ElementUtil.text(testAndApply(
+							y -> IterableUtils.size(y) == 1, ElementUtil
+									.select(Jsoup.parse(NodeUtil.attr(x, "data-bs-content"), ""), "p span[class='h5']"),
+							y -> IterableUtils.get(y, 0), null)))));
+			//
+			testAndRun(IterableUtils.size(ss) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			testAndAccept(x -> IterableUtils.size(x) == 1, ss, x -> entry.pitchAccent = IterableUtils.get(x, 0));
+			//
+		} // if
+			//
+			// Romaji
+			//
+		if (IterableUtils.size(es = ElementUtil.select(e, ".xxsmall")) == 1)
+
+		{
 			//
 			entry.romaji = ElementUtil.text(IterableUtils.get(es, 0));
 			//
