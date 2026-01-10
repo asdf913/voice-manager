@@ -45,6 +45,7 @@ import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.function.FailableConsumer;
@@ -89,7 +90,8 @@ class JapanDictGuiTest {
 			METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE,
 			METHOD_GET_COLUMN_NAME, METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND,
 			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
-			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_GET_PITCH_ACCENT_IMAGE, METHOD_CREATE_TABLE_CELL_RENDERER = null;
+			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_GET_PITCH_ACCENT_IMAGE, METHOD_CREATE_TABLE_CELL_RENDERER,
+			METHOD_OR = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -182,6 +184,9 @@ class JapanDictGuiTest {
 		//
 		(METHOD_CREATE_TABLE_CELL_RENDERER = Util.getDeclaredMethod(clz, "createTableCellRenderer",
 				TableCellRenderer.class)).setAccessible(true);
+		//
+		(METHOD_OR = Util.getDeclaredMethod(clz, "or", Boolean.TYPE, Boolean.TYPE, boolean[].class))
+				.setAccessible(true);
 		//
 	}
 
@@ -354,7 +359,7 @@ class JapanDictGuiTest {
 	}
 
 	@Test
-	void testNull() {
+	void testNull() throws Throwable {
 		//
 		final Method[] ms = JapanDictGui.class.getDeclaredMethods();
 		//
@@ -374,15 +379,16 @@ class JapanDictGuiTest {
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
+			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()
+					|| Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "or"),
+							Arrays.equals(parameterTypes = Util.getParameterTypes(m),
+									new Class<?>[] { Boolean.TYPE, Boolean.TYPE, boolean[].class }))) {
 				//
 				continue;
 				//
 			} // if
 				//
 			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
-			//
-			parameterTypes = m.getParameterTypes();
 			//
 			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
 				//
@@ -401,7 +407,7 @@ class JapanDictGuiTest {
 				} else if (Objects.equals(parameterType, Character.TYPE)) {
 					//
 					Util.add(collection, Character.valueOf(' '));
-					//
+					////
 				} else {
 					//
 					Util.add(collection, null);
@@ -420,7 +426,7 @@ class JapanDictGuiTest {
 				//
 				if (or(Boolean.logicalAnd(isPrimitive(returnType = Util.getReturnType(m)),
 						!Objects.equals(returnType, Void.TYPE)),
-						Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "getJapanDictEntry"),
+						Boolean.logicalAnd(Objects.equals(name, "getJapanDictEntry"),
 								Arrays.equals(parameterTypes,
 										new Class<?>[] { Element.class, Pattern.class, Pattern.class,
 												ObjectMapper.class, Integer.TYPE, Integer.TYPE, Map.class })),
@@ -467,7 +473,7 @@ class JapanDictGuiTest {
 	}
 
 	@Test
-	void testNonNull() {
+	void testNonNull() throws Throwable {
 		//
 		final Method[] ms = JapanDictGui.class.getDeclaredMethods();
 		//
@@ -507,7 +513,9 @@ class JapanDictGuiTest {
 									new Class<?>[] { Element.class, Pattern.class, Pattern.class, ObjectMapper.class,
 											Integer.TYPE, Integer.TYPE, Map.class })),
 					Boolean.logicalAnd(Objects.equals(name, "createTableCellRenderer"),
-							Arrays.equals(parameterTypes, new Class<?>[] { TableCellRenderer.class })))) {
+							Arrays.equals(parameterTypes, new Class<?>[] { TableCellRenderer.class })),
+					Boolean.logicalAnd(Objects.equals(name, "or"), Arrays.equals(parameterTypes,
+							new Class<?>[] { Boolean.TYPE, Boolean.TYPE, boolean[].class })))) {
 				//
 				continue;
 				//
@@ -608,28 +616,23 @@ class JapanDictGuiTest {
 			//
 	}
 
-	private static boolean or(final boolean a, final boolean b, final boolean... bs) {
+	@Test
+	void testOr() throws Throwable {
 		//
-		boolean result = a || b;
+		Assertions.assertFalse(or(false, false, null));
 		//
-		if (result) {
-			//
-			return result;
-			//
-		} // if
-			//
-		for (int i = 0; bs != null && i < bs.length; i++) {
-			//
-			if (result |= bs[i]) {
-				//
-				return result;
-				//
-			} // if
-				//
-		} // for
-			//
-		return result;
-		//
+	}
+
+	private static boolean or(final boolean a, final boolean b, final boolean... bs) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_OR, null, a, b, bs);
+			if (obj instanceof Boolean bool) {
+				return BooleanUtils.toBooleanDefaultIfNull(bool, false);
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static Class<?> componentType(final Class<?> instance) {

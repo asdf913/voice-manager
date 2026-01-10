@@ -2112,8 +2112,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		final String pageUrl = entry.pageUrl;
 		//
-		try (final Playwright playwright = testAndGet(Boolean.logicalOr(entry.pitchAccentImage == null,
-				entry.strokeImage == null || IterableUtils.isEmpty(entry.pitchAccents)), Playwright::create);
+		try (final Playwright playwright = testAndGet(or(entry.pitchAccentImage == null, entry.strokeImage == null,
+				IterableUtils.isEmpty(entry.pitchAccents)), Playwright::create);
 				final Browser browser = testAndApply(
 						Predicates.always(UrlValidatorUtil.isValid(UrlValidator.getInstance(), pageUrl)), playwright,
 						x -> BrowserTypeUtil.launch(ObjectUtils.getIfNull(
@@ -2324,6 +2324,30 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // try
 			//
 		pack(instance.window);
+		//
+	}
+
+	private static boolean or(final boolean a, final boolean b, final boolean... bs) {
+		//
+		boolean result = a || b;
+		//
+		if (result) {
+			//
+			return result;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (result |= bs[i]) {
+				//
+				return result;
+				//
+			} // if
+				//
+		} // for
+			//
+		return result;
 		//
 	}
 
