@@ -661,7 +661,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private String pageUrl = null;
 
-		private Integer index1, index2 = null;
+		@Note("Index 1")
+		private Integer index1 = null;
+
+		private Integer index2 = null;
 
 		@Note("Pitch Accent Image")
 		private BufferedImage pitchAccentImage = null;
