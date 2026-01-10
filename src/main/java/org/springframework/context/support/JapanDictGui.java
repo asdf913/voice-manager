@@ -2326,7 +2326,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static String getAttribute(final ElementHandle instance, final String name) {
+	private static String getAttribute(@Nullable final ElementHandle instance, final String name) {
 		return instance != null ? instance.getAttribute(name) : null;
 	}
 
