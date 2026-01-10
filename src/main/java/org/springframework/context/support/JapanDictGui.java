@@ -499,15 +499,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, btnSaveStrokeWithNumberImage = new JButton("Save"), String.format("%1$s,%2$s", growx, wrap));
 		//
-		Util.forEach(
-				Util.map(
-						Util.filter(
-								Util.stream(testAndApply(Objects::nonNull, JapanDictGui.class,
-										FieldUtils::getAllFieldsList, null)),
-								x -> Util.isAssignableFrom(JTextComponent.class, Util.getType(x))
-										&& !Util.isAnnotationPresent(x, Input.class)),
-						x -> Util.cast(JTextComponent.class, Narcissus.getField(this, x))),
-				x -> Util.setEditable(x, false));
+		Util.forEach(Util.map(Util.filter(
+				Util.stream(testAndApply(Objects::nonNull, JapanDictGui.class, FieldUtils::getAllFieldsList, null)),
+				x -> Boolean.logicalAnd(Util.isAssignableFrom(JTextComponent.class, Util.getType(x)),
+						!Util.isAnnotationPresent(x, Input.class))),
+				x -> Util.cast(JTextComponent.class, Narcissus.getField(this, x))), x -> Util.setEditable(x, false));
 		//
 		Util.forEach(Util.map(Util.filter(
 				Util.stream(testAndApply(Objects::nonNull, JapanDictGui.class, FieldUtils::getAllFieldsList, null)),
