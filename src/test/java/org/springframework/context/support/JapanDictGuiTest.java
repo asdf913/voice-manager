@@ -1,6 +1,7 @@
 package org.springframework.context.support;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -34,8 +35,11 @@ import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -91,7 +95,7 @@ class JapanDictGuiTest {
 			METHOD_GET_COLUMN_NAME, METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND,
 			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
 			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_GET_PITCH_ACCENT_IMAGE, METHOD_CREATE_TABLE_CELL_RENDERER,
-			METHOD_OR = null;
+			METHOD_OR, METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -186,6 +190,12 @@ class JapanDictGuiTest {
 				TableCellRenderer.class)).setAccessible(true);
 		//
 		(METHOD_OR = Util.getDeclaredMethod(clz, "or", Boolean.TYPE, Boolean.TYPE, boolean[].class))
+				.setAccessible(true);
+		//
+		(METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER = Util.getDeclaredMethod(clz,
+				"createPitchAccentListCellRenderer", Component.class, ListCellRenderer.class)).setAccessible(true);
+		//
+		(METHOD_SET_PREFERRED_SIZE = Util.getDeclaredMethod(clz, "setPreferredSize", Component.class, Dimension.class))
 				.setAccessible(true);
 		//
 	}
@@ -431,7 +441,9 @@ class JapanDictGuiTest {
 										new Class<?>[] { Element.class, Pattern.class, Pattern.class,
 												ObjectMapper.class, Integer.TYPE, Integer.TYPE, Map.class })),
 						Boolean.logicalAnd(Objects.equals(name, "createTableCellRenderer"),
-								Arrays.equals(parameterTypes, new Class<?>[] { TableCellRenderer.class })))) {
+								Arrays.equals(parameterTypes, new Class<?>[] { TableCellRenderer.class })),
+						Boolean.logicalAnd(Objects.equals(name, "createPitchAccentListCellRenderer"), Arrays
+								.equals(parameterTypes, new Class<?>[] { Component.class, ListCellRenderer.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -579,11 +591,12 @@ class JapanDictGuiTest {
 				//
 				result = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Boolean.logicalOr(
-						Boolean.logicalAnd(isPrimitive(returnType = Util.getReturnType(m)),
-								!Objects.equals(returnType, Void.TYPE)),
-						Boolean.logicalAnd(Objects.equals(name, "append"), Arrays.equals(parameterTypes,
-								new Class<?>[] { StringBuilder.class, Character.TYPE })))) {
+				if (or(Boolean.logicalAnd(isPrimitive(returnType = Util.getReturnType(m)),
+						!Objects.equals(returnType, Void.TYPE)),
+						Boolean.logicalAnd(Objects.equals(name, "append"),
+								Arrays.equals(parameterTypes, new Class<?>[] { StringBuilder.class, Character.TYPE })),
+						Boolean.logicalAnd(Objects.equals(name, "createPitchAccentListCellRenderer"), Arrays
+								.equals(parameterTypes, new Class<?>[] { Component.class, ListCellRenderer.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -1263,6 +1276,45 @@ class JapanDictGuiTest {
 		dtm.addRow(new Object[] { Narcissus.allocateInstance(CLASS_JAPAN_DICT_ENTRY) });
 		//
 		Assertions.assertNull(tcr.getTableCellRendererComponent(new JTable(dtm), tcr, false, false, ZERO, ZERO));
+		//
+	}
+
+	@Test
+	void testCreatePitchAccentListCellRenderer()
+			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
+		//
+		final ListCellRenderer<?> lcr = Util.cast(ListCellRenderer.class,
+				invoke(METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, null, null, null));
+		//
+		if (lcr == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		Assertions.assertNull(lcr.getListCellRendererComponent(null, null, ZERO, false, false));
+		//
+		final Object pitchAccent = Narcissus
+				.allocateInstance(Class.forName("org.springframework.context.support.JapanDictGui$PitchAccent"));
+		//
+		final Method getListCellRendererComponent = ListCellRenderer.class.getDeclaredMethod(
+				"getListCellRendererComponent", JList.class, Object.class, Integer.TYPE, Boolean.TYPE, Boolean.TYPE);
+		//
+		Assertions.assertNull(
+				Narcissus.invokeMethod(lcr, getListCellRendererComponent, null, pitchAccent, ZERO, false, false));
+		//
+		FieldUtils.writeDeclaredField(pitchAccent, "image", new BufferedImage(ONE, ONE, BufferedImage.TYPE_INT_RGB),
+				true);
+		//
+		Assertions.assertNotNull(
+				Narcissus.invokeMethod(lcr, getListCellRendererComponent, null, pitchAccent, ZERO, false, false));
+		//
+	}
+
+	@Test
+	void testSetPreferredSize() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_SET_PREFERRED_SIZE, null, new JLabel(), null));
 		//
 	}
 

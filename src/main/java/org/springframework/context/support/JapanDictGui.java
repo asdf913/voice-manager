@@ -64,7 +64,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -437,49 +436,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		final JComboBox<PitchAccent> jcbPitchAccent = new JComboBox<>(mcbmPitchAccent = new DefaultComboBoxModel<>());
 		//
-		final ListCellRenderer<? super PitchAccent> lcr = jcbPitchAccent.getRenderer();
-		//
-		final Dimension pdJcbPitchAccent = Util.getPreferredSize(jcbPitchAccent);
-		//
-		jcbPitchAccent.setRenderer(new ListCellRenderer<>() {
-
-			@Override
-			public Component getListCellRendererComponent(final JList<? extends PitchAccent> list,
-					@Nullable final PitchAccent value, final int index, final boolean isSelected,
-					final boolean cellHasFocus) {
-				//
-				if (value != null && value.image != null) {
-					//
-					final JPanel panel = new JPanel();
-					//
-					panel.setLayout(new MigLayout());
-					//
-					add(panel, new JLabel(new ImageIcon(value.image)));
-					//
-					if (StringUtils.isNotBlank(value.pitchAccent)) {
-						//
-						add(panel, new JLabel(String.format("(%1$s)", value.pitchAccent)), "align right");
-						//
-					} // if
-						//
-					final Dimension ps1 = Util.getPreferredSize(panel);
-					//
-					if (pdJcbPitchAccent != null && ps1 != null) {
-						//
-						jcbPitchAccent.setPreferredSize(
-								new Dimension((int) pdJcbPitchAccent.getWidth(), (int) ps1.getHeight()));
-						//
-					} // if
-						//
-					return panel;
-					//
-				} // if
-					//
-				return Util.getListCellRendererComponent(lcr, list, value, index, isSelected, cellHasFocus);
-				//
-			}
-
-		});
+		jcbPitchAccent.setRenderer(createPitchAccentListCellRenderer(jcbPitchAccent, jcbPitchAccent.getRenderer()));
 		//
 		add(this, jcbPitchAccent, String.format("%1$s,span %2$s", wrap, 3));
 		//
@@ -516,6 +473,51 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
 		//
+	}
+
+	private static ListCellRenderer<PitchAccent> createPitchAccentListCellRenderer(final Component component,
+			final ListCellRenderer<? super PitchAccent> lcr) {
+		//
+		return (list, value, index, isSelected, cellHasFocus) -> {
+			//
+			if (value != null && value.image != null) {
+				//
+				final JPanel panel = new JPanel();
+				//
+				panel.setLayout(new MigLayout());
+				//
+				add(panel, new JLabel(new ImageIcon(value.image)));
+				//
+				if (StringUtils.isNotBlank(value.pitchAccent)) {
+					//
+					add(panel, new JLabel(String.format("(%1$s)", value.pitchAccent)), "align right");
+					//
+				} // if
+					//
+				final Dimension pd1 = Util.getPreferredSize(component);
+				//
+				final Dimension pd2 = Util.getPreferredSize(panel);
+				//
+				if (pd1 != null && pd2 != null) {
+					//
+					setPreferredSize(component, new Dimension((int) pd1.getWidth(), (int) pd2.getHeight()));
+					//
+				} // if
+					//
+				return panel;
+				//
+			} // if
+				//
+			return Util.getListCellRendererComponent(lcr, list, value, index, isSelected, cellHasFocus);
+			//
+		};
+		//
+	}
+
+	private static void setPreferredSize(final Component instance, final Dimension preferredSize) {
+		if (instance != null) {
+			instance.setPreferredSize(preferredSize);
+		}
 	}
 
 	private static TableCellRenderer createTableCellRenderer(final TableCellRenderer tcr) {
