@@ -2163,9 +2163,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				for (int i = 0; i < IterableUtils.size(ehs1); i++) {
 					//
-					final BoundingBox boundingBox = boundingBox(testAndApply(CollectionUtils::isNotEmpty,
-							ElementHandleUtil.querySelectorAll(eh1 = IterableUtils.get(ehs1, i), "div"),
-							y -> IterableUtils.get(y, 0), null));
+					final BoundingBox boundingBox = boundingBox(Util.cast(ElementHandle.class,
+							testAndApply(CollectionUtils::isNotEmpty,
+									ElementHandleUtil.querySelectorAll(eh1 = IterableUtils.get(ehs1, i), "div"),
+									y -> IterableUtils.get(y, 0), null)));
 					//
 					try {
 						//
