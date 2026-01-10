@@ -34,7 +34,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -62,10 +64,12 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.SwingUtilities;
@@ -263,6 +267,16 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private transient ListSelectionModel lsm = null;
 
+	private static class PitchAccent {
+
+		private String pitchAccent = null;
+
+		private BufferedImage image = null;
+
+	}
+
+	private MutableComboBoxModel<PitchAccent> mcbmPitchAccent = null;
+
 	private JapanDictGui() {
 	}
 
@@ -418,6 +432,55 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		add(this, btnCopyPitchAccentImage = new JButton("Copy"));
 		//
 		add(this, btnSavePitchAccentImage = new JButton("Save"), wrap);
+		//
+		add(this, new JLabel());
+		//
+		final JComboBox<PitchAccent> jcbPitchAccent = new JComboBox<>(mcbmPitchAccent = new DefaultComboBoxModel<>());
+		//
+		final ListCellRenderer<? super PitchAccent> lcr = jcbPitchAccent.getRenderer();
+		//
+		final Dimension pdJcbPitchAccent = Util.getPreferredSize(jcbPitchAccent);
+		//
+		jcbPitchAccent.setRenderer(new ListCellRenderer<>() {
+
+			@Override
+			public Component getListCellRendererComponent(final JList<? extends PitchAccent> list,
+					final PitchAccent value, final int index, final boolean isSelected, final boolean cellHasFocus) {
+				//
+				if (value != null && value.image != null) {
+					//
+					final JPanel panel = new JPanel();
+					//
+					panel.setLayout(new MigLayout());
+					//
+					add(panel, new JLabel(new ImageIcon(value.image)));
+					//
+					if (StringUtils.isNotBlank(value.pitchAccent)) {
+						//
+						add(panel, new JLabel(String.format("(%1$s)", value.pitchAccent)), "align right");
+						//
+					} // if
+						//
+					final Dimension ps1 = Util.getPreferredSize(panel);
+					//
+					if (pdJcbPitchAccent != null && ps1 != null) {
+						//
+						jcbPitchAccent.setPreferredSize(
+								new Dimension((int) pdJcbPitchAccent.getWidth(), (int) ps1.getHeight()));
+						//
+					} // if
+						//
+					return panel;
+					//
+				} // if
+					//
+				return Util.getListCellRendererComponent(lcr, list, value, index, isSelected, cellHasFocus);
+				//
+			}
+
+		});
+		//
+		add(this, jcbPitchAccent, String.format("%1$s,span %2$s", wrap, 3));
 		//
 		add(this, new JLabel("Stroke"), String.format("span %1$s", 2));
 		//
@@ -598,7 +661,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private String pageUrl = null;
 
-		private Integer index = null;
+		private Integer index1, index2 = null;
 
 		@Note("Pitch Accent Image")
 		private BufferedImage pitchAccentImage = null;
@@ -607,6 +670,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		private BufferedImage strokeImage = null;
 
 		private BufferedImage strokeWithNumberImage = null;
+
+		private Iterable<PitchAccent> pitchAccents = null;
 
 	}
 
@@ -748,7 +813,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 									patternKatkana = ObjectUtils.getIfNull(patternKatkana,
 											() -> Pattern.compile("^\\p{InKatakana}+$")),
 									objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new),
-									Util.getRowCount(dtm), map) });
+									Util.getRowCount(dtm), j, map) });
 					//
 				} // for
 					//
@@ -825,7 +890,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	private static JapanDictEntry getJapanDictEntry(final Element e, final Pattern patternHiragana,
-			final Pattern patternKatakana, final ObjectMapper objectMapper, final int index, final Map<?, ?> map) {
+			final Pattern patternKatakana, final ObjectMapper objectMapper, final int index1, final int index2,
+			final Map<?, ?> map) {
 		//
 		final JapanDictEntry entry = new JapanDictEntry();
 		//
@@ -911,7 +977,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		entry.text = Util.toString(Util.get(map, "text"));
 		//
-		entry.index = Integer.valueOf(index);
+		entry.index1 = Integer.valueOf(index1);
+		//
+		entry.index2 = Integer.valueOf(index2);
 		//
 		entry.pageUrl = Util.toString(Util.get(map, "pageUrl"));
 		//
@@ -959,6 +1027,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				x -> Util.setEnabled(x, false));
 		//
 		Util.setSelectedItem(cbmJlptLevel, "");
+		//
+		Util.forEach(IntStream.iterate(Util.getSize(mcbmPitchAccent) - 1, i -> i >= 0, i -> i - 1),
+				i -> Util.removeElementAt(mcbmPitchAccent, i));
 		//
 		Util.forEach(
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream,
@@ -2037,8 +2108,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		final String pageUrl = entry.pageUrl;
 		//
-		try (final Playwright playwright = testAndGet(
-				Boolean.logicalOr(entry.pitchAccentImage == null, entry.strokeImage == null), Playwright::create);
+		try (final Playwright playwright = testAndGet(Boolean.logicalOr(entry.pitchAccentImage == null,
+				entry.strokeImage == null || IterableUtils.isEmpty(entry.pitchAccents)), Playwright::create);
 				final Browser browser = testAndApply(
 						Predicates.always(UrlValidatorUtil.isValid(UrlValidator.getInstance(), pageUrl)), playwright,
 						x -> BrowserTypeUtil.launch(ObjectUtils.getIfNull(
@@ -2071,6 +2142,108 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			setEnabled(entry.pitchAccentImage != null, instance.btnCopyPitchAccentImage,
 					instance.btnSavePitchAccentImage);
+			//
+			// Pitch Accents
+			//
+			if (IterableUtils.isEmpty(entry.pitchAccents)) {
+				//
+				final Iterable<ElementHandle> ehs1 = ElementHandleUtil.querySelectorAll(testAndApply(
+						x -> IterableUtils.size(x) > Util.intValue(entry.index2, 0),
+						PageUtil.querySelectorAll(page,
+								String.format("#entry-%1$s ul li.list-group-item[lang='ja'] .d-flex.p-2", entry.id)),
+						x -> IterableUtils.get(x, Util.intValue(entry.index2, 0)), null), "div.d-flex");
+				//
+				Iterable<ElementHandle> ehs = null;
+				//
+				ElementHandle eh1 = null;
+				//
+				PitchAccent pa = null;
+				//
+				Collection<PitchAccent> pas = null;
+				//
+				for (int i = 0; i < IterableUtils.size(ehs1); i++) {
+					//
+					final BoundingBox boundingBox = boundingBox(testAndApply(CollectionUtils::isNotEmpty,
+							ElementHandleUtil.querySelectorAll(eh1 = IterableUtils.get(ehs1, i), "div"),
+							y -> IterableUtils.get(y, 0), null));
+					//
+					try {
+						//
+						if (StringsUtil.contains(Strings.CS, getAttribute(eh1, "class"), "flex-colum")) {
+							//
+							(pa = new PitchAccent()).image = testAndApply(
+									x -> startsWith(Strings.CS,
+											getMimeType(testAndApply(Objects::nonNull, x,
+													new ContentInfoUtil()::findMatch, null)),
+											"image/"),
+									ElementHandleUtil.screenshot(testAndApply(CollectionUtils::isNotEmpty,
+											ElementHandleUtil.querySelectorAll(eh1, "div"),
+											x -> IterableUtils.get(x, 0), null)),
+									x -> toBufferedImage(x), null);
+							//
+						} else {
+							//
+							(pa = new PitchAccent()).image = testAndApply(
+									x -> startsWith(Strings.CS,
+											getMimeType(testAndApply(Objects::nonNull, x,
+													new ContentInfoUtil()::findMatch, null)),
+											"image/"),
+									ElementHandleUtil.screenshot(eh1), x -> chopImage(x, boundingBox), null);
+							//
+						} // if
+							//
+					} catch (final IOException e) {
+						//
+						TaskDialogs.showException(e);
+						//
+					} // try
+						//
+					if (IterableUtils.size(ehs = ElementHandleUtil.querySelectorAll(eh1, "[data-bs-content]")) == 1) {
+						//
+						pa.pitchAccent = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+								ElementUtil.select(testAndApply(Objects::nonNull,
+										getAttribute(IterableUtils.get(ehs, 0), "data-bs-content"),
+										x -> Jsoup.parse(x, ""), null), "p span[class='h5']"),
+								x -> IterableUtils.get(x, 0), null));
+						//
+					} else {
+						//
+						final Stream<ElementHandle> stream = testAndApply(Objects::nonNull, Util.spliterator(ehs),
+								x -> StreamSupport.stream(x, false), null);
+						//
+						final Iterable<String> ss = Util.toList(Util.distinct(Util.map(stream,
+								x -> ElementUtil.text(testAndApply(y -> IterableUtils.size(y) == 1,
+										ElementUtil.select(Jsoup.parse(getAttribute(x, "data-bs-content"), ""),
+												"p span[class='h5']"),
+										y -> IterableUtils.get(y, 0), null)))));
+						//
+						testAndRun(IterableUtils.size(ss) > 1, () -> {
+							//
+							throw new IllegalStateException();
+							//
+						});
+						//
+						testAndAccept((a, b) -> IterableUtils.size(b) == 1, pa, ss, (a, b) -> {
+							//
+							if (a != null) {
+								//
+								a.pitchAccent = IterableUtils.get(b, 0);
+								//
+							} // if
+								//
+						});
+						//
+					} // if
+						//
+					Util.add(pas = ObjectUtils.getIfNull(pas, ArrayList::new), pa);
+					//
+				} // for
+					//
+				entry.pitchAccents = pas;
+				//
+			} // if
+				//
+			Util.forEach(entry.pitchAccents, x -> Util.addElement(instance.mcbmPitchAccent, x));
 			//
 			// Stroke Image
 			//
@@ -2149,6 +2322,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	private static String getAttribute(final ElementHandle instance, final String name) {
+		return instance != null ? instance.getAttribute(name) : null;
+	}
+
 	@Nullable
 	private static BufferedImage getPitchAccentImage(@Nullable final JapanDictEntry japanDictEntry, final Page page)
 			throws IOException {
@@ -2161,7 +2338,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		if (StringUtils.isNotBlank(japanDictEntry.pitchAccent)) {
 			//
-			final ElementHandle eh1 = testAndApply(Objects::nonNull, japanDictEntry.index,
+			final ElementHandle eh1 = testAndApply(Objects::nonNull, japanDictEntry.index1,
 					x -> IterableUtils.get(PageUtil.querySelectorAll(page,
 							"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
 							Util.intValue(x, 0)),
@@ -2181,7 +2358,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return testAndApply(x -> startsWith(Strings.CS,
 				getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)), "image/"),
 				ElementHandleUtil.screenshot(testAndApply(CollectionUtils::isNotEmpty,
-						ElementHandleUtil.querySelectorAll(testAndApply(Objects::nonNull, japanDictEntry.index,
+						ElementHandleUtil.querySelectorAll(testAndApply(Objects::nonNull, japanDictEntry.index1,
 								x -> IterableUtils.get(PageUtil.querySelectorAll(page,
 										"div[aria-labelledby^='modal-reading'] + ul li div.d-flex.flex-column.p-2 .d-flex:first-child"),
 										Util.intValue(x, 0)),

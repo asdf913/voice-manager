@@ -298,8 +298,9 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof ElementHandle && Util.anyMatch(
-					Stream.of("boundingBox", "querySelectorAll", "screenshot"), x -> Objects.equals(name, x))) {
+			} else if (proxy instanceof ElementHandle
+					&& Util.anyMatch(Stream.of("boundingBox", "querySelectorAll", "screenshot", "getAttribute"),
+							x -> Objects.equals(name, x))) {
 				//
 				return null;
 				//
@@ -422,7 +423,7 @@ class JapanDictGuiTest {
 						Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "getJapanDictEntry"),
 								Arrays.equals(parameterTypes,
 										new Class<?>[] { Element.class, Pattern.class, Pattern.class,
-												ObjectMapper.class, Integer.TYPE, Map.class })),
+												ObjectMapper.class, Integer.TYPE, Integer.TYPE, Map.class })),
 						Boolean.logicalAnd(Objects.equals(name, "createTableCellRenderer"),
 								Arrays.equals(parameterTypes, new Class<?>[] { TableCellRenderer.class })))) {
 					//
@@ -504,7 +505,7 @@ class JapanDictGuiTest {
 					Boolean.logicalAnd(Objects.equals(name, "getJapanDictEntry"),
 							Arrays.equals(parameterTypes,
 									new Class<?>[] { Element.class, Pattern.class, Pattern.class, ObjectMapper.class,
-											Integer.TYPE, Map.class })),
+											Integer.TYPE, Integer.TYPE, Map.class })),
 					Boolean.logicalAnd(Objects.equals(name, "createTableCellRenderer"),
 							Arrays.equals(parameterTypes, new Class<?>[] { TableCellRenderer.class })))) {
 				//
