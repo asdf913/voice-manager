@@ -436,7 +436,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		final JComboBox<PitchAccent> jcbPitchAccent = new JComboBox<>(mcbmPitchAccent = new DefaultComboBoxModel<>());
 		//
-		jcbPitchAccent.setRenderer(createPitchAccentListCellRenderer(jcbPitchAccent, jcbPitchAccent.getRenderer()));
+		jcbPitchAccent.setRenderer(createPitchAccentListCellRenderer(jcbPitchAccent, jcbPitchAccent.getRenderer(),
+				Util.getPreferredSize(jcbPitchAccent)));
 		//
 		add(this, jcbPitchAccent, String.format("%1$s,span %2$s", wrap, 3));
 		//
@@ -476,7 +477,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	private static ListCellRenderer<PitchAccent> createPitchAccentListCellRenderer(final Component component,
-			final ListCellRenderer<? super PitchAccent> lcr) {
+			final ListCellRenderer<? super PitchAccent> lcr, final Dimension pd) {
 		//
 		return (list, value, index, isSelected, cellHasFocus) -> {
 			//
@@ -494,13 +495,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 				} // if
 					//
-				final Dimension pd1 = Util.getPreferredSize(component);
-				//
 				final Dimension pd2 = Util.getPreferredSize(panel);
 				//
-				if (pd1 != null && pd2 != null) {
+				if (pd != null && pd2 != null) {
 					//
-					setPreferredSize(component, new Dimension((int) pd1.getWidth(), (int) pd2.getHeight()));
+					setPreferredSize(component, new Dimension((int) pd.getWidth(), (int) pd2.getHeight()));
 					//
 				} // if
 					//

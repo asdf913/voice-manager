@@ -200,7 +200,8 @@ class JapanDictGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER = Util.getDeclaredMethod(clz,
-				"createPitchAccentListCellRenderer", Component.class, ListCellRenderer.class)).setAccessible(true);
+				"createPitchAccentListCellRenderer", Component.class, ListCellRenderer.class, Dimension.class))
+				.setAccessible(true);
 		//
 		(METHOD_SET_PREFERRED_SIZE = Util.getDeclaredMethod(clz, "setPreferredSize", Component.class, Dimension.class))
 				.setAccessible(true);
@@ -451,8 +452,9 @@ class JapanDictGuiTest {
 												ObjectMapper.class, Integer.TYPE, Integer.TYPE, Map.class })),
 						Boolean.logicalAnd(Objects.equals(name, "createTableCellRenderer"),
 								Arrays.equals(parameterTypes, new Class<?>[] { TableCellRenderer.class })),
-						Boolean.logicalAnd(Objects.equals(name, "createPitchAccentListCellRenderer"), Arrays
-								.equals(parameterTypes, new Class<?>[] { Component.class, ListCellRenderer.class })))) {
+						Boolean.logicalAnd(Objects.equals(name, "createPitchAccentListCellRenderer"), Arrays.equals(
+								parameterTypes,
+								new Class<?>[] { Component.class, ListCellRenderer.class, Dimension.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -604,8 +606,9 @@ class JapanDictGuiTest {
 						!Objects.equals(returnType, Void.TYPE)),
 						Boolean.logicalAnd(Objects.equals(name, "append"),
 								Arrays.equals(parameterTypes, new Class<?>[] { StringBuilder.class, Character.TYPE })),
-						Boolean.logicalAnd(Objects.equals(name, "createPitchAccentListCellRenderer"), Arrays
-								.equals(parameterTypes, new Class<?>[] { Component.class, ListCellRenderer.class })))) {
+						Boolean.logicalAnd(Objects.equals(name, "createPitchAccentListCellRenderer"), Arrays.equals(
+								parameterTypes,
+								new Class<?>[] { Component.class, ListCellRenderer.class, Dimension.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -1293,7 +1296,7 @@ class JapanDictGuiTest {
 			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
 		//
 		final ListCellRenderer<?> lcr = Util.cast(ListCellRenderer.class,
-				invoke(METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, null, null, null));
+				invoke(METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, null, null, null, null));
 		//
 		if (lcr == null) {
 			//
