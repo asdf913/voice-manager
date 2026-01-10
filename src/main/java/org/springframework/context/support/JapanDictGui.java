@@ -275,7 +275,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	}
 
-	private MutableComboBoxModel<PitchAccent> mcbmPitchAccent = null;
+	private transient MutableComboBoxModel<PitchAccent> mcbmPitchAccent = null;
 
 	private JapanDictGui() {
 	}
