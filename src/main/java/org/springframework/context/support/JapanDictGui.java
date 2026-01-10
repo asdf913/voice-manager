@@ -509,15 +509,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						x -> Util.cast(JTextComponent.class, Narcissus.getField(this, x))),
 				x -> Util.setEditable(x, false));
 		//
-		Util.forEach(
-				Util.map(
-						Util.filter(
-								Util.stream(testAndApply(Objects::nonNull, JapanDictGui.class,
-										FieldUtils::getAllFieldsList, null)),
-								x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))
-										&& !Util.isAnnotationPresent(x, Execute.class)),
-						x -> Util.cast(AbstractButton.class, Narcissus.getField(this, x))),
-				x -> Util.setEnabled(x, false));
+		Util.forEach(Util.map(Util.filter(
+				Util.stream(testAndApply(Objects::nonNull, JapanDictGui.class, FieldUtils::getAllFieldsList, null)),
+				x -> Boolean.logicalAnd(Util.isAssignableFrom(AbstractButton.class, Util.getType(x)),
+						!Util.isAnnotationPresent(x, Execute.class))),
+				x -> Util.cast(AbstractButton.class, Narcissus.getField(this, x))), x -> Util.setEnabled(x, false));
 		//
 		Util.forEach(
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream,
@@ -1020,15 +1016,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		setText(null, tfHiragana, tfKatakana, tfRomaji, tfAudioUrl, tfPitchAccent);
 		//
-		Util.forEach(
-				Util.map(
-						Util.filter(
-								Util.stream(testAndApply(Objects::nonNull, JapanDictGui.class,
-										FieldUtils::getAllFieldsList, null)),
-								x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))
-										&& !Util.isAnnotationPresent(x, Execute.class)),
-						x -> Util.cast(AbstractButton.class, Narcissus.getField(this, x))),
-				x -> Util.setEnabled(x, false));
+		Util.forEach(Util.map(Util.filter(
+				Util.stream(testAndApply(Objects::nonNull, JapanDictGui.class, FieldUtils::getAllFieldsList, null)),
+				x -> Boolean.logicalAnd(Util.isAssignableFrom(AbstractButton.class, Util.getType(x)),
+						!Util.isAnnotationPresent(x, Execute.class))),
+				x -> Util.cast(AbstractButton.class, Narcissus.getField(this, x))), x -> Util.setEnabled(x, false));
 		//
 		Util.setSelectedItem(cbmJlptLevel, "");
 		//
