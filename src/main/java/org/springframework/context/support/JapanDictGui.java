@@ -445,7 +445,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 			@Override
 			public Component getListCellRendererComponent(final JList<? extends PitchAccent> list,
-					final PitchAccent value, final int index, final boolean isSelected, final boolean cellHasFocus) {
+					@Nullable final PitchAccent value, final int index, final boolean isSelected,
+					final boolean cellHasFocus) {
 				//
 				if (value != null && value.image != null) {
 					//
