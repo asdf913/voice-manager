@@ -19,6 +19,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -63,9 +64,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper.Builder;
 import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 import com.microsoft.playwright.Browser;
@@ -95,7 +101,8 @@ class JapanDictGuiTest {
 			METHOD_GET_COLUMN_NAME, METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND,
 			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
 			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_GET_PITCH_ACCENT_IMAGE, METHOD_CREATE_TABLE_CELL_RENDERER,
-			METHOD_OR, METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE = null;
+			METHOD_OR, METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE,
+			METHOD_GET_PITCH_ACCENTS = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -197,6 +204,8 @@ class JapanDictGuiTest {
 		//
 		(METHOD_SET_PREFERRED_SIZE = Util.getDeclaredMethod(clz, "setPreferredSize", Component.class, Dimension.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_PITCH_ACCENTS = Util.getDeclaredMethod(clz, "getPitchAccents", Iterable.class)).setAccessible(true);
 		//
 	}
 
@@ -1315,6 +1324,30 @@ class JapanDictGuiTest {
 	void testSetPreferredSize() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_SET_PREFERRED_SIZE, null, new JLabel(), null));
+		//
+	}
+
+	@Test
+	void testGetPitchAccents() throws IllegalAccessException, InvocationTargetException, JsonProcessingException {
+		//
+		final Builder builder = JsonMapper.builder();
+		//
+		if (builder != null) {
+			//
+			builder.enable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY);
+			//
+		} // if
+			//
+		final ObjectMapper objectMapper = builder != null ? builder.build() : null;
+		//
+		if (objectMapper != null) {
+			//
+			objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
+			//
+		} // if
+			//
+		Assertions.assertEquals("[{\"image\":null,\"pitchAccent\":null}]", ObjectMapperUtil
+				.writeValueAsString(objectMapper, invoke(METHOD_GET_PITCH_ACCENTS, null, Collections.singleton(null))));
 		//
 	}
 

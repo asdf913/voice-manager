@@ -2141,100 +2141,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			if (IterableUtils.isEmpty(entry.pitchAccents)) {
 				//
-				final Iterable<ElementHandle> ehs1 = ElementHandleUtil.querySelectorAll(testAndApply(
-						x -> IterableUtils.size(x) > Util.intValue(entry.index2, 0),
-						PageUtil.querySelectorAll(page,
-								String.format("#entry-%1$s ul li.list-group-item[lang='ja'] .d-flex.p-2", entry.id)),
-						x -> IterableUtils.get(x, Util.intValue(entry.index2, 0)), null), "div.d-flex");
-				//
-				Iterable<ElementHandle> ehs = null;
-				//
-				ElementHandle eh1 = null;
-				//
-				PitchAccent pa = null;
-				//
-				Collection<PitchAccent> pas = null;
-				//
-				for (int i = 0; i < IterableUtils.size(ehs1); i++) {
-					//
-					final BoundingBox boundingBox = boundingBox(Util.cast(ElementHandle.class,
-							testAndApply(CollectionUtils::isNotEmpty,
-									ElementHandleUtil.querySelectorAll(eh1 = IterableUtils.get(ehs1, i), "div"),
-									y -> IterableUtils.get(y, 0), null)));
-					//
-					try {
-						//
-						if (StringsUtil.contains(Strings.CS, getAttribute(eh1, "class"), "flex-colum")) {
-							//
-							(pa = new PitchAccent()).image = testAndApply(
-									x -> startsWith(Strings.CS,
-											getMimeType(testAndApply(Objects::nonNull, x,
-													new ContentInfoUtil()::findMatch, null)),
-											"image/"),
-									ElementHandleUtil.screenshot(testAndApply(CollectionUtils::isNotEmpty,
-											ElementHandleUtil.querySelectorAll(eh1, "div"),
-											x -> IterableUtils.get(x, 0), null)),
-									x -> toBufferedImage(x), null);
-							//
-						} else {
-							//
-							(pa = new PitchAccent()).image = testAndApply(
-									x -> startsWith(Strings.CS,
-											getMimeType(testAndApply(Objects::nonNull, x,
-													new ContentInfoUtil()::findMatch, null)),
-											"image/"),
-									ElementHandleUtil.screenshot(eh1), x -> chopImage(x, boundingBox), null);
-							//
-						} // if
-							//
-					} catch (final IOException e) {
-						//
-						TaskDialogs.showException(e);
-						//
-					} // try
-						//
-					if (IterableUtils.size(ehs = ElementHandleUtil.querySelectorAll(eh1, "[data-bs-content]")) == 1) {
-						//
-						pa.pitchAccent = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-								ElementUtil.select(testAndApply(Objects::nonNull,
-										getAttribute(IterableUtils.get(ehs, 0), "data-bs-content"),
-										x -> Jsoup.parse(x, ""), null), "p span[class='h5']"),
-								x -> IterableUtils.get(x, 0), null));
-						//
-					} else {
-						//
-						final Stream<ElementHandle> stream = testAndApply(Objects::nonNull, Util.spliterator(ehs),
-								x -> StreamSupport.stream(x, false), null);
-						//
-						final Iterable<String> ss = Util.toList(Util.distinct(Util.map(stream,
-								x -> ElementUtil.text(testAndApply(y -> IterableUtils.size(y) == 1,
-										ElementUtil.select(Jsoup.parse(getAttribute(x, "data-bs-content"), ""),
-												"p span[class='h5']"),
-										y -> IterableUtils.get(y, 0), null)))));
-						//
-						testAndRun(IterableUtils.size(ss) > 1, () -> {
-							//
-							throw new IllegalStateException();
-							//
-						});
-						//
-						testAndAccept((a, b) -> IterableUtils.size(b) == 1, pa, ss, (a, b) -> {
-							//
-							if (a != null) {
-								//
-								a.pitchAccent = IterableUtils.get(b, 0);
-								//
-							} // if
-								//
-						});
-						//
-					} // if
-						//
-					Util.add(pas = ObjectUtils.getIfNull(pas, ArrayList::new), pa);
-					//
-				} // for
-					//
-				entry.pitchAccents = pas;
+				entry.pitchAccents = getPitchAccents(
+						ElementHandleUtil.querySelectorAll(
+								testAndApply(x -> IterableUtils.size(x) > Util.intValue(entry.index2, 0),
+										PageUtil.querySelectorAll(page, String.format(
+												"#entry-%1$s ul li.list-group-item[lang='ja'] .d-flex.p-2", entry.id)),
+										x -> IterableUtils.get(x, Util.intValue(entry.index2, 0)), null),
+								"div.d-flex"));
 				//
 			} // if
 				//
@@ -2314,6 +2227,94 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // try
 			//
 		pack(instance.window);
+		//
+	}
+
+	private static Iterable<PitchAccent> getPitchAccents(final Iterable<ElementHandle> iterable) {
+		//
+		ElementHandle eh = null;
+		//
+		Iterable<ElementHandle> ehs = null;
+		//
+		PitchAccent pa = null;
+		//
+		Collection<PitchAccent> collection = null;
+		//
+		for (int i = 0; i < IterableUtils.size(iterable); i++) {
+			//
+			final BoundingBox boundingBox = boundingBox(Util.cast(ElementHandle.class,
+					testAndApply(CollectionUtils::isNotEmpty,
+							ElementHandleUtil.querySelectorAll(eh = IterableUtils.get(iterable, i), "div"),
+							y -> IterableUtils.get(y, 0), null)));
+			//
+			try {
+				//
+				if (StringsUtil.contains(Strings.CS, getAttribute(eh, "class"), "flex-colum")) {
+					//
+					(pa = new PitchAccent()).image = testAndApply(
+							x -> startsWith(Strings.CS,
+									getMimeType(
+											testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)),
+									"image/"),
+							ElementHandleUtil.screenshot(testAndApply(CollectionUtils::isNotEmpty,
+									ElementHandleUtil.querySelectorAll(eh, "div"), x -> IterableUtils.get(x, 0), null)),
+							x -> toBufferedImage(x), null);
+					//
+				} else {
+					//
+					(pa = new PitchAccent()).image = testAndApply(x -> startsWith(Strings.CS,
+							getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)),
+							"image/"), ElementHandleUtil.screenshot(eh), x -> chopImage(x, boundingBox), null);
+					//
+				} // if
+					//
+			} catch (final IOException e) {
+				//
+				TaskDialogs.showException(e);
+				//
+			} // try
+				//
+			if (IterableUtils.size(ehs = ElementHandleUtil.querySelectorAll(eh, "[data-bs-content]")) == 1) {
+				//
+				pa.pitchAccent = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+						ElementUtil.select(testAndApply(Objects::nonNull,
+								getAttribute(IterableUtils.get(ehs, 0), "data-bs-content"), x -> Jsoup.parse(x, ""),
+								null), "p span[class='h5']"),
+						x -> IterableUtils.get(x, 0), null));
+				//
+			} else {
+				//
+				final Stream<ElementHandle> stream = testAndApply(Objects::nonNull, Util.spliterator(ehs),
+						x -> StreamSupport.stream(x, false), null);
+				//
+				final Iterable<String> ss = Util.toList(Util.distinct(Util.map(stream,
+						x -> ElementUtil.text(testAndApply(y -> IterableUtils.size(y) == 1, ElementUtil
+								.select(Jsoup.parse(getAttribute(x, "data-bs-content"), ""), "p span[class='h5']"),
+								y -> IterableUtils.get(y, 0), null)))));
+				//
+				testAndRun(IterableUtils.size(ss) > 1, () -> {
+					//
+					throw new IllegalStateException();
+					//
+				});
+				//
+				testAndAccept((a, b) -> IterableUtils.size(b) == 1, pa, ss, (a, b) -> {
+					//
+					if (a != null) {
+						//
+						a.pitchAccent = IterableUtils.get(b, 0);
+						//
+					} // if
+						//
+				});
+				//
+			} // if
+				//
+			Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), pa);
+			//
+		} // for
+			//
+		return collection;
 		//
 	}
 
