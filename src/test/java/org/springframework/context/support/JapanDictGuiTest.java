@@ -407,7 +407,7 @@ class JapanDictGuiTest {
 				} else if (Objects.equals(parameterType, Character.TYPE)) {
 					//
 					Util.add(collection, Character.valueOf(' '));
-					////
+					//
 				} else {
 					//
 					Util.add(collection, null);
