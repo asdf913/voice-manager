@@ -3797,7 +3797,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static String getConjugation(final Iterable<String> ss, final int i) {
+	private static String getConjugation(@Nullable final Iterable<String> ss, final int i) {
 		return testAndApply(x -> x != null && IterableUtils.size(x.key()) > x.rightInt(),
 				ObjectIntImmutablePair.of(ss, i), x -> x != null ? IterableUtils.get(x.key(), x.rightInt()) : null,
 				null);
