@@ -1638,17 +1638,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			return true;
 			//
-		} else if (Objects.equals(source, instance.btnCopyStrokeImage)) {
-			//
-			final IH ih = new IH();
-			//
-			ih.image = instance.strokeBufferedImage;
-			//
-			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
-					Reflection.newProxy(Transferable.class, ih), null));
-			//
-			return true;
-			//
 		} // if
 			//
 		return false;
@@ -1684,7 +1673,18 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} // if
 			//
-		if (Objects.equals(source, instance.btnSaveStrokeImage)) {
+		if (Objects.equals(source, instance.btnCopyStrokeImage)) {
+			//
+			final IH ih = new IH();
+			//
+			ih.image = instance.strokeBufferedImage;
+			//
+			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+					Reflection.newProxy(Transferable.class, ih), null));
+			//
+			return true;
+			//
+		} else if (Objects.equals(source, instance.btnSaveStrokeImage)) {
 			//
 			final StringBuilder sb = testAndApply(Objects::nonNull, Util.getText(instance.tfText), StringBuilder::new,
 					null);
