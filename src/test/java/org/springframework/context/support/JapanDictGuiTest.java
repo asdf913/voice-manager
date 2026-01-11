@@ -62,6 +62,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
+import org.javatuples.Unit;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -103,7 +104,7 @@ class JapanDictGuiTest {
 			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
 			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_CREATE_TABLE_CELL_RENDERER,
 			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_GET_PITCH_ACCENTS,
-			METHOD_FILTER, METHOD_ADD_PARAMETERS = null;
+			METHOD_FILTER, METHOD_ADD_PARAMETERS, METHOD_GET_JWT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -206,6 +207,8 @@ class JapanDictGuiTest {
 		//
 		(METHOD_ADD_PARAMETERS = Util.getDeclaredMethod(clz, "addParameters", URIBuilder.class, List.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_JWT = Util.getDeclaredMethod(clz, "getJwt", Iterable.class, String.class)).setAccessible(true);
 		//
 	}
 
@@ -1369,6 +1372,31 @@ class JapanDictGuiTest {
 		final Object object = Narcissus.allocateInstance(URIBuilder.class);
 		//
 		Assertions.assertSame(object, invoke(METHOD_ADD_PARAMETERS, null, object, Collections.emptyList()));
+		//
+	}
+
+	@Test
+	void testGetJwt() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_GET_JWT, null, Collections.singleton(null), null));
+		//
+		final String string = "a.b.c";
+		//
+		Assertions.assertEquals(Unit.with(string), invoke(METHOD_GET_JWT, null, Collections.singleton(string), null));
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			//
+			try {
+				//
+				invoke(METHOD_GET_JWT, null, Collections.nCopies(2, string), null);
+				//
+			} catch (final InvocationTargetException e) {
+				//
+				throw e.getTargetException();
+				//
+			} // try
+				//
+		});
 		//
 	}
 

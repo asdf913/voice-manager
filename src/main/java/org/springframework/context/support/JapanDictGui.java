@@ -1570,33 +1570,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			final NameValuePair nvp = testAndApply(x -> IterableUtils.size(x) == 1, nvps, x -> IterableUtils.get(x, 0),
 					null);
 			//
-			final Iterable<?> iterable = Util.cast(Iterable.class,
-					ObjectMapperUtil.readValue(objectMapper, NodeUtil.attr(e, DATA_READING), Object.class));
-			//
-			IValue0<String> iValue0 = null;
-			//
-			String string = null;
-			//
-			for (int i = 0; i < IterableUtils.size(iterable); i++) {
-				//
-				if (Boolean.logicalOr(
-						StringUtils.countMatches(string = Util.toString(IterableUtils.get(iterable, i)), '.') != 2,
-						StringsUtil.contains(Strings.CS, audioUrl, string))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				testAndRun(iValue0 != null, () -> {
-					//
-					throw new IllegalStateException();
-					//
-				});
-				//
-				iValue0 = Unit.with(string);
-				//
-			} // for
-				//
 			final Iterable<Field> fs = Util.toList(Util.filter(
 					Util.stream(testAndApply(Objects::nonNull, Util.getClass(nvp), FieldUtils::getAllFieldsList, null)),
 					x -> Objects.equals(Util.getName(x), VALUE)));
@@ -1607,7 +1580,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			});
 			//
-			testAndAccept((a, b) -> a != null, nvp, iValue0,
+			testAndAccept((a, b) -> a != null, nvp,
+					getJwt(Util.cast(Iterable.class,
+							ObjectMapperUtil.readValue(objectMapper, NodeUtil.attr(e, DATA_READING), Object.class)),
+							audioUrl),
 					(a, b) -> Narcissus.setField(a,
 							testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
 							IValue0Util.getValue0(b)));
@@ -1616,6 +1592,36 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} // try
 			//
+	}
+
+	private static IValue0<String> getJwt(final Iterable<?> iterable, final String url) {
+		//
+		String string = null;
+		//
+		IValue0<String> iValue0 = null;
+		//
+		for (int i = 0; i < IterableUtils.size(iterable); i++) {
+			//
+			if (Boolean.logicalOr(
+					StringUtils.countMatches(string = Util.toString(IterableUtils.get(iterable, i)), '.') != 2,
+					StringsUtil.contains(Strings.CS, url, string))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			testAndRun(iValue0 != null, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			iValue0 = Unit.with(string);
+			//
+		} // for
+			//
+		return iValue0;
+		//
 	}
 
 	@Nullable
