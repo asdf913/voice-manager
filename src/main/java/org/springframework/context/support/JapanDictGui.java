@@ -1605,11 +1605,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static List<NameValuePair> getQueryParams(final URIBuilder instance) {
+	private static List<NameValuePair> getQueryParams(@Nullable final URIBuilder instance) {
 		return instance != null ? instance.getQueryParams() : null;
 	}
 
-	private static String getValue(final NameValuePair instance) {
+	private static String getValue(@Nullable final NameValuePair instance) {
 		return instance != null ? instance.getValue() : null;
 	}
 
@@ -1617,7 +1617,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return instance != null && Util.toArray(nvps) != null ? instance.addParameters(nvps) : instance;
 	}
 
-	private static URIBuilder clearParameters(final URIBuilder instance) {
+	private static URIBuilder clearParameters(@Nullable final URIBuilder instance) {
 		return instance != null ? instance.clearParameters() : instance;
 	}
 
