@@ -1524,12 +1524,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 											//
 										} // if
 											//
-										if (found) {
+										testAndRun(found, () -> {
 											//
 											throw new IllegalStateException();
 											//
-										} // if
-											//
+										});
+										//
 										found = true;
 										//
 									} // for
