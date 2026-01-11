@@ -1789,15 +1789,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		setRequestProperty(httpURLConnection, USER_AGENT, userAgent);
 		//
-		if (httpURLConnection == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		final int responseCode = httpURLConnection.getResponseCode();
-		//
-		if (!HttpStatus.isSuccess(responseCode)) {
+		if (httpURLConnection == null || !HttpStatus.isSuccess(httpURLConnection.getResponseCode())) {
 			//
 			return null;
 			//
