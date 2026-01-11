@@ -1573,10 +1573,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						//
 						for (int i = 0; i < IterableUtils.size(iterable); i++) {
 							//
-							if (StringUtils.countMatches(string = Util.toString(IterableUtils.get(iterable, i)),
-									'.') != 2
-									|| StringsUtil.contains(Strings.CS,
-											japanDictEntry != null ? japanDictEntry.audioUrl : null, string)) {
+							if (Boolean.logicalOr(
+									StringUtils.countMatches(string = Util.toString(IterableUtils.get(iterable, i)),
+											'.') != 2,
+									StringsUtil.contains(Strings.CS,
+											japanDictEntry != null ? japanDictEntry.audioUrl : null, string))) {
 								//
 								continue;
 								//
