@@ -50,7 +50,6 @@ import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.function.FailableConsumer;
@@ -64,8 +63,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -91,8 +90,6 @@ class JapanDictGuiTest {
 
 	private static final int ONE = 1;
 
-	private static Class<?> CLASS_JAPAN_DICT_ENTRY = null;
-
 	private static Method METHOD_TEST_AND_GET, METHOD_SET_TEXT, METHOD_STARTS_WITH, METHOD_APPEND,
 			METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG, METHOD_TEST_AND_ACCEPT4, METHOD_GET_AUDIO_URL,
 			METHOD_TEST_AND_RUN, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
@@ -100,9 +97,8 @@ class JapanDictGuiTest {
 			METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE,
 			METHOD_GET_COLUMN_NAME, METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND,
 			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
-			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_GET_PITCH_ACCENT_IMAGE, METHOD_CREATE_TABLE_CELL_RENDERER,
-			METHOD_OR, METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE,
-			METHOD_GET_PITCH_ACCENTS = null;
+			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_CREATE_TABLE_CELL_RENDERER,
+			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_GET_PITCH_ACCENTS = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -188,16 +184,8 @@ class JapanDictGuiTest {
 		(METHOD_SET_ROW_SELECTION_INTERVAL = Util.getDeclaredMethod(clz, "setRowSelectionInterval", JTable.class,
 				Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
-		(METHOD_GET_PITCH_ACCENT_IMAGE = Util.getDeclaredMethod(clz, "getPitchAccentImage",
-				CLASS_JAPAN_DICT_ENTRY = Util
-						.forName("org.springframework.context.support.JapanDictGui$JapanDictEntry"),
-				Page.class)).setAccessible(true);
-		//
 		(METHOD_CREATE_TABLE_CELL_RENDERER = Util.getDeclaredMethod(clz, "createTableCellRenderer",
 				TableCellRenderer.class)).setAccessible(true);
-		//
-		(METHOD_OR = Util.getDeclaredMethod(clz, "or", Boolean.TYPE, Boolean.TYPE, boolean[].class))
-				.setAccessible(true);
 		//
 		(METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER = Util.getDeclaredMethod(clz,
 				"createPitchAccentListCellRenderer", Component.class, ListCellRenderer.class, Dimension.class))
@@ -641,23 +629,28 @@ class JapanDictGuiTest {
 			//
 	}
 
-	@Test
-	void testOr() throws Throwable {
-		//
-		Assertions.assertFalse(or(false, false, null));
-		//
-	}
-
 	private static boolean or(final boolean a, final boolean b, final boolean... bs) throws Throwable {
-		try {
-			final Object obj = invoke(METHOD_OR, null, a, b, bs);
-			if (obj instanceof Boolean bool) {
-				return BooleanUtils.toBooleanDefaultIfNull(bool, false);
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
+		//
+		boolean result = a || b;
+		//
+		if (result) {
+			//
+			return result;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (result |= bs[i]) {
+				//
+				return result;
+				//
+			} // if
+				//
+		} // for
+			//
+		return result;
+		//
 	}
 
 	private static Class<?> componentType(final Class<?> instance) {
@@ -1259,18 +1252,8 @@ class JapanDictGuiTest {
 	}
 
 	@Test
-	void testGetPitchAccentImage() throws IllegalAccessException, InvocationTargetException {
-		//
-		final Object japanDictEntry = Narcissus.allocateInstance(CLASS_JAPAN_DICT_ENTRY);
-		//
-		FieldUtils.writeDeclaredField(japanDictEntry, "pitchAccent", "a", true);
-		//
-		Assertions.assertNull(invoke(METHOD_GET_PITCH_ACCENT_IMAGE, null, japanDictEntry, null));
-		//
-	}
-
-	@Test
-	void testCreateTableCellRenderer() throws IllegalAccessException, InvocationTargetException {
+	void testCreateTableCellRenderer()
+			throws IllegalAccessException, InvocationTargetException, ClassNotFoundException {
 		//
 		final TableCellRenderer tcr = Util.cast(TableCellRenderer.class,
 				invoke(METHOD_CREATE_TABLE_CELL_RENDERER, null, (Object) null));
@@ -1285,7 +1268,8 @@ class JapanDictGuiTest {
 		//
 		final DefaultTableModel dtm = new DefaultTableModel(new Object[] { "", "Hiragana" }, ZERO);
 		//
-		dtm.addRow(new Object[] { Narcissus.allocateInstance(CLASS_JAPAN_DICT_ENTRY) });
+		dtm.addRow(new Object[] { Narcissus
+				.allocateInstance(Class.forName("org.springframework.context.support.JapanDictGui$JapanDictEntry")) });
 		//
 		Assertions.assertNull(tcr.getTableCellRendererComponent(new JTable(dtm), tcr, false, false, ZERO, ZERO));
 		//
