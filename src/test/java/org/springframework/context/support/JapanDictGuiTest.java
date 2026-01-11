@@ -79,11 +79,9 @@ import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
-import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.options.BoundingBox;
 
 import io.github.toolfactory.narcissus.Narcissus;
-import it.unimi.dsi.fastutil.ints.IntObjectPair;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyUtil;
 
@@ -279,14 +277,6 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof Playwright) {
-				//
-				if (Objects.equals(name, "chromium")) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} else if (proxy instanceof Locator
 					&& Util.anyMatch(Stream.of("screenshot", "boundingBox"), x -> Objects.equals(name, x))) {
 				//
@@ -326,18 +316,6 @@ class JapanDictGuiTest {
 				//
 				return selectedIndices;
 				//
-			} else if (proxy instanceof Map && Objects.equals(name, "get")) {
-				//
-				return null;
-				//
-			} else if (proxy instanceof IntObjectPair) {
-				//
-				if (Objects.equals(name, "right")) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} // if
 				//
 			throw new Throwable(name);

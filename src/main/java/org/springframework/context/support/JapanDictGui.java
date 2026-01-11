@@ -150,7 +150,6 @@ import com.microsoft.playwright.PlaywrightUtil;
 import com.microsoft.playwright.options.BoundingBox;
 
 import io.github.toolfactory.narcissus.Narcissus;
-import it.unimi.dsi.fastutil.ints.IntObjectPair;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import javazoom.jl.player.PlayerUtil;
@@ -1427,7 +1426,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			try {
 				//
-				final byte[] bs = right(download(Util.getText(instance.tfAudioUrl), instance.getUserAgent()));
+				final byte[] bs = download(Util.getText(instance.tfAudioUrl), instance.getUserAgent());
 				//
 				final StringBuilder sb = testAndApply(Objects::nonNull, Util.getText(instance.tfText),
 						StringBuilder::new, null);
@@ -1465,7 +1464,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			try {
 				//
-				if ((bs = right(download(Util.getText(instance.tfAudioUrl), userAgent))) == null) {
+				if ((bs = download(Util.getText(instance.tfAudioUrl), userAgent)) == null) {
 					//
 					final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class, getValueAt(instance.dtm,
 							instance.jTable != null ? instance.jTable.getSelectedRow() : 0, 0));
@@ -1631,7 +1630,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			} // if
 				//
 			try (final InputStream is = testAndApply(Objects::nonNull,
-					bs = bs != null ? right(download(Util.getText(instance.tfAudioUrl), userAgent)) : null,
+					bs = bs != null ? download(Util.getText(instance.tfAudioUrl), userAgent) : null,
 					ByteArrayInputStream::new, null)) {
 				//
 				testAndAccept(
@@ -1668,10 +1667,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	private static <T> FailableStream<T> filter(final FailableStream<T> instance,
 			final FailablePredicate<T, ?> predicate) {
 		return instance != null && instance.stream() != null ? instance.filter(predicate) : instance;
-	}
-
-	private static <T> T right(final IntObjectPair<T> instance) {
-		return instance != null ? instance.right() : null;
 	}
 
 	private static boolean actionPerformed3(@Nullable final JapanDictGui instance, final Object source) {
@@ -1789,8 +1784,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static IntObjectPair<byte[]> download(final String url, final String userAgent)
-			throws IOException, URISyntaxException {
+	private static byte[] download(final String url, final String userAgent) throws IOException, URISyntaxException {
 		//
 		final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class, Util.openConnection(Util.toURL(
 				testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x), url, URI::new, null))));
@@ -1807,13 +1801,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		if (!HttpStatus.isSuccess(responseCode)) {
 			//
-			return IntObjectPair.of(responseCode, null);
+			return null;
 			//
 		} // if
 			//
 		try (final InputStream is = Util.getInputStream(httpURLConnection)) {
 			//
-			return IntObjectPair.of(responseCode, testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null));
+			return testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
 			//
 		} // try
 			//
