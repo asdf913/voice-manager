@@ -26,7 +26,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
@@ -1483,7 +1482,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	private static String getAudioUrl(@Nullable final JapanDictEntry japanDictEntry, final String userAgent)
-			throws MalformedURLException, IOException, URISyntaxException {
+			throws IOException, URISyntaxException {
 		//
 		final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class,
 				Util.openConnection(Util.toURL(URIBuilderUtil.build(testAndApply(Objects::nonNull,
