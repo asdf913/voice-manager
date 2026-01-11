@@ -2007,7 +2007,7 @@ public abstract class Util {
 		}
 	}
 
-	static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, @Nullable final T t, final U u) {
+	static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, @Nullable final T t, @Nullable final U u) {
 		if (instance != null) {
 			instance.accept(t, u);
 		}
