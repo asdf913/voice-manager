@@ -26,6 +26,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
@@ -1424,155 +1425,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				if ((bs = download(Util.getText(instance.tfAudioUrl), userAgent)) == null) {
 					//
-					final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class, getValueAt(instance.dtm,
-							instance.jTable != null ? instance.jTable.getSelectedRow() : 0, 0));
+					Util.setText(instance.tfAudioUrl,
+							getAudioUrl(
+									Util.cast(JapanDictEntry.class,
+											getValueAt(instance.dtm,
+													instance.jTable != null ? instance.jTable.getSelectedRow() : 0, 0)),
+									userAgent));
 					//
-					final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class,
-							Util.openConnection(Util.toURL(URIBuilderUtil.build(testAndApply(Objects::nonNull,
-									japanDictEntry != null ? japanDictEntry.pageUrl : null, URIBuilder::new, null)))));
-					//
-					setRequestProperty(httpURLConnection, USER_AGENT, userAgent);
-					//
-					try (final InputStream is = Util.getInputStream(httpURLConnection)) {
-						//
-						final String audioUrl = japanDictEntry != null ? japanDictEntry.audioUrl : null;
-						//
-						final URIBuilder uriBuilder = testAndApply(Objects::nonNull, audioUrl, URIBuilder::new, null);
-						//
-						final List<NameValuePair> queryParams = getQueryParams(uriBuilder);
-						//
-						final ObjectMapper objectMapper = new ObjectMapper();
-						//
-						final Iterable<Element> es = Util
-								.toList(FailableStreamUtil
-										.stream(filter(
-												new FailableStream<>(
-														Util.stream(
-																ElementUtil.select(
-																		testAndApply(Objects::nonNull,
-																				testAndApply(Objects::nonNull, is,
-																						x -> IOUtils.toString(x,
-																								StandardCharsets.UTF_8),
-																						null),
-																				Jsoup::parse, null),
-																		"a[data-reading]"))),
-												x -> {
-													//
-													final Iterable<?> iterable = Util.cast(Iterable.class,
-															ObjectMapperUtil.readValue(objectMapper,
-																	NodeUtil.attr(x, DATA_READING), Object.class));
-													//
-													NameValuePair nvp = null;
-													//
-													boolean found = false;
-													//
-													String value = null;
-													//
-													for (int i = 0; i < IterableUtils.size(queryParams); i++) {
-														//
-														if ((nvp = IterableUtils.get(queryParams, i)) == null) {
-															//
-															continue;
-															//
-														} // if
-															//
-														for (int j = 0; j < IterableUtils.size(iterable); j++) {
-															//
-															if (Boolean.logicalOr(
-																	!Objects.equals(IterableUtils.get(iterable, j),
-																			(value = getValue(nvp))),
-																	NumberUtils.isParsable(value))) {
-																//
-																continue;
-																//
-															} // if
-																//
-															if (found) {
-																//
-																throw new IllegalStateException();
-																//
-															} // if
-																//
-															found = true;
-															//
-														} // for
-															//
-													} // for
-														//
-													return found;
-													//
-												})));
-						//
-						testAndRun(IterableUtils.size(es) > 1, () -> {
-							//
-							throw new IllegalStateException();
-							//
-						});
-						//
-						final Element e = testAndApply(x -> IterableUtils.size(x) == 1, es,
-								x -> IterableUtils.get(x, 0), null);
-						//
-						final Iterable<NameValuePair> nvps = Util.toList(Util.filter(Util.stream(queryParams),
-								x -> StringUtils.countMatches(getValue(x), '.') == 2));
-						//
-						testAndRun(IterableUtils.size(nvps) > 1, () -> {
-							//
-							throw new IllegalStateException();
-							//
-						});
-						//
-						final NameValuePair nvp = testAndApply(x -> IterableUtils.size(x) == 1, nvps,
-								x -> IterableUtils.get(x, 0), null);
-						//
-						final Iterable<?> iterable = Util.cast(Iterable.class,
-								ObjectMapperUtil.readValue(objectMapper, NodeUtil.attr(e, DATA_READING), Object.class));
-						//
-						IValue0<String> iValue0 = null;
-						//
-						String string = null;
-						//
-						for (int i = 0; i < IterableUtils.size(iterable); i++) {
-							//
-							if (Boolean
-									.logicalOr(
-											StringUtils.countMatches(
-													string = Util.toString(IterableUtils.get(iterable, i)), '.') != 2,
-											StringsUtil.contains(Strings.CS, audioUrl, string))) {
-								//
-								continue;
-								//
-							} // if
-								//
-							testAndRun(iValue0 != null, () -> {
-								//
-								throw new IllegalStateException();
-								//
-							});
-							//
-							iValue0 = Unit.with(string);
-							//
-						} // for
-							//
-						final Iterable<Field> fs = Util.toList(Util.filter(
-								Util.stream(testAndApply(Objects::nonNull, Util.getClass(nvp),
-										FieldUtils::getAllFieldsList, null)),
-								x -> Objects.equals(Util.getName(x), VALUE)));
-						//
-						testAndRun(IterableUtils.size(fs) > 1, () -> {
-							//
-							throw new IllegalStateException();
-							//
-						});
-						//
-						testAndAccept((a, b) -> a != null, nvp, iValue0, (a, b) -> Narcissus.setField(a,
-								testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
-								IValue0Util.getValue0(b)));
-						//
-						Util.setText(instance.tfAudioUrl, Util.toString(
-								URIBuilderUtil.build(addParameters(clearParameters(uriBuilder), queryParams))));
-						//
-					} // try
-						//
 				} // if
 					//
 			} catch (final IOException | URISyntaxException e) {
@@ -1603,6 +1462,143 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return false;
 		//
+	}
+
+	private static String getAudioUrl(final JapanDictEntry japanDictEntry, final String userAgent)
+			throws MalformedURLException, IOException, URISyntaxException {
+		//
+		final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class,
+				Util.openConnection(Util.toURL(URIBuilderUtil.build(testAndApply(Objects::nonNull,
+						japanDictEntry != null ? japanDictEntry.pageUrl : null, URIBuilder::new, null)))));
+		//
+		setRequestProperty(httpURLConnection, USER_AGENT, userAgent);
+		//
+		try (final InputStream is = Util.getInputStream(httpURLConnection)) {
+			//
+			final String audioUrl = japanDictEntry != null ? japanDictEntry.audioUrl : null;
+			//
+			final URIBuilder uriBuilder = testAndApply(Objects::nonNull, audioUrl, URIBuilder::new, null);
+			//
+			final List<NameValuePair> queryParams = getQueryParams(uriBuilder);
+			//
+			final ObjectMapper objectMapper = new ObjectMapper();
+			//
+			final Iterable<Element> es = Util.toList(FailableStreamUtil
+					.stream(filter(new FailableStream<>(Util.stream(ElementUtil.select(testAndApply(Objects::nonNull,
+							testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null),
+							Jsoup::parse, null), "a[data-reading]"))), x -> {
+								//
+								final Iterable<?> iterable = Util.cast(Iterable.class, ObjectMapperUtil
+										.readValue(objectMapper, NodeUtil.attr(x, DATA_READING), Object.class));
+								//
+								NameValuePair nvp = null;
+								//
+								boolean found = false;
+								//
+								String value = null;
+								//
+								for (int i = 0; i < IterableUtils.size(queryParams); i++) {
+									//
+									if ((nvp = IterableUtils.get(queryParams, i)) == null) {
+										//
+										continue;
+										//
+									} // if
+										//
+									for (int j = 0; j < IterableUtils.size(iterable); j++) {
+										//
+										if (Boolean
+												.logicalOr(
+														!Objects.equals(IterableUtils.get(iterable, j),
+																(value = getValue(nvp))),
+														NumberUtils.isParsable(value))) {
+											//
+											continue;
+											//
+										} // if
+											//
+										if (found) {
+											//
+											throw new IllegalStateException();
+											//
+										} // if
+											//
+										found = true;
+										//
+									} // for
+										//
+								} // for
+									//
+								return found;
+								//
+							})));
+			//
+			testAndRun(IterableUtils.size(es) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			final Element e = testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null);
+			//
+			final Iterable<NameValuePair> nvps = Util.toList(
+					Util.filter(Util.stream(queryParams), x -> StringUtils.countMatches(getValue(x), '.') == 2));
+			//
+			testAndRun(IterableUtils.size(nvps) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			final NameValuePair nvp = testAndApply(x -> IterableUtils.size(x) == 1, nvps, x -> IterableUtils.get(x, 0),
+					null);
+			//
+			final Iterable<?> iterable = Util.cast(Iterable.class,
+					ObjectMapperUtil.readValue(objectMapper, NodeUtil.attr(e, DATA_READING), Object.class));
+			//
+			IValue0<String> iValue0 = null;
+			//
+			String string = null;
+			//
+			for (int i = 0; i < IterableUtils.size(iterable); i++) {
+				//
+				if (Boolean.logicalOr(
+						StringUtils.countMatches(string = Util.toString(IterableUtils.get(iterable, i)), '.') != 2,
+						StringsUtil.contains(Strings.CS, audioUrl, string))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				testAndRun(iValue0 != null, () -> {
+					//
+					throw new IllegalStateException();
+					//
+				});
+				//
+				iValue0 = Unit.with(string);
+				//
+			} // for
+				//
+			final Iterable<Field> fs = Util.toList(Util.filter(
+					Util.stream(testAndApply(Objects::nonNull, Util.getClass(nvp), FieldUtils::getAllFieldsList, null)),
+					x -> Objects.equals(Util.getName(x), VALUE)));
+			//
+			testAndRun(IterableUtils.size(fs) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			testAndAccept((a, b) -> a != null, nvp, iValue0,
+					(a, b) -> Narcissus.setField(a,
+							testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
+							IValue0Util.getValue0(b)));
+			//
+			return Util.toString(URIBuilderUtil.build(addParameters(clearParameters(uriBuilder), queryParams)));
+			//
+		} // try
+			//
 	}
 
 	private static List<NameValuePair> getQueryParams(@Nullable final URIBuilder instance) {
