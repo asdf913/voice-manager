@@ -638,10 +638,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private String pageUrl = null;
 
-		@Note("Index 1")
-		private Integer index1 = null;
-
-		private Integer index2 = null;
+		private Integer index = null;
 
 		@Note("Stroke Image")
 		private BufferedImage strokeImage = null;
@@ -921,9 +918,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		entry.text = Util.toString(Util.get(map, "text"));
 		//
-		entry.index1 = Integer.valueOf(index1);
+		entry.index = Integer.valueOf(index1);
 		//
-		entry.index2 = Integer.valueOf(index2);
+		entry.index = Integer.valueOf(index2);
 		//
 		entry.pageUrl = Util.toString(Util.get(map, "pageUrl"));
 		//
@@ -2069,13 +2066,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			if (IterableUtils.isEmpty(entry.pitchAccents)) {
 				//
-				entry.pitchAccents = getPitchAccents(
-						ElementHandleUtil.querySelectorAll(
-								testAndApply(x -> IterableUtils.size(x) > Util.intValue(entry.index2, 0),
-										PageUtil.querySelectorAll(page, String.format(
-												"#entry-%1$s ul li.list-group-item[lang='ja'] .d-flex.p-2", entry.id)),
-										x -> IterableUtils.get(x, Util.intValue(entry.index2, 0)), null),
-								"div.d-flex"));
+				entry.pitchAccents = getPitchAccents(ElementHandleUtil.querySelectorAll(testAndApply(
+						x -> IterableUtils.size(x) > Util.intValue(entry.index, 0),
+						PageUtil.querySelectorAll(page,
+								String.format("#entry-%1$s ul li.list-group-item[lang='ja'] .d-flex.p-2", entry.id)),
+						x -> IterableUtils.get(x, Util.intValue(entry.index, 0)), null), "div.d-flex"));
 				//
 			} // if
 				//
