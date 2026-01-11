@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -59,6 +60,7 @@ import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.apache.http.client.utils.URIBuilder;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -100,7 +102,7 @@ class JapanDictGuiTest {
 			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
 			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_CREATE_TABLE_CELL_RENDERER,
 			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_GET_PITCH_ACCENTS,
-			METHOD_FILTER = null;
+			METHOD_FILTER, METHOD_ADD_PARAMETERS = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -201,6 +203,9 @@ class JapanDictGuiTest {
 		(METHOD_FILTER = Util.getDeclaredMethod(clz, "filter", FailableStream.class, FailablePredicate.class))
 				.setAccessible(true);
 		//
+		(METHOD_ADD_PARAMETERS = Util.getDeclaredMethod(clz, "addParameters", URIBuilder.class, List.class))
+				.setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -221,6 +226,16 @@ class JapanDictGuiTest {
 				//
 			final String name = Util.getName(method);
 			//
+			if (proxy instanceof Collection) {
+				//
+				if (Objects.equals(name, "toArray")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
+				//
 			if (proxy instanceof Predicate) {
 				//
 				if (Objects.equals(name, "test")) {
@@ -588,8 +603,13 @@ class JapanDictGuiTest {
 						Boolean.logicalAnd(Objects.equals(name, "createPitchAccentListCellRenderer"),
 								Arrays.equals(parameterTypes,
 										new Class<?>[] { Component.class, ListCellRenderer.class, Dimension.class })),
-						Boolean.logicalAnd(Objects.equals(name, "filter"), Arrays.equals(parameterTypes,
-								new Class<?>[] { FailableStream.class, FailablePredicate.class })))) {
+						Boolean.logicalAnd(Objects.equals(name, "filter"),
+								Arrays.equals(parameterTypes,
+										new Class<?>[] { FailableStream.class, FailablePredicate.class })),
+						Boolean.logicalAnd(Objects.equals(name, "addParameters"),
+								Arrays.equals(parameterTypes, new Class<?>[] { URIBuilder.class, List.class })),
+						Boolean.logicalAnd(Objects.equals(name, "clearParameters"),
+								Arrays.equals(parameterTypes, new Class<?>[] { URIBuilder.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -1337,6 +1357,15 @@ class JapanDictGuiTest {
 		final FailableStream<?> fs = new FailableStream<>(Stream.empty());
 		//
 		Assertions.assertSame(fs, invoke(METHOD_FILTER, null, fs, null));
+		//
+	}
+
+	@Test
+	void testAddParameters() throws IllegalAccessException, InvocationTargetException {
+		//
+		final Object instance = Narcissus.allocateInstance(URIBuilder.class);
+		//
+		Assertions.assertSame(instance, invoke(METHOD_ADD_PARAMETERS, null, instance, Collections.emptyList()));
 		//
 	}
 

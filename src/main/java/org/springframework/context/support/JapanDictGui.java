@@ -1602,21 +1602,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							//
 						});
 						//
-						final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0),
-								null);
+						testAndAccept((a, b) -> a != null, nvp, iValue0, (a, b) -> Narcissus.setField(a,
+								testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
+								IValue0Util.getValue0(b)));
 						//
-						testAndAccept((a, b) -> a != null, nvp, iValue0,
-								(a, b) -> Narcissus.setField(a, f, IValue0Util.getValue0(b)));
-						//
-						if (uriBuilder != null) {
-							//
-							uriBuilder.clearParameters();
-							//
-							uriBuilder.addParameters(queryParams);
-							//
-						} // if
-							//
-						Util.setText(instance.tfAudioUrl, Util.toString(URIBuilderUtil.build(uriBuilder)));
+						Util.setText(instance.tfAudioUrl, Util.toString(
+								URIBuilderUtil.build(addParameters(clearParameters(uriBuilder), queryParams))));
 						//
 					} // try
 						//
@@ -1661,6 +1652,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return false;
 		//
+	}
+
+	private static URIBuilder addParameters(final URIBuilder instance, final List<NameValuePair> nvps) {
+		return instance != null && Util.toArray(nvps) != null ? instance.addParameters(nvps) : instance;
+	}
+
+	private static URIBuilder clearParameters(final URIBuilder instance) {
+		return instance != null ? instance.clearParameters() : instance;
 	}
 
 	private static <T> FailableStream<T> filter(@Nullable final FailableStream<T> instance,
