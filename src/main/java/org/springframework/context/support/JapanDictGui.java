@@ -163,6 +163,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private static final String USER_AGENT = "User-Agent";
 
+	private static final String DATA_READING = "data-reading";
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -938,18 +940,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		try {
 			//
-			entry.audioUrl = getAudioUrl(
-					Util.toString(Util.get(map, "scheme")), Strings.CS, Util
-							.cast(Iterable.class,
-									ObjectMapperUtil
-											.readValue(objectMapper,
-													NodeUtil.attr(
-															testAndApply(x -> IterableUtils.size(x) > 0,
-																	ElementUtil.select(e,
-																			".d-inline-block.align-middle.p-2 a"),
-																	x -> IterableUtils.get(x, 0), null),
-															"data-reading"),
-													Object.class)));
+			entry.audioUrl = getAudioUrl(Util.toString(Util.get(map, "scheme")), Strings.CS,
+					Util.cast(Iterable.class,
+							ObjectMapperUtil.readValue(objectMapper,
+									NodeUtil.attr(testAndApply(x -> IterableUtils.size(x) > 0,
+											ElementUtil.select(e, ".d-inline-block.align-middle.p-2 a"),
+											x -> IterableUtils.get(x, 0), null), DATA_READING),
+									Object.class)));
 			//
 		} catch (final JsonProcessingException ex) {
 			//
@@ -1503,7 +1500,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 													//
 													final Iterable<?> iterable = Util.cast(Iterable.class,
 															ObjectMapperUtil.readValue(objectMapper,
-																	NodeUtil.attr(x, "data-reading"), Object.class));
+																	NodeUtil.attr(x, DATA_READING), Object.class));
 													//
 													NameValuePair nvp = null;
 													//
@@ -1566,8 +1563,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						final NameValuePair nvp = testAndApply(x -> IterableUtils.size(x) == 1, nvps,
 								x -> IterableUtils.get(x, 0), null);
 						//
-						final Iterable<?> iterable = Util.cast(Iterable.class, ObjectMapperUtil.readValue(objectMapper,
-								NodeUtil.attr(e, "data-reading"), Object.class));
+						final Iterable<?> iterable = Util.cast(Iterable.class,
+								ObjectMapperUtil.readValue(objectMapper, NodeUtil.attr(e, DATA_READING), Object.class));
 						//
 						IValue0<String> iValue0 = null;
 						//
