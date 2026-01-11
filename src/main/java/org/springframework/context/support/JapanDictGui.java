@@ -1718,36 +1718,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			return true;
 			//
-		} else if (Objects.equals(source, instance.btnSaveStrokeImage)) {
-			//
-			final StringBuilder sb = testAndApply(Objects::nonNull, Util.getText(instance.tfText), StringBuilder::new,
-					null);
-			//
-			final String format = "png";
-			//
-			append(append(append(sb, "(Stroke)"), '.'), format);
-			//
-			final JFileChooser jfc = new JFileChooser();
-			//
-			jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.toString(sb), Path::of, null)));
-			//
-			if (Util.and(!GraphicsEnvironment.isHeadless(), !isTestMode(), instance.strokeBufferedImage != null)
-					&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-				//
-				try {
-					//
-					ImageIO.write(instance.strokeBufferedImage, format, jfc.getSelectedFile());
-					//
-				} catch (final IOException e) {
-					//
-					throw new RuntimeException(e);
-					//
-				} // try
-					//
-			} // if
-				//
-			return true;
-			//
 		} // if
 			//
 		return false;
@@ -1798,6 +1768,36 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 					new StringSelection(Util.getText(instance.tfKatakana)), null));
 			//
+			return true;
+			//
+		} else if (Objects.equals(source, instance.btnSaveStrokeImage)) {
+			//
+			final StringBuilder sb = testAndApply(Objects::nonNull, Util.getText(instance.tfText), StringBuilder::new,
+					null);
+			//
+			final String format = "png";
+			//
+			append(append(append(sb, "(Stroke)"), '.'), format);
+			//
+			final JFileChooser jfc = new JFileChooser();
+			//
+			jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.toString(sb), Path::of, null)));
+			//
+			if (Util.and(!GraphicsEnvironment.isHeadless(), !isTestMode(), instance.strokeBufferedImage != null)
+					&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				//
+				try {
+					//
+					ImageIO.write(instance.strokeBufferedImage, format, jfc.getSelectedFile());
+					//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
+			} // if
+				//
 			return true;
 			//
 		} // if
