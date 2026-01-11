@@ -1621,6 +1621,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return instance != null ? instance.clearParameters() : instance;
 	}
 
+	@Nullable
 	private static <T> FailableStream<T> filter(@Nullable final FailableStream<T> instance,
 			final FailablePredicate<T, ?> predicate) {
 		return instance != null && instance.stream() != null ? instance.filter(predicate) : instance;
@@ -1793,6 +1794,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	@Nullable
 	private static byte[] download(final String url, final String userAgent) throws IOException, URISyntaxException {
 		//
 		final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class, Util.openConnection(Util.toURL(
