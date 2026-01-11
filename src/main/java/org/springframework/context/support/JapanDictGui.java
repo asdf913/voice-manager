@@ -1663,8 +1663,21 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			try {
 				//
-				final byte[] bs = download(Util.getText(instance.tfAudioUrl), instance.getUserAgent());
+				final String userAgent = instance.getUserAgent();
 				//
+				byte[] bs = download(Util.getText(instance.tfAudioUrl), instance.getUserAgent());
+				//
+				if (bs == null) {
+					//
+					Util.setText(instance.tfAudioUrl,
+							getAudioUrl(
+									Util.cast(JapanDictEntry.class,
+											getValueAt(instance.dtm,
+													instance.jTable != null ? instance.jTable.getSelectedRow() : 0, 0)),
+									userAgent));
+					//
+				} // if
+					//
 				final StringBuilder sb = testAndApply(Objects::nonNull, Util.getText(instance.tfText),
 						StringBuilder::new, null);
 				//
@@ -1672,7 +1685,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						x -> Objects.equals(getMessage(
 								testAndApply(Objects::nonNull, x, y -> new ContentInfoUtil().findMatch(y), null)),
 								"Audio file with ID3 version 2.4, MP3 encoding"),
-						bs, x -> append(append(sb, '.'), "mp3"));
+						bs = bs != null ? download(Util.getText(instance.tfAudioUrl), userAgent) : null,
+						x -> append(append(sb, '.'), "mp3"));
 				//
 				final JFileChooser jfc = new JFileChooser();
 				//
