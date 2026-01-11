@@ -1471,7 +1471,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static String getAudioUrl(final JapanDictEntry japanDictEntry, final String userAgent)
+	private static String getAudioUrl(@Nullable final JapanDictEntry japanDictEntry, final String userAgent)
 			throws MalformedURLException, IOException, URISyntaxException {
 		//
 		final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class,
