@@ -1476,8 +1476,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					try (final InputStream is = Util.getInputStream(httpURLConnection)) {
 						//
-						final URIBuilder uriBuilder = testAndApply(Objects::nonNull,
-								japanDictEntry != null ? japanDictEntry.audioUrl : null, URIBuilder::new, null);
+						final String audioUrl = japanDictEntry != null ? japanDictEntry.audioUrl : null;
+						//
+						final URIBuilder uriBuilder = testAndApply(Objects::nonNull, audioUrl, URIBuilder::new, null);
 						//
 						final List<NameValuePair> queryParams = getQueryParams(uriBuilder);
 						//
@@ -1573,11 +1574,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						//
 						for (int i = 0; i < IterableUtils.size(iterable); i++) {
 							//
-							if (Boolean.logicalOr(
-									StringUtils.countMatches(string = Util.toString(IterableUtils.get(iterable, i)),
-											'.') != 2,
-									StringsUtil.contains(Strings.CS,
-											japanDictEntry != null ? japanDictEntry.audioUrl : null, string))) {
+							if (Boolean
+									.logicalOr(
+											StringUtils.countMatches(
+													string = Util.toString(IterableUtils.get(iterable, i)), '.') != 2,
+											StringsUtil.contains(Strings.CS, audioUrl, string))) {
 								//
 								continue;
 								//
