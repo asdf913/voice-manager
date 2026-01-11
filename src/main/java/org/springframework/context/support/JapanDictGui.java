@@ -1595,7 +1595,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						final Iterable<Field> fs = Util.toList(Util.filter(
 								Util.stream(testAndApply(Objects::nonNull, Util.getClass(nvp),
 										FieldUtils::getAllFieldsList, null)),
-								x -> Objects.equals(Util.getName(x), "value")));
+								x -> Objects.equals(Util.getName(x), VALUE)));
 						//
 						testAndRun(IterableUtils.size(fs) > 1, () -> {
 							//
