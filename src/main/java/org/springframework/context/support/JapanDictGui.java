@@ -1800,7 +1800,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static boolean actionPerformed5(final JapanDictGui instance, final Object source) {
+	private static boolean actionPerformed5(@Nullable final JapanDictGui instance, final Object source) {
 		//
 		if (instance == null) {
 			//
