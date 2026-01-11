@@ -1366,9 +1366,9 @@ class JapanDictGuiTest {
 	@Test
 	void testAddParameters() throws IllegalAccessException, InvocationTargetException {
 		//
-		final Object instance = Narcissus.allocateInstance(URIBuilder.class);
+		final Object object = Narcissus.allocateInstance(URIBuilder.class);
 		//
-		Assertions.assertSame(instance, invoke(METHOD_ADD_PARAMETERS, null, instance, Collections.emptyList()));
+		Assertions.assertSame(object, invoke(METHOD_ADD_PARAMETERS, null, object, Collections.emptyList()));
 		//
 	}
 
