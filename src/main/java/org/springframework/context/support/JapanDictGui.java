@@ -1594,7 +1594,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static IValue0<String> getJwt(final Iterable<?> iterable, final String url) {
+	private static IValue0<String> getJwt(final Iterable<?> iterable, @Nullable final String url) {
 		//
 		String string = null;
 		//
