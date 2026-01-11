@@ -1330,14 +1330,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} // if
 			//
-		if (Objects.equals(source, instance.btnCopyHiragana)) {
-			//
-			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
-					new StringSelection(Util.getText(instance.tfHiragana)), null));
-			//
-			return true;
-			//
-		} else if (Objects.equals(source, instance.btnCopyRomaji)) {
+		if (Objects.equals(source, instance.btnCopyRomaji)) {
 			//
 			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 					new StringSelection(Util.getText(instance.tfRomaji)), null));
@@ -1414,7 +1407,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} // if
 			//
-		if (Objects.equals(source, instance.btnDownloadAudio)) {
+		if (Objects.equals(source, instance.btnCopyHiragana)) {
+			//
+			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+					new StringSelection(Util.getText(instance.tfHiragana)), null));
+			//
+			return true;
+			//
+		} else if (Objects.equals(source, instance.btnDownloadAudio)) {
 			//
 			try {
 				//
