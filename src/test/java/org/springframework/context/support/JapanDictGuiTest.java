@@ -55,8 +55,10 @@ import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableLongConsumer;
+import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -81,6 +83,7 @@ import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.options.BoundingBox;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import it.unimi.dsi.fastutil.ints.IntObjectPair;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyUtil;
 
@@ -98,7 +101,8 @@ class JapanDictGuiTest {
 			METHOD_GET_COLUMN_NAME, METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND,
 			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
 			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_CREATE_TABLE_CELL_RENDERER,
-			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_GET_PITCH_ACCENTS = null;
+			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_GET_PITCH_ACCENTS,
+			METHOD_FILTER = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -195,6 +199,9 @@ class JapanDictGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_PITCH_ACCENTS = Util.getDeclaredMethod(clz, "getPitchAccents", Iterable.class)).setAccessible(true);
+		//
+		(METHOD_FILTER = Util.getDeclaredMethod(clz, "filter", FailableStream.class, FailablePredicate.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -305,8 +312,6 @@ class JapanDictGuiTest {
 					//
 				} // if
 					//
-				return null;
-				//
 			} else if (proxy instanceof TableCellRenderer && Objects.equals(name, "getTableCellRendererComponent")) {
 				//
 				return null;
@@ -325,6 +330,14 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof IntObjectPair) {
+				//
+				if (Objects.equals(name, "right")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -594,9 +607,11 @@ class JapanDictGuiTest {
 						!Objects.equals(returnType, Void.TYPE)),
 						Boolean.logicalAnd(Objects.equals(name, "append"),
 								Arrays.equals(parameterTypes, new Class<?>[] { StringBuilder.class, Character.TYPE })),
-						Boolean.logicalAnd(Objects.equals(name, "createPitchAccentListCellRenderer"), Arrays.equals(
-								parameterTypes,
-								new Class<?>[] { Component.class, ListCellRenderer.class, Dimension.class })))) {
+						Boolean.logicalAnd(Objects.equals(name, "createPitchAccentListCellRenderer"),
+								Arrays.equals(parameterTypes,
+										new Class<?>[] { Component.class, ListCellRenderer.class, Dimension.class })),
+						Boolean.logicalAnd(Objects.equals(name, "filter"), Arrays.equals(parameterTypes,
+								new Class<?>[] { FailableStream.class, FailablePredicate.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -1335,6 +1350,15 @@ class JapanDictGuiTest {
 			//
 		Assertions.assertEquals("[{\"image\":null,\"type\":null}]", ObjectMapperUtil.writeValueAsString(objectMapper,
 				invoke(METHOD_GET_PITCH_ACCENTS, null, Collections.singleton(null))));
+		//
+	}
+
+	@Test
+	void testFilter() throws IllegalAccessException, InvocationTargetException {
+		//
+		final FailableStream<?> fs = new FailableStream<>(Stream.empty());
+		//
+		Assertions.assertSame(fs, invoke(METHOD_FILTER, null, fs, null));
 		//
 	}
 

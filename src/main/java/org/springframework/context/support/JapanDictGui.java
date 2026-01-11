@@ -39,6 +39,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -97,15 +98,22 @@ import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.FailableLongConsumer;
+import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.function.FailableSupplierUtil;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
+import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.commons.validator.routines.UrlValidatorUtil;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URIBuilderUtil;
 import org.eclipse.jetty.http.HttpStatus;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -142,6 +150,7 @@ import com.microsoft.playwright.PlaywrightUtil;
 import com.microsoft.playwright.options.BoundingBox;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import it.unimi.dsi.fastutil.ints.IntObjectPair;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import javazoom.jl.player.PlayerUtil;
@@ -1418,7 +1427,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			try {
 				//
-				final byte[] bs = download(Util.getText(instance.tfAudioUrl), instance.getUserAgent());
+				final byte[] bs = right(download(Util.getText(instance.tfAudioUrl), instance.getUserAgent()));
 				//
 				final StringBuilder sb = testAndApply(Objects::nonNull, Util.getText(instance.tfText),
 						StringBuilder::new, null);
@@ -1452,8 +1461,177 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			byte[] bs = null;
 			//
+			final String userAgent = instance.getUserAgent();
+			//
+			try {
+				//
+				if ((bs = right(download(Util.getText(instance.tfAudioUrl), userAgent))) == null) {
+					//
+					final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class, getValueAt(instance.dtm,
+							instance.jTable != null ? instance.jTable.getSelectedRow() : 0, 0));
+					//
+					final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class,
+							Util.openConnection(Util.toURL(URIBuilderUtil.build(testAndApply(Objects::nonNull,
+									japanDictEntry != null ? japanDictEntry.pageUrl : null, URIBuilder::new, null)))));
+					//
+					setRequestProperty(httpURLConnection, "User-Agent", userAgent);
+					//
+					try (final InputStream is = Util.getInputStream(httpURLConnection)) {
+						//
+						final URIBuilder uriBuilder = testAndApply(Objects::nonNull,
+								japanDictEntry != null ? japanDictEntry.audioUrl : null, URIBuilder::new, null);
+						//
+						final List<NameValuePair> queryParams = uriBuilder != null ? uriBuilder.getQueryParams() : null;
+						//
+						final ObjectMapper objectMapper = new ObjectMapper();
+						//
+						final Iterable<Element> es = Util
+								.toList(FailableStreamUtil
+										.stream(filter(
+												new FailableStream<>(
+														Util.stream(
+																ElementUtil.select(
+																		testAndApply(Objects::nonNull,
+																				testAndApply(Objects::nonNull, is,
+																						x -> IOUtils.toString(x,
+																								StandardCharsets.UTF_8),
+																						null),
+																				Jsoup::parse, null),
+																		"a[data-reading]"))),
+												x -> {
+													//
+													final Iterable<?> iterable = Util.cast(Iterable.class,
+															ObjectMapperUtil.readValue(objectMapper,
+																	NodeUtil.attr(x, "data-reading"), Object.class));
+													//
+													NameValuePair nvp = null;
+													//
+													boolean found = false;
+													//
+													String value = null;
+													//
+													for (int i = 0; i < IterableUtils.size(queryParams); i++) {
+														//
+														if ((nvp = IterableUtils.get(queryParams, i)) == null) {
+															//
+															continue;
+															//
+														} // if
+															//
+														for (int j = 0; j < IterableUtils.size(iterable); j++) {
+															//
+															if (!Objects.equals(IterableUtils.get(iterable, j),
+																	(value = nvp.getValue()))
+																	|| NumberUtils.isParsable(value)) {
+																//
+																continue;
+																//
+															} // if
+																//
+															if (found) {
+																//
+																throw new IllegalStateException();
+																//
+															} // if
+																//
+															found = true;
+															//
+														} // for
+															//
+													} // for
+														//
+													return found;
+													//
+												})));
+						//
+						testAndRun(IterableUtils.size(es) > 1, () -> {
+							//
+							throw new IllegalStateException();
+							//
+						});
+						//
+						final Element e = testAndApply(x -> IterableUtils.size(x) == 1, es,
+								x -> IterableUtils.get(x, 0), null);
+						//
+						final Iterable<NameValuePair> nvps = Util.toList(Util.filter(Util.stream(queryParams),
+								x -> StringUtils.countMatches(x != null ? x.getValue() : null, '.') == 2));
+						//
+						testAndRun(IterableUtils.size(nvps) > 1, () -> {
+							//
+							throw new IllegalStateException();
+							//
+						});
+						//
+						final NameValuePair nvp = testAndApply(x -> IterableUtils.size(x) == 1, nvps,
+								x -> IterableUtils.get(x, 0), null);
+						//
+						final Iterable<?> iterable = Util.cast(Iterable.class, ObjectMapperUtil.readValue(objectMapper,
+								NodeUtil.attr(e, "data-reading"), Object.class));
+						//
+						IValue0<String> iValue0 = null;
+						//
+						String string = null;
+						//
+						for (int i = 0; i < IterableUtils.size(iterable); i++) {
+							//
+							if (StringUtils.countMatches(string = Util.toString(IterableUtils.get(iterable, i)),
+									'.') != 2
+									|| StringsUtil.contains(Strings.CS,
+											japanDictEntry != null ? japanDictEntry.audioUrl : null, string)) {
+								//
+								continue;
+								//
+							} // if
+								//
+							if (iValue0 != null) {
+								//
+								throw new IllegalStateException();
+								//
+							} // if
+								//
+							iValue0 = Unit.with(string);
+							//
+						} // for
+							//
+						final Iterable<Field> fs = Util.toList(Util.filter(
+								Util.stream(testAndApply(Objects::nonNull, Util.getClass(nvp),
+										FieldUtils::getAllFieldsList, null)),
+								x -> Objects.equals(Util.getName(x), "value")));
+						//
+						testAndRun(IterableUtils.size(fs) > 1, () -> {
+							//
+							throw new IllegalStateException();
+							//
+						});
+						//
+						final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0),
+								null);
+						//
+						testAndAccept((a, b) -> a != null, nvp, iValue0,
+								(a, b) -> Narcissus.setField(a, f, IValue0Util.getValue0(b)));
+						//
+						if (uriBuilder != null) {
+							//
+							uriBuilder.clearParameters();
+							//
+							uriBuilder.addParameters(queryParams);
+							//
+						} // if
+							//
+						Util.setText(instance.tfAudioUrl, Util.toString(URIBuilderUtil.build(uriBuilder)));
+						//
+					} // try
+						//
+				} // if
+					//
+			} catch (final IOException | URISyntaxException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // if
+				//
 			try (final InputStream is = testAndApply(Objects::nonNull,
-					bs = download(Util.getText(instance.tfAudioUrl), instance.getUserAgent()),
+					bs = bs != null ? right(download(Util.getText(instance.tfAudioUrl), userAgent)) : null,
 					ByteArrayInputStream::new, null)) {
 				//
 				testAndAccept(
@@ -1485,6 +1663,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return false;
 		//
+	}
+
+	private static <T> FailableStream<T> filter(final FailableStream<T> instance,
+			final FailablePredicate<T, ?> predicate) {
+		return instance != null && instance.stream() != null ? instance.filter(predicate) : instance;
+	}
+
+	private static <T> T right(final IntObjectPair<T> instance) {
+		return instance != null ? instance.right() : null;
 	}
 
 	private static boolean actionPerformed3(@Nullable final JapanDictGui instance, final Object source) {
@@ -1602,16 +1789,31 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static byte[] download(final String url, final String userAgent) throws IOException, URISyntaxException {
+	private static IntObjectPair<byte[]> download(final String url, final String userAgent)
+			throws IOException, URISyntaxException {
 		//
 		final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class, Util.openConnection(Util.toURL(
 				testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x), url, URI::new, null))));
 		//
 		setRequestProperty(httpURLConnection, "User-Agent", userAgent);
 		//
+		if (httpURLConnection == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final int responseCode = httpURLConnection.getResponseCode();
+		//
+		if (!HttpStatus.isSuccess(responseCode)) {
+			//
+			return IntObjectPair.of(responseCode, null);
+			//
+		} // if
+			//
 		try (final InputStream is = Util.getInputStream(httpURLConnection)) {
 			//
-			return testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
+			return IntObjectPair.of(responseCode, testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null));
 			//
 		} // try
 			//
