@@ -1421,40 +1421,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			return true;
 			//
-		} else if (Objects.equals(source, instance.btnDownloadAudio)) {
-			//
-			try {
-				//
-				final byte[] bs = download(Util.getText(instance.tfAudioUrl), instance.getUserAgent());
-				//
-				final StringBuilder sb = testAndApply(Objects::nonNull, Util.getText(instance.tfText),
-						StringBuilder::new, null);
-				//
-				testAndAccept(
-						x -> Objects.equals(getMessage(
-								testAndApply(Objects::nonNull, x, y -> new ContentInfoUtil().findMatch(y), null)),
-								"Audio file with ID3 version 2.4, MP3 encoding"),
-						bs, x -> append(append(sb, '.'), "mp3"));
-				//
-				final JFileChooser jfc = new JFileChooser();
-				//
-				jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.toString(sb), Path::of, null)));
-				//
-				if (Util.and(!GraphicsEnvironment.isHeadless(), !isTestMode(), bs != null)
-						&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-					//
-					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
-					//
-				} // if
-					//
-			} catch (final URISyntaxException | IOException e) {
-				//
-				throw new RuntimeException(e);
-				//
-			} // try
-				//
-			return true;
-			//
 		} else if (Objects.equals(source, instance.btnPlayAudio)) {
 			//
 			byte[] bs = null;
@@ -1675,7 +1641,41 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} // if
 			//
-		if (Objects.equals(source, instance.btnCopyStrokeImage)) {
+		if (Objects.equals(source, instance.btnDownloadAudio)) {
+			//
+			try {
+				//
+				final byte[] bs = download(Util.getText(instance.tfAudioUrl), instance.getUserAgent());
+				//
+				final StringBuilder sb = testAndApply(Objects::nonNull, Util.getText(instance.tfText),
+						StringBuilder::new, null);
+				//
+				testAndAccept(
+						x -> Objects.equals(getMessage(
+								testAndApply(Objects::nonNull, x, y -> new ContentInfoUtil().findMatch(y), null)),
+								"Audio file with ID3 version 2.4, MP3 encoding"),
+						bs, x -> append(append(sb, '.'), "mp3"));
+				//
+				final JFileChooser jfc = new JFileChooser();
+				//
+				jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.toString(sb), Path::of, null)));
+				//
+				if (Util.and(!GraphicsEnvironment.isHeadless(), !isTestMode(), bs != null)
+						&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+					//
+					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
+					//
+				} // if
+					//
+			} catch (final URISyntaxException | IOException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+			return true;
+			//
+		} else if (Objects.equals(source, instance.btnCopyStrokeImage)) {
 			//
 			final IH ih = new IH();
 			//
