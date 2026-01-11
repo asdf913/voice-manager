@@ -1518,9 +1518,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 															//
 														for (int j = 0; j < IterableUtils.size(iterable); j++) {
 															//
-															if (!Objects.equals(IterableUtils.get(iterable, j),
-																	(value = getValue(nvp)))
-																	|| NumberUtils.isParsable(value)) {
+															if (Boolean.logicalOr(
+																	!Objects.equals(IterableUtils.get(iterable, j),
+																			(value = getValue(nvp))),
+																	NumberUtils.isParsable(value))) {
 																//
 																continue;
 																//
