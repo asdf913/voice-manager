@@ -260,7 +260,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private static class PitchAccent {
 
-		private String pitchAccent = null;
+		private String type = null;
 
 		private BufferedImage image = null;
 
@@ -475,9 +475,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				add(panel, new JLabel(new ImageIcon(value.image)));
 				//
-				if (StringUtils.isNotBlank(value.pitchAccent)) {
+				if (StringUtils.isNotBlank(value.type)) {
 					//
-					add(panel, new JLabel(String.format("(%1$s)", value.pitchAccent)), "align right");
+					add(panel, new JLabel(String.format("(%1$s)", value.type)), "align right");
 					//
 				} // if
 					//
@@ -2202,7 +2202,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			if (IterableUtils.size(ehs = ElementHandleUtil.querySelectorAll(eh, "[data-bs-content]")) == 1) {
 				//
-				pa.pitchAccent = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+				pa.type = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
 						ElementUtil.select(testAndApply(Objects::nonNull,
 								getAttribute(IterableUtils.get(ehs, 0), "data-bs-content"), x -> Jsoup.parse(x, ""),
 								null), "p span[class='h5']"),
@@ -2228,7 +2228,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					if (a != null) {
 						//
-						a.pitchAccent = IterableUtils.get(b, 0);
+						a.type = IterableUtils.get(b, 0);
 						//
 					} // if
 						//

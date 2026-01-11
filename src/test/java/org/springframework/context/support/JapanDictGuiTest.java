@@ -1333,8 +1333,8 @@ class JapanDictGuiTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals("[{\"image\":null,\"pitchAccent\":null}]", ObjectMapperUtil
-				.writeValueAsString(objectMapper, invoke(METHOD_GET_PITCH_ACCENTS, null, Collections.singleton(null))));
+		Assertions.assertEquals("[{\"image\":null,\"type\":null}]", ObjectMapperUtil.writeValueAsString(objectMapper,
+				invoke(METHOD_GET_PITCH_ACCENTS, null, Collections.singleton(null))));
 		//
 	}
 
