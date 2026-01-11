@@ -1664,7 +1664,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static <T> FailableStream<T> filter(final FailableStream<T> instance,
+	private static <T> FailableStream<T> filter(@Nullable final FailableStream<T> instance,
 			final FailablePredicate<T, ?> predicate) {
 		return instance != null && instance.stream() != null ? instance.filter(predicate) : instance;
 	}
