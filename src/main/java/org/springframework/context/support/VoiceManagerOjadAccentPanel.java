@@ -2919,7 +2919,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				testAndAccept(items -> IterableUtils.size(items) == 1,
 						Util.toList(Util.filter(Util.stream(PageUtil.querySelectorAll(page, "thead tr th")),
 								el -> Util.anyMatch(
-										testAndApply(Objects::nonNull, StringUtils.split(getAttribute(el, CLASS), " "),
+										testAndApply(Objects::nonNull,
+												StringUtils.split(ElementHandleUtil.getAttribute(el, CLASS), " "),
 												Arrays::stream, null),
 										y -> StringsUtil.startsWith(org.apache.commons.lang3.Strings.CS, y, "katsuyo_"))
 										&& StringUtils.isNotBlank(textContent(el)))),
@@ -3472,7 +3473,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				textAndImage.hiragana = StringUtils.trim(textContent(eh));
 				//
-				textAndImage.id = getAttribute(word, "id");
+				textAndImage.id = ElementHandleUtil.getAttribute(word, "id");
 				//
 				Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 				//
@@ -3679,10 +3680,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			if (Objects.equals("function", evaluate(page, "typeof get_pronounce_url"))) {
 				//
 				Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
-						Util.toString(
-								evaluate(page,
-										String.format("get_pronounce_url(\"%1$s\",\"%2$s\")", getAttribute(eh, "id"),
-												StringUtils.defaultIfBlank(format, "mp3")))),
+						Util.toString(evaluate(page, String.format("get_pronounce_url(\"%1$s\",\"%2$s\")",
+								ElementHandleUtil.getAttribute(eh, "id"), StringUtils.defaultIfBlank(format, "mp3")))),
 						ElementHandleUtil.screenshot(eh));
 				//
 			} // if
@@ -3696,11 +3695,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Nullable
 	private static Object evaluate(@Nullable final Page instance, final String expression) {
 		return instance != null ? instance.evaluate(expression) : null;
-	}
-
-	@Nullable
-	private static String getAttribute(@Nullable final ElementHandle instance, final String name) {
-		return instance != null ? instance.getAttribute(name) : null;
 	}
 
 	@Nullable
@@ -3725,7 +3719,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		for (int i = 0; i < IterableUtils.size(words); i++) {
 			//
-			conjugations = getConjugations(document, id = getAttribute(word = IterableUtils.get(words, i), "id"));
+			conjugations = getConjugations(document,
+					id = ElementHandleUtil.getAttribute(word = IterableUtils.get(words, i), "id"));
 			//
 			if (Boolean.logicalAnd(
 					StringUtils.isNotBlank(

@@ -12,4 +12,8 @@ public interface ElementHandleUtil {
 		return instance != null ? instance.querySelectorAll(selector) : null;
 	}
 
+	static String getAttribute(final ElementHandle instance, final String name) {
+		return instance != null ? instance.getAttribute(name) : null;
+	}
+
 }

@@ -2175,7 +2175,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			try {
 				//
-				if (StringsUtil.contains(Strings.CS, getAttribute(eh, "class"), "flex-colum")) {
+				if (StringsUtil.contains(Strings.CS, ElementHandleUtil.getAttribute(eh, "class"), "flex-colum")) {
 					//
 					(pa = new PitchAccent()).image = testAndApply(
 							x -> startsWith(Strings.CS,
@@ -2202,11 +2202,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			if (IterableUtils.size(ehs = ElementHandleUtil.querySelectorAll(eh, "[data-bs-content]")) == 1) {
 				//
-				pa.type = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-						ElementUtil.select(testAndApply(Objects::nonNull,
-								getAttribute(IterableUtils.get(ehs, 0), "data-bs-content"), x -> Jsoup.parse(x, ""),
-								null), "p span[class='h5']"),
-						x -> IterableUtils.get(x, 0), null));
+				pa.type = ElementUtil
+						.text(testAndApply(x -> IterableUtils.size(x) == 1,
+								ElementUtil.select(
+										testAndApply(Objects::nonNull,
+												ElementHandleUtil.getAttribute(IterableUtils.get(ehs, 0),
+														"data-bs-content"),
+												x -> Jsoup.parse(x, ""), null),
+										"p span[class='h5']"),
+								x -> IterableUtils.get(x, 0), null));
 				//
 			} else {
 				//
@@ -2214,8 +2218,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						x -> StreamSupport.stream(x, false), null);
 				//
 				final Iterable<String> ss = Util.toList(Util.distinct(Util.map(stream,
-						x -> ElementUtil.text(testAndApply(y -> IterableUtils.size(y) == 1, ElementUtil
-								.select(Jsoup.parse(getAttribute(x, "data-bs-content"), ""), "p span[class='h5']"),
+						x -> ElementUtil.text(testAndApply(y -> IterableUtils.size(y) == 1,
+								ElementUtil.select(
+										Jsoup.parse(ElementHandleUtil.getAttribute(x, "data-bs-content"), ""),
+										"p span[class='h5']"),
 								y -> IterableUtils.get(y, 0), null)))));
 				//
 				testAndRun(IterableUtils.size(ss) > 1, () -> {
@@ -2242,11 +2248,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return collection;
 		//
-	}
-
-	@Nullable
-	private static String getAttribute(@Nullable final ElementHandle instance, final String name) {
-		return instance != null ? instance.getAttribute(name) : null;
 	}
 
 	private static void check(@Nullable final ElementHandle instance) {
