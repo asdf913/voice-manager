@@ -1628,6 +1628,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return instance != null ? instance.getValue() : null;
 	}
 
+	@Nullable
 	private static URIBuilder addParameters(@Nullable final URIBuilder instance, final List<NameValuePair> nvps) {
 		return instance != null && Util.toArray(nvps) != null ? instance.addParameters(nvps) : instance;
 	}
