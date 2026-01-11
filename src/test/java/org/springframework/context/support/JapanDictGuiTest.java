@@ -618,6 +618,8 @@ class JapanDictGuiTest {
 						Boolean.logicalAnd(Objects.equals(name, "addParameters"),
 								Arrays.equals(parameterTypes, new Class<?>[] { URIBuilder.class, List.class })),
 						Boolean.logicalAnd(Objects.equals(name, "clearParameters"),
+								Arrays.equals(parameterTypes, new Class<?>[] { URIBuilder.class })),
+						Boolean.logicalAnd(Objects.equals(name, "getQueryParams"),
 								Arrays.equals(parameterTypes, new Class<?>[] { URIBuilder.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);

@@ -1479,7 +1479,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						final URIBuilder uriBuilder = testAndApply(Objects::nonNull,
 								japanDictEntry != null ? japanDictEntry.audioUrl : null, URIBuilder::new, null);
 						//
-						final List<NameValuePair> queryParams = uriBuilder != null ? uriBuilder.getQueryParams() : null;
+						final List<NameValuePair> queryParams = getQueryParams(uriBuilder);
 						//
 						final ObjectMapper objectMapper = new ObjectMapper();
 						//
@@ -1653,6 +1653,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return false;
 		//
+	}
+
+	private static List<NameValuePair> getQueryParams(final URIBuilder instance) {
+		return instance != null ? instance.getQueryParams() : null;
 	}
 
 	private static String getValue(final NameValuePair instance) {
