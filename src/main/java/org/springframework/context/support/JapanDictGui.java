@@ -1475,13 +1475,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			return true;
 			//
-		} else if (Objects.equals(source, instance.btnCopyKatakana)) {
-			//
-			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
-					new StringSelection(Util.getText(instance.tfKatakana)), null));
-			//
-			return true;
-			//
 		} // if
 			//
 		return false;
@@ -1777,6 +1770,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 			} // if
 				//
+			return true;
+			//
+		} else if (Objects.equals(source, instance.btnCopyKatakana)) {
+			//
+			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+					new StringSelection(Util.getText(instance.tfKatakana)), null));
+			//
 			return true;
 			//
 		} // if
