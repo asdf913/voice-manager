@@ -161,6 +161,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private static final String VALUE = "value";
 
+	private static final String USER_AGENT = "User-Agent";
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -698,7 +700,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class,
 						Util.openConnection(Util.toURL(uri)));
 				//
-				setRequestProperty(httpURLConnection, "User-Agent", getUserAgent());
+				setRequestProperty(httpURLConnection, USER_AGENT, getUserAgent());
 				//
 				if (httpURLConnection != null) {
 					//
@@ -1473,7 +1475,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							Util.openConnection(Util.toURL(URIBuilderUtil.build(testAndApply(Objects::nonNull,
 									japanDictEntry != null ? japanDictEntry.pageUrl : null, URIBuilder::new, null)))));
 					//
-					setRequestProperty(httpURLConnection, "User-Agent", userAgent);
+					setRequestProperty(httpURLConnection, USER_AGENT, userAgent);
 					//
 					try (final InputStream is = Util.getInputStream(httpURLConnection)) {
 						//
@@ -1789,7 +1791,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class, Util.openConnection(Util.toURL(
 				testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x), url, URI::new, null))));
 		//
-		setRequestProperty(httpURLConnection, "User-Agent", userAgent);
+		setRequestProperty(httpURLConnection, USER_AGENT, userAgent);
 		//
 		if (httpURLConnection == null) {
 			//
