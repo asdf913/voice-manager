@@ -60,6 +60,7 @@ import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
@@ -331,6 +332,14 @@ class JapanDictGuiTest {
 				//
 				return selectedIndices;
 				//
+			} else if (proxy instanceof NameValuePair) {
+				//
+				if (Objects.equals(name, "getValue")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);

@@ -1519,7 +1519,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 														for (int j = 0; j < IterableUtils.size(iterable); j++) {
 															//
 															if (!Objects.equals(IterableUtils.get(iterable, j),
-																	(value = nvp.getValue()))
+																	(value = getValue(nvp)))
 																	|| NumberUtils.isParsable(value)) {
 																//
 																continue;
@@ -1552,7 +1552,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 								x -> IterableUtils.get(x, 0), null);
 						//
 						final Iterable<NameValuePair> nvps = Util.toList(Util.filter(Util.stream(queryParams),
-								x -> StringUtils.countMatches(x != null ? x.getValue() : null, '.') == 2));
+								x -> StringUtils.countMatches(getValue(x), '.') == 2));
 						//
 						testAndRun(IterableUtils.size(nvps) > 1, () -> {
 							//
@@ -1652,6 +1652,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return false;
 		//
+	}
+
+	private static String getValue(final NameValuePair instance) {
+		return instance != null ? instance.getValue() : null;
 	}
 
 	private static URIBuilder addParameters(final URIBuilder instance, final List<NameValuePair> nvps) {
