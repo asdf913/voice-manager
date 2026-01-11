@@ -2029,7 +2029,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, @Nullable final U u,
 			final BiConsumer<T, U> consumer) {
 		if (Util.test(instance, t, u)) {
 			Util.accept(consumer, t, u);
