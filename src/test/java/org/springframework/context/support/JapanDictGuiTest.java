@@ -227,14 +227,10 @@ class JapanDictGuiTest {
 				//
 			final String name = Util.getName(method);
 			//
-			if (proxy instanceof Collection) {
+			if (proxy instanceof Collection && Objects.equals(name, "toArray")) {
 				//
-				if (Objects.equals(name, "toArray")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			if (proxy instanceof Predicate) {
@@ -332,14 +328,10 @@ class JapanDictGuiTest {
 				//
 				return selectedIndices;
 				//
-			} else if (proxy instanceof NameValuePair) {
+			} else if (proxy instanceof NameValuePair && Objects.equals(name, "getValue")) {
 				//
-				if (Objects.equals(name, "getValue")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
