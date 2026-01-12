@@ -104,7 +104,7 @@ class JapanDictGuiTest {
 			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
 			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_CREATE_TABLE_CELL_RENDERER,
 			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_GET_PITCH_ACCENTS,
-			METHOD_FILTER, METHOD_ADD_PARAMETERS, METHOD_GET_JWT = null;
+			METHOD_FILTER, METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -209,6 +209,9 @@ class JapanDictGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_JWT = Util.getDeclaredMethod(clz, "getJwt", Iterable.class, String.class)).setAccessible(true);
+		//
+		(METHOD_ADD_ROWS = Util.getDeclaredMethod(clz, "addRows", JapanDictGui.class, Iterable.class, String.class,
+				String.class)).setAccessible(true);
 		//
 	}
 
@@ -1397,6 +1400,19 @@ class JapanDictGuiTest {
 			} // try
 				//
 		});
+		//
+	}
+
+	@Test
+	void testAddRows() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_ADD_ROWS, null, null, Collections.singleton(null), null, null));
+		//
+		final Iterable<?> es = Collections.singleton(Narcissus.allocateInstance(Element.class));
+		//
+		Assertions.assertNull(invoke(METHOD_ADD_ROWS, null, null, es, null, null));
+		//
+		Assertions.assertNull(invoke(METHOD_ADD_ROWS, null, instance, es, null, null));
 		//
 	}
 

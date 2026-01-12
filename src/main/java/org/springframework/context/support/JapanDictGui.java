@@ -728,83 +728,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			} // if
 				//
-			final Iterable<Element> es1 = ElementUtil.select(document, ".container-fluid.bg-white.p-0");
+			addRows(this, ElementUtil.select(document, ".container-fluid.bg-white.p-0"), scheme, pageUrl);
 			//
-			Iterable<Element> es2 = null;
-			//
-			Element e1 = null;
-			//
-			Pattern patternHiragana = null, patternKatkana = null, p2 = null;
-			//
-			String id, h1, jlptLevel = null;
-			//
-			ObjectMapper objectMapper = null;
-			//
-			Map<?, ?> map = null;
-			//
-			final Iterable<Method> ms = Util.toList(Util.filter(
-					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Map.class), Arrays::stream, null),
-					x -> Boolean.logicalAnd(Objects.equals(Util.getName(x), "put"),
-							Arrays.equals(Util.getParameterTypes(x), new Class<?>[] { Object.class, Object.class }))));
-			//
-			testAndRun(IterableUtils.size(ms) > 1, () -> {
-				//
-				throw new IllegalStateException();
-				//
-			});
-			//
-			final Method put = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
-			//
-			for (int i = 0; i < IterableUtils.size(es1); i++) {
-				//
-				if ((e1 = IterableUtils.get(es1, i)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				id = testAndApply(x -> and(x, Util::matches, y -> Util.groupCount(y) > 0),
-						Util.matcher(p2 = ObjectUtils.getIfNull(p2, () -> Pattern.compile("^[^\\d]+(\\d+)$")),
-								NodeUtil.attr(e1, "id")),
-						x -> Util.group(x, 1), null);
-				//
-				h1 = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1, ElementUtil.select(e1, "h1"),
-						x -> IterableUtils.get(x, 0), null));
-				//
-				jlptLevel = getJlptLevel(cbmJlptLevel,
-						ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-								ElementUtil.select(e1, "span.badge[title^='#jlpt'].me-1"), x -> IterableUtils.get(x, 0),
-								null)));
-				//
-				es2 = ElementUtil.select(e1, "div[aria-labelledby^='modal-reading'] + ul li");
-				//
-				for (int j = 0; j < IterableUtils.size(es2); j++) {
-					//
-					clear(map = ObjectUtils.getIfNull(map, () -> Reflection.newProxy(Map.class, new IH())));
-					//
-					Narcissus.invokeMethod(map, put, "jlptLevel", jlptLevel);
-					//
-					Narcissus.invokeMethod(map, put, "text", h1);
-					//
-					Narcissus.invokeMethod(map, put, "pageUrl", pageUrl);
-					//
-					Narcissus.invokeMethod(map, put, "id", id);
-					//
-					Narcissus.invokeMethod(map, put, "scheme", scheme);
-					//
-					Util.addRow(dtm,
-							new Object[] { getJapanDictEntry(IterableUtils.get(es2, j),
-									patternHiragana = ObjectUtils.getIfNull(patternHiragana,
-											() -> Pattern.compile("^\\p{InHiragana}+$")),
-									patternKatkana = ObjectUtils.getIfNull(patternKatkana,
-											() -> Pattern.compile("^\\p{InKatakana}+$")),
-									objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new),
-									Util.getRowCount(dtm), j, map) });
-					//
-				} // for
-					//
-			} // for
-				//
 			final Dimension preferredSize = Util.getPreferredSize(jTable);
 			//
 			setPreferredScrollableViewportSize(jTable, new Dimension((int) getWidth(preferredSize),
@@ -838,6 +763,88 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				return;
 				//
 			} // if
+				//
+		} // for
+			//
+	}
+
+	private static void addRows(final JapanDictGui instance, final Iterable<Element> es, final String scheme,
+			final String pageUrl) {
+		//
+		Iterable<Element> es2 = null;
+		//
+		Element e1 = null;
+		//
+		Pattern patternHiragana = null, patternKatkana = null, p2 = null;
+		//
+		String id, h1, jlptLevel = null;
+		//
+		ObjectMapper objectMapper = null;
+		//
+		Map<?, ?> map = null;
+		//
+		final Iterable<Method> ms = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.getDeclaredMethods(Map.class), Arrays::stream, null),
+				x -> Boolean.logicalAnd(Objects.equals(Util.getName(x), "put"),
+						Arrays.equals(Util.getParameterTypes(x), new Class<?>[] { Object.class, Object.class }))));
+		//
+		testAndRun(IterableUtils.size(ms) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Method put = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
+		//
+		for (int i = 0; i < IterableUtils.size(es); i++) {
+			//
+			if ((e1 = IterableUtils.get(es, i)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			id = testAndApply(x -> and(x, Util::matches, y -> Util.groupCount(y) > 0),
+					Util.matcher(p2 = ObjectUtils.getIfNull(p2, () -> Pattern.compile("^[^\\d]+(\\d+)$")),
+							NodeUtil.attr(e1, "id")),
+					x -> Util.group(x, 1), null);
+			//
+			h1 = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1, ElementUtil.select(e1, "h1"),
+					x -> IterableUtils.get(x, 0), null));
+			//
+			jlptLevel = getJlptLevel(instance != null ? instance.cbmJlptLevel : null,
+					ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+							ElementUtil.select(e1, "span.badge[title^='#jlpt'].me-1"), x -> IterableUtils.get(x, 0),
+							null)));
+			//
+			es2 = ElementUtil.select(e1, "div[aria-labelledby^='modal-reading'] + ul li");
+			//
+			final DefaultTableModel dtm = instance != null ? instance.dtm : null;
+			//
+			for (int j = 0; j < IterableUtils.size(es2); j++) {
+				//
+				clear(map = ObjectUtils.getIfNull(map, () -> Reflection.newProxy(Map.class, new IH())));
+				//
+				Narcissus.invokeMethod(map, put, "jlptLevel", jlptLevel);
+				//
+				Narcissus.invokeMethod(map, put, "text", h1);
+				//
+				Narcissus.invokeMethod(map, put, "id", id);
+				//
+				Narcissus.invokeMethod(map, put, "scheme", scheme);
+				//
+				Narcissus.invokeMethod(map, put, "pageUrl", pageUrl);
+				//
+				Util.addRow(dtm,
+						new Object[] { getJapanDictEntry(IterableUtils.get(es2, j),
+								patternHiragana = ObjectUtils.getIfNull(patternHiragana,
+										() -> Pattern.compile("^\\p{InHiragana}+$")),
+								patternKatkana = ObjectUtils.getIfNull(patternKatkana,
+										() -> Pattern.compile("^\\p{InKatakana}+$")),
+								objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new),
+								Util.getRowCount(dtm), j, map) });
+				//
+			} // for
 				//
 		} // for
 			//
