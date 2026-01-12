@@ -2345,6 +2345,26 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} // try
 			//
+		JapanDictEntry temp = null;
+		//
+		for (int i = 0; instance.dtm != null && entry.strokeWithNumberImage == null
+				&& i < instance.dtm.getRowCount(); i++) {
+			//
+			if ((temp = Util.cast(JapanDictEntry.class, instance.dtm.getValueAt(i, 0))) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Objects.equals(temp.id, entry.id)
+					&& (entry.strokeWithNumberImage = temp.strokeWithNumberImage) != null) {
+				//
+				break;
+				//
+			} // if
+				//
+		} // for
+			//
 		try (final Playwright playwright = testAndGet(entry.strokeWithNumberImage == null, Playwright::create);
 				final Browser browser = testAndApply(
 						Predicates.always(UrlValidatorUtil.isValid(UrlValidator.getInstance(), pageUrl)), playwright,
