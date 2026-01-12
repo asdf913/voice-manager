@@ -768,7 +768,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static void addRows(final JapanDictGui instance, final Iterable<Element> es, final String scheme,
+	private static void addRows(@Nullable final JapanDictGui instance, final Iterable<Element> es, final String scheme,
 			final String pageUrl) {
 		//
 		Iterable<Element> es2 = null;
