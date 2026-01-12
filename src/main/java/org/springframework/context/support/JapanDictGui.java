@@ -2289,11 +2289,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		JapanDictEntry temp = null;
 		//
-		for (int i = 0; instance.dtm != null
-				&& Boolean.logicalAnd(entry.strokeImage == null, entry.strokeWithNumberImage == null)
-				&& i < instance.dtm.getRowCount(); i++) {
+		for (int i = 0; Util.and(entry.strokeImage == null, entry.strokeWithNumberImage == null,
+				i < Util.getRowCount(instance.dtm)); i++) {
 			//
-			if ((temp = Util.cast(JapanDictEntry.class, instance.dtm.getValueAt(i, 0))) == null) {
+			if ((temp = Util.cast(JapanDictEntry.class, getValueAt(instance.dtm, i, 0))) == null) {
 				//
 				continue;
 				//
