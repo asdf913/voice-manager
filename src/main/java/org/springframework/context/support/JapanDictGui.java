@@ -687,6 +687,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return text;
 		}
 
+		@Nullable
 		private static String getText(@Nullable final JapanDictEntry instance) {
 			return instance != null ? instance.getText() : null;
 		}
