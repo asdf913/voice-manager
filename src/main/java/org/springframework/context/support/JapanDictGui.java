@@ -2599,7 +2599,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		while (System.currentTimeMillis() - currentTimeMillis < NumberUtils.max(
 				toMillis(instance != null ? instance.storkeImageDuration : null, 20000),
-				StringUtils.length(japanDictEntry != null ? japanDictEntry.text : null) * 4075, 0)) {
+				StringUtils.length(japanDictEntry != null ? japanDictEntry.text : null) * 4100, 0)) {
 			//
 			if (before == null) {
 				//
