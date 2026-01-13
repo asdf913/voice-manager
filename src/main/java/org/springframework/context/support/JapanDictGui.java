@@ -2106,6 +2106,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		instance.afterPropertiesSet();
 		//
+		testAndAccept(Util::containsKey, properties, "org.springframework.context.support.JapanDictGui.text",
+				(a, b) -> Util.setText(instance.tfText, Util.toString(Util.get(a, b))));
+		//
 		add(jFrame, instance);
 		//
 		pack(instance.window = jFrame);
