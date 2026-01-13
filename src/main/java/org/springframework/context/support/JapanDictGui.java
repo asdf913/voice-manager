@@ -662,6 +662,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private byte[] audioData = null;
 
+		private byte[] getAudioData() {
+			return audioData;
+		}
+
+		private static byte[] getAudioData(final JapanDictEntry instance) {
+			return instance != null ? instance.getAudioData() : null;
+		}
+
 	}
 
 	@Override
@@ -1463,7 +1471,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class,
 					getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0));
 			//
-			byte[] bs = japanDictEntry != null ? japanDictEntry.audioData : null;
+			byte[] bs = JapanDictEntry.getAudioData(japanDictEntry);
 			//
 			final String userAgent = instance.getUserAgent();
 			//
@@ -1696,7 +1704,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class,
 						getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0));
 				//
-				byte[] bs = japanDictEntry != null ? japanDictEntry.audioData : null;
+				byte[] bs = JapanDictEntry.getAudioData(japanDictEntry);
 				//
 				final String userAgent = instance.getUserAgent();
 				//

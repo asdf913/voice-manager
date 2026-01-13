@@ -96,6 +96,8 @@ class JapanDictGuiTest {
 
 	private static final int ONE = 1;
 
+	private static Class<?> CLASS_JAPAN_DICT_ENTRY = null;
+
 	private static Method METHOD_TEST_AND_GET, METHOD_SET_TEXT, METHOD_STARTS_WITH, METHOD_APPEND,
 			METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG, METHOD_TEST_AND_ACCEPT4, METHOD_GET_AUDIO_URL,
 			METHOD_TEST_AND_RUN, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
@@ -109,6 +111,8 @@ class JapanDictGuiTest {
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
+		//
+		CLASS_JAPAN_DICT_ENTRY = Util.forName("org.springframework.context.support.JapanDictGui$JapanDictEntry");
 		//
 		final Class<?> clz = JapanDictGui.class;
 		//
@@ -1205,8 +1209,7 @@ class JapanDictGuiTest {
 		//
 		dtm.removeRow(0);
 		//
-		final Object japanDictEntry = Narcissus
-				.allocateInstance(Util.forName("org.springframework.context.support.JapanDictGui$JapanDictEntry"));
+		final Object japanDictEntry = Narcissus.allocateInstance(CLASS_JAPAN_DICT_ENTRY);
 		//
 		dtm.addRow(new Object[] { japanDictEntry });
 		//
@@ -1309,8 +1312,7 @@ class JapanDictGuiTest {
 		//
 		final DefaultTableModel dtm = new DefaultTableModel(new Object[] { "", "Hiragana" }, ZERO);
 		//
-		dtm.addRow(new Object[] { Narcissus
-				.allocateInstance(Class.forName("org.springframework.context.support.JapanDictGui$JapanDictEntry")) });
+		dtm.addRow(new Object[] { Narcissus.allocateInstance(CLASS_JAPAN_DICT_ENTRY) });
 		//
 		Assertions.assertNull(tcr.getTableCellRendererComponent(new JTable(dtm), tcr, false, false, ZERO, ZERO));
 		//
@@ -1439,6 +1441,58 @@ class JapanDictGuiTest {
 	void testGetSelectedRow() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertEquals(Integer.valueOf(-1), invoke(METHOD_GET_SELECTED_ROW, null, new JTable()));
+		//
+	}
+
+	@Test
+	void testJapanDictEntry() throws Throwable {
+		//
+		final Method[] ms = Util.getDeclaredMethods(CLASS_JAPAN_DICT_ENTRY);
+		//
+		Method m = null;
+		//
+		Object[] os = null;
+		//
+		String toString = null;
+		//
+		Object japanDictEntry = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
+				//
+				continue;
+				//
+			} // if
+				//
+			os = toArray(Collections.nCopies(m.getParameterCount(), null));
+			//
+			toString = Util.toString(m);
+			//
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				//
+			} else {
+				//
+				Assertions
+						.assertNull(
+								Narcissus
+										.invokeMethod(
+												japanDictEntry = ObjectUtils.getIfNull(japanDictEntry,
+														() -> Narcissus.allocateInstance(CLASS_JAPAN_DICT_ENTRY)),
+												m, os),
+								toString);
+				//
+			} // if
+				//
+		} // for
+			//
+			// org.springframework.context.support.JapanDictGui$JapanDictEntry.getAudioData(org.springframework.context.support.JapanDictGui$JapanDictEntry)
+			//
+		Assertions.assertNull(Narcissus.invokeStaticMethod(
+				Util.getDeclaredMethod(CLASS_JAPAN_DICT_ENTRY, "getAudioData", CLASS_JAPAN_DICT_ENTRY),
+				japanDictEntry));
 		//
 	}
 
