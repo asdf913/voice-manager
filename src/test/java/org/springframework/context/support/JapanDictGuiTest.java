@@ -343,14 +343,10 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof BooleanSupplier) {
+			} else if (proxy instanceof BooleanSupplier && Objects.equals(name, "getAsBoolean")) {
 				//
-				if (Objects.equals(name, "getAsBoolean")) {
-					//
-					return booleanValue;
-					//
-				} // if
-					//
+				return booleanValue;
+				//
 			} // if
 				//
 			throw new Throwable(name);
