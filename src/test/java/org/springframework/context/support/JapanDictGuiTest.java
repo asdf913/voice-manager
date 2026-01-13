@@ -1472,6 +1472,12 @@ class JapanDictGuiTest {
 				//
 				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
 				//
+				if (Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { CLASS_JAPAN_DICT_ENTRY })) {
+					//
+					Assertions.assertNull(Narcissus.invokeStaticMethod(m, japanDictEntry), toString);
+					//
+				} // if
+					//
 			} else {
 				//
 				Assertions
@@ -1487,12 +1493,6 @@ class JapanDictGuiTest {
 				//
 		} // for
 			//
-			// org.springframework.context.support.JapanDictGui$JapanDictEntry.getAudioData(org.springframework.context.support.JapanDictGui$JapanDictEntry)
-			//
-		Assertions.assertNull(Narcissus.invokeStaticMethod(
-				Util.getDeclaredMethod(CLASS_JAPAN_DICT_ENTRY, "getAudioData", CLASS_JAPAN_DICT_ENTRY),
-				japanDictEntry));
-		//
 	}
 
 }

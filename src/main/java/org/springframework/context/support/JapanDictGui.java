@@ -556,7 +556,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			} else if (Objects.equals(columnName, "")) {
 				//
-				Util.setText(jLabel, entry != null ? entry.text : null);
+				Util.setText(jLabel, JapanDictEntry.getText(entry));
 				//
 			} else if (Objects.equals(columnName, PITCH_ACCENT)) {
 				//
@@ -681,6 +681,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		@Nullable
 		private static byte[] getAudioData(@Nullable final JapanDictEntry instance) {
 			return instance != null ? instance.getAudioData() : null;
+		}
+
+		private String getText() {
+			return text;
+		}
+
+		private static String getText(final JapanDictEntry instance) {
+			return instance != null ? instance.getText() : null;
 		}
 
 	}
@@ -2599,7 +2607,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		while (System.currentTimeMillis() - currentTimeMillis < NumberUtils.max(
 				toMillis(instance != null ? instance.storkeImageDuration : null, 20000),
-				StringUtils.length(japanDictEntry != null ? japanDictEntry.text : null) * 4100, 0)) {
+				StringUtils.length(JapanDictEntry.getText(japanDictEntry)) * 4100, 0)) {
 			//
 			if (before == null) {
 				//
