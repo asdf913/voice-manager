@@ -659,6 +659,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private Iterable<PitchAccent> pitchAccents = null;
 
+		private byte[] audioData = null;
+
 	}
 
 	@Override
@@ -1424,20 +1426,18 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		if (Objects.equals(source, instance.btnPlayAudio)) {
 			//
-			byte[] bs = null;
+			final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class,
+					instance.jTable != null ? instance.jTable.getValueAt(instance.jTable.getSelectedRow(), 0) : null);
+			//
+			byte[] bs = japanDictEntry != null ? japanDictEntry.audioData : null;
 			//
 			final String userAgent = instance.getUserAgent();
 			//
 			try {
 				//
-				if ((bs = download(Util.getText(instance.tfAudioUrl), userAgent)) == null) {
+				if ((bs = bs == null ? download(Util.getText(instance.tfAudioUrl), userAgent) : bs) == null) {
 					//
-					Util.setText(instance.tfAudioUrl,
-							getAudioUrl(
-									Util.cast(JapanDictEntry.class,
-											getValueAt(instance.dtm,
-													instance.jTable != null ? instance.jTable.getSelectedRow() : 0, 0)),
-									userAgent));
+					Util.setText(instance.tfAudioUrl, getAudioUrl(japanDictEntry, userAgent));
 					//
 				} // if
 					//
@@ -1448,7 +1448,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			} // if
 				//
 			try (final InputStream is = testAndApply(Objects::nonNull,
-					bs = bs != null ? download(Util.getText(instance.tfAudioUrl), userAgent) : null,
+					bs = bs == null ? download(Util.getText(instance.tfAudioUrl), userAgent) : bs,
 					ByteArrayInputStream::new, null)) {
 				//
 				testAndAccept(
@@ -1457,6 +1457,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 								"Audio file with ID3 version 2.4, MP3 encoding"),
 						bs, x -> PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null)));
 				//
+				if (japanDictEntry != null) {
+					//
+					japanDictEntry.audioData = bs;
+					//
+				} // if
+					//
 			} catch (final URISyntaxException | IOException | JavaLayerException e) {
 				//
 				throw new RuntimeException(e);
@@ -1671,18 +1677,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			try {
 				//
+				final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class,
+						instance.jTable != null ? instance.jTable.getValueAt(instance.jTable.getSelectedRow(), 0)
+								: null);
+				//
+				byte[] bs = japanDictEntry != null ? japanDictEntry.audioData : null;
+				//
 				final String userAgent = instance.getUserAgent();
 				//
-				byte[] bs = download(Util.getText(instance.tfAudioUrl), instance.getUserAgent());
-				//
-				if (bs == null) {
+				if ((bs = bs == null ? bs = download(Util.getText(instance.tfAudioUrl), userAgent) : bs) == null) {
 					//
-					Util.setText(instance.tfAudioUrl,
-							getAudioUrl(
-									Util.cast(JapanDictEntry.class,
-											getValueAt(instance.dtm,
-													instance.jTable != null ? instance.jTable.getSelectedRow() : 0, 0)),
-									userAgent));
+					Util.setText(instance.tfAudioUrl, getAudioUrl(japanDictEntry, userAgent));
 					//
 				} // if
 					//
@@ -1693,9 +1698,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						x -> Objects.equals(getMessage(
 								testAndApply(Objects::nonNull, x, y -> new ContentInfoUtil().findMatch(y), null)),
 								"Audio file with ID3 version 2.4, MP3 encoding"),
-						bs = bs != null ? download(Util.getText(instance.tfAudioUrl), userAgent) : null,
+						bs = bs == null ? download(Util.getText(instance.tfAudioUrl), userAgent) : bs,
 						x -> append(append(sb, '.'), "mp3"));
 				//
+				if (japanDictEntry != null) {
+					//
+					japanDictEntry.audioData = bs;
+					//
+				} // if
+					//
 				final JFileChooser jfc = new JFileChooser();
 				//
 				jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.toString(sb), Path::of, null)));
