@@ -1427,7 +1427,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		if (Objects.equals(source, instance.btnPlayAudio)) {
 			//
 			final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class,
-					instance.jTable != null ? instance.jTable.getValueAt(instance.jTable.getSelectedRow(), 0) : null);
+					getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0));
 			//
 			byte[] bs = japanDictEntry != null ? japanDictEntry.audioData : null;
 			//
@@ -1678,8 +1678,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			try {
 				//
 				final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class,
-						instance.jTable != null ? instance.jTable.getValueAt(instance.jTable.getSelectedRow(), 0)
-								: null);
+						getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0));
 				//
 				byte[] bs = japanDictEntry != null ? japanDictEntry.audioData : null;
 				//
@@ -1740,6 +1739,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // if
 			//
 		return false;
+		//
+	}
+
+	private static int getSelectedRow(final JTable instance) {
+		//
+		return instance != null && instance.getSelectionModel() != null ? instance.getSelectedRow() : -1;
 		//
 	}
 
