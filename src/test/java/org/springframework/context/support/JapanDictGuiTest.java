@@ -26,6 +26,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.BooleanSupplier;
 import java.util.function.IntFunction;
 import java.util.function.LongPredicate;
 import java.util.function.Predicate;
@@ -100,8 +101,8 @@ class JapanDictGuiTest {
 			METHOD_TEST_AND_RUN, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
 			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL,
 			METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE,
-			METHOD_GET_COLUMN_NAME, METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND,
-			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
+			METHOD_GET_COLUMN_NAME, METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND2,
+			METHOD_AND3, METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
 			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_CREATE_TABLE_CELL_RENDERER,
 			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_GET_PITCH_ACCENTS,
 			METHOD_FILTER, METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW = null;
@@ -176,7 +177,9 @@ class JapanDictGuiTest {
 		(METHOD_GET_STROKE_IMAGE = Util.getDeclaredMethod(clz, "getStrokeImage", clz, Page.class, String.class))
 				.setAccessible(true);
 		//
-		(METHOD_AND = Util.getDeclaredMethod(clz, "and", Object.class, Predicate.class, Predicate.class))
+		(METHOD_AND2 = Util.getDeclaredMethod(clz, "and", Boolean.TYPE, BooleanSupplier.class)).setAccessible(true);
+		//
+		(METHOD_AND3 = Util.getDeclaredMethod(clz, "and", Object.class, Predicate.class, Predicate.class))
 				.setAccessible(true);
 		//
 		(METHOD_PREPARE_RENDERER = Util.getDeclaredMethod(clz, "prepareRenderer", JTable.class, TableCellRenderer.class,
@@ -219,7 +222,7 @@ class JapanDictGuiTest {
 
 	private static class IH implements InvocationHandler {
 
-		private Boolean test;
+		private Boolean test, booleanValue;
 
 		private Integer size, length, columnCount;
 
@@ -340,6 +343,14 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof BooleanSupplier) {
+				//
+				if (Objects.equals(name, "getAsBoolean")) {
+					//
+					return booleanValue;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -1229,11 +1240,21 @@ class JapanDictGuiTest {
 	@Test
 	void testAnd() throws IllegalAccessException, InvocationTargetException {
 		//
+		Assertions.assertEquals(Boolean.FALSE, invoke(METHOD_AND2, null, Boolean.TRUE, null));
+		//
+		final BooleanSupplier booleanSupplier = Reflection.newProxy(BooleanSupplier.class, ih);
+		//
+		Assertions.assertEquals(ih.booleanValue = Boolean.FALSE,
+				invoke(METHOD_AND2, null, Boolean.TRUE, booleanSupplier));
+		//
+		Assertions.assertEquals(ih.booleanValue = Boolean.TRUE,
+				invoke(METHOD_AND2, null, Boolean.TRUE, booleanSupplier));
+		//
 		final Predicate<?> alwaysTrue = Predicates.alwaysTrue();
 		//
-		Assertions.assertEquals(Boolean.FALSE, invoke(METHOD_AND, null, null, alwaysTrue, null));
+		Assertions.assertEquals(Boolean.FALSE, invoke(METHOD_AND3, null, null, alwaysTrue, null));
 		//
-		Assertions.assertEquals(Boolean.TRUE, invoke(METHOD_AND, null, null, alwaysTrue, alwaysTrue));
+		Assertions.assertEquals(Boolean.TRUE, invoke(METHOD_AND3, null, null, alwaysTrue, alwaysTrue));
 		//
 	}
 

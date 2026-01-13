@@ -45,6 +45,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.BooleanSupplier;
 import java.util.function.IntFunction;
 import java.util.function.LongPredicate;
 import java.util.function.Predicate;
@@ -1393,8 +1394,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			final BufferedImage image = pitchAccent != null ? pitchAccent.image : null;
 			//
-			if (Util.and(!GraphicsEnvironment.isHeadless(), !isTestMode(), image != null)
-					&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			if (and(Util.and(!GraphicsEnvironment.isHeadless(), !isTestMode(), image != null),
+					() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
 				//
 				try {
 					//
@@ -1414,6 +1415,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return false;
 		//
+	}
+
+	private static boolean and(final boolean condition, final BooleanSupplier booleanSupplier) {
+		return condition && booleanSupplier != null && booleanSupplier.getAsBoolean();
 	}
 
 	private static boolean actionPerformed2(@Nullable final JapanDictGui instance, final Object source) {
@@ -1710,8 +1715,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.toString(sb), Path::of, null)));
 				//
-				if (Util.and(!GraphicsEnvironment.isHeadless(), !isTestMode(), bs != null)
-						&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				if (and(Util.and(!GraphicsEnvironment.isHeadless(), !isTestMode(), bs != null),
+						() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
 					//
 					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
 					//
@@ -1769,9 +1774,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.toString(sb), Path::of, null)));
 			//
-			if (Util.and(!GraphicsEnvironment.isHeadless(), !isTestMode(),
-					instance.strokeWithNumberBufferedImage != null)
-					&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			if (and(Util.and(!GraphicsEnvironment.isHeadless(), !isTestMode(),
+					instance.strokeWithNumberBufferedImage != null),
+					() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
 				//
 				try {
 					//
@@ -1800,8 +1805,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.toString(sb), Path::of, null)));
 			//
-			if (Util.and(!GraphicsEnvironment.isHeadless(), !isTestMode(), instance.strokeBufferedImage != null)
-					&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			if (and(Util.and(!GraphicsEnvironment.isHeadless(), !isTestMode(), instance.strokeBufferedImage != null),
+					() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
 				//
 				try {
 					//
