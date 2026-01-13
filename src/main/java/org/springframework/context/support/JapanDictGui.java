@@ -1719,7 +1719,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				final String userAgent = instance.getUserAgent();
 				//
-				if ((bs = bs == null ? bs = download(Util.getText(instance.tfAudioUrl), userAgent) : bs) == null) {
+				if ((bs = bs == null ? download(Util.getText(instance.tfAudioUrl), userAgent) : bs) == null) {
 					//
 					Util.setText(instance.tfAudioUrl, getAudioUrl(japanDictEntry, userAgent));
 					//
