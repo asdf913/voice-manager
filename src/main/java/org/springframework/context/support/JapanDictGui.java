@@ -558,15 +558,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			} else if (Objects.equals(columnName, "Pitch Accent")) {
 				//
-				final Iterable<PitchAccent> pitchAccents = entry != null ? entry.pitchAccents : null;
+				final Stream<PitchAccent> stream = testAndApply(Objects::nonNull,
+						Util.spliterator(entry != null ? entry.pitchAccents : null),
+						x -> StreamSupport.stream(x, false), null);
 				//
 				testAndAccept(x -> IterableUtils.size(x) == 1,
-						Util.toList(
-								Util.distinct(Util.map(
-										testAndApply(Objects::nonNull, Util.spliterator(pitchAccents),
-												x -> StreamSupport.stream(x, false), null),
-										x -> x != null ? x.type : null))),
-						x -> {
+						Util.toList(Util.distinct(Util.map(stream, x -> x != null ? x.type : null))), x -> {
 							Util.setText(jLabel, IterableUtils.get(x, 0));
 						});
 				//
