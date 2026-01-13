@@ -166,6 +166,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private static final String DATA_READING = "data-reading";
 
+	private static final String PITCH_ACCENT = "Pitch Accent";
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -348,7 +350,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		add(this, new JLabel());
 		//
 		add(this, new JScrollPane(jTable = new JTable(dtm = new DefaultTableModel(
-				new Object[] { "", "JLPT Level", "Hiragana", "Katakana", "Romaji", "Pitch Accent" }, 0) {
+				new Object[] { "", "JLPT Level", "Hiragana", "Katakana", "Romaji", PITCH_ACCENT }, 0) {
 
 			@Override
 			public boolean isCellEditable(final int row, final int column) {
@@ -427,7 +429,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, btnPlayAudio = new JButton("Play"), wrap);
 		//
-		add(this, new JLabel("Pitch Accent"));
+		add(this, new JLabel(PITCH_ACCENT));
 		//
 		final JComboBox<PitchAccent> jcbPitchAccent = new JComboBox<>(mcbmPitchAccent = new DefaultComboBoxModel<>());
 		//
@@ -556,7 +558,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				Util.setText(jLabel, entry != null ? entry.text : null);
 				//
-			} else if (Objects.equals(columnName, "Pitch Accent")) {
+			} else if (Objects.equals(columnName, PITCH_ACCENT)) {
 				//
 				final Stream<PitchAccent> stream = testAndApply(Objects::nonNull,
 						Util.spliterator(entry != null ? entry.pitchAccents : null),
