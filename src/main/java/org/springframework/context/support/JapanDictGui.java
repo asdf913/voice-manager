@@ -1411,6 +1411,24 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			return true;
 			//
+		} else if (Objects.equals(source, instance.btnCopyHiragana)) {
+			//
+			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+					new StringSelection(Util.getText(instance.tfHiragana)), null));
+			//
+			return true;
+			//
+		} else if (Objects.equals(source, instance.btnCopyStrokeWithNumberImage)) {
+			//
+			final IH ih = new IH();
+			//
+			ih.image = instance.strokeWithNumberBufferedImage;
+			//
+			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+					Reflection.newProxy(Transferable.class, ih), null));
+			//
+			return true;
+			//
 		} // if
 			//
 		return false;
@@ -1474,24 +1492,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			} // try
 				//
-			return true;
-			//
-		} else if (Objects.equals(source, instance.btnCopyHiragana)) {
-			//
-			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
-					new StringSelection(Util.getText(instance.tfHiragana)), null));
-			//
-			return true;
-			//
-		} else if (Objects.equals(source, instance.btnCopyStrokeWithNumberImage)) {
-			//
-			final IH ih = new IH();
-			//
-			ih.image = instance.strokeWithNumberBufferedImage;
-			//
-			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
-					Reflection.newProxy(Transferable.class, ih), null));
-			//
 			return true;
 			//
 		} // if
