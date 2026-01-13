@@ -357,7 +357,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				return false;
 			}
 
-		})), String.format("%1$s,wmin %2$s,span %3$s", wrap, 100, 6));
+		})), String.format("%1$s,wmin %2$s,span %3$s", wrap, 100, 9));
 		//
 		if ((lsm = jTable.getSelectionModel()) != null) {
 			//
@@ -436,7 +436,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		jcbPitchAccent.setRenderer(createPitchAccentListCellRenderer(jcbPitchAccent, jcbPitchAccent.getRenderer(),
 				Util.getPreferredSize(jcbPitchAccent)));
 		//
-		add(this, jcbPitchAccent, String.format("span %1$s", 3));
+		add(this, jcbPitchAccent, String.format("span %1$s", 5));
 		//
 		add(this, btnCopyPitchAccentImage = new JButton("Copy"));
 		//
