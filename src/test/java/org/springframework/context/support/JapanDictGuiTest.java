@@ -112,8 +112,6 @@ class JapanDictGuiTest {
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
 		//
-		CLASS_JAPAN_DICT_ENTRY = Util.forName("org.springframework.context.support.JapanDictGui$JapanDictEntry");
-		//
 		final Class<?> clz = JapanDictGui.class;
 		//
 		(METHOD_TEST_AND_GET = Util.getDeclaredMethod(clz, "testAndGet", Boolean.TYPE, FailableSupplier.class))
@@ -178,7 +176,9 @@ class JapanDictGuiTest {
 				TableCellRenderer.class, JTable.class, Object.class, Boolean.TYPE, Boolean.TYPE, Integer.TYPE,
 				Integer.TYPE)).setAccessible(true);
 		//
-		(METHOD_GET_STROKE_IMAGE = Util.getDeclaredMethod(clz, "getStrokeImage", clz, Page.class, String.class))
+		(METHOD_GET_STROKE_IMAGE = Util.getDeclaredMethod(clz, "getStrokeImage", clz, Page.class,
+				CLASS_JAPAN_DICT_ENTRY = Util
+						.forName("org.springframework.context.support.JapanDictGui$JapanDictEntry")))
 				.setAccessible(true);
 		//
 		(METHOD_AND2 = Util.getDeclaredMethod(clz, "and", Boolean.TYPE, BooleanSupplier.class)).setAccessible(true);
@@ -383,12 +383,16 @@ class JapanDictGuiTest {
 
 	private IH ih = null;
 
+	private Object japanDictEntry;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = Util.cast(JapanDictGui.class, Narcissus.allocateInstance(JapanDictGui.class));
 		//
 		ih = new IH();
+		//
+		japanDictEntry = Narcissus.allocateInstance(CLASS_JAPAN_DICT_ENTRY);
 		//
 	}
 
@@ -1209,8 +1213,6 @@ class JapanDictGuiTest {
 		//
 		dtm.removeRow(0);
 		//
-		final Object japanDictEntry = Narcissus.allocateInstance(CLASS_JAPAN_DICT_ENTRY);
-		//
 		dtm.addRow(new Object[] { japanDictEntry });
 		//
 		Assertions.assertDoesNotThrow(() -> instance.valueChanged(listSelectionEvent));
@@ -1232,7 +1234,7 @@ class JapanDictGuiTest {
 	@Test
 	void testGetStrokeImage() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(invoke(METHOD_GET_STROKE_IMAGE, null, null, null, ""));
+		Assertions.assertNull(invoke(METHOD_GET_STROKE_IMAGE, null, null, null, japanDictEntry));
 		//
 	}
 
@@ -1311,7 +1313,7 @@ class JapanDictGuiTest {
 		//
 		final DefaultTableModel dtm = new DefaultTableModel(new Object[] { "", "Hiragana" }, ZERO);
 		//
-		dtm.addRow(new Object[] { Narcissus.allocateInstance(CLASS_JAPAN_DICT_ENTRY) });
+		dtm.addRow(new Object[] { japanDictEntry });
 		//
 		Assertions.assertNull(tcr.getTableCellRendererComponent(new JTable(dtm), tcr, false, false, ZERO, ZERO));
 		//
@@ -1453,8 +1455,6 @@ class JapanDictGuiTest {
 		Object[] os = null;
 		//
 		String toString = null;
-		//
-		Object japanDictEntry = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//

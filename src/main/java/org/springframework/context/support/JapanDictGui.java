@@ -2387,9 +2387,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				try {
 					//
-					testAndApply(Objects::nonNull,
-							entry.strokeImage = chopImage(getStrokeImage(instance, page, entry.id)), ImageIcon::new,
-							null);
+					testAndApply(Objects::nonNull, entry.strokeImage = chopImage(getStrokeImage(instance, page, entry)),
+							ImageIcon::new, null);
 					//
 				} catch (final IOException | InterruptedException e) {
 					//
@@ -2435,7 +2434,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				try {
 					//
 					testAndApply(Objects::nonNull,
-							entry.strokeWithNumberImage = chopImage(getStrokeImage(instance, page, entry.id)),
+							entry.strokeWithNumberImage = chopImage(getStrokeImage(instance, page, entry)),
 							ImageIcon::new, null);
 					//
 				} catch (final IOException | InterruptedException e) {
@@ -2558,8 +2557,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		}
 	}
 
-	private static BufferedImage getStrokeImage(final JapanDictGui instance, final Page page, final String id)
-			throws IOException, InterruptedException {
+	private static BufferedImage getStrokeImage(final JapanDictGui instance, final Page page,
+			final JapanDictEntry japanDictEntry) throws IOException, InterruptedException {
+		//
+		final String id = japanDictEntry != null ? japanDictEntry.id : null;
 		//
 		final Iterable<Field> fs = Util.toList(Util.filter(
 				Util.stream(testAndApply(Objects::nonNull, Util.getClass(id), FieldUtils::getAllFieldsList, null)),
@@ -2596,8 +2597,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		int[] ints = null;
 		//
-		while (System.currentTimeMillis() - currentTimeMillis < Math
-				.max(toMillis(instance != null ? instance.storkeImageDuration : null, 20000), 0)) {
+		while (System.currentTimeMillis() - currentTimeMillis < NumberUtils.max(
+				toMillis(instance != null ? instance.storkeImageDuration : null, 20000),
+				StringUtils.length(japanDictEntry != null ? japanDictEntry.text : null) * 4075, 0)) {
 			//
 			if (before == null) {
 				//
