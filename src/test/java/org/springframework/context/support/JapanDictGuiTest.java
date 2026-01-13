@@ -1296,8 +1296,7 @@ class JapanDictGuiTest {
 	}
 
 	@Test
-	void testCreateTableCellRenderer()
-			throws IllegalAccessException, InvocationTargetException, ClassNotFoundException {
+	void testCreateTableCellRenderer() throws IllegalAccessException, InvocationTargetException {
 		//
 		final TableCellRenderer tcr = Util.cast(TableCellRenderer.class,
 				invoke(METHOD_CREATE_TABLE_CELL_RENDERER, null, (Object) null));
