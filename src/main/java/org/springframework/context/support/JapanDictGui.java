@@ -1742,7 +1742,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static int getSelectedRow(final JTable instance) {
+	private static int getSelectedRow(@Nullable final JTable instance) {
 		//
 		return instance != null && instance.getSelectionModel() != null ? instance.getSelectedRow() : -1;
 		//
