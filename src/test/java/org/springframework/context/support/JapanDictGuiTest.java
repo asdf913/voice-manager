@@ -27,6 +27,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.LongPredicate;
 import java.util.function.Predicate;
@@ -99,12 +100,13 @@ class JapanDictGuiTest {
 	private static Class<?> CLASS_JAPAN_DICT_ENTRY = null;
 
 	private static Method METHOD_TEST_AND_GET, METHOD_SET_TEXT, METHOD_STARTS_WITH, METHOD_APPEND,
-			METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG, METHOD_TEST_AND_ACCEPT4, METHOD_GET_AUDIO_URL,
-			METHOD_TEST_AND_RUN, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
-			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL,
-			METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE,
-			METHOD_GET_COLUMN_NAME, METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND2,
-			METHOD_AND3, METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
+			METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG, METHOD_TEST_AND_ACCEPT4_BI_PREDICATE,
+			METHOD_TEST_AND_ACCEPT4_PREDICATE, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN, METHOD_GET_SYSTEM_CLIP_BOARD,
+			METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES,
+			METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2,
+			METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE, METHOD_GET_COLUMN_NAME,
+			METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND2, METHOD_AND3,
+			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
 			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_CREATE_TABLE_CELL_RENDERER,
 			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_GET_PITCH_ACCENTS,
 			METHOD_FILTER, METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW,
@@ -133,8 +135,11 @@ class JapanDictGuiTest {
 		(METHOD_TEST_AND_ACCEPT3_LONG = Util.getDeclaredMethod(clz, "testAndAccept", LongPredicate.class, Long.TYPE,
 				FailableLongConsumer.class)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_ACCEPT4 = Util.getDeclaredMethod(clz, "testAndAccept", BiPredicate.class, Object.class,
-				Object.class, BiConsumer.class)).setAccessible(true);
+		(METHOD_TEST_AND_ACCEPT4_BI_PREDICATE = Util.getDeclaredMethod(clz, "testAndAccept", BiPredicate.class,
+				Object.class, Object.class, BiConsumer.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT4_PREDICATE = Util.getDeclaredMethod(clz, "testAndAccept", Predicate.class, Object.class,
+				FailableConsumer.class, Consumer.class)).setAccessible(true);
 		//
 		(METHOD_GET_AUDIO_URL = Util.getDeclaredMethod(clz, "getAudioUrl", String.class, Strings.class, Iterable.class))
 				.setAccessible(true);
@@ -900,12 +905,20 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT3_LONG, null, longPredicate, l, null));
 		//
-		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT4, null, org.meeuw.functional.Predicates.biAlwaysTrue(),
-				null, null, null));
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT4_BI_PREDICATE, null,
+				org.meeuw.functional.Predicates.biAlwaysTrue(), null, null, null));
 		//
 		final Predicate<?> predicate = Predicates.alwaysTrue();
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT3_OBJECT, null, predicate, null, null));
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT3_OBJECT, null, predicate, null, null));
+		//
+		final FailableConsumer<?, ?> fs = x -> {
+			throw new RuntimeException();
+		};
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT4_PREDICATE, null, predicate, null, fs, null));
 		//
 	}
 

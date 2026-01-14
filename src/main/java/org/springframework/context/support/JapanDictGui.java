@@ -46,6 +46,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.LongPredicate;
 import java.util.function.Predicate;
@@ -2395,36 +2396,43 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			// Furigana
 			//
-			if (entry.furiganaImage == null) {
+			final Iterable<Field> fs = Util.toList(Util.filter(
+					Util.stream(
+							testAndApply(Objects::nonNull, Util.getClass(entry), FieldUtils::getAllFieldsList, null)),
+					x -> Objects.equals(Util.getName(x), "furiganaImage")));
+			//
+			testAndRun(IterableUtils.size(fs) > 1, () -> {
 				//
-				try {
-					//
-					entry.furiganaImage = toBufferedImage(
-							ElementHandleUtil
-									.screenshot(
-											testAndApply(x -> IterableUtils.size(x) == 1,
-													ElementHandleUtil.querySelectorAll(
-															testAndApply(
-																	x -> IterableUtils.size(x) > Util
-																			.intValue(entry.index, 0),
-																	PageUtil.querySelectorAll(
-																			page,
-																			String.format("#entry-%1$s ruby",
-																					entry.id)),
-																	x -> IterableUtils.get(x,
-																			Util.intValue(entry.index, 0)),
-																	null),
-															".."),
-													x -> IterableUtils.get(x, 0), null)));
-					//
-				} catch (final IOException e) {
-					//
-					throw new RuntimeException(e);
-					//
-				} // try
-					//
-			} // if
+				throw new IllegalStateException();
 				//
+			});
+			//
+			testAndAccept(x -> Narcissus.getField(entry, x) == null,
+					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null), x -> {
+						//
+						Narcissus
+								.setField(entry, x,
+										toBufferedImage(ElementHandleUtil.screenshot(testAndApply(
+												y -> IterableUtils.size(y) == 1,
+												ElementHandleUtil
+														.querySelectorAll(
+																testAndApply(
+																		y -> IterableUtils.size(y) > Util
+																				.intValue(entry.index, 0),
+																		PageUtil.querySelectorAll(
+																				page,
+																				String.format("#entry-%1$s ruby",
+																						entry.id)),
+																		y -> IterableUtils.get(y,
+																				Util.intValue(entry.index, 0)),
+																		null),
+																".."),
+												y -> IterableUtils.get(y, 0), null))));
+						//
+					}, x -> {
+						throw new RuntimeException(x);
+					});
+			//
 			Util.setIcon(instance.furiganaImage,
 					testAndApply(Objects::nonNull, entry.furiganaImage, ImageIcon::new, null));
 			//
@@ -2519,6 +2527,24 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		pack(instance.window);
 		//
+	}
+
+	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
+			final FailableConsumer<T, E> failableConsumer, final Consumer<Throwable> consumer) {
+		//
+		if (Util.test(predicate, value)) {
+			//
+			try {
+				//
+				FailableConsumerUtil.accept(failableConsumer, value);
+				//
+			} catch (final Throwable e) {
+				//
+				Util.accept(consumer, e);
+				//
+			} // try
+		} // if
+			//
 	}
 
 	private static boolean or(final boolean a, final boolean b, @Nullable final boolean... bs) {
