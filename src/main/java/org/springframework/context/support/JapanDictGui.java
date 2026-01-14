@@ -14,6 +14,8 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -2408,12 +2410,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			});
 			//
 			testAndAccept(x -> Narcissus.getField(entry, x) == null,
-					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null), x -> {
+					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null), f -> {
 						//
-						Narcissus
-								.setField(entry, x,
-										toBufferedImage(ElementHandleUtil.screenshot(testAndApply(
-												y -> IterableUtils.size(y) == 1,
+						final BufferedImage bi = toBufferedImage(
+								ElementHandleUtil.screenshot(
+										testAndApply(y -> IterableUtils.size(y) == 1,
 												ElementHandleUtil
 														.querySelectorAll(
 																testAndApply(
@@ -2427,7 +2428,102 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 																				Util.intValue(entry.index, 0)),
 																		null),
 																".."),
-												y -> IterableUtils.get(y, 0), null))));
+												y -> IterableUtils.get(y, 0), null)));
+						//
+						final WritableRaster raster = bi != null ? bi.getRaster() : null;
+						//
+						final DataBufferByte dbb = Util.cast(DataBufferByte.class,
+								raster != null ? raster.getDataBuffer() : null);
+						//
+						final byte[] data = dbb != null ? dbb.getData() : null;
+						//
+						int[] color = null;
+						//
+						int pixelIndex = 0;
+						//
+						for (int x = 0; bi != null && bi.getType() == BufferedImage.TYPE_3BYTE_BGR
+								&& x < bi.getWidth(); x++) {
+							//
+							if (color != null) {
+								//
+								break;
+								//
+							} // if
+								//
+							for (int y = 0; y < bi.getHeight(); y++) {
+								//
+								if (color == null) {
+									//
+									color = data != null ? new int[] {
+											data[pixelIndex = (y * bi.getWidth() + x) * 3/* 3 bytes per pixel */] & 0xff// blue
+											, data[pixelIndex + 1] & 0xff// green
+											, data[pixelIndex + 2]// red
+
+									} : null;
+									//
+									break;
+									//
+								} // if
+									//
+							} // for
+								//
+						} // for
+							//
+						int[] xs = null, ys = null;
+						//
+						for (int x = 0; color != null && data != null && bi != null && x < bi.getWidth(); x++) {
+							//
+							for (int y = 0; y < bi.getHeight(); y++) {
+								//
+								if (Arrays.equals(color, new int[] {
+										data[pixelIndex = (y * bi.getWidth() + x) * 3/* 3 bytes per pixel */] & 0xff// blue
+										, data[pixelIndex + 1] & 0xff// green
+										, data[pixelIndex + 2]// red
+								})) {
+									//
+									continue;
+									//
+								} // if
+									//
+								if (xs == null || xs.length == 0 || (xs.length == 1 && x > xs[0])) {
+									//
+									xs = ArrayUtils.add(xs, x);
+									//
+								} else if (x > xs[xs.length - 1]) {
+									//
+									xs[xs.length - 1] = x;
+									//
+								} // if
+									//
+								if (ys == null || ys.length == 0 || (ys.length == 1 && y > ys[ys.length - 1])) {
+									//
+									ys = ArrayUtils.add(ys, y);
+									//
+								} else if (y > ys[ys.length - 1]) {
+									//
+									ys[ys.length - 1] = y;
+									//
+								} else if (y < ys[0]) {
+									//
+									ys[0] = y;
+									//
+								} // if
+									//
+							} // for
+								//
+						} // for
+							//
+						if (xs != null && xs.length > 1 && ys != null && ys.length > 1) {
+							//
+							ImageIO.write(bi.getSubimage(xs[0], ys[0], xs[1] - xs[0], ys[1] - ys[0] + 1), "png",
+									Util.toFile(Path.of("2.png")));
+							//
+						} // if
+							//
+						Narcissus.setField(entry, f,
+								xs != null && xs.length > 1 && ys != null && ys.length > 1
+										? bi.getSubimage(xs[0], ys[0], xs[1] - xs[0], ys[1] - ys[0] + 1)
+										: bi);
 						//
 					}, x -> {
 						throw new RuntimeException(x);
