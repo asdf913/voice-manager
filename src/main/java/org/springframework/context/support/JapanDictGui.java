@@ -2429,9 +2429,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 														".."),
 												y -> IterableUtils.get(y, 0), null)));
 				//
-				final DataBufferByte dbb = Util.cast(DataBufferByte.class, getDataBuffer(getRaster(bi)));
-				//
-				final byte[] data = dbb != null ? dbb.getData() : null;
+				final byte[] data = getData(Util.cast(DataBufferByte.class, getDataBuffer(getRaster(bi))));
 				//
 				int[] color = null;
 				//
@@ -2584,6 +2582,31 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // try
 			//
 		pack(instance.window);
+		//
+	}
+
+	private static byte[] getData(final DataBufferByte instance) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), "theTrackable")));
+		//
+		testAndRun(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		return f != null && Narcissus.getField(instance, f) != null ? instance.getData() : null;
 		//
 	}
 
