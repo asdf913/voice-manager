@@ -2517,13 +2517,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 								//
 						} // for
 							//
-						if (xs != null && xs.length > 1 && ys != null && ys.length > 1) {
-							//
-							ImageIO.write(bi.getSubimage(xs[0], ys[0], xs[1] - xs[0], ys[1] - ys[0] + 1), "png",
-									Util.toFile(Path.of("2.png")));
-							//
-						} // if
-							//
 						Narcissus.setField(entry, f,
 								xs != null && xs.length > 1 && ys != null && ys.length > 1
 										? bi.getSubimage(xs[0], ys[0], xs[1] - xs[0], ys[1] - ys[0] + 1)
