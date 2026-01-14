@@ -874,8 +874,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 										() -> Pattern.compile("^\\p{InHiragana}+$")),
 								patternKatkana = ObjectUtils.getIfNull(patternKatkana,
 										() -> Pattern.compile("^\\p{InKatakana}+$")),
-								objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new),
-								Util.getRowCount(dtm), j, map) });
+								objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new), j, map) });
 				//
 			} // for
 				//
@@ -917,8 +916,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	private static JapanDictEntry getJapanDictEntry(final Element e, final Pattern patternHiragana,
-			final Pattern patternKatakana, final ObjectMapper objectMapper, final int index1, final int index2,
-			final Map<?, ?> map) {
+			final Pattern patternKatakana, final ObjectMapper objectMapper, final int index2, final Map<?, ?> map) {
 		//
 		final JapanDictEntry entry = new JapanDictEntry();
 		//
@@ -970,8 +968,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // if
 			//
 		entry.text = Util.toString(Util.get(map, "text"));
-		//
-		entry.index = Integer.valueOf(index1);
 		//
 		entry.index = Integer.valueOf(index2);
 		//

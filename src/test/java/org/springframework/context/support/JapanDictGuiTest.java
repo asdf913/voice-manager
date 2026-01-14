@@ -351,6 +351,14 @@ class JapanDictGuiTest {
 				//
 				return booleanValue;
 				//
+			} else if (proxy instanceof Map) {
+				//
+				if (Objects.equals(name, "get")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -467,7 +475,7 @@ class JapanDictGuiTest {
 						Boolean.logicalAnd(Objects.equals(name, "getJapanDictEntry"),
 								Arrays.equals(parameterTypes,
 										new Class<?>[] { Element.class, Pattern.class, Pattern.class,
-												ObjectMapper.class, Integer.TYPE, Integer.TYPE, Map.class })),
+												ObjectMapper.class, Integer.TYPE, Map.class })),
 						Boolean.logicalAnd(Objects.equals(name, "createTableCellRenderer"),
 								Arrays.equals(parameterTypes, new Class<?>[] { TableCellRenderer.class })),
 						Boolean.logicalAnd(Objects.equals(name, "createPitchAccentListCellRenderer"), Arrays.equals(
@@ -635,7 +643,10 @@ class JapanDictGuiTest {
 						Boolean.logicalAnd(Objects.equals(name, "clearParameters"),
 								Arrays.equals(parameterTypes, new Class<?>[] { URIBuilder.class })),
 						Boolean.logicalAnd(Objects.equals(name, "getQueryParams"),
-								Arrays.equals(parameterTypes, new Class<?>[] { URIBuilder.class })))) {
+								Arrays.equals(parameterTypes, new Class<?>[] { URIBuilder.class })),
+						Boolean.logicalAnd(Objects.equals(name, "getJapanDictEntry"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Element.class, Pattern.class,
+										Pattern.class, ObjectMapper.class, Integer.TYPE, Map.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
