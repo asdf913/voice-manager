@@ -253,7 +253,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Stroke Image")
 	private JLabel strokeImage = null;
 
-	private JLabel strokeWithNumberImage = null;
+	private JLabel furiganaImage, strokeWithNumberImage = null;
 
 	@Note("Stroke Image")
 	private transient BufferedImage strokeBufferedImage = null;
@@ -315,7 +315,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				if ((browserType = IterableUtils.get(browserTypes, i)) == null) {
 					//
-					continue;
 					//
 				} // if
 					//
@@ -428,6 +427,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		add(this, btnDownloadAudio = new JButton("Download"));
 		//
 		add(this, btnPlayAudio = new JButton("Play"), wrap);
+		//
+		add(this, new JLabel("Furigana"));
+		//
+		add(this, furiganaImage = new JLabel(), String.format("span %1$s,%2$s", 5, wrap));
 		//
 		add(this, new JLabel(PITCH_ACCENT));
 		//
@@ -671,7 +674,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		@Note("Stroke Image")
 		private BufferedImage strokeImage = null;
 
-		private BufferedImage strokeWithNumberImage = null;
+		private BufferedImage furiganaImage, strokeWithNumberImage = null;
 
 		private Iterable<PitchAccent> pitchAccents = null;
 
@@ -2369,7 +2372,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // for
 			//
 		try (final Playwright playwright = testAndGet(
-				Boolean.logicalOr(entry.strokeImage == null, IterableUtils.isEmpty(entry.pitchAccents)),
+				or(entry.furiganaImage == null, entry.strokeImage == null, IterableUtils.isEmpty(entry.pitchAccents)),
 				Playwright::create);
 				final Browser browser = testAndApply(
 						Predicates.always(UrlValidatorUtil.isValid(UrlValidator.getInstance(), pageUrl)), playwright,
@@ -2383,6 +2386,41 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				final Page page = newPage(browser)) {
 			//
 			PageUtil.navigate(page, pageUrl);
+			//
+			// Furigana
+			//
+			if (entry.furiganaImage == null) {
+				//
+				try {
+					//
+					entry.furiganaImage = toBufferedImage(
+							ElementHandleUtil
+									.screenshot(
+											testAndApply(x -> IterableUtils.size(x) == 1,
+													ElementHandleUtil.querySelectorAll(
+															testAndApply(
+																	x -> IterableUtils.size(x) > Util
+																			.intValue(entry.index, 0),
+																	PageUtil.querySelectorAll(
+																			page,
+																			String.format("#entry-%1$s ruby",
+																					entry.id)),
+																	x -> IterableUtils.get(x,
+																			Util.intValue(entry.index, 0)),
+																	null),
+															".."),
+													x -> IterableUtils.get(x, 0), null)));
+					//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
+			} // if
+				//
+			Util.setIcon(instance.furiganaImage,
+					testAndApply(Objects::nonNull, entry.furiganaImage, ImageIcon::new, null));
 			//
 			// Pitch Accents
 			//
@@ -2474,6 +2512,30 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // try
 			//
 		pack(instance.window);
+		//
+	}
+
+	private static boolean or(final boolean a, final boolean b, final boolean... bs) {
+		//
+		boolean result = Boolean.logicalOr(a, b);
+		//
+		if (result) {
+			//
+			return result;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (result |= bs[i]) {
+				//
+				return result;
+				//
+			} // if
+				//
+		} // for
+			//
+		return result;
 		//
 	}
 

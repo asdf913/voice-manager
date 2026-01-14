@@ -107,7 +107,8 @@ class JapanDictGuiTest {
 			METHOD_AND3, METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
 			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_CREATE_TABLE_CELL_RENDERER,
 			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_GET_PITCH_ACCENTS,
-			METHOD_FILTER, METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW = null;
+			METHOD_FILTER, METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW,
+			METHOD_OR = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -221,6 +222,9 @@ class JapanDictGuiTest {
 				String.class)).setAccessible(true);
 		//
 		(METHOD_GET_SELECTED_ROW = Util.getDeclaredMethod(clz, "getSelectedRow", JTable.class)).setAccessible(true);
+		//
+		(METHOD_OR = Util.getDeclaredMethod(clz, "or", Boolean.TYPE, Boolean.TYPE, boolean[].class))
+				.setAccessible(true);
 		//
 	}
 
@@ -675,28 +679,23 @@ class JapanDictGuiTest {
 			//
 	}
 
+	@Test
+	void testOr() throws Throwable {
+		//
+		Assertions.assertFalse(or(false, false, null));
+		//
+	}
+
 	private static boolean or(final boolean a, final boolean b, final boolean... bs) throws Throwable {
-		//
-		boolean result = a || b;
-		//
-		if (result) {
-			//
-			return result;
-			//
-		} // if
-			//
-		for (int i = 0; bs != null && i < bs.length; i++) {
-			//
-			if (result |= bs[i]) {
-				//
-				return result;
-				//
-			} // if
-				//
-		} // for
-			//
-		return result;
-		//
+		try {
+			final Object obj = invoke(METHOD_OR, null, a, b, bs);
+			if (obj instanceof Boolean bool) {
+				return bool.booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static Class<?> componentType(final Class<?> instance) {
