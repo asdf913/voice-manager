@@ -2552,6 +2552,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	@Nullable
 	private static int[] getFirstPixelColor(@Nullable final BufferedImage bi, final int type,
 			@Nullable final byte[] data) {
 		//
@@ -2612,6 +2613,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	@Nullable
 	private static byte[] getData(@Nullable final DataBufferByte instance) {
 		//
 		if (instance == null) {
@@ -2637,10 +2639,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	@Nullable
 	private static DataBuffer getDataBuffer(@Nullable final Raster instance) {
 		return instance != null ? instance.getDataBuffer() : null;
 	}
 
+	@Nullable
 	private static WritableRaster getRaster(@Nullable final BufferedImage instance) {
 		return instance != null ? instance.getRaster() : null;
 	}
