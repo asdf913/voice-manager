@@ -250,10 +250,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private transient ComboBoxModel<String> cbmBrowserType = null;
 
+	@Note("Furigana Image")
+	private JLabel furiganaImage = null;
+
 	@Note("Stroke Image")
 	private JLabel strokeImage = null;
 
-	private JLabel furiganaImage, strokeWithNumberImage = null;
+	private JLabel strokeWithNumberImage = null;
 
 	@Note("Stroke Image")
 	private transient BufferedImage strokeBufferedImage = null;
@@ -671,10 +674,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private Integer index = null;
 
+		@Note("Furigana Image")
+		private BufferedImage furiganaImage = null;
+
 		@Note("Stroke Image")
 		private BufferedImage strokeImage = null;
 
-		private BufferedImage furiganaImage, strokeWithNumberImage = null;
+		private BufferedImage strokeWithNumberImage = null;
 
 		private Iterable<PitchAccent> pitchAccents = null;
 
