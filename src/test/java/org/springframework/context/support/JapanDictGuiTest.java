@@ -8,6 +8,8 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.Raster;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -110,8 +112,8 @@ class JapanDictGuiTest {
 			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
 			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_CREATE_TABLE_CELL_RENDERER,
 			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_GET_PITCH_ACCENTS,
-			METHOD_FILTER, METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW,
-			METHOD_OR = null;
+			METHOD_FILTER, METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW, METHOD_OR,
+			METHOD_GET_FIRST_PIXEL_COLOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -231,6 +233,9 @@ class JapanDictGuiTest {
 		//
 		(METHOD_OR = Util.getDeclaredMethod(clz, "or", Boolean.TYPE, Boolean.TYPE, boolean[].class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_FIRST_PIXEL_COLOR = Util.getDeclaredMethod(clz, "getFirstPixelColor", BufferedImage.class,
+				Integer.TYPE, byte[].class)).setAccessible(true);
 		//
 	}
 
@@ -399,6 +404,8 @@ class JapanDictGuiTest {
 
 	private Object japanDictEntry;
 
+	private ObjectMapper objectMapper;
+
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -407,6 +414,8 @@ class JapanDictGuiTest {
 		ih = new IH();
 		//
 		japanDictEntry = Narcissus.allocateInstance(CLASS_JAPAN_DICT_ENTRY);
+		//
+		objectMapper = new ObjectMapper();
 		//
 	}
 
@@ -999,8 +1008,6 @@ class JapanDictGuiTest {
 		Assertions.assertNull(
 				invoke(METHOD_GET_JLPT_LEVEL_INDICES, null, new DefaultComboBoxModel<>(new Object[] { null }), null));
 		//
-		final ObjectMapper objectMapper = new ObjectMapper();
-		//
 		Assertions.assertEquals(ObjectMapperUtil.writeValueAsString(objectMapper, new int[] { ONE }),
 				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_GET_JLPT_LEVEL_INDICES, null,
 						new DefaultComboBoxModel<>(new Object[] { null, "N1" }), "JLPT N1")));
@@ -1515,6 +1522,25 @@ class JapanDictGuiTest {
 				//
 		} // for
 			//
+	}
+
+	@Test
+	void testGetFirstPixelColor()
+			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, JsonProcessingException {
+		//
+		final int type = BufferedImage.TYPE_3BYTE_BGR;
+		//
+		final BufferedImage bi = new BufferedImage(2, 2, type);
+		//
+		Assertions.assertNull(invoke(METHOD_GET_FIRST_PIXEL_COLOR, null, bi, Integer.valueOf(type), null));
+		//
+		Assertions.assertEquals("[0,0,0]", ObjectMapperUtil.writeValueAsString(objectMapper, invoke(
+				METHOD_GET_FIRST_PIXEL_COLOR, null, bi, Integer.valueOf(type),
+				Narcissus.invokeStaticMethod(JapanDictGui.class.getDeclaredMethod("getData", DataBufferByte.class),
+						Narcissus.invokeStaticMethod(
+								JapanDictGui.class.getDeclaredMethod("getDataBuffer", Raster.class),
+								bi.getRaster())))));
+		//
 	}
 
 }

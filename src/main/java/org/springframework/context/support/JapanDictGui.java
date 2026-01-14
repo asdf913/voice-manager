@@ -1094,22 +1094,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		int[] ints = null;
 		//
-		final Iterable<Field> fs = Util.toList(Util.filter(
-				Util.stream(
-						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
-				x -> Objects.equals(Util.getName(x), "raster")));
+		final int width = getWidth(instance);
 		//
-		testAndRun(IterableUtils.size(fs) > 1, () -> {
-			//
-			throw new IllegalStateException();
-			//
-		});
-		//
-		final boolean condition = testAndApply(Objects::nonNull,
-				testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
-				x -> Narcissus.getField(instance, x), null) != null;
-		//
-		for (int x = 0; condition && instance != null && x < instance.getWidth(); x++) {
+		for (int x = 0; instance != null && x < width; x++) {
 			//
 			for (int y = 0; y < instance.getHeight(); y++) {
 				//
@@ -1169,21 +1156,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} // if
 			//
-		final Iterable<Field> fs = Util
-				.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(bufferedImage))),
-						x -> Objects.equals(Util.getName(x), "raster")));
-		//
-		testAndRun(IterableUtils.size(fs) > 1, () -> {
-			//
-			throw new IllegalStateException();
-			//
-		});
-		//
-		final boolean condition = testAndApply(Objects::nonNull,
-				testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
-				x -> Narcissus.getField(bufferedImage, x), null) != null;
-		//
-		final int width = Util.intValue(condition ? bufferedImage.getWidth() : null, 0);
+		final int width = getWidth(bufferedImage);
 		//
 		Integer first = null;
 		//
@@ -1213,6 +1186,20 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // for
 			//
+		final Iterable<Field> fs = Util
+				.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(bufferedImage))),
+						x -> Objects.equals(Util.getName(x), "raster")));
+		//
+		testAndRun(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final boolean condition = testAndApply(Objects::nonNull,
+				testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
+				x -> Narcissus.getField(bufferedImage, x), null) != null;
+		//
 		final int height = Util.intValue(condition ? bufferedImage.getHeight() : null, 0);
 		//
 		return condition ? bufferedImage.getSubimage(0, 0, Math.min(Util.intValue(integerX, width), width), height)
@@ -2431,37 +2418,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				final byte[] data = getData(Util.cast(DataBufferByte.class, getDataBuffer(getRaster(bi))));
 				//
-				int[] color = null;
+				int[] color = getFirstPixelColor(bi, BufferedImage.TYPE_3BYTE_BGR, data);
 				//
 				int pixelIndex = 0;
 				//
-				for (int x = 0; bi != null && bi.getType() == BufferedImage.TYPE_3BYTE_BGR && x < bi.getWidth(); x++) {
-					//
-					if (color != null) {
-						//
-						break;
-						//
-					} // if
-						//
-					for (int y = 0; y < bi.getHeight(); y++) {
-						//
-						if (color == null) {
-							//
-							color = data != null ? new int[] {
-									data[pixelIndex = (y * bi.getWidth() + x) * 3/* 3 bytes per pixel */] & 0xff// blue
-									, data[pixelIndex + 1] & 0xff// green
-									, data[pixelIndex + 2]// red
-
-							} : null;
-							//
-							break;
-							//
-						} // if
-							//
-					} // for
-						//
-				} // for
-					//
 				int[] xs = null, ys = null;
 				//
 				for (int x = 0; color != null && data != null && bi != null && x < bi.getWidth(); x++) {
@@ -2582,6 +2542,65 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // try
 			//
 		pack(instance.window);
+		//
+	}
+
+	private static int[] getFirstPixelColor(final BufferedImage bi, final int type, final byte[] data) {
+		//
+		int[] color = null;
+		//
+		final int width = getWidth(bi);
+		//
+		int pixelIndex = 0;
+		//
+		for (int x = 0; bi != null && bi.getType() == type && x < width; x++) {
+			//
+			if (color != null) {
+				//
+				break;
+				//
+			} // if
+				//
+			for (int y = 0; y < bi.getHeight(); y++) {
+				//
+				if (color == null) {
+					//
+					color = data != null
+							? new int[] { data[pixelIndex = (y * width + x) * 3/* 3 bytes per pixel */] & 0xff// blue
+									, data[pixelIndex + 1] & 0xff// green
+									, data[pixelIndex + 2]// red
+
+							}
+							: null;
+					//
+					break;
+					//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		return color;
+		//
+	}
+
+	private static int getWidth(final BufferedImage instance) {
+		//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), "raster")));
+		//
+		testAndRun(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		return f != null && Narcissus.getField(instance, f) != null ? instance.getWidth() : 0;
 		//
 	}
 
