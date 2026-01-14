@@ -2388,6 +2388,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		};
 		//
+		Iterable<Field> fs = null;
+		//
 		try (final Playwright playwright = testAndGet(
 				or(entry.furiganaImage == null, entry.strokeImage == null, IterableUtils.isEmpty(entry.pitchAccents)),
 				Playwright::create);
@@ -2406,12 +2408,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			// Furigana
 			//
-			final Iterable<Field> fs = Util.toList(Util.filter(
+			testAndRun(IterableUtils.size(fs = Util.toList(Util.filter(
 					Util.stream(
 							testAndApply(Objects::nonNull, Util.getClass(entry), FieldUtils::getAllFieldsList, null)),
-					x -> Objects.equals(Util.getName(x), "furiganaImage")));
-			//
-			testAndRun(IterableUtils.size(fs) > 1, runnable);
+					x -> Objects.equals(Util.getName(x), "furiganaImage")))) > 1, runnable);
 			//
 			testAndAccept(x -> Narcissus.getField(entry, x) == null,
 					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null), f -> {
@@ -2553,21 +2553,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			// Stroke Image
 			//
-			if (entry.strokeImage == null) {
-				//
-				try {
-					//
-					testAndApply(Objects::nonNull, entry.strokeImage = chopImage(getStrokeImage(instance, page, entry)),
-							ImageIcon::new, null);
-					//
-				} catch (final IOException | InterruptedException e) {
-					//
-					TaskDialogs.showException(e);
-					//
-				} // try
-					//
-			} // if
-				//
+			testAndRun(IterableUtils.size(fs = Util.toList(Util.filter(
+					Util.stream(
+							testAndApply(Objects::nonNull, Util.getClass(entry), FieldUtils::getAllFieldsList, null)),
+					x -> Objects.equals(Util.getName(x), "strokeImage")))) > 1, runnable);
+			//
+			testAndAccept(x -> Narcissus.getField(entry, x) == null,
+					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
+					f -> Narcissus.setField(entry, f, chopImage(getStrokeImage(instance, page, entry))), consumer);
+			//
 			Util.setIcon(instance.strokeImage, testAndApply(Objects::nonNull,
 					instance.strokeBufferedImage = entry.strokeImage, ImageIcon::new, null));
 			//
@@ -2599,12 +2593,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					PageUtil.querySelectorAll(page, String.format("#dmak-reset-%1$s", entry.id)),
 					x -> IterableUtils.get(x, 0), null));
 			//
-			final Iterable<Field> fs = Util.toList(Util.filter(
+			testAndRun(IterableUtils.size(fs = Util.toList(Util.filter(
 					Util.stream(
 							testAndApply(Objects::nonNull, Util.getClass(entry), FieldUtils::getAllFieldsList, null)),
-					x -> Objects.equals(Util.getName(x), "strokeWithNumberImage")));
-			//
-			testAndRun(IterableUtils.size(fs) > 1, runnable);
+					x -> Objects.equals(Util.getName(x), "strokeWithNumberImage")))) > 1, runnable);
 			//
 			testAndAccept(x -> Narcissus.getField(entry, x) == null,
 					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
