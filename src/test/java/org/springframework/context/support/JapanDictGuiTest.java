@@ -113,7 +113,7 @@ class JapanDictGuiTest {
 			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_CREATE_TABLE_CELL_RENDERER,
 			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_GET_PITCH_ACCENTS,
 			METHOD_FILTER, METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW, METHOD_OR,
-			METHOD_GET_FIRST_PIXEL_COLOR = null;
+			METHOD_GET_FIRST_PIXEL_COLOR, METHOD_GET_MIN_MAX = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -236,6 +236,8 @@ class JapanDictGuiTest {
 		//
 		(METHOD_GET_FIRST_PIXEL_COLOR = Util.getDeclaredMethod(clz, "getFirstPixelColor", BufferedImage.class,
 				Integer.TYPE, byte[].class)).setAccessible(true);
+		//
+		(METHOD_GET_MIN_MAX = Util.getDeclaredMethod(clz, "getMinMax", int[].class, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -493,9 +495,11 @@ class JapanDictGuiTest {
 												ObjectMapper.class, Integer.TYPE, Map.class })),
 						Boolean.logicalAnd(Objects.equals(name, "createTableCellRenderer"),
 								Arrays.equals(parameterTypes, new Class<?>[] { TableCellRenderer.class })),
-						Boolean.logicalAnd(Objects.equals(name, "createPitchAccentListCellRenderer"), Arrays.equals(
-								parameterTypes,
-								new Class<?>[] { Component.class, ListCellRenderer.class, Dimension.class })))) {
+						Boolean.logicalAnd(Objects.equals(name, "createPitchAccentListCellRenderer"),
+								Arrays.equals(parameterTypes,
+										new Class<?>[] { Component.class, ListCellRenderer.class, Dimension.class })),
+						Boolean.logicalAnd(Objects.equals(name, "getMinMax"),
+								Arrays.equals(parameterTypes, new Class<?>[] { int[].class, Integer.TYPE })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -660,8 +664,11 @@ class JapanDictGuiTest {
 						Boolean.logicalAnd(Objects.equals(name, "getQueryParams"),
 								Arrays.equals(parameterTypes, new Class<?>[] { URIBuilder.class })),
 						Boolean.logicalAnd(Objects.equals(name, "getJapanDictEntry"),
-								Arrays.equals(parameterTypes, new Class<?>[] { Element.class, Pattern.class,
-										Pattern.class, ObjectMapper.class, Integer.TYPE, Map.class })))) {
+								Arrays.equals(parameterTypes,
+										new Class<?>[] { Element.class, Pattern.class, Pattern.class,
+												ObjectMapper.class, Integer.TYPE, Map.class })),
+						Boolean.logicalAnd(Objects.equals(name, "getMinMax"),
+								Arrays.equals(parameterTypes, new Class<?>[] { int[].class, Integer.TYPE })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -1540,6 +1547,32 @@ class JapanDictGuiTest {
 						Narcissus.invokeStaticMethod(
 								JapanDictGui.class.getDeclaredMethod("getDataBuffer", Raster.class),
 								bi.getRaster())))));
+		//
+	}
+
+	@Test
+	void testGetMinMax() throws IllegalAccessException, InvocationTargetException, JsonProcessingException {
+		//
+		final int two = 2;
+		//
+		int[] ints = new int[] { ONE };
+		//
+		Assertions.assertEquals(String.format("[%1$s,%2$s]", ONE, two), ObjectMapperUtil
+				.writeValueAsString(objectMapper, invoke(METHOD_GET_MIN_MAX, null, ints, Integer.valueOf(two))));
+		//
+		final int three = 3;
+		//
+		Assertions.assertEquals(String.format("[%1$s,%2$s]", ONE, three), ObjectMapperUtil
+				.writeValueAsString(objectMapper, invoke(METHOD_GET_MIN_MAX, null, ints, Integer.valueOf(three))));
+		//
+		Assertions.assertEquals(String.format("[%1$s]", ZERO), ObjectMapperUtil.writeValueAsString(objectMapper,
+				invoke(METHOD_GET_MIN_MAX, null, ints, Integer.valueOf(ZERO))));
+		//
+		Assertions.assertEquals(String.format("[%1$s,%2$s]", ONE, three), ObjectMapperUtil.writeValueAsString(
+				objectMapper, invoke(METHOD_GET_MIN_MAX, null, new int[] { ONE, two }, Integer.valueOf(three))));
+		//
+		Assertions.assertEquals(String.format("[%1$s,%2$s]", ONE, two), ObjectMapperUtil.writeValueAsString(
+				objectMapper, invoke(METHOD_GET_MIN_MAX, null, new int[] { ONE, two }, Integer.valueOf(ONE))));
 		//
 	}
 

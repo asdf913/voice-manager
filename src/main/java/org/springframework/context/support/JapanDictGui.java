@@ -2418,7 +2418,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				final byte[] data = getData(Util.cast(DataBufferByte.class, getDataBuffer(getRaster(bi))));
 				//
-				int[] color = getFirstPixelColor(bi, BufferedImage.TYPE_3BYTE_BGR, data);
+				final int[] color = getFirstPixelColor(bi, BufferedImage.TYPE_3BYTE_BGR, data);
 				//
 				int pixelIndex = 0;
 				//
@@ -2438,30 +2438,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							//
 						} // if
 							//
-						if (xs == null || xs.length == 0 || (xs.length == 1 && x > xs[0])) {
-							//
-							xs = ArrayUtils.add(xs, x);
-							//
-						} else if (x > xs[xs.length - 1]) {
-							//
-							xs[xs.length - 1] = x;
-							//
-						} // if
-							//
-						if (ys == null || ys.length == 0 || (ys.length == 1 && y > ys[ys.length - 1])) {
-							//
-							ys = ArrayUtils.add(ys, y);
-							//
-						} else if (y > ys[ys.length - 1]) {
-							//
-							ys[ys.length - 1] = y;
-							//
-						} else if (y < ys[0]) {
-							//
-							ys[0] = y;
-							//
-						} // if
-							//
+						xs = getMinMax(xs, x);
+						//
+						ys = getMinMax(ys, y);
+						//
 					} // for
 						//
 				} // for
@@ -2542,6 +2522,26 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // try
 			//
 		pack(instance.window);
+		//
+	}
+
+	private static int[] getMinMax(final int[] ints, final int i) {
+		//
+		if (ints == null || ints.length == 0 || (ints.length == 1 && i > ints[ints.length - 1])) {
+			//
+			return ArrayUtils.add(ints, i);
+			//
+		} else if (i > ints[ints.length - 1]) {
+			//
+			ints[ints.length - 1] = i;
+			//
+		} else if (i < ints[0]) {
+			//
+			ints[0] = i;
+			//
+		} // if
+			//
+		return ints;
 		//
 	}
 
