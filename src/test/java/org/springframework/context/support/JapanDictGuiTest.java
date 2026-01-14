@@ -1560,7 +1560,7 @@ class JapanDictGuiTest {
 		//
 		final int type = BufferedImage.TYPE_3BYTE_BGR;
 		//
-		Assertions.assertNull(getFirstPixelColor(new BufferedImage(2, 2, type), Integer.valueOf(type), null));
+		Assertions.assertNull(getFirstPixelColor(new BufferedImage(2, 2, type), type, null));
 		//
 	}
 
