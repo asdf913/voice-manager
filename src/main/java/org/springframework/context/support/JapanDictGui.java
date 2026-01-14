@@ -2356,11 +2356,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				testAndApply(Objects::nonNull, Util.getDeclaredMethods(Playwright.class), Arrays::stream, null),
 				x -> Objects.equals(Util.getName(x), Util.getSelectedItem(instance.cbmBrowserType))));
 		//
-		testAndRun(IterableUtils.size(ms) > 1, () -> {
+		final Runnable runnable = () -> {
 			//
 			throw new IllegalStateException();
 			//
-		});
+		};
+		//
+		testAndRun(IterableUtils.size(ms) > 1, runnable);
 		//
 		final String pageUrl = entry.pageUrl;
 		//
@@ -2409,11 +2411,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							testAndApply(Objects::nonNull, Util.getClass(entry), FieldUtils::getAllFieldsList, null)),
 					x -> Objects.equals(Util.getName(x), "furiganaImage")));
 			//
-			testAndRun(IterableUtils.size(fs) > 1, () -> {
-				//
-				throw new IllegalStateException();
-				//
-			});
+			testAndRun(IterableUtils.size(fs) > 1, runnable);
 			//
 			testAndAccept(x -> Narcissus.getField(entry, x) == null,
 					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null), f -> {
@@ -2606,11 +2604,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							testAndApply(Objects::nonNull, Util.getClass(entry), FieldUtils::getAllFieldsList, null)),
 					x -> Objects.equals(Util.getName(x), "strokeWithNumberImage")));
 			//
-			testAndRun(IterableUtils.size(fs) > 1, () -> {
-				//
-				throw new IllegalStateException();
-				//
-			});
+			testAndRun(IterableUtils.size(fs) > 1, runnable);
 			//
 			testAndAccept(x -> Narcissus.getField(entry, x) == null,
 					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null), f -> {
