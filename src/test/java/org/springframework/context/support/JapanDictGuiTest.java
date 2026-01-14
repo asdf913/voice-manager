@@ -1398,15 +1398,15 @@ class JapanDictGuiTest {
 			//
 		} // if
 			//
-		final ObjectMapper objectMapper = builder != null ? builder.build() : null;
+		final ObjectMapper om = builder != null ? builder.build() : null;
 		//
-		if (objectMapper != null) {
+		if (om != null) {
 			//
-			objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
+			om.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
 			//
 		} // if
 			//
-		Assertions.assertEquals("[{\"image\":null,\"type\":null}]", ObjectMapperUtil.writeValueAsString(objectMapper,
+		Assertions.assertEquals("[{\"image\":null,\"type\":null}]", ObjectMapperUtil.writeValueAsString(om,
 				invoke(METHOD_GET_PITCH_ACCENTS, null, Collections.singleton(null))));
 		//
 	}
