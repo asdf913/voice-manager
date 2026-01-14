@@ -1728,6 +1728,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				final StringBuilder sb = testAndApply(Objects::nonNull, Util.getText(instance.tfText),
 						StringBuilder::new, null);
 				//
+				testAndAccept(StringUtils::isNotBlank, Util.getText(instance.tfHiragana),
+						x -> append(sb, String.format("(%1$s)", x)));
+				//
+				testAndAccept(StringUtils::isNotBlank, Util.getText(instance.tfKatakana),
+						x -> append(sb, String.format("(%1$s)", x)));
+				//
 				testAndAccept(
 						x -> Objects.equals(getMessage(
 								testAndApply(Objects::nonNull, x, y -> new ContentInfoUtil().findMatch(y), null)),
