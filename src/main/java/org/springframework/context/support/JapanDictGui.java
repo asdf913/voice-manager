@@ -2380,6 +2380,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // for
 			//
+		final Consumer<Throwable> consumer = x -> {
+			//
+			throw new RuntimeException(x);
+			//
+		};
+		//
 		try (final Playwright playwright = testAndGet(
 				or(entry.furiganaImage == null, entry.strokeImage == null, IterableUtils.isEmpty(entry.pitchAccents)),
 				Playwright::create);
@@ -2525,9 +2531,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 										? bi.getSubimage(xs[0], ys[0], xs[1] - xs[0], ys[1] - ys[0] + 1)
 										: bi);
 						//
-					}, x -> {
-						throw new RuntimeException(x);
-					});
+					}, consumer);
 			//
 			Util.setIcon(instance.furiganaImage,
 					testAndApply(Objects::nonNull, entry.furiganaImage, ImageIcon::new, null));
@@ -2597,22 +2601,24 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					PageUtil.querySelectorAll(page, String.format("#dmak-reset-%1$s", entry.id)),
 					x -> IterableUtils.get(x, 0), null));
 			//
-			if (entry.strokeWithNumberImage == null) {
+			final Iterable<Field> fs = Util.toList(Util.filter(
+					Util.stream(
+							testAndApply(Objects::nonNull, Util.getClass(entry), FieldUtils::getAllFieldsList, null)),
+					x -> Objects.equals(Util.getName(x), "strokeWithNumberImage")));
+			//
+			testAndRun(IterableUtils.size(fs) > 1, () -> {
 				//
-				try {
-					//
-					testAndApply(Objects::nonNull,
-							entry.strokeWithNumberImage = chopImage(getStrokeImage(instance, page, entry)),
-							ImageIcon::new, null);
-					//
-				} catch (final IOException | InterruptedException e) {
-					//
-					TaskDialogs.showException(e);
-					//
-				} // try
-					//
-			} // if
+				throw new IllegalStateException();
 				//
+			});
+			//
+			testAndAccept(x -> Narcissus.getField(entry, x) == null,
+					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null), f -> {
+						//
+						Narcissus.setField(entry, f, chopImage(getStrokeImage(instance, page, entry)));
+						//
+					}, consumer);
+			//
 			Util.setIcon(instance.strokeWithNumberImage, testAndApply(Objects::nonNull,
 					instance.strokeWithNumberBufferedImage = entry.strokeWithNumberImage, ImageIcon::new, null));
 			//
