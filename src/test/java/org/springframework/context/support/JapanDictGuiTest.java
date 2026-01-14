@@ -59,6 +59,7 @@ import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableLongConsumer;
 import org.apache.commons.lang3.function.FailablePredicate;
+import org.apache.commons.lang3.function.FailableRunnable;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
@@ -101,7 +102,7 @@ class JapanDictGuiTest {
 
 	private static Method METHOD_TEST_AND_GET, METHOD_SET_TEXT, METHOD_STARTS_WITH, METHOD_APPEND,
 			METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG, METHOD_TEST_AND_ACCEPT4_BI_PREDICATE,
-			METHOD_TEST_AND_ACCEPT4_PREDICATE, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN, METHOD_GET_SYSTEM_CLIP_BOARD,
+			METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN2, METHOD_TEST_AND_RUN3, METHOD_GET_SYSTEM_CLIP_BOARD,
 			METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES,
 			METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2,
 			METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE, METHOD_GET_COLUMN_NAME,
@@ -138,14 +139,14 @@ class JapanDictGuiTest {
 		(METHOD_TEST_AND_ACCEPT4_BI_PREDICATE = Util.getDeclaredMethod(clz, "testAndAccept", BiPredicate.class,
 				Object.class, Object.class, BiConsumer.class)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_ACCEPT4_PREDICATE = Util.getDeclaredMethod(clz, "testAndAccept", Predicate.class, Object.class,
-				FailableConsumer.class, Consumer.class)).setAccessible(true);
-		//
 		(METHOD_GET_AUDIO_URL = Util.getDeclaredMethod(clz, "getAudioUrl", String.class, Strings.class, Iterable.class))
 				.setAccessible(true);
 		//
-		(METHOD_TEST_AND_RUN = Util.getDeclaredMethod(clz, "testAndRun", Boolean.TYPE, Runnable.class))
+		(METHOD_TEST_AND_RUN2 = Util.getDeclaredMethod(clz, "testAndRun", Boolean.TYPE, Runnable.class))
 				.setAccessible(true);
+		//
+		(METHOD_TEST_AND_RUN3 = Util.getDeclaredMethod(clz, "testAndRun", Boolean.TYPE, FailableRunnable.class,
+				Consumer.class)).setAccessible(true);
 		//
 		(METHOD_GET_SYSTEM_CLIP_BOARD = Util.getDeclaredMethod(clz, "getSystemClipboard", Toolkit.class))
 				.setAccessible(true);
@@ -914,12 +915,6 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT3_OBJECT, null, predicate, null, null));
 		//
-		final FailableConsumer<?, ?> fs = x -> {
-			throw new RuntimeException();
-		};
-		//
-		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT4_PREDICATE, null, predicate, null, fs, null));
-		//
 	}
 
 	@Test
@@ -948,7 +943,15 @@ class JapanDictGuiTest {
 	@Test
 	void testTestAndRun() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(invoke(METHOD_TEST_AND_RUN, null, Boolean.TRUE, null));
+		Assertions.assertNull(invoke(METHOD_TEST_AND_RUN2, null, Boolean.TRUE, null));
+		//
+		final FailableRunnable<?> fr = () -> {
+			//
+			throw new RuntimeException();
+			//
+		};
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_RUN3, null, Boolean.TRUE, fr, null));
 		//
 	}
 

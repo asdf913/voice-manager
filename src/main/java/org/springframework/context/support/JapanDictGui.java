@@ -103,6 +103,8 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.FailableLongConsumer;
 import org.apache.commons.lang3.function.FailablePredicate;
+import org.apache.commons.lang3.function.FailableRunnable;
+import org.apache.commons.lang3.function.FailableRunnableUtil;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.function.FailableSupplierUtil;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -2388,8 +2390,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		};
 		//
-		Iterable<Field> fs = null;
-		//
 		try (final Playwright playwright = testAndGet(
 				or(entry.furiganaImage == null, entry.strokeImage == null, IterableUtils.isEmpty(entry.pitchAccents)),
 				Playwright::create);
@@ -2408,137 +2408,130 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			// Furigana
 			//
-			testAndRun(IterableUtils.size(fs = Util.toList(Util.filter(
-					Util.stream(
-							testAndApply(Objects::nonNull, Util.getClass(entry), FieldUtils::getAllFieldsList, null)),
-					x -> Objects.equals(Util.getName(x), "furiganaImage")))) > 1, runnable);
-			//
-			testAndAccept(x -> Narcissus.getField(entry, x) == null,
-					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null), f -> {
-						//
-						final BufferedImage bi = toBufferedImage(
-								ElementHandleUtil.screenshot(
+			testAndRun(entry.furiganaImage == null, () -> {
+				//
+				final BufferedImage bi = toBufferedImage(
+						ElementHandleUtil
+								.screenshot(
 										testAndApply(y -> IterableUtils.size(y) == 1,
-												ElementHandleUtil
-														.querySelectorAll(
-																testAndApply(
-																		y -> IterableUtils.size(y) > Util
-																				.intValue(entry.index, 0),
-																		PageUtil.querySelectorAll(
-																				page,
-																				String.format("#entry-%1$s ruby",
-																						entry.id)),
-																		y -> IterableUtils.get(y,
-																				Util.intValue(entry.index, 0)),
-																		null),
-																".."),
+												ElementHandleUtil.querySelectorAll(
+														testAndApply(
+																y -> IterableUtils.size(y) > Util.intValue(entry.index,
+																		0),
+																PageUtil.querySelectorAll(
+																		page,
+																		String.format("#entry-%1$s ruby", entry.id)),
+																y -> IterableUtils.get(y,
+																		Util.intValue(entry.index, 0)),
+																null),
+														".."),
 												y -> IterableUtils.get(y, 0), null)));
+				//
+				final WritableRaster raster = bi != null ? bi.getRaster() : null;
+				//
+				final DataBufferByte dbb = Util.cast(DataBufferByte.class,
+						raster != null ? raster.getDataBuffer() : null);
+				//
+				final byte[] data = dbb != null ? dbb.getData() : null;
+				//
+				int[] color = null;
+				//
+				int pixelIndex = 0;
+				//
+				for (int x = 0; bi != null && bi.getType() == BufferedImage.TYPE_3BYTE_BGR && x < bi.getWidth(); x++) {
+					//
+					if (color != null) {
 						//
-						final WritableRaster raster = bi != null ? bi.getRaster() : null;
+						break;
 						//
-						final DataBufferByte dbb = Util.cast(DataBufferByte.class,
-								raster != null ? raster.getDataBuffer() : null);
+					} // if
 						//
-						final byte[] data = dbb != null ? dbb.getData() : null;
+					for (int y = 0; y < bi.getHeight(); y++) {
 						//
-						int[] color = null;
-						//
-						int pixelIndex = 0;
-						//
-						for (int x = 0; bi != null && bi.getType() == BufferedImage.TYPE_3BYTE_BGR
-								&& x < bi.getWidth(); x++) {
+						if (color == null) {
 							//
-							if (color != null) {
-								//
-								break;
-								//
-							} // if
-								//
-							for (int y = 0; y < bi.getHeight(); y++) {
-								//
-								if (color == null) {
-									//
-									color = data != null ? new int[] {
-											data[pixelIndex = (y * bi.getWidth() + x) * 3/* 3 bytes per pixel */] & 0xff// blue
-											, data[pixelIndex + 1] & 0xff// green
-											, data[pixelIndex + 2]// red
+							color = data != null ? new int[] {
+									data[pixelIndex = (y * bi.getWidth() + x) * 3/* 3 bytes per pixel */] & 0xff// blue
+									, data[pixelIndex + 1] & 0xff// green
+									, data[pixelIndex + 2]// red
 
-									} : null;
-									//
-									break;
-									//
-								} // if
-									//
-							} // for
-								//
-						} // for
+							} : null;
 							//
-						int[] xs = null, ys = null;
+							break;
+							//
+						} // if
+							//
+					} // for
 						//
-						for (int x = 0; color != null && data != null && bi != null && x < bi.getWidth(); x++) {
-							//
-							for (int y = 0; y < bi.getHeight(); y++) {
-								//
-								if (Arrays.equals(color, new int[] {
-										data[pixelIndex = (y * bi.getWidth() + x) * 3/* 3 bytes per pixel */] & 0xff// blue
+				} // for
+					//
+				int[] xs = null, ys = null;
+				//
+				for (int x = 0; color != null && data != null && bi != null && x < bi.getWidth(); x++) {
+					//
+					for (int y = 0; y < bi.getHeight(); y++) {
+						//
+						if (Arrays.equals(color,
+								new int[] { data[pixelIndex = (y * bi.getWidth() + x) * 3/* 3 bytes per pixel */] & 0xff// blue
 										, data[pixelIndex + 1] & 0xff// green
 										, data[pixelIndex + 2]// red
-								})) {
-									//
-									continue;
-									//
-								} // if
-									//
-								if (xs == null || xs.length == 0 || (xs.length == 1 && x > xs[0])) {
-									//
-									xs = ArrayUtils.add(xs, x);
-									//
-								} else if (x > xs[xs.length - 1]) {
-									//
-									xs[xs.length - 1] = x;
-									//
-								} // if
-									//
-								if (ys == null || ys.length == 0 || (ys.length == 1 && y > ys[ys.length - 1])) {
-									//
-									ys = ArrayUtils.add(ys, y);
-									//
-								} else if (y > ys[ys.length - 1]) {
-									//
-									ys[ys.length - 1] = y;
-									//
-								} else if (y < ys[0]) {
-									//
-									ys[0] = y;
-									//
-								} // if
-									//
-							} // for
-								//
-						} // for
+						})) {
 							//
-						Narcissus.setField(entry, f,
-								xs != null && xs.length > 1 && ys != null && ys.length > 1
-										? bi.getSubimage(xs[0], ys[0], xs[1] - xs[0], ys[1] - ys[0] + 1)
-										: bi);
+							continue;
+							//
+						} // if
+							//
+						if (xs == null || xs.length == 0 || (xs.length == 1 && x > xs[0])) {
+							//
+							xs = ArrayUtils.add(xs, x);
+							//
+						} else if (x > xs[xs.length - 1]) {
+							//
+							xs[xs.length - 1] = x;
+							//
+						} // if
+							//
+						if (ys == null || ys.length == 0 || (ys.length == 1 && y > ys[ys.length - 1])) {
+							//
+							ys = ArrayUtils.add(ys, y);
+							//
+						} else if (y > ys[ys.length - 1]) {
+							//
+							ys[ys.length - 1] = y;
+							//
+						} else if (y < ys[0]) {
+							//
+							ys[0] = y;
+							//
+						} // if
+							//
+					} // for
 						//
-					}, consumer);
+				} // for
+					//
+				entry.furiganaImage = xs != null && xs.length > 1 && ys != null && ys.length > 1
+						? bi.getSubimage(xs[0], ys[0], xs[1] - xs[0], ys[1] - ys[0] + 1)
+						: bi;
+				//
+			}, consumer);
 			//
 			Util.setIcon(instance.furiganaImage,
 					testAndApply(Objects::nonNull, entry.furiganaImage, ImageIcon::new, null));
 			//
 			// Pitch Accents
 			//
-			if (IterableUtils.isEmpty(entry.pitchAccents)) {
-				//
-				entry.pitchAccents = getPitchAccents(ElementHandleUtil.querySelectorAll(testAndApply(
-						x -> IterableUtils.size(x) > Util.intValue(entry.index, 0),
-						PageUtil.querySelectorAll(page,
-								String.format("#entry-%1$s ul li.list-group-item[lang='ja'] .d-flex.p-2", entry.id)),
-						x -> IterableUtils.get(x, Util.intValue(entry.index, 0)), null), "div.d-flex"));
-				//
-			} // if
-				//
+			testAndRun(IterableUtils.isEmpty(entry.pitchAccents), () ->
+			//
+			entry.pitchAccents = getPitchAccents(ElementHandleUtil.querySelectorAll(
+					testAndApply(x -> IterableUtils.size(x) > Util.intValue(entry.index, 0),
+							PageUtil.querySelectorAll(page,
+									String.format("#entry-%1$s ul li.list-group-item[lang='ja'] .d-flex.p-2",
+											entry.id)),
+							x -> IterableUtils.get(x, Util.intValue(entry.index, 0)), null),
+					"div.d-flex"))
+			//
+					, consumer);
+			//
 			Util.forEach(entry.pitchAccents, x -> Util.addElement(instance.mcbmPitchAccent, x));
 			//
 			setEnabled(!IterableUtils.isEmpty(entry.pitchAccents), instance.btnCopyPitchAccentImage,
@@ -2546,14 +2539,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			// Stroke Image
 			//
-			testAndRun(IterableUtils.size(fs = Util.toList(Util.filter(
-					Util.stream(
-							testAndApply(Objects::nonNull, Util.getClass(entry), FieldUtils::getAllFieldsList, null)),
-					x -> Objects.equals(Util.getName(x), "strokeImage")))) > 1, runnable);
-			//
-			testAndAccept(x -> Narcissus.getField(entry, x) == null,
-					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
-					f -> Narcissus.setField(entry, f, chopImage(getStrokeImage(instance, page, entry))), consumer);
+			testAndRun(entry.strokeImage == null,
+					() -> entry.strokeImage = chopImage(getStrokeImage(instance, page, entry)), consumer);
 			//
 			Util.setIcon(instance.strokeImage, testAndApply(Objects::nonNull,
 					instance.strokeBufferedImage = entry.strokeImage, ImageIcon::new, null));
@@ -2586,14 +2573,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					PageUtil.querySelectorAll(page, String.format("#dmak-reset-%1$s", entry.id)),
 					x -> IterableUtils.get(x, 0), null));
 			//
-			testAndRun(IterableUtils.size(fs = Util.toList(Util.filter(
-					Util.stream(
-							testAndApply(Objects::nonNull, Util.getClass(entry), FieldUtils::getAllFieldsList, null)),
-					x -> Objects.equals(Util.getName(x), "strokeWithNumberImage")))) > 1, runnable);
-			//
-			testAndAccept(x -> Narcissus.getField(entry, x) == null,
-					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
-					f -> Narcissus.setField(entry, f, chopImage(getStrokeImage(instance, page, entry))), consumer);
+			testAndRun(entry.strokeWithNumberImage == null,
+					() -> entry.strokeWithNumberImage = chopImage(getStrokeImage(instance, page, entry)), consumer);
 			//
 			Util.setIcon(instance.strokeWithNumberImage, testAndApply(Objects::nonNull,
 					instance.strokeWithNumberBufferedImage = entry.strokeWithNumberImage, ImageIcon::new, null));
@@ -2607,14 +2588,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
-			final FailableConsumer<T, E> failableConsumer, final Consumer<Throwable> consumer) {
+	private static <E extends Throwable> void testAndRun(final boolean condition, final FailableRunnable<E> runnable,
+			final Consumer<Throwable> consumer) {
 		//
-		if (Util.test(predicate, value)) {
+		if (condition) {
 			//
 			try {
 				//
-				FailableConsumerUtil.accept(failableConsumer, value);
+				FailableRunnableUtil.run(runnable);
 				//
 			} catch (final Throwable e) {
 				//
