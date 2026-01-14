@@ -492,7 +492,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				if (StringUtils.isNotBlank(value.type)) {
 					//
-					add(panel, new JLabel(String.format("(%1$s)", value.type)), "align right");
+					add(panel,
+							new JLabel(
+									Util.toString(append(append(append(new StringBuilder(), '('), value.type), ')'))),
+							"align right");
 					//
 				} // if
 					//
@@ -1408,10 +1411,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					null);
 			//
 			testAndAccept(StringUtils::isNotBlank, Util.getText(instance.tfHiragana),
-					x -> append(sb, String.format("(%1$s)", x)));
+					x -> append(append(append(sb, '('), x), ')'));
 			//
 			testAndAccept(StringUtils::isNotBlank, Util.getText(instance.tfKatakana),
-					x -> append(sb, String.format("(%1$s)", x)));
+					x -> append(append(append(sb, '('), x), ')'));
 			//
 			final String format = "png";
 			//
@@ -1731,10 +1734,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						StringBuilder::new, null);
 				//
 				testAndAccept(StringUtils::isNotBlank, Util.getText(instance.tfHiragana),
-						x -> append(sb, String.format("(%1$s)", x)));
+						x -> append(append(append(sb, '('), x), ')'));
 				//
 				testAndAccept(StringUtils::isNotBlank, Util.getText(instance.tfKatakana),
-						x -> append(sb, String.format("(%1$s)", x)));
+						x -> append(append(append(sb, '('), x), ')'));
 				//
 				testAndAccept(
 						x -> Objects.equals(getMessage(
