@@ -2427,7 +2427,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 														".."),
 												y -> IterableUtils.get(y, 0), null)));
 				//
-				final WritableRaster raster = bi != null ? bi.getRaster() : null;
+				final WritableRaster raster = getRaster(bi);
 				//
 				final DataBufferByte dbb = Util.cast(DataBufferByte.class,
 						raster != null ? raster.getDataBuffer() : null);
@@ -2586,6 +2586,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		pack(instance.window);
 		//
+	}
+
+	private static WritableRaster getRaster(final BufferedImage instance) {
+		return instance != null ? instance.getRaster() : null;
 	}
 
 	private static <E extends Throwable> void testAndRun(final boolean condition, final FailableRunnable<E> runnable,
