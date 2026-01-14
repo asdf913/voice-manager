@@ -1411,9 +1411,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			final StringBuilder sb = testAndApply(Objects::nonNull, Util.getText(instance.tfText), StringBuilder::new,
 					null);
 			//
+			testAndAccept(StringUtils::isNotBlank, Util.getText(instance.tfHiragana),
+					x -> append(sb, String.format("(%1$s)", x)));
+			//
+			testAndAccept(StringUtils::isNotBlank, Util.getText(instance.tfKatakana),
+					x -> append(sb, String.format("(%1$s)", x)));
+			//
 			final String format = "png";
 			//
-			append(append(append(sb, "(Pitch Accent)"), '.'), format);
+			append(append(sb, '.'), format);
 			//
 			final JFileChooser jfc = new JFileChooser();
 			//
