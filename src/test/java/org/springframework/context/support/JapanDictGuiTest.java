@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -11,7 +12,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -107,7 +107,7 @@ class JapanDictGuiTest {
 			METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN2, METHOD_TEST_AND_RUN3, METHOD_GET_SYSTEM_CLIP_BOARD,
 			METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES,
 			METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2,
-			METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE, METHOD_GET_COLUMN_NAME,
+			METHOD_CHOP_IMAGE_INT_ARRAY, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE, METHOD_GET_COLUMN_NAME,
 			METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND2, METHOD_AND3,
 			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
 			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_CREATE_TABLE_CELL_RENDERER,
@@ -172,6 +172,9 @@ class JapanDictGuiTest {
 		(METHOD_CHOP_IMAGE1 = Util.getDeclaredMethod(clz, "chopImage", BufferedImage.class)).setAccessible(true);
 		//
 		(METHOD_CHOP_IMAGE2 = Util.getDeclaredMethod(clz, "chopImage", byte[].class, BoundingBox.class))
+				.setAccessible(true);
+		//
+		(METHOD_CHOP_IMAGE_INT_ARRAY = Util.getDeclaredMethod(clz, "chopImage", BufferedImage.class, int[].class))
 				.setAccessible(true);
 		//
 		(METHOD_TO_DURATION = Util.getDeclaredMethod(clz, "toDuration", Object.class)).setAccessible(true);
@@ -668,7 +671,9 @@ class JapanDictGuiTest {
 										new Class<?>[] { Element.class, Pattern.class, Pattern.class,
 												ObjectMapper.class, Integer.TYPE, Map.class })),
 						Boolean.logicalAnd(Objects.equals(name, "getMinMax"),
-								Arrays.equals(parameterTypes, new Class<?>[] { int[].class, Integer.TYPE })))) {
+								Arrays.equals(parameterTypes, new Class<?>[] { int[].class, Integer.TYPE })),
+						Boolean.logicalAnd(Objects.equals(name, "chopImage"),
+								Arrays.equals(parameterTypes, new Class<?>[] { BufferedImage.class, int[].class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -1106,7 +1111,7 @@ class JapanDictGuiTest {
 	}
 
 	@Test
-	void testChopImage() throws IllegalAccessException, InvocationTargetException, IOException {
+	void testChopImage() throws Throwable {
 		//
 		byte[] bs = new byte[] {};
 		//
@@ -1133,6 +1138,25 @@ class JapanDictGuiTest {
 			//
 		} // try
 			//
+		final int type = BufferedImage.TYPE_3BYTE_BGR;
+		//
+		final BufferedImage bi = new BufferedImage(2, 2, type);
+		//
+		final Color red = Color.RED;
+		//
+		if (red != null) {
+			//
+			bi.setRGB(1, 1, red.getRGB());
+			//
+		} // if
+			//
+		final int[] color = getFirstPixelColor(bi, type, Util.cast(byte[].class,
+				Narcissus.invokeStaticMethod(JapanDictGui.class.getDeclaredMethod("getData", DataBufferByte.class),
+						Narcissus.invokeStaticMethod(
+								JapanDictGui.class.getDeclaredMethod("getDataBuffer", Raster.class), bi.getRaster()))));
+		//
+		Assertions.assertSame(bi, invoke(METHOD_CHOP_IMAGE_INT_ARRAY, null, bi, color));
+		//
 	}
 
 	@Test
@@ -1532,22 +1556,27 @@ class JapanDictGuiTest {
 	}
 
 	@Test
-	void testGetFirstPixelColor()
-			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, JsonProcessingException {
+	void testGetFirstPixelColor() throws Throwable {
 		//
 		final int type = BufferedImage.TYPE_3BYTE_BGR;
 		//
-		final BufferedImage bi = new BufferedImage(2, 2, type);
+		Assertions.assertNull(getFirstPixelColor(new BufferedImage(2, 2, type), Integer.valueOf(type), null));
 		//
-		Assertions.assertNull(invoke(METHOD_GET_FIRST_PIXEL_COLOR, null, bi, Integer.valueOf(type), null));
-		//
-		Assertions.assertEquals("[0,0,0]", ObjectMapperUtil.writeValueAsString(objectMapper, invoke(
-				METHOD_GET_FIRST_PIXEL_COLOR, null, bi, Integer.valueOf(type),
-				Narcissus.invokeStaticMethod(JapanDictGui.class.getDeclaredMethod("getData", DataBufferByte.class),
-						Narcissus.invokeStaticMethod(
-								JapanDictGui.class.getDeclaredMethod("getDataBuffer", Raster.class),
-								bi.getRaster())))));
-		//
+	}
+
+	private static int[] getFirstPixelColor(final BufferedImage bi, final int type, final byte[] data)
+			throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_GET_FIRST_PIXEL_COLOR, null, bi, type, data);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof int[] ints) {
+				return ints;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test

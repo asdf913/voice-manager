@@ -2416,39 +2416,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 														".."),
 												y -> IterableUtils.get(y, 0), null)));
 				//
-				final byte[] data = getData(Util.cast(DataBufferByte.class, getDataBuffer(getRaster(bi))));
-				//
-				final int[] color = getFirstPixelColor(bi, BufferedImage.TYPE_3BYTE_BGR, data);
-				//
-				int pixelIndex = 0;
-				//
-				int[] xs = null, ys = null;
-				//
-				for (int x = 0; color != null && data != null && bi != null && x < bi.getWidth(); x++) {
-					//
-					for (int y = 0; y < bi.getHeight(); y++) {
-						//
-						if (Arrays.equals(color,
-								new int[] { data[pixelIndex = (y * bi.getWidth() + x) * 3/* 3 bytes per pixel */] & 0xff// blue
-										, data[pixelIndex + 1] & 0xff// green
-										, data[pixelIndex + 2]// red
-						})) {
-							//
-							continue;
-							//
-						} // if
-							//
-						xs = getMinMax(xs, x);
-						//
-						ys = getMinMax(ys, y);
-						//
-					} // for
-						//
-				} // for
-					//
-				entry.furiganaImage = xs != null && xs.length > 1 && ys != null && ys.length > 1
-						? bi.getSubimage(xs[0], ys[0], xs[1] - xs[0], ys[1] - ys[0] + 1)
-						: bi;
+				entry.furiganaImage = chopImage(bi, getFirstPixelColor(bi, BufferedImage.TYPE_3BYTE_BGR,
+						getData(Util.cast(DataBufferByte.class, getDataBuffer(getRaster(bi))))));
 				//
 			}, consumer);
 			//
@@ -2522,6 +2491,47 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // try
 			//
 		pack(instance.window);
+		//
+	}
+
+	private static BufferedImage chopImage(final BufferedImage instance, final int[] color) {
+		//
+		final byte[] data = getData(Util.cast(DataBufferByte.class, getDataBuffer(getRaster(instance))));
+		//
+		int pixelIndex = 0;
+		//
+		final int width = getWidth(instance);
+		//
+		int[] xs = null, ys = null;
+		//
+		for (int x = 0; color != null 
+				&& data != null 
+				&& instance != null
+				&& x < width; x++) {
+			//
+			for (int y = 0; y < instance.getHeight(); y++) {
+				//
+				if (Arrays.equals(color,
+						new int[] { data[pixelIndex = (y * width + x) * 3/* 3 bytes per pixel */] & 0xff// blue
+								, data[pixelIndex + 1] & 0xff// green
+								, data[pixelIndex + 2]// red
+						})) {
+					//
+					continue;
+					//
+				} // if
+					//
+				xs = getMinMax(xs, x);
+				//
+				ys = getMinMax(ys, y);
+				//
+			} // for
+				//
+		} // for
+			//
+		return xs != null && xs.length > 1 && ys != null && ys.length > 1
+				? instance.getSubimage(xs[0], ys[0], xs[1] - xs[0], ys[1] - ys[0] + 1)
+				: instance;
 		//
 	}
 
