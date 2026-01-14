@@ -2607,11 +2607,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			testAndRun(IterableUtils.size(fs) > 1, runnable);
 			//
 			testAndAccept(x -> Narcissus.getField(entry, x) == null,
-					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null), f -> {
-						//
-						Narcissus.setField(entry, f, chopImage(getStrokeImage(instance, page, entry)));
-						//
-					}, consumer);
+					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
+					f -> Narcissus.setField(entry, f, chopImage(getStrokeImage(instance, page, entry))), consumer);
 			//
 			Util.setIcon(instance.strokeWithNumberImage, testAndApply(Objects::nonNull,
 					instance.strokeWithNumberBufferedImage = entry.strokeWithNumberImage, ImageIcon::new, null));
