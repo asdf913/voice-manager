@@ -14,7 +14,9 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
+import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -2427,10 +2429,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 														".."),
 												y -> IterableUtils.get(y, 0), null)));
 				//
-				final WritableRaster raster = getRaster(bi);
-				//
-				final DataBufferByte dbb = Util.cast(DataBufferByte.class,
-						raster != null ? raster.getDataBuffer() : null);
+				final DataBufferByte dbb = Util.cast(DataBufferByte.class, getDataBuffer(getRaster(bi)));
 				//
 				final byte[] data = dbb != null ? dbb.getData() : null;
 				//
@@ -2586,6 +2585,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		pack(instance.window);
 		//
+	}
+
+	private static DataBuffer getDataBuffer(final Raster instance) {
+		return instance != null ? instance.getDataBuffer() : null;
 	}
 
 	private static WritableRaster getRaster(final BufferedImage instance) {
