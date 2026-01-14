@@ -2586,7 +2586,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static int getWidth(final BufferedImage instance) {
+	private static int getWidth(@Nullable final BufferedImage instance) {
 		//
 		final Iterable<Field> fs = Util.toList(Util.filter(
 				Util.stream(
