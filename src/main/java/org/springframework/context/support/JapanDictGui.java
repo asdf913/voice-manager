@@ -2504,10 +2504,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		int[] xs = null, ys = null;
 		//
-		for (int x = 0; color != null 
-				&& data != null 
-				&& instance != null
-				&& x < width; x++) {
+		for (int x = 0; color != null && data != null && instance != null && x < width; x++) {
 			//
 			for (int y = 0; y < instance.getHeight(); y++) {
 				//
@@ -2535,7 +2532,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static int[] getMinMax(final int[] ints, final int i) {
+	private static int[] getMinMax(@Nullable final int[] ints, final int i) {
 		//
 		if (ints == null || ints.length == 0 || (ints.length == 1 && i > ints[ints.length - 1])) {
 			//
