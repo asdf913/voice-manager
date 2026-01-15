@@ -250,7 +250,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Copy Stroke With Number Image")
 	private AbstractButton btnCopyStrokeWithNumberImage = null;
 
-	private AbstractButton btnSaveStrokeWithNumberImage = null;
+	private AbstractButton btnSaveFuriganaImage, btnSaveStrokeWithNumberImage = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
@@ -448,7 +448,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, furiganaImage = new JLabel(), String.format("span %1$s", 5));
 		//
-		add(this, btnCopyFuriganaImage = new JButton("Copy"), wrap);
+		add(this, btnCopyFuriganaImage = new JButton("Copy"));
+		//
+		add(this, btnSaveFuriganaImage = new JButton("Save"), wrap);
 		//
 		add(this, new JLabel(PITCH_ACCENT));
 		//
@@ -1421,6 +1423,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			final StringBuilder sb = testAndApply(Objects::nonNull, Util.getText(instance.tfText), StringBuilder::new,
 					null);
 			//
+			append(sb, "(Pitch Accent)");
+			//
 			testAndAccept(StringUtils::isNotBlank, Util.getText(instance.tfHiragana),
 					x -> append(append(append(sb, '('), x), ')'));
 			//
@@ -1904,6 +1908,44 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 					Reflection.newProxy(Transferable.class, ih), null));
 			//
+			return true;
+			//
+		} else if (Objects.equals(source, instance.btnSaveFuriganaImage)) {
+			//
+			final StringBuilder sb = testAndApply(Objects::nonNull, Util.getText(instance.tfText), StringBuilder::new,
+					null);
+			//
+			append(sb, "(Furigana)");
+			//
+			testAndAccept(StringUtils::isNotBlank, Util.getText(instance.tfHiragana),
+					x -> append(append(append(sb, '('), x), ')'));
+			//
+			testAndAccept(StringUtils::isNotBlank, Util.getText(instance.tfKatakana),
+					x -> append(append(append(sb, '('), x), ')'));
+			//
+			final String format = "png";
+			//
+			append(append(sb, '.'), format);
+			//
+			final JFileChooser jfc = new JFileChooser();
+			//
+			jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.toString(sb), Path::of, null)));
+			//
+			if (and(Util.and(!GraphicsEnvironment.isHeadless(), !isTestMode(), instance.furiganaBufferedImage != null),
+					() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
+				//
+				try {
+					//
+					ImageIO.write(instance.furiganaBufferedImage, format, jfc.getSelectedFile());
+					//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
+			} // if
+				//
 			return true;
 			//
 		} // if
@@ -2443,7 +2485,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			Util.setIcon(instance.furiganaImage, testAndApply(Objects::nonNull,
 					instance.furiganaBufferedImage = entry.furiganaImage, ImageIcon::new, null));
 			//
-			Util.setEnabled(instance.btnCopyFuriganaImage, entry.furiganaImage != null);
+			setEnabled(entry.furiganaImage != null, instance.btnCopyFuriganaImage, instance.btnSaveFuriganaImage);
 			//
 			// Pitch Accents
 			//
