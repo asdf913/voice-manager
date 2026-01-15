@@ -232,6 +232,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Play Audio")
 	private AbstractButton btnPlayAudio = null;
 
+	@Note("Copy Furigane Image")
+	private AbstractButton btnCopyFurigana = null;
+
 	@Note("Copy Pitch Accent Image")
 	private AbstractButton btnCopyPitchAccentImage = null;
 
@@ -247,7 +250,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Copy Stroke With Number Image")
 	private AbstractButton btnCopyStrokeWithNumberImage = null;
 
-	private AbstractButton btnCopyFurigana, btnSaveStrokeWithNumberImage = null;
+	private AbstractButton btnSaveStrokeWithNumberImage = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
@@ -265,10 +268,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private JLabel strokeWithNumberImage = null;
 
+	@Note("Furigana Image")
+	private BufferedImage furiganaBufferedImage = null;
+
 	@Note("Stroke Image")
 	private transient BufferedImage strokeBufferedImage = null;
 
-	private transient BufferedImage furiganaBufferedImage, strokeWithNumberBufferedImage = null;
+	private transient BufferedImage strokeWithNumberBufferedImage = null;
 
 	private Window window = null;
 
