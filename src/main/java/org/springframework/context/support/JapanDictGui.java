@@ -247,7 +247,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Copy Stroke With Number Image")
 	private AbstractButton btnCopyStrokeWithNumberImage = null;
 
-	private AbstractButton btnSaveStrokeWithNumberImage = null;
+	private AbstractButton btnCopyFurigana, btnSaveStrokeWithNumberImage = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
@@ -268,7 +268,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Stroke Image")
 	private transient BufferedImage strokeBufferedImage = null;
 
-	private transient BufferedImage strokeWithNumberBufferedImage = null;
+	private transient BufferedImage furiganaBufferedImage, strokeWithNumberBufferedImage = null;
 
 	private Window window = null;
 
@@ -440,7 +440,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, new JLabel("Furigana"));
 		//
-		add(this, furiganaImage = new JLabel(), String.format("span %1$s,%2$s", 5, wrap));
+		add(this, furiganaImage = new JLabel(), String.format("span %1$s", 5));
+		//
+		add(this, btnCopyFurigana = new JButton("Copy"), wrap);
 		//
 		add(this, new JLabel(PITCH_ACCENT));
 		//
@@ -1887,6 +1889,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			return true;
 			//
+		} else if (Objects.equals(source, instance.btnCopyFurigana)) {
+			//
+			final IH ih = new IH();
+			//
+			ih.image = instance.furiganaBufferedImage;
+			//
+			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+					Reflection.newProxy(Transferable.class, ih), null));
+			//
+			return true;
+			//
 		} // if
 			//
 		return false;
@@ -2421,8 +2434,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			}, consumer);
 			//
-			Util.setIcon(instance.furiganaImage,
-					testAndApply(Objects::nonNull, entry.furiganaImage, ImageIcon::new, null));
+			Util.setIcon(instance.furiganaImage, testAndApply(Objects::nonNull,
+					instance.furiganaBufferedImage = entry.furiganaImage, ImageIcon::new, null));
+			//
+			Util.setEnabled(instance.btnCopyFurigana, entry.furiganaImage != null);
 			//
 			// Pitch Accents
 			//
