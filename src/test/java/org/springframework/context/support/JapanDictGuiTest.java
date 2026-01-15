@@ -13,6 +13,7 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -54,6 +55,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.Strings;
@@ -105,11 +107,11 @@ class JapanDictGuiTest {
 	private static Method METHOD_TEST_AND_GET, METHOD_SET_TEXT, METHOD_STARTS_WITH, METHOD_APPEND,
 			METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG, METHOD_TEST_AND_ACCEPT4_BI_PREDICATE,
 			METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN2, METHOD_TEST_AND_RUN3, METHOD_GET_SYSTEM_CLIP_BOARD,
-			METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY, METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES,
-			METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2,
-			METHOD_CHOP_IMAGE_INT_ARRAY, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE, METHOD_GET_COLUMN_NAME,
-			METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND2, METHOD_AND3,
-			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
+			METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_TO_ARRAY,
+			METHOD_GET_JLPT_LEVEL_INDICES, METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1,
+			METHOD_CHOP_IMAGE2, METHOD_CHOP_IMAGE_INT_ARRAY, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE,
+			METHOD_GET_COLUMN_NAME, METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND2,
+			METHOD_AND3, METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
 			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_CREATE_TABLE_CELL_RENDERER,
 			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_GET_PITCH_ACCENTS,
 			METHOD_FILTER, METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW, METHOD_OR,
@@ -156,7 +158,10 @@ class JapanDictGuiTest {
 		(METHOD_SET_ENABLED = Util.getDeclaredMethod(clz, "setEnabled", Boolean.TYPE, Component.class, Component.class,
 				Component[].class)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_APPLY = Util.getDeclaredMethod(clz, "testAndApply", BiPredicate.class, Object.class,
+		(METHOD_TEST_AND_APPLY4 = Util.getDeclaredMethod(clz, "testAndApply", Predicate.class, Object.class,
+				FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY5 = Util.getDeclaredMethod(clz, "testAndApply", BiPredicate.class, Object.class,
 				Object.class, BiFunction.class, BiFunction.class)).setAccessible(true);
 		//
 		(METHOD_TO_ARRAY = Util.getDeclaredMethod(clz, "toArray", Stream.class, IntFunction.class)).setAccessible(true);
@@ -738,7 +743,7 @@ class JapanDictGuiTest {
 	}
 
 	@Test
-	void testActionPerformed() throws IllegalAccessException {
+	void testActionPerformed() throws Throwable {
 		//
 		if (instance == null) {
 			//
@@ -748,58 +753,31 @@ class JapanDictGuiTest {
 			//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent("", 0, null)));
 		//
-		// btnCopyHiragana
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))));
 		//
-		final AbstractButton btnCopyHiragana = new JButton();
+		Field f = null;
 		//
-		FieldUtils.writeDeclaredField(instance, "btnCopyHiragana", btnCopyHiragana, true);
-		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyHiragana, 0, null)));
-		//
-		// btnCopyKatakana
-		//
-		final AbstractButton btnCopyKatakana = new JButton();
-		//
-		FieldUtils.writeDeclaredField(instance, "btnCopyKatakana", btnCopyKatakana, true);
-		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyKatakana, 0, null)));
-		//
-		// btnCopyRomaji
-		//
-		final AbstractButton btnCopyRomaji = new JButton();
-		//
-		FieldUtils.writeDeclaredField(instance, "btnCopyRomaji", btnCopyRomaji, true);
-		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyRomaji, 0, null)));
-		//
-		// btnCopyAudioUrl
-		//
-		final AbstractButton btnCopyAudioUrl = new JButton();
-		//
-		FieldUtils.writeDeclaredField(instance, "btnCopyAudioUrl", btnCopyAudioUrl, true);
-		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyAudioUrl, 0, null)));
-		//
-		// btnCopyPitchAccentImage
-		//
-		final AbstractButton btnCopyPitchAccentImage = new JButton();
-		//
-		FieldUtils.writeDeclaredField(instance, "btnCopyPitchAccentImage", btnCopyPitchAccentImage, true);
-		//
-		Assertions
-				.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyPitchAccentImage, 0, null)));
-		//
-		// btnCopyPitchAccentImage
-		//
-		final AbstractButton btnSavePitchAccentImage = new JButton();
-		//
-		FieldUtils.writeDeclaredField(instance, "btnSavePitchAccentImage", btnSavePitchAccentImage, true);
-		//
-		Assertions
-				.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnSavePitchAccentImage, 0, null)));
-		//
-		// btnDownloadAudio
-		//
+		for (int i = 0; i < IterableUtils.size(fs); i++) {
+			//
+			if ((f = IterableUtils.get(fs, i)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			final AbstractButton abstractButton = new JButton();
+			//
+			Narcissus.setField(instance, f, abstractButton);
+			//
+			Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(abstractButton, 0, null)));
+			//
+		} // for
+			//
+			// btnDownloadAudio
+			//
 		final AbstractButton btnDownloadAudio = new JButton();
 		//
 		FieldUtils.writeDeclaredField(instance, "btnDownloadAudio", btnDownloadAudio, true);
@@ -824,64 +802,16 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
 		//
-		// btnPlayAudio
-		//
-		final AbstractButton btnPlayAudio = new JButton();
-		//
-		FieldUtils.writeDeclaredField(instance, "btnPlayAudio", btnPlayAudio, true);
-		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnPlayAudio, 0, null)));
-		//
-		// btnCopyStrokeImage
-		//
-		final AbstractButton btnCopyStrokeImage = new JButton();
-		//
-		FieldUtils.writeDeclaredField(instance, "btnCopyStrokeImage", btnCopyStrokeImage, true);
-		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyStrokeImage, 0, null)));
-		//
-		// btnSaveStrokeImage
-		//
-		final AbstractButton btnSaveStrokeImage = new JButton();
-		//
-		FieldUtils.writeDeclaredField(instance, "btnSaveStrokeImage", btnSaveStrokeImage, true);
-		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnSaveStrokeImage, 0, null)));
-		//
-		// btnCopyStrokeWithNumberImage
-		//
-		final AbstractButton btnCopyStrokeWithNumberImage = new JButton();
-		//
-		FieldUtils.writeDeclaredField(instance, "btnCopyStrokeWithNumberImage", btnCopyStrokeWithNumberImage, true);
-		//
-		Assertions.assertDoesNotThrow(
-				() -> instance.actionPerformed(new ActionEvent(btnCopyStrokeWithNumberImage, 0, null)));
-		//
-		// btnSaveStrokeWithNumberImage
-		//
-		final AbstractButton btnSaveStrokeWithNumberImage = new JButton();
-		//
-		FieldUtils.writeDeclaredField(instance, "btnSaveStrokeWithNumberImage", btnSaveStrokeWithNumberImage, true);
-		//
-		Assertions.assertDoesNotThrow(
-				() -> instance.actionPerformed(new ActionEvent(btnSaveStrokeWithNumberImage, 0, null)));
-		//
-		// btnCopyFuriganaImage
-		//
-		final AbstractButton btnCopyFuriganaImage = new JButton();
-		//
-		FieldUtils.writeDeclaredField(instance, "btnCopyFuriganaImage", btnCopyFuriganaImage, true);
-		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyFuriganaImage, 0, null)));
-		//
-		// btnSaveFuriganaImage
-		//
-		final AbstractButton btnSaveFuriganaImage = new JButton();
-		//
-		FieldUtils.writeDeclaredField(instance, "btnSaveFuriganaImage", btnSaveFuriganaImage, true);
-		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnSaveFuriganaImage, 0, null)));
-		//
+	}
+
+	private static <T, R, E extends Exception> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
+			throws Throwable {
+		try {
+			return (R) invoke(METHOD_TEST_AND_APPLY4, null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static Object invoke(final Method method, final Object instance, final Object... args)
@@ -1016,7 +946,7 @@ class JapanDictGuiTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(invoke(METHOD_TEST_AND_APPLY, null, Reflection.newProxy(BiPredicate.class, ih), null,
+		Assertions.assertNull(invoke(METHOD_TEST_AND_APPLY5, null, Reflection.newProxy(BiPredicate.class, ih), null,
 				null, null, null));
 		//
 	}
