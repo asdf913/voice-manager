@@ -232,8 +232,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Play Audio")
 	private AbstractButton btnPlayAudio = null;
 
-	@Note("Copy Furigane Image")
-	private AbstractButton btnCopyFurigana = null;
+	@Note("Copy Furigana Image")
+	private AbstractButton btnCopyFuriganaImage = null;
 
 	@Note("Copy Pitch Accent Image")
 	private AbstractButton btnCopyPitchAccentImage = null;
@@ -448,7 +448,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, furiganaImage = new JLabel(), String.format("span %1$s", 5));
 		//
-		add(this, btnCopyFurigana = new JButton("Copy"), wrap);
+		add(this, btnCopyFuriganaImage = new JButton("Copy"), wrap);
 		//
 		add(this, new JLabel(PITCH_ACCENT));
 		//
@@ -1895,7 +1895,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			return true;
 			//
-		} else if (Objects.equals(source, instance.btnCopyFurigana)) {
+		} else if (Objects.equals(source, instance.btnCopyFuriganaImage)) {
 			//
 			final IH ih = new IH();
 			//
@@ -2443,7 +2443,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			Util.setIcon(instance.furiganaImage, testAndApply(Objects::nonNull,
 					instance.furiganaBufferedImage = entry.furiganaImage, ImageIcon::new, null));
 			//
-			Util.setEnabled(instance.btnCopyFurigana, entry.furiganaImage != null);
+			Util.setEnabled(instance.btnCopyFuriganaImage, entry.furiganaImage != null);
 			//
 			// Pitch Accents
 			//
