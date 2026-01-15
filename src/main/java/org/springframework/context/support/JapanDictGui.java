@@ -269,7 +269,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	private JLabel strokeWithNumberImage = null;
 
 	@Note("Furigana Image")
-	private BufferedImage furiganaBufferedImage = null;
+	private transient BufferedImage furiganaBufferedImage = null;
 
 	@Note("Stroke Image")
 	private transient BufferedImage strokeBufferedImage = null;
