@@ -874,11 +874,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				try {
 					//
-					thenAcceptAsync(CompletableFuture.supplyAsync(supplier), x -> {
-						//
-						JapanDictEntry.setStrokeWithNumberImage(japanDictEntry, x);
-						//
-					});
+					thenAcceptAsync(CompletableFuture.supplyAsync(supplier),
+							x -> JapanDictEntry.setStrokeWithNumberImage(japanDictEntry, x));
 					//
 				} catch (final Exception ex) {
 					//
