@@ -731,7 +731,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return id;
 		}
 
-		private static String getId(final JapanDictEntry instance) {
+		private static String getId(@Nullable final JapanDictEntry instance) {
 			return instance != null ? instance.getId() : null;
 		}
 
