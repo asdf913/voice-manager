@@ -2747,6 +2747,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		}
 
+		@Nullable
 		private static BufferedImage chopImage(@Nullable final BufferedImage instance, @Nullable final int[] color) {
 			//
 			final byte[] data = getData(Util.cast(DataBufferByte.class, getDataBuffer(getRaster(instance))));
