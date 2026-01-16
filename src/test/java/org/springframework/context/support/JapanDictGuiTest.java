@@ -118,7 +118,8 @@ class JapanDictGuiTest {
 			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_CREATE_TABLE_CELL_RENDERER,
 			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_FILTER,
 			METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW, METHOD_OR,
-			METHOD_GET_MIN_MAX, METHOD_THEN_ACCEPT_ASYNC, METHOD_SET_STROKE_IMAGE_AND_STROKE_WITH_NUMBER_IMAGE = null;
+			METHOD_GET_MIN_MAX, METHOD_THEN_ACCEPT_ASYNC, METHOD_SET_STROKE_IMAGE_AND_STROKE_WITH_NUMBER_IMAGE,
+			METHOD_COPY_FIELD = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -250,6 +251,9 @@ class JapanDictGuiTest {
 		//
 		(METHOD_SET_STROKE_IMAGE_AND_STROKE_WITH_NUMBER_IMAGE = Util.getDeclaredMethod(clz,
 				"setStrokeImageAndStrokeWithNumberImage", DefaultTableModel.class, CLASS_JAPAN_DICT_ENTRY))
+				.setAccessible(true);
+		//
+		(METHOD_COPY_FIELD = Util.getDeclaredMethod(clz, "copyField", Object.class, Object.class, String.class))
 				.setAccessible(true);
 		//
 	}
@@ -1811,6 +1815,18 @@ class JapanDictGuiTest {
 				//
 		} // for
 			//
+	}
+
+	@Test
+	void testCopyField() throws Throwable {
+		//
+		Assertions
+				.assertNull(invoke(METHOD_COPY_FIELD, null, japanDictEntry, japanDictEntry,
+						Util.getName(testAndApply(
+								x -> !IterableUtils.isEmpty(x), testAndApply(Objects::nonNull,
+										Util.getClass(japanDictEntry), FieldUtils::getAllFieldsList, null),
+								x -> IterableUtils.get(x, ZERO), null))));
+		//
 	}
 
 }

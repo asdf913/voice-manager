@@ -878,16 +878,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					thenAcceptAsync(CompletableFuture.supplyAsync(japanDictEntrySupplier), x -> {
 						//
-						if (japanDictEntry != null && x != null) {
-							//
-							japanDictEntry.furiganaImage = x.furiganaImage;
-							//
-							japanDictEntry.pitchAccents = x.pitchAccents;
-							//
-							japanDictEntry.strokeImage = x.strokeImage;
-							//
-						} // if
-							//
+						copyField(x, japanDictEntry, "furiganaImage");
+						//
+						copyField(x, japanDictEntry, "pitchAccents");
+						//
+						copyField(x, japanDictEntry, "strokeImage");
+						//
 						setStrokeImageAndStrokeWithNumberImage(dtm, japanDictEntry);
 						//
 					});
@@ -946,6 +942,37 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			} // if
 				//
 		} // for
+			//
+	}
+
+	private static void copyField(final Object source, final Object destination, final String fieldName) {
+		//
+		Iterable<Field> fields = Util.toList(Util.filter(
+				Util.stream(testAndApply(Objects::nonNull, Util.getClass(source), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), fieldName)));
+		//
+		final Runnable runnable = () -> {
+			//
+			throw new IllegalStateException();
+			//
+		};
+		//
+		testAndRun(IterableUtils.size(fields) > 1, runnable);
+		//
+		final Field fs = testAndApply(x -> IterableUtils.size(x) == 1, fields, x -> IterableUtils.get(x, 0), null);
+		//
+		testAndRun(IterableUtils.size(fields = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(destination), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), fieldName)))) > 1, runnable);
+		//
+		final Field fd = testAndApply(x -> IterableUtils.size(x) == 1, fields, x -> IterableUtils.get(x, 0), null);
+		//
+		if (fd != null && fs != null) {
+			//
+			Narcissus.setField(destination, fd, Narcissus.getField(source, fs));
+			//
+		} // if
 			//
 	}
 
