@@ -740,7 +740,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			this.strokeWithNumberImage = strokeWithNumberImage;
 		}
 
-		private static void setStrokeWithNumberImage(final JapanDictEntry instance,
+		private static void setStrokeWithNumberImage(@Nullable final JapanDictEntry instance,
 				final BufferedImage strokeWithNumberImage) {
 			if (instance != null) {
 				instance.setStrokeWithNumberImage(strokeWithNumberImage);
