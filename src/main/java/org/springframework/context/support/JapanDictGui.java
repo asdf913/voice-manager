@@ -102,6 +102,8 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.StringsUtil;
+import org.apache.commons.lang3.function.FailableBiConsumer;
+import org.apache.commons.lang3.function.FailableBiConsumerUtil;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -850,13 +852,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Playwright.class), Arrays::stream, null),
 					x -> Objects.equals(Util.getName(x), Util.getSelectedItem(cbmBrowserType))));
 			//
-			StrokeWithNumberImageSupplier srokeWithNumberImageSupplier = null;
-			//
 			JapanDictEntrySupplier japanDictEntrySupplier = null;
 			//
 			Collection<String> ids = null;
-			//
-			String id = null;
 			//
 			final Function<Playwright, BrowserType> function = x -> ObjectUtils.getIfNull(
 					Util.cast(BrowserType.class,
@@ -900,37 +898,35 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 				} // try
 					//
-				if (!IterableUtils.contains(ids = ObjectUtils.getIfNull(ids, ArrayList::new),
-						id = JapanDictEntry.getId(japanDictEntry))) {
-					//
-					(srokeWithNumberImageSupplier = new StrokeWithNumberImageSupplier()).browserTypeFunction = function;
-					//
-					srokeWithNumberImageSupplier.japanDictEntry = japanDictEntry;
-					//
-					srokeWithNumberImageSupplier.japanDictGui = this;
-					//
-					try {
-						//
-						thenAcceptAsync(CompletableFuture.supplyAsync(srokeWithNumberImageSupplier), x -> {
+				testAndAccept((a, b) -> !IterableUtils.contains(a, b), ids = ObjectUtils.getIfNull(ids, ArrayList::new),
+						JapanDictEntry.getId(japanDictEntry), (a, b) -> {
 							//
-							JapanDictEntry.setStrokeWithNumberImage(japanDictEntry,
-									ObjectUtils.getIfNull(JapanDictEntry.getStrokeWithNumberImage(japanDictEntry), x));
+							final StrokeWithNumberImageSupplier strokeWithNumberImageSupplier = new StrokeWithNumberImageSupplier();
 							//
-							setStrokeImageAndStrokeWithNumberImage(dtm, japanDictEntry);
+							strokeWithNumberImageSupplier.browserTypeFunction = function;
+							//
+							strokeWithNumberImageSupplier.japanDictEntry = japanDictEntry;
+							//
+							strokeWithNumberImageSupplier.japanDictGui = this;
+							//
+							thenAcceptAsync(CompletableFuture.supplyAsync(strokeWithNumberImageSupplier), y -> {
+								//
+								JapanDictEntry.setStrokeWithNumberImage(japanDictEntry, ObjectUtils
+										.getIfNull(JapanDictEntry.getStrokeWithNumberImage(japanDictEntry), y));
+								//
+								setStrokeImageAndStrokeWithNumberImage(dtm, japanDictEntry);
+								//
+							});
+							//
+							Util.add(a, b);
+							//
+						}, x -> {
+							//
+							throw ObjectUtils.getIfNull(Util.cast(RuntimeException.class, x),
+									() -> new RuntimeException(x));
 							//
 						});
-						//
-					} catch (final Exception ex) {
-						//
-						throw ObjectUtils.getIfNull(Util.cast(RuntimeException.class, ex),
-								() -> new RuntimeException(ex));
-						//
-					} // try
-						//
-					Util.add(ids, id);
-					//
-				} // if
-					//
+				//
 			} // for
 				//
 			pack(window);
@@ -950,6 +946,25 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			} // if
 				//
 		} // for
+			//
+	}
+
+	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, final T t,
+			final U u, final FailableBiConsumer<T, U, E> failableConsumer, final Consumer<Throwable> consumer) {
+		//
+		if (Util.test(instance, t, u)) {
+			//
+			try {
+				//
+				FailableBiConsumerUtil.accept(failableConsumer, t, u);
+				//
+			} catch (final Throwable ex) {
+				//
+				Util.accept(consumer, ex);
+				//
+			} // try
+				//
+		} // if
 			//
 	}
 

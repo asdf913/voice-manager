@@ -61,6 +61,7 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableLongConsumer;
@@ -107,13 +108,13 @@ class JapanDictGuiTest {
 	private static Class<?> CLASS_JAPAN_DICT_ENTRY = null;
 
 	private static Method METHOD_TEST_AND_GET, METHOD_SET_TEXT, METHOD_STARTS_WITH, METHOD_APPEND,
-			METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG, METHOD_TEST_AND_ACCEPT4_BI_PREDICATE,
-			METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN2, METHOD_TEST_AND_RUN3, METHOD_GET_SYSTEM_CLIP_BOARD,
-			METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_TO_ARRAY,
-			METHOD_GET_JLPT_LEVEL_INDICES, METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1,
-			METHOD_CHOP_IMAGE2, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE, METHOD_GET_COLUMN_NAME,
-			METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND2, METHOD_AND3,
-			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
+			METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG, METHOD_TEST_AND_ACCEPT5,
+			METHOD_TEST_AND_ACCEPT4_BI_PREDICATE, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN2, METHOD_TEST_AND_RUN3,
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
+			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL,
+			METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE,
+			METHOD_GET_COLUMN_NAME, METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND2,
+			METHOD_AND3, METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
 			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_CREATE_TABLE_CELL_RENDERER,
 			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_FILTER,
 			METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW, METHOD_OR,
@@ -144,6 +145,9 @@ class JapanDictGuiTest {
 		//
 		(METHOD_TEST_AND_ACCEPT4_BI_PREDICATE = Util.getDeclaredMethod(clz, "testAndAccept", BiPredicate.class,
 				Object.class, Object.class, BiConsumer.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT5 = Util.getDeclaredMethod(clz, "testAndAccept", BiPredicate.class, Object.class,
+				Object.class, FailableBiConsumer.class, Consumer.class)).setAccessible(true);
 		//
 		(METHOD_GET_AUDIO_URL = Util.getDeclaredMethod(clz, "getAudioUrl", String.class, Strings.class, Iterable.class))
 				.setAccessible(true);
@@ -258,16 +262,28 @@ class JapanDictGuiTest {
 
 		private int[] selectedIndices;
 
+		private Throwable throwable;
+
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
+			final String name = Util.getName(method);
+			//
+			if (proxy instanceof FailableBiConsumer) {
+				//
+				if (Objects.equals(name, "accept") && throwable != null) {
+					//
+					throw throwable;
+					//
+				} // if
+					//
+			} // if
+				//
 			if (Objects.equals(Util.getReturnType(method), Void.TYPE)) {
 				//
 				return null;
 				//
 			} // if
 				//
-			final String name = Util.getName(method);
-			//
 			if (proxy instanceof Collection && Objects.equals(name, "toArray")) {
 				//
 				return null;
@@ -878,14 +894,26 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT3_LONG, null, longPredicate, l, null));
 		//
-		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT4_BI_PREDICATE, null,
-				org.meeuw.functional.Predicates.biAlwaysTrue(), null, null, null));
-		//
 		final Predicate<?> predicate = Predicates.alwaysTrue();
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT3_OBJECT, null, predicate, null, null));
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT3_OBJECT, null, predicate, null, null));
+		//
+		final BiPredicate<?, ?> biPredicate = org.meeuw.functional.Predicates.biAlwaysTrue();
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT4_BI_PREDICATE, null, biPredicate, null, null, null));
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT5, null, biPredicate, null, null, null, null));
+		//
+		if (ih != null) {
+			//
+			ih.throwable = new Throwable();
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT5, null, biPredicate, null, null,
+				Reflection.newProxy(FailableBiConsumer.class, ih), null));
 		//
 	}
 
