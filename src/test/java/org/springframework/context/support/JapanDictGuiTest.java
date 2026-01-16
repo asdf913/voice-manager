@@ -117,7 +117,8 @@ class JapanDictGuiTest {
 			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_CREATE_TABLE_CELL_RENDERER,
 			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_GET_PITCH_ACCENTS,
 			METHOD_FILTER, METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW, METHOD_OR,
-			METHOD_GET_FIRST_PIXEL_COLOR, METHOD_GET_MIN_MAX, METHOD_THEN_ACCEPT_ASYNC = null;
+			METHOD_GET_FIRST_PIXEL_COLOR, METHOD_GET_MIN_MAX, METHOD_THEN_ACCEPT_ASYNC,
+			METHOD_SET_STROKE_IMAGE_AND_STROKE_WITH_NUMBER_IMAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -251,6 +252,10 @@ class JapanDictGuiTest {
 		//
 		(METHOD_THEN_ACCEPT_ASYNC = Util.getDeclaredMethod(clz, "thenAcceptAsync", CompletableFuture.class,
 				Consumer.class)).setAccessible(true);
+		//
+		(METHOD_SET_STROKE_IMAGE_AND_STROKE_WITH_NUMBER_IMAGE = Util.getDeclaredMethod(clz,
+				"setStrokeImageAndStrokeWithNumberImage", DefaultTableModel.class, CLASS_JAPAN_DICT_ENTRY))
+				.setAccessible(true);
 		//
 	}
 
@@ -1648,6 +1653,22 @@ class JapanDictGuiTest {
 				//
 		} // for
 			//
+	}
+
+	@Test
+	void testSetStrokeImageAndStrokeWithNumberImage() throws IllegalAccessException, InvocationTargetException {
+		//
+		final DefaultTableModel dtm = new DefaultTableModel(new Object[] { null }, ONE);
+		//
+		Assertions.assertNull(invoke(METHOD_SET_STROKE_IMAGE_AND_STROKE_WITH_NUMBER_IMAGE, null, dtm, japanDictEntry));
+		//
+		Util.addRow(dtm, new Object[] { japanDictEntry });
+		//
+		FieldUtils.writeDeclaredField(japanDictEntry, "id", "", true);
+		//
+		Assertions.assertNull(invoke(METHOD_SET_STROKE_IMAGE_AND_STROKE_WITH_NUMBER_IMAGE, null, dtm,
+				Narcissus.allocateInstance(CLASS_JAPAN_DICT_ENTRY)));
+		//
 	}
 
 }

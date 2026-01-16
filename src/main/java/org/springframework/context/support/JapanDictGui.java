@@ -882,6 +882,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							//
 						} // if
 							//
+						setStrokeImageAndStrokeWithNumberImage(dtm, japanDictEntry);
+						//
 					});
 					//
 				} catch (final Exception ex) {
@@ -901,8 +903,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					try {
 						//
-						thenAcceptAsync(CompletableFuture.supplyAsync(srokeWithNumberImageSupplier),
-								x -> JapanDictEntry.setStrokeWithNumberImage(japanDictEntry, x));
+						thenAcceptAsync(CompletableFuture.supplyAsync(srokeWithNumberImageSupplier), x -> {
+							//
+							JapanDictEntry.setStrokeWithNumberImage(japanDictEntry, ObjectUtils.getIfNull(
+									japanDictEntry != null ? japanDictEntry.strokeWithNumberImage : null, x));
+							//
+							setStrokeImageAndStrokeWithNumberImage(dtm, japanDictEntry);
+							//
+						});
 						//
 					} catch (final Exception ex) {
 						//
@@ -2534,22 +2542,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		testAndRun(IterableUtils.size(ms) > 1, runnable);
 		//
-		JapanDictEntry temp = null;
+		setStrokeImageAndStrokeWithNumberImage(instance.dtm, entry);
 		//
-		for (int i = 0; Util.and(entry.strokeImage == null, entry.strokeWithNumberImage == null,
-				i < Util.getRowCount(instance.dtm)); i++) {
-			//
-			if ((temp = Util.cast(JapanDictEntry.class, getValueAt(instance.dtm, i, 0))) != null
-					&& Objects.equals(JapanDictEntry.getId(entry), temp.id)
-					&& Boolean.logicalAnd((entry.strokeImage = temp.strokeImage) != null,
-							(entry.strokeWithNumberImage = temp.strokeWithNumberImage) != null)) {
-				//
-				break;
-				//
-			} // if
-				//
-		} // for
-			//
 		final Consumer<Throwable> consumer = x -> {
 			//
 			throw new RuntimeException(x);
@@ -2631,7 +2625,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			supplier.japanDictGui = instance;
 			//
-			JapanDictEntry.setStrokeWithNumberImage(entry, Util.get(supplier));
+			JapanDictEntry.setStrokeWithNumberImage(entry,
+					ObjectUtils.getIfNull(entry != null ? entry.strokeWithNumberImage : null, Util.get(supplier)));
+			//
+			setStrokeImageAndStrokeWithNumberImage(instance.dtm, entry);
 			//
 		}, consumer);
 		//
@@ -2643,6 +2640,27 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		pack(instance.window);
 		//
+	}
+
+	private static void setStrokeImageAndStrokeWithNumberImage(final DefaultTableModel dtm,
+			final JapanDictEntry japanDictEntry) {
+		//
+		JapanDictEntry temp = null;
+		//
+		for (int i = 0; japanDictEntry != null && i < Util.getRowCount(dtm); i++) {
+			//
+			if ((temp = Util.cast(JapanDictEntry.class, getValueAt(dtm, i, 0))) != null
+					&& Objects.equals(JapanDictEntry.getId(japanDictEntry), JapanDictEntry.getId(temp))) {
+				//
+				temp.strokeImage = ObjectUtils.getIfNull(temp.strokeImage, japanDictEntry.strokeImage);
+				//
+				temp.strokeWithNumberImage = ObjectUtils.getIfNull(temp.strokeWithNumberImage,
+						japanDictEntry.strokeWithNumberImage);
+				//
+			} // if
+				//
+		} // for
+			//
 	}
 
 	private static class JapanDictEntrySupplier implements Supplier<JapanDictEntry> {
