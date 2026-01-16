@@ -727,6 +727,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return instance != null ? instance.getText() : null;
 		}
 
+		private String getId() {
+			return id;
+		}
+
+		private static String getId(final JapanDictEntry instance) {
+			return instance != null ? instance.getId() : null;
+		}
+
 	}
 
 	@Override
@@ -833,7 +841,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class, getValueAt(dtm, i, 0));
 				//
 				if (IterableUtils.contains(ids = ObjectUtils.getIfNull(ids, ArrayList::new),
-						id = japanDictEntry != null ? japanDictEntry.id : null)) {
+						id = JapanDictEntry.getId(japanDictEntry))) {
 					//
 					continue;
 					//
@@ -2498,7 +2506,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				i < Util.getRowCount(instance.dtm)); i++) {
 			//
 			if ((temp = Util.cast(JapanDictEntry.class, getValueAt(instance.dtm, i, 0))) != null
-					&& Objects.equals(entry.id, temp.id)
+					&& Objects.equals(JapanDictEntry.getId(entry), temp.id)
 					&& Boolean.logicalAnd((entry.strokeImage = temp.strokeImage) != null,
 							(entry.strokeWithNumberImage = temp.strokeWithNumberImage) != null)) {
 				//
@@ -2530,6 +2538,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			PageUtil.navigate(page, pageUrl);
 			//
+			final String id = JapanDictEntry.getId(entry);
+			//
 			// Furigana
 			//
 			testAndRun(entry.furiganaImage == null, () -> {
@@ -2542,9 +2552,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 														testAndApply(
 																y -> IterableUtils.size(y) > Util.intValue(entry.index,
 																		0),
-																PageUtil.querySelectorAll(
-																		page,
-																		String.format("#entry-%1$s ruby", entry.id)),
+																PageUtil.querySelectorAll(page,
+																		String.format("#entry-%1$s ruby", id)),
 																y -> IterableUtils.get(y,
 																		Util.intValue(entry.index, 0)),
 																null),
@@ -2565,13 +2574,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			testAndRun(IterableUtils.isEmpty(entry.pitchAccents), () ->
 			//
-			entry.pitchAccents = getPitchAccents(ElementHandleUtil.querySelectorAll(
-					testAndApply(x -> IterableUtils.size(x) > Util.intValue(entry.index, 0),
-							PageUtil.querySelectorAll(page,
-									String.format("#entry-%1$s ul li.list-group-item[lang='ja'] .d-flex.p-2",
-											entry.id)),
-							x -> IterableUtils.get(x, Util.intValue(entry.index, 0)), null),
-					"div.d-flex"))
+			entry.pitchAccents = getPitchAccents(
+					ElementHandleUtil
+							.querySelectorAll(
+									testAndApply(x -> IterableUtils.size(x) > Util.intValue(entry.index, 0),
+											PageUtil.querySelectorAll(page, String.format(
+													"#entry-%1$s ul li.list-group-item[lang='ja'] .d-flex.p-2", id)),
+											x -> IterableUtils.get(x, Util.intValue(entry.index, 0)), null),
+									"div.d-flex"))
 			//
 					, consumer);
 			//
@@ -2650,7 +2660,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				PageUtil.navigate(page, pageUrl);
 				//
-				final String id = japanDictEntry != null ? japanDictEntry.id : null;
+				final String id = JapanDictEntry.getId(japanDictEntry);
 				//
 				// Stroke With Number Image
 				//
@@ -2976,7 +2986,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	private static BufferedImage getStrokeImage(final JapanDictGui instance, final Page page,
 			@Nullable final JapanDictEntry japanDictEntry) throws IOException, InterruptedException {
 		//
-		final String id = japanDictEntry != null ? japanDictEntry.id : null;
+		final String id = JapanDictEntry.getId(japanDictEntry);
 		//
 		final Iterable<Field> fs = Util.toList(Util.filter(
 				Util.stream(testAndApply(Objects::nonNull, Util.getClass(id), FieldUtils::getAllFieldsList, null)),
