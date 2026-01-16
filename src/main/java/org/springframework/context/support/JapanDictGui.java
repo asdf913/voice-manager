@@ -751,6 +751,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return strokeWithNumberImage;
 		}
 
+		@Nullable
 		private static BufferedImage getStrokeWithNumberImage(@Nullable final JapanDictEntry instance) {
 			return instance != null ? instance.getStrokeWithNumberImage() : null;
 		}
