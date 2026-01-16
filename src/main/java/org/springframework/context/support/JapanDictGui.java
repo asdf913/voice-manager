@@ -882,7 +882,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 				} catch (final Exception ex) {
 					//
-					throw ex instanceof RuntimeException re ? re : new RuntimeException(ex);
+					throw ObjectUtils.getIfNull(Util.cast(RuntimeException.class, ex), () -> new RuntimeException(ex));
 					//
 				} // try
 					//
