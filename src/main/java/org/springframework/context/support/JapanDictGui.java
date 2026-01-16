@@ -2785,6 +2785,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		}
 
+		@Nullable
 		private static int[] getFirstPixelColor(final BufferedImage bi, final int type, @Nullable final byte[] data) {
 			//
 			int[] color = null;
