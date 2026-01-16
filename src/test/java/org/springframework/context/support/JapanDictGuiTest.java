@@ -385,14 +385,10 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof IntStream) {
+			} else if (proxy instanceof IntStream && Objects.equals(name, "sum")) {
 				//
-				if (Objects.equals(name, "sum")) {
-					//
-					return sum;
-					//
-				} // if
-					//
+				return sum;
+				//
 			} // if
 				//
 			throw new Throwable(name);
