@@ -897,7 +897,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return instance != null ? instance.sum() : 0;
 	}
 
-	private static <T> void thenAcceptAsync(final CompletableFuture<T> instance, final Consumer<T> consumer) {
+	private static <T> void thenAcceptAsync(@Nullable final CompletableFuture<T> instance,
+			@Nullable final Consumer<T> consumer) {
 		if (instance != null && consumer != null) {
 			instance.thenAcceptAsync(consumer);
 		}
