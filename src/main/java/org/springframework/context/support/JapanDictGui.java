@@ -46,14 +46,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.LongPredicate;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -813,6 +816,63 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			testAndRun(Boolean.logicalAnd(Util.getRowCount(dtm) == 1, getColumnCount(dtm) > 0),
 					() -> setRowSelectionInterval(jTable, 0, 0));
 			//
+			// Stroke With Number Image
+			//
+			final Iterable<Method> ms = Util.toList(Util.filter(
+					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Playwright.class), Arrays::stream, null),
+					x -> Objects.equals(Util.getName(x), Util.getSelectedItem(cbmBrowserType))));
+			//
+			StrokeWithNumberImageSupplier supplier = null;
+			//
+			Collection<String> ids = null;
+			//
+			String id = null;
+			//
+			for (int i = 0; i < Util.getRowCount(dtm); i++) {
+				//
+				final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class, getValueAt(dtm, i, 0));
+				//
+				if (IterableUtils.contains(ids = ObjectUtils.getIfNull(ids, ArrayList::new),
+						id = japanDictEntry != null ? japanDictEntry.id : null)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				Util.add(ids, id);
+				//
+				(supplier = new StrokeWithNumberImageSupplier()).browserTypeFunction = x -> ObjectUtils.getIfNull(
+						Util.cast(BrowserType.class,
+								testAndApply(Objects::nonNull,
+										testAndApply(y -> IterableUtils.size(y) == 1, ms, y -> IterableUtils.get(y, 0),
+												null),
+										y -> Narcissus.invokeMethod(x, y), null)),
+						() -> PlaywrightUtil.chromium(x));
+				//
+				supplier.japanDictEntry = japanDictEntry;
+				//
+				supplier.japanDictGui = this;
+				//
+				try {
+					//
+					thenAcceptAsync(CompletableFuture.supplyAsync(supplier), x -> {
+						//
+						if (japanDictEntry != null) {
+							//
+							japanDictEntry.strokeWithNumberImage = x;
+							//
+						} // if
+							//
+					});
+					//
+				} catch (final Exception ex) {
+					//
+					throw ex instanceof RuntimeException re ? re : new RuntimeException(ex);
+					//
+				} // try
+					//
+			} // for
+				//
 			pack(window);
 			//
 		} // if
@@ -831,6 +891,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // for
 			//
+	}
+
+	private static <T> void thenAcceptAsync(final CompletableFuture<T> instance, final Consumer<T> consumer) {
+		if (instance != null && consumer != null) {
+			instance.thenAcceptAsync(consumer);
+		}
 	}
 
 	private static void addRows(@Nullable final JapanDictGui instance, final Iterable<Element> es, final String scheme,
@@ -2521,43 +2587,85 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} // try
 			//
-		try (final Playwright playwright = testAndGet(entry.strokeWithNumberImage == null, Playwright::create);
-				final Browser browser = testAndApply(
-						Predicates.always(UrlValidatorUtil.isValid(UrlValidator.getInstance(), pageUrl)), playwright,
-						x -> BrowserTypeUtil.launch(ObjectUtils.getIfNull(
-								Util.cast(BrowserType.class, testAndApply(Objects::nonNull,
-										testAndApply(y -> IterableUtils.size(y) == 1, ms, y -> IterableUtils.get(y, 0),
-												null),
-										y -> Narcissus.invokeMethod(x, y), null)),
-								() -> PlaywrightUtil.chromium(x))),
-						null);
-				final Page page = newPage(browser)) {
-			//
-			PageUtil.navigate(page, pageUrl);
-			//
 			// Stroke With Number Image
 			//
-			check(testAndApply(x -> IterableUtils.size(x) == 1,
-					PageUtil.querySelectorAll(page, String.format("#dmak-show-stroke-check-%1$s", entry.id)),
-					x -> IterableUtils.get(x, 0), null));
+		testAndRun(entry.strokeWithNumberImage == null, () -> {
 			//
-			click(testAndApply(x -> IterableUtils.size(x) == 1,
-					PageUtil.querySelectorAll(page, String.format("#dmak-reset-%1$s", entry.id)),
-					x -> IterableUtils.get(x, 0), null));
+			final StrokeWithNumberImageSupplier supplier = new StrokeWithNumberImageSupplier();
 			//
-			testAndRun(entry.strokeWithNumberImage == null,
-					() -> entry.strokeWithNumberImage = chopImage(getStrokeImage(instance, page, entry)), consumer);
+			supplier.browserTypeFunction = x -> ObjectUtils.getIfNull(
+					Util.cast(BrowserType.class,
+							testAndApply(Objects::nonNull,
+									testAndApply(y -> IterableUtils.size(y) == 1, ms, y -> IterableUtils.get(y, 0),
+											null),
+									y -> Narcissus.invokeMethod(x, y), null)),
+					() -> PlaywrightUtil.chromium(x));
 			//
-			Util.setIcon(instance.strokeWithNumberImage, testAndApply(Objects::nonNull,
-					instance.strokeWithNumberBufferedImage = entry.strokeWithNumberImage, ImageIcon::new, null));
+			supplier.japanDictEntry = entry;
 			//
-			setEnabled(entry.strokeWithNumberImage != null, instance.btnCopyStrokeWithNumberImage,
-					instance.btnSaveStrokeWithNumberImage);
+			supplier.japanDictGui = instance;
 			//
-		} // try
+			entry.strokeWithNumberImage = Util.get(supplier);
 			//
+		}, consumer);
+		//
+		Util.setIcon(instance.strokeWithNumberImage, testAndApply(Objects::nonNull,
+				instance.strokeWithNumberBufferedImage = entry.strokeWithNumberImage, ImageIcon::new, null));
+		//
+		setEnabled(entry.strokeWithNumberImage != null, instance.btnCopyStrokeWithNumberImage,
+				instance.btnSaveStrokeWithNumberImage);
+		//
 		pack(instance.window);
 		//
+	}
+
+	private static class StrokeWithNumberImageSupplier implements Supplier<BufferedImage> {
+
+		private JapanDictGui japanDictGui = null;
+
+		private JapanDictEntry japanDictEntry = null;
+
+		private Function<Playwright, BrowserType> browserTypeFunction = null;
+
+		@Override
+		public BufferedImage get() {
+			//
+			final String pageUrl = japanDictEntry != null ? japanDictEntry.pageUrl : null;
+			//
+			try (final Playwright playwright = testAndGet(
+					japanDictEntry != null && japanDictEntry.strokeWithNumberImage == null, Playwright::create);
+					final Browser browser = testAndApply(
+							Predicates.always(UrlValidatorUtil.isValid(UrlValidator.getInstance(), pageUrl)),
+							playwright,
+							x -> BrowserTypeUtil.launch(ObjectUtils.getIfNull(Util.apply(browserTypeFunction, x),
+									() -> PlaywrightUtil.chromium(x))),
+							null);
+					final Page page = newPage(browser)) {
+				//
+				PageUtil.navigate(page, pageUrl);
+				//
+				final String id = japanDictEntry != null ? japanDictEntry.id : null;
+				//
+				// Stroke With Number Image
+				//
+				check(testAndApply(x -> IterableUtils.size(x) == 1,
+						PageUtil.querySelectorAll(page, String.format("#dmak-show-stroke-check-%1$s", id)),
+						x -> IterableUtils.get(x, 0), null));
+				//
+				click(testAndApply(x -> IterableUtils.size(x) == 1,
+						PageUtil.querySelectorAll(page, String.format("#dmak-reset-%1$s", id)),
+						x -> IterableUtils.get(x, 0), null));
+				//
+				return chopImage(getStrokeImage(japanDictGui, page, japanDictEntry));
+				//
+			} catch (final IOException | InterruptedException ex) {
+				//
+				throw ex instanceof RuntimeException re ? re : new RuntimeException(ex);
+				//
+			} // try
+				//
+		}
+
 	}
 
 	@Nullable

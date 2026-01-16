@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -115,7 +116,7 @@ class JapanDictGuiTest {
 			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_CREATE_TABLE_CELL_RENDERER,
 			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_GET_PITCH_ACCENTS,
 			METHOD_FILTER, METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW, METHOD_OR,
-			METHOD_GET_FIRST_PIXEL_COLOR, METHOD_GET_MIN_MAX = null;
+			METHOD_GET_FIRST_PIXEL_COLOR, METHOD_GET_MIN_MAX, METHOD_THEN_ACCEPT_ASYNC = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -246,6 +247,9 @@ class JapanDictGuiTest {
 				Integer.TYPE, byte[].class)).setAccessible(true);
 		//
 		(METHOD_GET_MIN_MAX = Util.getDeclaredMethod(clz, "getMinMax", int[].class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_THEN_ACCEPT_ASYNC = Util.getDeclaredMethod(clz, "thenAcceptAsync", CompletableFuture.class,
+				Consumer.class)).setAccessible(true);
 		//
 	}
 
@@ -1548,6 +1552,14 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertEquals(String.format("[%1$s,%2$s]", ONE, two), ObjectMapperUtil.writeValueAsString(
 				objectMapper, invoke(METHOD_GET_MIN_MAX, null, new int[] { ONE, two }, Integer.valueOf(ONE))));
+		//
+	}
+
+	@Test
+	void testThenAcceptAsync() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertEquals(null,
+				invoke(METHOD_THEN_ACCEPT_ASYNC, null, Narcissus.allocateInstance(CompletableFuture.class), null));
 		//
 	}
 
