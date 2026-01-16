@@ -1572,4 +1572,86 @@ class JapanDictGuiTest {
 		//
 	}
 
+	@Test
+	void testStrokeWithNumberImageSupplier() throws Throwable {
+		//
+		final Class<?> clz = Util
+				.forName("org.springframework.context.support.JapanDictGui$StrokeWithNumberImageSupplier");
+		//
+		final Method[] ms = Util.getDeclaredMethods(clz);
+		//
+		Method m = null;
+		//
+		Object[] os = null;
+		//
+		String toString = null;
+		//
+		Object object = null;
+		//
+		Collection<Object> collection = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
+		Class<?> parameterType = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
+				//
+				continue;
+				//
+			} // if
+				//
+				// null
+				//
+			os = toArray(Collections.nCopies(m.getParameterCount(), null));
+			//
+			toString = Util.toString(m);
+			//
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(
+						Narcissus.invokeMethod(
+								object = ObjectUtils.getIfNull(object, () -> Narcissus.allocateInstance(clz)), m, os),
+						toString);
+				//
+			} // if
+				//
+			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
+			//
+			parameterTypes = m.getParameterTypes();
+			//
+			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
+				//
+				if (isInterface(parameterType = ArrayUtils.get(parameterTypes, j))) {
+					//
+					Util.add(collection, Reflection.newProxy(parameterType, ih = ObjectUtils.getIfNull(ih, IH::new)));
+					//
+				} // if
+					//
+			} // for
+				//
+			os = toArray(collection);
+			//
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(
+						Narcissus.invokeMethod(
+								object = ObjectUtils.getIfNull(object, () -> Narcissus.allocateInstance(clz)), m, os),
+						toString);
+				//
+			} // if
+				//
+		} // for
+			//
+	}
+
 }

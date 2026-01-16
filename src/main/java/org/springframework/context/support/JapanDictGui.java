@@ -2672,6 +2672,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		}
 
+		private static void check(final ElementHandle instance) {
+			if (instance != null) {
+				instance.check();
+			}
+		}
+
 	}
 
 	@Nullable
@@ -2964,12 +2970,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return collection;
 		//
-	}
-
-	private static void check(@Nullable final ElementHandle instance) {
-		if (instance != null) {
-			instance.check();
-		}
 	}
 
 	@Nullable
