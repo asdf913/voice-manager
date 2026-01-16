@@ -262,15 +262,15 @@ class JapanDictGuiTest {
 
 		private int[] selectedIndices;
 
-		private Throwable throwable;
+		private Exception exception;
 
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
 			final String name = Util.getName(method);
 			//
-			if (proxy instanceof FailableBiConsumer && Objects.equals(name, "accept") && throwable != null) {
+			if (proxy instanceof FailableBiConsumer && Objects.equals(name, "accept") && exception != null) {
 				//
-				throw throwable;
+				throw exception;
 				//
 			} // if
 				//
@@ -904,7 +904,7 @@ class JapanDictGuiTest {
 		//
 		if (ih != null) {
 			//
-			ih.throwable = new Throwable();
+			ih.exception = new Exception();
 			//
 		} // if
 			//
