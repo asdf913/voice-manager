@@ -842,47 +842,78 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Playwright.class), Arrays::stream, null),
 					x -> Objects.equals(Util.getName(x), Util.getSelectedItem(cbmBrowserType))));
 			//
-			StrokeWithNumberImageSupplier supplier = null;
+			StrokeWithNumberImageSupplier srokeWithNumberImageSupplier = null;
+			//
+			JapanDictEntrySupplier japanDictEntrySupplier = null;
 			//
 			Collection<String> ids = null;
 			//
 			String id = null;
 			//
+			final Function<Playwright, BrowserType> function = x -> ObjectUtils.getIfNull(
+					Util.cast(BrowserType.class,
+							testAndApply(Objects::nonNull,
+									testAndApply(y -> IterableUtils.size(y) == 1, ms, y -> IterableUtils.get(y, 0),
+											null),
+									y -> Narcissus.invokeMethod(x, y), null)),
+					() -> PlaywrightUtil.chromium(x));
+			//
 			for (int i = 0; i < Util.getRowCount(dtm); i++) {
 				//
 				final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class, getValueAt(dtm, i, 0));
 				//
-				if (IterableUtils.contains(ids = ObjectUtils.getIfNull(ids, ArrayList::new),
-						id = JapanDictEntry.getId(japanDictEntry))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				Util.add(ids, id);
+				(japanDictEntrySupplier = new JapanDictEntrySupplier()).browserTypeFunction = function;
 				//
-				(supplier = new StrokeWithNumberImageSupplier()).browserTypeFunction = x -> ObjectUtils.getIfNull(
-						Util.cast(BrowserType.class,
-								testAndApply(Objects::nonNull,
-										testAndApply(y -> IterableUtils.size(y) == 1, ms, y -> IterableUtils.get(y, 0),
-												null),
-										y -> Narcissus.invokeMethod(x, y), null)),
-						() -> PlaywrightUtil.chromium(x));
+				japanDictEntrySupplier.japanDictEntry = japanDictEntry;
 				//
-				supplier.japanDictEntry = japanDictEntry;
-				//
-				supplier.japanDictGui = this;
+				japanDictEntrySupplier.japanDictGui = this;
 				//
 				try {
 					//
-					thenAcceptAsync(CompletableFuture.supplyAsync(supplier),
-							x -> JapanDictEntry.setStrokeWithNumberImage(japanDictEntry, x));
+					thenAcceptAsync(CompletableFuture.supplyAsync(japanDictEntrySupplier), x -> {
+						//
+						if (japanDictEntry != null && x != null) {
+							//
+							japanDictEntry.furiganaImage = x.furiganaImage;
+							//
+							japanDictEntry.pitchAccents = x.pitchAccents;
+							//
+							japanDictEntry.strokeImage = x.strokeImage;
+							//
+						} // if
+							//
+					});
 					//
 				} catch (final Exception ex) {
 					//
 					throw ObjectUtils.getIfNull(Util.cast(RuntimeException.class, ex), () -> new RuntimeException(ex));
 					//
 				} // try
+					//
+				if (!IterableUtils.contains(ids = ObjectUtils.getIfNull(ids, ArrayList::new),
+						id = JapanDictEntry.getId(japanDictEntry))) {
+					//
+					(srokeWithNumberImageSupplier = new StrokeWithNumberImageSupplier()).browserTypeFunction = function;
+					//
+					srokeWithNumberImageSupplier.japanDictEntry = japanDictEntry;
+					//
+					srokeWithNumberImageSupplier.japanDictGui = this;
+					//
+					try {
+						//
+						thenAcceptAsync(CompletableFuture.supplyAsync(srokeWithNumberImageSupplier),
+								x -> JapanDictEntry.setStrokeWithNumberImage(japanDictEntry, x));
+						//
+					} catch (final Exception ex) {
+						//
+						throw ObjectUtils.getIfNull(Util.cast(RuntimeException.class, ex),
+								() -> new RuntimeException(ex));
+						//
+					} // try
+						//
+					Util.add(ids, id);
+					//
+				} // if
 					//
 			} // for
 				//
@@ -2503,8 +2534,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		testAndRun(IterableUtils.size(ms) > 1, runnable);
 		//
-		final String pageUrl = entry.pageUrl;
-		//
 		JapanDictEntry temp = null;
 		//
 		for (int i = 0; Util.and(entry.strokeImage == null, entry.strokeWithNumberImage == null,
@@ -2527,88 +2556,65 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		};
 		//
-		try (final Playwright playwright = testAndGet(
-				or(entry.furiganaImage == null, entry.strokeImage == null, IterableUtils.isEmpty(entry.pitchAccents)),
-				Playwright::create);
-				final Browser browser = testAndApply(
-						Predicates.always(UrlValidatorUtil.isValid(UrlValidator.getInstance(), pageUrl)), playwright,
-						x -> BrowserTypeUtil.launch(ObjectUtils.getIfNull(
-								Util.cast(BrowserType.class, testAndApply(Objects::nonNull,
+		final Function<Playwright, BrowserType> function = x -> ObjectUtils
+				.getIfNull(
+						Util.cast(BrowserType.class,
+								testAndApply(Objects::nonNull,
 										testAndApply(y -> IterableUtils.size(y) == 1, ms, y -> IterableUtils.get(y, 0),
 												null),
 										y -> Narcissus.invokeMethod(x, y), null)),
-								() -> PlaywrightUtil.chromium(x))),
-						null);
-				final Page page = newPage(browser)) {
-			//
-			PageUtil.navigate(page, pageUrl);
-			//
-			final String id = JapanDictEntry.getId(entry);
-			//
-			// Furigana
-			//
-			testAndRun(entry.furiganaImage == null, () -> {
-				//
-				final BufferedImage bi = toBufferedImage(
-						ElementHandleUtil
-								.screenshot(
-										testAndApply(y -> IterableUtils.size(y) == 1,
-												ElementHandleUtil.querySelectorAll(
-														testAndApply(
-																y -> IterableUtils.size(y) > Util.intValue(entry.index,
-																		0),
-																PageUtil.querySelectorAll(page,
-																		String.format("#entry-%1$s ruby", id)),
-																y -> IterableUtils.get(y,
-																		Util.intValue(entry.index, 0)),
-																null),
-														".."),
-												y -> IterableUtils.get(y, 0), null)));
-				//
-				entry.furiganaImage = chopImage(bi, getFirstPixelColor(bi, BufferedImage.TYPE_3BYTE_BGR,
-						getData(Util.cast(DataBufferByte.class, getDataBuffer(getRaster(bi))))));
-				//
-			}, consumer);
-			//
-			Util.setIcon(instance.furiganaImage, testAndApply(Objects::nonNull,
-					instance.furiganaBufferedImage = entry.furiganaImage, ImageIcon::new, null));
-			//
-			setEnabled(entry.furiganaImage != null, instance.btnCopyFuriganaImage, instance.btnSaveFuriganaImage);
-			//
-			// Pitch Accents
-			//
-			testAndRun(IterableUtils.isEmpty(entry.pitchAccents), () ->
-			//
-			entry.pitchAccents = getPitchAccents(
-					ElementHandleUtil
-							.querySelectorAll(
-									testAndApply(x -> IterableUtils.size(x) > Util.intValue(entry.index, 0),
-											PageUtil.querySelectorAll(page, String.format(
-													"#entry-%1$s ul li.list-group-item[lang='ja'] .d-flex.p-2", id)),
-											x -> IterableUtils.get(x, Util.intValue(entry.index, 0)), null),
-									"div.d-flex"))
-			//
-					, consumer);
-			//
-			Util.forEach(entry.pitchAccents, x -> Util.addElement(instance.mcbmPitchAccent, x));
-			//
-			setEnabled(!IterableUtils.isEmpty(entry.pitchAccents), instance.btnCopyPitchAccentImage,
-					instance.btnSavePitchAccentImage);
-			//
-			// Stroke Image
-			//
-			testAndRun(entry.strokeImage == null,
-					() -> entry.strokeImage = chopImage(getStrokeImage(instance, page, entry)), consumer);
-			//
-			Util.setIcon(instance.strokeImage, testAndApply(Objects::nonNull,
-					instance.strokeBufferedImage = entry.strokeImage, ImageIcon::new, null));
-			//
-			setEnabled(entry.strokeImage != null, instance.btnCopyStrokeImage, instance.btnSaveStrokeImage);
-			//
-		} // try
-			//
-			// Stroke With Number Image
-			//
+						() -> PlaywrightUtil.chromium(x));
+		//
+		testAndRun(
+				or(entry.furiganaImage == null, entry.strokeImage == null, IterableUtils.isEmpty(entry.pitchAccents)),
+				() -> {
+					//
+					//
+					final JapanDictEntrySupplier japanDictEntrySupplier = new JapanDictEntrySupplier();
+					//
+					japanDictEntrySupplier.browserTypeFunction = function;
+					//
+					japanDictEntrySupplier.japanDictEntry = entry;
+					//
+					japanDictEntrySupplier.japanDictGui = instance;
+					//
+					final JapanDictEntry result = Util.get(japanDictEntrySupplier);
+					//
+					if (result != null) {
+						//
+						entry.furiganaImage = ObjectUtils.getIfNull(result.furiganaImage, entry.furiganaImage);
+						//
+						entry.pitchAccents = ObjectUtils.getIfNull(result.pitchAccents, entry.pitchAccents);
+						//
+						entry.strokeImage = ObjectUtils.getIfNull(result.strokeImage, entry.strokeImage);
+						//
+					} // if
+						//
+				}, consumer);
+		//
+		// Furigana
+		//
+		Util.setIcon(instance.furiganaImage, testAndApply(Objects::nonNull,
+				instance.furiganaBufferedImage = entry.furiganaImage, ImageIcon::new, null));
+		//
+		setEnabled(entry.furiganaImage != null, instance.btnCopyFuriganaImage, instance.btnSaveFuriganaImage);
+		//
+		// Pitch Accents
+		//
+		Util.forEach(entry.pitchAccents, x -> Util.addElement(instance.mcbmPitchAccent, x));
+		//
+		setEnabled(!IterableUtils.isEmpty(entry.pitchAccents), instance.btnCopyPitchAccentImage,
+				instance.btnSavePitchAccentImage);
+		//
+		// Stroke Image
+		//
+		Util.setIcon(instance.strokeImage,
+				testAndApply(Objects::nonNull, instance.strokeBufferedImage = entry.strokeImage, ImageIcon::new, null));
+		//
+		setEnabled(entry.strokeImage != null, instance.btnCopyStrokeImage, instance.btnSaveStrokeImage);
+		//
+		// Stroke With Number Image
+		//
 		testAndRun(entry.strokeWithNumberImage == null, () -> {
 			//
 			final StrokeWithNumberImageSupplier supplier = new StrokeWithNumberImageSupplier();
@@ -2637,6 +2643,81 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		pack(instance.window);
 		//
+	}
+
+	private static class JapanDictEntrySupplier implements Supplier<JapanDictEntry> {
+
+		private JapanDictGui japanDictGui = null;
+
+		private JapanDictEntry japanDictEntry = null;
+
+		private Function<Playwright, BrowserType> browserTypeFunction = null;
+
+		@Override
+		public JapanDictEntry get() {
+			//
+			final JapanDictEntry result = new JapanDictEntry();
+			//
+			final String pageUrl = japanDictEntry != null ? japanDictEntry.pageUrl : null;
+			//
+			try (final Playwright playwright = testAndGet(
+					japanDictEntry != null && japanDictEntry.strokeWithNumberImage == null, Playwright::create);
+					final Browser browser = testAndApply(
+							Predicates.always(UrlValidatorUtil.isValid(UrlValidator.getInstance(), pageUrl)),
+							playwright,
+							x -> BrowserTypeUtil.launch(ObjectUtils.getIfNull(Util.apply(browserTypeFunction, x),
+									() -> PlaywrightUtil.chromium(x))),
+							null);
+					final Page page = newPage(browser)) {
+				//
+				PageUtil.navigate(page, pageUrl);
+				//
+				final String id = JapanDictEntry.getId(japanDictEntry);
+				//
+				final Integer index = japanDictEntry != null ? japanDictEntry.index : null;
+				//
+				// Furigana
+				//
+				final BufferedImage bi = toBufferedImage(
+						ElementHandleUtil
+								.screenshot(testAndApply(y -> IterableUtils.size(y) == 1,
+										ElementHandleUtil.querySelectorAll(
+												testAndApply(y -> IterableUtils.size(y) > Util.intValue(index, 0),
+														PageUtil.querySelectorAll(page,
+																String.format("#entry-%1$s ruby", id)),
+														y -> IterableUtils.get(y, Util.intValue(index, 0)), null),
+												".."),
+										y -> IterableUtils.get(y, 0), null)));
+				//
+				result.furiganaImage = chopImage(bi, getFirstPixelColor(bi, BufferedImage.TYPE_3BYTE_BGR,
+						getData(Util.cast(DataBufferByte.class, getDataBuffer(getRaster(bi))))));
+				//
+				// Pitch Accents
+				//
+				result.pitchAccents = getPitchAccents(
+						ElementHandleUtil
+								.querySelectorAll(
+										testAndApply(x -> IterableUtils.size(x) > Util.intValue(index, 0),
+												PageUtil.querySelectorAll(page, String.format(
+														"#entry-%1$s ul li.list-group-item[lang='ja'] .d-flex.p-2",
+														id)),
+												x -> IterableUtils.get(x, Util.intValue(index, 0)), null),
+										"div.d-flex"));
+				//
+				// Stroke Image
+				//
+				result.strokeImage = chopImage(getStrokeImage(japanDictGui, page, japanDictEntry));
+				//
+			} catch (final IOException | InterruptedException ex) {
+				//
+				throw ex instanceof RuntimeException re ? re : new RuntimeException(ex);
+				//
+			} // try
+				//
+			return result;
+			//
+		}
+
 	}
 
 	private static class StrokeWithNumberImageSupplier implements Supplier<BufferedImage> {
