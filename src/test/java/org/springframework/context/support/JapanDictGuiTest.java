@@ -111,14 +111,13 @@ class JapanDictGuiTest {
 			METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN2, METHOD_TEST_AND_RUN3, METHOD_GET_SYSTEM_CLIP_BOARD,
 			METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_TO_ARRAY,
 			METHOD_GET_JLPT_LEVEL_INDICES, METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1,
-			METHOD_CHOP_IMAGE2, METHOD_CHOP_IMAGE_INT_ARRAY, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE,
-			METHOD_GET_COLUMN_NAME, METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND2,
-			METHOD_AND3, METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
+			METHOD_CHOP_IMAGE2, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE, METHOD_GET_COLUMN_NAME,
+			METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND2, METHOD_AND3,
+			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
 			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_CREATE_TABLE_CELL_RENDERER,
-			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_GET_PITCH_ACCENTS,
-			METHOD_FILTER, METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW, METHOD_OR,
-			METHOD_GET_FIRST_PIXEL_COLOR, METHOD_GET_MIN_MAX, METHOD_THEN_ACCEPT_ASYNC,
-			METHOD_SET_STROKE_IMAGE_AND_STROKE_WITH_NUMBER_IMAGE = null;
+			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_FILTER,
+			METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW, METHOD_OR,
+			METHOD_GET_MIN_MAX, METHOD_THEN_ACCEPT_ASYNC, METHOD_SET_STROKE_IMAGE_AND_STROKE_WITH_NUMBER_IMAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -182,9 +181,6 @@ class JapanDictGuiTest {
 		(METHOD_CHOP_IMAGE2 = Util.getDeclaredMethod(clz, "chopImage", byte[].class, BoundingBox.class))
 				.setAccessible(true);
 		//
-		(METHOD_CHOP_IMAGE_INT_ARRAY = Util.getDeclaredMethod(clz, "chopImage", BufferedImage.class, int[].class))
-				.setAccessible(true);
-		//
 		(METHOD_TO_DURATION = Util.getDeclaredMethod(clz, "toDuration", Object.class)).setAccessible(true);
 		//
 		(METHOD_TO_BUFFERED_IMAGE = Util.getDeclaredMethod(clz, "toBufferedImage", byte[].class)).setAccessible(true);
@@ -227,8 +223,6 @@ class JapanDictGuiTest {
 		(METHOD_SET_PREFERRED_SIZE = Util.getDeclaredMethod(clz, "setPreferredSize", Component.class, Dimension.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_PITCH_ACCENTS = Util.getDeclaredMethod(clz, "getPitchAccents", Iterable.class)).setAccessible(true);
-		//
 		(METHOD_FILTER = Util.getDeclaredMethod(clz, "filter", FailableStream.class, FailablePredicate.class))
 				.setAccessible(true);
 		//
@@ -244,9 +238,6 @@ class JapanDictGuiTest {
 		//
 		(METHOD_OR = Util.getDeclaredMethod(clz, "or", Boolean.TYPE, Boolean.TYPE, boolean[].class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_FIRST_PIXEL_COLOR = Util.getDeclaredMethod(clz, "getFirstPixelColor", BufferedImage.class,
-				Integer.TYPE, byte[].class)).setAccessible(true);
 		//
 		(METHOD_GET_MIN_MAX = Util.getDeclaredMethod(clz, "getMinMax", int[].class, Integer.TYPE)).setAccessible(true);
 		//
@@ -1098,25 +1089,6 @@ class JapanDictGuiTest {
 			//
 		} // try
 			//
-		final int type = BufferedImage.TYPE_3BYTE_BGR;
-		//
-		final BufferedImage bi = new BufferedImage(2, 2, type);
-		//
-		final Color red = Color.RED;
-		//
-		if (red != null) {
-			//
-			bi.setRGB(1, 1, red.getRGB());
-			//
-		} // if
-			//
-		final int[] color = getFirstPixelColor(bi, type, Util.cast(byte[].class,
-				Narcissus.invokeStaticMethod(JapanDictGui.class.getDeclaredMethod("getData", DataBufferByte.class),
-						Narcissus.invokeStaticMethod(
-								JapanDictGui.class.getDeclaredMethod("getDataBuffer", Raster.class), bi.getRaster()))));
-		//
-		Assertions.assertSame(bi, invoke(METHOD_CHOP_IMAGE_INT_ARRAY, null, bi, color));
-		//
 	}
 
 	@Test
@@ -1379,30 +1351,6 @@ class JapanDictGuiTest {
 	}
 
 	@Test
-	void testGetPitchAccents() throws IllegalAccessException, InvocationTargetException, JsonProcessingException {
-		//
-		final Builder builder = JsonMapper.builder();
-		//
-		if (builder != null) {
-			//
-			builder.enable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY);
-			//
-		} // if
-			//
-		final ObjectMapper om = builder != null ? builder.build() : null;
-		//
-		if (om != null) {
-			//
-			om.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
-			//
-		} // if
-			//
-		Assertions.assertEquals("[{\"image\":null,\"type\":null}]", ObjectMapperUtil.writeValueAsString(om,
-				invoke(METHOD_GET_PITCH_ACCENTS, null, Collections.singleton(null))));
-		//
-	}
-
-	@Test
 	void testFilter() throws IllegalAccessException, InvocationTargetException {
 		//
 		final FailableStream<?> fs = new FailableStream<>(Stream.empty());
@@ -1513,30 +1461,6 @@ class JapanDictGuiTest {
 				//
 		} // for
 			//
-	}
-
-	@Test
-	void testGetFirstPixelColor() throws Throwable {
-		//
-		final int type = BufferedImage.TYPE_3BYTE_BGR;
-		//
-		Assertions.assertNull(getFirstPixelColor(new BufferedImage(2, 2, type), type, null));
-		//
-	}
-
-	private static int[] getFirstPixelColor(final BufferedImage bi, final int type, final byte[] data)
-			throws Throwable {
-		try {
-			final Object obj = invoke(METHOD_GET_FIRST_PIXEL_COLOR, null, bi, type, data);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof int[] ints) {
-				return ints;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -1669,6 +1593,200 @@ class JapanDictGuiTest {
 		Assertions.assertNull(invoke(METHOD_SET_STROKE_IMAGE_AND_STROKE_WITH_NUMBER_IMAGE, null, dtm,
 				Narcissus.allocateInstance(CLASS_JAPAN_DICT_ENTRY)));
 		//
+	}
+
+	@Test
+	void testJapanDictEntrySupplier() throws Throwable {
+		//
+		final Class<?> clz = Util.forName("org.springframework.context.support.JapanDictGui$JapanDictEntrySupplier");
+		//
+		final Method[] ms = Util.getDeclaredMethods(clz);
+		//
+		Method m = null;
+		//
+		final int type = BufferedImage.TYPE_3BYTE_BGR;
+		//
+		final BufferedImage bi = new BufferedImage(2, 2, type);
+		//
+		final Color red = Color.RED;
+		//
+		if (red != null) {
+			//
+			bi.setRGB(1, 1, red.getRGB());
+			//
+		} // if
+			//
+		int[] firstPixelColor = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if (Boolean.logicalAnd(Objects.equals(Util.getName(m = ArrayUtils.get(ms, i)), "getFirstPixelColor"),
+					Arrays.equals(Util.getParameterTypes(m),
+							new Class<?>[] { BufferedImage.class, Integer.TYPE, byte[].class }))) {
+				//
+				firstPixelColor = Util.cast(int[].class,
+						Narcissus.invokeStaticMethod(m, bi, type,
+								Util.cast(byte[].class, Narcissus.invokeStaticMethod(
+										JapanDictGui.class.getDeclaredMethod("getData", DataBufferByte.class),
+										Narcissus.invokeStaticMethod(
+												JapanDictGui.class.getDeclaredMethod("getDataBuffer", Raster.class),
+												bi.getRaster())))));
+				//
+			} // if
+				//
+		} // if
+			//
+		Object[] os = null;
+		//
+		String toString = null;
+		//
+		Object object = null, result = null;
+		//
+		Collection<Object> collection = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
+		Class<?> parameterType = null;
+		//
+		int parameterCount = 0;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
+				//
+				continue;
+				//
+			} // if
+				//
+				// null
+				//
+			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
+			//
+			parameterTypes = m.getParameterTypes();
+			//
+			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
+				//
+				if (Objects.equals(parameterType = ArrayUtils.get(parameterTypes, j), Integer.TYPE)) {
+					//
+					Util.add(collection, Integer.valueOf(0));
+					//
+				} else {
+					//
+					Util.add(collection, null);
+					//
+				} // if
+					//
+			} // for
+				//
+			os = toArray(collection);
+			//
+			toString = Util.toString(m);
+			//
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				//
+			} else {
+				//
+				result = Narcissus.invokeMethod(
+						object = ObjectUtils.getIfNull(object, () -> Narcissus.allocateInstance(clz)), m, os);
+				//
+				if (Boolean.logicalAnd(Objects.equals(Util.getName(m), "get"), parameterCount == 0)) {
+					//
+					Assertions.assertNotNull(result, toString);
+					//
+				} else {
+					//
+					Assertions.assertNull(result, toString);
+					//
+				} // if
+					//
+			} // if
+				//
+				// non-null
+				//
+			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
+			//
+			parameterTypes = m.getParameterTypes();
+			//
+			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
+				//
+				if (isInterface(parameterType = ArrayUtils.get(parameterTypes, j))) {
+					//
+					Util.add(collection, Reflection.newProxy(parameterType, ih = ObjectUtils.getIfNull(ih, IH::new)));
+					//
+				} else if (Objects.equals(parameterType, int[].class)) {
+					//
+					Util.add(collection, new int[] {});
+					//
+				} else if (Objects.equals(parameterType, Integer.TYPE)) {
+					//
+					Util.add(collection, Integer.valueOf(0));
+					//
+				} else {
+					//
+					Util.add(collection, null);
+					//
+				} // if
+					//
+			} // for
+				//
+			os = toArray(collection);
+			//
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				//
+			} else {
+				//
+				result = Narcissus.invokeMethod(
+						object = ObjectUtils.getIfNull(object, () -> Narcissus.allocateInstance(clz)), m, os);
+				//
+				if (Boolean.logicalAnd(Objects.equals(Util.getName(m), "get"), parameterCount == 0)) {
+					//
+					Assertions.assertNotNull(result, toString);
+					//
+				} else {
+					//
+					Assertions.assertNull(result, toString);
+					//
+				} // if
+					//
+			} // if
+				//
+				// org.springframework.context.support.JapanDictGui.JapanDictEntrySupplier$chopImage(java.awt.image.BufferedImage,int[])
+				//
+			if (Boolean.logicalAnd(Objects.equals(Util.getName(m), "chopImage"),
+					Arrays.equals(parameterTypes, new Class<?>[] { BufferedImage.class, int[].class }))) {
+				//
+				Assertions.assertSame(bi, Narcissus.invokeStaticMethod(m, bi, firstPixelColor));
+				//
+			} else if (Boolean.logicalAnd(Objects.equals(Util.getName(m), "getPitchAccents"),
+					Arrays.equals(parameterTypes, new Class<?>[] { Iterable.class }))) {// org.springframework.context.support.JapanDictGui.JapanDictEntrySupplier$getPitchAccents(java.lang.Iterable)
+				//
+				final Builder builder = JsonMapper.builder();
+				//
+				if (builder != null) {
+					//
+					builder.enable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY);
+					//
+				} // if
+					//
+				final ObjectMapper om = builder != null ? builder.build() : null;
+				//
+				if (om != null) {
+					//
+					om.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
+					//
+				} // if
+					//
+				Assertions.assertEquals("[{\"image\":null,\"type\":null}]", ObjectMapperUtil.writeValueAsString(om,
+						Narcissus.invokeStaticMethod(m, Collections.singleton(null))));
+				//
+			} // if
+				//
+		} // for
+			//
 	}
 
 }

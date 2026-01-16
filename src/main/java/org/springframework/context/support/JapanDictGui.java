@@ -2724,7 +2724,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				// Stroke Image
 				//
-				result.strokeImage = chopImage(getStrokeImage(japanDictGui, page, japanDictEntry));
+				result.strokeImage = JapanDictGui.chopImage(getStrokeImage(japanDictGui, page, japanDictEntry));
 				//
 			} catch (final IOException | InterruptedException ex) {
 				//
@@ -2733,6 +2733,181 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			} // try
 				//
 			return result;
+			//
+		}
+
+		private static BufferedImage chopImage(final BufferedImage instance, final int[] color) {
+			//
+			final byte[] data = getData(Util.cast(DataBufferByte.class, getDataBuffer(getRaster(instance))));
+			//
+			int pixelIndex = 0;
+			//
+			final int width = getWidth(instance);
+			//
+			int[] xs = null, ys = null;
+			//
+			for (int x = 0; color != null && data != null && instance != null && x < width; x++) {
+				//
+				for (int y = 0; y < instance.getHeight(); y++) {
+					//
+					if (Arrays.equals(color,
+							new int[] { data[pixelIndex = (y * width + x) * 3/* 3 bytes per pixel */] & 0xff// blue
+									, data[pixelIndex + 1] & 0xff// green
+									, data[pixelIndex + 2]// red
+							})) {
+						//
+						continue;
+						//
+					} // if
+						//
+					xs = getMinMax(xs, x);
+					//
+					ys = getMinMax(ys, y);
+					//
+				} // for
+					//
+			} // for
+				//
+			return xs != null && xs.length > 1 && ys != null && ys.length > 1
+					? instance.getSubimage(xs[0], ys[0], xs[1] - xs[0], ys[1] - ys[0] + 1)
+					: instance;
+			//
+		}
+
+		private static int[] getFirstPixelColor(final BufferedImage bi, final int type, final byte[] data) {
+			//
+			int[] color = null;
+			//
+			final int width = getWidth(bi);
+			//
+			int pixelIndex = 0;
+			//
+			for (int x = 0; bi != null && bi.getType() == type && x < width; x++) {
+				//
+				if (color != null) {
+					//
+					break;
+					//
+				} // if
+					//
+				for (int y = 0; y < bi.getHeight(); y++) {
+					//
+					if (color == null) {
+						//
+						color = data != null
+								? new int[] { data[pixelIndex = (y * width + x) * 3/* 3 bytes per pixel */] & 0xff// blue
+										, data[pixelIndex + 1] & 0xff// green
+										, data[pixelIndex + 2]// red
+
+								}
+								: null;
+						//
+						break;
+						//
+					} // if
+						//
+				} // for
+					//
+			} // for
+				//
+			return color;
+			//
+		}
+
+		private static Iterable<PitchAccent> getPitchAccents(final Iterable<ElementHandle> iterable) {
+			//
+			ElementHandle eh = null;
+			//
+			Iterable<ElementHandle> ehs = null;
+			//
+			PitchAccent pa = null;
+			//
+			Collection<PitchAccent> collection = null;
+			//
+			for (int i = 0; i < IterableUtils.size(iterable); i++) {
+				//
+				final BoundingBox boundingBox = boundingBox(Util.cast(ElementHandle.class,
+						testAndApply(CollectionUtils::isNotEmpty,
+								ElementHandleUtil.querySelectorAll(eh = IterableUtils.get(iterable, i), "div"),
+								y -> IterableUtils.get(y, 0), null)));
+				//
+				try {
+					//
+					if (StringsUtil.contains(Strings.CS, ElementHandleUtil.getAttribute(eh, "class"), "flex-colum")) {
+						//
+						(pa = new PitchAccent()).image = testAndApply(
+								x -> startsWith(Strings.CS,
+										getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch,
+												null)),
+										"image/"),
+								ElementHandleUtil.screenshot(testAndApply(CollectionUtils::isNotEmpty,
+										ElementHandleUtil.querySelectorAll(eh, "div"), x -> IterableUtils.get(x, 0),
+										null)),
+								x -> toBufferedImage(x), null);
+						//
+					} else {
+						//
+						(pa = new PitchAccent()).image = testAndApply(
+								x -> startsWith(Strings.CS,
+										getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch,
+												null)),
+										"image/"),
+								ElementHandleUtil.screenshot(eh), x -> JapanDictGui.chopImage(x, boundingBox), null);
+						//
+					} // if
+						//
+				} catch (final IOException e) {
+					//
+					TaskDialogs.showException(e);
+					//
+				} // try
+					//
+				if (IterableUtils.size(ehs = ElementHandleUtil.querySelectorAll(eh, "[data-bs-content]")) == 1) {
+					//
+					pa.type = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+							ElementUtil.select(
+									testAndApply(Objects::nonNull,
+											ElementHandleUtil.getAttribute(IterableUtils.get(ehs, 0),
+													"data-bs-content"),
+											x -> Jsoup.parse(x, ""), null),
+									"p span[class='h5']"),
+							x -> IterableUtils.get(x, 0), null));
+					//
+				} else {
+					//
+					final Stream<ElementHandle> stream = testAndApply(Objects::nonNull, Util.spliterator(ehs),
+							x -> StreamSupport.stream(x, false), null);
+					//
+					final Iterable<String> ss = Util.toList(Util.distinct(Util.map(stream,
+							x -> ElementUtil.text(testAndApply(y -> IterableUtils.size(y) == 1,
+									ElementUtil.select(
+											Jsoup.parse(ElementHandleUtil.getAttribute(x, "data-bs-content"), ""),
+											"p span[class='h5']"),
+									y -> IterableUtils.get(y, 0), null)))));
+					//
+					testAndRun(IterableUtils.size(ss) > 1, () -> {
+						//
+						throw new IllegalStateException();
+						//
+					});
+					//
+					testAndAccept((a, b) -> IterableUtils.size(b) == 1, pa, ss, (a, b) -> {
+						//
+						if (a != null) {
+							//
+							a.type = IterableUtils.get(b, 0);
+							//
+						} // if
+							//
+					});
+					//
+				} // if
+					//
+				Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), pa);
+				//
+			} // for
+				//
+			return collection;
 			//
 		}
 
@@ -2794,45 +2969,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	}
 
-	@Nullable
-	private static BufferedImage chopImage(@Nullable final BufferedImage instance, @Nullable final int[] color) {
-		//
-		final byte[] data = getData(Util.cast(DataBufferByte.class, getDataBuffer(getRaster(instance))));
-		//
-		int pixelIndex = 0;
-		//
-		final int width = getWidth(instance);
-		//
-		int[] xs = null, ys = null;
-		//
-		for (int x = 0; color != null && data != null && instance != null && x < width; x++) {
-			//
-			for (int y = 0; y < instance.getHeight(); y++) {
-				//
-				if (Arrays.equals(color,
-						new int[] { data[pixelIndex = (y * width + x) * 3/* 3 bytes per pixel */] & 0xff// blue
-								, data[pixelIndex + 1] & 0xff// green
-								, data[pixelIndex + 2]// red
-						})) {
-					//
-					continue;
-					//
-				} // if
-					//
-				xs = getMinMax(xs, x);
-				//
-				ys = getMinMax(ys, y);
-				//
-			} // for
-				//
-		} // for
-			//
-		return xs != null && xs.length > 1 && ys != null && ys.length > 1
-				? instance.getSubimage(xs[0], ys[0], xs[1] - xs[0], ys[1] - ys[0] + 1)
-				: instance;
-		//
-	}
-
 	private static int[] getMinMax(@Nullable final int[] ints, final int i) {
 		//
 		if (ints == null || ints.length == 0 || (ints.length == 1 && i > ints[ints.length - 1])) {
@@ -2850,48 +2986,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // if
 			//
 		return ints;
-		//
-	}
-
-	@Nullable
-	private static int[] getFirstPixelColor(@Nullable final BufferedImage bi, final int type,
-			@Nullable final byte[] data) {
-		//
-		int[] color = null;
-		//
-		final int width = getWidth(bi);
-		//
-		int pixelIndex = 0;
-		//
-		for (int x = 0; bi != null && bi.getType() == type && x < width; x++) {
-			//
-			if (color != null) {
-				//
-				break;
-				//
-			} // if
-				//
-			for (int y = 0; y < bi.getHeight(); y++) {
-				//
-				if (color == null) {
-					//
-					color = data != null
-							? new int[] { data[pixelIndex = (y * width + x) * 3/* 3 bytes per pixel */] & 0xff// blue
-									, data[pixelIndex + 1] & 0xff// green
-									, data[pixelIndex + 2]// red
-
-							}
-							: null;
-					//
-					break;
-					//
-				} // if
-					//
-			} // for
-				//
-		} // for
-			//
-		return color;
 		//
 	}
 
@@ -2989,100 +3083,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // for
 			//
 		return result;
-		//
-	}
-
-	private static Iterable<PitchAccent> getPitchAccents(final Iterable<ElementHandle> iterable) {
-		//
-		ElementHandle eh = null;
-		//
-		Iterable<ElementHandle> ehs = null;
-		//
-		PitchAccent pa = null;
-		//
-		Collection<PitchAccent> collection = null;
-		//
-		for (int i = 0; i < IterableUtils.size(iterable); i++) {
-			//
-			final BoundingBox boundingBox = boundingBox(Util.cast(ElementHandle.class,
-					testAndApply(CollectionUtils::isNotEmpty,
-							ElementHandleUtil.querySelectorAll(eh = IterableUtils.get(iterable, i), "div"),
-							y -> IterableUtils.get(y, 0), null)));
-			//
-			try {
-				//
-				if (StringsUtil.contains(Strings.CS, ElementHandleUtil.getAttribute(eh, "class"), "flex-colum")) {
-					//
-					(pa = new PitchAccent()).image = testAndApply(
-							x -> startsWith(Strings.CS,
-									getMimeType(
-											testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)),
-									"image/"),
-							ElementHandleUtil.screenshot(testAndApply(CollectionUtils::isNotEmpty,
-									ElementHandleUtil.querySelectorAll(eh, "div"), x -> IterableUtils.get(x, 0), null)),
-							x -> toBufferedImage(x), null);
-					//
-				} else {
-					//
-					(pa = new PitchAccent()).image = testAndApply(x -> startsWith(Strings.CS,
-							getMimeType(testAndApply(Objects::nonNull, x, new ContentInfoUtil()::findMatch, null)),
-							"image/"), ElementHandleUtil.screenshot(eh), x -> chopImage(x, boundingBox), null);
-					//
-				} // if
-					//
-			} catch (final IOException e) {
-				//
-				TaskDialogs.showException(e);
-				//
-			} // try
-				//
-			if (IterableUtils.size(ehs = ElementHandleUtil.querySelectorAll(eh, "[data-bs-content]")) == 1) {
-				//
-				pa.type = ElementUtil
-						.text(testAndApply(x -> IterableUtils.size(x) == 1,
-								ElementUtil.select(
-										testAndApply(Objects::nonNull,
-												ElementHandleUtil.getAttribute(IterableUtils.get(ehs, 0),
-														"data-bs-content"),
-												x -> Jsoup.parse(x, ""), null),
-										"p span[class='h5']"),
-								x -> IterableUtils.get(x, 0), null));
-				//
-			} else {
-				//
-				final Stream<ElementHandle> stream = testAndApply(Objects::nonNull, Util.spliterator(ehs),
-						x -> StreamSupport.stream(x, false), null);
-				//
-				final Iterable<String> ss = Util.toList(Util.distinct(Util.map(stream,
-						x -> ElementUtil.text(testAndApply(y -> IterableUtils.size(y) == 1,
-								ElementUtil.select(
-										Jsoup.parse(ElementHandleUtil.getAttribute(x, "data-bs-content"), ""),
-										"p span[class='h5']"),
-								y -> IterableUtils.get(y, 0), null)))));
-				//
-				testAndRun(IterableUtils.size(ss) > 1, () -> {
-					//
-					throw new IllegalStateException();
-					//
-				});
-				//
-				testAndAccept((a, b) -> IterableUtils.size(b) == 1, pa, ss, (a, b) -> {
-					//
-					if (a != null) {
-						//
-						a.type = IterableUtils.get(b, 0);
-						//
-					} // if
-						//
-				});
-				//
-			} // if
-				//
-			Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), pa);
-			//
-		} // for
-			//
-		return collection;
 		//
 	}
 
