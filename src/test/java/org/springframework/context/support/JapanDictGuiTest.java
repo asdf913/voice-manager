@@ -1820,12 +1820,11 @@ class JapanDictGuiTest {
 	@Test
 	void testCopyField() throws Throwable {
 		//
-		Assertions
-				.assertNull(invoke(METHOD_COPY_FIELD, null, japanDictEntry, japanDictEntry,
-						Util.getName(testAndApply(
-								x -> !IterableUtils.isEmpty(x), testAndApply(Objects::nonNull,
-										Util.getClass(japanDictEntry), FieldUtils::getAllFieldsList, null),
-								x -> IterableUtils.get(x, ZERO), null))));
+		final Field field = testAndApply(x -> !IterableUtils.isEmpty(x),
+				testAndApply(Objects::nonNull, Util.getClass(japanDictEntry), FieldUtils::getAllFieldsList, null),
+				x -> IterableUtils.get(x, ZERO), null);
+		//
+		Assertions.assertNull(invoke(METHOD_COPY_FIELD, null, japanDictEntry, japanDictEntry, Util.getName(field)));
 		//
 	}
 
