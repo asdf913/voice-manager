@@ -2643,7 +2643,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	private static void setStrokeImageAndStrokeWithNumberImage(final DefaultTableModel dtm,
-			final JapanDictEntry japanDictEntry) {
+			@Nullable final JapanDictEntry japanDictEntry) {
 		//
 		JapanDictEntry temp = null;
 		//
