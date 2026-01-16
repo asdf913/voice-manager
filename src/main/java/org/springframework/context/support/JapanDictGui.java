@@ -735,6 +735,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return instance != null ? instance.getId() : null;
 		}
 
+		private void setStrokeWithNumberImage(final BufferedImage strokeWithNumberImage) {
+			this.strokeWithNumberImage = strokeWithNumberImage;
+		}
+
+		private static void setStrokeWithNumberImage(final JapanDictEntry instance,
+				final BufferedImage strokeWithNumberImage) {
+			if (instance != null) {
+				instance.setStrokeWithNumberImage(strokeWithNumberImage);
+			}
+		}
+
 	}
 
 	@Override
@@ -865,12 +876,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					thenAcceptAsync(CompletableFuture.supplyAsync(supplier), x -> {
 						//
-						if (japanDictEntry != null) {
-							//
-							japanDictEntry.strokeWithNumberImage = x;
-							//
-						} // if
-							//
+						JapanDictEntry.setStrokeWithNumberImage(japanDictEntry, x);
+						//
 					});
 					//
 				} catch (final Exception ex) {
@@ -2620,7 +2627,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			supplier.japanDictGui = instance;
 			//
-			entry.strokeWithNumberImage = Util.get(supplier);
+			JapanDictEntry.setStrokeWithNumberImage(entry, Util.get(supplier));
 			//
 		}, consumer);
 		//
