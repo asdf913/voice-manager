@@ -268,14 +268,10 @@ class JapanDictGuiTest {
 			//
 			final String name = Util.getName(method);
 			//
-			if (proxy instanceof FailableBiConsumer) {
+			if (proxy instanceof FailableBiConsumer && Objects.equals(name, "accept") && throwable != null) {
 				//
-				if (Objects.equals(name, "accept") && throwable != null) {
-					//
-					throw throwable;
-					//
-				} // if
-					//
+				throw throwable;
+				//
 			} // if
 				//
 			if (Objects.equals(Util.getReturnType(method), Void.TYPE)) {
