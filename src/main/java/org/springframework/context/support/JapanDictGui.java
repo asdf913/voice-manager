@@ -2972,7 +2972,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	@Nullable
 	private static BufferedImage getStrokeImage(final JapanDictGui instance, final Page page,
-			final JapanDictEntry japanDictEntry) throws IOException, InterruptedException {
+			@Nullable final JapanDictEntry japanDictEntry) throws IOException, InterruptedException {
 		//
 		final String id = japanDictEntry != null ? japanDictEntry.id : null;
 		//
