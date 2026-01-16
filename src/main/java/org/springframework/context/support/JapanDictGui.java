@@ -893,7 +893,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static int sum(final IntStream instance) {
+	private static int sum(@Nullable final IntStream instance) {
 		return instance != null ? instance.sum() : 0;
 	}
 
