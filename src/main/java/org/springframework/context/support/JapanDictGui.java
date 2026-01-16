@@ -747,6 +747,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			}
 		}
 
+		private BufferedImage getStrokeWithNumberImage() {
+			return strokeWithNumberImage;
+		}
+
+		private static BufferedImage getStrokeWithNumberImage(final JapanDictEntry instance) {
+			return instance != null ? instance.getStrokeWithNumberImage() : null;
+		}
 	}
 
 	@Override
@@ -905,8 +912,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						//
 						thenAcceptAsync(CompletableFuture.supplyAsync(srokeWithNumberImageSupplier), x -> {
 							//
-							JapanDictEntry.setStrokeWithNumberImage(japanDictEntry, ObjectUtils.getIfNull(
-									japanDictEntry != null ? japanDictEntry.strokeWithNumberImage : null, x));
+							JapanDictEntry.setStrokeWithNumberImage(japanDictEntry,
+									ObjectUtils.getIfNull(JapanDictEntry.getStrokeWithNumberImage(japanDictEntry), x));
 							//
 							setStrokeImageAndStrokeWithNumberImage(dtm, japanDictEntry);
 							//
@@ -2609,7 +2616,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		// Stroke With Number Image
 		//
-		testAndRun(entry.strokeWithNumberImage == null, () -> {
+		testAndRun(JapanDictEntry.getStrokeWithNumberImage(entry) == null, () -> {
 			//
 			final StrokeWithNumberImageSupplier supplier = new StrokeWithNumberImageSupplier();
 			//
@@ -2626,16 +2633,18 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			supplier.japanDictGui = instance;
 			//
 			JapanDictEntry.setStrokeWithNumberImage(entry,
-					ObjectUtils.getIfNull(entry != null ? entry.strokeWithNumberImage : null, Util.get(supplier)));
+					ObjectUtils.getIfNull(JapanDictEntry.getStrokeWithNumberImage(entry), Util.get(supplier)));
 			//
 			setStrokeImageAndStrokeWithNumberImage(instance.dtm, entry);
 			//
 		}, consumer);
 		//
-		Util.setIcon(instance.strokeWithNumberImage, testAndApply(Objects::nonNull,
-				instance.strokeWithNumberBufferedImage = entry.strokeWithNumberImage, ImageIcon::new, null));
+		Util.setIcon(instance.strokeWithNumberImage,
+				testAndApply(Objects::nonNull,
+						instance.strokeWithNumberBufferedImage = JapanDictEntry.getStrokeWithNumberImage(entry),
+						ImageIcon::new, null));
 		//
-		setEnabled(entry.strokeWithNumberImage != null, instance.btnCopyStrokeWithNumberImage,
+		setEnabled(JapanDictEntry.getStrokeWithNumberImage(entry) != null, instance.btnCopyStrokeWithNumberImage,
 				instance.btnSaveStrokeWithNumberImage);
 		//
 		pack(instance.window);
@@ -2654,8 +2663,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				temp.strokeImage = ObjectUtils.getIfNull(temp.strokeImage, japanDictEntry.strokeImage);
 				//
-				temp.strokeWithNumberImage = ObjectUtils.getIfNull(temp.strokeWithNumberImage,
-						japanDictEntry.strokeWithNumberImage);
+				JapanDictEntry.setStrokeWithNumberImage(temp,
+						ObjectUtils.getIfNull(JapanDictEntry.getStrokeWithNumberImage(temp),
+								JapanDictEntry.getStrokeWithNumberImage(japanDictEntry)));
 				//
 			} // if
 				//
@@ -2679,7 +2689,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			final String pageUrl = japanDictEntry != null ? japanDictEntry.pageUrl : null;
 			//
 			try (final Playwright playwright = testAndGet(
-					japanDictEntry != null && japanDictEntry.strokeWithNumberImage == null, Playwright::create);
+					japanDictEntry != null && JapanDictEntry.getStrokeWithNumberImage(japanDictEntry) == null,
+					Playwright::create);
 					final Browser browser = testAndApply(
 							Predicates.always(UrlValidatorUtil.isValid(UrlValidator.getInstance(), pageUrl)),
 							playwright,
@@ -2928,7 +2939,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			final String pageUrl = japanDictEntry != null ? japanDictEntry.pageUrl : null;
 			//
 			try (final Playwright playwright = testAndGet(
-					japanDictEntry != null && japanDictEntry.strokeWithNumberImage == null, Playwright::create);
+					japanDictEntry != null && JapanDictEntry.getStrokeWithNumberImage(japanDictEntry) == null,
+					Playwright::create);
 					final Browser browser = testAndApply(
 							Predicates.always(UrlValidatorUtil.isValid(UrlValidator.getInstance(), pageUrl)),
 							playwright,
