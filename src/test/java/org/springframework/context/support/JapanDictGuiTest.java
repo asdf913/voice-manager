@@ -36,6 +36,7 @@ import java.util.function.IntFunction;
 import java.util.function.LongPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
@@ -257,7 +258,7 @@ class JapanDictGuiTest {
 
 		private Boolean test, booleanValue;
 
-		private Integer size, length, columnCount;
+		private Integer size, length, columnCount, sum;
 
 		private int[] selectedIndices;
 
@@ -384,6 +385,14 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof IntStream) {
+				//
+				if (Objects.equals(name, "sum")) {
+					//
+					return sum;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -633,7 +642,7 @@ class JapanDictGuiTest {
 						//
 						ih.test = Boolean.FALSE;
 						//
-						ih.size = ih.length = ih.columnCount = Integer.valueOf(0);
+						ih.size = ih.length = ih.columnCount = ih.sum = Integer.valueOf(0);
 						//
 					} // if
 						//

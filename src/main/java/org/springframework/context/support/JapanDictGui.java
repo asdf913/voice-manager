@@ -801,7 +801,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			final Dimension preferredSize = Util.getPreferredSize(jTable);
 			//
 			setPreferredScrollableViewportSize(jTable, new Dimension((int) getWidth(preferredSize),
-					(int) Math.min(Util.map(IntStream.range(0, Util.getRowCount(dtm)), x ->
+					(int) Math.min(sum(Util.map(IntStream.range(0, Util.getRowCount(dtm)), x ->
 					//
 					Math.max(getRowHeight(jTable),
 							Util.orElse(
@@ -811,7 +811,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 															jTable, getCellRenderer(jTable, x, column), x, column))))),
 									0))
 					//
-					).sum(), getHeight(preferredSize))));
+					)), getHeight(preferredSize))));
 			//
 			testAndRun(Boolean.logicalAnd(Util.getRowCount(dtm) == 1, getColumnCount(dtm) > 0),
 					() -> setRowSelectionInterval(jTable, 0, 0));
@@ -891,6 +891,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // for
 			//
+	}
+
+	private static int sum(final IntStream instance) {
+		return instance != null ? instance.sum() : 0;
 	}
 
 	private static <T> void thenAcceptAsync(final CompletableFuture<T> instance, final Consumer<T> consumer) {
