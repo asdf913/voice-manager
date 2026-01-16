@@ -949,8 +949,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, final T t,
-			final U u, final FailableBiConsumer<T, U, E> failableConsumer, final Consumer<Throwable> consumer) {
+	private static <T, U, E extends Exception> void testAndAccept(final BiPredicate<T, U> instance, final T t,
+			final U u, final FailableBiConsumer<T, U, E> failableConsumer, final Consumer<Exception> consumer) {
 		//
 		if (Util.test(instance, t, u)) {
 			//
@@ -958,7 +958,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				FailableBiConsumerUtil.accept(failableConsumer, t, u);
 				//
-			} catch (final Throwable ex) {
+			} catch (final Exception ex) {
 				//
 				Util.accept(consumer, ex);
 				//
