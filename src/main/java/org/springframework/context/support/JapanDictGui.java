@@ -2632,6 +2632,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		private Function<Playwright, BrowserType> browserTypeFunction = null;
 
 		@Override
+		@Nullable
 		public BufferedImage get() {
 			//
 			final String pageUrl = japanDictEntry != null ? japanDictEntry.pageUrl : null;
