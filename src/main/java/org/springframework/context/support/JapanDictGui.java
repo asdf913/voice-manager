@@ -2967,6 +2967,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							//
 					});
 					//
+					if (StringUtils.isBlank(pa.type) && pa.image != null) {
+						//
+						final BufferedImage bi = pa.image;
+						//
+						pa.image = chopImage(bi, getFirstPixelColor(bi, bi.getType(),
+								getData(Util.cast(DataBufferByte.class, getDataBuffer(getRaster(bi))))));
+						//
+					} // if
+						//
 				} // if
 					//
 				Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), pa);
