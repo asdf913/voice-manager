@@ -943,7 +943,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					x -> StreamSupport.stream(x, false), null);
 			//
 			final Iterable<String> idIterable = Util
-					.toList(Util.map(stream, x -> testAndApply(y -> Util.matches(y) && Util.groupCount(y) > 0,
+					.toList(Util.map(stream, x -> testAndApply(y -> and(Util.matches(y), () -> Util.groupCount(y) > 0),
 							Util.matcher(pattern, NodeUtil.attr(x, "id")), y -> Util.group(y, 1), null)));
 			//
 			Iterable<Element> es2 = null;
