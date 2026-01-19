@@ -575,11 +575,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static TableColumnModel getColumnModel(final JTable instance) {
+	private static TableColumnModel getColumnModel(@Nullable final JTable instance) {
 		return instance != null ? instance.getColumnModel() : null;
 	}
 
-	private static TableColumn getColumn(final TableColumnModel instance, final int columnIndex) {
+	private static TableColumn getColumn(@Nullable final TableColumnModel instance, final int columnIndex) {
 		return instance != null ? instance.getColumn(columnIndex) : null;
 	}
 
