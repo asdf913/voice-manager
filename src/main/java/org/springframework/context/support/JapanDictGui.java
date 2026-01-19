@@ -305,6 +305,16 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private BufferedImage image = null;
 
+		private void setType(final String type) {
+			this.type = type;
+		}
+
+		private static void setType(final PitchAccent instance, final String type) {
+			if (instance != null) {
+				instance.setType(type);
+			}
+		}
+
 	}
 
 	private transient MutableComboBoxModel<PitchAccent> mcbmPitchAccent = null;
@@ -2930,14 +2940,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 				if (IterableUtils.size(ehs = ElementHandleUtil.querySelectorAll(eh, "[data-bs-content]")) == 1) {
 					//
-					pa.type = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-							ElementUtil.select(
-									testAndApply(Objects::nonNull,
-											ElementHandleUtil.getAttribute(IterableUtils.get(ehs, 0),
-													"data-bs-content"),
-											x -> Jsoup.parse(x, ""), null),
-									"p span[class='h5']"),
-							x -> IterableUtils.get(x, 0), null));
+					PitchAccent.setType(pa,
+							ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+									ElementUtil.select(
+											testAndApply(Objects::nonNull,
+													ElementHandleUtil.getAttribute(IterableUtils.get(ehs, 0),
+															"data-bs-content"),
+													x -> Jsoup.parse(x, ""), null),
+											"p span[class='h5']"),
+									x -> IterableUtils.get(x, 0), null)));
 					//
 				} else {
 					//
@@ -2959,12 +2970,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					testAndAccept((a, b) -> IterableUtils.size(b) == 1, pa, ss, (a, b) -> {
 						//
-						if (a != null) {
-							//
-							a.type = IterableUtils.get(b, 0);
-							//
-						} // if
-							//
+						PitchAccent.setType(a, IterableUtils.get(b, 0));
+						//
 					});
 					//
 					if (StringUtils.isBlank(pa.type) && pa.image != null) {

@@ -105,7 +105,7 @@ class JapanDictGuiTest {
 
 	private static final int ONE = 1;
 
-	private static Class<?> CLASS_JAPAN_DICT_ENTRY = null;
+	private static Class<?> CLASS_JAPAN_DICT_ENTRY, CLASS_PITCH_ACCENT;
 
 	private static Method METHOD_TEST_AND_GET, METHOD_SET_TEXT, METHOD_STARTS_WITH, METHOD_APPEND,
 			METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG, METHOD_TEST_AND_ACCEPT5,
@@ -255,6 +255,8 @@ class JapanDictGuiTest {
 		//
 		(METHOD_COPY_FIELD = Util.getDeclaredMethod(clz, "copyField", Object.class, Object.class, String.class))
 				.setAccessible(true);
+		//
+		CLASS_PITCH_ACCENT = Util.forName("org.springframework.context.support.JapanDictGui$PitchAccent");
 		//
 	}
 
@@ -433,9 +435,9 @@ class JapanDictGuiTest {
 
 	private IH ih = null;
 
-	private Object japanDictEntry;
-
 	private ObjectMapper objectMapper;
+
+	private Object japanDictEntry, pitchAccent;
 
 	@BeforeEach
 	void beforeEach() {
@@ -444,9 +446,11 @@ class JapanDictGuiTest {
 		//
 		ih = new IH();
 		//
+		objectMapper = new ObjectMapper();
+		//
 		japanDictEntry = Narcissus.allocateInstance(CLASS_JAPAN_DICT_ENTRY);
 		//
-		objectMapper = new ObjectMapper();
+		pitchAccent = Narcissus.allocateInstance(CLASS_PITCH_ACCENT);
 		//
 	}
 
@@ -1354,9 +1358,6 @@ class JapanDictGuiTest {
 			//
 		Assertions.assertNull(lcr.getListCellRendererComponent(null, null, ZERO, false, false));
 		//
-		final Object pitchAccent = Narcissus
-				.allocateInstance(Class.forName("org.springframework.context.support.JapanDictGui$PitchAccent"));
-		//
 		final Method getListCellRendererComponent = ListCellRenderer.class.getDeclaredMethod(
 				"getListCellRendererComponent", JList.class, Object.class, Integer.TYPE, Boolean.TYPE, Boolean.TYPE);
 		//
@@ -1826,6 +1827,75 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertNull(invoke(METHOD_COPY_FIELD, null, japanDictEntry, japanDictEntry, Util.getName(field)));
 		//
+	}
+
+	@Test
+	void testPitchAccent() throws Throwable {
+		//
+		final Method[] ms = Util.getDeclaredMethods(CLASS_PITCH_ACCENT);
+		//
+		Method m = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
+		Collection<Object> collection = null;
+		//
+		Object[] os = null;
+		//
+		String toString = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
+				//
+				continue;
+				//
+			} // if
+				//
+				// null
+				//
+			os = toArray(Collections.nCopies(m.getParameterCount(), null));
+			//
+			toString = Util.toString(m);
+			//
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(Narcissus.invokeMethod(pitchAccent = ObjectUtils.getIfNull(pitchAccent,
+						() -> Narcissus.allocateInstance(CLASS_PITCH_ACCENT)), m, os), toString);
+				//
+			} // if
+				//
+				// non-null
+				//
+			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
+			//
+			parameterTypes = m.getParameterTypes();
+			//
+			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
+				//
+				Util.add(collection, Narcissus.allocateInstance(ArrayUtils.get(parameterTypes, j)));
+				//
+			} // for
+				//
+			os = toArray(collection);
+			//
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(Narcissus.invokeMethod(pitchAccent = ObjectUtils.getIfNull(pitchAccent,
+						() -> Narcissus.allocateInstance(CLASS_PITCH_ACCENT)), m, os), toString);
+				//
+			} // if
+				//
+		} // for
+			//
 	}
 
 }
