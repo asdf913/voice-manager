@@ -583,7 +583,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return instance != null ? instance.getColumn(columnIndex) : null;
 	}
 
-	private static void setMinWidth(final TableColumn instance, final int minWidth) {
+	private static void setMinWidth(@Nullable final TableColumn instance, final int minWidth) {
 		if (instance != null) {
 			instance.setMinWidth(minWidth);
 		}
