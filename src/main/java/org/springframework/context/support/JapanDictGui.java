@@ -2968,11 +2968,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						//
 					});
 					//
-					testAndAccept((a, b) -> IterableUtils.size(b) == 1, pa, ss, (a, b) -> {
-						//
-						PitchAccent.setType(a, IterableUtils.get(b, 0));
-						//
-					});
+					testAndAccept((a, b) -> IterableUtils.size(b) == 1, pa, ss,
+							(a, b) -> PitchAccent.setType(a, IterableUtils.get(b, 0)));
 					//
 					if (StringUtils.isBlank(pa.type) && pa.image != null) {
 						//
