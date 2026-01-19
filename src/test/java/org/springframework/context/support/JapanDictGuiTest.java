@@ -54,6 +54,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 
@@ -88,6 +89,7 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper.Builder;
 import com.google.common.base.Predicates;
+import com.google.common.collect.Multimap;
 import com.google.common.reflect.Reflection;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.ElementHandle;
@@ -237,7 +239,7 @@ class JapanDictGuiTest {
 		(METHOD_GET_JWT = Util.getDeclaredMethod(clz, "getJwt", Iterable.class, String.class)).setAccessible(true);
 		//
 		(METHOD_ADD_ROWS = Util.getDeclaredMethod(clz, "addRows", JapanDictGui.class, Iterable.class, String.class,
-				String.class)).setAccessible(true);
+				String.class, Multimap.class)).setAccessible(true);
 		//
 		(METHOD_GET_SELECTED_ROW = Util.getDeclaredMethod(clz, "getSelectedRow", JTable.class)).setAccessible(true);
 		//
@@ -403,6 +405,14 @@ class JapanDictGuiTest {
 				//
 				return sum;
 				//
+			} else if (proxy instanceof TableColumnModel) {
+				//
+				if (Objects.equals(name, "getColumn")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -525,7 +535,7 @@ class JapanDictGuiTest {
 						Boolean.logicalAnd(Objects.equals(name, "getJapanDictEntry"),
 								Arrays.equals(parameterTypes,
 										new Class<?>[] { Element.class, Pattern.class, Pattern.class,
-												ObjectMapper.class, Integer.TYPE, Map.class })),
+												ObjectMapper.class, Integer.TYPE, Map.class, Iterable.class })),
 						Boolean.logicalAnd(Objects.equals(name, "createTableCellRenderer"),
 								Arrays.equals(parameterTypes, new Class<?>[] { TableCellRenderer.class })),
 						Boolean.logicalAnd(Objects.equals(name, "createPitchAccentListCellRenderer"),
@@ -699,7 +709,7 @@ class JapanDictGuiTest {
 						Boolean.logicalAnd(Objects.equals(name, "getJapanDictEntry"),
 								Arrays.equals(parameterTypes,
 										new Class<?>[] { Element.class, Pattern.class, Pattern.class,
-												ObjectMapper.class, Integer.TYPE, Map.class })),
+												ObjectMapper.class, Integer.TYPE, Map.class, Iterable.class })),
 						Boolean.logicalAnd(Objects.equals(name, "getMinMax"),
 								Arrays.equals(parameterTypes, new Class<?>[] { int[].class, Integer.TYPE })),
 						Boolean.logicalAnd(Objects.equals(name, "chopImage"),
@@ -1425,13 +1435,13 @@ class JapanDictGuiTest {
 	@Test
 	void testAddRows() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(invoke(METHOD_ADD_ROWS, null, null, Collections.singleton(null), null, null));
+		Assertions.assertNull(invoke(METHOD_ADD_ROWS, null, null, Collections.singleton(null), null, null, null));
 		//
 		final Iterable<?> es = Collections.singleton(Narcissus.allocateInstance(Element.class));
 		//
-		Assertions.assertNull(invoke(METHOD_ADD_ROWS, null, null, es, null, null));
+		Assertions.assertNull(invoke(METHOD_ADD_ROWS, null, null, es, null, null, null));
 		//
-		Assertions.assertNull(invoke(METHOD_ADD_ROWS, null, instance, es, null, null));
+		Assertions.assertNull(invoke(METHOD_ADD_ROWS, null, instance, es, null, null, null));
 		//
 	}
 

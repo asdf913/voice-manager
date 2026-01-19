@@ -30,8 +30,10 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -89,6 +91,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.metal.MetalComboBoxUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 import javax.xml.parsers.DocumentBuilder;
@@ -134,6 +138,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.nodes.TextNodeUtil;
 import org.meeuw.functional.Predicates;
 import org.meeuw.functional.TriConsumer;
 import org.meeuw.functional.TriConsumerUtil;
@@ -149,6 +155,9 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.github.romankh3.image.comparison.ImageComparison;
 import com.github.romankh3.image.comparison.model.ImageComparisonResult;
 import com.github.romankh3.image.comparison.model.ImageComparisonState;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
@@ -319,6 +328,18 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private transient MutableComboBoxModel<PitchAccent> mcbmPitchAccent = null;
 
+	private static class Link {
+
+		private URL url;
+
+		private String text;
+
+	}
+
+	private JTable jTableLink = null;
+
+	private DefaultTableModel dtmLink = null;
+
 	private JapanDictGui() {
 	}
 
@@ -404,7 +425,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		jTable.setDefaultRenderer(Object.class, createTableCellRenderer(jTable.getDefaultRenderer(Object.class)));
 		//
-		final Dimension preferredSize = Util.getPreferredSize(jTable);
+		Dimension preferredSize = Util.getPreferredSize(jTable);
 		//
 		setPreferredScrollableViewportSize(jTable,
 				new Dimension((int) getWidth(preferredSize), (int) getHeight(preferredSize)));
@@ -497,7 +518,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, btnCopyStrokeImage = new JButton("Copy"), String.format("flowy,split %1$s", 2));
 		//
-		add(this, btnSaveStrokeImage = new JButton("Save"), String.format("%1$s,%2$s", growx, wrap));
+		add(this, btnSaveStrokeImage = new JButton("Save"), growx);
+		//
+		add(this, new JLabel(), wrap);
 		//
 		add(this, new JLabel("Stroke with Number"), String.format("span %1$s", 2));
 		//
@@ -505,7 +528,33 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, btnCopyStrokeWithNumberImage = new JButton("Copy"), String.format("flowy,split %1$s", 2));
 		//
-		add(this, btnSaveStrokeWithNumberImage = new JButton("Save"), String.format("%1$s,%2$s", growx, wrap));
+		add(this, btnSaveStrokeWithNumberImage = new JButton("Save"), growx);
+		//
+		add(this, new JLabel(), wrap);
+		//
+		add(this, new JLabel("Link"));
+		//
+		add(this, new JScrollPane(
+				jTableLink = new JTable(dtmLink = new DefaultTableModel(new Object[] { "Text", "URL" }, 0)) {
+
+					@Override
+					public boolean isCellEditable(final int row, final int column) {
+						return false;
+					}
+
+				}), String.format("span %1$s", 12));
+		//
+		jTableLink.setDefaultRenderer(Object.class,
+				createTableCellRenderer(jTableLink.getDefaultRenderer(Object.class)));
+		//
+		final TableColumnModel tcm = getColumnModel(jTableLink);
+		//
+		setMinWidth(getColumn(tcm, 0), 87);
+		//
+		setMinWidth(getColumn(tcm, 1), 475);
+		//
+		setPreferredScrollableViewportSize(jTableLink, new Dimension(
+				(int) getWidth(preferredSize = Util.getPreferredSize(jTableLink)), (int) getHeight(preferredSize)));
 		//
 		Util.forEach(Util.map(Util.filter(
 				Util.stream(testAndApply(Objects::nonNull, JapanDictGui.class, FieldUtils::getAllFieldsList, null)),
@@ -524,6 +573,20 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
 		//
+	}
+
+	private static TableColumnModel getColumnModel(final JTable instance) {
+		return instance != null ? instance.getColumnModel() : null;
+	}
+
+	private static TableColumn getColumn(final TableColumnModel instance, final int columnIndex) {
+		return instance != null ? instance.getColumn(columnIndex) : null;
+	}
+
+	private static void setMinWidth(final TableColumn instance, final int minWidth) {
+		if (instance != null) {
+			instance.setMinWidth(minWidth);
+		}
 	}
 
 	private static ListCellRenderer<PitchAccent> createPitchAccentListCellRenderer(final Component component,
@@ -578,8 +641,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			final String columnName = getColumnName(table, column);
 			//
-			final JapanDictEntry entry = Util.cast(JapanDictEntry.class,
-					ObjectUtils.getIfNull(value, () -> getValueAt(getModel(table), row, 0)));
+			final Object object = getValueAt(getModel(table), row, 0);
+			//
+			// org.springframework.context.support.JapanDictGui$JapanDictEntry
+			//
+			final JapanDictEntry entry = Util.cast(JapanDictEntry.class, ObjectUtils.getIfNull(value, () -> object));
 			//
 			final Component c = JapanDictGui.getTableCellRendererComponent(tcr, table, value, isSelected, hasFocus, row,
 					column);
@@ -588,7 +654,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			final Strings strings = Strings.CI;
 			//
-			final Iterable<Field> fs = Util.toList(Util.filter(
+			Iterable<Field> fs = Util.toList(Util.filter(
 					Util.stream(
 							testAndApply(Objects::nonNull, Util.getClass(entry), FieldUtils::getAllFieldsList, null)),
 					x -> StringsUtil.equals(strings, Util.getName(x),
@@ -600,7 +666,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			});
 			//
-			final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+			Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 			//
 			if (f != null && entry != null) {
 				//
@@ -619,6 +685,29 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				testAndAccept(x -> IterableUtils.size(x) == 1,
 						Util.toList(Util.distinct(Util.map(stream, x -> x != null ? x.type : null))),
 						x -> Util.setText(jLabel, IterableUtils.get(x, 0)));
+				//
+			} // if
+				//
+				// org.springframework.context.support.JapanDictGui$Link
+				//
+			final Link link = Util.cast(Link.class, ObjectUtils.getIfNull(value, () -> object));
+			//
+			testAndRun(IterableUtils.size(fs = Util.toList(Util.filter(
+					Util.stream(
+							testAndApply(Objects::nonNull, Util.getClass(link), FieldUtils::getAllFieldsList, null)),
+					x -> StringsUtil.equals(strings, Util.getName(x),
+							StringsUtil.replace(strings, columnName, " ", ""))))) > 1,
+					() -> {
+						//
+						throw new IllegalStateException();
+						//
+					});
+			//
+			f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+			//
+			if (f != null && link != null) {
+				//
+				Util.setText(jLabel, Util.toString(Narcissus.getField(link, f)));
 				//
 			} // if
 				//
@@ -728,6 +817,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		private Iterable<PitchAccent> pitchAccents = null;
 
 		private byte[] audioData = null;
+
+		private Iterable<Link> links = null;
 
 		private byte[] getAudioData() {
 			return audioData;
@@ -844,9 +935,88 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			} // if
 				//
-			addRows(this, ElementUtil.select(document, ".container-fluid.bg-white.p-0"), scheme, pageUrl);
+			final Iterable<Element> es = ElementUtil.select(document, ".container-fluid.bg-white.p-0");
 			//
-			final Dimension preferredSize = Util.getPreferredSize(jTable);
+			final Pattern pattern = Pattern.compile("^[^\\d]+(\\d+)$");
+			//
+			final Iterable<String> idIterable = Util.toList(Util.map(
+					testAndApply(Objects::nonNull, Util.spliterator(es), x -> StreamSupport.stream(x, false), null),
+					x -> {
+						//
+						return testAndApply(y -> Util.matches(y) && Util.groupCount(y) > 0,
+								Util.matcher(pattern, NodeUtil.attr(x, "id")), y -> Util.group(y, 1), null);
+						//
+					}));
+			//
+			Iterable<Element> es2 = null;
+			//
+			String id = null;
+			//
+			Multimap<String, Link> multimap = null;
+			//
+			Link link = null;
+			//
+			Element e1, e2 = null;
+			//
+			for (int i = 0; i < IterableUtils.size(idIterable); i++) {
+				//
+				if ((es2 = ElementUtil.select(document,
+						String.format("#collapseDicts%1$s li", IterableUtils.get(idIterable, i)))) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				id = IterableUtils.get(idIterable, i);
+				//
+				for (final Element e : es2) {
+					//
+					if (NodeUtil.childNodeSize(e) == 1 && (e1 = IterableUtils.get(e, 0)) != null
+							&& ElementUtil.childrenSize(e1) == 1
+							&& (e2 = IterableUtils.get(ElementUtil.children(e1), 0)) != null) {
+						//
+						(link = new Link()).text = ElementUtil.text(e2);
+						//
+						try {
+							//
+							link.url = new URL(NodeUtil.attr(e2, "href"));
+							//
+						} catch (final MalformedURLException ex) {
+							//
+							throw new RuntimeException(ex);
+							//
+						} // try
+							//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), id,
+								link);
+						//
+					} else if (NodeUtil.childNodeSize(e) == 2 && e.childNode(0) instanceof TextNode textNode
+							&& e.childNode(1) instanceof Element e3) {
+						//
+						(link = new Link()).text = TextNodeUtil.text(textNode);
+						//
+						try {
+							//
+							link.url = new URL(NodeUtil.attr(e3, "href"));
+							//
+						} catch (final MalformedURLException ex) {
+							//
+							throw new RuntimeException(ex);
+							//
+						} // try
+							//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), id,
+								link);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // for
+				//
+			addRows(this, es, scheme, pageUrl, multimap);
+			//
+			Dimension preferredSize = Util.getPreferredSize(jTable);
 			//
 			setPreferredScrollableViewportSize(jTable, new Dimension((int) getWidth(preferredSize),
 					(int) Math.min(sum(Util.map(IntStream.range(0, Util.getRowCount(dtm)), x ->
@@ -943,6 +1113,20 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			} // for
 				//
+				// links
+				//
+			setPreferredScrollableViewportSize(jTableLink,
+					new Dimension((int) getWidth(preferredSize = Util.getPreferredSize(jTableLink)),
+							(int) Math.min(sum(Util.map(IntStream.range(0, Util.getRowCount(dtmLink)), x ->
+							//
+							Math.max(getRowHeight(jTable),
+									Util.orElse(Util.max(Util.map(IntStream.range(0, getColumnCount(jTableLink)),
+											column -> (int) getHeight(Util.getPreferredSize(prepareRenderer(jTableLink,
+													getCellRenderer(jTableLink, x, column), x, column))))),
+											0))
+							//
+							)), getHeight(preferredSize))));
+			//
 			pack(window);
 			//
 		} // if
@@ -1026,7 +1210,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	private static void addRows(@Nullable final JapanDictGui instance, final Iterable<Element> es, final String scheme,
-			final String pageUrl) {
+			final String pageUrl, final Multimap<String, Link> links) {
 		//
 		Iterable<Element> es2 = null;
 		//
@@ -1098,7 +1282,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 										() -> Pattern.compile("^\\p{InHiragana}+$")),
 								patternKatkana = ObjectUtils.getIfNull(patternKatkana,
 										() -> Pattern.compile("^\\p{InKatakana}+$")),
-								objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new), j, map) });
+								objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new), j, map,
+								MultimapUtil.get(links, id)) });
 				//
 			} // for
 				//
@@ -1119,18 +1304,18 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Nullable
 	private static Component prepareRenderer(@Nullable final JTable instance,
 			@Nullable final TableCellRenderer tableCellRenderer, final int row, final int column) {
-		return instance != null && instance.getColumnModel() != null && tableCellRenderer != null
+		return instance != null && getColumnModel(instance) != null && tableCellRenderer != null
 				? instance.prepareRenderer(tableCellRenderer, row, column)
 				: null;
 	}
 
 	@Nullable
 	private static TableCellRenderer getCellRenderer(@Nullable final JTable instance, final int row, final int column) {
-		return instance != null && instance.getColumnModel() != null ? instance.getCellRenderer(row, column) : null;
+		return instance != null && getColumnModel(instance) != null ? instance.getCellRenderer(row, column) : null;
 	}
 
 	private static int getColumnCount(@Nullable final JTable instance) {
-		return instance != null && instance.getColumnModel() != null ? instance.getColumnCount() : 0;
+		return instance != null && getColumnModel(instance) != null ? instance.getColumnCount() : 0;
 	}
 
 	private static void clear(@Nullable final Map<?, ?> instance) {
@@ -1140,7 +1325,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	private static JapanDictEntry getJapanDictEntry(final Element e, final Pattern patternHiragana,
-			final Pattern patternKatakana, final ObjectMapper objectMapper, final int index2, final Map<?, ?> map) {
+			final Pattern patternKatakana, final ObjectMapper objectMapper, final int index2, final Map<?, ?> map,
+			final Iterable<Link> links) {
 		//
 		final JapanDictEntry entry = new JapanDictEntry();
 		//
@@ -1213,6 +1399,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} // try
 			//
+		entry.links = links;
+		//
 		return entry;
 		//
 	}
@@ -1245,6 +1433,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				Util.filter(Util.stream(FieldUtils.getAllFieldsList(JapanDictGui.class)),
 						x -> Objects.equals(Util.getType(x), BufferedImage.class)),
 				x -> Narcissus.setField(this, x, null));
+		//
+		Util.forEach(IntStream.iterate(Util.getRowCount(dtmLink) - 1, i -> i >= 0, i -> i - 1),
+				i -> Util.removeRow(dtmLink, i));
 		//
 	}
 
@@ -2708,6 +2899,25 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		setEnabled(JapanDictEntry.getStrokeWithNumberImage(entry) != null, instance.btnCopyStrokeWithNumberImage,
 				instance.btnSaveStrokeWithNumberImage);
+		//
+		// links
+		//
+		Util.forEach(entry.links, x -> Util.addRow(instance.dtmLink, new Object[] { x }));
+		//
+		final JTable jTable = instance.jTableLink;
+		//
+		final Dimension preferredSize = Util.getPreferredSize(jTable);
+		//
+		setPreferredScrollableViewportSize(instance.jTableLink, new Dimension((int) getWidth(preferredSize),
+				(int) Math.min(sum(Util.map(IntStream.range(0, Util.getRowCount(instance.dtmLink)), x ->
+				//
+				Math.max(getRowHeight(jTable),
+						Util.orElse(Util.max(Util.map(IntStream.range(0, getColumnCount(jTable)),
+								column -> (int) getHeight(Util.getPreferredSize(
+										prepareRenderer(jTable, getCellRenderer(jTable, x, column), x, column))))),
+								0))
+				//
+				)), getHeight(preferredSize))));
 		//
 		pack(instance.window);
 		//
