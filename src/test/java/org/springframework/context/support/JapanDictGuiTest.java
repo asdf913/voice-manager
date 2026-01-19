@@ -1345,7 +1345,7 @@ class JapanDictGuiTest {
 
 	@Test
 	void testCreatePitchAccentListCellRenderer()
-			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
+			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		//
 		final ListCellRenderer<?> lcr = Util.cast(ListCellRenderer.class,
 				invoke(METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, null, null, null, null));
