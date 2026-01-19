@@ -121,7 +121,7 @@ class JapanDictGuiTest {
 			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_FILTER,
 			METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW, METHOD_OR,
 			METHOD_GET_MIN_MAX, METHOD_THEN_ACCEPT_ASYNC, METHOD_SET_STROKE_IMAGE_AND_STROKE_WITH_NUMBER_IMAGE,
-			METHOD_COPY_FIELD = null;
+			METHOD_COPY_FIELD, METHOD_GET_LINK_MULTI_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -256,6 +256,9 @@ class JapanDictGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_COPY_FIELD = Util.getDeclaredMethod(clz, "copyField", Object.class, Object.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_LINK_MULTI_MAP = Util.getDeclaredMethod(clz, "getLinkMultimap", Element.class, Iterable.class))
 				.setAccessible(true);
 		//
 		CLASS_PITCH_ACCENT = Util.forName("org.springframework.context.support.JapanDictGui$PitchAccent");
@@ -1902,6 +1905,13 @@ class JapanDictGuiTest {
 				//
 		} // for
 			//
+	}
+
+	@Test
+	void testGetLinkMultimap() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_GET_LINK_MULTI_MAP, null, null, Collections.singleton(null)));
+		//
 	}
 
 }
