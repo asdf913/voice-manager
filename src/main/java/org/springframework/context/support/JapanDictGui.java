@@ -1082,6 +1082,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
+	@Nullable
 	private static Multimap<String, Link> getLinkMultimap(final Element element, final Iterable<String> ids) {
 		//
 		Multimap<String, Link> multimap = null;
