@@ -89,6 +89,7 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper.Builder;
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.reflect.Reflection;
 import com.microsoft.playwright.Browser;
@@ -121,7 +122,7 @@ class JapanDictGuiTest {
 			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_FILTER,
 			METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW, METHOD_OR,
 			METHOD_GET_MIN_MAX, METHOD_THEN_ACCEPT_ASYNC, METHOD_SET_STROKE_IMAGE_AND_STROKE_WITH_NUMBER_IMAGE,
-			METHOD_COPY_FIELD, METHOD_GET_LINK_MULTI_MAP = null;
+			METHOD_COPY_FIELD, METHOD_GET_LINK_MULTI_MAP_ELEMENT, METHOD_GET_LINK_MULTI_MAP_STRING = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -258,8 +259,11 @@ class JapanDictGuiTest {
 		(METHOD_COPY_FIELD = Util.getDeclaredMethod(clz, "copyField", Object.class, Object.class, String.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_LINK_MULTI_MAP = Util.getDeclaredMethod(clz, "getLinkMultimap", Element.class, Iterable.class))
-				.setAccessible(true);
+		(METHOD_GET_LINK_MULTI_MAP_ELEMENT = Util.getDeclaredMethod(clz, "getLinkMultimap", Element.class,
+				Iterable.class)).setAccessible(true);
+		//
+		(METHOD_GET_LINK_MULTI_MAP_STRING = Util.getDeclaredMethod(clz, "getLinkMultimap", String.class,
+				Iterable.class)).setAccessible(true);
 		//
 		CLASS_PITCH_ACCENT = Util.forName("org.springframework.context.support.JapanDictGui$PitchAccent");
 		//
@@ -1910,7 +1914,10 @@ class JapanDictGuiTest {
 	@Test
 	void testGetLinkMultimap() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(invoke(METHOD_GET_LINK_MULTI_MAP, null, null, Collections.singleton(null)));
+		Assertions.assertEquals(ImmutableMultimap.of(),
+				invoke(METHOD_GET_LINK_MULTI_MAP_ELEMENT, null, null, Collections.singleton(null)));
+		//
+		Assertions.assertNull(invoke(METHOD_GET_LINK_MULTI_MAP_STRING, null, null, Collections.singleton(null)));
 		//
 	}
 

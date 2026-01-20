@@ -1084,67 +1084,66 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private static Multimap<String, Link> getLinkMultimap(final Element element, final Iterable<String> ids) {
 		//
-		Iterable<Element> es2 = null;
+		Multimap<String, Link> multimap = null;
 		//
-		String id = null;
+		for (int i = 0; i < IterableUtils.size(ids); i++) {
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), getLinkMultimap(
+					IterableUtils.get(ids, i),
+					ElementUtil.select(element, String.format("#collapseDicts%1$s li", IterableUtils.get(ids, i)))));
+			//
+		} // for
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, Link> getLinkMultimap(final String id, final Iterable<Element> es) {
 		//
 		Multimap<String, Link> multimap = null;
 		//
 		Link link = null;
 		//
-		Element e1, e2 = null;
+		Element e, e1, e2 = null;
 		//
-		for (int i = 0; i < IterableUtils.size(ids); i++) {
+		for (int i = 0; i < IterableUtils.size(es); i++) {
 			//
-			if ((es2 = ElementUtil.select(element,
-					String.format("#collapseDicts%1$s li", IterableUtils.get(ids, i)))) == null) {
+			if (NodeUtil.childNodeSize(e = IterableUtils.get(es, i)) == 1 && (e1 = IterableUtils.get(e, 0)) != null
+					&& ElementUtil.childrenSize(e1) == 1
+					&& (e2 = IterableUtils.get(ElementUtil.children(e1), 0)) != null) {
 				//
-				continue;
+				(link = new Link()).text = ElementUtil.text(e2);
+				//
+				try {
+					//
+					link.url = new URL(NodeUtil.attr(e2, "href"));
+					//
+				} catch (final MalformedURLException ex) {
+					//
+					throw new RuntimeException(ex);
+					//
+				} // try
+					//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), id, link);
+				//
+			} else if (NodeUtil.childNodeSize(e) == 2 && NodeUtil.childNode(e, 0) instanceof TextNode textNode
+					&& NodeUtil.childNode(e, 1) instanceof Element e3) {
+				//
+				(link = new Link()).text = TextNodeUtil.text(textNode);
+				//
+				try {
+					//
+					link.url = new URL(NodeUtil.attr(e3, "href"));
+					//
+				} catch (final MalformedURLException ex) {
+					//
+					throw new RuntimeException(ex);
+					//
+				} // try
+					//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), id, link);
 				//
 			} // if
-				//
-			id = IterableUtils.get(ids, i);
-			//
-			for (final Element e : es2) {
-				//
-				if (NodeUtil.childNodeSize(e) == 1 && (e1 = IterableUtils.get(e, 0)) != null
-						&& ElementUtil.childrenSize(e1) == 1
-						&& (e2 = IterableUtils.get(ElementUtil.children(e1), 0)) != null) {
-					//
-					(link = new Link()).text = ElementUtil.text(e2);
-					//
-					try {
-						//
-						link.url = new URL(NodeUtil.attr(e2, "href"));
-						//
-					} catch (final MalformedURLException ex) {
-						//
-						throw new RuntimeException(ex);
-						//
-					} // try
-						//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), id, link);
-					//
-				} else if (NodeUtil.childNodeSize(e) == 2 && e.childNode(0) instanceof TextNode textNode
-						&& e.childNode(1) instanceof Element e3) {
-					//
-					(link = new Link()).text = TextNodeUtil.text(textNode);
-					//
-					try {
-						//
-						link.url = new URL(NodeUtil.attr(e3, "href"));
-						//
-					} catch (final MalformedURLException ex) {
-						//
-						throw new RuntimeException(ex);
-						//
-					} // try
-						//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), id, link);
-					//
-				} // if
-					//
-			} // for
 				//
 		} // for
 			//
