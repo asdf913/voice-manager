@@ -1054,7 +1054,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					new Dimension((int) getWidth(preferredSize = Util.getPreferredSize(jTableLink)),
 							(int) Math.min(sum(Util.map(IntStream.range(0, Util.getRowCount(dtmLink)), x ->
 							//
-							Math.max(getRowHeight(jTable),
+							Math.max(getRowHeight(jTableLink),
 									Util.orElse(Util.max(Util.map(IntStream.range(0, getColumnCount(jTableLink)),
 											column -> (int) getHeight(Util.getPreferredSize(prepareRenderer(jTableLink,
 													getCellRenderer(jTableLink, x, column), x, column))))),
