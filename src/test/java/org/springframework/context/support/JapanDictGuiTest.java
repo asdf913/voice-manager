@@ -79,6 +79,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.util.ReflectionUtils;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -271,7 +272,7 @@ class JapanDictGuiTest {
 
 	private static class IH implements InvocationHandler {
 
-		private Boolean test, booleanValue;
+		private Boolean test, booleanValue, equals;
 
 		private Integer size, length, columnCount, sum;
 
@@ -281,6 +282,12 @@ class JapanDictGuiTest {
 
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
+			if (ReflectionUtils.isEqualsMethod(method)) {
+				//
+				return equals;
+				//
+			} // if
+				//
 			final String name = Util.getName(method);
 			//
 			if (proxy instanceof FailableBiConsumer && Objects.equals(name, "accept") && exception != null) {
@@ -1216,6 +1223,12 @@ class JapanDictGuiTest {
 		//
 		final ListSelectionEvent listSelectionEvent = new ListSelectionEvent(lsm, 0, 0, false);
 		//
+		if (ih != null) {
+			//
+			ih.equals = Boolean.FALSE;
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> instance.valueChanged(listSelectionEvent));
 		//
 		final DefaultTableModel dtm = new DefaultTableModel(new Object[] { null }, 0);

@@ -269,7 +269,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Copy Stroke With Number Image")
 	private AbstractButton btnCopyStrokeWithNumberImage = null;
 
-	private AbstractButton btnSaveStrokeWithNumberImage = null;
+	private AbstractButton btnSaveStrokeWithNumberImage, btnCopyUrl = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
@@ -306,7 +306,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private DefaultTableModel dtm = null;
 
-	private transient ListSelectionModel lsm = null;
+	private transient ListSelectionModel lsm, lsmLink = null;
 
 	private static class PitchAccent {
 
@@ -542,7 +542,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						return false;
 					}
 
-				}), String.format("span %1$s", 12));
+				}), String.format("span %1$s,%2$s", 12, wrap));
 		//
 		jTableLink.setDefaultRenderer(Object.class,
 				createTableCellRenderer(jTableLink.getDefaultRenderer(Object.class)));
@@ -555,6 +555,16 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		setPreferredScrollableViewportSize(jTableLink, new Dimension(
 				(int) getWidth(preferredSize = Util.getPreferredSize(jTableLink)), (int) getHeight(preferredSize)));
+		//
+		if ((lsmLink = jTableLink.getSelectionModel()) != null) {
+			//
+			lsmLink.addListSelectionListener(this);
+			//
+		} // if
+			//
+		add(this, new JLabel());
+		//
+		add(this, btnCopyUrl = new JButton("Copy"));
 		//
 		Util.forEach(Util.map(Util.filter(
 				Util.stream(testAndApply(Objects::nonNull, JapanDictGui.class, FieldUtils::getAllFieldsList, null)),
@@ -2339,6 +2349,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			return true;
 			//
+		} else if (Objects.equals(source, instance.btnCopyUrl)) {
+			//
+			final Link link = Util.cast(Link.class,
+					getValueAt(instance.dtmLink, getSelectedRow(instance.jTableLink), 0));
+			//
+			testAndRun(Boolean.logicalAnd(!isTestMode(), link != null),
+					() -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+							new StringSelection(Util.toString(link != null ? link.url : null)), null));
+			//
+			return true;
+			//
 		} // if
 			//
 		return false;
@@ -2751,13 +2772,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		int selectedIndex = 0;
 		//
-		if (Objects.equals(Util.getSource(evt), lsm) && evt != null && !evt.getValueIsAdjusting() && jTable != null
+		final Object source = Util.getSource(evt);
+		//
+		if (Objects.equals(source, lsm) && evt != null && !evt.getValueIsAdjusting() && jTable != null
 				&& (selectedIndices = getSelectedIndices(lsm)) != null && selectedIndices.length == 1
 				&& (selectedIndex = selectedIndices[0]) < jTable.getRowCount()) {
 			//
-			reset();
-			//
 			valueChanged(this, Util.cast(JapanDictEntry.class, getValueAt(dtm, selectedIndex, 0)));
+			//
+		} else if (Objects.equals(source, lsmLink)) {
+			//
+			Util.setEnabled(btnCopyUrl, true);
 			//
 		} // if
 			//
