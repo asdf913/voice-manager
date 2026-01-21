@@ -352,7 +352,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		final String growx = "growx";
 		//
-		add(this, tfText = new JTextField(), String.format("%1$s,%2$s,span %3$s", growx, wrap, 3));
+		final int width = 100;
+		//
+		add(this, tfText = new JTextField(), String.format("%1$s,%2$s,span %3$s,wmax %4$s", growx, wrap, 3, width));
 		//
 		try (final Playwright playwright = Playwright.create()) {
 			//
@@ -461,11 +463,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, tfHiragana = new JTextField(), String.format("%1$s,span %2$s", growx, 3));
 		//
-		add(this, btnCopyHiragana = new JButton("Copy"), wrap);
+		add(this, btnCopyHiragana = new JButton("Copy"));
 		//
 		add(this, new JLabel("Katakana"));
 		//
-		add(this, tfKatakana = new JTextField(), String.format("%1$s,span %2$s", growx, 3));
+		add(this, tfKatakana = new JTextField(), String.format("%1$s,wmin %2$s", growx, width));
 		//
 		add(this, btnCopyKatakana = new JButton("Copy"), wrap);
 		//
@@ -479,19 +481,25 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, tfAudioUrl = new JTextField(), String.format("%1$s,span %2$s,wmax %3$spx", growx, 3, 150));
 		//
-		add(this, btnCopyAudioUrl = new JButton("Copy"));
+		JPanel jPanel = new JPanel();
 		//
-		add(this, btnDownloadAudio = new JButton("Download"));
+		add(jPanel, btnCopyAudioUrl = new JButton("Copy"));
 		//
-		add(this, btnPlayAudio = new JButton("Play"), wrap);
+		add(jPanel, btnDownloadAudio = new JButton("Download"));
+		//
+		add(jPanel, btnPlayAudio = new JButton("Play"));
+		//
+		add(this, jPanel, String.format("%1$s,span %2$s", wrap, 4));
 		//
 		add(this, new JLabel("Furigana"));
 		//
 		add(this, furiganaImage = new JLabel(), String.format("span %1$s", 5));
 		//
-		add(this, btnCopyFuriganaImage = new JButton("Copy"));
+		add(jPanel = new JPanel(), btnCopyFuriganaImage = new JButton("Copy"));
 		//
-		add(this, btnSaveFuriganaImage = new JButton("Save"), wrap);
+		add(jPanel, btnSaveFuriganaImage = new JButton("Save"));
+		//
+		add(this, jPanel, String.format("%1$s,span %2$s", wrap, 2));
 		//
 		add(this, new JLabel(PITCH_ACCENT));
 		//
@@ -508,9 +516,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, jcbPitchAccent, String.format("span %1$s", 5));
 		//
-		add(this, btnCopyPitchAccentImage = new JButton("Copy"));
+		add(jPanel = new JPanel(), btnCopyPitchAccentImage = new JButton("Copy"));
 		//
-		add(this, btnSavePitchAccentImage = new JButton("Save"), wrap);
+		add(jPanel, btnSavePitchAccentImage = new JButton("Save"));
+		//
+		add(this, jPanel, String.format("%1$s,span %2$s", wrap, 2));
 		//
 		add(this, new JLabel("Stroke"), String.format("span %1$s", 2));
 		//
