@@ -269,7 +269,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Copy Stroke With Number Image")
 	private AbstractButton btnCopyStrokeWithNumberImage = null;
 
-	private AbstractButton btnSaveStrokeWithNumberImage, btnCopyUrl = null;
+	@Note("Save Stroke With Number Image")
+	private AbstractButton btnSaveStrokeWithNumberImage = null;
+
+	private AbstractButton btnCopyUrl = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
@@ -306,7 +309,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private DefaultTableModel dtm = null;
 
-	private transient ListSelectionModel lsm, lsmLink = null;
+	private transient ListSelectionModel lsm = null;
 
 	private static class PitchAccent {
 
@@ -339,6 +342,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	private JTable jTableLink = null;
 
 	private DefaultTableModel dtmLink = null;
+
+	private ListSelectionModel lsmLink = null;
 
 	private JapanDictGui() {
 	}
