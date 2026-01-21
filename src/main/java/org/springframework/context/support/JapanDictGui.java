@@ -466,7 +466,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, new JLabel("Hiragana"));
 		//
-		add(this, tfHiragana = new JTextField(), String.format("%1$s,span %2$s", growx, 3));
+		add(this, tfHiragana = new JTextField(), String.format("%1$s,span %2$s,wmax %3$s", growx, 3, width));
 		//
 		add(this, btnCopyHiragana = new JButton("Copy"));
 		//
@@ -474,11 +474,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, tfKatakana = new JTextField(), String.format("%1$s,wmin %2$s", growx, width));
 		//
-		add(this, btnCopyKatakana = new JButton("Copy"), wrap);
+		add(this, btnCopyKatakana = new JButton("Copy"));
 		//
 		add(this, new JLabel("Romaji"));
 		//
-		add(this, tfRomaji = new JTextField(), String.format("%1$s,span %2$s", growx, 3));
+		add(this, tfRomaji = new JTextField(), String.format("%1$s,span %2$s,wmin %3$s", growx, 1, width));
 		//
 		add(this, btnCopyRomaji = new JButton("Copy"), wrap);
 		//
