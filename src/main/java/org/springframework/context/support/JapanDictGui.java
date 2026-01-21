@@ -343,7 +343,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private DefaultTableModel dtmLink = null;
 
-	private ListSelectionModel lsmLink = null;
+	private transient ListSelectionModel lsmLink = null;
 
 	private JapanDictGui() {
 	}
