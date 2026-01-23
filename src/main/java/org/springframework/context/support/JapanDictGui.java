@@ -591,9 +591,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		add(this, new JLabel());
 		//
-		add(this, btnCopyUrl = new JButton("Copy"));
+		add(jPanel = new JPanel(), btnCopyUrl = new JButton("Copy"));
 		//
-		add(this, btnBrowseUrl = new JButton("Browse"));
+		add(jPanel, btnBrowseUrl = new JButton("Browse"));
+		//
+		add(this, jPanel, String.format("span %1$s", 2));
 		//
 		Util.forEach(Util.map(Util.filter(
 				Util.stream(testAndApply(Objects::nonNull, JapanDictGui.class, FieldUtils::getAllFieldsList, null)),
