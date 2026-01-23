@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
@@ -272,7 +273,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Save Stroke With Number Image")
 	private AbstractButton btnSaveStrokeWithNumberImage = null;
 
-	private AbstractButton btnCopyUrl = null;
+	private AbstractButton btnCopyUrl, btnBrowseUrl = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
@@ -580,6 +581,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		add(this, new JLabel());
 		//
 		add(this, btnCopyUrl = new JButton("Copy"));
+		//
+		add(this, btnBrowseUrl = new JButton("Browse"));
 		//
 		Util.forEach(Util.map(Util.filter(
 				Util.stream(testAndApply(Objects::nonNull, JapanDictGui.class, FieldUtils::getAllFieldsList, null)),
@@ -2369,15 +2372,81 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			final Link link = Util.cast(Link.class,
 					getValueAt(instance.dtmLink, getSelectedRow(instance.jTableLink), 0));
 			//
-			testAndRun(Boolean.logicalAnd(!isTestMode(), link != null),
-					() -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
-							new StringSelection(Util.toString(link != null ? link.url : null)), null));
+			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+					new StringSelection(Util.toString(link != null ? link.url : null)), null));
+			//
+			return true;
+			//
+		} else if (Objects.equals(source, instance.btnBrowseUrl)) {
+			//
+			final Link link = Util.cast(Link.class,
+					getValueAt(instance.dtmLink, getSelectedRow(instance.jTableLink), 0));
+			//
+			testAndRun(!isTestMode(), () -> browse(Desktop.getDesktop(), toURI(link != null ? link.url : null)), e -> {
+				//
+				throw e instanceof RuntimeException re ? re : new RuntimeException(e);
+				//
+			});
 			//
 			return true;
 			//
 		} // if
 			//
 		return false;
+		//
+	}
+
+	private static void browse(final Desktop instance, final URI uri) throws IOException {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), "peer")));
+		//
+		testAndRun(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f != null && Narcissus.getField(instance, f) != null) {
+			//
+			instance.browse(uri);
+			//
+		} // if
+			//
+	}
+
+	private static URI toURI(final URL instance) throws URISyntaxException {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), "handler")));
+		//
+		testAndRun(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		return f != null && Narcissus.getField(instance, f) != null ? instance.toURI() : null;
 		//
 	}
 
