@@ -2866,7 +2866,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} else if (Objects.equals(source, lsmLink)) {
 			//
-			Util.setEnabled(btnCopyUrl, true);
+			setEnabled(true, btnCopyUrl, btnBrowseUrl);
 			//
 		} // if
 			//
