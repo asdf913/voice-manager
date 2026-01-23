@@ -345,6 +345,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return url;
 		}
 
+		@Nullable
 		private static URL getUrl(@Nullable final Link instance) {
 			return instance != null ? instance.getUrl() : null;
 		}
