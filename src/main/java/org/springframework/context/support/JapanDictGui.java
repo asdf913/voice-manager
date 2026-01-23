@@ -1159,9 +1159,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				try {
 					//
-					link.url = new URL(NodeUtil.attr(e2, "href"));
+					link.url = Util.toURL(new URI(NodeUtil.attr(e2, "href")));
 					//
-				} catch (final MalformedURLException ex) {
+				} catch (final MalformedURLException | URISyntaxException ex) {
 					//
 					throw new RuntimeException(ex);
 					//
@@ -1176,9 +1176,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				try {
 					//
-					link.url = new URL(NodeUtil.attr(e3, "href"));
+					link.url = Util.toURL(new URI(NodeUtil.attr(e3, "href")));
 					//
-				} catch (final MalformedURLException ex) {
+				} catch (final MalformedURLException | URISyntaxException ex) {
 					//
 					throw new RuntimeException(ex);
 					//
