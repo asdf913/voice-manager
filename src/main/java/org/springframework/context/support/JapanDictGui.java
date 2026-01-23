@@ -341,6 +341,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private String text;
 
+		private URL getUrl() {
+			return url;
+		}
+
+		private static URL getUrl(final Link instance) {
+			return instance != null ? instance.getUrl() : null;
+		}
+
 	}
 
 	private JTable jTableLink = null;
@@ -2372,24 +2380,22 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} else if (Objects.equals(source, instance.btnCopyUrl)) {
 			//
-			final Link link = Util.cast(Link.class,
-					getValueAt(instance.dtmLink, getSelectedRow(instance.jTableLink), 0));
-			//
-			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
-					new StringSelection(Util.toString(link != null ? link.url : null)), null));
+			testAndRun(!isTestMode(), () -> Util.setContents(
+					getSystemClipboard(Toolkit.getDefaultToolkit()), new StringSelection(Util.toString(Link.getUrl(Util
+							.cast(Link.class, getValueAt(instance.dtmLink, getSelectedRow(instance.jTableLink), 0))))),
+					null));
 			//
 			return true;
 			//
 		} else if (Objects.equals(source, instance.btnBrowseUrl)) {
 			//
-			final Link link = Util.cast(Link.class,
-					getValueAt(instance.dtmLink, getSelectedRow(instance.jTableLink), 0));
-			//
-			testAndRun(!isTestMode(), () -> browse(Desktop.getDesktop(), toURI(link != null ? link.url : null)), e -> {
-				//
-				throw e instanceof RuntimeException re ? re : new RuntimeException(e);
-				//
-			});
+			testAndRun(!isTestMode(), () -> browse(Desktop.getDesktop(), toURI(Link.getUrl(
+					Util.cast(Link.class, getValueAt(instance.dtmLink, getSelectedRow(instance.jTableLink), 0))))),
+					e -> {
+						//
+						throw e instanceof RuntimeException re ? re : new RuntimeException(e);
+						//
+					});
 			//
 			return true;
 			//

@@ -1934,4 +1934,81 @@ class JapanDictGuiTest {
 		//
 	}
 
+	@Test
+	void testLink() throws Throwable {
+		//
+		final Class<?> clz = Util.forName("org.springframework.context.support.JapanDictGui$Link");
+		//
+		final Method[] ms = Util.getDeclaredMethods(clz);
+		//
+		Method m = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
+		Collection<Object> collection = null;
+		//
+		Object[] os = null;
+		//
+		String toString = null;
+		//
+		Object link = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
+				//
+				continue;
+				//
+			} // if
+				//
+				// null
+				//
+			os = toArray(Collections.nCopies(m.getParameterCount(), null));
+			//
+			toString = Util.toString(m);
+			//
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(
+						Narcissus.invokeMethod(
+								link = ObjectUtils.getIfNull(link, () -> Narcissus.allocateInstance(clz)), m, os),
+						toString);
+				//
+			} // if
+				//
+				// non-null
+				//
+			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
+			//
+			parameterTypes = m.getParameterTypes();
+			//
+			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
+				//
+				Util.add(collection, Narcissus.allocateInstance(ArrayUtils.get(parameterTypes, j)));
+				//
+			} // for
+				//
+			os = toArray(collection);
+			//
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(
+						Narcissus.invokeMethod(
+								link = ObjectUtils.getIfNull(link, () -> Narcissus.allocateInstance(clz)), m, os),
+						toString);
+				//
+			} // if
+				//
+		} // for
+			//
+	}
+
 }
