@@ -2428,6 +2428,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
+	@Nullable
 	private static URI toURI(@Nullable final URL instance) throws URISyntaxException {
 		//
 		if (instance == null) {
