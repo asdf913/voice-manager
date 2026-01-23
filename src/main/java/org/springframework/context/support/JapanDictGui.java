@@ -2399,7 +2399,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static void browse(final Desktop instance, final URI uri) throws IOException {
+	private static void browse(@Nullable final Desktop instance, final URI uri) throws IOException {
 		//
 		if (instance == null) {
 			//
@@ -2428,7 +2428,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static URI toURI(final URL instance) throws URISyntaxException {
+	private static URI toURI(@Nullable final URL instance) throws URISyntaxException {
 		//
 		if (instance == null) {
 			//
