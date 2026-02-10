@@ -2415,7 +2415,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static int getRowCount(final JTable instance) {
+	private static int getRowCount(@Nullable final JTable instance) {
 		return instance != null && instance.getModel() != null ? instance.getRowCount() : 0;
 	}
 
