@@ -2383,17 +2383,24 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} else if (Objects.equals(source, instance.btnCopyUrl)) {
 			//
-			testAndRun(!isTestMode(), () -> Util.setContents(
-					getSystemClipboard(Toolkit.getDefaultToolkit()), new StringSelection(Util.toString(Link.getUrl(Util
-							.cast(Link.class, getValueAt(instance.dtmLink, getSelectedRow(instance.jTableLink), 0))))),
-					null));
+			testAndRun(!isTestMode(),
+					() -> Util
+							.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+									new StringSelection(Util.toString(Link.getUrl(Util.cast(Link.class,
+											testAndApply(x -> getRowCount(x) > 0, instance.jTableLink,
+													x -> getValueAt(instance.dtmLink, getSelectedRow(x), 0), null))))),
+									null));
 			//
 			return true;
 			//
 		} else if (Objects.equals(source, instance.btnBrowseUrl)) {
 			//
-			testAndRun(!isTestMode(), () -> browse(Desktop.getDesktop(), toURI(Link.getUrl(
-					Util.cast(Link.class, getValueAt(instance.dtmLink, getSelectedRow(instance.jTableLink), 0))))),
+			testAndRun(!isTestMode(),
+					() -> browse(Desktop.getDesktop(),
+							toURI(Link
+									.getUrl(Util.cast(Link.class,
+											testAndApply(x -> getRowCount(x) > 0, instance.jTableLink,
+													x -> getValueAt(instance.dtmLink, getSelectedRow(x), 0), null))))),
 					e -> {
 						//
 						throw e instanceof RuntimeException re ? re : new RuntimeException(e);
@@ -2406,6 +2413,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return false;
 		//
+	}
+
+	private static int getRowCount(final JTable instance) {
+		return instance != null && instance.getModel() != null ? instance.getRowCount() : 0;
 	}
 
 	private static void browse(@Nullable final Desktop instance, final URI uri) throws IOException {
@@ -2873,7 +2884,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		if (Objects.equals(source, lsm) && evt != null && !evt.getValueIsAdjusting() && jTable != null
 				&& (selectedIndices = getSelectedIndices(lsm)) != null && selectedIndices.length == 1
-				&& (selectedIndex = selectedIndices[0]) < jTable.getRowCount()) {
+				&& (selectedIndex = selectedIndices[0]) < getRowCount(jTable)) {
 			//
 			valueChanged(this, Util.cast(JapanDictEntry.class, getValueAt(dtm, selectedIndex, 0)));
 			//
