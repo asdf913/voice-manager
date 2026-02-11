@@ -20,6 +20,7 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
@@ -130,6 +131,9 @@ import org.apache.commons.validator.routines.UrlValidatorUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URIBuilderUtil;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.eclipse.jetty.http.HttpStatus;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -276,7 +280,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Copy URL")
 	private AbstractButton btnCopyUrl = null;
 
-	private AbstractButton btnBrowseUrl = null;
+	private AbstractButton btnBrowseUrl, btnPdf = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
@@ -596,7 +600,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(jPanel, btnBrowseUrl = new JButton("Browse"));
 		//
-		add(this, jPanel, String.format("span %1$s", 2));
+		add(this, jPanel, String.format("span %1$s,%2$s", 2, wrap));
+		//
+		add(this, new JLabel());
+		//
+		add(this, btnPdf = new JButton("PDF"));
 		//
 		Util.forEach(Util.map(Util.filter(
 				Util.stream(testAndApply(Objects::nonNull, JapanDictGui.class, FieldUtils::getAllFieldsList, null)),
@@ -2409,6 +2417,25 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			return true;
 			//
+		} else if (Objects.equals(source, instance.btnPdf)) {
+			//
+			final PDPage page = new PDPage();
+			//
+			try (final PDDocument document = new PDDocument();
+					PDPageContentStream pageContentStream = new PDPageContentStream(document, page)) {
+				//
+				final File file = new File("test.pdf");
+				//
+				System.out.println(file.getAbsolutePath());
+				//
+				document.save(file);
+				//
+			} catch (final IOException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
 		} // if
 			//
 		return false;
@@ -3056,6 +3083,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 								0))
 				//
 				)), getHeight(preferredSize))));
+		//
+		// pdf
+		//
+		Util.setEnabled(instance.btnPdf, true);
 		//
 		pack(instance.window);
 		//
