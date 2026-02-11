@@ -2456,14 +2456,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, 10));
 				//
-				testAndAccept(
-						(a, b) -> !IterableUtils.isEmpty(
-								Util.cast(Iterable.class, Narcissus.getField(a, getFieldByName(a, "fontStack"))))
-								&& b != null,
-						pageContentStream,
-						JapanDictEntry.getText(Util.cast(JapanDictEntry.class,
-								getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0))),
-						(a, b) -> a.showText(b));
+				showText(pageContentStream, JapanDictEntry.getText(
+						Util.cast(JapanDictEntry.class, getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0))));
 				//
 				pageContentStream.endText();
 				//
@@ -2485,6 +2479,19 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return false;
 		//
+	}
+
+	private static void showText(final PDPageContentStream instance, final String text) throws IOException {
+		//
+		if (instance != null
+				&& !IterableUtils.isEmpty(
+						Util.cast(Iterable.class, Narcissus.getField(instance, getFieldByName(instance, "fontStack"))))
+				&& text != null) {
+			//
+			instance.showText(text);
+			//
+		} // if
+			//
 	}
 
 	private static int getRowCount(@Nullable final JTable instance) {
