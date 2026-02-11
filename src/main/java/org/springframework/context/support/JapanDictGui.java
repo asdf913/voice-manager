@@ -2512,11 +2512,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static float getAscent(final PDFontDescriptor instance, final float defaultValue) {
+	private static float getAscent(@Nullable final PDFontDescriptor instance, final float defaultValue) {
 		return instance != null && instance.getCOSObject() != null ? instance.getAscent() : defaultValue;
 	}
 
-	private static float getDescent(final PDFontDescriptor instance, final float defaultValue) {
+	private static float getDescent(@Nullable final PDFontDescriptor instance, final float defaultValue) {
 		return instance != null && instance.getCOSObject() != null ? instance.getDescent() : defaultValue;
 	}
 
