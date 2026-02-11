@@ -67,6 +67,7 @@ import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.Code;
 import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -701,7 +702,7 @@ class JapanDictGuiTest {
 		//
 		Class<?>[] parameterTypes = null;
 		//
-		Class<?> parameterType, returnType, clz = null;
+		Class<?> parameterType, returnType = null;
 		//
 		Collection<Object> collection = null;
 		//
@@ -894,25 +895,16 @@ class JapanDictGuiTest {
 		try (final InputStream is = Util.getResourceAsStream(clz,
 				"/" + StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/") + ".class")) {
 			//
-			return CollectionUtils
-					.isEqualCollection(
-							Util.toList(
-									Util.map(
-											testAndApply(Objects::nonNull,
-													InstructionListUtil
-															.getInstructions(testAndApply(Objects::nonNull,
-																	getCode(getCode(JavaClassUtil.getMethod(
-																			ClassParserUtil.parse(
-																					testAndApply(Objects::nonNull, is,
-																							x -> new ClassParser(x,
-																									null),
-																							null)),
-																			method))),
-																	InstructionList::new, null)),
-													Arrays::stream, null),
-											x -> x != null ? x.getName() : null)),
-							Arrays.asList("aload_0", "instanceof", "ifeq", "aload_0", "checkcast", "astore_1",
-									"aload_1", "goto", "new", "dup", "aload_0", "invokespecial", "athrow"));
+			final Instruction[] instructions = InstructionListUtil.getInstructions(testAndApply(Objects::nonNull,
+					getCode(getCode(JavaClassUtil.getMethod(ClassParserUtil
+							.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)), method))),
+					InstructionList::new, null));
+			//
+			return CollectionUtils.isEqualCollection(
+					Util.toList(Util.map(testAndApply(Objects::nonNull, instructions, Arrays::stream, null),
+							x -> x != null ? x.getName() : null)),
+					Arrays.asList("aload_0", "instanceof", "ifeq", "aload_0", "checkcast", "astore_1", "aload_1",
+							"goto", "new", "dup", "aload_0", "invokespecial", "athrow"));
 			//
 		} // try
 			//
