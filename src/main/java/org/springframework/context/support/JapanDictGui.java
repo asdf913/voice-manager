@@ -482,7 +482,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			} catch (final Exception e) {
 				//
-				throw e instanceof RuntimeException runtimeException ? runtimeException : new RuntimeException(e);
+				throwRuntimeException(e);
 				//
 			} // try
 				//
@@ -988,7 +988,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				testAndRun(GraphicsEnvironment.isHeadless(), () -> {
 					//
-					throw e instanceof RuntimeException re ? re : new RuntimeException(e);
+					throwRuntimeException(e);
 					//
 				});
 				//
@@ -2424,7 +2424,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 													x -> getValueAt(instance.dtmLink, getSelectedRow(x), 0), null))))),
 					e -> {
 						//
-						throw e instanceof RuntimeException re ? re : new RuntimeException(e);
+						throwRuntimeException(e);
 						//
 					});
 			//
@@ -2478,6 +2478,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // if
 			//
 		return false;
+		//
+	}
+
+	private static void throwRuntimeException(final Throwable e) {
+		//
+		throw e instanceof RuntimeException re ? re : new RuntimeException(e);
 		//
 	}
 
@@ -3233,7 +3239,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			} catch (final IOException | InterruptedException ex) {
 				//
-				throw ex instanceof RuntimeException re ? re : new RuntimeException(ex);
+				throwRuntimeException(ex);
 				//
 			} // try
 				//

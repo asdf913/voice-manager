@@ -63,6 +63,13 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.Code;
+import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.generic.InstructionList;
+import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -596,6 +603,18 @@ class JapanDictGuiTest {
 			//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
+				if (isThrowRuntimeException(Util.getClass(instance), m)) {
+					//
+					final Method m1 = m;
+					//
+					final Object[] os1 = os;
+					//
+					Assertions.assertThrows(RuntimeException.class, () -> Narcissus.invokeStaticMethod(m1, os1));
+					//
+					continue;
+					//
+				} // if
+					//
 				result = Narcissus.invokeStaticMethod(m, os);
 				//
 				if (or(Boolean.logicalAnd(isPrimitive(returnType = Util.getReturnType(m)),
@@ -682,7 +701,7 @@ class JapanDictGuiTest {
 		//
 		Class<?>[] parameterTypes = null;
 		//
-		Class<?> parameterType, returnType = null;
+		Class<?> parameterType, returnType, clz = null;
 		//
 		Collection<Object> collection = null;
 		//
@@ -778,6 +797,18 @@ class JapanDictGuiTest {
 			//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
+				if (isThrowRuntimeException(Util.getClass(instance), m)) {
+					//
+					final Method m1 = m;
+					//
+					final Object[] os1 = os;
+					//
+					Assertions.assertThrows(RuntimeException.class, () -> Narcissus.invokeStaticMethod(m1, os1));
+					//
+					continue;
+					//
+				} // if
+					//
 				result = Narcissus.invokeStaticMethod(m, os);
 				//
 				if (or(Boolean.logicalAnd(isPrimitive(returnType = Util.getReturnType(m)),
@@ -856,6 +887,43 @@ class JapanDictGuiTest {
 				//
 		} // for
 			//
+	}
+
+	private static boolean isThrowRuntimeException(final Class<?> clz, final Method method) throws Throwable {
+		//
+		try (final InputStream is = Util.getResourceAsStream(clz,
+				"/" + StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/") + ".class")) {
+			//
+			return CollectionUtils
+					.isEqualCollection(
+							Util.toList(
+									Util.map(
+											testAndApply(Objects::nonNull,
+													InstructionListUtil
+															.getInstructions(testAndApply(Objects::nonNull,
+																	getCode(getCode(JavaClassUtil.getMethod(
+																			ClassParserUtil.parse(
+																					testAndApply(Objects::nonNull, is,
+																							x -> new ClassParser(x,
+																									null),
+																							null)),
+																			method))),
+																	InstructionList::new, null)),
+													Arrays::stream, null),
+											x -> x != null ? x.getName() : null)),
+							Arrays.asList("aload_0", "instanceof", "ifeq", "aload_0", "checkcast", "astore_1",
+									"aload_1", "goto", "new", "dup", "aload_0", "invokespecial", "athrow"));
+			//
+		} // try
+			//
+	}
+
+	private static byte[] getCode(final Code instance) {
+		return instance != null ? instance.getCode() : null;
+	}
+
+	private static Code getCode(final org.apache.bcel.classfile.Method instance) {
+		return instance != null ? instance.getCode() : null;
 	}
 
 	@Test
