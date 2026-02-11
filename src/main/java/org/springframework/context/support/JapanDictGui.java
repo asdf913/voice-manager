@@ -2449,10 +2449,23 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					try (final InputStream is = Util.getResourceAsStream(JapanDictGui.class,
 							"/NotoSansCJKjp-Regular.otf")) {
 						//
-						instance.pdFont = testAndApply(Objects::nonNull,
-								testAndApply(Objects::nonNull, is, new OTFParser()::parseEmbedded, null),
-								x -> PDType0Font.load(document, x, false), null);
+						final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
 						//
+						final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch,
+								null);
+						//
+						try (final ByteArrayInputStream bais = testAndApply(Objects::nonNull, bs,
+								ByteArrayInputStream::new, null)) {
+							//
+							instance.pdFont = testAndApply(Objects::nonNull,
+									testAndApply(
+											x -> x != null && ci != null
+													&& StringsUtil.equals(Strings.CI, ci.getName(), "OpenType"),
+											bais, new OTFParser()::parseEmbedded, null),
+									x -> PDType0Font.load(document, x, false), null);
+							//
+						} // try
+							//
 					} // try
 						//
 				} // if
