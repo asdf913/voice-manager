@@ -504,14 +504,18 @@ class JapanDictGuiTest {
 			try (final InputStream is = getInputStream(start(
 					exists ? new ProcessBuilder(new String[] { "nmcli", "-mode", "multiline", "general" }) : null))) {
 				//
-				connectivity = Util.toString(testAndApply(x -> IterableUtils.size(x) == 1,
-						Util.toList(Util.map(
-								Util.filter(
-										Util.stream(testAndApply(Objects::nonNull, is,
-												x -> IOUtils.readLines(x, charset), null)),
-										x -> StringsUtil.startsWith(Strings.CI, x, "CONNECTIVITY:")),
-								x -> StringUtils.trim(StringUtils.substringAfter(x, ':')))),
-						x -> IterableUtils.size(x) == 0, null));
+				final Collection<String> collection = testAndApply(Objects::nonNull, is,
+						x -> IOUtils.readLines(x, charset), null);
+				//
+				connectivity = Util
+						.toString(testAndApply(
+								x -> IterableUtils
+										.size(x) == 1,
+								Util.toList(Util.map(
+										Util.filter(Util.stream(collection),
+												x -> StringsUtil.startsWith(Strings.CI, x, "CONNECTIVITY:")),
+										x -> StringUtils.trim(StringUtils.substringAfter(x, ':')))),
+								x -> IterableUtils.size(x) == 0, null));
 				//
 			} // try
 				//
