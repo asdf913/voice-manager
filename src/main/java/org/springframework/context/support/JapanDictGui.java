@@ -2466,7 +2466,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				IOUtils.closeQuietly(pageContentStream);
 				//
-				final File file = new File("test.pdf");
+				final File file = Util.toFile(Path.of("test.pdf"));
 				//
 				System.out.println(file.getAbsolutePath());
 				//
