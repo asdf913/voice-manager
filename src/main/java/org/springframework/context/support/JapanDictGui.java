@@ -2428,7 +2428,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			final PDPage page = new PDPage();
 			//
 			try (final PDDocument document = new PDDocument();
-					PDPageContentStream pageContentStream = new PDPageContentStream(document, page)) {
+					final PDPageContentStream pageContentStream = new PDPageContentStream(document, page)) {
+				//
+				document.addPage(page);
+				//
+				IOUtils.closeQuietly(pageContentStream);
 				//
 				final File file = new File("test.pdf");
 				//
