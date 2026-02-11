@@ -2481,7 +2481,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static void showText(final PDPageContentStream instance, final String text) throws IOException {
+	private static void showText(final PDPageContentStream instance, @Nullable final String text) throws IOException {
 		//
 		if (instance != null
 				&& !IterableUtils.isEmpty(
