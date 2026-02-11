@@ -13,6 +13,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -20,6 +22,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -487,12 +490,25 @@ class JapanDictGuiTest {
 		//
 		if (Objects.equals(operatingSystem = OperatingSystemUtil.getOperatingSystem(), OperatingSystem.LINUX)) {
 			//
-			try (final InputStream is = getInputStream(
-					new ProcessBuilder(new String[] { "nmcli", "-mode", "multiline", "general" }).start())) {
+			final Charset charset = StandardCharsets.UTF_8;
+			//
+			boolean exists = false;
+			//
+			try (final InputStream is = getInputStream(start(new ProcessBuilder(new String[] { "which", "nmcli" })))) {
+				//
+				exists = Util.exists(testAndApply(Objects::nonNull, StringUtils.trim(IOUtils.toString(is, charset)),
+						File::new, null));
+				//
+			} // try
+				//
+			try (final InputStream is = getInputStream(start(
+					exists ? new ProcessBuilder(new String[] { "nmcli", "-mode", "multiline", "general" }) : null))) {
 				//
 				connectivity = Util.toString(testAndApply(x -> IterableUtils.size(x) == 1,
 						Util.toList(Util.map(
-								Util.filter(Util.stream(IOUtils.readLines(is, StandardCharsets.UTF_8)),
+								Util.filter(
+										Util.stream(testAndApply(Objects::nonNull, is,
+												x -> IOUtils.readLines(x, charset), null)),
 										x -> StringsUtil.startsWith(Strings.CI, x, "CONNECTIVITY:")),
 								x -> StringUtils.trim(StringUtils.substringAfter(x, ':')))),
 						x -> IterableUtils.size(x) == 0, null));
@@ -501,6 +517,10 @@ class JapanDictGuiTest {
 				//
 		} // if
 			//
+	}
+
+	private static Process start(final ProcessBuilder instance) throws IOException {
+		return instance != null ? instance.start() : null;
 	}
 
 	private static InputStream getInputStream(final Process instance) {
