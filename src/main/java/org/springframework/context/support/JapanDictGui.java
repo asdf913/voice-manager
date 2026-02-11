@@ -1127,7 +1127,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		final Iterable<BiPredicate<JapanDictGui, Object>> predicates = Arrays.asList(JapanDictGui::actionPerformed1,
 				JapanDictGui::actionPerformed2, JapanDictGui::actionPerformed3, JapanDictGui::actionPerformed4,
-				JapanDictGui::actionPerformed5);
+				JapanDictGui::actionPerformed5, JapanDictGui::actionPerformed6);
 		//
 		for (int i = 0; i < IterableUtils.size(predicates); i++) {
 			//
@@ -2421,7 +2421,21 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			return true;
 			//
-		} else if (Objects.equals(source, instance.btnPdf)) {
+		} // if
+			//
+		return false;
+		//
+	}
+
+	private static boolean actionPerformed6(final JapanDictGui instance, final Object source) {
+		//
+		if (instance == null) {
+			//
+			return false;
+			//
+		} // if
+			//
+		if (Objects.equals(source, instance.btnPdf)) {
 			//
 			final PDPage page = new PDPage();
 			//
