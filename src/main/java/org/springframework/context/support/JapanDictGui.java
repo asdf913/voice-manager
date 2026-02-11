@@ -2418,15 +2418,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			testAndRun(!isTestMode(),
 					() -> browse(Desktop.getDesktop(),
-							toURI(Link
-									.getUrl(Util.cast(Link.class,
-											testAndApply(x -> getRowCount(x) > 0, instance.jTableLink,
-													x -> getValueAt(instance.dtmLink, getSelectedRow(x), 0), null))))),
-					e -> {
-						//
-						throwRuntimeException(e);
-						//
-					});
+							toURI(Link.getUrl(Util.cast(Link.class,
+									testAndApply(x -> getRowCount(x) > 0, instance.jTableLink,
+											x -> getValueAt(instance.dtmLink, getSelectedRow(x), 0), null))))),
+					JapanDictGui::throwRuntimeException);
 			//
 			return true;
 			//
