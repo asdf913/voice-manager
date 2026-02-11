@@ -12,12 +12,14 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,9 +61,12 @@ import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -79,6 +84,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.oxbow.swingbits.util.OperatingSystem;
+import org.oxbow.swingbits.util.OperatingSystemUtil;
 import org.springframework.util.ReflectionUtils;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -459,8 +466,12 @@ class JapanDictGuiTest {
 
 	private Object japanDictEntry, pitchAccent;
 
+	private OperatingSystem operatingSystem = null;
+
+	private String connectivity = null;
+
 	@BeforeEach
-	void beforeEach() {
+	void beforeEach() throws Throwable {
 		//
 		instance = Util.cast(JapanDictGui.class, Narcissus.allocateInstance(JapanDictGui.class));
 		//
@@ -472,6 +483,26 @@ class JapanDictGuiTest {
 		//
 		pitchAccent = Narcissus.allocateInstance(CLASS_PITCH_ACCENT);
 		//
+		if (Objects.equals(operatingSystem = OperatingSystemUtil.getOperatingSystem(), OperatingSystem.LINUX)) {
+			//
+			try (final InputStream is = getInputStream(
+					new ProcessBuilder(new String[] { "nmcli", "-mode", "multiline", "general" }).start())) {
+				//
+				connectivity = Util.toString(testAndApply(x -> IterableUtils.size(x) == 1,
+						Util.toList(Util.map(
+								Util.filter(Util.stream(IOUtils.readLines(is, StandardCharsets.UTF_8)),
+										x -> StringsUtil.startsWith(Strings.CI, x, "CONNECTIVITY:")),
+								x -> StringUtils.trim(StringUtils.substringAfter(x, ':')))),
+						x -> IterableUtils.size(x) == 0, null));
+				//
+			} // try
+				//
+		} // if
+			//
+	}
+
+	private static InputStream getInputStream(final Process instance) {
+		return instance != null ? instance.getInputStream() : null;
 	}
 
 	@Test
@@ -564,6 +595,28 @@ class JapanDictGuiTest {
 					//
 			} else {
 				//
+				if (Objects.equals(name, "actionPerformed")
+						&& Arrays.equals(parameterTypes, new Class<?>[] { ActionEvent.class })
+						&& Objects.equals(operatingSystem, OperatingSystem.LINUX)
+						&& !StringsUtil.equals(Strings.CI, connectivity, "full")) {
+					//
+					final Method m1 = m;
+					//
+					final Object[] os1 = os;
+					//
+					Assertions
+							.assertThrows(RuntimeException.class,
+									() -> Narcissus
+											.invokeMethod(
+													instance = ObjectUtils.getIfNull(instance,
+															() -> Util.cast(JapanDictGui.class,
+																	Narcissus.allocateInstance(JapanDictGui.class))),
+													m1, os1));
+					//
+					continue;
+					//
+				} // if
+					//
 				result = Narcissus.invokeMethod(
 						instance = ObjectUtils.getIfNull(instance,
 								() -> Util.cast(JapanDictGui.class, Narcissus.allocateInstance(JapanDictGui.class))),
@@ -735,6 +788,28 @@ class JapanDictGuiTest {
 					//
 			} else {
 				//
+				if (Objects.equals(name, "actionPerformed")
+						&& Arrays.equals(parameterTypes, new Class<?>[] { ActionEvent.class })
+						&& Objects.equals(operatingSystem, OperatingSystem.LINUX)
+						&& !StringsUtil.equals(Strings.CI, connectivity, "full")) {
+					//
+					final Method m1 = m;
+					//
+					final Object[] os1 = os;
+					//
+					Assertions
+							.assertThrows(RuntimeException.class,
+									() -> Narcissus
+											.invokeMethod(
+													instance = ObjectUtils.getIfNull(instance,
+															() -> Util.cast(JapanDictGui.class,
+																	Narcissus.allocateInstance(JapanDictGui.class))),
+													m1, os1));
+					//
+					continue;
+					//
+				} // if
+					//
 				result = Narcissus.invokeMethod(
 						instance = ObjectUtils.getIfNull(instance,
 								() -> Util.cast(JapanDictGui.class, Narcissus.allocateInstance(JapanDictGui.class))),
@@ -817,8 +892,18 @@ class JapanDictGuiTest {
 			//
 			Narcissus.setField(instance, f, abstractButton);
 			//
-			Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(abstractButton, 0, null)));
-			//
+			if (Objects.equals(Util.getName(f), "btnExecute") && Objects.equals(operatingSystem, OperatingSystem.LINUX)
+					&& !StringsUtil.equals(Strings.CI, connectivity, "full")) {
+				//
+				Assertions.assertThrows(RuntimeException.class,
+						() -> instance.actionPerformed(new ActionEvent(abstractButton, 0, null)));
+				//
+			} else {
+				//
+				Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(abstractButton, 0, null)));
+				//
+			} // if
+				//
 		} // for
 			//
 			// btnDownloadAudio
