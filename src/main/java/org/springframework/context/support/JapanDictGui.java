@@ -52,7 +52,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
@@ -128,12 +127,15 @@ import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.commons.validator.routines.UrlValidatorUtil;
+import org.apache.fontbox.ttf.OTFParser;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URIBuilderUtil;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.eclipse.jetty.http.HttpStatus;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -361,6 +363,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	private DefaultTableModel dtmLink = null;
 
 	private transient ListSelectionModel lsmLink = null;
+
+	private PDFont pdFont = null;
 
 	private JapanDictGui() {
 	}
@@ -2432,6 +2436,34 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				document.addPage(page);
 				//
+				if (instance.pdFont == null) {
+					//
+					try (final InputStream is = Util.getResourceAsStream(JapanDictGui.class,
+							"/NotoSansCJKjp-Regular.otf")) {
+						//
+						instance.pdFont = testAndApply(Objects::nonNull,
+								testAndApply(Objects::nonNull, is, new OTFParser()::parseEmbedded, null),
+								x -> PDType0Font.load(document, x, false), null);
+						//
+					} // try
+						//
+				} // if
+					//
+				pageContentStream.beginText();
+				//
+				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, 10));
+				//
+				testAndAccept(
+						(a, b) -> !IterableUtils.isEmpty(
+								Util.cast(Iterable.class, Narcissus.getField(a, getFieldByName(a, "fontStack"))))
+								&& b != null,
+						pageContentStream,
+						JapanDictEntry.getText(Util.cast(JapanDictEntry.class,
+								getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0))),
+						(a, b) -> a.showText(b));
+				//
+				pageContentStream.endText();
+				//
 				IOUtils.closeQuietly(pageContentStream);
 				//
 				final File file = new File("test.pdf");
@@ -2758,10 +2790,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, @Nullable final U u,
-			final BiConsumer<T, U> consumer) {
+	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, final T t,
+			@Nullable final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
 		if (Util.test(instance, t, u)) {
-			Util.accept(consumer, t, u);
+			FailableBiConsumerUtil.accept(consumer, t, u);
 		} // if
 	}
 

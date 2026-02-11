@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
@@ -157,7 +156,7 @@ class JapanDictGuiTest {
 				FailableLongConsumer.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT4_BI_PREDICATE = Util.getDeclaredMethod(clz, "testAndAccept", BiPredicate.class,
-				Object.class, Object.class, BiConsumer.class)).setAccessible(true);
+				Object.class, Object.class, FailableBiConsumer.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT5 = Util.getDeclaredMethod(clz, "testAndAccept", BiPredicate.class, Object.class,
 				Object.class, FailableBiConsumer.class, Consumer.class)).setAccessible(true);
