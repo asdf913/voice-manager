@@ -986,12 +986,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 			} catch (final Exception e) {
 				//
-				if (GraphicsEnvironment.isHeadless()) {
+				testAndRun(GraphicsEnvironment.isHeadless(), () -> {
 					//
 					throw e instanceof RuntimeException re ? re : new RuntimeException(e);
 					//
-				} // if
-					//
+				});
+				//
 				TaskDialogs.showException(e);
 				//
 			} finally {
