@@ -586,6 +586,10 @@ class JapanDictGuiTest {
 					//
 					Util.add(collection, Long.valueOf(0));
 					//
+				} else if (Objects.equals(parameterType, Float.TYPE)) {
+					//
+					Util.add(collection, Float.valueOf(0));
+					//
 				} else if (Objects.equals(parameterType, Character.TYPE)) {
 					//
 					Util.add(collection, Character.valueOf(' '));
@@ -759,6 +763,10 @@ class JapanDictGuiTest {
 				} else if (Objects.equals(parameterType, Long.TYPE)) {
 					//
 					Util.add(collection, Long.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Float.TYPE)) {
+					//
+					Util.add(collection, Float.valueOf(0));
 					//
 				} else if (Objects.equals(parameterType, Character.TYPE)) {
 					//

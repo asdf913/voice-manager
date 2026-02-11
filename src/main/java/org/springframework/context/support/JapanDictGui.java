@@ -134,7 +134,11 @@ import org.apache.http.client.utils.URIBuilderUtil;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageUtil;
+import org.apache.pdfbox.pdmodel.common.PDRectangleUtil;
 import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
+import org.apache.pdfbox.pdmodel.font.PDFontUtil;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.eclipse.jetty.http.HttpStatus;
 import org.javatuples.Unit;
@@ -2437,12 +2441,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		if (Objects.equals(source, instance.btnPdf)) {
 			//
-			final PDPage page = new PDPage();
+			final PDPage pdPage = new PDPage();
 			//
 			try (final PDDocument document = new PDDocument();
-					final PDPageContentStream pageContentStream = new PDPageContentStream(document, page)) {
+					final PDPageContentStream pageContentStream = new PDPageContentStream(document, pdPage)) {
 				//
-				document.addPage(page);
+				document.addPage(pdPage);
 				//
 				if (instance.pdFont == null) {
 					//
@@ -2472,7 +2476,16 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 				pageContentStream.beginText();
 				//
-				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, 10));
+				final int fontSize = 10;
+				//
+				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
+				//
+				final PDFontDescriptor pdFontDescriptor = PDFontUtil.getFontDescriptor(instance.pdFont);
+				//
+				pageContentStream.newLineAtOffset(0, PDRectangleUtil.getHeight(PDPageUtil.getMediaBox(pdPage))
+						//
+						- (getAscent(pdFontDescriptor, 0) / 1000 * fontSize)
+						+ (getDescent(pdFontDescriptor, 0) / 1000 * fontSize));
 				//
 				showText(pageContentStream, JapanDictEntry.getText(
 						Util.cast(JapanDictEntry.class, getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0))));
@@ -2497,6 +2510,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return false;
 		//
+	}
+
+	private static float getAscent(final PDFontDescriptor instance, final float defaultValue) {
+		return instance != null && instance.getCOSObject() != null ? instance.getAscent() : defaultValue;
+	}
+
+	private static float getDescent(final PDFontDescriptor instance, final float defaultValue) {
+		return instance != null && instance.getCOSObject() != null ? instance.getDescent() : defaultValue;
 	}
 
 	private static void throwRuntimeException(final Throwable e) {
