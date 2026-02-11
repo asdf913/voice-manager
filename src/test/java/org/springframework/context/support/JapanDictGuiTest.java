@@ -3,6 +3,7 @@ package org.springframework.context.support;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -470,6 +471,8 @@ class JapanDictGuiTest {
 
 	private String connectivity = null;
 
+	private final boolean isHeadless = GraphicsEnvironment.isHeadless();
+
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
@@ -598,7 +601,7 @@ class JapanDictGuiTest {
 				if (Objects.equals(name, "actionPerformed")
 						&& Arrays.equals(parameterTypes, new Class<?>[] { ActionEvent.class })
 						&& Objects.equals(operatingSystem, OperatingSystem.LINUX)
-						&& !StringsUtil.equals(Strings.CI, connectivity, "full")) {
+						&& !StringsUtil.equals(Strings.CI, connectivity, "full") && isHeadless) {
 					//
 					final Method m1 = m;
 					//
@@ -791,7 +794,7 @@ class JapanDictGuiTest {
 				if (Objects.equals(name, "actionPerformed")
 						&& Arrays.equals(parameterTypes, new Class<?>[] { ActionEvent.class })
 						&& Objects.equals(operatingSystem, OperatingSystem.LINUX)
-						&& !StringsUtil.equals(Strings.CI, connectivity, "full")) {
+						&& !StringsUtil.equals(Strings.CI, connectivity, "full") && isHeadless) {
 					//
 					final Method m1 = m;
 					//
@@ -893,7 +896,7 @@ class JapanDictGuiTest {
 			Narcissus.setField(instance, f, abstractButton);
 			//
 			if (Objects.equals(Util.getName(f), "btnExecute") && Objects.equals(operatingSystem, OperatingSystem.LINUX)
-					&& !StringsUtil.equals(Strings.CI, connectivity, "full")) {
+					&& !StringsUtil.equals(Strings.CI, connectivity, "full") && isHeadless) {
 				//
 				Assertions.assertThrows(RuntimeException.class,
 						() -> instance.actionPerformed(new ActionEvent(abstractButton, 0, null)));
