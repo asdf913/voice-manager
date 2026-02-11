@@ -475,6 +475,8 @@ class JapanDictGuiTest {
 
 	private final boolean isHeadless = GraphicsEnvironment.isHeadless();
 
+	private boolean nmcliExists = false;
+
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
@@ -492,17 +494,16 @@ class JapanDictGuiTest {
 			//
 			final Charset charset = StandardCharsets.UTF_8;
 			//
-			boolean exists = false;
-			//
 			try (final InputStream is = getInputStream(start(new ProcessBuilder(new String[] { "which", "nmcli" })))) {
 				//
-				exists = Util.exists(testAndApply(Objects::nonNull, StringUtils.trim(IOUtils.toString(is, charset)),
-						File::new, null));
+				nmcliExists = Util.exists(testAndApply(Objects::nonNull,
+						StringUtils.trim(IOUtils.toString(is, charset)), File::new, null));
 				//
 			} // try
 				//
-			try (final InputStream is = getInputStream(start(
-					exists ? new ProcessBuilder(new String[] { "nmcli", "-mode", "multiline", "general" }) : null))) {
+			try (final InputStream is = getInputStream(
+					start(nmcliExists ? new ProcessBuilder(new String[] { "nmcli", "-mode", "multiline", "general" })
+							: null))) {
 				//
 				final Collection<String> collection = testAndApply(Objects::nonNull, is,
 						x -> IOUtils.readLines(x, charset), null);
@@ -624,7 +625,7 @@ class JapanDictGuiTest {
 				if (Objects.equals(name, "actionPerformed")
 						&& Arrays.equals(parameterTypes, new Class<?>[] { ActionEvent.class })
 						&& Objects.equals(operatingSystem, OperatingSystem.LINUX)
-						&& !StringsUtil.equals(Strings.CI, connectivity, "full") && isHeadless) {
+						&& !StringsUtil.equals(Strings.CI, connectivity, "full") && isHeadless && nmcliExists) {
 					//
 					final Method m1 = m;
 					//
@@ -817,7 +818,7 @@ class JapanDictGuiTest {
 				if (Objects.equals(name, "actionPerformed")
 						&& Arrays.equals(parameterTypes, new Class<?>[] { ActionEvent.class })
 						&& Objects.equals(operatingSystem, OperatingSystem.LINUX)
-						&& !StringsUtil.equals(Strings.CI, connectivity, "full") && isHeadless) {
+						&& !StringsUtil.equals(Strings.CI, connectivity, "full") && isHeadless && nmcliExists) {
 					//
 					final Method m1 = m;
 					//
@@ -919,7 +920,7 @@ class JapanDictGuiTest {
 			Narcissus.setField(instance, f, abstractButton);
 			//
 			if (Objects.equals(Util.getName(f), "btnExecute") && Objects.equals(operatingSystem, OperatingSystem.LINUX)
-					&& !StringsUtil.equals(Strings.CI, connectivity, "full") && isHeadless) {
+					&& !StringsUtil.equals(Strings.CI, connectivity, "full") && isHeadless && nmcliExists) {
 				//
 				Assertions.assertThrows(RuntimeException.class,
 						() -> instance.actionPerformed(new ActionEvent(abstractButton, 0, null)));
