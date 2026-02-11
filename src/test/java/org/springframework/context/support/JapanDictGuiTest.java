@@ -895,14 +895,16 @@ class JapanDictGuiTest {
 		try (final InputStream is = Util.getResourceAsStream(clz,
 				"/" + StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/") + ".class")) {
 			//
-			final Instruction[] instructions = InstructionListUtil.getInstructions(testAndApply(Objects::nonNull,
-					getCode(getCode(JavaClassUtil.getMethod(ClassParserUtil
-							.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)), method))),
-					InstructionList::new, null));
+			final Stream<Instruction> stream = testAndApply(Objects::nonNull,
+					InstructionListUtil
+							.getInstructions(testAndApply(Objects::nonNull,
+									getCode(getCode(JavaClassUtil.getMethod(ClassParserUtil.parse(
+											testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),
+											method))),
+									InstructionList::new, null)),
+					Arrays::stream, null);
 			//
-			return CollectionUtils.isEqualCollection(
-					Util.toList(Util.map(testAndApply(Objects::nonNull, instructions, Arrays::stream, null),
-							x -> x != null ? x.getName() : null)),
+			return CollectionUtils.isEqualCollection(Util.toList(Util.map(stream, x -> x != null ? x.getName() : null)),
 					Arrays.asList("aload_0", "instanceof", "ifeq", "aload_0", "checkcast", "astore_1", "aload_1",
 							"goto", "new", "dup", "aload_0", "invokespecial", "athrow"));
 			//
