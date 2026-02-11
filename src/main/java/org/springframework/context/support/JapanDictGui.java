@@ -367,7 +367,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private transient ListSelectionModel lsmLink = null;
 
-	private PDFont pdFont = null;
+	private transient PDFont pdFont = null;
 
 	private JapanDictGui() {
 	}
