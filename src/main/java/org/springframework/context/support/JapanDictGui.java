@@ -282,7 +282,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Copy URL")
 	private AbstractButton btnCopyUrl = null;
 
-	private AbstractButton btnBrowseUrl, btnPdf = null;
+	@Note("Browse URL")
+	private AbstractButton btnBrowseUrl = null;
+
+	private AbstractButton btnPdf = null;
 
 	private JComboBox<String> jcbJlptLevel = null;
 
