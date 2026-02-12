@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -848,7 +849,9 @@ class JapanDictGuiTest {
 						Boolean.logicalAnd(Objects.equals(name, "getMinMax"),
 								Arrays.equals(parameterTypes, new Class<?>[] { int[].class, Integer.TYPE })),
 						Boolean.logicalAnd(Objects.equals(name, "chopImage"),
-								Arrays.equals(parameterTypes, new Class<?>[] { BufferedImage.class, int[].class })))) {
+								Arrays.equals(parameterTypes, new Class<?>[] { BufferedImage.class, int[].class })),
+						Boolean.logicalAnd(Objects.equals(name, "orElse"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Optional.class, Object.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
