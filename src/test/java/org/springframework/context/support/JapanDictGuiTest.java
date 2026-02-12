@@ -95,6 +95,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.meeuw.functional.ThrowingRunnable;
 import org.oxbow.swingbits.util.OperatingSystem;
 import org.oxbow.swingbits.util.OperatingSystemUtil;
 import org.springframework.util.ReflectionUtils;
@@ -141,7 +142,8 @@ class JapanDictGuiTest {
 			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_FILTER,
 			METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW, METHOD_OR,
 			METHOD_GET_MIN_MAX, METHOD_THEN_ACCEPT_ASYNC, METHOD_SET_STROKE_IMAGE_AND_STROKE_WITH_NUMBER_IMAGE,
-			METHOD_COPY_FIELD, METHOD_GET_LINK_MULTI_MAP_ELEMENT, METHOD_GET_LINK_MULTI_MAP_STRING = null;
+			METHOD_COPY_FIELD, METHOD_GET_LINK_MULTI_MAP_ELEMENT, METHOD_GET_LINK_MULTI_MAP_STRING,
+			METHOD_TEST_AND_RUN_THROWS = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -283,6 +285,9 @@ class JapanDictGuiTest {
 		//
 		(METHOD_GET_LINK_MULTI_MAP_STRING = Util.getDeclaredMethod(clz, "getLinkMultimap", String.class,
 				Iterable.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_RUN_THROWS = Util.getDeclaredMethod(clz, "testAndRunThrows", Boolean.TYPE,
+				ThrowingRunnable.class)).setAccessible(true);
 		//
 		CLASS_PITCH_ACCENT = Util.forName("org.springframework.context.support.JapanDictGui$PitchAccent");
 		//
@@ -2191,6 +2196,13 @@ class JapanDictGuiTest {
 				//
 		} // for
 			//
+	}
+
+	@Test
+	void testTestAndRunThrows() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_RUN_THROWS, null, Boolean.TRUE, null));
+		//
 	}
 
 }

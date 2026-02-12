@@ -153,6 +153,8 @@ import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.nodes.TextNodeUtil;
 import org.meeuw.functional.Predicates;
+import org.meeuw.functional.ThrowingRunnable;
+import org.meeuw.functional.ThrowingRunnableUtil;
 import org.meeuw.functional.TriConsumer;
 import org.meeuw.functional.TriConsumerUtil;
 import org.oxbow.swingbits.dialog.task.TaskDialogs;
@@ -2489,10 +2491,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				final float descent = PDFontDescriptorUtil.getDescent(pdFontDescriptor, 0);
 				//
-				final float pageHeight = PDRectangleUtil.getHeight(PDPageUtil.getMediaBox(pdPage))
+				float pageHeight = PDRectangleUtil.getHeight(PDPageUtil.getMediaBox(pdPage))
 						- (ascent / 1000 * fontSize) + (descent / 1000 * fontSize);
 				//
-				pageContentStream.newLineAtOffset(0, pageHeight);
+				final float width = getTextWidth("Romaji", instance.pdFont, fontSize);
+				//
+				pageContentStream.newLineAtOffset(width, pageHeight);
 				//
 				final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class,
 						getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0));
@@ -2508,7 +2512,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
 				//
 				pageContentStream.newLineAtOffset(0,
-						pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+						pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+				//
+				showText(pageContentStream, "Romaji");
+				//
+				pageContentStream.endText();
+				//
+				pageContentStream.beginText();
+				//
+				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
+				//
+				pageContentStream.newLineAtOffset(width, pageHeight);
 				//
 				showText(pageContentStream, japanDictEntry != null ? japanDictEntry.romaji : null);
 				//
@@ -2532,6 +2546,112 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return false;
 		//
+	}
+
+	private static float getTextWidth(final String text, final PDFont font, final float fontSize) throws IOException {
+		//
+		float width = 0;
+		//
+		if (testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), text, getFieldByName(text, "value"),
+				(a, b) -> Narcissus.getField(a, b), null) != null) {
+			//
+			for (int i = 0; i < StringUtils.length(text); i++) {
+				//
+				// Get the width of each character and add it to the total width
+				//
+				width += getWidth(font, text.charAt(i), 0) / 1000.0f;
+				//
+			} // for
+				//
+		} // if
+			//
+		return width * fontSize;
+		//
+	}
+
+	private static float getWidth(final PDFont instance, final int code, final float defaultValue) throws IOException {
+		//
+		if (instance == null) {
+			//
+			return defaultValue;
+			//
+		} // if
+			//
+		final Class<?> clz = Util.getClass(instance);
+		//
+		final String name = Util.getName(clz);
+		//
+		List<Field> fs = null;
+		//
+		Field f = null;
+		//
+		if (Util.contains(Arrays.asList("org.apache.pdfbox.pdmodel.font.PDMMType1Font",
+				"org.apache.pdfbox.pdmodel.font.PDTrueTypeFont", "org.apache.pdfbox.pdmodel.font.PDType1CFont",
+				"org.apache.pdfbox.pdmodel.font.PDType1Font"), name)) {
+			//
+			testAndRunThrows(
+					IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
+							x -> Objects.equals(Util.getName(x), "codeToWidthMap")))) > 1,
+					() -> {
+						//
+						throw new IllegalStateException();
+						//
+					});
+			//
+			if ((f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) != null
+					&& Narcissus.getField(instance, f) == null) {
+				//
+				return defaultValue;
+				//
+			} // if
+				//
+		} else if (Objects.equals("org.apache.pdfbox.pdmodel.font.PDType0Font", name)) {
+			//
+			testAndRunThrows(
+					IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
+							x -> Objects.equals(Util.getName(x), "descendantFont")))) > 1,
+					() -> {
+						//
+						throw new IllegalStateException();
+						//
+					});
+			//
+			if ((f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) != null
+					&& Narcissus.getField(instance, f) == null) {
+				//
+				return defaultValue;
+				//
+			} // if
+				//
+		} else if (Objects.equals("org.apache.pdfbox.pdmodel.font.PDType3Font", name)) {
+			//
+			testAndRunThrows(
+					IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
+							x -> Objects.equals(Util.getName(x), "dict")))) > 1,
+					() -> {
+						//
+						throw new IllegalStateException();
+						//
+					});
+			//
+			if ((f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) != null
+					&& Narcissus.getField(instance, f) == null) {
+				//
+				return defaultValue;
+				//
+			} // if
+				//
+		} // if
+			//
+		return instance.getWidth(code);
+		//
+	}
+
+	private static <E extends Throwable> void testAndRunThrows(final boolean b,
+			final ThrowingRunnable<E> throwingRunnable) throws E {
+		if (b) {
+			ThrowingRunnableUtil.runThrows(throwingRunnable);
+		}
 	}
 
 	private static void throwRuntimeException(final Throwable e) {
