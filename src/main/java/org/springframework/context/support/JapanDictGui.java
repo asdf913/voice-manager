@@ -2479,8 +2479,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							//
 							instance.pdFont = testAndApply(Objects::nonNull,
 									testAndApply(
-											x -> x != null && ci != null
-													&& StringsUtil.equals(Strings.CI, ci.getName(), "OpenType"),
+											x -> x != null && StringsUtil.equals(Strings.CI, getName(ci), "OpenType"),
 											bais, new OTFParser()::parseEmbedded, null),
 									x -> PDType0Font.load(document, x, false), null);
 							//
@@ -2646,7 +2645,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return false;
 		//
 	}
-	//
+
+	private static String getName(final ContentInfo instance) {
+		return instance != null ? instance.getName() : null;
+	}
 
 	private static void drawImage(final PDPageContentStream instance, final PDImageXObject image, final float x,
 			final float y) throws IOException {
