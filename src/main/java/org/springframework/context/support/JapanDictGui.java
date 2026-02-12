@@ -2600,7 +2600,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static <T> T orElse(final Optional<T> instance, @Nullable final T defaultValue) {
+	private static <T> T orElse(@Nullable final Optional<T> instance, @Nullable final T defaultValue) {
 		return instance != null ? instance.orElse(defaultValue) : null;
 	}
 
