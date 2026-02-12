@@ -2509,7 +2509,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				float pageHeight = PDRectangleUtil.getHeight(PDPageUtil.getMediaBox(pdPage))
 						- (ascent / 1000 * fontSize) + (descent / 1000 * fontSize);
 				//
-				final float width = Util
+				float width = Util
 						.floatValue(
 								orElse(Util.max(
 										FailableStreamUtil.stream(FailableStreamUtil.map(
@@ -2623,11 +2623,71 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 				} // try
 					//
+				final float textHeight = getTextHeight(instance.pdFont, fontSize,
+						PDRectangleUtil.getWidth(PDPageUtil.getMediaBox(pdPage)) / 10, PDPageUtil.getMediaBox(pdPage));
+				//
 				drawImage(pageContentStream, pdImageXObject, width,
-						pageHeight - PDImageUtil.getHeight(pdImageXObject)
-								+ getTextHeight(instance.pdFont, fontSize,
-										PDRectangleUtil.getWidth(PDPageUtil.getMediaBox(pdPage)) / 10,
-										PDPageUtil.getMediaBox(pdPage)));
+						pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
+				//
+				// Stroke
+				//
+				width = Util.floatValue(orElse(Util.max(
+						FailableStreamUtil.stream(
+								FailableStreamUtil.map(new FailableStream<>(Stream.of("Stroke", "Stroke with Number")),
+										x -> Float.valueOf(getTextWidth(x, instance.pdFont, fontSize)))),
+						ObjectUtils::compare), null), 0);
+				//
+				beginText(pageContentStream);
+				//
+				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
+				//
+				newLineAtOffset(pageContentStream, 0,
+						pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+				//
+				showText(pageContentStream, "Stroke");
+				//
+				endText(pageContentStream);
+				//
+				try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+					//
+					testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null),
+							japanDictEntry != null ? japanDictEntry.strokeImage : null, baos,
+							(a, b) -> ImageIO.write(a, "png", b), null);
+					//
+					pdImageXObject = testAndApply((a, b) -> b != null && b.length > 0, document, baos.toByteArray(),
+							(a, b) -> PDImageXObject.createFromByteArray(a, b, null), null);
+					//
+				} // try
+					//
+				drawImage(pageContentStream, pdImageXObject, width,
+						pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
+				//
+				// Stroke with Number
+				//
+				beginText(pageContentStream);
+				//
+				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
+				//
+				newLineAtOffset(pageContentStream, 0,
+						pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+				//
+				showText(pageContentStream, "Stroke With Number");
+				//
+				endText(pageContentStream);
+				//
+				try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+					//
+					testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null),
+							japanDictEntry != null ? japanDictEntry.strokeWithNumberImage : null, baos,
+							(a, b) -> ImageIO.write(a, "png", b), null);
+					//
+					pdImageXObject = testAndApply((a, b) -> b != null && b.length > 0, document, baos.toByteArray(),
+							(a, b) -> PDImageXObject.createFromByteArray(a, b, null), null);
+					//
+				} // try
+					//
+				drawImage(pageContentStream, pdImageXObject, width,
+						pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
 				//
 				IOUtils.closeQuietly(pageContentStream);
 				//
