@@ -178,14 +178,10 @@ class VoiceManagerImageToPdfPanelTest {
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
-			if (self instanceof COSObjectable) {
+			if (self instanceof COSObjectable && Objects.equals(methodName, "getCOSObject")) {
 				//
-				if (Objects.equals(methodName, "getCOSObject")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			if (self instanceof PDPage) {
