@@ -2715,6 +2715,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
+	@Nullable
 	private static IntIntPair getMinimumAndMaximumY(final BufferedImage bi) {
 		//
 		Color c = null;
