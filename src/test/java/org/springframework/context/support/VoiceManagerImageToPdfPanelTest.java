@@ -41,6 +41,7 @@ import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.COSObjectable;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
@@ -177,6 +178,16 @@ class VoiceManagerImageToPdfPanelTest {
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
+			if (self instanceof COSObjectable) {
+				//
+				if (Objects.equals(methodName, "getCOSObject")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
+				//
 			if (self instanceof PDPage) {
 				//
 				if (Objects.equals(methodName, "getAnnotations")) {
