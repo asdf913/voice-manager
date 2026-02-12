@@ -2607,7 +2607,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		float width = 0;
 		//
-		if (testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), text, getFieldByName(text, "value"),
+		if (testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), text, getFieldByName(text, VALUE),
 				Narcissus::getField, null) != null) {
 			//
 			for (int i = 0; i < StringUtils.length(text); i++) {
