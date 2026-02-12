@@ -51,6 +51,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -2494,7 +2495,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				float pageHeight = PDRectangleUtil.getHeight(PDPageUtil.getMediaBox(pdPage))
 						- (ascent / 1000 * fontSize) + (descent / 1000 * fontSize);
 				//
-				final float width = getTextWidth("Romaji", instance.pdFont, fontSize);
+				final float width = Util.floatValue(get(Util.max(
+						FailableStreamUtil.stream(FailableStreamUtil.map(
+								new FailableStream<>(Stream.of("Romaji", "Hiragana", "Katakana")),
+								x -> Float.valueOf(getTextWidth(x, instance.pdFont, fontSize)))),
+						ObjectUtils::compare)), 0);
 				//
 				pageContentStream.newLineAtOffset(width, pageHeight);
 				//
@@ -2528,6 +2533,52 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				pageContentStream.endText();
 				//
+				// Hiragana
+				//
+				pageContentStream.beginText();
+				//
+				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
+				//
+				pageContentStream.newLineAtOffset(0,
+						pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+				//
+				showText(pageContentStream, "Hiragana");
+				//
+				pageContentStream.endText();
+				//
+				pageContentStream.beginText();
+				//
+				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
+				//
+				pageContentStream.newLineAtOffset(width, pageHeight);
+				//
+				showText(pageContentStream, japanDictEntry != null ? japanDictEntry.hiragana : null);
+				//
+				pageContentStream.endText();
+				//
+				// katakana
+				//
+				pageContentStream.beginText();
+				//
+				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
+				//
+				pageContentStream.newLineAtOffset(0,
+						pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+				//
+				showText(pageContentStream, "Katakana");
+				//
+				pageContentStream.endText();
+				//
+				pageContentStream.beginText();
+				//
+				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
+				//
+				pageContentStream.newLineAtOffset(width, pageHeight);
+				//
+				showText(pageContentStream, japanDictEntry != null ? japanDictEntry.katakana : null);
+				//
+				pageContentStream.endText();
+				//
 				IOUtils.closeQuietly(pageContentStream);
 				//
 				final File file = Util.toFile(Path.of("test.pdf"));
@@ -2546,6 +2597,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return false;
 		//
+	}
+
+	private static <T> T get(final Optional<T> instance) {
+		return instance != null && instance.isPresent() ? instance.get() : null;
 	}
 
 	private static float getTextWidth(final String text, final PDFont font, final float fontSize) throws IOException {
