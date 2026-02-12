@@ -2475,6 +2475,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						//
 				} // if
 					//
+					// Text
+					//
 				pageContentStream.beginText();
 				//
 				final int fontSize = 10;
@@ -2483,13 +2485,32 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				final PDFontDescriptor pdFontDescriptor = PDFontUtil.getFontDescriptor(instance.pdFont);
 				//
-				pageContentStream.newLineAtOffset(0, PDRectangleUtil.getHeight(PDPageUtil.getMediaBox(pdPage))
-						//
-						- (PDFontDescriptorUtil.getAscent(pdFontDescriptor, 0) / 1000 * fontSize)
-						+ (PDFontDescriptorUtil.getDescent(pdFontDescriptor, 0) / 1000 * fontSize));
+				final float ascent = PDFontDescriptorUtil.getAscent(pdFontDescriptor, 0);
 				//
-				showText(pageContentStream, JapanDictEntry.getText(
-						Util.cast(JapanDictEntry.class, getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0))));
+				final float descent = PDFontDescriptorUtil.getDescent(pdFontDescriptor, 0);
+				//
+				final float pageHeight = PDRectangleUtil.getHeight(PDPageUtil.getMediaBox(pdPage))
+						- (ascent / 1000 * fontSize) + (descent / 1000 * fontSize);
+				//
+				pageContentStream.newLineAtOffset(0, pageHeight);
+				//
+				final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class,
+						getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0));
+				//
+				showText(pageContentStream, JapanDictEntry.getText(japanDictEntry));
+				//
+				pageContentStream.endText();
+				//
+				// Romaji
+				//
+				pageContentStream.beginText();
+				//
+				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
+				//
+				pageContentStream.newLineAtOffset(0,
+						pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+				//
+				showText(pageContentStream, japanDictEntry != null ? japanDictEntry.romaji : null);
 				//
 				pageContentStream.endText();
 				//
