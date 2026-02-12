@@ -216,6 +216,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private static final String PITCH_ACCENT = "Pitch Accent";
 
+	private static final String RASTER = "raster";
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -1666,7 +1668,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		final Iterable<Field> fs = Util
 				.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(bufferedImage))),
-						x -> Objects.equals(Util.getName(x), "raster")));
+						x -> Objects.equals(Util.getName(x), RASTER)));
 		//
 		testAndRun(IterableUtils.size(fs) > 1, () -> {
 			//
@@ -2725,7 +2727,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		IntIntMutablePair intIntPair = null;
 		//
-		for (int x = 0; bi != null && Narcissus.getField(bi, getFieldByName(bi, "raster")) != null
+		for (int x = 0; bi != null && Narcissus.getField(bi, getFieldByName(bi, RASTER)) != null
 				&& x < bi.getWidth(); x++) {
 			//
 			for (int y = 0; y < bi.getHeight(); y++) {
@@ -3956,7 +3958,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		final Iterable<Field> fs = Util.toList(Util.filter(
 				Util.stream(
 						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
-				x -> Objects.equals(Util.getName(x), "raster")));
+				x -> Objects.equals(Util.getName(x), RASTER)));
 		//
 		testAndRun(IterableUtils.size(fs) > 1, () -> {
 			//
