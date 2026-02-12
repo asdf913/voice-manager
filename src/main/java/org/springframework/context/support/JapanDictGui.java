@@ -2624,7 +2624,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static float getWidth(final PDFont instance, final int code, final float defaultValue) throws IOException {
+	private static float getWidth(@Nullable final PDFont instance, final int code, final float defaultValue)
+			throws IOException {
 		//
 		if (instance == null) {
 			//
