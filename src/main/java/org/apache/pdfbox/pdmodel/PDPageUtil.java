@@ -9,11 +9,11 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 public interface PDPageUtil {
 
 	static PDRectangle getMediaBox(final PDPage instance) {
-		return instance != null ? instance.getMediaBox() : null;
+		return instance != null && instance.getCOSObject() != null ? instance.getMediaBox() : null;
 	}
 
 	static List<PDAnnotation> getAnnotations(final PDPage instance) throws IOException {
-		return instance != null ? instance.getAnnotations() : null;
+		return instance != null && instance.getCOSObject() != null ? instance.getAnnotations() : null;
 	}
 
 }
