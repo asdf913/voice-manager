@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -80,6 +79,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableBiConsumer;
+import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableLongConsumer;
@@ -194,7 +194,7 @@ class JapanDictGuiTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY5 = Util.getDeclaredMethod(clz, "testAndApply", BiPredicate.class, Object.class,
-				Object.class, BiFunction.class, BiFunction.class)).setAccessible(true);
+				Object.class, FailableBiFunction.class, FailableBiFunction.class)).setAccessible(true);
 		//
 		(METHOD_TO_ARRAY = Util.getDeclaredMethod(clz, "toArray", Stream.class, IntFunction.class)).setAccessible(true);
 		//
@@ -352,7 +352,7 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof BiFunction) {
+			} else if (proxy instanceof FailableBiFunction) {
 				//
 				if (Objects.equals(name, "apply")) {
 					//

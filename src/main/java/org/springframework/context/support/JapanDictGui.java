@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Desktop;
@@ -20,6 +21,7 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,7 +55,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -112,6 +113,8 @@ import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiConsumerUtil;
+import org.apache.commons.lang3.function.FailableBiFunction;
+import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -136,12 +139,17 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.PDPageUtil;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.common.PDRectangleUtil;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptorUtil;
 import org.apache.pdfbox.pdmodel.font.PDFontUtil;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageUtil;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.pdfbox.rendering.PDFRenderer;
+import org.apache.pdfbox.rendering.PDFRendererUtil;
 import org.eclipse.jetty.http.HttpStatus;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -189,6 +197,8 @@ import com.microsoft.playwright.PlaywrightUtil;
 import com.microsoft.playwright.options.BoundingBox;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import it.unimi.dsi.fastutil.ints.IntIntMutablePair;
+import it.unimi.dsi.fastutil.ints.IntIntPair;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import javazoom.jl.player.PlayerUtil;
@@ -1774,9 +1784,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, @Nullable final T t, final U u,
-			final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse) {
-		return Util.test(predicate, t, u) ? Util.apply(functionTrue, t, u) : Util.apply(functionFalse, t, u);
+	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, @Nullable final T t,
+			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
+			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
+		return Util.test(predicate, t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
+				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
 
 	private static class IH implements InvocationHandler {
@@ -2480,7 +2492,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					// Text
 					//
-				pageContentStream.beginText();
+				beginText(pageContentStream);
 				//
 				final int fontSize = 10;
 				//
@@ -2496,95 +2508,130 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						- (ascent / 1000 * fontSize) + (descent / 1000 * fontSize);
 				//
 				final float width = Util
-						.floatValue(orElse(Util.max(
-								FailableStreamUtil.stream(FailableStreamUtil.map(
-										new FailableStream<>(Stream.of("Romaji", "Hiragana", "Katakana")),
-										x -> Float.valueOf(getTextWidth(x, instance.pdFont, fontSize)))),
-								ObjectUtils::compare), null), 0);
+						.floatValue(
+								orElse(Util.max(
+										FailableStreamUtil.stream(FailableStreamUtil.map(
+												new FailableStream<>(
+														Stream.of("Romaji", "Hiragana", "Katakana", "Furigana")),
+												x -> Float.valueOf(getTextWidth(x, instance.pdFont, fontSize)))),
+										ObjectUtils::compare), null),
+								0);
 				//
-				pageContentStream.newLineAtOffset(width, pageHeight);
+				newLineAtOffset(pageContentStream, width, pageHeight);
 				//
 				final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class,
 						getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0));
 				//
 				showText(pageContentStream, JapanDictEntry.getText(japanDictEntry));
 				//
-				pageContentStream.endText();
+				endText(pageContentStream);
 				//
 				// Romaji
 				//
-				pageContentStream.beginText();
+				beginText(pageContentStream);
 				//
 				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
 				//
-				pageContentStream.newLineAtOffset(0,
+				newLineAtOffset(pageContentStream, 0,
 						pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
 				//
 				showText(pageContentStream, "Romaji");
 				//
-				pageContentStream.endText();
+				endText(pageContentStream);
 				//
-				pageContentStream.beginText();
+				beginText(pageContentStream);
 				//
 				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
 				//
-				pageContentStream.newLineAtOffset(width, pageHeight);
+				newLineAtOffset(pageContentStream, width, pageHeight);
 				//
 				showText(pageContentStream, japanDictEntry != null ? japanDictEntry.romaji : null);
 				//
-				pageContentStream.endText();
+				endText(pageContentStream);
 				//
 				// Hiragana
 				//
-				pageContentStream.beginText();
+				beginText(pageContentStream);
 				//
 				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
 				//
-				pageContentStream.newLineAtOffset(0,
+				newLineAtOffset(pageContentStream, 0,
 						pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
 				//
 				showText(pageContentStream, "Hiragana");
 				//
-				pageContentStream.endText();
+				endText(pageContentStream);
 				//
-				pageContentStream.beginText();
+				beginText(pageContentStream);
 				//
 				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
 				//
-				pageContentStream.newLineAtOffset(width, pageHeight);
+				newLineAtOffset(pageContentStream, width, pageHeight);
 				//
 				showText(pageContentStream, japanDictEntry != null ? japanDictEntry.hiragana : null);
 				//
-				pageContentStream.endText();
+				endText(pageContentStream);
 				//
 				// katakana
 				//
-				pageContentStream.beginText();
+				beginText(pageContentStream);
 				//
 				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
 				//
-				pageContentStream.newLineAtOffset(0,
+				newLineAtOffset(pageContentStream, 0,
 						pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
 				//
 				showText(pageContentStream, "Katakana");
 				//
-				pageContentStream.endText();
+				endText(pageContentStream);
 				//
-				pageContentStream.beginText();
+				beginText(pageContentStream);
 				//
 				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
 				//
-				pageContentStream.newLineAtOffset(width, pageHeight);
+				newLineAtOffset(pageContentStream, width, pageHeight);
 				//
 				showText(pageContentStream, japanDictEntry != null ? japanDictEntry.katakana : null);
 				//
-				pageContentStream.endText();
+				endText(pageContentStream);
+				//
+				// Furigana
+				//
+				beginText(pageContentStream);
+				//
+				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
+				//
+				newLineAtOffset(pageContentStream, 0,
+						pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+				//
+				showText(pageContentStream, "Furigana");
+				//
+				endText(pageContentStream);
+				//
+				PDImageXObject pdImageXObject = null;
+				//
+				try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+					//
+					testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null),
+							japanDictEntry != null ? japanDictEntry.furiganaImage : null, baos,
+							(a, b) -> ImageIO.write(a, "png", b), null);
+					//
+					pdImageXObject = testAndApply((a, b) -> b != null && b.length > 0, document, baos.toByteArray(),
+							(a, b) -> PDImageXObject.createFromByteArray(a, b, null), null);
+					//
+				} // try
+					//
+				drawImage(pageContentStream, pdImageXObject, width,
+						pageHeight - PDImageUtil.getHeight(pdImageXObject)
+								+ getTextHeight(instance.pdFont, fontSize,
+										PDRectangleUtil.getWidth(PDPageUtil.getMediaBox(pdPage)) / 10,
+										PDPageUtil.getMediaBox(pdPage)));
 				//
 				IOUtils.closeQuietly(pageContentStream);
 				//
 				final File file = Util.toFile(Path.of("test.pdf"));
 				//
-				System.out.println(file.getAbsolutePath());
+				System.out.println(Util.getAbsolutePath(file));
 				//
 				document.save(file);
 				//
@@ -2598,6 +2645,166 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return false;
 		//
+	}
+	//
+
+	private static void drawImage(final PDPageContentStream instance, final PDImageXObject image, final float x,
+			final float y) throws IOException {
+		//
+		if (instance != null && image != null && image.getStream() != null) {
+			//
+			instance.drawImage(image, x, y);
+			//
+		} // if
+			//
+	}
+
+	private static void newLineAtOffset(final PDPageContentStream instance, float tx, float ty) throws IOException {
+		//
+		if (instance != null && Narcissus.getBooleanField(instance, getFieldByName(instance, "inTextMode"))) {
+			//
+			instance.newLineAtOffset(tx, ty);
+			//
+		} // if
+			//
+	}
+
+	private static void beginText(final PDPageContentStream instance) throws IOException {
+		//
+		if (instance != null && Narcissus.getField(instance, getFieldByName(instance, "outputStream")) != null) {
+			//
+			instance.beginText();
+			//
+		} // if
+			//
+	}
+
+	private static void endText(final PDPageContentStream instance) throws IOException {
+		//
+		if (instance != null && Narcissus.getBooleanField(instance, getFieldByName(instance, "inTextMode"))) {
+			//
+			instance.endText();
+			//
+		} // if
+			//
+	}
+
+	private static int getTextHeight(final PDFont font, final float fontSize, final float size,
+			final PDRectangle pdRectangle) throws IOException {
+		//
+		try (final PDDocument pdDocument = new PDDocument()) {
+			//
+			final PDPage pdPage = testAndApply(Objects::nonNull, pdRectangle, PDPage::new, x -> new PDPage());
+			//
+			pdDocument.addPage(pdPage);
+			//
+			try (final PDPageContentStream cs = new PDPageContentStream(pdDocument, pdPage)) {
+				//
+				addText(cs, font, fontSize, pdPage, size);
+				//
+			} // try
+				//
+			final IntIntPair intIntPair = getMinimumAndMaximumY(
+					PDFRendererUtil.renderImage(new PDFRenderer(pdDocument), 0));
+			//
+			return intIntPair != null ? intIntPair.rightInt() - intIntPair.leftInt() + 1 : 0;
+			//
+		} // try
+			//
+	}
+
+	private static IntIntPair getMinimumAndMaximumY(final BufferedImage bi) {
+		//
+		Color c = null;
+		//
+		IntIntMutablePair intIntPair = null;
+		//
+		for (int x = 0; bi != null && Narcissus.getField(bi, getFieldByName(bi, "raster")) != null
+				&& x < bi.getWidth(); x++) {
+			//
+			for (int y = 0; y < bi.getHeight(); y++) {
+				//
+				if (c == null) {
+					//
+					c = new Color(bi.getRGB(x, y));
+					//
+				} else if (!Objects.equals(c, new Color(bi.getRGB(x, y)))) {
+					//
+					if (intIntPair == null) {
+						//
+						intIntPair = IntIntMutablePair.of(y, y);
+						//
+					} else {
+						//
+						intIntPair.left(Math.min(intIntPair.leftInt(), y));
+						//
+						intIntPair.right(Math.max(intIntPair.rightInt(), y));
+						//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		return intIntPair;
+		//
+	}
+
+	private static void addText(final PDPageContentStream cs, final PDFont font, final float fontSize,
+			final PDPage pdPage, final float size) throws IOException {
+		//
+		PDFontDescriptor pdFontDescriptor = null;
+		//
+		String value = null;
+		//
+		Field f = null;
+		//
+		for (int i = 0; cs != null && i < 10; i++) {
+			//
+			beginText(cs);
+			//
+			testAndAccept(Objects::nonNull, font, x -> cs.setFont(x, fontSize));
+			//
+			newLineAtOffset(cs, i * size + (size - getTextWidth(
+					//
+					value = Integer.toString(100 - i * 10) + "%"
+					//
+					, font, fontSize)) / 2, (PDRectangleUtil.getHeight(PDPageUtil.getMediaBox(pdPage)) - size
+			//
+							- (PDFontDescriptorUtil.getAscent(pdFontDescriptor = PDFontUtil.getFontDescriptor(font), 0)
+									/ 1000 * fontSize)
+							+ (PDFontDescriptorUtil.getDescent(pdFontDescriptor, 0) / 1000 * fontSize))
+			//
+			);
+			//
+			if (f == null) {
+				//
+				final Collection<Field> fs = Util
+						.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(cs))),
+								x -> Objects.equals(Util.getName(x), "fontStack")));
+				//
+				testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+					//
+					throw new IllegalStateException();
+					//
+				});
+				//
+				f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+				//
+			} // if
+				//
+			if (f == null || !IterableUtils.isEmpty(Util.cast(Iterable.class, Narcissus.getField(cs, f)))) {
+				//
+				cs.showText(value);
+				//
+			} // if
+				//
+			endText(cs);
+			//
+		} // for
+			//
 	}
 
 	@Nullable
