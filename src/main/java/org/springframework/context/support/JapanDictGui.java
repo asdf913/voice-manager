@@ -138,6 +138,7 @@ import org.apache.pdfbox.pdmodel.PDPageUtil;
 import org.apache.pdfbox.pdmodel.common.PDRectangleUtil;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
+import org.apache.pdfbox.pdmodel.font.PDFontDescriptorUtil;
 import org.apache.pdfbox.pdmodel.font.PDFontUtil;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.eclipse.jetty.http.HttpStatus;
@@ -2484,8 +2485,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				pageContentStream.newLineAtOffset(0, PDRectangleUtil.getHeight(PDPageUtil.getMediaBox(pdPage))
 						//
-						- (getAscent(pdFontDescriptor, 0) / 1000 * fontSize)
-						+ (getDescent(pdFontDescriptor, 0) / 1000 * fontSize));
+						- (PDFontDescriptorUtil.getAscent(pdFontDescriptor, 0) / 1000 * fontSize)
+						+ (PDFontDescriptorUtil.getDescent(pdFontDescriptor, 0) / 1000 * fontSize));
 				//
 				showText(pageContentStream, JapanDictEntry.getText(
 						Util.cast(JapanDictEntry.class, getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0))));
@@ -2510,14 +2511,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return false;
 		//
-	}
-
-	private static float getAscent(@Nullable final PDFontDescriptor instance, final float defaultValue) {
-		return instance != null && instance.getCOSObject() != null ? instance.getAscent() : defaultValue;
-	}
-
-	private static float getDescent(@Nullable final PDFontDescriptor instance, final float defaultValue) {
-		return instance != null && instance.getCOSObject() != null ? instance.getDescent() : defaultValue;
 	}
 
 	private static void throwRuntimeException(final Throwable e) {
