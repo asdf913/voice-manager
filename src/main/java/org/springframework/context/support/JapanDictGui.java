@@ -2495,11 +2495,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				float pageHeight = PDRectangleUtil.getHeight(PDPageUtil.getMediaBox(pdPage))
 						- (ascent / 1000 * fontSize) + (descent / 1000 * fontSize);
 				//
-				final float width = Util.floatValue(get(Util.max(
-						FailableStreamUtil.stream(FailableStreamUtil.map(
-								new FailableStream<>(Stream.of("Romaji", "Hiragana", "Katakana")),
-								x -> Float.valueOf(getTextWidth(x, instance.pdFont, fontSize)))),
-						ObjectUtils::compare)), 0);
+				final float width = Util
+						.floatValue(orElse(Util.max(
+								FailableStreamUtil.stream(FailableStreamUtil.map(
+										new FailableStream<>(Stream.of("Romaji", "Hiragana", "Katakana")),
+										x -> Float.valueOf(getTextWidth(x, instance.pdFont, fontSize)))),
+								ObjectUtils::compare), null), 0);
 				//
 				pageContentStream.newLineAtOffset(width, pageHeight);
 				//
@@ -2599,8 +2600,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static <T> T get(final Optional<T> instance) {
-		return instance != null && instance.isPresent() ? instance.get() : null;
+	private static <T> T orElse(final Optional<T> instance, final T defaultValue) {
+		return instance != null ? instance.orElse(defaultValue) : null;
 	}
 
 	private static float getTextWidth(final String text, final PDFont font, final float fontSize) throws IOException {
