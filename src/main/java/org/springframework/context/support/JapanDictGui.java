@@ -2479,7 +2479,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							//
 							instance.pdFont = testAndApply(Objects::nonNull,
 									testAndApply(
-											x -> x != null && StringsUtil.equals(Strings.CI, getName(ci), "OpenType"),
+											x -> Boolean.logicalAnd(x != null,
+													StringsUtil.equals(Strings.CI, getName(ci), "OpenType")),
 											bais, new OTFParser()::parseEmbedded, null),
 									x -> PDType0Font.load(document, x, false), null);
 							//
