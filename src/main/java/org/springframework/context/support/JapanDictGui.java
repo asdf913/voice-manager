@@ -2650,8 +2650,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static void drawImage(final PDPageContentStream instance, final PDImageXObject image, final float x,
-			final float y) throws IOException {
+	private static void drawImage(@Nullable final PDPageContentStream instance, @Nullable final PDImageXObject image,
+			final float x, final float y) throws IOException {
 		//
 		if (instance != null && image != null && image.getStream() != null) {
 			//
@@ -2661,7 +2661,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static void newLineAtOffset(final PDPageContentStream instance, float tx, float ty) throws IOException {
+	private static void newLineAtOffset(@Nullable final PDPageContentStream instance, float tx, float ty)
+			throws IOException {
 		//
 		if (instance != null && Narcissus.getBooleanField(instance, getFieldByName(instance, "inTextMode"))) {
 			//
@@ -2671,7 +2672,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static void beginText(final PDPageContentStream instance) throws IOException {
+	private static void beginText(@Nullable final PDPageContentStream instance) throws IOException {
 		//
 		if (instance != null && Narcissus.getField(instance, getFieldByName(instance, "outputStream")) != null) {
 			//
@@ -2681,7 +2682,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static void endText(final PDPageContentStream instance) throws IOException {
+	private static void endText(@Nullable final PDPageContentStream instance) throws IOException {
 		//
 		if (instance != null && Narcissus.getBooleanField(instance, getFieldByName(instance, "inTextMode"))) {
 			//
@@ -2716,7 +2717,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	@Nullable
-	private static IntIntPair getMinimumAndMaximumY(final BufferedImage bi) {
+	private static IntIntPair getMinimumAndMaximumY(@Nullable final BufferedImage bi) {
 		//
 		Color c = null;
 		//
@@ -2755,7 +2756,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static void addText(final PDPageContentStream cs, final PDFont font, final float fontSize,
+	private static void addText(@Nullable final PDPageContentStream cs, final PDFont font, final float fontSize,
 			final PDPage pdPage, final float size) throws IOException {
 		//
 		PDFontDescriptor pdFontDescriptor = null;
