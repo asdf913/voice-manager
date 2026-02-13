@@ -950,7 +950,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return romaji;
 		}
 
-		private static String getRomaji(final JapanDictEntry instance) {
+		private static String getRomaji(@Nullable final JapanDictEntry instance) {
 			return instance != null ? instance.getRomaji() : null;
 		}
 
@@ -3312,7 +3312,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, final T t,
+	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, @Nullable final T t,
 			@Nullable final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
 		if (Util.test(instance, t, u)) {
 			FailableBiConsumerUtil.accept(consumer, t, u);
