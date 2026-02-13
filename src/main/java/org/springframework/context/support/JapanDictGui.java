@@ -945,6 +945,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		private static BufferedImage getStrokeWithNumberImage(@Nullable final JapanDictEntry instance) {
 			return instance != null ? instance.getStrokeWithNumberImage() : null;
 		}
+
+		private String getRomaji() {
+			return romaji;
+		}
+
+		private static String getRomaji(final JapanDictEntry instance) {
+			return instance != null ? instance.getRomaji() : null;
+		}
+
 	}
 
 	@Override
@@ -2547,7 +2556,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				newLineAtOffset(pageContentStream, width, pageHeight);
 				//
-				showText(pageContentStream, japanDictEntry != null ? japanDictEntry.romaji : null);
+				showText(pageContentStream, JapanDictEntry.getRomaji(japanDictEntry));
 				//
 				endText(pageContentStream);
 				//
@@ -3504,7 +3513,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		TriConsumerUtil.accept(triConsumer, instance.tfKatakana, entry.katakana,
 				Collections.singleton(instance.btnCopyKatakana));
 		//
-		TriConsumerUtil.accept(triConsumer, instance.tfRomaji, entry.romaji,
+		TriConsumerUtil.accept(triConsumer, instance.tfRomaji, JapanDictEntry.getRomaji(entry),
 				Collections.singleton(instance.btnCopyRomaji));
 		//
 		TriConsumerUtil.accept(triConsumer, instance.tfAudioUrl, entry.audioUrl,
