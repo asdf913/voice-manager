@@ -2623,7 +2623,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				// Stroke
 				//
-
 				width = Util.floatValue(orElse(Util.max(
 						FailableStreamUtil.stream(
 								FailableStreamUtil.map(new FailableStream<>(Stream.of("Stroke", "Stroke with Number")),
