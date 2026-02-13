@@ -959,6 +959,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return hiragana;
 		}
 
+		@Nullable
 		private static String getHiragana(@Nullable final JapanDictEntry instance) {
 			return instance != null ? instance.getHiragana() : null;
 		}
