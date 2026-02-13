@@ -950,6 +950,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return romaji;
 		}
 
+		@Nullable
 		private static String getRomaji(@Nullable final JapanDictEntry instance) {
 			return instance != null ? instance.getRomaji() : null;
 		}
