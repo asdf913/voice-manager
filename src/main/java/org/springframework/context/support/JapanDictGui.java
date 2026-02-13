@@ -2610,19 +2610,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				endText(pageContentStream);
 				//
-				PDImageXObject pdImageXObject = null;
+				final String format = "png";
 				//
-				try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-					//
-					testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null),
-							japanDictEntry != null ? japanDictEntry.furiganaImage : null, baos,
-							(a, b) -> ImageIO.write(a, "png", b));
-					//
-					pdImageXObject = testAndApply((a, b) -> b != null && b.length > 0, document, baos.toByteArray(),
-							(a, b) -> PDImageXObject.createFromByteArray(a, b, null), null);
-					//
-				} // try
-					//
+				PDImageXObject pdImageXObject = toPDImageXObject(
+						japanDictEntry != null ? japanDictEntry.furiganaImage : null, format, document);
+				//
 				final float textHeight = getTextHeight(instance.pdFont, fontSize,
 						PDRectangleUtil.getWidth(PDPageUtil.getMediaBox(pdPage)) / 10, PDPageUtil.getMediaBox(pdPage));
 				//
@@ -2631,6 +2623,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				// Stroke
 				//
+
 				width = Util.floatValue(orElse(Util.max(
 						FailableStreamUtil.stream(
 								FailableStreamUtil.map(new FailableStream<>(Stream.of("Stroke", "Stroke with Number")),
@@ -2648,19 +2641,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				endText(pageContentStream);
 				//
-				try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-					//
-					testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null),
-							japanDictEntry != null ? japanDictEntry.strokeImage : null, baos,
-							(a, b) -> ImageIO.write(a, "png", b));
-					//
-					pdImageXObject = testAndApply((a, b) -> b != null && b.length > 0, document, baos.toByteArray(),
-							(a, b) -> PDImageXObject.createFromByteArray(a, b, null), null);
-					//
-				} // try
-					//
-				drawImage(pageContentStream, pdImageXObject, width,
-						pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
+				drawImage(pageContentStream,
+						pdImageXObject = toPDImageXObject(japanDictEntry != null ? japanDictEntry.strokeImage : null,
+								format, document),
+						width, pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
 				//
 				// Stroke with Number
 				//
@@ -2675,19 +2659,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				endText(pageContentStream);
 				//
-				try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-					//
-					testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null),
-							japanDictEntry != null ? japanDictEntry.strokeWithNumberImage : null, baos,
-							(a, b) -> ImageIO.write(a, "png", b));
-					//
-					pdImageXObject = testAndApply((a, b) -> b != null && b.length > 0, document, baos.toByteArray(),
-							(a, b) -> PDImageXObject.createFromByteArray(a, b, null), null);
-					//
-				} // try
-					//
-				drawImage(pageContentStream, pdImageXObject, width,
-						pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
+				drawImage(pageContentStream,
+						pdImageXObject = toPDImageXObject(
+								japanDictEntry != null ? japanDictEntry.strokeWithNumberImage : null, format, document),
+						width, pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
 				//
 				IOUtils.closeQuietly(pageContentStream);
 				//
@@ -2707,6 +2682,22 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return false;
 		//
+	}
+
+	private static PDImageXObject toPDImageXObject(final BufferedImage bufferedImage, final String format,
+			final PDDocument pdDocument) throws IOException {
+		//
+		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			testAndAccept((a, b) -> Boolean
+					.logicalAnd(a != null && Narcissus.getField(a, getFieldByName(a, RASTER)) != null, b != null),
+					bufferedImage, baos, (a, b) -> ImageIO.write(a, format, b));
+			//
+			return testAndApply((a, b) -> b != null && b.length > 0, pdDocument, baos.toByteArray(),
+					(a, b) -> PDImageXObject.createFromByteArray(a, b, null), null);
+			//
+		} // try
+			//
 	}
 
 	@Nullable
