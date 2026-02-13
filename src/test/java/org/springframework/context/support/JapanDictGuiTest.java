@@ -113,7 +113,6 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.reflect.Reflection;
-import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
@@ -384,10 +383,6 @@ class JapanDictGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Browser && Objects.equals(name, "newPage")) {
-				//
-				return null;
-				//
 			} else if (proxy instanceof Locator
 					&& Util.anyMatch(Stream.of("screenshot", "boundingBox"), x -> Objects.equals(name, x))) {
 				//

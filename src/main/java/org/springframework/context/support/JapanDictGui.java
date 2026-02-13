@@ -187,6 +187,7 @@ import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.BrowserTypeUtil;
+import com.microsoft.playwright.BrowserUtil;
 import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.ElementHandleUtil;
 import com.microsoft.playwright.Locator;
@@ -427,7 +428,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				} // if
 					//
 				try (final Browser browser = testAndApply(Predicates.always(!runningInGitHubActions), browserType,
-						BrowserTypeUtil::launch, null); final Page page = newPage(browser)) {
+						BrowserTypeUtil::launch, null); final Page page = BrowserUtil.newPage(browser)) {
 					//
 					Util.put(userAgentMap = ObjectUtils.getIfNull(userAgentMap, LinkedHashMap::new), browserType.name(),
 							Util.toString(evaluate(page, "window.navigator.userAgent")));
@@ -829,11 +830,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Nullable
 	private static Object evaluate(@Nullable final Page instance, final String expression) {
 		return instance != null ? instance.evaluate(expression) : null;
-	}
-
-	@Nullable
-	private static Page newPage(@Nullable final Browser instance) {
-		return instance != null ? instance.newPage() : null;
 	}
 
 	@Nullable
@@ -3712,7 +3708,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							x -> BrowserTypeUtil.launch(ObjectUtils.getIfNull(Util.apply(browserTypeFunction, x),
 									() -> PlaywrightUtil.chromium(x))),
 							null);
-					final Page page = newPage(browser)) {
+					final Page page = BrowserUtil.newPage(browser)) {
 				//
 				PageUtil.navigate(page, pageUrl);
 				//
@@ -3968,7 +3964,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							x -> BrowserTypeUtil.launch(ObjectUtils.getIfNull(Util.apply(browserTypeFunction, x),
 									() -> PlaywrightUtil.chromium(x))),
 							null);
-					final Page page = newPage(browser)) {
+					final Page page = BrowserUtil.newPage(browser)) {
 				//
 				PageUtil.navigate(page, pageUrl);
 				//

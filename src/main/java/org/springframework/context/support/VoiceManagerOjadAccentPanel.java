@@ -181,6 +181,7 @@ import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserTypeUtil;
+import com.microsoft.playwright.BrowserUtil;
 import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.ElementHandleUtil;
 import com.microsoft.playwright.JSHandle;
@@ -1946,7 +1947,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			TemplateUtil.process(template, map, w);
 			//
-			final Page page = newPage(BrowserTypeUtil.launch(PlaywrightUtil.chromium(playwright)));
+			final Page page = BrowserUtil.newPage(BrowserTypeUtil.launch(PlaywrightUtil.chromium(playwright)));
 			//
 			setContent(page, Util.toString(w));
 			//
@@ -2733,7 +2734,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			if (!testMode) {
 				//
-				PageUtil.navigate(page = newPage(
+				PageUtil.navigate(page = BrowserUtil.newPage(
 						browser = BrowserTypeUtil.launch(PlaywrightUtil.chromium(playwright = Playwright.create()))),
 						u);
 				//
@@ -2755,7 +2756,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 											1)
 									* size);
 					//
-					PageUtil.navigate(page = newPage(browser), u = createUrl(url, map));
+					PageUtil.navigate(page = BrowserUtil.newPage(browser), u = createUrl(url, map));
 					//
 				} // if
 					//
@@ -2854,7 +2855,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			if (!testMode) {
 				//
-				PageUtil.navigate(page = newPage(
+				PageUtil.navigate(page = BrowserUtil.newPage(
 						browser = BrowserTypeUtil.launch(PlaywrightUtil.chromium(playwright = Playwright.create()))),
 						url);
 				//
@@ -2876,7 +2877,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 											1)
 									* size);
 					//
-					PageUtil.navigate(page = newPage(browser), url = createUrl(baseUrl, map));
+					PageUtil.navigate(page = BrowserUtil.newPage(browser), url = createUrl(baseUrl, map));
 					//
 				} // if
 					//
@@ -3016,7 +3017,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			if (!isTestMode()) {
 				//
-				PageUtil.navigate(page = newPage(
+				PageUtil.navigate(page = BrowserUtil.newPage(
 						browser = BrowserTypeUtil.launch(PlaywrightUtil.chromium(playwright = Playwright.create()))),
 						url);
 				//
@@ -4143,11 +4144,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Nullable
 	private static ContentInfo findMatch(@Nullable final ContentInfoUtil instance, @Nullable final byte[] bytes) {
 		return instance != null && bytes != null ? instance.findMatch(bytes) : null;
-	}
-
-	@Nullable
-	private static Page newPage(@Nullable final Browser instance) {
-		return instance != null ? instance.newPage() : null;
 	}
 
 	@Override

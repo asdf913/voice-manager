@@ -129,7 +129,6 @@ import com.google.common.base.Suppliers;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
-import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.JSHandle;
 import com.microsoft.playwright.Page;
@@ -387,14 +386,6 @@ class VoiceManagerOjadAccentPanelTest {
 			} else if (proxy instanceof Playwright) {
 				//
 				if (Objects.equals(methodName, "chromium")) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Browser) {
-				//
-				if (Objects.equals(methodName, "newPage")) {
 					//
 					return null;
 					//
