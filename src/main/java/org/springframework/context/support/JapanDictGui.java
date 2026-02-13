@@ -2684,7 +2684,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static PDImageXObject toPDImageXObject(final BufferedImage bufferedImage, final String format,
+	private static PDImageXObject toPDImageXObject(@Nullable final BufferedImage bufferedImage, final String format,
 			final PDDocument pdDocument) throws IOException {
 		//
 		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
