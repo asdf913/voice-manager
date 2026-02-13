@@ -2616,7 +2616,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null),
 							japanDictEntry != null ? japanDictEntry.furiganaImage : null, baos,
-							(a, b) -> ImageIO.write(a, "png", b), null);
+							(a, b) -> ImageIO.write(a, "png", b));
 					//
 					pdImageXObject = testAndApply((a, b) -> b != null && b.length > 0, document, baos.toByteArray(),
 							(a, b) -> PDImageXObject.createFromByteArray(a, b, null), null);
@@ -2652,7 +2652,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null),
 							japanDictEntry != null ? japanDictEntry.strokeImage : null, baos,
-							(a, b) -> ImageIO.write(a, "png", b), null);
+							(a, b) -> ImageIO.write(a, "png", b));
 					//
 					pdImageXObject = testAndApply((a, b) -> b != null && b.length > 0, document, baos.toByteArray(),
 							(a, b) -> PDImageXObject.createFromByteArray(a, b, null), null);
@@ -2679,7 +2679,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null),
 							japanDictEntry != null ? japanDictEntry.strokeWithNumberImage : null, baos,
-							(a, b) -> ImageIO.write(a, "png", b), null);
+							(a, b) -> ImageIO.write(a, "png", b));
 					//
 					pdImageXObject = testAndApply((a, b) -> b != null && b.length > 0, document, baos.toByteArray(),
 							(a, b) -> PDImageXObject.createFromByteArray(a, b, null), null);
