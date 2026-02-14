@@ -131,6 +131,7 @@ import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.commons.validator.routines.UrlValidatorUtil;
 import org.apache.fontbox.ttf.OTFParser;
+import org.apache.fontbox.ttf.TrueTypeFont;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URIBuilderUtil;
@@ -395,6 +396,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	private DefaultTableModel dtmLink = null;
 
 	private transient ListSelectionModel lsmLink = null;
+
+	private TrueTypeFont trueTypeFont = null;
 
 	private JapanDictGui() {
 	}
@@ -2513,14 +2516,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		if (Objects.equals(source, instance.btnPdf)) {
 			//
-			final PDPage pdPage = new PDPage();
-			//
-			try (final PDDocument document = new PDDocument();
-					final PDPageContentStream pageContentStream = new PDPageContentStream(document, pdPage)) {
-				//
-				document.addPage(pdPage);
-				//
-				PDFont pdFont = null;
+			if (instance.trueTypeFont == null) {
 				//
 				try (final InputStream is = Util.getResourceAsStream(JapanDictGui.class,
 						"/NotoSansCJKjp-Regular.otf")) {
@@ -2530,20 +2526,31 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					try (final ByteArrayInputStream bais = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new,
 							null)) {
 						//
-						pdFont = testAndApply(Objects::nonNull,
-								testAndApply(
-										x -> Boolean.logicalAnd(x != null,
-												StringsUtil.equals(Strings.CI,
-														getName(testAndApply(Objects::nonNull, bs,
-																new ContentInfoUtil()::findMatch, null)),
-														"OpenType")),
-										bais, new OTFParser()::parseEmbedded, null),
-								x -> PDType0Font.load(document, x, false), null);
+						instance.trueTypeFont = testAndApply(
+								x -> Boolean.logicalAnd(x != null,
+										StringsUtil.equals(Strings.CI,
+												getName(testAndApply(Objects::nonNull, bs,
+														new ContentInfoUtil()::findMatch, null)),
+												"OpenType")),
+								bais, new OTFParser()::parseEmbedded, null);
 						//
 					} // try
 						//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
 				} // try
 					//
+			} // if
+				//
+			final PDPage pdPage = new PDPage();
+			//
+			try (final PDDocument document = new PDDocument();
+					final PDPageContentStream pageContentStream = new PDPageContentStream(document, pdPage)) {
+				//
+				document.addPage(pdPage);
+				//
 				final StringBuilder sb = testAndApply(Objects::nonNull, Util.getText(instance.tfText),
 						StringBuilder::new, null);
 				//
@@ -2562,12 +2569,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				if (and(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 						() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
 					//
-					FileUtils
-							.writeByteArrayToFile(jfc.getSelectedFile(),
-									toPdfByteArray(
-											Util.cast(JapanDictEntry.class,
-													getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0)),
-											pdFont));
+					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
+							toPdfByteArray(
+									Util.cast(JapanDictEntry.class,
+											getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0)),
+									testAndApply(Objects::nonNull, instance.trueTypeFont,
+											x -> PDType0Font.load(document, x, false), null)));
 					//
 				} // if
 					//
