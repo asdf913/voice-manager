@@ -1022,6 +1022,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return links;
 		}
 
+		@Nullable
 		private static Iterable<Link> getLinks(@Nullable final JapanDictEntry instance) {
 			return instance != null ? instance.getLinks() : null;
 		}
