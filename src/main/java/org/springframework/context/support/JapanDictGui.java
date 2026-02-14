@@ -365,7 +365,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return image;
 		}
 
-		private static BufferedImage getImage(final PitchAccent instance) {
+		private static BufferedImage getImage(@Nullable final PitchAccent instance) {
 			return instance != null ? instance.getImage() : null;
 		}
 
