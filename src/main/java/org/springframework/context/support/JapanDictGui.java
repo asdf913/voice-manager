@@ -2727,7 +2727,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						.orElse(Util.max(Util.mapToInt(
 								testAndApply(Objects::nonNull, Util.spliterator(pitchAccents),
 										x -> StreamSupport.stream(x, false), null),
-								x -> x != null ? getWidth(x.image) : 0)), 0);
+								x -> getWidth(PitchAccent.getImage(x)))), 0);
 				//
 				int height = 0;
 				//
