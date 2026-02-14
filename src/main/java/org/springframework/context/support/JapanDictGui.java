@@ -2782,7 +2782,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					endText(pageContentStream);
 					//
-					height = pdImageXObject != null ? pdImageXObject.getHeight() : 0;
+					height = PDImageUtil.getHeight(pdImageXObject);
 					//
 				} // for
 					//
