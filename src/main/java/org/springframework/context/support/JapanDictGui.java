@@ -2693,8 +2693,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				endText(pageContentStream);
 				//
 				drawImage(pageContentStream,
-						pdImageXObject = toPDImageXObject(
-								japanDictEntry != null ? japanDictEntry.strokeWithNumberImage : null, format, document),
+						pdImageXObject = toPDImageXObject(JapanDictEntry.getStrokeWithNumberImage(japanDictEntry),
+								format, document),
 						width, pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
 				//
 				// Pitch Accent
