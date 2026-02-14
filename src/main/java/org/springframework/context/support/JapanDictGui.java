@@ -2922,10 +2922,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return instance != null ? instance.orElse(defaultValue) : defaultValue;
 	}
 
+	@Nullable
 	private static OptionalDouble max(@Nullable final DoubleStream instance) {
 		return instance != null ? instance.max() : null;
 	}
 
+	@Nullable
 	private static <T> DoubleStream mapToDouble(@Nullable final Stream<T> instance,
 			final ToDoubleFunction<T> function) {
 		return instance != null ? instance.mapToDouble(function) : null;
