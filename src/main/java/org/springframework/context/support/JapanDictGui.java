@@ -396,8 +396,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private transient ListSelectionModel lsmLink = null;
 
-	private transient PDFont pdFont = null;
-
 	private JapanDictGui() {
 	}
 
@@ -2518,281 +2516,37 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				document.addPage(pdPage);
 				//
-				if (instance.pdFont == null) {
+				PDFont pdFont = null;
+				//
+				try (final InputStream is = Util.getResourceAsStream(JapanDictGui.class,
+						"/NotoSansCJKjp-Regular.otf")) {
 					//
-					try (final InputStream is = Util.getResourceAsStream(JapanDictGui.class,
-							"/NotoSansCJKjp-Regular.otf")) {
+					final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
+					//
+					try (final ByteArrayInputStream bais = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new,
+							null)) {
 						//
-						final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
+						pdFont = testAndApply(Objects::nonNull,
+								testAndApply(
+										x -> Boolean.logicalAnd(x != null,
+												StringsUtil.equals(Strings.CI,
+														getName(testAndApply(Objects::nonNull, bs,
+																new ContentInfoUtil()::findMatch, null)),
+														"OpenType")),
+										bais, new OTFParser()::parseEmbedded, null),
+								x -> PDType0Font.load(document, x, false), null);
 						//
-						final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch,
-								null);
-						//
-						try (final ByteArrayInputStream bais = testAndApply(Objects::nonNull, bs,
-								ByteArrayInputStream::new, null)) {
-							//
-							instance.pdFont = testAndApply(Objects::nonNull,
-									testAndApply(
-											x -> Boolean.logicalAnd(x != null,
-													StringsUtil.equals(Strings.CI, getName(ci), "OpenType")),
-											bais, new OTFParser()::parseEmbedded, null),
-									x -> PDType0Font.load(document, x, false), null);
-							//
-						} // try
-							//
 					} // try
 						//
-				} // if
+				} // try
 					//
-					// Text
-					//
-				beginText(pageContentStream);
-				//
-				final int fontSize = 10;
-				//
-				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
-				//
-				final PDFontDescriptor pdFontDescriptor = PDFontUtil.getFontDescriptor(instance.pdFont);
-				//
-				final float ascent = PDFontDescriptorUtil.getAscent(pdFontDescriptor, 0);
-				//
-				final float descent = PDFontDescriptorUtil.getDescent(pdFontDescriptor, 0);
-				//
-				float pageHeight = PDRectangleUtil.getHeight(PDPageUtil.getMediaBox(pdPage))
-						- (ascent / 1000 * fontSize) + (descent / 1000 * fontSize);
-				//
-				float width = Util
-						.floatValue(
-								orElse(Util.max(
-										FailableStreamUtil.stream(FailableStreamUtil.map(
-												new FailableStream<>(
-														Stream.of("Romaji", "Hiragana", "Katakana", "Furigana")),
-												x -> Float.valueOf(getTextWidth(x, instance.pdFont, fontSize)))),
-										ObjectUtils::compare), null),
-								0);
-				//
-				newLineAtOffset(pageContentStream, width, pageHeight);
-				//
-				final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class,
-						getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0));
-				//
-				showText(pageContentStream, JapanDictEntry.getText(japanDictEntry));
-				//
-				endText(pageContentStream);
-				//
-				// Romaji
-				//
-				beginText(pageContentStream);
-				//
-				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
-				//
-				newLineAtOffset(pageContentStream, 0,
-						pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
-				//
-				showText(pageContentStream, "Romaji");
-				//
-				endText(pageContentStream);
-				//
-				beginText(pageContentStream);
-				//
-				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
-				//
-				newLineAtOffset(pageContentStream, width, pageHeight);
-				//
-				showText(pageContentStream, JapanDictEntry.getRomaji(japanDictEntry));
-				//
-				endText(pageContentStream);
-				//
-				// Hiragana
-				//
-				beginText(pageContentStream);
-				//
-				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
-				//
-				newLineAtOffset(pageContentStream, 0,
-						pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
-				//
-				showText(pageContentStream, "Hiragana");
-				//
-				endText(pageContentStream);
-				//
-				beginText(pageContentStream);
-				//
-				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
-				//
-				newLineAtOffset(pageContentStream, width, pageHeight);
-				//
-				showText(pageContentStream, JapanDictEntry.getHiragana(japanDictEntry));
-				//
-				endText(pageContentStream);
-				//
-				// katakana
-				//
-				beginText(pageContentStream);
-				//
-				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
-				//
-				newLineAtOffset(pageContentStream, 0,
-						pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
-				//
-				showText(pageContentStream, "Katakana");
-				//
-				endText(pageContentStream);
-				//
-				beginText(pageContentStream);
-				//
-				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
-				//
-				newLineAtOffset(pageContentStream, width, pageHeight);
-				//
-				showText(pageContentStream, JapanDictEntry.getKatakana(japanDictEntry));
-				//
-				endText(pageContentStream);
-				//
-				// Furigana
-				//
-				beginText(pageContentStream);
-				//
-				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
-				//
-				newLineAtOffset(pageContentStream, 0,
-						pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
-				//
-				showText(pageContentStream, "Furigana");
-				//
-				endText(pageContentStream);
-				//
-				final String format = "png";
-				//
-				PDImageXObject pdImageXObject = toPDImageXObject(JapanDictEntry.getFuriganaImage(japanDictEntry),
-						format, document);
-				//
-				final float textHeight = getTextHeight(instance.pdFont, fontSize,
-						PDRectangleUtil.getWidth(PDPageUtil.getMediaBox(pdPage)) / 10, PDPageUtil.getMediaBox(pdPage));
-				//
-				drawImage(pageContentStream, pdImageXObject, width,
-						pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
-				//
-				// Stroke
-				//
-				width = Util.floatValue(orElse(Util.max(
-						FailableStreamUtil.stream(
-								FailableStreamUtil.map(new FailableStream<>(Stream.of("Stroke", "Stroke with Number")),
-										x -> Float.valueOf(getTextWidth(x, instance.pdFont, fontSize)))),
-						ObjectUtils::compare), null), 0);
-				//
-				beginText(pageContentStream);
-				//
-				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
-				//
-				newLineAtOffset(pageContentStream, 0,
-						pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
-				//
-				showText(pageContentStream, "Stroke");
-				//
-				endText(pageContentStream);
-				//
-				drawImage(pageContentStream,
-						pdImageXObject = toPDImageXObject(JapanDictEntry.getStrokeImage(japanDictEntry), format,
-								document),
-						width, pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
-				//
-				// Stroke with Number
-				//
-				beginText(pageContentStream);
-				//
-				testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
-				//
-				newLineAtOffset(pageContentStream, 0,
-						pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
-				//
-				showText(pageContentStream, "Stroke With Number");
-				//
-				endText(pageContentStream);
-				//
-				drawImage(pageContentStream,
-						pdImageXObject = toPDImageXObject(JapanDictEntry.getStrokeWithNumberImage(japanDictEntry),
-								format, document),
-						width, pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
-				//
-				// Pitch Accent
-				//
-				final Iterable<PitchAccent> pitchAccents = JapanDictEntry.getPitchAccents(japanDictEntry);
-				//
-				PitchAccent pitchAccent = null;
-				//
-				boolean first = true;
-				//
-				final int maxImageWidth = Util
-						.orElse(Util.max(Util.mapToInt(
-								testAndApply(Objects::nonNull, Util.spliterator(pitchAccents),
-										x -> StreamSupport.stream(x, false), null),
-								x -> getWidth(PitchAccent.getImage(x)))), 0);
-				//
-				int height = 0;
-				//
-				for (int i = 0; i < IterableUtils.size(pitchAccents); i++) {
-					//
-					if ((pitchAccent = IterableUtils.get(pitchAccents, i)) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (first) {
-						//
-						beginText(pageContentStream);
-						//
-						testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
-						//
-						newLineAtOffset(pageContentStream, 0,
-								pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
-						//
-						showText(pageContentStream, "Pitch Accent");
-						//
-						endText(pageContentStream);
-						//
-						width = getTextWidth("Pitch Accent", instance.pdFont, fontSize);
-						//
-					} // if
-						//
-					if (first) {
-						//
-						drawImage(pageContentStream,
-								pdImageXObject = toPDImageXObject(PitchAccent.getImage(pitchAccent), format, document),
-								width, pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
-						//
-						first = false;
-						//
-					} else {
-						//
-						drawImage(pageContentStream,
-								pdImageXObject = toPDImageXObject(PitchAccent.getImage(pitchAccent), format, document),
-								width, pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) - height);
-						//
-					} // if
-						//
-					beginText(pageContentStream);
-					//
-					testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
-					//
-					newLineAtOffset(pageContentStream, width + maxImageWidth, pageHeight);
-					//
-					showText(pageContentStream, pitchAccent.type);
-					//
-					endText(pageContentStream);
-					//
-					height = PDImageUtil.getHeight(pdImageXObject);
-					//
-				} // for
-					//
-				IOUtils.closeQuietly(pageContentStream);
-				//
-				final File file = Util.toFile(Path.of("test.pdf"));
+				final File file = Util.getAbsoluteFile(Util.toFile(Path.of("test.pdf")));
 				//
 				System.out.println(Util.getAbsolutePath(file));
 				//
-				document.save(file);
+				FileUtils.writeByteArrayToFile(file, toPdfByteArray(
+						Util.cast(JapanDictEntry.class, getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0)),
+						pdFont));
 				//
 			} catch (final IOException e) {
 				//
@@ -2804,6 +2558,267 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return false;
 		//
+	}
+
+	private static byte[] toPdfByteArray(final JapanDictEntry japanDictEntry, final PDFont pdFont) throws IOException {
+		//
+		final PDPage pdPage = new PDPage();
+		//
+		try (final PDDocument document = new PDDocument();
+				final PDPageContentStream pageContentStream = new PDPageContentStream(document, pdPage);
+				final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			document.addPage(pdPage);
+			//
+			// Text
+			//
+			beginText(pageContentStream);
+			//
+			final int fontSize = 10;
+			//
+			testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
+			//
+			final PDFontDescriptor pdFontDescriptor = PDFontUtil.getFontDescriptor(pdFont);
+			//
+			final float ascent = PDFontDescriptorUtil.getAscent(pdFontDescriptor, 0);
+			//
+			final float descent = PDFontDescriptorUtil.getDescent(pdFontDescriptor, 0);
+			//
+			final PDRectangle pdRectangle = PDPageUtil.getMediaBox(pdPage);
+			//
+			float pageHeight = PDRectangleUtil.getHeight(pdRectangle) - (ascent / 1000 * fontSize)
+					+ (descent / 1000 * fontSize);
+			//
+			float width = Util
+					.floatValue(
+							orElse(Util.max(
+									FailableStreamUtil.stream(FailableStreamUtil.map(
+											new FailableStream<>(
+													Stream.of("Romaji", "Hiragana", "Katakana", "Furigana")),
+											x -> Float.valueOf(getTextWidth(x, pdFont, fontSize)))),
+									ObjectUtils::compare), null),
+							0);
+			//
+			newLineAtOffset(pageContentStream, width, pageHeight);
+			//
+			showText(pageContentStream, JapanDictEntry.getText(japanDictEntry));
+			//
+			endText(pageContentStream);
+			//
+			// Romaji
+			//
+			beginText(pageContentStream);
+			//
+			testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
+			//
+			newLineAtOffset(pageContentStream, 0,
+					pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+			//
+			showText(pageContentStream, "Romaji");
+			//
+			endText(pageContentStream);
+			//
+			beginText(pageContentStream);
+			//
+			testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
+			//
+			newLineAtOffset(pageContentStream, width, pageHeight);
+			//
+			showText(pageContentStream, JapanDictEntry.getRomaji(japanDictEntry));
+			//
+			endText(pageContentStream);
+			//
+			// Hiragana
+			//
+			beginText(pageContentStream);
+			//
+			testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
+			//
+			newLineAtOffset(pageContentStream, 0,
+					pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+			//
+			showText(pageContentStream, "Hiragana");
+			//
+			endText(pageContentStream);
+			//
+			beginText(pageContentStream);
+			//
+			testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
+			//
+			newLineAtOffset(pageContentStream, width, pageHeight);
+			//
+			showText(pageContentStream, JapanDictEntry.getHiragana(japanDictEntry));
+			//
+			endText(pageContentStream);
+			//
+			// katakana
+			//
+			beginText(pageContentStream);
+			//
+			testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
+			//
+			newLineAtOffset(pageContentStream, 0,
+					pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+			//
+			showText(pageContentStream, "Katakana");
+			//
+			endText(pageContentStream);
+			//
+			beginText(pageContentStream);
+			//
+			testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
+			//
+			newLineAtOffset(pageContentStream, width, pageHeight);
+			//
+			showText(pageContentStream, JapanDictEntry.getKatakana(japanDictEntry));
+			//
+			endText(pageContentStream);
+			//
+			// Furigana
+			//
+			beginText(pageContentStream);
+			//
+			testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
+			//
+			newLineAtOffset(pageContentStream, 0,
+					pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+			//
+			showText(pageContentStream, "Furigana");
+			//
+			endText(pageContentStream);
+			//
+			final String format = "png";
+			//
+			PDImageXObject pdImageXObject = toPDImageXObject(JapanDictEntry.getFuriganaImage(japanDictEntry), format,
+					document);
+			//
+			final float textHeight = getTextHeight(pdFont, fontSize, PDRectangleUtil.getWidth(pdRectangle) / 10,
+					pdRectangle);
+			//
+			drawImage(pageContentStream, pdImageXObject, width,
+					pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
+			//
+			// Stroke
+			//
+			width = Util.floatValue(orElse(
+					Util.max(FailableStreamUtil.stream(
+							FailableStreamUtil.map(new FailableStream<>(Stream.of("Stroke", "Stroke with Number")),
+									x -> Float.valueOf(getTextWidth(x, pdFont, fontSize)))),
+							ObjectUtils::compare),
+					null), 0);
+			//
+			beginText(pageContentStream);
+			//
+			testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
+			//
+			newLineAtOffset(pageContentStream, 0,
+					pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+			//
+			showText(pageContentStream, "Stroke");
+			//
+			endText(pageContentStream);
+			//
+			drawImage(pageContentStream,
+					pdImageXObject = toPDImageXObject(JapanDictEntry.getStrokeImage(japanDictEntry), format, document),
+					width, pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
+			//
+			// Stroke with Number
+			//
+			beginText(pageContentStream);
+			//
+			testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
+			//
+			newLineAtOffset(pageContentStream, 0,
+					pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+			//
+			showText(pageContentStream, "Stroke With Number");
+			//
+			endText(pageContentStream);
+			//
+			drawImage(pageContentStream,
+					pdImageXObject = toPDImageXObject(JapanDictEntry.getStrokeWithNumberImage(japanDictEntry), format,
+							document),
+					width, pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
+			//
+			// Pitch Accent
+			//
+			final Iterable<PitchAccent> pitchAccents = JapanDictEntry.getPitchAccents(japanDictEntry);
+			//
+			PitchAccent pitchAccent = null;
+			//
+			boolean first = true;
+			//
+			final int maxImageWidth = Util
+					.orElse(Util.max(Util.mapToInt(
+							testAndApply(Objects::nonNull, Util.spliterator(pitchAccents),
+									x -> StreamSupport.stream(x, false), null),
+							x -> getWidth(PitchAccent.getImage(x)))), 0);
+			//
+			int height = 0;
+			//
+			for (int i = 0; i < IterableUtils.size(pitchAccents); i++) {
+				//
+				if ((pitchAccent = IterableUtils.get(pitchAccents, i)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (first) {
+					//
+					beginText(pageContentStream);
+					//
+					testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
+					//
+					newLineAtOffset(pageContentStream, 0,
+							pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+					//
+					showText(pageContentStream, "Pitch Accent");
+					//
+					endText(pageContentStream);
+					//
+					width = getTextWidth("Pitch Accent", pdFont, fontSize);
+					//
+				} // if
+					//
+				if (first) {
+					//
+					drawImage(pageContentStream,
+							pdImageXObject = toPDImageXObject(PitchAccent.getImage(pitchAccent), format, document),
+							width, pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
+					//
+					first = false;
+					//
+				} else {
+					//
+					drawImage(pageContentStream,
+							pdImageXObject = toPDImageXObject(PitchAccent.getImage(pitchAccent), format, document),
+							width, pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) - height);
+					//
+				} // if
+					//
+				beginText(pageContentStream);
+				//
+				testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
+				//
+				newLineAtOffset(pageContentStream, width + maxImageWidth, pageHeight);
+				//
+				showText(pageContentStream, pitchAccent.type);
+				//
+				endText(pageContentStream);
+				//
+				height = PDImageUtil.getHeight(pdImageXObject);
+				//
+			} // for
+				//
+			IOUtils.closeQuietly(pageContentStream);
+			//
+			document.save(baos);
+			//
+			return baos.toByteArray();
+			//
+		} // try
+			//
 	}
 
 	private static PDImageXObject toPDImageXObject(@Nullable final BufferedImage bufferedImage, final String format,
