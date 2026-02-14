@@ -448,14 +448,10 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof DoubleStream) {
+			} else if (proxy instanceof DoubleStream && Objects.equals(name, "max")) {
 				//
-				if (Objects.equals(name, "max")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
