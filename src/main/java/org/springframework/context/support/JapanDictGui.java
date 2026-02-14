@@ -955,6 +955,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return instance != null ? instance.getHiragana() : null;
 		}
 
+		private String getKatakana() {
+			return katakana;
+		}
+
+		private static String getKatakana(final JapanDictEntry instance) {
+			return instance != null ? instance.getKatakana() : null;
+		}
 	}
 
 	@Override
@@ -2603,7 +2610,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				newLineAtOffset(pageContentStream, width, pageHeight);
 				//
-				showText(pageContentStream, japanDictEntry != null ? japanDictEntry.katakana : null);
+				showText(pageContentStream, JapanDictEntry.getKatakana(japanDictEntry));
 				//
 				endText(pageContentStream);
 				//
@@ -3582,7 +3589,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		TriConsumerUtil.accept(triConsumer, instance.tfHiragana, JapanDictEntry.getHiragana(entry),
 				Collections.singleton(instance.btnCopyHiragana));
 		//
-		TriConsumerUtil.accept(triConsumer, instance.tfKatakana, entry.katakana,
+		TriConsumerUtil.accept(triConsumer, instance.tfKatakana, JapanDictEntry.getKatakana(entry),
 				Collections.singleton(instance.btnCopyKatakana));
 		//
 		TriConsumerUtil.accept(triConsumer, instance.tfRomaji, JapanDictEntry.getRomaji(entry),
