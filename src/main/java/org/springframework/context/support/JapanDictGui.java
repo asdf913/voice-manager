@@ -759,8 +759,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			} else if (Objects.equals(columnName, PITCH_ACCENT)) {
 				//
 				final Stream<PitchAccent> stream = testAndApply(Objects::nonNull,
-						Util.spliterator(entry != null ? entry.pitchAccents : null),
-						x -> StreamSupport.stream(x, false), null);
+						Util.spliterator(JapanDictEntry.getPitchAccents(entry)), x -> StreamSupport.stream(x, false),
+						null);
 				//
 				testAndAccept(x -> IterableUtils.size(x) == 1,
 						Util.toList(Util.distinct(Util.map(stream, x -> x != null ? x.type : null))),
@@ -977,6 +977,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private static BufferedImage getStrokeImage(final JapanDictEntry instance) {
 			return instance != null ? instance.getStrokeImage() : null;
+		}
+
+		private Iterable<PitchAccent> getPitchAccents() {
+			return pitchAccents;
+		}
+
+		private static Iterable<PitchAccent> getPitchAccents(final JapanDictEntry instance) {
+			return instance != null ? instance.getPitchAccents() : null;
 		}
 
 	}
@@ -2699,7 +2707,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				// Pitch Accent
 				//
-				final Iterable<PitchAccent> pitchAccents = japanDictEntry != null ? japanDictEntry.pitchAccents : null;
+				final Iterable<PitchAccent> pitchAccents = JapanDictEntry.getPitchAccents(japanDictEntry);
 				//
 				PitchAccent pitchAccent = null;
 				//
@@ -3645,7 +3653,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						() -> PlaywrightUtil.chromium(x));
 		//
 		testAndRun(or(JapanDictEntry.getFuriganaImage(entry) == null, JapanDictEntry.getStrokeImage(entry) == null,
-				IterableUtils.isEmpty(entry.pitchAccents)), () -> {
+				IterableUtils.isEmpty(JapanDictEntry.getPitchAccents(entry))), () -> {
 					//
 					//
 					final JapanDictEntrySupplier japanDictEntrySupplier = new JapanDictEntrySupplier();
@@ -3680,9 +3688,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		// Pitch Accents
 		//
-		Util.forEach(entry.pitchAccents, x -> Util.addElement(instance.mcbmPitchAccent, x));
+		Util.forEach(JapanDictEntry.getPitchAccents(entry), x -> Util.addElement(instance.mcbmPitchAccent, x));
 		//
-		setEnabled(!IterableUtils.isEmpty(entry.pitchAccents), instance.btnCopyPitchAccentImage,
+		setEnabled(!IterableUtils.isEmpty(JapanDictEntry.getPitchAccents(entry)), instance.btnCopyPitchAccentImage,
 				instance.btnSavePitchAccentImage);
 		//
 		// Stroke Image
