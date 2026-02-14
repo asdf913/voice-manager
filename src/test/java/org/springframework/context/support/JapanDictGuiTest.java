@@ -870,7 +870,7 @@ class JapanDictGuiTest {
 								Arrays.equals(parameterTypes, new Class<?>[] { Optional.class, Object.class })),
 						Boolean.logicalAnd(Objects.equals(name, "toPdfByteArray"),
 								Arrays.equals(parameterTypes, new Class<?>[] { CLASS_JAPAN_DICT_ENTRY, PDFont.class })),
-						Boolean.logicalAnd(Objects.equals(name, "toPdolor"),
+						Boolean.logicalAnd(Objects.equals(name, "toPDcolor"),
 								Arrays.equals(parameterTypes, new Class<?>[] { Color.class, PDColorSpace.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
