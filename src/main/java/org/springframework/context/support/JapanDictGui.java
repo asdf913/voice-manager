@@ -2971,6 +2971,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
+	@Nullable
 	private static PDColor toPDcolor(@Nullable final Color instance, final PDColorSpace pdColorSpace) {
 		//
 		return instance != null
