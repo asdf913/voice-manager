@@ -2671,8 +2671,79 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				drawImage(pageContentStream,
 						pdImageXObject = toPDImageXObject(
 								japanDictEntry != null ? japanDictEntry.strokeWithNumberImage : null, format, document),
-						width, pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
+						width, pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
 				//
+				// Pitch Accent
+				//
+				final Iterable<PitchAccent> pitchAccents = japanDictEntry != null ? japanDictEntry.pitchAccents : null;
+				//
+				PitchAccent pitchAccent = null;
+				//
+				boolean first = true;
+				//
+				final int maxImageWidth = Util
+						.orElse(Util.max(Util.mapToInt(
+								testAndApply(Objects::nonNull, Util.spliterator(pitchAccents),
+										x -> StreamSupport.stream(x, false), null),
+								x -> x != null ? getWidth(x.image) : 0)), 0);
+				//
+				int height = 0;
+				//
+				for (int i = 0; i < IterableUtils.size(pitchAccents); i++) {
+					//
+					if ((pitchAccent = IterableUtils.get(pitchAccents, i)) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (first) {
+						//
+						beginText(pageContentStream);
+						//
+						testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
+						//
+						newLineAtOffset(pageContentStream, 0,
+								pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+						//
+						showText(pageContentStream, "Pitch Accent");
+						//
+						endText(pageContentStream);
+						//
+						width = getTextWidth("Pitch Accent", instance.pdFont, fontSize);
+						//
+					} // if
+						//
+					if (first) {
+						//
+						drawImage(pageContentStream,
+								pdImageXObject = toPDImageXObject(pitchAccent.image, format, document), width,
+								pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
+						//
+						first = false;
+						//
+					} else {
+						//
+						drawImage(pageContentStream,
+								pdImageXObject = toPDImageXObject(pitchAccent.image, format, document), width,
+								pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) - height);
+						//
+					} // if
+						//
+					beginText(pageContentStream);
+					//
+					testAndAccept(Objects::nonNull, instance.pdFont, x -> pageContentStream.setFont(x, fontSize));
+					//
+					newLineAtOffset(pageContentStream, width + maxImageWidth, pageHeight);
+					//
+					showText(pageContentStream, pitchAccent.type);
+					//
+					endText(pageContentStream);
+					//
+					height = pdImageXObject != null ? pdImageXObject.getHeight() : 0;
+					//
+				} // for
+					//
 				IOUtils.closeQuietly(pageContentStream);
 				//
 				final File file = Util.toFile(Path.of("test.pdf"));
