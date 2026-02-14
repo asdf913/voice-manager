@@ -431,7 +431,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						BrowserTypeUtil::launch, null); final Page page = BrowserUtil.newPage(browser)) {
 					//
 					Util.put(userAgentMap = ObjectUtils.getIfNull(userAgentMap, LinkedHashMap::new), browserType.name(),
-							Util.toString(evaluate(page, "window.navigator.userAgent")));
+							Util.toString(PageUtil.evaluate(page, "window.navigator.userAgent")));
 					//
 				} // try
 					//
@@ -825,11 +825,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Nullable
 	private static String getColumnName(@Nullable final JTable instance, final int column) {
 		return instance != null && getModel(instance) != null ? instance.getColumnName(column) : null;
-	}
-
-	@Nullable
-	private static Object evaluate(@Nullable final Page instance, final String expression) {
-		return instance != null ? instance.evaluate(expression) : null;
 	}
 
 	@Nullable

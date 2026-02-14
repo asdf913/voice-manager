@@ -152,11 +152,10 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY, METHOD_TO_BYTE_ARRAY, METHOD_GET_IF_NULL,
 			METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER, METHOD_SAVE_IMAGE,
 			METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS,
-			METHOD_GET_PROPERTY, METHOD_EVALUATE, METHOD_GET_VOICE_URL_IMAGES, METHOD_MATCHES,
-			METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER, METHOD_TEST_AND_ACCEPT_INT_PREDICATE,
-			METHOD_TEST_AND_ACCEPT_PREDICATE3, METHOD_TEST_AND_ACCEPT_PREDICATE5, METHOD_GET_MOST_OCCURENCE_COLOR,
-			METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR, METHOD_CLOSE,
-			METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE,
+			METHOD_GET_PROPERTY, METHOD_GET_VOICE_URL_IMAGES, METHOD_MATCHES, METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER,
+			METHOD_TEST_AND_ACCEPT_INT_PREDICATE, METHOD_TEST_AND_ACCEPT_PREDICATE3, METHOD_TEST_AND_ACCEPT_PREDICATE5,
+			METHOD_GET_MOST_OCCURENCE_COLOR, METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR,
+			METHOD_CLOSE, METHOD_GET_TEXT_AND_IMAGES, METHOD_COMMON_PREFIX, METHOD_GET_CONJUGATION, METHOD_PROCESS_PAGE,
 			METHOD_SET_HANDLER, METHOD_ADD_ANNOTATIONS, METHOD_MAP_TO_DOUBLE, METHOD_GET,
 			METHOD_CREATE_PD_EMBEDDED_FILE, METHOD_GET_MIME_TYPE, METHOD_GET_VOICE_URL_BY_X,
 			METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, METHOD_GET_SIZE, METHOD_GET_TRANSLATE_XS, METHOD_FLAT_MAP,
@@ -233,8 +232,6 @@ class VoiceManagerOjadAccentPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_PROPERTY = clz.getDeclaredMethod("getProperty", JSHandle.class, String.class)).setAccessible(true);
-		//
-		(METHOD_EVALUATE = clz.getDeclaredMethod("evaluate", Page.class, String.class)).setAccessible(true);
 		//
 		(METHOD_GET_VOICE_URL_IMAGES = clz.getDeclaredMethod("getVoiceUrlImages", Iterable.class, Page.class,
 				String.class)).setAccessible(true);
@@ -1727,27 +1724,6 @@ class VoiceManagerOjadAccentPanelTest {
 				return (JSHandle) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testEvaluate() throws Throwable {
-		//
-		if (ih != null) {
-			//
-			ih.evaluate = Collections.singletonMap(null, null);
-			//
-		} // if
-			//
-		Assertions.assertNull(evaluate(page, null));
-		//
-	}
-
-	private static Object evaluate(final Page instance, final String expression) throws Throwable {
-		try {
-			return METHOD_EVALUATE.invoke(null, instance, expression);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

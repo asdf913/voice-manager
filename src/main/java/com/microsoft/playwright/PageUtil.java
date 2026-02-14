@@ -12,4 +12,8 @@ public interface PageUtil {
 		return instance != null ? instance.querySelectorAll(selector) : null;
 	}
 
+	static Object evaluate(final Page instance, final String expression) {
+		return instance != null ? instance.evaluate(expression) : null;
+	}
+
 }

@@ -3678,10 +3678,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // if
 				//
-			if (Objects.equals("function", evaluate(page, "typeof get_pronounce_url"))) {
+			if (Objects.equals("function", PageUtil.evaluate(page, "typeof get_pronounce_url"))) {
 				//
 				Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
-						Util.toString(evaluate(page, String.format("get_pronounce_url(\"%1$s\",\"%2$s\")",
+						Util.toString(PageUtil.evaluate(page, String.format("get_pronounce_url(\"%1$s\",\"%2$s\")",
 								ElementHandleUtil.getAttribute(eh, "id"), StringUtils.defaultIfBlank(format, "mp3")))),
 						ElementHandleUtil.screenshot(eh));
 				//
@@ -3691,11 +3691,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		return map;
 		//
-	}
-
-	@Nullable
-	private static Object evaluate(@Nullable final Page instance, final String expression) {
-		return instance != null ? instance.evaluate(expression) : null;
 	}
 
 	@Nullable

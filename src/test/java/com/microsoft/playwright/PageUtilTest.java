@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
@@ -11,8 +12,8 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.reflect.Reflection;
@@ -28,7 +29,7 @@ class PageUtilTest {
 			final String name = getName(method);
 			//
 			if (proxy instanceof Page
-					&& anyMatch(Stream.of("navigate", "querySelectorAll"), x -> Objects.equals(x, name))) {
+					&& anyMatch(Stream.of("navigate", "querySelectorAll", "evaluate"), x -> Objects.equals(x, name))) {
 				//
 				return null;
 				//
@@ -46,15 +47,6 @@ class PageUtilTest {
 			return instance != null ? instance.getName() : null;
 		}
 
-	}
-
-	private Page page = null;
-
-	@BeforeEach
-	void beforeEach() {
-		//
-		page = Reflection.newProxy(Page.class, new IH());
-		//
 	}
 
 	@Test
@@ -85,17 +77,86 @@ class PageUtilTest {
 	}
 
 	@Test
-	void testNavigate() {
+	void testNotNull() {
 		//
-		Assertions.assertNull(PageUtil.navigate(page, null));
+		final Method[] ms = PageUtil.class.getDeclaredMethods();
 		//
+		Method m = null;
+		//
+		Collection<Object> collection = null;
+		//
+		String toString = null;
+		//
+		Object result = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
+		Class<?> parameterType = null;
+		//
+		IH ih = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
+				//
+				continue;
+				//
+			} // if
+				//
+			clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
+			//
+			parameterTypes = m.getParameterTypes();
+			//
+			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
+				//
+				if (isInterface(parameterType = ArrayUtils.get(parameterTypes, j))) {
+					//
+					add(collection, Reflection.newProxy(parameterType, ih = ObjectUtils.getIfNull(ih, IH::new)));
+					//
+				} else {
+					//
+					add(collection, Narcissus.allocateInstance(parameterType));
+					//
+				} // if
+					//
+			} // for
+				//
+			toString = Objects.toString(m);
+			//
+			result = Narcissus.invokeStaticMethod(m, toArray(collection));
+			//
+			if (isPrimitive(m.getReturnType())) {
+				//
+				Assertions.assertNotNull(result, toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(result, toString);
+				//
+			} // if
+				//
+		} // for
+			//
 	}
 
-	@Test
-	void testQuerySelectorAll() {
-		//
-		Assertions.assertNull(PageUtil.querySelectorAll(page, null));
-		//
+	private static boolean isInterface(final Class<?> instance) {
+		return instance != null && instance.isInterface();
+	}
+
+	private static boolean isPrimitive(final Class<?> instance) {
+		return instance != null && instance.isPrimitive();
+	}
+
+	private static <E> void add(final Collection<E> items, final E item) {
+		if (items != null) {
+			items.add(item);
+		}
+	}
+
+	private static void clear(final Collection<?> instance) {
+		if (instance != null) {
+			instance.clear();
+		}
 	}
 
 }
