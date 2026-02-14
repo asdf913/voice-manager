@@ -149,8 +149,13 @@ import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptorUtil;
 import org.apache.pdfbox.pdmodel.font.PDFontUtil;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
+import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageUtil;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.pdfbox.pdmodel.interactive.action.PDActionURI;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.rendering.PDFRendererUtil;
 import org.eclipse.jetty.http.HttpStatus;
@@ -2633,7 +2638,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			final float descent = PDFontDescriptorUtil.getDescent(pdFontDescriptor, 0);
 			//
-			final PDRectangle pdRectangle = PDPageUtil.getMediaBox(pdPage);
+			PDRectangle pdRectangle = PDPageUtil.getMediaBox(pdPage);
 			//
 			float pageHeight = PDRectangleUtil.getHeight(pdRectangle) - (ascent / 1000 * fontSize)
 					+ (descent / 1000 * fontSize);
@@ -2868,6 +2873,16 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			first = true;
 			//
+			PDAnnotationLink pdAnnotationLink = null;
+			//
+			PDBorderStyleDictionary pdBorderStyleDictionary = null;
+			//
+			Color color = null;
+			//
+			PDActionURI pdActionURI = null;
+			//
+			String url = null;
+			//
 			for (int i = 0; i < IterableUtils.size(links); i++) {
 				//
 				if ((link = IterableUtils.get(links, i)) == null) {
@@ -2900,6 +2915,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				newLineAtOffset(pageContentStream, 0,
 						pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
 				//
+				pageContentStream.setNonStrokingColor(Color.BLACK);
+				//
 				showText(pageContentStream, Link.getText(link));
 				//
 				endText(pageContentStream);
@@ -2910,7 +2927,36 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				newLineAtOffset(pageContentStream, width, pageHeight);
 				//
-				showText(pageContentStream, Util.toString(link.url));
+				pageContentStream.setNonStrokingColor(color = Color.BLUE);
+				//
+				showText(pageContentStream, url = Util.toString(link.url));
+				//
+				(pdBorderStyleDictionary = new PDBorderStyleDictionary())
+						.setStyle(PDBorderStyleDictionary.STYLE_UNDERLINE);
+				//
+				(pdAnnotationLink = new PDAnnotationLink()).setBorderStyle(pdBorderStyleDictionary);
+				//
+				pdAnnotationLink.setColor(
+						color != null
+								? new PDColor(new float[] { color.getRed(), color.getGreen(), color.getBlue() },
+										PDDeviceRGB.INSTANCE)
+								: null);
+				//
+				(pdRectangle = new PDRectangle()).setLowerLeftX(width);
+				//
+				pdRectangle.setLowerLeftY(pageHeight);
+				//
+				pdRectangle.setUpperRightX(width + getTextWidth(url, pdFont, fontSize));
+				//
+				pdRectangle.setUpperRightY(pageHeight + textHeight);
+				//
+				pdAnnotationLink.setRectangle(pdRectangle);
+				//
+				(pdActionURI = new PDActionURI()).setURI(url);
+				//
+				pdAnnotationLink.setAction(pdActionURI);
+				//
+				Util.add(PDPageUtil.getAnnotations(pdPage), pdAnnotationLink);
 				//
 				endText(pageContentStream);
 				//
