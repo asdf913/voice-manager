@@ -971,6 +971,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return instance != null ? instance.getFuriganaImage() : null;
 		}
 
+		private BufferedImage getStrokeImage() {
+			return strokeImage;
+		}
+
+		private static BufferedImage getStrokeImage(final JapanDictEntry instance) {
+			return instance != null ? instance.getStrokeImage() : null;
+		}
+
 	}
 
 	@Override
@@ -2667,8 +2675,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				endText(pageContentStream);
 				//
 				drawImage(pageContentStream,
-						pdImageXObject = toPDImageXObject(japanDictEntry != null ? japanDictEntry.strokeImage : null,
-								format, document),
+						pdImageXObject = toPDImageXObject(JapanDictEntry.getStrokeImage(japanDictEntry), format,
+								document),
 						width, pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
 				//
 				// Stroke with Number
@@ -3636,7 +3644,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 										y -> Narcissus.invokeMethod(x, y), null)),
 						() -> PlaywrightUtil.chromium(x));
 		//
-		testAndRun(or(JapanDictEntry.getFuriganaImage(entry) == null, entry.strokeImage == null,
+		testAndRun(or(JapanDictEntry.getFuriganaImage(entry) == null, JapanDictEntry.getStrokeImage(entry) == null,
 				IterableUtils.isEmpty(entry.pitchAccents)), () -> {
 					//
 					//
@@ -3679,8 +3687,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		// Stroke Image
 		//
-		Util.setIcon(instance.strokeImage,
-				testAndApply(Objects::nonNull, instance.strokeBufferedImage = entry.strokeImage, ImageIcon::new, null));
+		Util.setIcon(instance.strokeImage, testAndApply(Objects::nonNull,
+				instance.strokeBufferedImage = JapanDictEntry.getStrokeImage(entry), ImageIcon::new, null));
 		//
 		setEnabled(entry.strokeImage != null, instance.btnCopyStrokeImage, instance.btnSaveStrokeImage);
 		//
@@ -3754,7 +3762,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			if ((temp = Util.cast(JapanDictEntry.class, getValueAt(dtm, i, 0))) != null
 					&& Objects.equals(JapanDictEntry.getId(japanDictEntry), JapanDictEntry.getId(temp))) {
 				//
-				temp.strokeImage = ObjectUtils.getIfNull(temp.strokeImage, japanDictEntry.strokeImage);
+				temp.strokeImage = ObjectUtils.getIfNull(JapanDictEntry.getStrokeImage(temp),
+						japanDictEntry.strokeImage);
 				//
 				JapanDictEntry.setStrokeWithNumberImage(temp,
 						ObjectUtils.getIfNull(JapanDictEntry.getStrokeWithNumberImage(temp),
