@@ -22,7 +22,6 @@ import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
@@ -2545,14 +2544,33 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						//
 				} // try
 					//
-				final File file = Util.getAbsoluteFile(Util.toFile(Path.of("test.pdf")));
+				final StringBuilder sb = testAndApply(Objects::nonNull, Util.getText(instance.tfText),
+						StringBuilder::new, null);
 				//
-				System.out.println(Util.getAbsolutePath(file));
+				testAndAccept(StringUtils::isNotBlank, Util.getText(instance.tfHiragana),
+						x -> append(append(append(sb, '('), x), ')'));
 				//
-				FileUtils.writeByteArrayToFile(file, toPdfByteArray(
-						Util.cast(JapanDictEntry.class, getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0)),
-						pdFont));
+				testAndAccept(StringUtils::isNotBlank, Util.getText(instance.tfKatakana),
+						x -> append(append(append(sb, '('), x), ')'));
 				//
+				append(append(sb, '.'), "pdf");
+				//
+				final JFileChooser jfc = new JFileChooser();
+				//
+				jfc.setSelectedFile(Util.toFile(testAndApply(Objects::nonNull, Util.toString(sb), Path::of, null)));
+				//
+				if (and(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
+						() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
+					//
+					FileUtils
+							.writeByteArrayToFile(jfc.getSelectedFile(),
+									toPdfByteArray(
+											Util.cast(JapanDictEntry.class,
+													getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0)),
+											pdFont));
+					//
+				} // if
+					//
 			} catch (final IOException e) {
 				//
 				throw new RuntimeException(e);
