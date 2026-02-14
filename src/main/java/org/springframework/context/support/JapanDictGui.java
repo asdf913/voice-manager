@@ -361,6 +361,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			}
 		}
 
+		private BufferedImage getImage() {
+			return image;
+		}
+
+		private static BufferedImage getImage(final PitchAccent instance) {
+			return instance != null ? instance.getImage() : null;
+		}
+
 	}
 
 	private transient MutableComboBoxModel<PitchAccent> mcbmPitchAccent = null;
@@ -674,13 +682,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		return (list, value, index, isSelected, cellHasFocus) -> {
 			//
-			if (value != null && value.image != null) {
+			final BufferedImage image = PitchAccent.getImage(value);
+			//
+			if (value != null && image != null) {
 				//
 				final JPanel panel = new JPanel();
 				//
 				panel.setLayout(new MigLayout());
 				//
-				add(panel, new JLabel(new ImageIcon(value.image)));
+				add(panel, new JLabel(new ImageIcon(image)));
 				//
 				if (StringUtils.isNotBlank(value.type)) {
 					//
@@ -1925,7 +1935,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			final PitchAccent pitchAccent = Util.cast(PitchAccent.class,
 					Util.getSelectedItem(instance.mcbmPitchAccent));
 			//
-			ih.image = pitchAccent != null ? pitchAccent.image : null;
+			ih.image = PitchAccent.getImage(pitchAccent);
 			//
 			testAndRun(!isTestMode(), () -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 					Reflection.newProxy(Transferable.class, ih), null));
@@ -1956,7 +1966,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			final PitchAccent pitchAccent = Util.cast(PitchAccent.class,
 					Util.getSelectedItem(instance.mcbmPitchAccent));
 			//
-			final BufferedImage image = pitchAccent != null ? pitchAccent.image : null;
+			final BufferedImage image = PitchAccent.getImage(pitchAccent);
 			//
 			if (and(Util.and(!GraphicsEnvironment.isHeadless(), !isTestMode(), image != null),
 					() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
@@ -2749,16 +2759,16 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					if (first) {
 						//
 						drawImage(pageContentStream,
-								pdImageXObject = toPDImageXObject(pitchAccent.image, format, document), width,
-								pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
+								pdImageXObject = toPDImageXObject(PitchAccent.getImage(pitchAccent), format, document),
+								width, pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
 						//
 						first = false;
 						//
 					} else {
 						//
 						drawImage(pageContentStream,
-								pdImageXObject = toPDImageXObject(pitchAccent.image, format, document), width,
-								pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) - height);
+								pdImageXObject = toPDImageXObject(PitchAccent.getImage(pitchAccent), format, document),
+								width, pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) - height);
 						//
 					} // if
 						//
@@ -4019,9 +4029,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					testAndAccept((a, b) -> IterableUtils.size(b) == 1, pa, ss,
 							(a, b) -> PitchAccent.setType(a, IterableUtils.get(b, 0)));
 					//
-					if (StringUtils.isBlank(pa.type) && pa.image != null) {
-						//
-						final BufferedImage bi = pa.image;
+					final BufferedImage bi = PitchAccent.getImage(pa);
+					//
+					if (StringUtils.isBlank(pa.type) && bi != null) {
 						//
 						pa.image = chopImage(bi, getFirstPixelColor(bi, bi.getType(),
 								getData(Util.cast(DataBufferByte.class, getDataBuffer(getRaster(bi))))));
