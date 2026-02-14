@@ -365,6 +365,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return image;
 		}
 
+		@Nullable
 		private static BufferedImage getImage(@Nullable final PitchAccent instance) {
 			return instance != null ? instance.getImage() : null;
 		}
@@ -967,6 +968,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return katakana;
 		}
 
+		@Nullable
 		private static String getKatakana(@Nullable final JapanDictEntry instance) {
 			return instance != null ? instance.getKatakana() : null;
 		}
@@ -975,6 +977,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return furiganaImage;
 		}
 
+		@Nullable
 		private static BufferedImage getFuriganaImage(@Nullable final JapanDictEntry instance) {
 			return instance != null ? instance.getFuriganaImage() : null;
 		}
@@ -983,6 +986,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return strokeImage;
 		}
 
+		@Nullable
 		private static BufferedImage getStrokeImage(@Nullable final JapanDictEntry instance) {
 			return instance != null ? instance.getStrokeImage() : null;
 		}
@@ -991,6 +995,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return pitchAccents;
 		}
 
+		@Nullable
 		private static Iterable<PitchAccent> getPitchAccents(@Nullable final JapanDictEntry instance) {
 			return instance != null ? instance.getPitchAccents() : null;
 		}
