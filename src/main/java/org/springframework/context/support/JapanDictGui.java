@@ -1005,6 +1005,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return instance != null ? instance.getPitchAccents() : null;
 		}
 
+		private Iterable<Link> getLinks() {
+			return links;
+		}
+
+		private static Iterable<Link> getLinks(final JapanDictEntry instance) {
+			return instance != null ? instance.getLinks() : null;
+		}
+
 	}
 
 	@Override
@@ -2846,7 +2854,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				// Links
 				//
-			final Iterable<Link> links = japanDictEntry != null ? japanDictEntry.links : null;
+			final Iterable<Link> links = JapanDictEntry.getLinks(japanDictEntry);
 			//
 			Link link = null;
 			//
@@ -3863,7 +3871,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		// links
 		//
-		Util.forEach(entry.links, x -> Util.addRow(instance.dtmLink, new Object[] { x }));
+		Util.forEach(JapanDictEntry.getLinks(entry), x -> Util.addRow(instance.dtmLink, new Object[] { x }));
 		//
 		final JTable jTable = instance.jTableLink;
 		//
