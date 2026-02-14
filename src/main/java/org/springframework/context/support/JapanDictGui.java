@@ -3676,16 +3676,18 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					final JapanDictEntry result = Util.get(japanDictEntrySupplier);
 					//
-					if (result != null) {
-						//
-						entry.furiganaImage = ObjectUtils.getIfNull(result.furiganaImage, entry.furiganaImage);
-						//
-						entry.pitchAccents = ObjectUtils.getIfNull(result.pitchAccents, entry.pitchAccents);
-						//
-						entry.strokeImage = ObjectUtils.getIfNull(result.strokeImage, entry.strokeImage);
-						//
-					} // if
-						//
+					entry.furiganaImage = ObjectUtils.getIfNull(JapanDictEntry.getFuriganaImage(result),
+							JapanDictEntry.getFuriganaImage(entry));
+					//
+					entry.pitchAccents = ObjectUtils.getIfNull(JapanDictEntry.getPitchAccents(result),
+							JapanDictEntry.getPitchAccents(entry));
+					//
+					entry.strokeImage = ObjectUtils.getIfNull(JapanDictEntry.getStrokeImage(result),
+							JapanDictEntry.getStrokeImage(entry));
+					//
+					entry.strokeWithNumberImage = ObjectUtils.getIfNull(JapanDictEntry.getStrokeWithNumberImage(result),
+							JapanDictEntry.getStrokeWithNumberImage(entry));
+					//
 				}, consumer);
 		//
 		// Furigana
