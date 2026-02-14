@@ -53,6 +53,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
@@ -62,8 +63,10 @@ import java.util.function.IntFunction;
 import java.util.function.LongPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.function.ToDoubleFunction;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -2730,13 +2733,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			// Stroke
 			//
-			width = Util.floatValue(orElse(
-					Util.max(FailableStreamUtil.stream(
-							FailableStreamUtil.map(new FailableStream<>(Stream.of("Stroke", "Stroke with Number")),
-									x -> Float.valueOf(getTextWidth(x, pdFont, fontSize)))),
-							ObjectUtils::compare),
-					null), 0);
-			//
 			beginText(pageContentStream);
 			//
 			testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
@@ -2749,8 +2745,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			endText(pageContentStream);
 			//
 			drawImage(pageContentStream,
-					pdImageXObject = toPDImageXObject(JapanDictEntry.getStrokeImage(japanDictEntry), format, document),
-					width, pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
+					pdImageXObject = toPDImageXObject(JapanDictEntry
+							.getStrokeImage(japanDictEntry), format, document),
+					width = Util
+							.floatValue(orElse(Util.max(
+									FailableStreamUtil.stream(FailableStreamUtil.map(
+											new FailableStream<>(Stream.of("Stroke", "Stroke with Number")),
+											x -> Float.valueOf(getTextWidth(x, pdFont, fontSize)))),
+									ObjectUtils::compare), null), 0),
+					pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
 			//
 			// Stroke with Number
 			//
@@ -2841,6 +2844,61 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			} // for
 				//
+				// Links
+				//
+			final Iterable<Link> links = japanDictEntry != null ? japanDictEntry.links : null;
+			//
+			Link link = null;
+			//
+			first = true;
+			//
+			for (int i = 0; i < IterableUtils.size(links); i++) {
+				//
+				if ((link = IterableUtils.get(links, i)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (first) {
+					//
+					final FailableStream<String> fs = testAndApply(Objects::nonNull,
+							Util.map(testAndApply(Objects::nonNull, Util.spliterator(links),
+									x -> StreamSupport.stream(x, false), null), x -> x != null ? x.text : null),
+							FailableStream::new, null);
+					//
+					width = Double.valueOf(orElse(max(mapToDouble(
+							FailableStreamUtil.stream(
+									FailableStreamUtil.map(fs, x -> Float.valueOf(getTextWidth(x, pdFont, fontSize)))),
+							x -> Util.floatValue(x, 0))), 0)).floatValue();
+					//
+					first = false;
+					//
+				} // if
+					//
+				beginText(pageContentStream);
+				//
+				testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
+				//
+				newLineAtOffset(pageContentStream, 0,
+						pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+				//
+				showText(pageContentStream, link.text);
+				//
+				endText(pageContentStream);
+				//
+				beginText(pageContentStream);
+				//
+				testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
+				//
+				newLineAtOffset(pageContentStream, width, pageHeight);
+				//
+				showText(pageContentStream, Util.toString(link.url));
+				//
+				endText(pageContentStream);
+				//
+			} // for
+				//
 			IOUtils.closeQuietly(pageContentStream);
 			//
 			document.save(baos);
@@ -2849,6 +2907,18 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} // try
 			//
+	}
+
+	private static double orElse(final OptionalDouble instance, final double defaultValue) {
+		return instance != null ? instance.orElse(defaultValue) : defaultValue;
+	}
+
+	private static OptionalDouble max(final DoubleStream instance) {
+		return instance != null ? instance.max() : null;
+	}
+
+	private static <T> DoubleStream mapToDouble(final Stream<T> instance, final ToDoubleFunction<T> function) {
+		return instance != null ? instance.mapToDouble(function) : null;
 	}
 
 	private static PDImageXObject toPDImageXObject(@Nullable final BufferedImage bufferedImage, final String format,

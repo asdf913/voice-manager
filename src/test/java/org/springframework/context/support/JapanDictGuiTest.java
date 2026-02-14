@@ -41,6 +41,7 @@ import java.util.function.IntFunction;
 import java.util.function.LongPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -368,10 +369,14 @@ class JapanDictGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Stream && Objects.equals(name, "toArray")) {
+			} else if (proxy instanceof Stream) {
 				//
-				return null;
-				//
+				if (Util.contains(Arrays.asList("toArray", "mapToDouble"), name)) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} else if (proxy instanceof ListModel && Objects.equals(name, "getSize")) {
 				//
 				return size;
@@ -443,6 +448,14 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof DoubleStream) {
+				//
+				if (Objects.equals(name, "max")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -591,6 +604,10 @@ class JapanDictGuiTest {
 				} else if (Objects.equals(parameterType, Float.TYPE)) {
 					//
 					Util.add(collection, Float.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Double.TYPE)) {
+					//
+					Util.add(collection, Double.valueOf(0));
 					//
 				} else if (Objects.equals(parameterType, Character.TYPE)) {
 					//
@@ -771,6 +788,10 @@ class JapanDictGuiTest {
 				} else if (Objects.equals(parameterType, Float.TYPE)) {
 					//
 					Util.add(collection, Float.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Double.TYPE)) {
+					//
+					Util.add(collection, Double.valueOf(0));
 					//
 				} else if (Objects.equals(parameterType, Character.TYPE)) {
 					//
