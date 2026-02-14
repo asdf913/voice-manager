@@ -2862,10 +2862,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 				if (first) {
 					//
+					final Stream<Link> stream = testAndApply(Objects::nonNull, Util.spliterator(links),
+							x -> StreamSupport.stream(x, false), null);
+					//
 					final FailableStream<String> fs = testAndApply(Objects::nonNull,
-							Util.map(testAndApply(Objects::nonNull, Util.spliterator(links),
-									x -> StreamSupport.stream(x, false), null), x -> x != null ? x.text : null),
-							FailableStream::new, null);
+							Util.map(stream, x -> x != null ? x.text : null), FailableStream::new, null);
 					//
 					width = Double.valueOf(orElse(max(mapToDouble(
 							FailableStreamUtil.stream(
