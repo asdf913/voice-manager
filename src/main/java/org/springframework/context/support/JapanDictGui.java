@@ -962,6 +962,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		private static String getKatakana(final JapanDictEntry instance) {
 			return instance != null ? instance.getKatakana() : null;
 		}
+
+		private BufferedImage getFuriganaImage() {
+			return furiganaImage;
+		}
+
+		private static BufferedImage getFuriganaImage(final JapanDictEntry instance) {
+			return instance != null ? instance.getFuriganaImage() : null;
+		}
+
 	}
 
 	@Override
@@ -2629,8 +2638,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				final String format = "png";
 				//
-				PDImageXObject pdImageXObject = toPDImageXObject(
-						japanDictEntry != null ? japanDictEntry.furiganaImage : null, format, document);
+				PDImageXObject pdImageXObject = toPDImageXObject(JapanDictEntry.getFuriganaImage(japanDictEntry),
+						format, document);
 				//
 				final float textHeight = getTextHeight(instance.pdFont, fontSize,
 						PDRectangleUtil.getWidth(PDPageUtil.getMediaBox(pdPage)) / 10, PDPageUtil.getMediaBox(pdPage));
@@ -3627,9 +3636,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 										y -> Narcissus.invokeMethod(x, y), null)),
 						() -> PlaywrightUtil.chromium(x));
 		//
-		testAndRun(
-				or(entry.furiganaImage == null, entry.strokeImage == null, IterableUtils.isEmpty(entry.pitchAccents)),
-				() -> {
+		testAndRun(or(JapanDictEntry.getFuriganaImage(entry) == null, entry.strokeImage == null,
+				IterableUtils.isEmpty(entry.pitchAccents)), () -> {
 					//
 					//
 					final JapanDictEntrySupplier japanDictEntrySupplier = new JapanDictEntrySupplier();
@@ -3657,9 +3665,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		// Furigana
 		//
 		Util.setIcon(instance.furiganaImage, testAndApply(Objects::nonNull,
-				instance.furiganaBufferedImage = entry.furiganaImage, ImageIcon::new, null));
+				instance.furiganaBufferedImage = JapanDictEntry.getFuriganaImage(entry), ImageIcon::new, null));
 		//
-		setEnabled(entry.furiganaImage != null, instance.btnCopyFuriganaImage, instance.btnSaveFuriganaImage);
+		setEnabled(JapanDictEntry.getFuriganaImage(entry) != null, instance.btnCopyFuriganaImage,
+				instance.btnSaveFuriganaImage);
 		//
 		// Pitch Accents
 		//
