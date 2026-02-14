@@ -150,6 +150,7 @@ import org.apache.pdfbox.pdmodel.font.PDFontDescriptorUtil;
 import org.apache.pdfbox.pdmodel.font.PDFontUtil;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
+import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace;
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageUtil;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
@@ -2938,11 +2939,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				(pdAnnotationLink = new PDAnnotationLink()).setBorderStyle(pdBorderStyleDictionary);
 				//
-				pdAnnotationLink.setColor(
-						color != null
-								? new PDColor(new float[] { color.getRed(), color.getGreen(), color.getBlue() },
-										PDDeviceRGB.INSTANCE)
-								: null);
+				pdAnnotationLink.setColor(toPDcolor(color, PDDeviceRGB.INSTANCE));
 				//
 				(pdRectangle = new PDRectangle()).setLowerLeftX(width);
 				//
@@ -2972,6 +2969,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} // try
 			//
+	}
+
+	private static PDColor toPDcolor(final Color instance, final PDColorSpace pdColorSpace) {
+		//
+		return instance != null
+				? new PDColor(new float[] { instance.getRed(), instance.getGreen(), instance.getBlue() }, pdColorSpace)
+				: null;
+		//
 	}
 
 	private static double orElse(@Nullable final OptionalDouble instance, final double defaultValue) {

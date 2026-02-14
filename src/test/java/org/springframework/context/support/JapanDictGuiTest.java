@@ -92,6 +92,7 @@ import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace;
 import org.javatuples.Unit;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
@@ -867,8 +868,10 @@ class JapanDictGuiTest {
 								Arrays.equals(parameterTypes, new Class<?>[] { BufferedImage.class, int[].class })),
 						Boolean.logicalAnd(Objects.equals(name, "orElse"),
 								Arrays.equals(parameterTypes, new Class<?>[] { Optional.class, Object.class })),
-						Boolean.logicalAnd(Objects.equals(name, "toPdfByteArray"), Arrays.equals(parameterTypes,
-								new Class<?>[] { CLASS_JAPAN_DICT_ENTRY, PDFont.class })))) {
+						Boolean.logicalAnd(Objects.equals(name, "toPdfByteArray"),
+								Arrays.equals(parameterTypes, new Class<?>[] { CLASS_JAPAN_DICT_ENTRY, PDFont.class })),
+						Boolean.logicalAnd(Objects.equals(name, "toPdolor"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Color.class, PDColorSpace.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
