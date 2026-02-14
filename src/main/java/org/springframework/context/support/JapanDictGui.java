@@ -392,6 +392,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return instance != null ? instance.getUrl() : null;
 		}
 
+		private String getText() {
+			return text;
+		}
+
+		private static String getText(final Link instance) {
+			return instance != null ? instance.getText() : null;
+		}
+
 	}
 
 	private JTable jTableLink = null;
@@ -2874,7 +2882,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							x -> StreamSupport.stream(x, false), null);
 					//
 					final FailableStream<String> fs = testAndApply(Objects::nonNull,
-							Util.map(stream, x -> x != null ? x.text : null), FailableStream::new, null);
+							Util.map(stream, x -> Link.getText(x)), FailableStream::new, null);
 					//
 					width = Double.valueOf(orElse(max(mapToDouble(
 							FailableStreamUtil.stream(
@@ -2892,7 +2900,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				newLineAtOffset(pageContentStream, 0,
 						pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
 				//
-				showText(pageContentStream, link.text);
+				showText(pageContentStream, Link.getText(link));
 				//
 				endText(pageContentStream);
 				//
