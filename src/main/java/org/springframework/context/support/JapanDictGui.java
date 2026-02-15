@@ -931,6 +931,16 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return instance != null ? instance.getAudioData() : null;
 		}
 
+		private void setAudioData(byte[] audioData) {
+			this.audioData = audioData;
+		}
+
+		private static void setAudioData(final JapanDictEntry instance, final byte[] audioData) {
+			if (instance != null) {
+				instance.setAudioData(audioData);
+			}
+		}
+
 		private String getText() {
 			return text;
 		}
@@ -1030,6 +1040,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		@Nullable
 		private static Iterable<Link> getLinks(@Nullable final JapanDictEntry instance) {
 			return instance != null ? instance.getLinks() : null;
+		}
+
+		private String getAudioUrl() {
+			return audioUrl;
+		}
+
+		private static String getAudioUrl(final JapanDictEntry instance) {
+			return instance != null ? instance.getAudioUrl() : null;
 		}
 
 	}
@@ -2120,7 +2138,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		try (final InputStream is = Util.getInputStream(httpURLConnection)) {
 			//
-			final String audioUrl = japanDictEntry != null ? japanDictEntry.audioUrl : null;
+			final String audioUrl = JapanDictEntry.getAudioUrl(japanDictEntry);
 			//
 			final URIBuilder uriBuilder = testAndApply(Objects::nonNull, audioUrl, URIBuilder::new, null);
 			//
@@ -2974,9 +2992,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				// Audio Data
 				//
-			if (JapanDictEntry.getAudioData(japanDictEntry) == null && japanDictEntry != null) {
+			if (JapanDictEntry.getAudioData(japanDictEntry) == null) {
 				//
-				japanDictEntry.audioData = download(japanDictEntry.audioUrl, userAgent);
+				JapanDictEntry.setAudioData(japanDictEntry,
+						download(JapanDictEntry.getAudioUrl(japanDictEntry), userAgent));
 				//
 			} // if
 				//
@@ -3887,7 +3906,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		TriConsumerUtil.accept(triConsumer, instance.tfRomaji, JapanDictEntry.getRomaji(entry),
 				Collections.singleton(instance.btnCopyRomaji));
 		//
-		TriConsumerUtil.accept(triConsumer, instance.tfAudioUrl, entry.audioUrl,
+		TriConsumerUtil.accept(triConsumer, instance.tfAudioUrl, JapanDictEntry.getAudioUrl(entry),
 				Arrays.asList(instance.btnCopyAudioUrl, instance.btnDownloadAudio, instance.btnPlayAudio));
 		//
 		final Iterable<Method> ms = Util.toList(Util.filter(
