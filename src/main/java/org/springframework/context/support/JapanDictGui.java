@@ -144,6 +144,8 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.PDPageUtil;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.common.PDRectangleUtil;
+import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
+import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptorUtil;
@@ -155,6 +157,7 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageUtil;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.action.PDActionURI;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -2601,11 +2604,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 									Util.cast(JapanDictEntry.class,
 											getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0)),
 									testAndApply(Objects::nonNull, instance.trueTypeFont,
-											x -> PDType0Font.load(document, x, false), null)));
+											x -> PDType0Font.load(document, x, false), null),
+									instance.getUserAgent()));
 					//
 				} // if
 					//
-			} catch (final IOException e) {
+			} catch (final IOException | URISyntaxException e) {
 				//
 				throw new RuntimeException(e);
 				//
@@ -2617,7 +2621,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static byte[] toPdfByteArray(final JapanDictEntry japanDictEntry, final PDFont pdFont) throws IOException {
+	private static byte[] toPdfByteArray(final JapanDictEntry japanDictEntry, final PDFont pdFont,
+			final String userAgent) throws IOException, URISyntaxException {
 		//
 		final PDPage pdPage = new PDPage();
 		//
@@ -2658,7 +2663,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			newLineAtOffset(pageContentStream, width, pageHeight);
 			//
-			showText(pageContentStream, JapanDictEntry.getText(japanDictEntry));
+			final String text = JapanDictEntry.getText(japanDictEntry);
+			//
+			showText(pageContentStream, text);
 			//
 			endText(pageContentStream);
 			//
@@ -2704,7 +2711,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			newLineAtOffset(pageContentStream, width, pageHeight);
 			//
-			showText(pageContentStream, JapanDictEntry.getHiragana(japanDictEntry));
+			final String hiragana = JapanDictEntry.getHiragana(japanDictEntry);
+			//
+			showText(pageContentStream, hiragana);
 			//
 			endText(pageContentStream);
 			//
@@ -2727,7 +2736,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			newLineAtOffset(pageContentStream, width, pageHeight);
 			//
-			showText(pageContentStream, JapanDictEntry.getKatakana(japanDictEntry));
+			final String katakana = JapanDictEntry.getKatakana(japanDictEntry);
+			//
+			showText(pageContentStream, katakana);
 			//
 			endText(pageContentStream);
 			//
@@ -2960,6 +2971,63 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				endText(pageContentStream);
 				//
 			} // for
+				//
+				// Audio Data
+				//
+			if (JapanDictEntry.getAudioData(japanDictEntry) == null && japanDictEntry != null) {
+				//
+				japanDictEntry.audioData = download(japanDictEntry.audioUrl, userAgent);
+				//
+			} // if
+				//
+			final byte[] bs = JapanDictEntry.getAudioData(japanDictEntry);
+			//
+			if (bs != null) {
+				//
+				final int size = 100;
+				//
+				(pdRectangle = new PDRectangle())
+						.setLowerLeftX(PDRectangleUtil.getWidth(PDPageUtil.getMediaBox(pdPage)) - size);
+				//
+				pdRectangle.setLowerLeftY(PDRectangleUtil.getHeight(PDPageUtil.getMediaBox(pdPage)) - size);
+				//
+				pdRectangle.setUpperRightX(PDRectangleUtil.getWidth(PDPageUtil.getMediaBox(pdPage)));
+				//
+				pdRectangle.setUpperRightY(PDRectangleUtil.getHeight(PDPageUtil.getMediaBox(pdPage)));
+				//
+				final PDAnnotationFileAttachment pdAnnotationFileAttachment = new PDAnnotationFileAttachment();
+				//
+				pdAnnotationFileAttachment.setRectangle(pdRectangle);
+				//
+				final PDComplexFileSpecification pdComplexFileSpecification = new PDComplexFileSpecification();
+				//
+				try (final InputStream is = new ByteArrayInputStream(bs)) {
+					//
+					final PDEmbeddedFile pdEmbeddedFile = testAndApply(
+							(a, b) -> Boolean.logicalAnd(a != null, b != null), document, is, PDEmbeddedFile::new,
+							null);
+					//
+					if (pdEmbeddedFile != null) {
+						//
+						pdEmbeddedFile.setSubtype(getMimeType(new ContentInfoUtil().findMatch(bs)));
+						//
+						pdEmbeddedFile.setSize(bs.length);
+						//
+					} // if
+						//
+					pdComplexFileSpecification.setEmbeddedFile(pdEmbeddedFile);
+					//
+					pdComplexFileSpecification.setFile("audio.mp3");
+					//
+					pdAnnotationFileAttachment.setFile(pdComplexFileSpecification);
+					//
+					pdAnnotationFileAttachment.setSubject(text);
+					//
+					Util.add(PDPageUtil.getAnnotations(pdPage), pdAnnotationFileAttachment);
+					//
+				} // try
+					//
+			} // if
 				//
 			IOUtils.closeQuietly(pageContentStream);
 			//

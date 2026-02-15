@@ -652,7 +652,7 @@ class JapanDictGuiTest {
 						Boolean.logicalAnd(Objects.equals(name, "getMinMax"),
 								Arrays.equals(parameterTypes, new Class<?>[] { int[].class, Integer.TYPE })),
 						Boolean.logicalAnd(Objects.equals(name, "toPdfByteArray"), Arrays.equals(parameterTypes,
-								new Class<?>[] { CLASS_JAPAN_DICT_ENTRY, PDFont.class })))) {
+								new Class<?>[] { CLASS_JAPAN_DICT_ENTRY, PDFont.class, String.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -869,7 +869,8 @@ class JapanDictGuiTest {
 						Boolean.logicalAnd(Objects.equals(name, "orElse"),
 								Arrays.equals(parameterTypes, new Class<?>[] { Optional.class, Object.class })),
 						Boolean.logicalAnd(Objects.equals(name, "toPdfByteArray"),
-								Arrays.equals(parameterTypes, new Class<?>[] { CLASS_JAPAN_DICT_ENTRY, PDFont.class })),
+								Arrays.equals(parameterTypes,
+										new Class<?>[] { CLASS_JAPAN_DICT_ENTRY, PDFont.class, String.class })),
 						Boolean.logicalAnd(Objects.equals(name, "toPDcolor"),
 								Arrays.equals(parameterTypes, new Class<?>[] { Color.class, PDColorSpace.class })))) {
 					//
