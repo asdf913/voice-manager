@@ -2627,7 +2627,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 				} // if
 					//
-			} catch (final IOException | URISyntaxException e) {
+			} catch (final Exception e) {
 				//
 				throw new RuntimeException(e);
 				//
@@ -2640,7 +2640,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	private static byte[] toPdfByteArray(final JapanDictEntry japanDictEntry, final PDFont pdFont,
-			final String userAgent) throws IOException, URISyntaxException {
+			final String userAgent) throws Exception {
 		//
 		final PDPage pdPage = new PDPage();
 		//
@@ -2992,13 +2992,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				// Audio Data
 				//
-			if (JapanDictEntry.getAudioData(japanDictEntry) == null) {
-				//
-				JapanDictEntry.setAudioData(japanDictEntry,
-						download(JapanDictEntry.getAudioUrl(japanDictEntry), userAgent));
-				//
-			} // if
-				//
+			testAndAccept(x -> JapanDictEntry.getAudioData(x) == null, japanDictEntry,
+					x -> JapanDictEntry.setAudioData(x, download(JapanDictEntry.getAudioUrl(x), userAgent)));
+			//
 			final byte[] bs = JapanDictEntry.getAudioData(japanDictEntry);
 			//
 			if (bs != null) {
