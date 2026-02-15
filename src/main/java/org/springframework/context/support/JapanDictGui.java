@@ -235,6 +235,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private static final String KATAKANA = "Katakana";
 
+	private static final String HIRAGANA = "Hiragana";
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -253,7 +255,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Note("Response Code")
 	private JTextComponent tfResponseCode = null;
 
-	@Note("Hiragana")
+	@Note(HIRAGANA)
 	private JTextComponent tfHiragana = null;
 
 	@Note(KATAKANA)
@@ -492,7 +494,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		add(this, new JLabel());
 		//
 		add(this, new JScrollPane(jTable = new JTable(dtm = new DefaultTableModel(
-				new Object[] { "", "JLPT Level", "Hiragana", KATAKANA, ROMAJI, PITCH_ACCENT }, 0) {
+				new Object[] { "", "JLPT Level", HIRAGANA, KATAKANA, ROMAJI, PITCH_ACCENT }, 0) {
 
 			@Override
 			public boolean isCellEditable(final int row, final int column) {
@@ -543,7 +545,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		});
 		//
-		add(this, new JLabel("Hiragana"));
+		add(this, new JLabel(HIRAGANA));
 		//
 		add(this, tfHiragana = new JTextField(), String.format("%1$s,span %2$s,wmax %3$s", growx, 3, width));
 		//
@@ -896,7 +898,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		@Note("JLPT Level")
 		private String jlptLevel = null;
 
-		@Note("Hiragana")
+		@Note(HIRAGANA)
 		private String hiragana = null;
 
 		@Note(KATAKANA)
@@ -2678,7 +2680,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					.floatValue(
 							orElse(Util.max(
 									FailableStreamUtil.stream(FailableStreamUtil.map(
-											new FailableStream<>(Stream.of(ROMAJI, "Hiragana", KATAKANA, "Furigana")),
+											new FailableStream<>(Stream.of(ROMAJI, HIRAGANA, KATAKANA, "Furigana")),
 											x -> Float.valueOf(getTextWidth(x, pdFont, fontSize)))),
 									ObjectUtils::compare), null),
 							0);
@@ -2723,7 +2725,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			newLineAtOffset(pageContentStream, 0,
 					pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
 			//
-			showText(pageContentStream, "Hiragana");
+			showText(pageContentStream, HIRAGANA);
 			//
 			endText(pageContentStream);
 			//
