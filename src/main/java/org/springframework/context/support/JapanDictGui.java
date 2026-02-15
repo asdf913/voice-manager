@@ -2800,13 +2800,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
 			//
-			newLineAtOffset(pageContentStream, 0,
-					pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
-			//
-			showText(pageContentStream, FURIGANA);
-			//
-			endText(pageContentStream);
-			//
 			final String format = "png";
 			//
 			PDImageXObject pdImageXObject = toPDImageXObject(JapanDictEntry.getFuriganaImage(japanDictEntry), format,
@@ -2814,6 +2807,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			final float textHeight = getTextHeight(pdFont, fontSize, PDRectangleUtil.getWidth(pdRectangle) / 10,
 					pdRectangle);
+			//
+			newLineAtOffset(pageContentStream, 0,
+					(pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize))
+							- ((PDImageUtil.getHeight(pdImageXObject) - textHeight) / 2));
+			//
+			showText(pageContentStream, FURIGANA);
+			//
+			endText(pageContentStream);
 			//
 			drawImage(pageContentStream, pdImageXObject, width,
 					pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
@@ -2825,22 +2826,22 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
 			//
 			newLineAtOffset(pageContentStream, 0,
-					pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+					(pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize))
+							- ((PDImageUtil
+									.getHeight(pdImageXObject = toPDImageXObject(
+											JapanDictEntry.getStrokeImage(japanDictEntry), format, document))
+									- textHeight) / 2));
 			//
 			showText(pageContentStream, STROKE);
 			//
 			endText(pageContentStream);
 			//
-			drawImage(pageContentStream,
-					pdImageXObject = toPDImageXObject(JapanDictEntry
-							.getStrokeImage(japanDictEntry), format, document),
-					width = Util
-							.floatValue(orElse(Util.max(
-									FailableStreamUtil.stream(FailableStreamUtil.map(
-											new FailableStream<>(Stream.of(STROKE, "Stroke with Number")),
-											x -> Float.valueOf(getTextWidth(x, pdFont, fontSize)))),
-									ObjectUtils::compare), null), 0),
-					pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
+			drawImage(pageContentStream, pdImageXObject, width = Util.floatValue(orElse(
+					Util.max(FailableStreamUtil.stream(
+							FailableStreamUtil.map(new FailableStream<>(Stream.of(STROKE, "Stroke with Number")),
+									x -> Float.valueOf(getTextWidth(x, pdFont, fontSize)))),
+							ObjectUtils::compare),
+					null), 0), pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
 			//
 			// Stroke with Number
 			//
@@ -2849,16 +2850,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
 			//
 			newLineAtOffset(pageContentStream, 0,
-					pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+					(pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize)) - ((PDImageUtil
+							.getHeight(pdImageXObject = toPDImageXObject(
+									JapanDictEntry.getStrokeWithNumberImage(japanDictEntry), format, document))
+							- textHeight) / 2));
 			//
 			showText(pageContentStream, "Stroke With Number");
 			//
 			endText(pageContentStream);
 			//
-			drawImage(pageContentStream,
-					pdImageXObject = toPDImageXObject(JapanDictEntry.getStrokeWithNumberImage(japanDictEntry), format,
-							document),
-					width, pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
+			drawImage(pageContentStream, pdImageXObject, width,
+					pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
 			//
 			// Pitch Accent
 			//
@@ -2891,7 +2893,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
 					//
 					newLineAtOffset(pageContentStream, 0,
-							pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
+							(pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize))
+									- ((PDImageUtil.getHeight(pdImageXObject = toPDImageXObject(
+											PitchAccent.getImage(pitchAccent), format, document)) - textHeight) / 2));
 					//
 					showText(pageContentStream, PITCH_ACCENT);
 					//
@@ -2903,9 +2907,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 				if (first) {
 					//
-					drawImage(pageContentStream,
-							pdImageXObject = toPDImageXObject(PitchAccent.getImage(pitchAccent), format, document),
-							width, pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
+					drawImage(pageContentStream, pdImageXObject, width,
+							pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
 					//
 					first = false;
 					//
