@@ -4113,9 +4113,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			final String pageUrl = japanDictEntry != null ? japanDictEntry.pageUrl : null;
 			//
-			try (final Playwright playwright = testAndGet(
-					japanDictEntry != null && JapanDictEntry.getStrokeWithNumberImage(japanDictEntry) == null,
-					Playwright::create);
+			try (final Playwright playwright = testAndGet(or(JapanDictEntry.getFuriganaImage(japanDictEntry) == null,
+					JapanDictEntry.getStrokeImage(japanDictEntry) == null,
+					IterableUtils.isEmpty(JapanDictEntry.getPitchAccents(japanDictEntry))), Playwright::create);
 					final Browser browser = testAndApply(
 							Predicates.always(UrlValidatorUtil.isValid(UrlValidator.getInstance(), pageUrl)),
 							playwright,
@@ -4143,24 +4143,30 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 												".."),
 										y -> IterableUtils.get(y, 0), null)));
 				//
-				result.furiganaImage = chopImage(bi, getFirstPixelColor(bi, BufferedImage.TYPE_3BYTE_BGR,
-						getData(Util.cast(DataBufferByte.class, getDataBuffer(getRaster(bi))))));
+				result.furiganaImage = ObjectUtils.getIfNull(
+						chopImage(bi,
+								getFirstPixelColor(bi, BufferedImage.TYPE_3BYTE_BGR,
+										getData(Util.cast(DataBufferByte.class, getDataBuffer(getRaster(bi)))))),
+						() -> JapanDictEntry.getFuriganaImage(japanDictEntry));
 				//
 				// Pitch Accents
 				//
-				result.pitchAccents = getPitchAccents(
-						ElementHandleUtil
-								.querySelectorAll(
+				result.pitchAccents = ObjectUtils
+						.getIfNull(
+								getPitchAccents(ElementHandleUtil.querySelectorAll(
 										testAndApply(x -> IterableUtils.size(x) > Util.intValue(index, 0),
 												PageUtil.querySelectorAll(page, String.format(
 														"#entry-%1$s ul li.list-group-item[lang='ja'] .d-flex.p-2",
 														id)),
 												x -> IterableUtils.get(x, Util.intValue(index, 0)), null),
-										"div.d-flex"));
+										"div.d-flex")),
+								() -> JapanDictEntry.getPitchAccents(japanDictEntry));
 				//
 				// Stroke Image
 				//
-				result.strokeImage = JapanDictGui.chopImage(getStrokeImage(japanDictGui, page, japanDictEntry));
+				result.strokeImage = ObjectUtils.getIfNull(
+						JapanDictGui.chopImage(getStrokeImage(japanDictGui, page, japanDictEntry)),
+						() -> JapanDictEntry.getStrokeImage(japanDictEntry));
 				//
 			} catch (final IOException | InterruptedException ex) {
 				//
