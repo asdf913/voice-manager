@@ -2924,7 +2924,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				testAndAccept(Objects::nonNull, pdFont, x -> pageContentStream.setFont(x, fontSize));
 				//
-				newLineAtOffset(pageContentStream, width + maxImageWidth, pageHeight);
+				newLineAtOffset(pageContentStream, width + maxImageWidth,
+						pageHeight + PDImageUtil.getHeight(pdImageXObject) / 2);
 				//
 				showText(pageContentStream, pitchAccent.type);
 				//
