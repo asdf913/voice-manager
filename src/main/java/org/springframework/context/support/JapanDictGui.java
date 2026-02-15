@@ -2620,7 +2620,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				testAndAccept(StringUtils::isNotBlank, Util.getText(instance.tfKatakana),
 						x -> append(append(append(sb, '('), x), ')'));
 				//
-				append(append(sb, '.'), "pdf");
+				testAndAccept((a, b) -> b != null && b.length == 1, sb,
+						getFileExtensions(testAndApply(Objects::nonNull, getSamplePdfByteArray(),
+								new ContentInfoUtil()::findMatch, null)),
+						(a, b) -> append(append(a, '.'), ArrayUtils.get(b, 0)));
 				//
 				final JFileChooser jfc = new JFileChooser();
 				//
@@ -2650,6 +2653,23 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return false;
 		//
+	}
+
+	private static String[] getFileExtensions(final ContentInfo instance) {
+		return instance != null ? instance.getFileExtensions() : null;
+	}
+
+	private static byte[] getSamplePdfByteArray() throws IOException {
+		//
+		try (final PDDocument document = new PDDocument();
+				final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			document.save(baos);
+			//
+			return baos.toByteArray();
+			//
+		} // try
+			//
 	}
 
 	private static byte[] toPdfByteArray(final JapanDictEntry japanDictEntry, final PDFont pdFont,

@@ -651,8 +651,11 @@ class JapanDictGuiTest {
 										new Class<?>[] { Component.class, ListCellRenderer.class, Dimension.class })),
 						Boolean.logicalAnd(Objects.equals(name, "getMinMax"),
 								Arrays.equals(parameterTypes, new Class<?>[] { int[].class, Integer.TYPE })),
-						Boolean.logicalAnd(Objects.equals(name, "toPdfByteArray"), Arrays.equals(parameterTypes,
-								new Class<?>[] { CLASS_JAPAN_DICT_ENTRY, PDFont.class, String.class })))) {
+						Boolean.logicalAnd(Objects.equals(name, "toPdfByteArray"),
+								Arrays.equals(parameterTypes,
+										new Class<?>[] { CLASS_JAPAN_DICT_ENTRY, PDFont.class, String.class })),
+						Boolean.logicalAnd(Objects.equals(name, "getSamplePdfByteArray"),
+								Arrays.equals(parameterTypes, new Class<?>[] {})))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -872,7 +875,9 @@ class JapanDictGuiTest {
 								Arrays.equals(parameterTypes,
 										new Class<?>[] { CLASS_JAPAN_DICT_ENTRY, PDFont.class, String.class })),
 						Boolean.logicalAnd(Objects.equals(name, "toPDcolor"),
-								Arrays.equals(parameterTypes, new Class<?>[] { Color.class, PDColorSpace.class })))) {
+								Arrays.equals(parameterTypes, new Class<?>[] { Color.class, PDColorSpace.class })),
+						Boolean.logicalAnd(Objects.equals(name, "getSamplePdfByteArray"),
+								Arrays.equals(parameterTypes, new Class<?>[] {})))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
