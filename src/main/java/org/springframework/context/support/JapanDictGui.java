@@ -2860,7 +2860,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					newLineAtOffset(pageContentStream, 0,
 							pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
 					//
-					showText(pageContentStream, "Pitch Accent");
+					showText(pageContentStream, PITCH_ACCENT);
 					//
 					endText(pageContentStream);
 					//
