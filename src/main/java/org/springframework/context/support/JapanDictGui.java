@@ -3051,13 +3051,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static void setSubtype(final PDEmbeddedFile instance, @Nullable final String mimeType) {
+	private static void setSubtype(@Nullable final PDEmbeddedFile instance, @Nullable final String mimeType) {
 		if (instance != null && instance.getCOSObject() != null) {
 			instance.setSubtype(mimeType);
 		}
 	}
 
-	private static void setSize(final PDEmbeddedFile instance, final int size) {
+	private static void setSize(@Nullable final PDEmbeddedFile instance, final int size) {
 		if (instance != null && instance.getCOSObject() != null) {
 			instance.setSize(size);
 		}
