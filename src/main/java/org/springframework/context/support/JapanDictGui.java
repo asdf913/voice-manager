@@ -3051,7 +3051,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static void setSubtype(final PDEmbeddedFile instance, final String mimeType) {
+	private static void setSubtype(final PDEmbeddedFile instance, @Nullable final String mimeType) {
 		if (instance != null && instance.getCOSObject() != null) {
 			instance.setSubtype(mimeType);
 		}
