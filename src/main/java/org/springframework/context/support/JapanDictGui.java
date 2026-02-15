@@ -2102,11 +2102,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					bs = bs == null ? download(Util.getText(instance.tfAudioUrl), userAgent) : bs,
 					ByteArrayInputStream::new, null)) {
 				//
-				testAndAccept(
-						x -> Objects.equals(getMessage(
-								testAndApply(Objects::nonNull, x, y -> new ContentInfoUtil().findMatch(y), null)),
-								"Audio file with ID3 version 2.4, MP3 encoding"),
-						bs, x -> PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null)));
+				testAndAccept(JapanDictGui::isMp3, bs,
+						x -> PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null)));
 				//
 				if (japanDictEntry != null) {
 					//
@@ -2136,6 +2133,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // if
 			//
 		return false;
+		//
+	}
+
+	private static boolean isMp3(final byte[] bs) {
+		//
+		return Objects.equals(getMessage(testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null)),
+				"Audio file with ID3 version 2.4, MP3 encoding");
 		//
 	}
 
@@ -2343,10 +2347,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				testAndAccept(StringUtils::isNotBlank, Util.getText(instance.tfKatakana),
 						x -> append(append(append(sb, '('), x), ')'));
 				//
-				testAndAccept(
-						x -> Objects.equals(getMessage(
-								testAndApply(Objects::nonNull, x, y -> new ContentInfoUtil().findMatch(y), null)),
-								"Audio file with ID3 version 2.4, MP3 encoding"),
+				testAndAccept(JapanDictGui::isMp3,
 						bs = bs == null ? download(Util.getText(instance.tfAudioUrl), userAgent) : bs,
 						x -> append(append(sb, '.'), "mp3"));
 				//
@@ -3061,7 +3062,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					pdComplexFileSpecification.setEmbeddedFile(pdEmbeddedFile);
 					//
-					pdComplexFileSpecification.setFile("audio.mp3");
+					pdComplexFileSpecification.setFile(Util.toString(testAndApply((a, b) -> isMp3(a), bs,
+							new StringBuilder("audio"), (a, b) -> append(append(b, '.'), "mp3"), null)));
 					//
 					pdAnnotationFileAttachment.setFile(pdComplexFileSpecification);
 					//
