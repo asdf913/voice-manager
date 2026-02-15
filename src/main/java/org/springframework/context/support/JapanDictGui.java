@@ -2873,7 +2873,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					endText(pageContentStream);
 					//
-					width = getTextWidth("Pitch Accent", pdFont, fontSize);
+					width = getTextWidth(PITCH_ACCENT, pdFont, fontSize);
 					//
 				} // if
 					//
