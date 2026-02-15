@@ -91,8 +91,6 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace;
 import org.javatuples.Unit;
@@ -148,7 +146,7 @@ class JapanDictGuiTest {
 			METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW, METHOD_OR,
 			METHOD_GET_MIN_MAX, METHOD_THEN_ACCEPT_ASYNC, METHOD_SET_STROKE_IMAGE_AND_STROKE_WITH_NUMBER_IMAGE,
 			METHOD_COPY_FIELD, METHOD_GET_LINK_MULTI_MAP_ELEMENT, METHOD_GET_LINK_MULTI_MAP_STRING,
-			METHOD_TEST_AND_RUN_THROWS, METHOD_SET_SUB_TYPE, METHOD_SET_SIZE = null;
+			METHOD_TEST_AND_RUN_THROWS = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -293,12 +291,6 @@ class JapanDictGuiTest {
 		//
 		(METHOD_TEST_AND_RUN_THROWS = Util.getDeclaredMethod(clz, "testAndRunThrows", Boolean.TYPE,
 				ThrowingRunnable.class)).setAccessible(true);
-		//
-		(METHOD_SET_SUB_TYPE = Util.getDeclaredMethod(clz, "setSubtype", PDEmbeddedFile.class, String.class))
-				.setAccessible(true);
-		//
-		(METHOD_SET_SIZE = Util.getDeclaredMethod(clz, "setSize", PDEmbeddedFile.class, Integer.TYPE))
-				.setAccessible(true);
 		//
 		CLASS_PITCH_ACCENT = Util.forName("org.springframework.context.support.JapanDictGui$PitchAccent");
 		//
@@ -505,8 +497,6 @@ class JapanDictGuiTest {
 
 	private boolean nmcliExists = false;
 
-	private PDEmbeddedFile pdEmbeddedFile = null;
-
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
@@ -552,8 +542,6 @@ class JapanDictGuiTest {
 				//
 		} // if
 			//
-		pdEmbeddedFile = new PDEmbeddedFile(new PDDocument());
-		//
 	}
 
 	private static Process start(final ProcessBuilder instance) throws IOException {
@@ -2238,20 +2226,6 @@ class JapanDictGuiTest {
 	void testTestAndRunThrows() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_RUN_THROWS, null, Boolean.TRUE, null));
-		//
-	}
-
-	@Test
-	void testSetSubtype() throws IllegalAccessException, InvocationTargetException {
-		//
-		Assertions.assertNull(invoke(METHOD_SET_SUB_TYPE, null, pdEmbeddedFile, null));
-		//
-	}
-
-	@Test
-	void testSetSize() throws IllegalAccessException, InvocationTargetException {
-		//
-		Assertions.assertNull(invoke(METHOD_SET_SIZE, null, pdEmbeddedFile, Integer.valueOf(0)));
 		//
 	}
 

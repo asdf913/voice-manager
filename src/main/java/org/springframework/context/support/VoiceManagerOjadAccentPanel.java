@@ -145,6 +145,7 @@ import org.apache.pdfbox.pdmodel.PDPageUtil;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
+import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFileUtil;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.state.PDGraphicsState;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
@@ -2283,16 +2284,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		final PDEmbeddedFile pdEmbeddedFile = testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null),
 				pdDocument, is, PDEmbeddedFile::new, null);
 		//
-		if (pdEmbeddedFile != null) {
+		PDEmbeddedFileUtil.setSubtype(pdEmbeddedFile, getMimeType(findMatch(ciu, bs)));
+		//
+		if (bs != null) {
 			//
-			pdEmbeddedFile.setSubtype(getMimeType(findMatch(ciu, bs)));
+			PDEmbeddedFileUtil.setSize(pdEmbeddedFile, bs.length);
 			//
-			if (bs != null) {
-				//
-				pdEmbeddedFile.setSize(bs.length);
-				//
-			} // if
-				//
 		} // if
 			//
 		return pdEmbeddedFile;

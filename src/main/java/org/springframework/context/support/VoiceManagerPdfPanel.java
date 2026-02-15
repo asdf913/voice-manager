@@ -167,6 +167,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.common.PDRectangleUtil;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
+import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFileUtil;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptorUtil;
@@ -3370,7 +3371,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				}, pathAudio, Files::newInputStream, null)) {
 					//
-					setSubtype(
+					PDEmbeddedFileUtil.setSubtype(
 							pdfEmbeddedFile = testAndApply(Objects::nonNull, is, x -> new PDEmbeddedFile(document, is),
 									null),
 							getMimeType(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), pathAudio));
@@ -3496,12 +3497,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static long toMillis(@Nullable final Duration instance, final long defaultValue) {
 		return instance != null ? instance.toMillis() : defaultValue;
-	}
-
-	private static void setSubtype(@Nullable final PDEmbeddedFile instance, final String mimeType) {
-		if (instance != null) {
-			instance.setSubtype(mimeType);
-		}
 	}
 
 	private static int leftInt(@Nullable final IntIntPair instance, final int defaultValue) {

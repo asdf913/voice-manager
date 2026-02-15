@@ -146,6 +146,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.common.PDRectangleUtil;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
+import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFileUtil;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptorUtil;
@@ -3032,9 +3033,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							(a, b) -> Boolean.logicalAnd(a != null, b != null), document, is, PDEmbeddedFile::new,
 							null);
 					//
-					setSubtype(pdEmbeddedFile, getMimeType(new ContentInfoUtil().findMatch(bs)));
+					PDEmbeddedFileUtil.setSubtype(pdEmbeddedFile, getMimeType(new ContentInfoUtil().findMatch(bs)));
 					//
-					setSize(pdEmbeddedFile, bs.length);
+					PDEmbeddedFileUtil.setSize(pdEmbeddedFile, bs.length);
 					//
 					pdComplexFileSpecification.setEmbeddedFile(pdEmbeddedFile);
 					//
@@ -3058,18 +3059,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} // try
 			//
-	}
-
-	private static void setSubtype(@Nullable final PDEmbeddedFile instance, @Nullable final String mimeType) {
-		if (instance != null && instance.getCOSObject() != null) {
-			instance.setSubtype(mimeType);
-		}
-	}
-
-	private static void setSize(@Nullable final PDEmbeddedFile instance, final int size) {
-		if (instance != null && instance.getCOSObject() != null) {
-			instance.setSize(size);
-		}
 	}
 
 	@Nullable
