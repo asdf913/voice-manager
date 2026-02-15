@@ -3022,14 +3022,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							(a, b) -> Boolean.logicalAnd(a != null, b != null), document, is, PDEmbeddedFile::new,
 							null);
 					//
-					if (pdEmbeddedFile != null) {
-						//
-						pdEmbeddedFile.setSubtype(getMimeType(new ContentInfoUtil().findMatch(bs)));
-						//
-						pdEmbeddedFile.setSize(bs.length);
-						//
-					} // if
-						//
+					setSubtype(pdEmbeddedFile, getMimeType(new ContentInfoUtil().findMatch(bs)));
+					//
+					setSize(pdEmbeddedFile, bs.length);
+					//
 					pdComplexFileSpecification.setEmbeddedFile(pdEmbeddedFile);
 					//
 					pdComplexFileSpecification.setFile("audio.mp3");
@@ -3052,6 +3048,18 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} // try
 			//
+	}
+
+	private static void setSubtype(final PDEmbeddedFile instance, final String mimeType) {
+		if (instance != null && instance.getCOSObject() != null) {
+			instance.setSubtype(mimeType);
+		}
+	}
+
+	private static void setSize(final PDEmbeddedFile instance, final int size) {
+		if (instance != null && instance.getCOSObject() != null) {
+			instance.setSize(size);
+		}
 	}
 
 	@Nullable
