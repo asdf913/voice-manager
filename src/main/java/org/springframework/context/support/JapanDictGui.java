@@ -239,6 +239,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private static final String FURIGANA = "Furigana";
 
+	private static final String STROKE = "Stroke";
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -610,7 +612,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, jPanel, String.format("%1$s,span %2$s", wrap, 2));
 		//
-		add(this, new JLabel("Stroke"), String.format("span %1$s", 2));
+		add(this, new JLabel(STROKE), String.format("span %1$s", 2));
 		//
 		add(this, strokeImage = new JLabel(), String.format("span %1$s", 6));
 		//
@@ -2801,7 +2803,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			newLineAtOffset(pageContentStream, 0,
 					pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
 			//
-			showText(pageContentStream, "Stroke");
+			showText(pageContentStream, STROKE);
 			//
 			endText(pageContentStream);
 			//
@@ -2811,7 +2813,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					width = Util
 							.floatValue(orElse(Util.max(
 									FailableStreamUtil.stream(FailableStreamUtil.map(
-											new FailableStream<>(Stream.of("Stroke", "Stroke with Number")),
+											new FailableStream<>(Stream.of(STROKE, "Stroke with Number")),
 											x -> Float.valueOf(getTextWidth(x, pdFont, fontSize)))),
 									ObjectUtils::compare), null), 0),
 					pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
