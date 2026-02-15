@@ -237,6 +237,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private static final String HIRAGANA = "Hiragana";
 
+	private static final String FURIGANA = "Furigana";
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -577,7 +579,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, jPanel, String.format("%1$s,span %2$s", wrap, 4));
 		//
-		add(this, new JLabel("Furigana"));
+		add(this, new JLabel(FURIGANA));
 		//
 		add(this, furiganaImage = new JLabel(), String.format("span %1$s", 5));
 		//
@@ -2680,7 +2682,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					.floatValue(
 							orElse(Util.max(
 									FailableStreamUtil.stream(FailableStreamUtil.map(
-											new FailableStream<>(Stream.of(ROMAJI, HIRAGANA, KATAKANA, "Furigana")),
+											new FailableStream<>(Stream.of(ROMAJI, HIRAGANA, KATAKANA, FURIGANA)),
 											x -> Float.valueOf(getTextWidth(x, pdFont, fontSize)))),
 									ObjectUtils::compare), null),
 							0);
@@ -2775,7 +2777,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			newLineAtOffset(pageContentStream, 0,
 					pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize));
 			//
-			showText(pageContentStream, "Furigana");
+			showText(pageContentStream, FURIGANA);
 			//
 			endText(pageContentStream);
 			//
