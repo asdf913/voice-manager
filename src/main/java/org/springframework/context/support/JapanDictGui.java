@@ -4627,7 +4627,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		}
 
-		private static int[] toArray(final IntStream instance) {
+		private static int[] toArray(@Nullable final IntStream instance) {
 			return instance != null ? instance.toArray() : null;
 		}
 
