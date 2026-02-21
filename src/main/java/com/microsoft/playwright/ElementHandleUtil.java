@@ -16,4 +16,8 @@ public interface ElementHandleUtil {
 		return instance != null ? instance.getAttribute(name) : null;
 	}
 
+	static String textContent(final ElementHandle instance) {
+		return instance != null ? instance.textContent() : null;
+	}
+
 }
