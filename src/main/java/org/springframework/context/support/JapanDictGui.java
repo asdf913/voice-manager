@@ -4546,6 +4546,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private Function<Playwright, BrowserType> browserTypeFunction = null;
 
+		@Nullable
 		private int[] strokes = null;
 
 		@Override
