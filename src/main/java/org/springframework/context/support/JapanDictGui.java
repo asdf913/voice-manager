@@ -141,6 +141,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URIBuilderUtil;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.PDPageUtil;
@@ -2767,6 +2768,23 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				final PDPageContentStream pageContentStream = new PDPageContentStream(document, pdPage);
 				final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			//
+			final PDDocumentInformation documentInformation = document.getDocumentInformation();
+			//
+			if (documentInformation != null) {
+				//
+				final StringBuilder sb = testAndApply(Objects::nonNull, JapanDictEntry.getText(japanDictEntry),
+						StringBuilder::new, null);
+				//
+				testAndAccept(StringUtils::isNotBlank, JapanDictEntry.getHiragana(japanDictEntry),
+						x -> append(append(append(sb, '('), x), ')'));
+				//
+				testAndAccept(StringUtils::isNotBlank, JapanDictEntry.getKatakana(japanDictEntry),
+						x -> append(append(append(sb, '('), x), ')'));
+				//
+				documentInformation.setTitle(Util.toString(sb));
+				//
+			} // if
+				//
 			document.addPage(pdPage);
 			//
 			// Text
