@@ -148,7 +148,8 @@ class JapanDictGuiTest {
 			METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW, METHOD_OR,
 			METHOD_GET_MIN_MAX, METHOD_THEN_ACCEPT_ASYNC, METHOD_SET_STROKE_IMAGE_AND_STROKE_WITH_NUMBER_IMAGE,
 			METHOD_COPY_FIELD, METHOD_GET_LINK_MULTI_MAP_ELEMENT, METHOD_GET_LINK_MULTI_MAP_STRING,
-			METHOD_TEST_AND_RUN_THROWS, METHOD_CREATE_STRING_PD_RECTANGLE_ENTRY_LIST_CELL_RENDERER = null;
+			METHOD_TEST_AND_RUN_THROWS, METHOD_CREATE_STRING_PD_RECTANGLE_ENTRY_LIST_CELL_RENDERER,
+			METHOD_SET_CBM_PD_RECTANGLE_SELECTED_ITEM = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -296,6 +297,9 @@ class JapanDictGuiTest {
 		//
 		(METHOD_CREATE_STRING_PD_RECTANGLE_ENTRY_LIST_CELL_RENDERER = Util.getDeclaredMethod(clz,
 				"createStringPDRectangleEntryListCellRenderer", ListCellRenderer.class)).setAccessible(true);
+		//
+		(METHOD_SET_CBM_PD_RECTANGLE_SELECTED_ITEM = Util.getDeclaredMethod(clz, "setCbmPDRectangleSelectedItem",
+				JapanDictGui.class, Object.class)).setAccessible(true);
 		//
 		CLASS_PITCH_ACCENT = Util.forName("org.springframework.context.support.JapanDictGui$PitchAccent");
 		//
@@ -2264,6 +2268,20 @@ class JapanDictGuiTest {
 		Assertions.assertNull(Narcissus.invokeMethod(object, method, null, null, 0, false, false));
 		//
 		Assertions.assertNotNull(Narcissus.invokeMethod(object, method, null, Pair.of(null, null), 0, false, false));
+		//
+	}
+
+	@Test
+	void testSetCbmPDRectangleSelectedItem() throws IllegalAccessException, InvocationTargetException {
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "cbmPDRectangle",
+					new DefaultComboBoxModel<>(new Object[] { null, "" }), true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(METHOD_SET_CBM_PD_RECTANGLE_SELECTED_ITEM, null, instance, null));
 		//
 	}
 

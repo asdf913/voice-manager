@@ -3808,12 +3808,48 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		testAndAccept(Util::containsKey, properties, "org.springframework.context.support.JapanDictGui.text",
 				(a, b) -> Util.setText(instance.tfText, Util.toString(Util.get(a, b))));
 		//
+		testAndAccept(Util::containsKey, properties, "org.springframework.context.support.JapanDictGui.pdRectangle",
+				(a, b) -> setCbmPDRectangleSelectedItem(instance, Util.get(a, b)));
+		//
 		add(jFrame, instance);
 		//
 		pack(instance.window = jFrame);
 		//
 		Util.setVisible(jFrame, true);
 		//
+	}
+
+	private static void setCbmPDRectangleSelectedItem(final JapanDictGui instance, final Object value) {
+		//
+		Object elementAt = null;
+		//
+		Method getKey = null;
+		//
+		final ComboBoxModel<?> cbm = instance != null ? instance.cbmPDRectangle : null;
+		//
+		for (int i = 0; i < Util.getSize(cbm); i++) {
+			//
+			if ((elementAt = Util.getElementAt(cbm, i)) != null && getKey == null) {
+				//
+				getKey = testAndApply(x -> IterableUtils.size(x) == 1,
+						Util.toList(Util.filter(
+								testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(elementAt)),
+										Arrays::stream, null),
+								m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getKey"),
+										m == null || m.getParameterCount() == 0))),
+						x -> IterableUtils.get(x, 0), null);
+				//
+			} // if
+				//
+			if (Objects.equals(value, testAndApply((c, d) -> Boolean.logicalAnd(c != null, d != null), elementAt,
+					getKey, Narcissus::invokeMethod, null))) {
+				//
+				Util.setSelectedItem(cbm, elementAt);
+				//
+			} // if
+				//
+		} // for
+			//
 	}
 
 	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, @Nullable final T t,
