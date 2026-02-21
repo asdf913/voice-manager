@@ -470,6 +470,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				if ((browserType = IterableUtils.get(browserTypes, i)) == null) {
 					//
+					continue;
 					//
 				} // if
 					//
