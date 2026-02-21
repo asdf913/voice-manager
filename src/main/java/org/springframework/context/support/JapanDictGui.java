@@ -1323,12 +1323,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 								//
 								setStrokeImageAndStrokeWithNumberImage(dtm, japanDictEntry);
 								//
-								if (japanDictEntry != null && japanDictEntry.strokes == null) {
-									//
-									japanDictEntry.strokes = strokeWithNumberImageSupplier.strokes;
-									//
-								} // if
-									//
 							});
 							//
 							Util.add(a, b);
