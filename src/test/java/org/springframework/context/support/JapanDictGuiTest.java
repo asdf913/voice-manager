@@ -2251,14 +2251,13 @@ class JapanDictGuiTest {
 		final Object object = Narcissus.invokeStaticMethod(METHOD_CREATE_STRING_PD_RECTANGLE_ENTRY_LIST_CELL_RENDERER,
 				(Object) null);
 		//
-		final Method method = testAndApply(x -> IterableUtils.size(x) == 1,
-				Util.toList(Util.filter(
-						testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(object)), Arrays::stream,
-								null),
-						m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getListCellRendererComponent"),
-								Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { JList.class, Object.class,
-										Integer.TYPE, Boolean.TYPE, Boolean.TYPE })))),
-				x -> IterableUtils.get(x, 0), null);
+		final Iterable<Method> ms = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(object)), Arrays::stream, null),
+				m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getListCellRendererComponent"), Arrays.equals(
+						Util.getParameterTypes(m),
+						new Class<?>[] { JList.class, Object.class, Integer.TYPE, Boolean.TYPE, Boolean.TYPE }))));
+		//
+		final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
 		//
 		Assertions.assertNotNull(method);
 		//
