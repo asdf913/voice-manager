@@ -2719,13 +2719,25 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				if (and(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 						() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
 					//
+					final Object selectedItem = Util.getSelectedItem(instance.cbmPDRectangle);
+					//
+					final Iterable<Method> ms = Util.toList(Util.filter(
+							testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(selectedItem)), Arrays::stream,
+									null),
+							m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getValue"),
+									m == null || m.getParameterCount() == 0)));
+					//
 					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), toPdfByteArray(
 							Util.cast(JapanDictEntry.class,
 									getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0)),
 							testAndApply(Objects::nonNull, instance.trueTypeFont,
 									x -> PDType0Font.load(document, x, false), null),
-							instance.getUserAgent(), Util.cast(PDRectangle.class, Util
-									.getValue(Util.cast(Entry.class, Util.getSelectedItem(instance.cbmPDRectangle))))));
+							instance.getUserAgent(),
+							Util.cast(PDRectangle.class,
+									testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), selectedItem,
+											testAndApply(x -> IterableUtils.size(x) == 1, ms,
+													x -> IterableUtils.get(x, 0), null),
+											Narcissus::invokeMethod, null))));
 					//
 				} // if
 					//
