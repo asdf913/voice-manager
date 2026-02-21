@@ -3819,7 +3819,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static void setCbmPDRectangleSelectedItem(final JapanDictGui instance, final Object value) {
+	private static void setCbmPDRectangleSelectedItem(@Nullable final JapanDictGui instance, final Object value) {
 		//
 		Object elementAt = null;
 		//
