@@ -3831,13 +3831,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			if ((elementAt = Util.getElementAt(cbm, i)) != null && getKey == null) {
 				//
-				getKey = testAndApply(x -> IterableUtils.size(x) == 1,
-						Util.toList(Util.filter(
-								testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(elementAt)),
-										Arrays::stream, null),
-								m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getKey"),
-										m == null || m.getParameterCount() == 0))),
-						x -> IterableUtils.get(x, 0), null);
+				final Iterable<Method> ms = Util.toList(Util.filter(
+						testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(elementAt)), Arrays::stream, null),
+						m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getKey"),
+								m == null || m.getParameterCount() == 0)));
+				//
+				getKey = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
 				//
 			} // if
 				//
