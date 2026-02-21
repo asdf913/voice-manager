@@ -4615,7 +4615,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						//
 				} // for
 					//
-				strokes = toArray(Util.mapToInt(Util.stream(list), x -> NumberUtils.toInt(x)));
+				strokes = toArray(Util.mapToInt(Util.stream(list), NumberUtils::toInt));
 				//
 				return bufferedImage;
 				//
