@@ -91,6 +91,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace;
 import org.javatuples.Unit;
@@ -653,7 +654,8 @@ class JapanDictGuiTest {
 								Arrays.equals(parameterTypes, new Class<?>[] { int[].class, Integer.TYPE })),
 						Boolean.logicalAnd(Objects.equals(name, "toPdfByteArray"),
 								Arrays.equals(parameterTypes,
-										new Class<?>[] { CLASS_JAPAN_DICT_ENTRY, PDFont.class, String.class })),
+										new Class<?>[] { CLASS_JAPAN_DICT_ENTRY, PDFont.class, String.class,
+												PDRectangle.class })),
 						Boolean.logicalAnd(Objects.equals(name, "getSamplePdfByteArray"),
 								Arrays.equals(parameterTypes, new Class<?>[] {})))) {
 					//
@@ -873,7 +875,8 @@ class JapanDictGuiTest {
 								Arrays.equals(parameterTypes, new Class<?>[] { Optional.class, Object.class })),
 						Boolean.logicalAnd(Objects.equals(name, "toPdfByteArray"),
 								Arrays.equals(parameterTypes,
-										new Class<?>[] { CLASS_JAPAN_DICT_ENTRY, PDFont.class, String.class })),
+										new Class<?>[] { CLASS_JAPAN_DICT_ENTRY, PDFont.class, String.class,
+												PDRectangle.class })),
 						Boolean.logicalAnd(Objects.equals(name, "toPDcolor"),
 								Arrays.equals(parameterTypes, new Class<?>[] { Color.class, PDColorSpace.class })),
 						Boolean.logicalAnd(Objects.equals(name, "getSamplePdfByteArray"),

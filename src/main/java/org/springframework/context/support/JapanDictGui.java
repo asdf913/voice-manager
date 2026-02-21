@@ -51,6 +51,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalDouble;
@@ -82,6 +83,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -131,6 +133,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.commons.validator.routines.UrlValidatorUtil;
 import org.apache.fontbox.ttf.OTFParser;
@@ -431,6 +434,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private transient TrueTypeFont trueTypeFont = null;
 
+	private ComboBoxModel<Entry<String, PDRectangle>> cbmPDRectangle = null;
+
 	private JapanDictGui() {
 	}
 
@@ -672,6 +677,87 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		add(this, jPanel, String.format("span %1$s,%2$s", 2, wrap));
 		//
 		add(this, new JLabel());
+		//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(testAndApply(Objects::nonNull, PDRectangle.class, FieldUtils::getAllFieldsList, null)),
+				f -> Util.isAssignableFrom(PDRectangle.class, Util.getType(f))));
+		//
+		final int length = IterableUtils.size(fs);
+		//
+		final List<Entry<String, PDRectangle>> list = new ArrayList<>();
+		//
+		for (int i = 0; i < length; i++) {
+			//
+			Util.add(list, Pair.of(Util.getName(IterableUtils.get(fs, i)),
+					Util.cast(PDRectangle.class, Narcissus.getStaticField(IterableUtils.get(fs, i)))));
+			//
+		} // for
+			//
+		Collections.sort(list, (a, b) -> {
+			//
+			final String ak = Util.getKey(a);
+			//
+			final boolean b1 = Objects.equals(Util.getKey(a), "A4");
+			//
+			if (b1) {
+				//
+				return -1;
+				//
+			} // if
+				//
+			final String bk = Util.getKey(b);
+			//
+			final boolean b2 = Objects.equals(bk, "A4");
+			//
+			final Strings strings = Strings.CI;
+			//
+			if (Boolean.logicalAnd(StringsUtil.startsWith(strings, ak, "A"),
+					StringsUtil.startsWith(strings, bk, "A"))) {
+				//
+				return Integer.compare(NumberUtils.toInt(StringUtils.substring(ak, 1)),
+						NumberUtils.toInt(StringUtils.substring(bk, 1)));
+				//
+			} // if
+				//
+			if (Boolean.logicalOr(StringsUtil.startsWith(strings, ak, "A"), b2)) {
+				//
+				return -1;
+				//
+			} // if
+				//
+			return ObjectUtils.compare(ak, bk);
+			//
+		});
+		//
+		list.add(0, null);
+		//
+		Narcissus.setField(this, getFieldByName(this, "cbmPDRectangle"), Util.newInstance(
+				Util.getDeclaredConstructor(DefaultComboBoxModel.class, Object[].class), (Object) Util.toArray(list)));
+		//
+		final JComboBox<Entry<String, PDRectangle>> jcbPDRectangle = new JComboBox<>(cbmPDRectangle);
+		//
+		final ListCellRenderer<? super Entry<String, PDRectangle>> lcr = jcbPDRectangle.getRenderer();
+		//
+		jcbPDRectangle.setRenderer(new ListCellRenderer<>() {
+
+			@Override
+			public Component getListCellRendererComponent(final JList<? extends Entry<String, PDRectangle>> list,
+					final Entry<String, PDRectangle> value, final int index, final boolean isSelected,
+					final boolean cellHasFocus) {
+				//
+				if (value != null) {
+					//
+					return new JLabel(Util.getKey(value));
+					//
+				} // if
+					//
+				return Util.getListCellRendererComponent(lcr, list, value, index, isSelected, cellHasFocus);
+				//
+			}
+
+		});
+		//
+		add(this, jcbPDRectangle);
 		//
 		add(this, btnPdf = new JButton("PDF"));
 		//
@@ -2634,13 +2720,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				if (and(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 						() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
 					//
-					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
-							toPdfByteArray(
-									Util.cast(JapanDictEntry.class,
-											getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0)),
-									testAndApply(Objects::nonNull, instance.trueTypeFont,
-											x -> PDType0Font.load(document, x, false), null),
-									instance.getUserAgent()));
+					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), toPdfByteArray(
+							Util.cast(JapanDictEntry.class,
+									getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0)),
+							testAndApply(Objects::nonNull, instance.trueTypeFont,
+									x -> PDType0Font.load(document, x, false), null),
+							instance.getUserAgent(), Util.cast(PDRectangle.class, Util
+									.getValue(Util.cast(Entry.class, Util.getSelectedItem(instance.cbmPDRectangle))))));
 					//
 				} // if
 					//
@@ -2675,9 +2761,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	private static byte[] toPdfByteArray(final JapanDictEntry japanDictEntry, final PDFont pdFont,
-			final String userAgent) throws Exception {
+			final String userAgent, final PDRectangle pdRectangle) throws Exception {
 		//
-		final PDPage pdPage = new PDPage();
+		final PDPage pdPage = testAndApply(Objects::nonNull, pdRectangle, PDPage::new, x -> new PDPage());
 		//
 		try (final PDDocument document = new PDDocument();
 				final PDPageContentStream pageContentStream = new PDPageContentStream(document, pdPage);
@@ -2699,9 +2785,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			final float descent = PDFontDescriptorUtil.getDescent(pdFontDescriptor, 0);
 			//
-			PDRectangle pdRectangle = PDPageUtil.getMediaBox(pdPage);
+			PDRectangle mediaBox = PDPageUtil.getMediaBox(pdPage);
 			//
-			float pageHeight = PDRectangleUtil.getHeight(pdRectangle) - (ascent / 1000 * fontSize)
+			float pageHeight = PDRectangleUtil.getHeight(mediaBox) - (ascent / 1000 * fontSize)
 					+ (descent / 1000 * fontSize);
 			//
 			float width = Util
@@ -2805,8 +2891,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			PDImageXObject pdImageXObject = toPDImageXObject(JapanDictEntry.getFuriganaImage(japanDictEntry), format,
 					document);
 			//
-			final float textHeight = getTextHeight(pdFont, fontSize, PDRectangleUtil.getWidth(pdRectangle) / 10,
-					pdRectangle);
+			final float textHeight = getTextHeight(pdFont, fontSize, PDRectangleUtil.getWidth(mediaBox) / 10, mediaBox);
 			//
 			newLineAtOffset(pageContentStream, 0,
 					(pageHeight = pageHeight - (ascent / 1000 * fontSize) + (descent / 1000 * fontSize))
@@ -3008,15 +3093,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				pdAnnotationLink.setColor(toPDcolor(color, PDDeviceRGB.INSTANCE));
 				//
-				(pdRectangle = new PDRectangle()).setLowerLeftX(width);
+				(mediaBox = new PDRectangle()).setLowerLeftX(width);
 				//
-				pdRectangle.setLowerLeftY(pageHeight);
+				mediaBox.setLowerLeftY(pageHeight);
 				//
-				pdRectangle.setUpperRightX(width + getTextWidth(url, pdFont, fontSize));
+				mediaBox.setUpperRightX(width + getTextWidth(url, pdFont, fontSize));
 				//
-				pdRectangle.setUpperRightY(pageHeight + textHeight);
+				mediaBox.setUpperRightY(pageHeight + textHeight);
 				//
-				pdAnnotationLink.setRectangle(pdRectangle);
+				pdAnnotationLink.setRectangle(mediaBox);
 				//
 				(pdActionURI = new PDActionURI()).setURI(url);
 				//
@@ -3039,18 +3124,18 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				final int size = 100;
 				//
-				(pdRectangle = new PDRectangle())
+				(mediaBox = new PDRectangle())
 						.setLowerLeftX(PDRectangleUtil.getWidth(PDPageUtil.getMediaBox(pdPage)) - size);
 				//
-				pdRectangle.setLowerLeftY(PDRectangleUtil.getHeight(PDPageUtil.getMediaBox(pdPage)) - size);
+				mediaBox.setLowerLeftY(PDRectangleUtil.getHeight(PDPageUtil.getMediaBox(pdPage)) - size);
 				//
-				pdRectangle.setUpperRightX(PDRectangleUtil.getWidth(PDPageUtil.getMediaBox(pdPage)));
+				mediaBox.setUpperRightX(PDRectangleUtil.getWidth(PDPageUtil.getMediaBox(pdPage)));
 				//
-				pdRectangle.setUpperRightY(PDRectangleUtil.getHeight(PDPageUtil.getMediaBox(pdPage)));
+				mediaBox.setUpperRightY(PDRectangleUtil.getHeight(PDPageUtil.getMediaBox(pdPage)));
 				//
 				final PDAnnotationFileAttachment pdAnnotationFileAttachment = new PDAnnotationFileAttachment();
 				//
-				pdAnnotationFileAttachment.setRectangle(pdRectangle);
+				pdAnnotationFileAttachment.setRectangle(mediaBox);
 				//
 				final PDComplexFileSpecification pdComplexFileSpecification = new PDComplexFileSpecification();
 				//
