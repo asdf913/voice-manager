@@ -46,6 +46,7 @@ import java.time.Duration;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -2794,6 +2795,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						x -> append(append(append(sb, '('), x), ')'));
 				//
 				documentInformation.setTitle(Util.toString(sb));
+				//
+				documentInformation.setCreationDate(Calendar.getInstance());
 				//
 			} // if
 				//
