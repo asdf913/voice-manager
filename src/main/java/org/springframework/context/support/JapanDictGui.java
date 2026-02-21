@@ -437,6 +437,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private transient ComboBoxModel<Entry<String, PDRectangle>> cbmPDRectangle = null;
 
+	private MutableComboBoxModel<Integer> mcbmStroke = null;
+
 	private JapanDictGui() {
 	}
 
@@ -632,7 +634,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, new JLabel("Stroke with Number"), String.format("span %1$s", 2));
 		//
-		add(this, strokeWithNumberImage = new JLabel(), String.format("span %1$s", 6));
+		add(this, strokeWithNumberImage = new JLabel(), String.format("span %1$s", 5));
+		//
+		add(this, new JComboBox<>(mcbmStroke = new DefaultComboBoxModel<>()));
 		//
 		add(this, btnCopyStrokeWithNumberImage = new JButton("Copy"), String.format("flowy,split %1$s", 2));
 		//
@@ -1019,6 +1023,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private Iterable<Link> links = null;
 
+		private int[] strokes = null;
+
 		private byte[] getAudioData() {
 			return audioData;
 		}
@@ -1317,6 +1323,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 								//
 								setStrokeImageAndStrokeWithNumberImage(dtm, japanDictEntry);
 								//
+								if (japanDictEntry != null && japanDictEntry.strokes == null) {
+									//
+									japanDictEntry.strokes = strokeWithNumberImageSupplier.strokes;
+									//
+								} // if
+									//
 							});
 							//
 							Util.add(a, b);
@@ -1708,8 +1720,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		Util.setSelectedItem(cbmJlptLevel, "");
 		//
-		Util.forEach(IntStream.iterate(Util.getSize(mcbmPitchAccent) - 1, i -> i >= 0, i -> i - 1),
-				i -> Util.removeElementAt(mcbmPitchAccent, i));
+		Util.forEach(Stream.of(mcbmPitchAccent, mcbmStroke),
+				x -> Util.forEach(IntStream.iterate(Util.getSize(x) - 1, i -> i >= 0, i -> i - 1),
+						i -> Util.removeElementAt(x, i)));
 		//
 		Util.forEach(
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream,
@@ -4191,6 +4204,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			JapanDictEntry.setStrokeWithNumberImage(entry,
 					ObjectUtils.getIfNull(JapanDictEntry.getStrokeWithNumberImage(entry), Util.get(supplier)));
 			//
+			if (entry != null && entry.strokes == null) {
+				//
+				entry.strokes = supplier.strokes;
+				//
+			} // if
+				//
 			setStrokeImageAndStrokeWithNumberImage(instance.dtm, entry);
 			//
 		}, consumer);
@@ -4200,6 +4219,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						instance.strokeWithNumberBufferedImage = JapanDictEntry.getStrokeWithNumberImage(entry),
 						ImageIcon::new, null));
 		//
+		if (entry != null && entry.strokes != null) {
+			//
+			Util.forEach(IntStream.iterate(0, x -> x < entry.strokes.length, x -> x + 1),
+					x -> Util.addElement(instance.mcbmStroke, entry.strokes[x]));
+			//
+		} // if
+			//
 		setEnabled(JapanDictEntry.getStrokeWithNumberImage(entry) != null, instance.btnCopyStrokeWithNumberImage,
 				instance.btnSaveStrokeWithNumberImage);
 		//
@@ -4524,6 +4550,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private Function<Playwright, BrowserType> browserTypeFunction = null;
 
+		private int[] strokes = null;
+
 		@Override
 		@Nullable
 		public BufferedImage get() {
@@ -4555,7 +4583,39 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						PageUtil.querySelectorAll(page, String.format("#dmak-reset-%1$s", id)),
 						x -> IterableUtils.get(x, 0), null));
 				//
-				return chopImage(getStrokeImage(japanDictGui, page, japanDictEntry));
+				final BufferedImage bufferedImage = chopImage(getStrokeImage(japanDictGui, page, japanDictEntry));
+				//
+				final Iterable<String> iterable = Util.toList(
+						Util.map(Util.stream(PageUtil.querySelectorAll(page, String.format("#dmak-%1$s tspan", id))),
+								x -> x != null ? x.textContent() : null));
+				//
+				List<String> list = null;
+				//
+				String string = null;
+				//
+				int size = 0;
+				//
+				for (int i = 0; i < IterableUtils.size(iterable); i++) {
+					//
+					string = IterableUtils.get(iterable, i);
+					//
+					if (IterableUtils.isEmpty(list = ObjectUtils.getIfNull(list, ArrayList::new))
+							|| (CollectionUtils.isNotEmpty(list) && NumberUtils.toInt(string) < NumberUtils
+									.toInt(IterableUtils.get(list, (size = IterableUtils.size(list)) - 1)))) {
+						//
+						Util.add(list, string);
+						//
+					} else if (NumberUtils.toInt(string) > NumberUtils.toInt(IterableUtils.get(list, size - 1))) {
+						//
+						list.set(size - 1, string);
+						//
+					} // if
+						//
+				} // for
+					//
+				strokes = toArray(Util.mapToInt(Util.stream(list), x -> NumberUtils.toInt(x)));
+				//
+				return bufferedImage;
 				//
 			} catch (final IOException | InterruptedException ex) {
 				//
@@ -4563,6 +4623,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			} // try
 				//
+		}
+
+		private static int[] toArray(final IntStream instance) {
+			return instance != null ? instance.toArray() : null;
 		}
 
 		private static void check(@Nullable final ElementHandle instance) {

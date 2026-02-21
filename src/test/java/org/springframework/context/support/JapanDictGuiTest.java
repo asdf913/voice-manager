@@ -450,10 +450,18 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof IntStream && Objects.equals(name, "sum")) {
+			} else if (proxy instanceof IntStream) {
 				//
-				return sum;
-				//
+				if (Objects.equals(name, "sum")) {
+					//
+					return sum;
+					//
+				} else if (Objects.equals(name, "toArray")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} else if (proxy instanceof TableColumnModel && Objects.equals(name, "getColumn")) {
 				//
 				return null;
