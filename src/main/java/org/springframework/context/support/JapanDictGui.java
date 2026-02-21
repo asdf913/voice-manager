@@ -4273,6 +4273,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						ObjectUtils.getIfNull(JapanDictEntry.getStrokeWithNumberImage(temp),
 								JapanDictEntry.getStrokeWithNumberImage(japanDictEntry)));
 				//
+				temp.strokes = ObjectUtils.getIfNull(temp.strokes, japanDictEntry.strokes);
+				//
 			} // if
 				//
 		} // for
