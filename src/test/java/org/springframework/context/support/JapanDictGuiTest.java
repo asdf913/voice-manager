@@ -89,6 +89,7 @@ import org.apache.commons.lang3.function.FailableRunnable;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -147,7 +148,7 @@ class JapanDictGuiTest {
 			METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW, METHOD_OR,
 			METHOD_GET_MIN_MAX, METHOD_THEN_ACCEPT_ASYNC, METHOD_SET_STROKE_IMAGE_AND_STROKE_WITH_NUMBER_IMAGE,
 			METHOD_COPY_FIELD, METHOD_GET_LINK_MULTI_MAP_ELEMENT, METHOD_GET_LINK_MULTI_MAP_STRING,
-			METHOD_TEST_AND_RUN_THROWS = null;
+			METHOD_TEST_AND_RUN_THROWS, METHOD_CREATE_STRING_PD_RECTANGLE_ENTRY_LIST_CELL_RENDERER = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -292,6 +293,9 @@ class JapanDictGuiTest {
 		//
 		(METHOD_TEST_AND_RUN_THROWS = Util.getDeclaredMethod(clz, "testAndRunThrows", Boolean.TYPE,
 				ThrowingRunnable.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_STRING_PD_RECTANGLE_ENTRY_LIST_CELL_RENDERER = Util.getDeclaredMethod(clz,
+				"createStringPDRectangleEntryListCellRenderer", ListCellRenderer.class)).setAccessible(true);
 		//
 		CLASS_PITCH_ACCENT = Util.forName("org.springframework.context.support.JapanDictGui$PitchAccent");
 		//
@@ -657,7 +661,9 @@ class JapanDictGuiTest {
 										new Class<?>[] { CLASS_JAPAN_DICT_ENTRY, PDFont.class, String.class,
 												PDRectangle.class })),
 						Boolean.logicalAnd(Objects.equals(name, "getSamplePdfByteArray"),
-								Arrays.equals(parameterTypes, new Class<?>[] {})))) {
+								Arrays.equals(parameterTypes, new Class<?>[] {})),
+						Boolean.logicalAnd(Objects.equals(name, "createStringPDRectangleEntryListCellRenderer"),
+								Arrays.equals(parameterTypes, new Class<?>[] { ListCellRenderer.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -880,7 +886,9 @@ class JapanDictGuiTest {
 						Boolean.logicalAnd(Objects.equals(name, "toPDcolor"),
 								Arrays.equals(parameterTypes, new Class<?>[] { Color.class, PDColorSpace.class })),
 						Boolean.logicalAnd(Objects.equals(name, "getSamplePdfByteArray"),
-								Arrays.equals(parameterTypes, new Class<?>[] {})))) {
+								Arrays.equals(parameterTypes, new Class<?>[] {})),
+						Boolean.logicalAnd(Objects.equals(name, "createStringPDRectangleEntryListCellRenderer"),
+								Arrays.equals(parameterTypes, new Class<?>[] { ListCellRenderer.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -2234,6 +2242,29 @@ class JapanDictGuiTest {
 	void testTestAndRunThrows() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_RUN_THROWS, null, Boolean.TRUE, null));
+		//
+	}
+
+	@Test
+	void testCreateStringPDRectangleEntryListCellRenderer() throws Throwable {
+		//
+		final Object object = Narcissus.invokeStaticMethod(METHOD_CREATE_STRING_PD_RECTANGLE_ENTRY_LIST_CELL_RENDERER,
+				(Object) null);
+		//
+		final Method method = testAndApply(x -> IterableUtils.size(x) == 1,
+				Util.toList(Util.filter(
+						testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(object)), Arrays::stream,
+								null),
+						m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getListCellRendererComponent"),
+								Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { JList.class, Object.class,
+										Integer.TYPE, Boolean.TYPE, Boolean.TYPE })))),
+				x -> IterableUtils.get(x, 0), null);
+		//
+		Assertions.assertNotNull(method);
+		//
+		Assertions.assertNull(Narcissus.invokeMethod(object, method, null, null, 0, false, false));
+		//
+		Assertions.assertNotNull(Narcissus.invokeMethod(object, method, null, Pair.of(null, null), 0, false, false));
 		//
 	}
 

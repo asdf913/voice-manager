@@ -83,7 +83,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -737,26 +736,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		final JComboBox<Entry<String, PDRectangle>> jcbPDRectangle = new JComboBox<>(cbmPDRectangle);
 		//
-		final ListCellRenderer<? super Entry<String, PDRectangle>> lcr = jcbPDRectangle.getRenderer();
-		//
-		jcbPDRectangle.setRenderer(new ListCellRenderer<>() {
-
-			@Override
-			public Component getListCellRendererComponent(final JList<? extends Entry<String, PDRectangle>> list,
-					final Entry<String, PDRectangle> value, final int index, final boolean isSelected,
-					final boolean cellHasFocus) {
-				//
-				if (value != null) {
-					//
-					return new JLabel(Util.getKey(value));
-					//
-				} // if
-					//
-				return Util.getListCellRendererComponent(lcr, list, value, index, isSelected, cellHasFocus);
-				//
-			}
-
-		});
+		jcbPDRectangle.setRenderer(createStringPDRectangleEntryListCellRenderer(jcbPDRectangle.getRenderer()));
 		//
 		add(this, jcbPDRectangle);
 		//
@@ -778,6 +758,23 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream,
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
+		//
+	}
+
+	private static ListCellRenderer<Entry<String, PDRectangle>> createStringPDRectangleEntryListCellRenderer(
+			final ListCellRenderer<? super Entry<String, PDRectangle>> lcr) {
+		//
+		return (list, value, index, isSelected, cellHasFocus) -> {
+			//
+			if (value != null) {
+				//
+				return new JLabel(Util.getKey(value));
+				//
+			} // if
+				//
+			return Util.getListCellRendererComponent(lcr, list, value, index, isSelected, cellHasFocus);
+			//
+		};
 		//
 	}
 
