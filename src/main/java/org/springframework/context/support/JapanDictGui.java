@@ -2844,23 +2844,19 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			final PDDocumentInformation documentInformation = document.getDocumentInformation();
 			//
-			if (documentInformation != null) {
-				//
-				final StringBuilder sb = testAndApply(Objects::nonNull, JapanDictEntry.getText(japanDictEntry),
-						StringBuilder::new, null);
-				//
-				testAndAccept(StringUtils::isNotBlank, JapanDictEntry.getHiragana(japanDictEntry),
-						x -> append(append(append(sb, '('), x), ')'));
-				//
-				testAndAccept(StringUtils::isNotBlank, JapanDictEntry.getKatakana(japanDictEntry),
-						x -> append(append(append(sb, '('), x), ')'));
-				//
-				documentInformation.setTitle(Util.toString(sb));
-				//
-				documentInformation.setCreationDate(Calendar.getInstance());
-				//
-			} // if
-				//
+			final StringBuilder sb = testAndApply(Objects::nonNull, JapanDictEntry.getText(japanDictEntry),
+					StringBuilder::new, null);
+			//
+			testAndAccept(StringUtils::isNotBlank, JapanDictEntry.getHiragana(japanDictEntry),
+					x -> append(append(append(sb, '('), x), ')'));
+			//
+			testAndAccept(StringUtils::isNotBlank, JapanDictEntry.getKatakana(japanDictEntry),
+					x -> append(append(append(sb, '('), x), ')'));
+			//
+			setTitle(documentInformation, Util.toString(sb));
+			//
+			setCreationDate(documentInformation, Calendar.getInstance());
+			//
 			document.addPage(pdPage);
 			//
 			// Text
@@ -3310,6 +3306,52 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return baos.toByteArray();
 			//
 		} // try
+			//
+	}
+
+	private static void setTitle(final PDDocumentInformation instance, final String title) {
+		//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				f -> Objects.equals(Util.getName(f), "info")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f != null && Narcissus.getField(instance, f) != null) {
+			//
+			instance.setTitle(title);
+			//
+		} // if
+			//
+	}
+
+	private static void setCreationDate(final PDDocumentInformation instance, final Calendar date) {
+		//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				f -> Objects.equals(Util.getName(f), "info")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f != null && Narcissus.getField(instance, f) != null) {
+			//
+			instance.setCreationDate(date);
+			//
+		} // if
 			//
 	}
 
