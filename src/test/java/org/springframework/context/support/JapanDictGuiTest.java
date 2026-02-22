@@ -479,14 +479,10 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof Entry) {
+			} else if (proxy instanceof Entry && IterableUtils.contains(Arrays.asList("getKey", "getValue"), name)) {
 				//
-				if (IterableUtils.contains(Arrays.asList("getKey", "getValue"), name)) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
