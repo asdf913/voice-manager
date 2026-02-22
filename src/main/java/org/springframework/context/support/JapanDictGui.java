@@ -389,6 +389,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			}
 		}
 
+		private String getType() {
+			return type;
+		}
+
+		private static String getType(final PitchAccent instance) {
+			return instance != null ? instance.getType() : null;
+		}
+
 		private BufferedImage getImage() {
 			return image;
 		}
@@ -3109,12 +3117,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			for (int i = 0; i < IterableUtils.size(pitchAccents); i++) {
 				//
-				if ((pitchAccent = IterableUtils.get(pitchAccents, i)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
+				pitchAccent = IterableUtils.get(pitchAccents, i);
+				//
 				if (first) {
 					//
 					beginText(pageContentStream);
@@ -3156,7 +3160,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				newLineAtOffset(pageContentStream, width + maxImageWidth,
 						pageHeight + PDImageUtil.getHeight(pdImageXObject) / 2);
 				//
-				showText(pageContentStream, pitchAccent.type);
+				showText(pageContentStream, PitchAccent.getType(pitchAccent));
 				//
 				endText(pageContentStream);
 				//
