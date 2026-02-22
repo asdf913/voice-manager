@@ -1207,6 +1207,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return instance != null ? instance.getAudioUrl() : null;
 		}
 
+		private CharIntPair[] getStrokes() {
+			return strokes;
+		}
+
+		private static CharIntPair[] getStrokes(final JapanDictEntry instance) {
+			return instance != null ? instance.getStrokes() : null;
+		}
+
 	}
 
 	@Override
@@ -3035,7 +3043,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			drawImage(pageContentStream, pdImageXObject, width,
 					pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
 			//
-			CharIntPair[] strokes = japanDictEntry != null ? japanDictEntry.strokes : null;
+			final CharIntPair[] strokes = JapanDictEntry.getStrokes(japanDictEntry);
 			//
 			CharIntPair stroke = null;
 			//
@@ -4356,11 +4364,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						instance.strokeWithNumberBufferedImage = JapanDictEntry.getStrokeWithNumberImage(entry),
 						ImageIcon::new, null));
 		//
-		if (entry != null && entry.strokes != null) {
+		final CharIntPair[] strokes = JapanDictEntry.getStrokes(entry);
+		//
+		if (strokes != null) {
 			//
-			Util.forEach(IntStream.iterate(0, x -> x < entry.strokes.length, x -> x + 1), x -> {
+			Util.forEach(IntStream.iterate(0, x -> x < strokes.length, x -> x + 1), x -> {
 				//
-				final CharIntPair cip = entry.strokes[x];
+				final CharIntPair cip = ArrayUtils.get(strokes, x);
 				//
 				Util.addRow(instance.dtmStroke, new Object[] { cip != null ? Character.valueOf(cip.keyChar()) : null,
 						cip != null ? Integer.valueOf(cip.valueInt()) : null });
@@ -4433,7 +4443,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						ObjectUtils.getIfNull(JapanDictEntry.getStrokeWithNumberImage(temp),
 								JapanDictEntry.getStrokeWithNumberImage(japanDictEntry)));
 				//
-				temp.strokes = ObjectUtils.getIfNull(temp.strokes, japanDictEntry.strokes);
+				temp.strokes = ObjectUtils.getIfNull(JapanDictEntry.getStrokes(temp),
+						JapanDictEntry.getStrokes(japanDictEntry));
 				//
 			} // if
 				//
