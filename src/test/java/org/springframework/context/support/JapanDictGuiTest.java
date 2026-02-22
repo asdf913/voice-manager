@@ -93,9 +93,11 @@ import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.javatuples.Unit;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
@@ -125,6 +127,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.BoundingBox;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import it.unimi.dsi.fastutil.chars.CharIntPair;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyUtil;
 
@@ -150,7 +153,7 @@ class JapanDictGuiTest {
 			METHOD_GET_MIN_MAX, METHOD_THEN_ACCEPT_ASYNC, METHOD_SET_STROKE_IMAGE_AND_STROKE_WITH_NUMBER_IMAGE,
 			METHOD_COPY_FIELD, METHOD_GET_LINK_MULTI_MAP_ELEMENT, METHOD_GET_LINK_MULTI_MAP_STRING,
 			METHOD_TEST_AND_RUN_THROWS, METHOD_CREATE_STRING_PD_RECTANGLE_ENTRY_LIST_CELL_RENDERER,
-			METHOD_SET_CBM_PD_RECTANGLE_SELECTED_ITEM = null;
+			METHOD_SET_CBM_PD_RECTANGLE_SELECTED_ITEM, METHOD_SHOW_TEXT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -301,6 +304,9 @@ class JapanDictGuiTest {
 		//
 		(METHOD_SET_CBM_PD_RECTANGLE_SELECTED_ITEM = Util.getDeclaredMethod(clz, "setCbmPDRectangleSelectedItem",
 				JapanDictGui.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_SHOW_TEXT = Util.getDeclaredMethod(clz, "showText", CharIntPair[].class, Float.TYPE, PDImage.class,
+				PDFont.class, Integer.TYPE, PDPageContentStream.class, Float.TYPE, Float.TYPE)).setAccessible(true);
 		//
 		CLASS_PITCH_ACCENT = Util.forName("org.springframework.context.support.JapanDictGui$PitchAccent");
 		//
@@ -2310,6 +2316,27 @@ class JapanDictGuiTest {
 			//
 		Assertions.assertNull(invoke(METHOD_SET_CBM_PD_RECTANGLE_SELECTED_ITEM, null, instance, null));
 		//
+	}
+
+	@Test
+	void testShowText() {
+		//
+		final CharIntPair cip = CharIntPair.of(' ', ONE);
+		//
+		Assertions.assertDoesNotThrow(
+				() -> showText(new CharIntPair[] { null, cip, cip }, ONE, null, null, ONE, null, ZERO, ONE));
+		//
+	}
+
+	private static void showText(final CharIntPair[] strokes, final float w, final PDImage pdImage, final PDFont pdFont,
+			final int fontSize, final PDPageContentStream pageContentStream, final float pageHeight,
+			final float textHeight) throws Throwable {
+		try {
+			invoke(METHOD_SHOW_TEXT, null, strokes, w, pdImage, pdFont, fontSize, pageContentStream, pageHeight,
+					textHeight);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }
