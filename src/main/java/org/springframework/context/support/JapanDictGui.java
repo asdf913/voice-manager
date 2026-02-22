@@ -3039,13 +3039,60 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			drawImage(pageContentStream, pdImageXObject, width,
 					pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
 			//
-			// Pitch Accent
+			CharIntPair[] strokes = japanDictEntry != null ? japanDictEntry.strokes : null;
 			//
+			CharIntPair stroke = null;
+			//
+			boolean first = true;
+			//
+			final int length = strokes != null ? strokes.length : 0;
+			//
+			final int lineHeight = 10;
+			//
+			for (int i = 0; i < length; i++) {
+				//
+				if ((stroke = ArrayUtils.get(strokes, i)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (first) {
+					//
+					width = width + PDImageUtil.getWidth(pdImageXObject) + (float) Util.floatValue(
+							new FailableStream<>(testAndApply(Objects::nonNull, strokes, Arrays::stream, null))
+									.map(x -> x != null
+											? Float.valueOf(getTextWidth(String.valueOf(x.keyChar()), pdFont, fontSize))
+											: null)
+									.stream().max(Float::compare).orElse(null),
+							0);
+					//
+					first = false;
+					//
+				} //
+					//
+				beginText(pageContentStream);
+				//
+				newLineAtOffset(pageContentStream, width,
+						pageHeight
+								+ (PDImageUtil.getHeight(pdImageXObject) - (textHeight + lineHeight) * (length + 1)) / 2
+								+ (textHeight + lineHeight) * (length - i));
+				//
+				showText(pageContentStream,
+						String.join(" ", String.valueOf(stroke.keyChar()), Integer.toString(stroke.valueInt())));
+				//
+				endText(pageContentStream);
+				// i
+				//
+			} // for
+				//
+				// Pitch Accent
+				//
 			final Iterable<PitchAccent> pitchAccents = JapanDictEntry.getPitchAccents(japanDictEntry);
 			//
 			PitchAccent pitchAccent = null;
 			//
-			boolean first = true;
+			first = true;
 			//
 			final int maxImageWidth = Util
 					.orElse(Util.max(Util.mapToInt(
