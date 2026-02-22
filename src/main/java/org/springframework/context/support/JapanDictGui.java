@@ -215,6 +215,7 @@ import com.microsoft.playwright.PlaywrightUtil;
 import com.microsoft.playwright.options.BoundingBox;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import it.unimi.dsi.fastutil.chars.CharIntPair;
 import it.unimi.dsi.fastutil.ints.IntIntMutablePair;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
 import javazoom.jl.decoder.JavaLayerException;
@@ -427,17 +428,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	}
 
-	private JTable jTableLink = null;
+	private JTable jTableLink, jTableStroke = null;
 
-	private DefaultTableModel dtmLink = null;
+	private DefaultTableModel dtmLink, dtmStroke = null;
 
 	private transient ListSelectionModel lsmLink = null;
 
 	private transient TrueTypeFont trueTypeFont = null;
 
 	private transient ComboBoxModel<Entry<String, PDRectangle>> cbmPDRectangle = null;
-
-	private transient MutableComboBoxModel<Integer> mcbmStroke = null;
 
 	private JapanDictGui() {
 	}
@@ -634,13 +633,51 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, new JLabel("Stroke with Number"), String.format("span %1$s", 2));
 		//
-		add(this, strokeWithNumberImage = new JLabel(), String.format("span %1$s", 5));
-		//
-		add(this, new JComboBox<>(mcbmStroke = new DefaultComboBoxModel<>()));
+		add(this, strokeWithNumberImage = new JLabel(), String.format("span %1$s", 6));
 		//
 		add(this, btnCopyStrokeWithNumberImage = new JButton("Copy"), String.format("flowy,split %1$s", 2));
 		//
 		add(this, btnSaveStrokeWithNumberImage = new JButton("Save"), growx);
+		//
+		jTableStroke = new JTable(
+				dtmStroke = new DefaultTableModel(new Object[] { "Character", "Number Of Stroke" }, 0)) {
+
+			@Override
+			public boolean isCellEditable(final int row, final int column) {
+				return false;
+			}
+
+		};
+		//
+		TableColumnModel tcmStroke = jTableStroke.getColumnModel();
+		//
+		TableColumn tc = null;
+		//
+		for (int i = 0; tcmStroke != null && i < tcmStroke.getColumnCount(); i++) {
+			//
+			if ((tc = tcmStroke.getColumn(i)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (i == 0) {
+				//
+				tc.setMaxWidth(58);
+				//
+			} else {
+				//
+				tc.setMaxWidth(103);
+				//
+			} // if
+				//
+		} // for
+			//
+		setPreferredScrollableViewportSize(jTableStroke, new Dimension(
+				(int) getWidth(preferredSize = Util.getPreferredSize(jTableStroke)), (int) getHeight(preferredSize)));
+		//
+		add(this, new JScrollPane(jTableStroke), String.format("span %1$s,%2$s,wmin %3$s", 2, growx,
+				sum(IntStream.range(0, tcmStroke.getColumnCount()).map(i -> tcmStroke.getColumn(i).getMaxWidth()))));
 		//
 		add(this, new JLabel(), wrap);
 		//
@@ -1023,7 +1060,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private Iterable<Link> links = null;
 
-		private int[] strokes = null;
+		private CharIntPair[] strokes = null;
 
 		private byte[] getAudioData() {
 			return audioData;
@@ -1714,7 +1751,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		Util.setSelectedItem(cbmJlptLevel, "");
 		//
-		Util.forEach(Stream.of(mcbmPitchAccent, mcbmStroke),
+		Util.forEach(Stream.of(mcbmPitchAccent),
 				x -> Util.forEach(IntStream.iterate(Util.getSize(x) - 1, i -> i >= 0, i -> i - 1),
 						i -> Util.removeElementAt(x, i)));
 		//
@@ -1728,8 +1765,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						x -> Objects.equals(Util.getType(x), BufferedImage.class)),
 				x -> Narcissus.setField(this, x, null));
 		//
-		Util.forEach(IntStream.iterate(Util.getRowCount(dtmLink) - 1, i -> i >= 0, i -> i - 1),
-				i -> Util.removeRow(dtmLink, i));
+		Util.forEach(Stream.of(dtmLink, dtmStroke),
+				x -> Util.forEach(IntStream.iterate(Util.getRowCount(x) - 1, i -> i >= 0, i -> i - 1),
+						i -> Util.removeRow(x, i)));
 		//
 	}
 
@@ -4215,8 +4253,31 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		if (entry != null && entry.strokes != null) {
 			//
-			Util.forEach(IntStream.iterate(0, x -> x < entry.strokes.length, x -> x + 1),
-					x -> Util.addElement(instance.mcbmStroke, entry.strokes[x]));
+			Util.forEach(IntStream.iterate(0, x -> x < entry.strokes.length, x -> x + 1), x -> {
+				//
+				final CharIntPair cip = entry.strokes[x];
+				//
+				Util.addRow(instance.dtmStroke, new Object[] { cip != null ? Character.valueOf(cip.keyChar()) : null,
+						cip != null ? Integer.valueOf(cip.valueInt()) : null });
+				//
+			});
+			//
+			final JTable jTable = instance.jTableStroke;
+			//
+			final Dimension preferredSize = Util.getPreferredSize(jTable);
+			//
+			setPreferredScrollableViewportSize(instance.jTableStroke, new Dimension((int) getWidth(preferredSize),
+					(int) Math.min(sum(Util.map(IntStream.range(0, Util.getRowCount(instance.dtmStroke)), x ->
+					//
+					Math.max(getRowHeight(jTable),
+							Util.orElse(
+									Util.max(
+											Util.map(IntStream.range(0, getColumnCount(jTable)),
+													column -> (int) getHeight(Util.getPreferredSize(prepareRenderer(
+															jTable, getCellRenderer(jTable, x, column), x, column))))),
+									0))
+					//
+					)), getHeight(preferredSize))));
 			//
 		} // if
 			//
@@ -4546,8 +4607,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private Function<Playwright, BrowserType> browserTypeFunction = null;
 
-		@Nullable
-		private int[] strokes = null;
+		private CharIntPair[] strokes = null;
 
 		@Override
 		@Nullable
@@ -4610,8 +4670,20 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						//
 				} // for
 					//
-				strokes = toArray(Util.mapToInt(Util.stream(list), NumberUtils::toInt));
+				final int[] ints = toArray(Util.mapToInt(Util.stream(list), NumberUtils::toInt));
 				//
+				final String text = JapanDictEntry.getText(japanDictEntry);
+				//
+				final int length1 = StringUtils.length(text);
+				//
+				final int length2 = ints != null ? ints.length : 0;
+				//
+				for (int i = 0; i < Math.min(length1, length2); i++) {
+					//
+					strokes = ArrayUtils.add(strokes, CharIntPair.of(text.charAt(i), ints[i]));
+					//
+				} // for
+					//
 				return bufferedImage;
 				//
 			} catch (final IOException | InterruptedException ex) {
