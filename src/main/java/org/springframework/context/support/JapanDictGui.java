@@ -522,14 +522,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		})), String.format("%1$s,wmin %2$s,span %3$s", wrap, 100, 9));
 		//
-		if ((lsm = jTable.getSelectionModel()) != null) {
-			//
-			lsm.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			//
-			lsm.addListSelectionListener(this);
-			//
-		} // if
-			//
+		setSelectionMode(lsm = jTable.getSelectionModel(), ListSelectionModel.SINGLE_SELECTION);
+		//
+		addListSelectionListener(lsm, this);
+		//
 		jTable.setDefaultRenderer(Object.class, createTableCellRenderer(jTable.getDefaultRenderer(Object.class)));
 		//
 		Dimension preferredSize = Util.getPreferredSize(jTable);
@@ -808,6 +804,19 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
 		//
+	}
+
+	private static void setSelectionMode(final ListSelectionModel instance, final int selectionMode) {
+		if (instance != null) {
+			instance.setSelectionMode(selectionMode);
+		}
+	}
+
+	private static void addListSelectionListener(final ListSelectionModel instance,
+			final ListSelectionListener listSelectionListener) {
+		if (instance != null) {
+			instance.addListSelectionListener(listSelectionListener);
+		}
 	}
 
 	private static ListCellRenderer<Entry<String, PDRectangle>> createStringPDRectangleEntryListCellRenderer(
