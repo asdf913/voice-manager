@@ -1211,7 +1211,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return strokes;
 		}
 
-		private static CharIntPair[] getStrokes(final JapanDictEntry instance) {
+		private static CharIntPair[] getStrokes(@Nullable final JapanDictEntry instance) {
 			return instance != null ? instance.getStrokes() : null;
 		}
 
