@@ -3063,7 +3063,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 				if (first) {
 					//
-					width = width + PDImageUtil.getWidth(pdImageXObject) + (float) Util.floatValue(
+					width = width + PDImageUtil.getWidth(pdImageXObject) + Util.floatValue(
 							new FailableStream<>(testAndApply(Objects::nonNull, strokes, Arrays::stream, null))
 									.map(x -> x != null
 											? Float.valueOf(getTextWidth(String.valueOf(x.keyChar()), pdFont, fontSize))
