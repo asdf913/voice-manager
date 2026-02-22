@@ -810,13 +810,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return instance != null ? instance.getColumnCount() : 0;
 	}
 
-	private static void setSelectionMode(final ListSelectionModel instance, final int selectionMode) {
+	private static void setSelectionMode(@Nullable final ListSelectionModel instance, final int selectionMode) {
 		if (instance != null) {
 			instance.setSelectionMode(selectionMode);
 		}
 	}
 
-	private static void addListSelectionListener(final ListSelectionModel instance,
+	private static void addListSelectionListener(@Nullable final ListSelectionModel instance,
 			final ListSelectionListener listSelectionListener) {
 		if (instance != null) {
 			instance.addListSelectionListener(listSelectionListener);
