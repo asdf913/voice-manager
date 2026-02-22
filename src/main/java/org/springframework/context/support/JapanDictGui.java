@@ -393,6 +393,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return type;
 		}
 
+		@Nullable
 		private static String getType(@Nullable final PitchAccent instance) {
 			return instance != null ? instance.getType() : null;
 		}
