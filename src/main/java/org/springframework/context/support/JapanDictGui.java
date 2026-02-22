@@ -735,39 +735,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} // for
 			//
 		Collections.sort(list, (a, b) -> {
-			//
-			final String ak = Util.getKey(a);
-			//
-			final boolean b1 = Objects.equals(Util.getKey(a), "A4");
-			//
-			if (b1) {
-				//
-				return -1;
-				//
-			} // if
-				//
-			final String bk = Util.getKey(b);
-			//
-			final boolean b2 = Objects.equals(bk, "A4");
-			//
-			final Strings strings = Strings.CI;
-			//
-			if (Boolean.logicalAnd(StringsUtil.startsWith(strings, ak, "A"),
-					StringsUtil.startsWith(strings, bk, "A"))) {
-				//
-				return Integer.compare(NumberUtils.toInt(StringUtils.substring(ak, 1)),
-						NumberUtils.toInt(StringUtils.substring(bk, 1)));
-				//
-			} // if
-				//
-			if (Boolean.logicalOr(StringsUtil.startsWith(strings, ak, "A"), b2)) {
-				//
-				return -1;
-				//
-			} // if
-				//
-			return ObjectUtils.compare(ak, bk);
-			//
+			return compare(a, b);
 		});
 		//
 		list.add(0, null);
@@ -799,6 +767,41 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream,
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
+		//
+	}
+
+	private static int compare(final Entry<String, PDRectangle> a, final Entry<String, PDRectangle> b) {
+		//
+		final String ak = Util.getKey(a);
+		//
+		final boolean b1 = Objects.equals(Util.getKey(a), "A4");
+		//
+		if (b1) {
+			//
+			return -1;
+			//
+		} // if
+			//
+		final String bk = Util.getKey(b);
+		//
+		final boolean b2 = Objects.equals(bk, "A4");
+		//
+		final Strings strings = Strings.CI;
+		//
+		if (Boolean.logicalAnd(StringsUtil.startsWith(strings, ak, "A"), StringsUtil.startsWith(strings, bk, "A"))) {
+			//
+			return Integer.compare(NumberUtils.toInt(StringUtils.substring(ak, 1)),
+					NumberUtils.toInt(StringUtils.substring(bk, 1)));
+			//
+		} // if
+			//
+		if (Boolean.logicalOr(StringsUtil.startsWith(strings, ak, "A"), b2)) {
+			//
+			return -1;
+			//
+		} // if
+			//
+		return ObjectUtils.compare(ak, bk);
 		//
 	}
 
