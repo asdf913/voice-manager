@@ -707,12 +707,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		setPreferredScrollableViewportSize(jTableLink, new Dimension(
 				(int) getWidth(preferredSize = Util.getPreferredSize(jTableLink)), (int) getHeight(preferredSize)));
 		//
-		if ((lsmLink = jTableLink.getSelectionModel()) != null) {
-			//
-			lsmLink.addListSelectionListener(this);
-			//
-		} // if
-			//
+		addListSelectionListener(lsmLink = jTableLink.getSelectionModel(), this);
+		//
 		add(this, new JLabel());
 		//
 		add(jPanel = new JPanel(), btnCopyUrl = new JButton("Copy"));
