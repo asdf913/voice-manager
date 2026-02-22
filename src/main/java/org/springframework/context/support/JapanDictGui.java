@@ -3096,7 +3096,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						String.join(" ", String.valueOf(stroke.keyChar()), Integer.toString(stroke.valueInt())));
 				//
 				endText(pageContentStream);
-				// i
 				//
 			} // for
 				//
