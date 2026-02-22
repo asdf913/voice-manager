@@ -4644,7 +4644,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				final Iterable<String> iterable = Util.toList(
 						Util.map(Util.stream(PageUtil.querySelectorAll(page, String.format("#dmak-%1$s tspan", id))),
-								x -> ElementHandleUtil.textContent(x)));
+								ElementHandleUtil::textContent));
 				//
 				List<String> list = null;
 				//
