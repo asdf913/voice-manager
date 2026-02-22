@@ -159,6 +159,7 @@ import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
 import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace;
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageUtil;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.action.PDActionURI;
@@ -3053,59 +3054,62 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			drawImage(pageContentStream, pdImageXObject, width,
 					pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
 			//
-			final CharIntPair[] strokes = JapanDictEntry.getStrokes(japanDictEntry);
+			showText(JapanDictEntry.getStrokes(japanDictEntry), width, pdImageXObject, pdFont, fontSize,
+					pageContentStream, pageHeight, textHeight);
 			//
-			CharIntPair stroke = null;
+//			final CharIntPair[] strokes = JapanDictEntry.getStrokes(japanDictEntry);
 			//
-			boolean first = true;
+//			CharIntPair stroke = null;
+//			//
+//			boolean first = true;
+//			//
+//			final int length = strokes != null ? strokes.length : 0;
+//			//
+//			final int lineHeight = 10;
+//			//
+//			for (int i = 0; i < length; i++) {
+//				//
+//				if ((stroke = ArrayUtils.get(strokes, i)) == null) {
+//					//
+//					continue;
+//					//
+//				} // if
+//					//
+//				if (first) {
+//					//
+//					width = width + PDImageUtil.getWidth(pdImageXObject) + Util.floatValue(
+//							new FailableStream<>(testAndApply(Objects::nonNull, strokes, Arrays::stream, null))
+//									.map(x -> x != null
+//											? Float.valueOf(getTextWidth(String.valueOf(x.keyChar()), pdFont, fontSize))
+//											: null)
+//									.stream().max(Float::compare).orElse(null),
+//							0);
+//					//
+//					first = false;
+//					//
+//				} // if
+//					//
+//				beginText(pageContentStream);
+//				//
+//				newLineAtOffset(pageContentStream, width,
+//						pageHeight
+//								+ (PDImageUtil.getHeight(pdImageXObject) - (textHeight + lineHeight) * (length + 1)) / 2
+//								+ (textHeight + lineHeight) * (length - i));
+//				//
+//				showText(pageContentStream,
+//						String.join(" ", String.valueOf(stroke.keyChar()), Integer.toString(stroke.valueInt())));
+//				//
+//				endText(pageContentStream);
+//				//
+//			} // for
 			//
-			final int length = strokes != null ? strokes.length : 0;
+			// Pitch Accent
 			//
-			final int lineHeight = 10;
-			//
-			for (int i = 0; i < length; i++) {
-				//
-				if ((stroke = ArrayUtils.get(strokes, i)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (first) {
-					//
-					width = width + PDImageUtil.getWidth(pdImageXObject) + Util.floatValue(
-							new FailableStream<>(testAndApply(Objects::nonNull, strokes, Arrays::stream, null))
-									.map(x -> x != null
-											? Float.valueOf(getTextWidth(String.valueOf(x.keyChar()), pdFont, fontSize))
-											: null)
-									.stream().max(Float::compare).orElse(null),
-							0);
-					//
-					first = false;
-					//
-				} //
-					//
-				beginText(pageContentStream);
-				//
-				newLineAtOffset(pageContentStream, width,
-						pageHeight
-								+ (PDImageUtil.getHeight(pdImageXObject) - (textHeight + lineHeight) * (length + 1)) / 2
-								+ (textHeight + lineHeight) * (length - i));
-				//
-				showText(pageContentStream,
-						String.join(" ", String.valueOf(stroke.keyChar()), Integer.toString(stroke.valueInt())));
-				//
-				endText(pageContentStream);
-				//
-			} // for
-				//
-				// Pitch Accent
-				//
 			final Iterable<PitchAccent> pitchAccents = JapanDictEntry.getPitchAccents(japanDictEntry);
 			//
 			PitchAccent pitchAccent = null;
 			//
-			first = true;
+			boolean first = true;
 			//
 			final int maxImageWidth = Util
 					.orElse(Util.max(Util.mapToInt(
@@ -3322,6 +3326,68 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return baos.toByteArray();
 			//
 		} // try
+			//
+	}
+
+	private static void showText(final CharIntPair[] strokes, final float w, final PDImage pdImage, final PDFont pdFont,
+			final int fontSize, final PDPageContentStream pageContentStream, final float pageHeight,
+			final float textHeight) throws IOException {
+		// `
+		CharIntPair stroke = null;
+		//
+		boolean first = true;
+		//
+		final int length = strokes != null ? strokes.length : 0;
+		//
+		final int lineHeight = 10;
+		//
+		float width = 0f;
+		//
+		for (int i = 0; i < length; i++) {
+			//
+			if ((stroke = ArrayUtils.get(strokes, i)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (first) {
+				//
+				width = w
+						+ PDImageUtil.getWidth(pdImage) + Util
+								.floatValue(
+										Util.orElse(
+												Util.max(
+														Util.filter(FailableStreamUtil.stream(
+																new FailableStream<>(testAndApply(Objects::nonNull,
+																		strokes, Arrays::stream, null)).map(
+																				x -> x != null
+																						? Float.valueOf(getTextWidth(
+																								String.valueOf(
+																										x.keyChar()),
+																								pdFont, fontSize))
+																						: null)),
+																Objects::nonNull),
+														Float::compare),
+												null),
+										0);
+				//
+				first = false;
+				//
+			} // if
+				//
+			beginText(pageContentStream);
+			//
+			newLineAtOffset(pageContentStream, width,
+					pageHeight + (PDImageUtil.getHeight(pdImage) - (textHeight + lineHeight) * (length + 1)) / 2
+							+ (textHeight + lineHeight) * (length - i));
+			//
+			showText(pageContentStream,
+					String.join(" ", String.valueOf(stroke.keyChar()), Integer.toString(stroke.valueInt())));
+			//
+			endText(pageContentStream);
+			//
+		} // for
 			//
 	}
 
