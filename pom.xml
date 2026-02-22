@@ -364,7 +364,7 @@
 		<dependency>
 			<groupId>org.bytedeco</groupId>
 			<artifactId>ffmpeg-platform</artifactId>
-			<version>7.1.1-1.5.12</version>
+			<version>8.0.1-1.5.13</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.github.romankh3/image-comparison -->
 		<dependency>
