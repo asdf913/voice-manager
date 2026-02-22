@@ -655,9 +655,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		TableColumn tc = null;
 		//
-		for (int i = 0; tcmStroke != null && i < tcmStroke.getColumnCount(); i++) {
+		for (int i = 0; i < getColumnCount(tcmStroke); i++) {
 			//
-			if ((tc = tcmStroke.getColumn(i)) == null) {
+			if ((tc = getColumn(tcmStroke, i)) == null) {
 				//
 				continue;
 				//
@@ -679,7 +679,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				(int) getWidth(preferredSize = Util.getPreferredSize(jTableStroke)), (int) getHeight(preferredSize)));
 		//
 		add(this, new JScrollPane(jTableStroke), String.format("span %1$s,%2$s,wmin %3$s", 2, growx,
-				sum(IntStream.range(0, tcmStroke.getColumnCount()).map(i -> tcmStroke.getColumn(i).getMaxWidth()))));
+				sum(IntStream.range(0, getColumnCount(tcmStroke)).map(i -> tcmStroke.getColumn(i).getMaxWidth()))));
 		//
 		add(this, new JLabel(), wrap);
 		//
@@ -804,6 +804,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
 		//
+	}
+
+	private static int getColumnCount(final TableColumnModel instance) {
+		return instance != null ? instance.getColumnCount() : 0;
 	}
 
 	private static void setSelectionMode(final ListSelectionModel instance, final int selectionMode) {

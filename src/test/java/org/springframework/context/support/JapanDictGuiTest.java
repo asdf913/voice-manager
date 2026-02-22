@@ -462,10 +462,18 @@ class JapanDictGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof TableColumnModel && Objects.equals(name, "getColumn")) {
+			} else if (proxy instanceof TableColumnModel) {
 				//
-				return null;
-				//
+				if (Objects.equals(name, "getColumn")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(name, "getColumnCount")) {
+					//
+					return columnCount;
+					//
+				} // if
+					//
 			} else if (proxy instanceof DoubleStream && Objects.equals(name, "max")) {
 				//
 				return null;
@@ -588,6 +596,12 @@ class JapanDictGuiTest {
 		//
 		Object result = null;
 		//
+		if (ih != null) {
+			//
+			ih.columnCount = Integer.valueOf(0);
+			//
+		} // if
+			//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()
