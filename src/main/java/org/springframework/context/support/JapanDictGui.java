@@ -3184,12 +3184,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			for (int i = 0; i < IterableUtils.size(links); i++) {
 				//
-				if ((link = IterableUtils.get(links, i)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
+				link = IterableUtils.get(links, i);
+				//
 				if (first) {
 					//
 					final Stream<Link> stream = testAndApply(Objects::nonNull, Util.spliterator(links),
@@ -3198,10 +3194,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					final FailableStream<String> fs = testAndApply(Objects::nonNull,
 							Util.map(stream, x -> Link.getText(x)), FailableStream::new, null);
 					//
-					width = Double.valueOf(orElse(max(mapToDouble(
-							FailableStreamUtil.stream(
-									FailableStreamUtil.map(fs, x -> Float.valueOf(getTextWidth(x, pdFont, fontSize)))),
-							x -> Util.floatValue(x, 0))), 0)).floatValue();
+					width = Util
+							.floatValue(
+									Double.valueOf(
+											orElse(max(
+													mapToDouble(
+															FailableStreamUtil.stream(FailableStreamUtil.map(fs,
+																	x -> Float.valueOf(
+																			getTextWidth(x, pdFont, fontSize)))),
+															x -> Util.floatValue(x, 0))),
+													0)),
+									0);
 					//
 					first = false;
 					//
@@ -3228,7 +3231,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				pageContentStream.setNonStrokingColor(color = Color.BLUE);
 				//
-				showText(pageContentStream, url = Util.toString(link.url));
+				showText(pageContentStream, url = Util.toString(Link.getUrl(link)));
 				//
 				(pdBorderStyleDictionary = new PDBorderStyleDictionary())
 						.setStyle(PDBorderStyleDictionary.STYLE_UNDERLINE);
