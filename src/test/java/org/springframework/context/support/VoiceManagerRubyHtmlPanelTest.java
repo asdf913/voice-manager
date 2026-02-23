@@ -72,8 +72,8 @@ class VoiceManagerRubyHtmlPanelTest {
 
 	private static Method METHOD_LENGTH, METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
 			METHOD_GET_LAYOUT_MANAGER, METHOD_GET_SCREEN_SIZE, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_AND,
-			METHOD_GET_DESCRIPTION, METHOD_TEST_AND_RUN_THROWS, METHOD_CLEAR, METHOD_GET_VALUE, METHOD_CREATE_MAP,
-			METHOD_GET_AST, METHOD_GET_CHILD_COUNT, METHOD_GET_CHILD = null;
+			METHOD_GET_DESCRIPTION, METHOD_TEST_AND_RUN_THROWS, METHOD_GET_VALUE, METHOD_CREATE_MAP, METHOD_GET_AST,
+			METHOD_GET_CHILD_COUNT, METHOD_GET_CHILD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -104,8 +104,6 @@ class VoiceManagerRubyHtmlPanelTest {
 		//
 		(METHOD_TEST_AND_RUN_THROWS = clz.getDeclaredMethod("testAndRunThrows", Boolean.TYPE, ThrowingRunnable.class))
 				.setAccessible(true);
-		//
-		(METHOD_CLEAR = clz.getDeclaredMethod("clear", Map.class)).setAccessible(true);
 		//
 		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Expression.class, EvaluationContext.class, Object.class))
 				.setAccessible(true);
@@ -652,21 +650,6 @@ class VoiceManagerRubyHtmlPanelTest {
 			final ThrowingRunnable<E> throwingRunnable) throws Throwable {
 		try {
 			METHOD_TEST_AND_RUN_THROWS.invoke(null, b, throwingRunnable);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testClear() {
-		//
-		Assertions.assertDoesNotThrow(() -> clear(Reflection.newProxy(Map.class, ih)));
-		//
-	}
-
-	private static void clear(final Map<?, ?> instance) throws Throwable {
-		try {
-			METHOD_CLEAR.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -1887,6 +1887,12 @@ public abstract class Util {
 		}
 	}
 
+	static void clear(final Map<?, ?> instance) {
+		if (instance != null) {
+			instance.clear();
+		}
+	}
+
 	static boolean matches(@Nullable final Matcher instance) {
 		//
 		if (instance == null) {

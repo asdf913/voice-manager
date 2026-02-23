@@ -1637,7 +1637,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			for (int j = 0; j < IterableUtils.size(es2); j++) {
 				//
-				clear(map = ObjectUtils.getIfNull(map, () -> Reflection.newProxy(Map.class, new IH())));
+				Util.clear(map = ObjectUtils.getIfNull(map, () -> Reflection.newProxy(Map.class, new IH())));
 				//
 				Narcissus.invokeMethod(map, put, "jlptLevel", jlptLevel);
 				//
@@ -1689,12 +1689,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private static int getColumnCount(@Nullable final JTable instance) {
 		return instance != null && getColumnModel(instance) != null ? instance.getColumnCount() : 0;
-	}
-
-	private static void clear(@Nullable final Map<?, ?> instance) {
-		if (instance != null) {
-			instance.clear();
-		}
 	}
 
 	private static JapanDictEntry getJapanDictEntry(final Element e, final Pattern patternHiragana,

@@ -276,7 +276,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			TableUtil.put(table = ObjectUtils.getIfNull(table, HashBasedTable::create), beanDefinitionName, "instance",
 					instance = BeanFactoryUtil.getBean(dlbf, beanDefinitionName));
 			//
-			clear(map = ObjectUtils.getIfNull(map, LinkedHashMap::new));
+			Util.clear(map = ObjectUtils.getIfNull(map, LinkedHashMap::new));
 			//
 			if ((ast = getAST(expression = testAndApply((a, b) -> b != null,
 					ep = ObjectUtils.getIfNull(ep, SpelExpressionParser::new),
@@ -316,12 +316,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 
 	private static int getChildCount(@Nullable final SpelNode instance) {
 		return instance != null ? instance.getChildCount() : 0;
-	}
-
-	private static void clear(@Nullable final Map<?, ?> instance) {
-		if (instance != null) {
-			instance.clear();
-		}
 	}
 
 	@Nullable
