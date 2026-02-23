@@ -513,14 +513,10 @@ class JapanDictGuiTest {
 				//
 				return test;
 				//
-			} else if (proxy instanceof BrowserType) {
+			} else if (proxy instanceof BrowserType && Objects.equals(name, "name")) {
 				//
-				if (Objects.equals(name, "name")) {
-					//
-					return name;
-					//
-				} // if
-					//
+				return name;
+				//
 			} // if
 				//
 			throw new Throwable(name);
