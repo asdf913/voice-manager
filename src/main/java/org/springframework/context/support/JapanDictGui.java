@@ -3334,8 +3334,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	}
 
-	private static void showText(final CharIntPair[] strokes, final PDImage pdImage, final PDFont pdFont,
-			final int fontSize, final PDPageContentStream pageContentStream, final FloatMap floatMap)
+	private static void showText(@Nullable final CharIntPair[] strokes, final PDImage pdImage, final PDFont pdFont,
+			final int fontSize, final PDPageContentStream pageContentStream, @Nullable final FloatMap floatMap)
 			throws IOException {
 		// `
 		CharIntPair stroke = null;
