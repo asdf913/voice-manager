@@ -91,11 +91,13 @@ import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.MutableComboBoxModel;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.metal.MetalComboBoxUI;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -665,6 +667,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		TableColumn tc = null;
 		//
+		DefaultTableCellRenderer dtcr = null;
+		//
 		for (int i = 0; i < getColumnCount(tcmStroke); i++) {
 			//
 			if ((tc = getColumn(tcmStroke, i)) == null) {
@@ -673,9 +677,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			} // if
 				//
+			(dtcr = new DefaultTableCellRenderer()).setHorizontalAlignment(SwingConstants.RIGHT);
+			//
+			tc.setCellRenderer(dtcr);
+			//
 			if (i == 0) {
 				//
-				tc.setMaxWidth(58);
+				tc.setCellRenderer(dtcr);
 				//
 			} else {
 				//
