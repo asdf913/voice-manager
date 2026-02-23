@@ -787,7 +787,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			final IOFileFilter ioFileFilter = TrueFileFilter.INSTANCE;
 			//
-			final Iterable<File> iterable = testAndApply(x -> x != null && Util.exists(x) && x.isDirectory(),
+			final Iterable<File> iterable = testAndApply(x -> and(x, Util::exists, JapanDictGui::isDirectory),
 					Util.toFile(testAndApply(Objects::nonNull,
 							Shell32Util.getKnownFolderPath(KnownFolders.FOLDERID_Fonts), Path::of, null)),
 					x -> FileUtils.listFiles(x, ioFileFilter, ioFileFilter), null);
@@ -866,6 +866,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
 		//
+	}
+
+	private static boolean isDirectory(final File instance) {
+		return instance != null && instance.isDirectory();
 	}
 
 	private static <E> void setRenderer(final JComboBox<E> instance, final ListCellRenderer<? super E> aRenderer) {
