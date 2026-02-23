@@ -4857,7 +4857,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					string = IterableUtils.get(iterable, i);
 					//
 					if (IterableUtils.isEmpty(list = ObjectUtils.getIfNull(list, ArrayList::new))
-							|| (CollectionUtils.isNotEmpty(list) && NumberUtils.toInt(string) < NumberUtils
+							|| (CollectionUtils.isNotEmpty(list) && NumberUtils.toInt(string) <= NumberUtils
 									.toInt(IterableUtils.get(list, (size = IterableUtils.size(list)) - 1)))) {
 						//
 						Util.add(list, string);
