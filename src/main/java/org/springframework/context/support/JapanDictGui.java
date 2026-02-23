@@ -851,7 +851,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static String name(final BrowserType instance) {
+	private static String name(@Nullable final BrowserType instance) {
 		return instance != null ? instance.name() : null;
 	}
 
