@@ -504,16 +504,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			for (int i = 0; i < IterableUtils.size(browserTypes); i++) {
 				//
-				if ((browserType = IterableUtils.get(browserTypes, i)) == null) {
+				try (final Browser browser = testAndApply(Predicates.always(!runningInGitHubActions),
+						browserType = IterableUtils.get(browserTypes, i), BrowserTypeUtil::launch, null);
+						final Page page = BrowserUtil.newPage(browser)) {
 					//
-					continue;
-					//
-				} // if
-					//
-				try (final Browser browser = testAndApply(Predicates.always(!runningInGitHubActions), browserType,
-						BrowserTypeUtil::launch, null); final Page page = BrowserUtil.newPage(browser)) {
-					//
-					Util.put(userAgentMap = ObjectUtils.getIfNull(userAgentMap, LinkedHashMap::new), browserType.name(),
+					Util.put(userAgentMap = ObjectUtils.getIfNull(userAgentMap, LinkedHashMap::new), name(browserType),
 							Util.toString(PageUtil.evaluate(page, "window.navigator.userAgent")));
 					//
 				} // try
@@ -856,6 +851,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
 		//
+	}
+
+	private static String name(final BrowserType instance) {
+		return instance != null ? instance.name() : null;
 	}
 
 	private static void setCellRenderer(final TableColumn instance, final TableCellRenderer cellRenderer) {
