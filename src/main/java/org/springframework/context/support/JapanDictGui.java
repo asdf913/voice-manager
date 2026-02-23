@@ -2122,12 +2122,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					final Object arg1 = ArrayUtils.get(args, 0);
 					//
-					if (!Util.containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), arg1)) {
-						//
-						throw new IllegalStateException(Util.toString(arg1));
-						//
-					} // if
-						//
+					testAndRunThrows(!Util.containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), arg1),
+							() -> {
+								//
+								throw new IllegalStateException(Util.toString(arg1));
+								//
+							});
+					//
 					return Util.get(map, arg1);
 					//
 				} // if
