@@ -504,14 +504,10 @@ class JapanDictGuiTest {
 				//
 				return floatValue;
 				//
-			} else if (proxy instanceof ObjIntPredicate) {
+			} else if (proxy instanceof ObjIntPredicate && Objects.equals(name, "test")) {
 				//
-				if (Objects.equals(name, "test")) {
-					//
-					return test;
-					//
-				} // if
-					//
+				return test;
+				//
 			} // if
 				//
 			throw new Throwable(name);
