@@ -632,12 +632,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		final JComboBox<PitchAccent> jcbPitchAccent = new JComboBox<>(mcbmPitchAccent = new DefaultComboBoxModel<>());
 		//
-		if (Objects.equals(Util.getName(Util.getClass(FileSystems.getDefault())), "sun.nio.fs.MacOSXFileSystem")) {
-			//
-			jcbPitchAccent.setUI(new MetalComboBoxUI());
-			//
-		} // if
-			//
+		testAndRun(Objects.equals(Util.getName(Util.getClass(FileSystems.getDefault())), "sun.nio.fs.MacOSXFileSystem"),
+				() -> jcbPitchAccent.setUI(new MetalComboBoxUI()));
+		//
 		setRenderer(jcbPitchAccent, createPitchAccentListCellRenderer(jcbPitchAccent, jcbPitchAccent.getRenderer(),
 				Util.getPreferredSize(jcbPitchAccent)));
 		//
