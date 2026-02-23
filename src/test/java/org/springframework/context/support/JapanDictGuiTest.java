@@ -973,7 +973,9 @@ class JapanDictGuiTest {
 						Boolean.logicalAnd(Objects.equals(name, "createStringPDRectangleEntryListCellRenderer"),
 								Arrays.equals(parameterTypes, new Class<?>[] { ListCellRenderer.class })),
 						Boolean.logicalAnd(Objects.equals(name, "createFontFileEntryListCellRenderer"),
-								Arrays.equals(parameterTypes, new Class<?>[] { ListCellRenderer.class })))) {
+								Arrays.equals(parameterTypes, new Class<?>[] { ListCellRenderer.class })),
+						Boolean.logicalAnd(Objects.equals(name, "name"),
+								Arrays.equals(parameterTypes, new Class<?>[] { BrowserType.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
