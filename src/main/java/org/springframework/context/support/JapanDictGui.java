@@ -2080,7 +2080,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private Image image = null;
 
-		private Map<?, ?> map, floatMap;
+		@Note("Map")
+		private Map<?, ?> map;
+
+		private Map<?, ?> floatMap;
 
 		@Override
 		@Nullable
