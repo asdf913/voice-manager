@@ -676,29 +676,29 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		};
 		//
-		TableColumnModel tcmStroke = jTableStroke.getColumnModel();
+		final TableColumnModel tcmStroke = jTableStroke.getColumnModel();
 		//
-		TableColumn tc = null;
-		//
-		DefaultTableCellRenderer dtcr = null;
-		//
-		for (int i = 0; i < getColumnCount(tcmStroke); i++) {
+		Util.forEach(IntStream.iterate(0, i -> i < getColumnCount(tcmStroke), i -> i + 1), i -> {
 			//
-			(dtcr = new DefaultTableCellRenderer()).setHorizontalAlignment(SwingConstants.RIGHT);
+			final TableColumn tc = getColumn(tcmStroke, i);
 			//
-			setCellRenderer(tc = getColumn(tcmStroke, i), dtcr);
+			final DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
+			//
+			dtcr.setHorizontalAlignment(SwingConstants.RIGHT);
+			//
+			setCellRenderer(tc, dtcr);
 			//
 			testAndAccept((a, b) -> b == 0, tc, i, (a, b) -> setMaxWidth(a, 58));
 			//
 			testAndAccept((a, b) -> b == 1, tc, i, (a, b) -> setMaxWidth(a, 103));
 			//
-		} // for
-			//
+		});
+		//
 		setPreferredScrollableViewportSize(jTableStroke, new Dimension(
 				(int) getWidth(preferredSize = Util.getPreferredSize(jTableStroke)), (int) getHeight(preferredSize)));
 		//
 		add(this, new JScrollPane(jTableStroke), String.format("span %1$s,%2$s,wmin %3$s", 2, growx,
-				sum(IntStream.range(0, getColumnCount(tcmStroke)).map(i -> tcmStroke.getColumn(i).getMaxWidth()))));
+				sum(IntStream.range(0, getColumnCount(tcmStroke)).map(i -> getColumn(tcmStroke, i).getMaxWidth()))));
 		//
 		add(this, new JLabel(), wrap);
 		//
