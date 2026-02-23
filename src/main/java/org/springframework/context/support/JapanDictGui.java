@@ -2868,19 +2868,16 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			Object selectedItem = Util.getSelectedItem(instance.cbmFont);
 			//
+			Iterable<Method> ms = Util.toList(Util.filter(
+					testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(selectedItem)), Arrays::stream, null),
+					m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getValue"),
+							m == null || m.getParameterCount() == 0)));
+			//
 			try (final InputStream is = testAndApply(Objects::nonNull,
-					Util.cast(File.class,
-							testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null),
-									selectedItem = Util.getSelectedItem(instance.cbmFont),
-									testAndApply(x -> IterableUtils.size(x) == 1,
-											//
-											Util.toList(Util.filter(testAndApply(Objects::nonNull,
-													Util.getMethods(Util.getClass(selectedItem)), Arrays::stream, null),
-													m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getValue"),
-															m == null || m.getParameterCount() == 0)))
-											//
-											, x -> IterableUtils.get(x, 0), null),
-									Narcissus::invokeMethod, null)),
+					Util.cast(File.class, testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null),
+							selectedItem = Util.getSelectedItem(instance.cbmFont),
+							testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null),
+							Narcissus::invokeMethod, null)),
 					FileInputStream::new, null)) {
 				//
 				ttf = testAndApply(Objects::nonNull, is, new TTFParser()::parseEmbedded, null);
@@ -2948,13 +2945,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				if (and(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 						() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
 					//
-					final Stream<Method> ms = testAndApply(Objects::nonNull,
-							Util.getMethods(Util.getClass(selectedItem)), Arrays::stream, null);
-					//
 					final Method method = testAndApply(x -> IterableUtils.size(x) == 1,
 							//
-							Util.toList(
-									Util.filter(ms, m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getValue"),
+							ms = Util.toList(Util.filter(
+									testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(selectedItem)),
+											Arrays::stream, null),
+									m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getValue"),
 											m == null || m.getParameterCount() == 0)))
 							//
 							, x -> IterableUtils.get(x, 0), null);
