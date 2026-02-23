@@ -117,6 +117,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -787,36 +788,33 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		if (Objects.equals(OperatingSystemUtil.getOperatingSystem(), OperatingSystem.WINDOWS)) {
 			//
-			final File folder = Util.toFile(testAndApply(Objects::nonNull,
-					Shell32Util.getKnownFolderPath(KnownFolders.FOLDERID_Fonts), Path::of, null));
+			final IOFileFilter ioFileFilter = TrueFileFilter.INSTANCE;
 			//
-			if (folder != null && Util.exists(folder) && folder.isDirectory()) {
+			final Iterable<File> iterable = testAndApply(x -> x != null && Util.exists(x) && x.isDirectory(),
+					Util.toFile(testAndApply(Objects::nonNull,
+							Shell32Util.getKnownFolderPath(KnownFolders.FOLDERID_Fonts), Path::of, null)),
+					x -> FileUtils.listFiles(x, ioFileFilter, ioFileFilter), null);
+			//
+			File file = null;
+			//
+			Font font = null;
+			//
+			for (int i = 0; i < IterableUtils.size(iterable); i++) {
 				//
-				final Iterable<File> iterable = FileUtils.listFiles(folder, TrueFileFilter.INSTANCE,
-						TrueFileFilter.INSTANCE);
-				//
-				File file = null;
-				//
-				Font font = null;
-				//
-				for (int i = 0; i < IterableUtils.size(iterable); i++) {
+				if ((file = IterableUtils.get(iterable, i)) == null) {
 					//
-					if ((file = IterableUtils.get(iterable, i)) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (Objects.equals(getMessage(new ContentInfoUtil().findMatch(file)), "TrueType font data")
-							&& (font = Font.createFont(Font.TRUETYPE_FONT, file)) != null && font.canDisplay('あ')) {
-						//
-						Util.add(list2, Pair.of(font, file));
-						//
-					} // if
-						//
-				} // for
+					continue;
 					//
-			} // if
+				} // if
+					//
+				if (Objects.equals(getMessage(new ContentInfoUtil().findMatch(file)), "TrueType font data")
+						&& (font = Font.createFont(Font.TRUETYPE_FONT, file)) != null && font.canDisplay('あ')) {
+					//
+					Util.add(list2, Pair.of(font, file));
+					//
+				} // if
+					//
+			} // for
 				//
 		} // if
 			//
