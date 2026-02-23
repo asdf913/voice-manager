@@ -839,7 +839,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			final Font font = Util.getKey(value);
 			//
-			if (font != null ) {
+			if (font != null) {
 				//
 				return new JLabel(font.getFamily());
 				//
@@ -855,20 +855,20 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return instance != null ? instance.name() : null;
 	}
 
-	private static void setCellRenderer(final TableColumn instance, final TableCellRenderer cellRenderer) {
+	private static void setCellRenderer(@Nullable final TableColumn instance, final TableCellRenderer cellRenderer) {
 		if (instance != null) {
 			instance.setCellRenderer(cellRenderer);
 		}
 	}
 
-	private static void setMaxWidth(final TableColumn instance, final int maxWidth) {
+	private static void setMaxWidth(@Nullable final TableColumn instance, final int maxWidth) {
 		if (instance != null) {
 			instance.setMaxWidth(maxWidth);
 		}
 	}
 
-	private static <E> void testAndAccept(final ObjIntPredicate<E> predicate, final E object, final int integer,
-			final ObjIntConsumer<E> consumer) {
+	private static <E> void testAndAccept(@Nullable final ObjIntPredicate<E> predicate, final E object,
+			final int integer, @Nullable final ObjIntConsumer<E> consumer) {
 		//
 		if (predicate != null && predicate.test(object, integer) && consumer != null) {
 			//
@@ -878,7 +878,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static boolean isDirectory(final File instance) {
+	private static boolean isDirectory(@Nullable final File instance) {
 		//
 		if (instance == null || Boolean
 				.logicalAnd(IterableUtils.contains(Arrays.asList(OperatingSystem.WINDOWS, OperatingSystem.LINUX),
