@@ -493,14 +493,11 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
-			} else if (Util.isAssignableFrom(CLASS_FLOAT_MAP, Util.getClass(proxy))) {
+			} else if (Util.isAssignableFrom(CLASS_FLOAT_MAP, Util.getClass(proxy))
+					&& Objects.equals(name, "getFloat")) {
 				//
-				if (Objects.equals(name, "getFloat")) {
-					//
-					return floatValue;
-					//
-				} // if
-					//
+				return floatValue;
+				//
 			} // if
 				//
 			throw new Throwable(name);
