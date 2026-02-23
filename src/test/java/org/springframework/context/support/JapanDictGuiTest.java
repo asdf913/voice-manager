@@ -137,7 +137,7 @@ class JapanDictGuiTest {
 
 	private static final int ONE = 1;
 
-	private static Class<?> CLASS_JAPAN_DICT_ENTRY, CLASS_PITCH_ACCENT;
+	private static Class<?> CLASS_JAPAN_DICT_ENTRY, CLASS_PITCH_ACCENT, CLASS_FLOAT_MAP;
 
 	private static Method METHOD_TEST_AND_GET, METHOD_SET_TEXT, METHOD_STARTS_WITH, METHOD_APPEND,
 			METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG, METHOD_TEST_AND_ACCEPT5,
@@ -305,8 +305,10 @@ class JapanDictGuiTest {
 		(METHOD_SET_CBM_PD_RECTANGLE_SELECTED_ITEM = Util.getDeclaredMethod(clz, "setCbmPDRectangleSelectedItem",
 				JapanDictGui.class, Object.class)).setAccessible(true);
 		//
-		(METHOD_SHOW_TEXT = Util.getDeclaredMethod(clz, "showText", CharIntPair[].class, Float.TYPE, PDImage.class,
-				PDFont.class, Integer.TYPE, PDPageContentStream.class, Float.TYPE, Float.TYPE)).setAccessible(true);
+		(METHOD_SHOW_TEXT = Util.getDeclaredMethod(clz, "showText", CharIntPair[].class, PDImage.class, PDFont.class,
+				Integer.TYPE, PDPageContentStream.class,
+				CLASS_FLOAT_MAP = Util.forName("org.springframework.context.support.JapanDictGui$FloatMap")))
+				.setAccessible(true);
 		//
 		CLASS_PITCH_ACCENT = Util.forName("org.springframework.context.support.JapanDictGui$PitchAccent");
 		//
@@ -321,6 +323,8 @@ class JapanDictGuiTest {
 		private int[] selectedIndices;
 
 		private Exception exception;
+
+		private Float floatValue;
 
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -489,6 +493,14 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
+			} else if (Util.isAssignableFrom(CLASS_FLOAT_MAP, Util.getClass(proxy))) {
+				//
+				if (Objects.equals(name, "getFloat")) {
+					//
+					return floatValue;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -664,6 +676,12 @@ class JapanDictGuiTest {
 			//
 			toString = Util.toString(m);
 			//
+			if (ih != null) {
+				//
+				ih.floatValue = Float.valueOf(0f);
+				//
+			} // if
+				//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
 				if (isThrowRuntimeException(Util.getClass(instance), m)) {
@@ -869,6 +887,12 @@ class JapanDictGuiTest {
 				} // if
 					//
 			} // for
+				//
+			if (ih != null) {
+				//
+				ih.floatValue = Float.valueOf(0f);
+				//
+			} // if
 				//
 			os = toArray(collection);
 			//
@@ -1369,6 +1393,15 @@ class JapanDictGuiTest {
 		Assertions.assertNull(invoke(invocationHandler, map, put, new Object[] { k, v }));
 		//
 		Assertions.assertSame(v, invoke(invocationHandler, map, get, new Object[] { k }));
+		//
+		// java.util.Map
+		//
+		final Object floatMap = Reflection.newProxy(CLASS_FLOAT_MAP, invocationHandler);
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(invocationHandler, floatMap, null, null));
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> invoke(invocationHandler, floatMap,
+				Util.getDeclaredMethod(CLASS_FLOAT_MAP, "getFloat", String.class), null));
 		//
 	}
 
@@ -2323,17 +2356,15 @@ class JapanDictGuiTest {
 		//
 		final CharIntPair cip = CharIntPair.of(' ', ONE);
 		//
-		Assertions.assertDoesNotThrow(
-				() -> showText(new CharIntPair[] { null, cip, cip }, ONE, null, null, ONE, null, ZERO, ONE));
+		Assertions
+				.assertDoesNotThrow(() -> showText(new CharIntPair[] { null, cip, cip }, null, null, ONE, null, null));
 		//
 	}
 
-	private static void showText(final CharIntPair[] strokes, final float w, final PDImage pdImage, final PDFont pdFont,
-			final int fontSize, final PDPageContentStream pageContentStream, final float pageHeight,
-			final float textHeight) throws Throwable {
+	private static void showText(final CharIntPair[] strokes, final PDImage pdImage, final PDFont pdFont,
+			final int fontSize, final PDPageContentStream pageContentStream, final Object floatMap) throws Throwable {
 		try {
-			invoke(METHOD_SHOW_TEXT, null, strokes, w, pdImage, pdFont, fontSize, pageContentStream, pageHeight,
-					textHeight);
+			invoke(METHOD_SHOW_TEXT, null, strokes, pdImage, pdFont, fontSize, pageContentStream, floatMap);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

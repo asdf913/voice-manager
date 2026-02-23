@@ -2080,7 +2080,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		private Image image = null;
 
-		private Map<?, ?> map = null;
+		private Map<?, ?> map, floatMap;
 
 		@Override
 		@Nullable
@@ -2126,6 +2126,30 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					} // if
 						//
 					return Util.get(map, arg1);
+					//
+				} // if
+					//
+			} else if (proxy instanceof FloatMap) {
+				//
+				if (Objects.equals(name, "getFloat")) {
+					//
+					final Object arg1 = ArrayUtils.get(args, 0);
+					//
+					if (!Util.containsKey(floatMap = ObjectUtils.getIfNull(floatMap, LinkedHashMap::new), arg1)) {
+						//
+						throw new IllegalStateException(Util.toString(arg1));
+						//
+					} // if
+						//
+					return Util.get(floatMap, arg1);
+					//
+				} else if (Objects.equals(name, "setFloat")) {
+					//
+					testAndAccept(Objects::nonNull, args,
+							x -> Narcissus.invokeMethod(floatMap = ObjectUtils.getIfNull(floatMap, LinkedHashMap::new),
+									Util.getDeclaredMethod(Map.class, "put", Object.class, Object.class), x));
+					//
+					return null;
 					//
 				} // if
 					//
@@ -3054,8 +3078,22 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			drawImage(pageContentStream, pdImageXObject, width,
 					pageHeight = pageHeight - PDImageUtil.getHeight(pdImageXObject) + textHeight);
 			//
-			showText(JapanDictEntry.getStrokes(japanDictEntry), width, pdImageXObject, pdFont, fontSize,
-					pageContentStream, pageHeight, textHeight);
+			final IH ih = new IH();
+			//
+			final FloatMap floatMap = Reflection.newProxy(FloatMap.class, ih);
+			//
+			if (floatMap != null) {
+				//
+				floatMap.setFloat("width", width);
+				//
+				floatMap.setFloat("pageHeight", pageHeight);
+				//
+				floatMap.setFloat("textHeight", textHeight);
+				//
+			} // if
+				//
+			showText(JapanDictEntry.getStrokes(japanDictEntry), pdImageXObject, pdFont, fontSize, pageContentStream,
+					floatMap);
 			//
 			// Pitch Accent
 			//
@@ -3283,9 +3321,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static void showText(final CharIntPair[] strokes, final float w, final PDImage pdImage, final PDFont pdFont,
-			final int fontSize, final PDPageContentStream pageContentStream, final float pageHeight,
-			final float textHeight) throws IOException {
+	private static interface FloatMap {
+
+		float getFloat(final String key);
+
+		void setFloat(final String key, final float value);
+
+	}
+
+	private static void showText(final CharIntPair[] strokes, final PDImage pdImage, final PDFont pdFont,
+			final int fontSize, final PDPageContentStream pageContentStream, final FloatMap floatMap)
+			throws IOException {
 		// `
 		CharIntPair stroke = null;
 		//
@@ -3297,6 +3343,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		float width = 0f;
 		//
+		final float pageHeight = floatMap != null ? floatMap.getFloat("pageHeight") : 0;
+		//
+		final float textHeight = floatMap != null ? floatMap.getFloat("textHeight") : 0;
+		//
 		for (int i = 0; i < length; i++) {
 			//
 			if ((stroke = ArrayUtils.get(strokes, i)) == null) {
@@ -3307,7 +3357,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			if (first) {
 				//
-				width = w
+				width = (floatMap != null ? floatMap.getFloat("width") : 0)
 						+ PDImageUtil.getWidth(pdImage) + Util
 								.floatValue(
 										Util.orElse(
