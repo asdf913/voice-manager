@@ -2948,24 +2948,27 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				if (and(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 						() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
 					//
-					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), toPdfByteArray(
-							Util.cast(JapanDictEntry.class,
-									getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0)),
-							testAndApply(Objects::nonNull, ObjectUtils.getIfNull(ttf,
-									instance.trueTypeFont), x -> PDType0Font.load(document, x, false), null),
-							instance.getUserAgent(),
-							Util.cast(PDRectangle.class, testAndApply(
-									(a, b) -> Boolean.logicalAnd(a != null, b != null),
-									selectedItem = Util.getSelectedItem(instance.cbmPDRectangle),
-									testAndApply(x -> IterableUtils.size(x) == 1,
-											//
-											Util.toList(Util.filter(testAndApply(Objects::nonNull,
-													Util.getMethods(Util.getClass(selectedItem)), Arrays::stream, null),
-													m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getValue"),
-															m == null || m.getParameterCount() == 0)))
-											//
-											, x -> IterableUtils.get(x, 0), null),
-									Narcissus::invokeMethod, null))));
+					final Method method = testAndApply(x -> IterableUtils.size(x) == 1,
+							//
+							Util.toList(Util.filter(
+									testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(selectedItem)),
+											Arrays::stream, null),
+									m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getValue"),
+											m == null || m.getParameterCount() == 0)))
+							//
+							, x -> IterableUtils.get(x, 0), null);
+					//
+					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
+							toPdfByteArray(
+									Util.cast(JapanDictEntry.class,
+											getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0)),
+									testAndApply(Objects::nonNull, ObjectUtils.getIfNull(ttf, instance.trueTypeFont),
+											x -> PDType0Font.load(document, x, false), null),
+									instance.getUserAgent(),
+									Util.cast(PDRectangle.class,
+											testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null),
+													selectedItem = Util.getSelectedItem(instance.cbmPDRectangle),
+													method, Narcissus::invokeMethod, null))));
 					//
 				} // if
 					//
