@@ -2164,6 +2164,8 @@ class JapanDictGuiTest {
 		//
 		String toString = null;
 		//
+		Class<?> parameterType = null;
+		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
@@ -2182,6 +2184,12 @@ class JapanDictGuiTest {
 				//
 				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
 				//
+			} else if (Boolean.logicalAnd(Objects.equals(operatingSystem, OperatingSystem.WINDOWS),
+					Objects.equals(Util.getReturnType(m), String.class))) {
+				//
+				Assertions.assertNotNull(Narcissus.invokeMethod(pitchAccent = ObjectUtils.getIfNull(pitchAccent,
+						() -> Narcissus.allocateInstance(CLASS_PITCH_ACCENT)), m, os), toString);
+				//
 			} else {
 				//
 				Assertions.assertNull(Narcissus.invokeMethod(pitchAccent = ObjectUtils.getIfNull(pitchAccent,
@@ -2197,8 +2205,17 @@ class JapanDictGuiTest {
 			//
 			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
 				//
-				Util.add(collection, Narcissus.allocateInstance(ArrayUtils.get(parameterTypes, j)));
-				//
+				if (Boolean.logicalAnd(Objects.equals(operatingSystem, OperatingSystem.WINDOWS),
+						Objects.equals(parameterType = ArrayUtils.get(parameterTypes, j), String.class))) {
+					//
+					Util.add(collection, "");
+					//
+				} else {
+					//
+					Util.add(collection, Narcissus.allocateInstance(parameterType));
+					//
+				} // if
+					//
 			} // for
 				//
 			os = toArray(collection);
@@ -2206,6 +2223,12 @@ class JapanDictGuiTest {
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
 				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				//
+			} else if (Boolean.logicalAnd(Objects.equals(operatingSystem, OperatingSystem.WINDOWS),
+					Objects.equals(Util.getReturnType(m), String.class))) {
+				//
+				Assertions.assertNotNull(Narcissus.invokeMethod(pitchAccent = ObjectUtils.getIfNull(pitchAccent,
+						() -> Narcissus.allocateInstance(CLASS_PITCH_ACCENT)), m, os), toString);
 				//
 			} else {
 				//

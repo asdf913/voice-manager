@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -22,6 +23,8 @@ import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
@@ -84,6 +87,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -112,6 +116,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -139,6 +144,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.commons.validator.routines.UrlValidatorUtil;
 import org.apache.fontbox.ttf.OTFParser;
+import org.apache.fontbox.ttf.TTFParser;
 import org.apache.fontbox.ttf.TrueTypeFont;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
@@ -187,6 +193,8 @@ import org.meeuw.functional.ThrowingRunnableUtil;
 import org.meeuw.functional.TriConsumer;
 import org.meeuw.functional.TriConsumerUtil;
 import org.oxbow.swingbits.dialog.task.TaskDialogs;
+import org.oxbow.swingbits.util.OperatingSystem;
+import org.oxbow.swingbits.util.OperatingSystemUtil;
 import org.springframework.beans.factory.FactoryBeanUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.JlptLevelListFactoryBean;
@@ -216,6 +224,8 @@ import com.microsoft.playwright.PageUtil;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.PlaywrightUtil;
 import com.microsoft.playwright.options.BoundingBox;
+import com.sun.jna.platform.win32.KnownFolders;
+import com.sun.jna.platform.win32.Shell32Util;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import it.unimi.dsi.fastutil.chars.CharIntPair;
@@ -455,6 +465,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	private transient TrueTypeFont trueTypeFont = null;
 
 	private transient ComboBoxModel<Entry<String, PDRectangle>> cbmPDRectangle = null;
+
+	private ComboBoxModel<Entry<Font, File>> cbmFont = null;
 
 	private JapanDictGui() {
 	}
@@ -737,33 +749,110 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, new JLabel());
 		//
+		// org.apache.pdfbox.pdmodel.common.PDRectangle
+		//
 		final Iterable<Field> fs = Util.toList(Util.filter(
 				Util.stream(testAndApply(Objects::nonNull, PDRectangle.class, FieldUtils::getAllFieldsList, null)),
 				f -> Util.isAssignableFrom(PDRectangle.class, Util.getType(f))));
 		//
 		final int length = IterableUtils.size(fs);
 		//
-		final List<Entry<String, PDRectangle>> list = new ArrayList<>();
+		final List<Entry<String, PDRectangle>> list1 = new ArrayList<>();
 		//
 		for (int i = 0; i < length; i++) {
 			//
-			Util.add(list, Pair.of(Util.getName(IterableUtils.get(fs, i)),
+			Util.add(list1, Pair.of(Util.getName(IterableUtils.get(fs, i)),
 					Util.cast(PDRectangle.class, Narcissus.getStaticField(IterableUtils.get(fs, i)))));
 			//
 		} // for
 			//
-		Collections.sort(list, JapanDictGui::compare);
+		Collections.sort(list1, JapanDictGui::compare);
 		//
-		list.add(0, null);
+		list1.add(0, null);
 		//
 		Narcissus.setField(this, getFieldByName(this, "cbmPDRectangle"), Util.newInstance(
-				Util.getDeclaredConstructor(DefaultComboBoxModel.class, Object[].class), (Object) Util.toArray(list)));
+				Util.getDeclaredConstructor(DefaultComboBoxModel.class, Object[].class), (Object) Util.toArray(list1)));
 		//
 		final JComboBox<Entry<String, PDRectangle>> jcbPDRectangle = new JComboBox<>(cbmPDRectangle);
 		//
-		jcbPDRectangle.setRenderer(createStringPDRectangleEntryListCellRenderer(jcbPDRectangle.getRenderer()));
+		jcbPDRectangle.setRenderer(createStringPDRectangleEntryListCellRenderer(Util.getRenderer(jcbPDRectangle)));
 		//
 		add(this, jcbPDRectangle);
+		//
+		// java.awt.Font
+		//
+		final List<Entry<Font, File>> list2 = new ArrayList<>();
+		//
+		if (Objects.equals(OperatingSystemUtil.getOperatingSystem(), OperatingSystem.WINDOWS)) {
+			//
+			final File folder = Util.toFile(testAndApply(Objects::nonNull,
+					Shell32Util.getKnownFolderPath(KnownFolders.FOLDERID_Fonts), Path::of, null));
+			//
+			if (folder != null && Util.exists(folder) && folder.isDirectory()) {
+				//
+				final Iterable<File> iterable = FileUtils.listFiles(folder, TrueFileFilter.INSTANCE,
+						TrueFileFilter.INSTANCE);
+				//
+				File file = null;
+				//
+				Font font = null;
+				//
+				for (int i = 0; i < IterableUtils.size(iterable); i++) {
+					//
+					if ((file = IterableUtils.get(iterable, i)) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (Objects.equals(getMessage(new ContentInfoUtil().findMatch(file)), "TrueType font data")
+							&& (font = Font.createFont(Font.TRUETYPE_FONT, file)) != null && font.canDisplay('あ')) {
+						//
+						Util.add(list2, Pair.of(font, file));
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+		} // if
+			//
+		list2.add(0, null);
+		//
+		Narcissus.setField(this, getFieldByName(this, "cbmFont"), Util.newInstance(
+				Util.getDeclaredConstructor(DefaultComboBoxModel.class, Object[].class), (Object) Util.toArray(list2)));
+		//
+		final JComboBox<Entry<Font, File>> jcbFont = testAndApply(Objects::nonNull, cbmFont, JComboBox::new,
+				x -> new JComboBox<>());
+		//
+		final ListCellRenderer<? super Entry<Font, File>> lcr = Util.getRenderer(jcbFont);
+		//
+		if (jcbFont != null) {
+			//
+			jcbFont.setRenderer(new ListCellRenderer<>() {
+
+				@Override
+				public Component getListCellRendererComponent(final JList<? extends Entry<Font, File>> list,
+						final Entry<Font, File> value, final int index, final boolean isSelected,
+						final boolean cellHasFocus) {
+					//
+					final Font font = Util.getKey(value);
+					//
+					if (font != null) {
+						//
+						return new JLabel(font.getFamily());
+						//
+					} // if
+						//
+					return Util.getListCellRendererComponent(lcr, list, value, index, isSelected, cellHasFocus);
+					//
+				}
+			});
+			//
+		} // if
+			//
+		add(this, jcbFont);
 		//
 		add(this, btnPdf = new JButton("PDF"));
 		//
@@ -2775,7 +2864,34 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		if (Objects.equals(source, instance.btnPdf)) {
 			//
-			if (instance.trueTypeFont == null) {
+			TrueTypeFont ttf = null;
+			//
+			Object selectedItem = Util.getSelectedItem(instance.cbmFont);
+			//
+			try (final InputStream is = testAndApply(Objects::nonNull,
+					Util.cast(File.class,
+							testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null),
+									selectedItem = Util.getSelectedItem(instance.cbmFont),
+									testAndApply(x -> IterableUtils.size(x) == 1,
+											//
+											Util.toList(Util.filter(testAndApply(Objects::nonNull,
+													Util.getMethods(Util.getClass(selectedItem)), Arrays::stream, null),
+													m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getValue"),
+															m == null || m.getParameterCount() == 0)))
+											//
+											, x -> IterableUtils.get(x, 0), null),
+									Narcissus::invokeMethod, null)),
+					FileInputStream::new, null)) {
+				//
+				ttf = testAndApply(Objects::nonNull, is, new TTFParser()::parseEmbedded, null);
+				//
+			} catch (final IOException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+			if (ttf == null || instance.trueTypeFont == null) {
 				//
 				try (final InputStream is = Util.getResourceAsStream(JapanDictGui.class,
 						"/NotoSansCJKjp-Regular.otf")) {
@@ -2832,25 +2948,24 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				if (and(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 						() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
 					//
-					final Object selectedItem = Util.getSelectedItem(instance.cbmPDRectangle);
-					//
-					final Iterable<Method> ms = Util.toList(Util.filter(
-							testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(selectedItem)), Arrays::stream,
-									null),
-							m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getValue"),
-									m == null || m.getParameterCount() == 0)));
-					//
 					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), toPdfByteArray(
 							Util.cast(JapanDictEntry.class,
 									getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0)),
-							testAndApply(Objects::nonNull, instance.trueTypeFont,
-									x -> PDType0Font.load(document, x, false), null),
+							testAndApply(Objects::nonNull, ObjectUtils.getIfNull(ttf,
+									instance.trueTypeFont), x -> PDType0Font.load(document, x, false), null),
 							instance.getUserAgent(),
-							Util.cast(PDRectangle.class,
-									testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), selectedItem,
-											testAndApply(x -> IterableUtils.size(x) == 1, ms,
-													x -> IterableUtils.get(x, 0), null),
-											Narcissus::invokeMethod, null))));
+							Util.cast(PDRectangle.class, testAndApply(
+									(a, b) -> Boolean.logicalAnd(a != null, b != null),
+									selectedItem = Util.getSelectedItem(instance.cbmPDRectangle),
+									testAndApply(x -> IterableUtils.size(x) == 1,
+											//
+											Util.toList(Util.filter(testAndApply(Objects::nonNull,
+													Util.getMethods(Util.getClass(selectedItem)), Arrays::stream, null),
+													m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getValue"),
+															m == null || m.getParameterCount() == 0)))
+											//
+											, x -> IterableUtils.get(x, 0), null),
+									Narcissus::invokeMethod, null))));
 					//
 				} // if
 					//
