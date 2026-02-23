@@ -890,7 +890,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			return false;
 			//
 		} // if
-			///
+			//
 		return instance.isDirectory();
 		//
 	}
