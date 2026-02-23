@@ -67,6 +67,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.LongPredicate;
+import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.ToDoubleFunction;
@@ -178,6 +179,7 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.rendering.PDFRendererUtil;
+import org.d2ab.function.ObjIntPredicate;
 import org.eclipse.jetty.http.HttpStatus;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -692,16 +694,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			tc.setCellRenderer(dtcr);
 			//
-			if (i == 0) {
-				//
-				tc.setMaxWidth(58);
-				//
-			} else {
-				//
-				tc.setMaxWidth(103);
-				//
-			} // if
-				//
+			testAndAccept((a, b) -> b == 0, tc, i, (a, b) -> setMaxWidth(a, 58));
+			//
+			testAndAccept((a, b) -> b == 1, tc, i, (a, b) -> setMaxWidth(a, 103));
+			//
 		} // for
 			//
 		setPreferredScrollableViewportSize(jTableStroke, new Dimension(
@@ -866,6 +862,23 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
 		//
+	}
+
+	private static void setMaxWidth(final TableColumn instance, final int maxWidth) {
+		if (instance != null) {
+			instance.setMaxWidth(maxWidth);
+		}
+	}
+
+	private static <E> void testAndAccept(final ObjIntPredicate<E> predicate, final E object, final int integer,
+			final ObjIntConsumer<E> consumer) {
+		//
+		if (predicate != null && predicate.test(object, integer) && consumer != null) {
+			//
+			consumer.accept(object, integer);
+			//
+		} // if
+			//
 	}
 
 	private static boolean isDirectory(final File instance) {

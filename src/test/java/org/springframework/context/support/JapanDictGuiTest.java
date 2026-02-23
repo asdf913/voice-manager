@@ -40,6 +40,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.LongPredicate;
+import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.DoubleStream;
@@ -98,6 +99,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
+import org.d2ab.function.ObjIntPredicate;
 import org.javatuples.Unit;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
@@ -141,12 +143,13 @@ class JapanDictGuiTest {
 
 	private static Method METHOD_TEST_AND_GET, METHOD_SET_TEXT, METHOD_STARTS_WITH, METHOD_APPEND,
 			METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG, METHOD_TEST_AND_ACCEPT5,
-			METHOD_TEST_AND_ACCEPT4_BI_PREDICATE, METHOD_GET_AUDIO_URL, METHOD_TEST_AND_RUN2, METHOD_TEST_AND_RUN3,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
-			METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES, METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL,
-			METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2, METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE,
-			METHOD_GET_COLUMN_NAME, METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND2,
-			METHOD_AND3, METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
+			METHOD_TEST_AND_ACCEPT_OBJECT_INTEGER, METHOD_TEST_AND_ACCEPT4_BI_PREDICATE, METHOD_GET_AUDIO_URL,
+			METHOD_TEST_AND_RUN2, METHOD_TEST_AND_RUN3, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_ENABLED,
+			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_TO_ARRAY, METHOD_GET_JLPT_LEVEL_INDICES,
+			METHOD_GET_JLPT_LEVEL, METHOD_SET_JCB_JLPT_LEVEL, METHOD_CHOP_IMAGE1, METHOD_CHOP_IMAGE2,
+			METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE, METHOD_GET_COLUMN_NAME,
+			METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND2, METHOD_AND3,
+			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
 			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_CREATE_TABLE_CELL_RENDERER,
 			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_FILTER,
 			METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW, METHOD_OR,
@@ -183,6 +186,9 @@ class JapanDictGuiTest {
 		//
 		(METHOD_TEST_AND_ACCEPT5 = Util.getDeclaredMethod(clz, "testAndAccept", BiPredicate.class, Object.class,
 				Object.class, FailableBiConsumer.class, Consumer.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT_OBJECT_INTEGER = Util.getDeclaredMethod(clz, "testAndAccept", ObjIntPredicate.class,
+				Object.class, Integer.TYPE, ObjIntConsumer.class)).setAccessible(true);
 		//
 		(METHOD_GET_AUDIO_URL = Util.getDeclaredMethod(clz, "getAudioUrl", String.class, Strings.class, Iterable.class))
 				.setAccessible(true);
@@ -498,6 +504,14 @@ class JapanDictGuiTest {
 				//
 				return floatValue;
 				//
+			} else if (proxy instanceof ObjIntPredicate) {
+				//
+				if (Objects.equals(name, "test")) {
+					//
+					return test;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -1223,6 +1237,11 @@ class JapanDictGuiTest {
 			//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT5, null, biPredicate, null, null,
 				Reflection.newProxy(FailableBiConsumer.class, ih), null));
+		//
+		// testAndAccept(org.d2ab.function.ObjIntPredicate,java.lang.Object,int,java.util.function.ObjIntConsumer)
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT_OBJECT_INTEGER, null,
+				Reflection.newProxy(ObjIntPredicate.class, ih), null, Integer.valueOf(1), null));
 		//
 	}
 
