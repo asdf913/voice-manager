@@ -870,9 +870,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private static boolean isDirectory(final File instance) {
 		//
-		if (instance == null
-				|| Boolean.logicalAnd(Objects.equals(OperatingSystemUtil.getOperatingSystem(), OperatingSystem.WINDOWS),
-						instance.getPath() == null)) {
+		if (instance == null || Boolean
+				.logicalAnd(IterableUtils.contains(Arrays.asList(OperatingSystem.WINDOWS, OperatingSystem.LINUX),
+						OperatingSystemUtil.getOperatingSystem()), instance.getPath() == null)) {
 			//
 			return false;
 			//
