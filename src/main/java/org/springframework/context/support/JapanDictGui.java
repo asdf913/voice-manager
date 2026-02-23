@@ -2138,12 +2138,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					final Object arg1 = ArrayUtils.get(args, 0);
 					//
-					if (!Util.containsKey(floatMap = ObjectUtils.getIfNull(floatMap, LinkedHashMap::new), arg1)) {
-						//
-						throw new IllegalStateException(Util.toString(arg1));
-						//
-					} // if
-						//
+					testAndRunThrows(
+							!Util.containsKey(floatMap = ObjectUtils.getIfNull(floatMap, LinkedHashMap::new), arg1),
+							() -> {
+								//
+								throw new IllegalStateException(Util.toString(arg1));
+								//
+							});
+					//
 					return Util.get(floatMap, arg1);
 					//
 				} else if (Objects.equals(name, "setFloat")) {
