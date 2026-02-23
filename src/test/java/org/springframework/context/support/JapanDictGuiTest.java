@@ -157,7 +157,8 @@ class JapanDictGuiTest {
 			METHOD_GET_MIN_MAX, METHOD_THEN_ACCEPT_ASYNC, METHOD_SET_STROKE_IMAGE_AND_STROKE_WITH_NUMBER_IMAGE,
 			METHOD_COPY_FIELD, METHOD_GET_LINK_MULTI_MAP_ELEMENT, METHOD_GET_LINK_MULTI_MAP_STRING,
 			METHOD_TEST_AND_RUN_THROWS, METHOD_CREATE_STRING_PD_RECTANGLE_ENTRY_LIST_CELL_RENDERER,
-			METHOD_SET_CBM_PD_RECTANGLE_SELECTED_ITEM, METHOD_SHOW_TEXT = null;
+			METHOD_SET_CBM_PD_RECTANGLE_SELECTED_ITEM, METHOD_SHOW_TEXT,
+			METHOD_CREATE_FONT_FILE_ENTRY_LIST_CELL_RENDERER = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -316,6 +317,9 @@ class JapanDictGuiTest {
 				Integer.TYPE, PDPageContentStream.class,
 				CLASS_FLOAT_MAP = Util.forName("org.springframework.context.support.JapanDictGui$FloatMap")))
 				.setAccessible(true);
+		//
+		(METHOD_CREATE_FONT_FILE_ENTRY_LIST_CELL_RENDERER = Util.getDeclaredMethod(clz,
+				"createFontFileEntryListCellRenderer", ListCellRenderer.class)).setAccessible(true);
 		//
 		CLASS_PITCH_ACCENT = Util.forName("org.springframework.context.support.JapanDictGui$PitchAccent");
 		//
@@ -734,6 +738,8 @@ class JapanDictGuiTest {
 						Boolean.logicalAnd(Objects.equals(name, "getSamplePdfByteArray"),
 								Arrays.equals(parameterTypes, new Class<?>[] {})),
 						Boolean.logicalAnd(Objects.equals(name, "createStringPDRectangleEntryListCellRenderer"),
+								Arrays.equals(parameterTypes, new Class<?>[] { ListCellRenderer.class })),
+						Boolean.logicalAnd(Objects.equals(name, "createFontFileEntryListCellRenderer"),
 								Arrays.equals(parameterTypes, new Class<?>[] { ListCellRenderer.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
@@ -965,6 +971,8 @@ class JapanDictGuiTest {
 						Boolean.logicalAnd(Objects.equals(name, "getSamplePdfByteArray"),
 								Arrays.equals(parameterTypes, new Class<?>[] {})),
 						Boolean.logicalAnd(Objects.equals(name, "createStringPDRectangleEntryListCellRenderer"),
+								Arrays.equals(parameterTypes, new Class<?>[] { ListCellRenderer.class })),
+						Boolean.logicalAnd(Objects.equals(name, "createFontFileEntryListCellRenderer"),
 								Arrays.equals(parameterTypes, new Class<?>[] { ListCellRenderer.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
@@ -2412,6 +2420,29 @@ class JapanDictGuiTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testCreateFontFileEntryListCellRenderer() throws Throwable {
+		//
+		final Object object = Narcissus.invokeStaticMethod(METHOD_CREATE_FONT_FILE_ENTRY_LIST_CELL_RENDERER,
+				(Object) null);
+		//
+		final Iterable<Method> ms = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(object)), Arrays::stream, null),
+				m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getListCellRendererComponent"), Arrays.equals(
+						Util.getParameterTypes(m),
+						new Class<?>[] { JList.class, Object.class, Integer.TYPE, Boolean.TYPE, Boolean.TYPE }))));
+		//
+		final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
+		//
+		Assertions.assertNotNull(method);
+		//
+		Assertions.assertNull(Narcissus.invokeMethod(object, method, null, null, 0, false, false));
+		//
+		Assertions.assertNotNull(
+				Narcissus.invokeMethod(object, method, null, Pair.of(new JLabel().getFont(), null), 0, false, false));
+		//
 	}
 
 }

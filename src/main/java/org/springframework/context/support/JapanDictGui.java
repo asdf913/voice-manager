@@ -89,7 +89,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -808,27 +807,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		final JComboBox<Entry<Font, File>> jcbFont = testAndApply(Objects::nonNull, cbmFont, JComboBox::new,
 				x -> new JComboBox<>());
 		//
-		final ListCellRenderer<? super Entry<Font, File>> lcr = Util.getRenderer(jcbFont);
-		//
-		setRenderer(jcbFont, new ListCellRenderer<>() {
-
-			@Override
-			public Component getListCellRendererComponent(final JList<? extends Entry<Font, File>> list,
-					final Entry<Font, File> value, final int index, final boolean isSelected,
-					final boolean cellHasFocus) {
-				//
-				final Font font = Util.getKey(value);
-				//
-				if (font != null) {
-					//
-					return new JLabel(font.getFamily());
-					//
-				} // if
-					//
-				return Util.getListCellRendererComponent(lcr, list, value, index, isSelected, cellHasFocus);
-				//
-			}
-		});
+		setRenderer(jcbFont, createFontFileEntryListCellRenderer(Util.getRenderer(jcbFont)));
 		//
 		add(this, jcbFont);
 		//
@@ -850,6 +829,25 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream,
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
+		//
+	}
+
+	private static ListCellRenderer<Entry<Font, File>> createFontFileEntryListCellRenderer(
+			final ListCellRenderer<? super Entry<Font, File>> lcr) {
+		//
+		return (list, value, index, isSelected, cellHasFocus) -> {
+			//
+			final Font font = Util.getKey(value);
+			//
+			if (font != null ) {
+				//
+				return new JLabel(font.getFamily());
+				//
+			} // if
+				//
+			return Util.getListCellRendererComponent(lcr, list, value, index, isSelected, cellHasFocus);
+			//
+		};
 		//
 	}
 
