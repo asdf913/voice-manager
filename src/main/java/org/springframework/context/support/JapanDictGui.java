@@ -637,7 +637,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} // if
 			//
-		jcbPitchAccent.setRenderer(createPitchAccentListCellRenderer(jcbPitchAccent, jcbPitchAccent.getRenderer(),
+		setRenderer(jcbPitchAccent, createPitchAccentListCellRenderer(jcbPitchAccent, jcbPitchAccent.getRenderer(),
 				Util.getPreferredSize(jcbPitchAccent)));
 		//
 		add(this, jcbPitchAccent, String.format("span %1$s", 5));
@@ -774,9 +774,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		Narcissus.setField(this, getFieldByName(this, "cbmPDRectangle"), Util.newInstance(
 				Util.getDeclaredConstructor(DefaultComboBoxModel.class, Object[].class), (Object) Util.toArray(list1)));
 		//
-		final JComboBox<Entry<String, PDRectangle>> jcbPDRectangle = new JComboBox<>(cbmPDRectangle);
+		final JComboBox<Entry<String, PDRectangle>> jcbPDRectangle = testAndApply(Objects::nonNull, cbmPDRectangle,
+				JComboBox::new, x -> new JComboBox<>());
 		//
-		jcbPDRectangle.setRenderer(createStringPDRectangleEntryListCellRenderer(Util.getRenderer(jcbPDRectangle)));
+		setRenderer(jcbPDRectangle, createStringPDRectangleEntryListCellRenderer(Util.getRenderer(jcbPDRectangle)));
 		//
 		add(this, jcbPDRectangle);
 		//
@@ -829,30 +830,26 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		final ListCellRenderer<? super Entry<Font, File>> lcr = Util.getRenderer(jcbFont);
 		//
-		if (jcbFont != null) {
-			//
-			jcbFont.setRenderer(new ListCellRenderer<>() {
+		setRenderer(jcbFont, new ListCellRenderer<>() {
 
-				@Override
-				public Component getListCellRendererComponent(final JList<? extends Entry<Font, File>> list,
-						final Entry<Font, File> value, final int index, final boolean isSelected,
-						final boolean cellHasFocus) {
+			@Override
+			public Component getListCellRendererComponent(final JList<? extends Entry<Font, File>> list,
+					final Entry<Font, File> value, final int index, final boolean isSelected,
+					final boolean cellHasFocus) {
+				//
+				final Font font = Util.getKey(value);
+				//
+				if (font != null) {
 					//
-					final Font font = Util.getKey(value);
+					return new JLabel(font.getFamily());
 					//
-					if (font != null) {
-						//
-						return new JLabel(font.getFamily());
-						//
-					} // if
-						//
-					return Util.getListCellRendererComponent(lcr, list, value, index, isSelected, cellHasFocus);
+				} // if
 					//
-				}
-			});
-			//
-		} // if
-			//
+				return Util.getListCellRendererComponent(lcr, list, value, index, isSelected, cellHasFocus);
+				//
+			}
+		});
+		//
 		add(this, jcbFont);
 		//
 		add(this, btnPdf = new JButton("PDF"));
@@ -874,6 +871,29 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
 		//
+	}
+
+	private static <E> void setRenderer(final JComboBox<E> instance, final ListCellRenderer<? super E> aRenderer) {
+		//
+		final Iterable<Field> fs = Util.collect(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), "objectLock")), Collectors.toList());
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f != null && Narcissus.getField(instance, f) != null) {
+			//
+			instance.setRenderer(aRenderer);
+			//
+		} // if
+			//
 	}
 
 	private static int compare(final Entry<String, PDRectangle> a, final Entry<String, PDRectangle> b) {
