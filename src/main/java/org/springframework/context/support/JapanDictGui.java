@@ -466,7 +466,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private transient ComboBoxModel<Entry<String, PDRectangle>> cbmPDRectangle = null;
 
-	private ComboBoxModel<Entry<Font, File>> cbmFont = null;
+	private transient ComboBoxModel<Entry<Font, File>> cbmFont = null;
 
 	private JapanDictGui() {
 	}
