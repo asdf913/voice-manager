@@ -684,15 +684,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		for (int i = 0; i < getColumnCount(tcmStroke); i++) {
 			//
-			if ((tc = getColumn(tcmStroke, i)) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
 			(dtcr = new DefaultTableCellRenderer()).setHorizontalAlignment(SwingConstants.RIGHT);
 			//
-			tc.setCellRenderer(dtcr);
+			setCellRenderer(tc = getColumn(tcmStroke, i), dtcr);
 			//
 			testAndAccept((a, b) -> b == 0, tc, i, (a, b) -> setMaxWidth(a, 58));
 			//
@@ -862,6 +856,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
 		//
+	}
+
+	private static void setCellRenderer(final TableColumn instance, final TableCellRenderer cellRenderer) {
+		if (instance != null) {
+			instance.setCellRenderer(cellRenderer);
+		}
 	}
 
 	private static void setMaxWidth(final TableColumn instance, final int maxWidth) {
