@@ -869,7 +869,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	private static boolean isDirectory(final File instance) {
-		return instance != null && instance.isDirectory();
+		//
+		if (instance == null
+				|| Boolean.logicalAnd(Objects.equals(OperatingSystemUtil.getOperatingSystem(), OperatingSystem.WINDOWS),
+						instance.getPath() == null)) {
+			//
+			return false;
+			//
+		} // if
+			///
+		return instance.isDirectory();
+		//
 	}
 
 	private static <E> void setRenderer(final JComboBox<E> instance, final ListCellRenderer<? super E> aRenderer) {
