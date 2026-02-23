@@ -683,7 +683,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			if (i == 0) {
 				//
-				tc.setCellRenderer(dtcr);
+				tc.setMaxWidth(58);
 				//
 			} else {
 				//
