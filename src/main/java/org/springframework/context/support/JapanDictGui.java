@@ -2948,12 +2948,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				if (and(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 						() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
 					//
+					final Stream<Method> ms = testAndApply(Objects::nonNull,
+							Util.getMethods(Util.getClass(selectedItem)), Arrays::stream, null);
+					//
 					final Method method = testAndApply(x -> IterableUtils.size(x) == 1,
 							//
-							Util.toList(Util.filter(
-									testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(selectedItem)),
-											Arrays::stream, null),
-									m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getValue"),
+							Util.toList(
+									Util.filter(ms, m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getValue"),
 											m == null || m.getParameterCount() == 0)))
 							//
 							, x -> IterableUtils.get(x, 0), null);
