@@ -31,6 +31,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -2870,8 +2871,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			Iterable<Method> ms = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(selectedItem)), Arrays::stream, null),
-					m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getValue"),
-							m == null || m.getParameterCount() == 0)));
+					m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getValue"), getParameterCount(m) == 0)));
 			//
 			try (final InputStream is = testAndApply(Objects::nonNull,
 					Util.cast(File.class, testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null),
@@ -2951,7 +2951,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 									testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(selectedItem)),
 											Arrays::stream, null),
 									m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getValue"),
-											m == null || m.getParameterCount() == 0)))
+											getParameterCount(m) == 0)))
 							//
 							, x -> IterableUtils.get(x, 0), null);
 					//
@@ -2979,6 +2979,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return false;
 		//
+	}
+
+	private static int getParameterCount(final Executable instance) {
+		return instance != null ? instance.getParameterCount() : 0;
 	}
 
 	@Nullable
@@ -4225,8 +4229,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				final Iterable<Method> ms = Util.toList(Util.filter(
 						testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(elementAt)), Arrays::stream, null),
-						m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getKey"),
-								m == null || m.getParameterCount() == 0)));
+						m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getKey"), getParameterCount(m) == 0)));
 				//
 				getKey = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
 				//
