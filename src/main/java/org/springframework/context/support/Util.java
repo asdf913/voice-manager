@@ -1887,7 +1887,7 @@ public abstract class Util {
 		}
 	}
 
-	static void clear(final Map<?, ?> instance) {
+	static void clear(@Nullable final Map<?, ?> instance) {
 		if (instance != null) {
 			instance.clear();
 		}
