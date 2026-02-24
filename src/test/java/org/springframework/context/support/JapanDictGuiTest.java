@@ -128,6 +128,7 @@ import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.BoundingBox;
+import com.sun.jna.Pointer;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import it.unimi.dsi.fastutil.chars.CharIntPair;
@@ -158,7 +159,7 @@ class JapanDictGuiTest {
 			METHOD_COPY_FIELD, METHOD_GET_LINK_MULTI_MAP_ELEMENT, METHOD_GET_LINK_MULTI_MAP_STRING,
 			METHOD_TEST_AND_RUN_THROWS, METHOD_CREATE_STRING_PD_RECTANGLE_ENTRY_LIST_CELL_RENDERER,
 			METHOD_SET_CBM_PD_RECTANGLE_SELECTED_ITEM, METHOD_SHOW_TEXT,
-			METHOD_CREATE_FONT_FILE_ENTRY_LIST_CELL_RENDERER = null;
+			METHOD_CREATE_FONT_FILE_ENTRY_LIST_CELL_RENDERER, METHOD_CF_STRING_TO_STRING = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -321,13 +322,17 @@ class JapanDictGuiTest {
 		(METHOD_CREATE_FONT_FILE_ENTRY_LIST_CELL_RENDERER = Util.getDeclaredMethod(clz,
 				"createFontFileEntryListCellRenderer", ListCellRenderer.class)).setAccessible(true);
 		//
+		(METHOD_CF_STRING_TO_STRING = Util.getDeclaredMethod(clz, "cfStringToString",
+				Util.forName("org.springframework.context.support.JapanDictGui$CoreFoundation"), Pointer.class))
+				.setAccessible(true);
+		//
 		CLASS_PITCH_ACCENT = Util.forName("org.springframework.context.support.JapanDictGui$PitchAccent");
 		//
 	}
 
 	private static class IH implements InvocationHandler {
 
-		private Boolean test, booleanValue, equals;
+		private Boolean test, booleanValue, equals, CFStringGetCString;
 
 		private Integer size, length, columnCount, sum;
 
@@ -336,6 +341,8 @@ class JapanDictGuiTest {
 		private Exception exception;
 
 		private Float floatValue;
+
+		private Long CFStringGetLength, CFStringGetMaximumSizeForEncoding;
 
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -517,6 +524,23 @@ class JapanDictGuiTest {
 				//
 				return name;
 				//
+			} else if (Objects.equals(method != null ? Util.getName(method.getDeclaringClass()) : null,
+					"org.springframework.context.support.JapanDictGui$CoreFoundation")) {
+				//
+				if (Objects.equals(name, "CFStringGetLength")) {
+					//
+					return CFStringGetLength;
+					//
+				} else if (Objects.equals(name, "CFStringGetMaximumSizeForEncoding")) {
+					//
+					return CFStringGetMaximumSizeForEncoding;
+					//
+				} else if (Objects.equals(name, "CFStringGetCString")) {
+					//
+					return CFStringGetCString;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -818,6 +842,16 @@ class JapanDictGuiTest {
 		//
 		Object result = null;
 		//
+		if (ih != null) {
+			//
+			ih.floatValue = Float.valueOf(0f);
+			//
+			ih.CFStringGetLength = ih.CFStringGetMaximumSizeForEncoding = Long.valueOf(0);
+			//
+			ih.CFStringGetCString = Boolean.FALSE;
+			//
+		} // if
+			//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ArrayUtils.get(ms, i)) == null || or(m.isSynthetic(),
@@ -905,12 +939,6 @@ class JapanDictGuiTest {
 				} // if
 					//
 			} // for
-				//
-			if (ih != null) {
-				//
-				ih.floatValue = Float.valueOf(0f);
-				//
-			} // if
 				//
 			os = toArray(collection);
 			//
@@ -2440,6 +2468,14 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertNotNull(
 				Narcissus.invokeMethod(object, method, null, Pair.of(new JLabel().getFont(), null), 0, false, false));
+		//
+	}
+
+	@Test
+	void testCfStringToString() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions
+				.assertNull(invoke(METHOD_CF_STRING_TO_STRING, null, null, Narcissus.allocateInstance(Pointer.class)));
 		//
 	}
 

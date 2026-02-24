@@ -44,7 +44,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.format.DateTimeParseException;
@@ -227,6 +226,10 @@ import com.microsoft.playwright.PageUtil;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.PlaywrightUtil;
 import com.microsoft.playwright.options.BoundingBox;
+import com.sun.jna.Library;
+import com.sun.jna.Memory;
+import com.sun.jna.Native;
+import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.KnownFolders;
 import com.sun.jna.platform.win32.Shell32Util;
 
@@ -474,6 +477,31 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	private JapanDictGui() {
 	}
 
+	private interface CoreText extends Library {
+
+		Pointer CTFontManagerCopyAvailableFontURLs();
+
+	}
+
+	private interface CoreFoundation extends Library {
+
+		void CFRelease(final Pointer obj);
+
+		long CFArrayGetCount(final Pointer array);
+
+		Pointer CFArrayGetValueAtIndex(final Pointer array, final long index);
+
+		Pointer CFURLGetString(final Pointer anURL);
+
+		long CFStringGetLength(final Pointer str);
+
+		long CFStringGetMaximumSizeForEncoding(final long length, final int encoding);
+
+		boolean CFStringGetCString(final Pointer theString, final Pointer buffer, final long bufferSize,
+				final int encoding);
+
+	}
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
@@ -628,7 +656,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		final JComboBox<PitchAccent> jcbPitchAccent = new JComboBox<>(mcbmPitchAccent = new DefaultComboBoxModel<>());
 		//
-		testAndRun(Objects.equals(Util.getName(Util.getClass(FileSystems.getDefault())), "sun.nio.fs.MacOSXFileSystem"),
+		final OperatingSystem operatingSystem = OperatingSystemUtil.getOperatingSystem();
+		//
+		testAndRun(Objects.equals(operatingSystem, OperatingSystem.MACOS),
 				() -> jcbPitchAccent.setUI(new MetalComboBoxUI()));
 		//
 		setRenderer(jcbPitchAccent, createPitchAccentListCellRenderer(jcbPitchAccent, jcbPitchAccent.getRenderer(),
@@ -767,7 +797,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		final List<Entry<Font, File>> list2 = new ArrayList<>();
 		//
-		if (Objects.equals(OperatingSystemUtil.getOperatingSystem(), OperatingSystem.WINDOWS)) {
+		File file = null;
+		//
+		Font font = null;
+		//
+		if (Objects.equals(operatingSystem, OperatingSystem.WINDOWS)) {
 			//
 			final IOFileFilter ioFileFilter = TrueFileFilter.INSTANCE;
 			//
@@ -775,10 +809,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					Util.toFile(testAndApply(Objects::nonNull,
 							Shell32Util.getKnownFolderPath(KnownFolders.FOLDERID_Fonts), Path::of, null)),
 					x -> FileUtils.listFiles(x, ioFileFilter, ioFileFilter), null);
-			//
-			File file = null;
-			//
-			Font font = null;
 			//
 			for (int i = 0; i < IterableUtils.size(iterable); i++) {
 				//
@@ -796,6 +826,80 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				} // if
 					//
 			} // for
+				//
+		} else if (Objects.equals(operatingSystem, OperatingSystem.MACOS)) {
+			//
+			final CoreFoundation coreFoundation = Native.load("CoreFoundation", CoreFoundation.class);
+			//
+			Pointer ctFontManagerCopyAvailableFontURLs = null;
+			//
+			try {
+				//
+				final CoreText coreText = Native.load("CoreText", CoreText.class);
+				//
+				if ((ctFontManagerCopyAvailableFontURLs = coreText != null
+						? coreText.CTFontManagerCopyAvailableFontURLs()
+						: null) != null && coreFoundation != null) {
+					//
+					final long cfArrayGetCount = coreFoundation.CFArrayGetCount(ctFontManagerCopyAvailableFontURLs);
+					//
+					ContentInfoUtil ciu = null;
+					//
+					TrueTypeFont ttf = null;
+					//
+					for (long i = 0; i < cfArrayGetCount; i++) {
+						//
+						if (Util.exists(
+								file = testAndApply(Objects::nonNull,
+										getPath(testAndApply(Objects::nonNull, cfStringToString(coreFoundation,
+												coreFoundation.CFURLGetString(coreFoundation.CFArrayGetValueAtIndex(
+														ctFontManagerCopyAvailableFontURLs, i))),
+												URI::new, null)),
+										File::new, null))
+								&& Util.isFile(file)) {
+							//
+							if (Objects
+									.equals(getMessage(
+											(((ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new)) != null)
+													? ciu.findMatch(file)
+													: null)),
+											"TrueType font data")
+									&& (font = Font.createFont(Font.TRUETYPE_FONT, file)) != null
+									&& font.canDisplay('あ')) {
+								//
+								try (final PDDocument document = new PDDocument();
+										final PDPageContentStream pageContentStream = new PDPageContentStream(document,
+												new PDPage());
+										final InputStream is = new FileInputStream(file)) {
+									//
+									if ((ttf = testAndApply(Objects::nonNull, is, new TTFParser()::parseEmbedded,
+											null)) == null || ttf.getOS2Windows() == null) {
+										//
+										continue;
+										//
+									} // if
+										//
+								} // try
+									//
+								Util.add(list2, Pair.of(font, file));
+								//
+							} // if
+								//
+						} // if
+							//
+					} // if
+						//
+				} // if
+					//
+			} finally {
+				//
+				if (coreFoundation != null) {
+					//
+					coreFoundation.CFRelease(ctFontManagerCopyAvailableFontURLs);
+					//
+				} // if
+					//
+			} // try
 				//
 		} // if
 			//
@@ -829,6 +933,39 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream,
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
+		//
+	}
+
+	private static String getPath(final URI instance) {
+		return instance != null ? instance.getPath() : null;
+	}
+
+	private static String cfStringToString(final CoreFoundation coreFoundation, final Pointer cfStr) {
+		//
+		if (cfStr == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final int kCFStringEncodingUTF8 = 0x08000100;
+		//
+		final long length = coreFoundation != null ? coreFoundation.CFStringGetLength(cfStr) : 0;
+		//
+		final long maxSize = (coreFoundation != null
+				? coreFoundation.CFStringGetMaximumSizeForEncoding(length, kCFStringEncodingUTF8)
+				: 0) + 1;
+		//
+		final Pointer buffer = new Memory(maxSize);
+		//
+		if (coreFoundation != null
+				&& coreFoundation.CFStringGetCString(cfStr, buffer, maxSize, kCFStringEncodingUTF8)) {
+			//
+			return buffer.getString(0, "UTF-8");
+			//
+		} // if
+			//
+		return null;
 		//
 	}
 
@@ -881,9 +1018,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private static boolean isDirectory(@Nullable final File instance) {
 		//
-		if (instance == null || Boolean
-				.logicalAnd(IterableUtils.contains(Arrays.asList(OperatingSystem.WINDOWS, OperatingSystem.LINUX),
-						OperatingSystemUtil.getOperatingSystem()), instance.getPath() == null)) {
+		if (instance == null
+				|| Boolean
+						.logicalAnd(
+								IterableUtils.contains(Arrays.asList(OperatingSystem.WINDOWS, OperatingSystem.LINUX,
+										OperatingSystem.MACOS), OperatingSystemUtil.getOperatingSystem()),
+								instance.getPath() == null)) {
 			//
 			return false;
 			//
