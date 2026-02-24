@@ -483,6 +483,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		Pointer CTFontManagerCopyAvailableFontURLs();
 
+		private static Pointer CTFontManagerCopyAvailableFontURLs(final CoreText instance) {
+			return instance != null ? instance.CTFontManagerCopyAvailableFontURLs() : null;
+		}
+
 	}
 
 	private interface CoreFoundation extends Library {
@@ -846,11 +850,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			try {
 				//
-				final CoreText coreText = Native.load("CoreText", CoreText.class);
-				//
-				if ((ctFontManagerCopyAvailableFontURLs = coreText != null
-						? coreText.CTFontManagerCopyAvailableFontURLs()
-						: null) != null && coreFoundation != null) {
+				if ((ctFontManagerCopyAvailableFontURLs = CoreText
+						.CTFontManagerCopyAvailableFontURLs(Native.load("CoreText", CoreText.class))) != null
+						&& coreFoundation != null) {
 					//
 					final long cfArrayGetCount = coreFoundation.CFArrayGetCount(ctFontManagerCopyAvailableFontURLs);
 					//

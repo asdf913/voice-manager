@@ -548,6 +548,15 @@ class JapanDictGuiTest {
 					//
 				} // if
 					//
+			} else if (Objects.equals(method != null ? Util.getName(method.getDeclaringClass()) : null,
+					"org.springframework.context.support.JapanDictGui$CoreText")) {
+				//
+				if (Objects.equals(name, "CTFontManagerCopyAvailableFontURLs")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -2497,8 +2506,6 @@ class JapanDictGuiTest {
 		//
 		Collection<Object> collection = null;
 		//
-		Object[] os = null;
-		//
 		String toString = null;
 		//
 		Class<?> parameterType = null;
@@ -2513,13 +2520,13 @@ class JapanDictGuiTest {
 				//
 				// null
 				//
-			os = toArray(Collections.nCopies(m.getParameterCount(), null));
-			//
 			toString = Util.toString(m);
 			//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
-				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				Assertions.assertNull(
+						Narcissus.invokeStaticMethod(m, toArray(Collections.nCopies(m.getParameterCount(), null))),
+						toString);
 				//
 			} // if
 				//
@@ -2550,11 +2557,71 @@ class JapanDictGuiTest {
 					//
 			} // for
 				//
-			os = toArray(collection);
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				Assertions.assertNull(Narcissus.invokeStaticMethod(m, toArray(collection)), toString);
+				//
+			} // if
+				//
+		} // for
+			//
+	}
+
+	@Test
+	void testCoreText() {
+		//
+		final Method[] ms = Util
+				.getDeclaredMethods(Util.forName("org.springframework.context.support.JapanDictGui$CoreText"));
+		//
+		Method m = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
+		Collection<Object> collection = null;
+		//
+		String toString = null;
+		//
+		Class<?> parameterType = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
+				//
+				continue;
+				//
+			} // if
+				//
+				// null
+				//
+			toString = Util.toString(m);
 			//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
-				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				Assertions.assertNull(
+						Narcissus.invokeStaticMethod(m, toArray(Collections.nCopies(m.getParameterCount(), null))),
+						toString);
+				//
+			} // if
+				//
+				// non-null
+				//
+			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
+			//
+			parameterTypes = m.getParameterTypes();
+			//
+			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
+				//
+				if (isInterface(parameterType = ArrayUtils.get(parameterTypes, j))) {
+					//
+					Util.add(collection, Reflection.newProxy(parameterType, ih));
+					//
+				} // if
+					//
+			} // for
+				//
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				Assertions.assertNull(Narcissus.invokeStaticMethod(m, toArray(collection)), toString);
 				//
 			} // if
 				//
