@@ -936,7 +936,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return instance != null ? instance.getPath() : null;
 	}
 
-	private static String cfStringToString(final CoreFoundation coreFoundation, final Pointer cfStr) {
+	private static String cfStringToString(@Nullable final CoreFoundation coreFoundation, final Pointer cfStr) {
 		//
 		if (cfStr == null) {
 			//
