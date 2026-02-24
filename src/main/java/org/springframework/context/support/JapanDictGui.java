@@ -932,11 +932,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static String getPath(final URI instance) {
+	private static String getPath(@Nullable final URI instance) {
 		return instance != null ? instance.getPath() : null;
 	}
 
-	private static String cfStringToString(@Nullable final CoreFoundation coreFoundation, final Pointer cfStr) {
+	private static String cfStringToString(@Nullable final CoreFoundation coreFoundation,
+			@Nullable final Pointer cfStr) {
 		//
 		if (cfStr == null) {
 			//
