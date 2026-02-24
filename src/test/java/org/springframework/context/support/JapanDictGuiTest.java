@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -92,6 +93,8 @@ import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.fontbox.ttf.OTFParser;
+import org.apache.fontbox.ttf.TrueTypeFont;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -123,6 +126,8 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.reflect.Reflection;
+import com.j256.simplemagic.ContentInfo;
+import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Locator;
@@ -159,7 +164,7 @@ class JapanDictGuiTest {
 			METHOD_COPY_FIELD, METHOD_GET_LINK_MULTI_MAP_ELEMENT, METHOD_GET_LINK_MULTI_MAP_STRING,
 			METHOD_TEST_AND_RUN_THROWS, METHOD_CREATE_STRING_PD_RECTANGLE_ENTRY_LIST_CELL_RENDERER,
 			METHOD_SET_CBM_PD_RECTANGLE_SELECTED_ITEM, METHOD_SHOW_TEXT,
-			METHOD_CREATE_FONT_FILE_ENTRY_LIST_CELL_RENDERER, METHOD_CF_STRING_TO_STRING = null;
+			METHOD_CREATE_FONT_FILE_ENTRY_LIST_CELL_RENDERER, METHOD_CF_STRING_TO_STRING, METHOD_GET_OS2_WINDOWS = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -325,6 +330,8 @@ class JapanDictGuiTest {
 		(METHOD_CF_STRING_TO_STRING = Util.getDeclaredMethod(clz, "cfStringToString",
 				CLASS_CORE_FOUNDATION = Util.forName("org.springframework.context.support.JapanDictGui$CoreFoundation"),
 				Pointer.class)).setAccessible(true);
+		//
+		(METHOD_GET_OS2_WINDOWS = Util.getDeclaredMethod(clz, "getOS2Windows", TrueTypeFont.class)).setAccessible(true);
 		//
 		CLASS_PITCH_ACCENT = Util.forName("org.springframework.context.support.JapanDictGui$PitchAccent");
 		//
@@ -2553,6 +2560,36 @@ class JapanDictGuiTest {
 				//
 		} // for
 			//
+	}
+
+	@Test
+	void testGetOS2Windows() throws Throwable {
+		//
+		try (final InputStream is = Util.getResourceAsStream(JapanDictGui.class, "/NotoSansCJKjp-Regular.otf")) {
+			//
+			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
+			//
+			try (final ByteArrayInputStream bais = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new,
+					null)) {
+				//
+				Assertions
+						.assertNotNull(invoke(METHOD_GET_OS2_WINDOWS, null,
+								testAndApply(
+										x -> Boolean.logicalAnd(x != null,
+												StringsUtil.equals(Strings.CI,
+														getName(bs != null ? new ContentInfoUtil().findMatch(bs)
+																: null),
+														"OpenType")),
+										bais, new OTFParser()::parseEmbedded, null)));
+				//
+			} // try
+				//
+		} // try
+			//
+	}
+
+	private static String getName(final ContentInfo instance) {
+		return instance != null ? instance.getName() : null;
 	}
 
 }

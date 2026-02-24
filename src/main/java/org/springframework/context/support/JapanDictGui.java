@@ -145,6 +145,7 @@ import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.commons.validator.routines.UrlValidatorUtil;
+import org.apache.fontbox.ttf.OS2WindowsMetricsTable;
 import org.apache.fontbox.ttf.OTFParser;
 import org.apache.fontbox.ttf.TTFParser;
 import org.apache.fontbox.ttf.TrueTypeFont;
@@ -852,8 +853,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					ContentInfoUtil ciu = null;
 					//
-					TrueTypeFont ttf = null;
-					//
 					for (long i = 0; i < cfArrayGetCount; i++) {
 						//
 						if (Util.exists(
@@ -876,8 +875,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 											new PDPage());
 									final InputStream is = Files.newInputStream(Util.toPath(file))) {
 								//
-								if ((ttf = testAndApply(Objects::nonNull, is, new TTFParser()::parseEmbedded,
-										null)) == null || ttf.getOS2Windows() == null) {
+								if (getOS2Windows(testAndApply(Objects::nonNull, is, new TTFParser()::parseEmbedded,
+										null)) == null) {
 									//
 									continue;
 									//
@@ -931,6 +930,20 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream,
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
+		//
+	}
+
+	private static OS2WindowsMetricsTable getOS2Windows(final TrueTypeFont instance) throws IOException {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Field f = getFieldByName(instance, "tables");
+		//
+		return f != null && Narcissus.getField(instance, f) != null ? instance.getOS2Windows() : null;
 		//
 	}
 
