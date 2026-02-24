@@ -857,35 +857,30 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 														ctFontManagerCopyAvailableFontURLs, i))),
 												URI::new, null)),
 										File::new, null))
-								&& Util.isFile(file)) {
+								&& Util.isFile(file)
+								&& Objects.equals(
+										getMessage((((ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new)) != null)
+												? ciu.findMatch(file)
+												: null)),
+										"TrueType font data")
+								&& (font = Font.createFont(Font.TRUETYPE_FONT, file)) != null && font.canDisplay('あ')) {
 							//
-							if (Objects
-									.equals(getMessage(
-											(((ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new)) != null)
-													? ciu.findMatch(file)
-													: null)),
-											"TrueType font data")
-									&& (font = Font.createFont(Font.TRUETYPE_FONT, file)) != null
-									&& font.canDisplay('あ')) {
+							try (final PDDocument document = new PDDocument();
+									final PDPageContentStream pageContentStream = new PDPageContentStream(document,
+											new PDPage());
+									final InputStream is = Files.newInputStream(Util.toPath(file))) {
 								//
-								try (final PDDocument document = new PDDocument();
-										final PDPageContentStream pageContentStream = new PDPageContentStream(document,
-												new PDPage());
-										final InputStream is = Files.newInputStream(Util.toPath(file))) {
+								if ((ttf = testAndApply(Objects::nonNull, is, new TTFParser()::parseEmbedded,
+										null)) == null || ttf.getOS2Windows() == null) {
 									//
-									if ((ttf = testAndApply(Objects::nonNull, is, new TTFParser()::parseEmbedded,
-											null)) == null || ttf.getOS2Windows() == null) {
-										//
-										continue;
-										//
-									} // if
-										//
-								} // try
+									continue;
 									//
-								Util.add(list2, Pair.of(font, file));
+								} // if
+									//
+							} // try
 								//
-							} // if
-								//
+							Util.add(list2, Pair.of(font, file));
+							//
 						} // if
 							//
 					} // if
