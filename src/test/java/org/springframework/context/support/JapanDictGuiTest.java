@@ -141,7 +141,7 @@ class JapanDictGuiTest {
 
 	private static final int ONE = 1;
 
-	private static Class<?> CLASS_JAPAN_DICT_ENTRY, CLASS_PITCH_ACCENT, CLASS_FLOAT_MAP;
+	private static Class<?> CLASS_JAPAN_DICT_ENTRY, CLASS_PITCH_ACCENT, CLASS_FLOAT_MAP, CLASS_CORE_FOUNDATION;
 
 	private static Method METHOD_TEST_AND_GET, METHOD_SET_TEXT, METHOD_STARTS_WITH, METHOD_APPEND,
 			METHOD_TEST_AND_ACCEPT3_OBJECT, METHOD_TEST_AND_ACCEPT3_LONG, METHOD_TEST_AND_ACCEPT5,
@@ -323,8 +323,8 @@ class JapanDictGuiTest {
 				"createFontFileEntryListCellRenderer", ListCellRenderer.class)).setAccessible(true);
 		//
 		(METHOD_CF_STRING_TO_STRING = Util.getDeclaredMethod(clz, "cfStringToString",
-				Util.forName("org.springframework.context.support.JapanDictGui$CoreFoundation"), Pointer.class))
-				.setAccessible(true);
+				CLASS_CORE_FOUNDATION = Util.forName("org.springframework.context.support.JapanDictGui$CoreFoundation"),
+				Pointer.class)).setAccessible(true);
 		//
 		CLASS_PITCH_ACCENT = Util.forName("org.springframework.context.support.JapanDictGui$PitchAccent");
 		//
@@ -2477,6 +2477,82 @@ class JapanDictGuiTest {
 		Assertions
 				.assertNull(invoke(METHOD_CF_STRING_TO_STRING, null, null, Narcissus.allocateInstance(Pointer.class)));
 		//
+	}
+
+	@Test
+	void testCoreFoundation() {
+		//
+		final Method[] ms = Util.getDeclaredMethods(CLASS_CORE_FOUNDATION);
+		//
+		Method m = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
+		Collection<Object> collection = null;
+		//
+		Object[] os = null;
+		//
+		String toString = null;
+		//
+		Class<?> parameterType = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
+				//
+				continue;
+				//
+			} // if
+				//
+				// null
+				//
+			os = toArray(Collections.nCopies(m.getParameterCount(), null));
+			//
+			toString = Util.toString(m);
+			//
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				//
+			} // if
+				//
+				// non-null
+				//
+			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
+			//
+			parameterTypes = m.getParameterTypes();
+			//
+			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
+				//
+				if (Objects.equals(parameterType = ArrayUtils.get(parameterTypes, j), Long.TYPE)) {
+					//
+					Util.add(collection, Long.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Integer.TYPE)) {
+					//
+					Util.add(collection, Integer.valueOf(0));
+					//
+				} else if (isInterface(parameterType)) {
+					//
+					Util.add(collection, Reflection.newProxy(parameterType, ih));
+					//
+				} else {
+					Util.add(collection, Narcissus.allocateInstance(parameterType));
+					//
+				} // if
+					//
+			} // for
+				//
+			os = toArray(collection);
+			//
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				//
+			} // if
+				//
+		} // for
+			//
 	}
 
 }
