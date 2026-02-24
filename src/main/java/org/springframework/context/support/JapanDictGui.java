@@ -809,6 +809,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		Font font = null;
 		//
+		ContentInfoUtil ciu = null;
+		//
 		if (Objects.equals(operatingSystem, OperatingSystem.WINDOWS)) {
 			//
 			final IOFileFilter ioFileFilter = TrueFileFilter.INSTANCE;
@@ -826,8 +828,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 				} // if
 					//
-				if (Objects.equals(getMessage(new ContentInfoUtil().findMatch(file)), "TrueType font data")
-						&& (font = Font.createFont(Font.TRUETYPE_FONT, file)) != null && font.canDisplay('あ')) {
+				if (Objects.equals(getMessage(findMatch(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), file)),
+						"TrueType font data") && (font = Font.createFont(Font.TRUETYPE_FONT, file)) != null
+						&& font.canDisplay('あ')) {
 					//
 					Util.add(list2, Pair.of(font, file));
 					//
@@ -851,8 +854,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					final long cfArrayGetCount = coreFoundation.CFArrayGetCount(ctFontManagerCopyAvailableFontURLs);
 					//
-					ContentInfoUtil ciu = null;
-					//
 					for (long i = 0; i < cfArrayGetCount; i++) {
 						//
 						if (Util.exists(
@@ -863,10 +864,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 												URI::new, null)),
 										File::new, null))
 								&& Util.isFile(file)
-								&& Objects.equals(
-										getMessage((((ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new)) != null)
-												? ciu.findMatch(file)
-												: null)),
+								&& Objects.equals(getMessage(
+										findMatch(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), file)),
 										"TrueType font data")
 								&& (font = Font.createFont(Font.TRUETYPE_FONT, file)) != null && font.canDisplay('あ')) {
 							//
@@ -930,6 +929,23 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream,
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
+		//
+	}
+
+	private static ContentInfo findMatch(final ContentInfoUtil instance, final File file) throws IOException {
+		//
+		if (instance == null || file == null
+				|| Boolean
+						.logicalAnd(
+								IterableUtils.contains(Arrays.asList(OperatingSystem.WINDOWS, OperatingSystem.LINUX,
+										OperatingSystem.MACOS), OperatingSystemUtil.getOperatingSystem()),
+								file.getPath() == null)) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance.findMatch(file);
 		//
 	}
 
