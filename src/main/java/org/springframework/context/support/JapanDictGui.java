@@ -44,6 +44,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.format.DateTimeParseException;
@@ -870,7 +871,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 								try (final PDDocument document = new PDDocument();
 										final PDPageContentStream pageContentStream = new PDPageContentStream(document,
 												new PDPage());
-										final InputStream is = new FileInputStream(file)) {
+										final InputStream is = Files.newInputStream(Util.toPath(file))) {
 									//
 									if ((ttf = testAndApply(Objects::nonNull, is, new TTFParser()::parseEmbedded,
 											null)) == null || ttf.getOS2Windows() == null) {
