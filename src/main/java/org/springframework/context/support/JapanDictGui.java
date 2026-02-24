@@ -955,14 +955,16 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				? coreFoundation.CFStringGetMaximumSizeForEncoding(length, kCFStringEncodingUTF8)
 				: 0) + 1;
 		//
-		final Pointer buffer = new Memory(maxSize);
-		//
-		if (coreFoundation != null
-				&& coreFoundation.CFStringGetCString(cfStr, buffer, maxSize, kCFStringEncodingUTF8)) {
+		try (final Memory buffer = new Memory(maxSize)) {
 			//
-			return buffer.getString(0, "UTF-8");
-			//
-		} // if
+			if (coreFoundation != null
+					&& coreFoundation.CFStringGetCString(cfStr, buffer, maxSize, kCFStringEncodingUTF8)) {
+				//
+				return buffer.getString(0, "UTF-8");
+				//
+			} // if
+				//
+		} // try
 			//
 		return null;
 		//
