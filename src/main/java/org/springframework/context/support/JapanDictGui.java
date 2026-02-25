@@ -483,7 +483,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		Pointer CTFontManagerCopyAvailableFontURLs();
 
-		private static Pointer CTFontManagerCopyAvailableFontURLs(final CoreText instance) {
+		private static Pointer CTFontManagerCopyAvailableFontURLs(@Nullable final CoreText instance) {
 			return instance != null ? instance.CTFontManagerCopyAvailableFontURLs() : null;
 		}
 
@@ -973,7 +973,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static OS2WindowsMetricsTable getOS2Windows(final TrueTypeFont instance) throws IOException {
+	private static OS2WindowsMetricsTable getOS2Windows(@Nullable final TrueTypeFont instance) throws IOException {
 		//
 		if (instance == null) {
 			//
