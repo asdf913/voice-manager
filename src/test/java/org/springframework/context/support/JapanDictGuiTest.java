@@ -555,14 +555,11 @@ class JapanDictGuiTest {
 				} // if
 					//
 			} else if (Objects.equals(method != null ? Util.getName(method.getDeclaringClass()) : null,
-					"org.springframework.context.support.JapanDictGui$CoreText")) {
+					"org.springframework.context.support.JapanDictGui$CoreText")
+					&& Objects.equals(name, "CTFontManagerCopyAvailableFontURLs")) {
 				//
-				if (Objects.equals(name, "CTFontManagerCopyAvailableFontURLs")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
@@ -1164,34 +1161,31 @@ class JapanDictGuiTest {
 						//
 					} // if
 						//
-				} else if (instruction instanceof GETSTATIC getstatic) {
+				} else if (instruction instanceof GETSTATIC getstatic
+						&& Objects.equals(TypeUtil.getClassName(getstatic.getReferenceType(cpg)),
+								"org.oxbow.swingbits.util.OperatingSystem")) {
 					//
-					if (Objects.equals(TypeUtil.getClassName(getstatic.getReferenceType(cpg)),
-							"org.oxbow.swingbits.util.OperatingSystem")) {
+					if (IterableUtils.size(collection) > 1) {
 						//
-						if (IterableUtils.size(collection) > 1) {
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					final OperatingSystem[] values = OperatingSystem.values();
+					//
+					OperatingSystem value = null;
+					//
+					for (int j = 0; values != null && j < values.length; j++) {
+						//
+						if (Objects.equals(Util.name(value = ArrayUtils.get(values, j)), getstatic.getFieldName(cpg))
+								&& !Util.contains(collection = ObjectUtils.getIfNull(collection, ArrayList::new),
+										value)) {
 							//
-							throw new IllegalStateException();
+							Util.add(collection, value);
 							//
 						} // if
 							//
-						final OperatingSystem[] values = OperatingSystem.values();
-						//
-						OperatingSystem value = null;
-						//
-						for (int j = 0; values != null && j < values.length; j++) {
-							//
-							if (Objects.equals(Util.name(value = ArrayUtils.get(values, j)),
-									getstatic.getFieldName(cpg))
-									&& !Util.contains(collection = ObjectUtils.getIfNull(collection, ArrayList::new),
-											value)) {
-								//
-								Util.add(collection, value);
-								//
-							} // if
-								//
-						} // for
-					} // if
+					} // for
 						//
 				} // if
 					//
