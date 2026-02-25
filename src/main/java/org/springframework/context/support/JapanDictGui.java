@@ -956,7 +956,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static ContentInfo findMatch(final ContentInfoUtil instance, final File file) throws IOException {
+	private static ContentInfo findMatch(@Nullable final ContentInfoUtil instance, @Nullable final File file)
+			throws IOException {
 		//
 		if (instance == null || file == null
 				|| Boolean
