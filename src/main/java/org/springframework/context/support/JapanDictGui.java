@@ -483,6 +483,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		Pointer CTFontManagerCopyAvailableFontURLs();
 
+		@Nullable
 		private static Pointer CTFontManagerCopyAvailableFontURLs(@Nullable final CoreText instance) {
 			return instance != null ? instance.CTFontManagerCopyAvailableFontURLs() : null;
 		}
