@@ -506,7 +506,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		boolean CFStringGetCString(final Pointer theString, final Pointer buffer, final long bufferSize,
 				final int encoding);
 
-		private static void CFRelease(@Nullable final CoreFoundation instance, final Pointer obj) {
+		private static void CFRelease(@Nullable final CoreFoundation instance, @Nullable final Pointer obj) {
 			if (instance != null) {
 				instance.CFRelease(obj);
 			}
