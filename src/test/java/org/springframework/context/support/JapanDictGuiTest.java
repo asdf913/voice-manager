@@ -688,6 +688,8 @@ class JapanDictGuiTest {
 			//
 		} // if
 			//
+		OperatingSystem operatingSystemTemp = null;
+		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()
@@ -761,8 +763,8 @@ class JapanDictGuiTest {
 					//
 				result = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Objects.equals(OperatingSystemUtil.getOperatingSystem(),
-						getOperatingSystem(Util.getClass(instance), m))) {
+				if ((operatingSystemTemp = getOperatingSystem(Util.getClass(instance), m)) != null
+						&& !Objects.equals(OperatingSystemUtil.getOperatingSystem(), operatingSystemTemp)) {
 					//
 					Assertions.assertNull(result, toString);
 					//
@@ -886,6 +888,8 @@ class JapanDictGuiTest {
 			//
 		} // if
 			//
+		OperatingSystem operatingSystemTemp = null;
+		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ArrayUtils.get(ms, i)) == null || or(m.isSynthetic(),
@@ -994,8 +998,8 @@ class JapanDictGuiTest {
 					//
 				result = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Objects.equals(OperatingSystemUtil.getOperatingSystem(),
-						getOperatingSystem(Util.getClass(instance), m))) {
+				if ((operatingSystemTemp = getOperatingSystem(Util.getClass(instance), m)) != null
+						&& !Objects.equals(OperatingSystemUtil.getOperatingSystem(), operatingSystemTemp)) {
 					//
 					Assertions.assertNull(result, toString);
 					//
