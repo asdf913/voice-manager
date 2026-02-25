@@ -808,70 +808,57 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		// java.awt.Font
 		//
-		final List<Entry<Font, File>> list2 = new ArrayList<>();
+		Iterable<File> files = null;
 		//
+		if (Objects.equals(operatingSystem, OperatingSystem.WINDOWS)) {
+			//
+			final IOFileFilter ioFileFilter = TrueFileFilter.INSTANCE;
+			//
+			files = testAndApply(x -> and(x, Util::exists, JapanDictGui::isDirectory),
+					Util.toFile(testAndApply(Objects::nonNull,
+							Shell32Util.getKnownFolderPath(KnownFolders.FOLDERID_Fonts), Path::of, null)),
+					x -> FileUtils.listFiles(x, ioFileFilter, ioFileFilter), null);
+			//
+		} else if (Objects.equals(operatingSystem, OperatingSystem.MACOS)) {
+			//
+			files = CTFontManagerCopyAvailableFontURLs();
+			//
+		} // if
+			//
 		File file = null;
 		//
 		Font font = null;
 		//
 		ContentInfoUtil ciu = null;
 		//
-		if (Objects.equals(operatingSystem, OperatingSystem.WINDOWS)) {
+		final List<Entry<Font, File>> list2 = new ArrayList<>();
+		//
+		for (int i = 0; i < IterableUtils.size(files); i++) {
 			//
-			final IOFileFilter ioFileFilter = TrueFileFilter.INSTANCE;
-			//
-			final Iterable<File> iterable = testAndApply(x -> and(x, Util::exists, JapanDictGui::isDirectory),
-					Util.toFile(testAndApply(Objects::nonNull,
-							Shell32Util.getKnownFolderPath(KnownFolders.FOLDERID_Fonts), Path::of, null)),
-					x -> FileUtils.listFiles(x, ioFileFilter, ioFileFilter), null);
-			//
-			for (int i = 0; i < IterableUtils.size(iterable); i++) {
+			if (Util.exists(file = IterableUtils.get(files, i)) && Util.isFile(file)
+					&& Objects.equals(
+							getMessage(findMatch(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), file)),
+							"TrueType font data")
+					&& (font = Font.createFont(Font.TRUETYPE_FONT, file)) != null && font.canDisplay('あ')) {
 				//
-				if (Util.exists(file = IterableUtils.get(iterable, i)) && Util.isFile(file)
-						&& Objects.equals(
-								getMessage(findMatch(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), file)),
-								"TrueType font data")
-						&& (font = Font.createFont(Font.TRUETYPE_FONT, file)) != null && font.canDisplay('あ')) {
+				try (final PDDocument document = new PDDocument();
+						final PDPageContentStream pageContentStream = new PDPageContentStream(document, new PDPage());
+						final InputStream is = Files.newInputStream(Util.toPath(file))) {
 					//
-					Util.add(list2, Pair.of(font, file));
-					//
-				} // if
-					//
-			} // for
-				//
-		} else if (Objects.equals(operatingSystem, OperatingSystem.MACOS)) {
-			//
-			final Iterable<File> files = CTFontManagerCopyAvailableFontURLs();
-			//
-			for (int i = 0; i < IterableUtils.size(files); i++) {
-				//
-				if (Util.exists(file = IterableUtils.get(files, i)) && Util.isFile(file)
-						&& Objects.equals(
-								getMessage(findMatch(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), file)),
-								"TrueType font data")
-						&& (font = Font.createFont(Font.TRUETYPE_FONT, file)) != null && font.canDisplay('あ')) {
-					//
-					try (final PDDocument document = new PDDocument();
-							final PDPageContentStream pageContentStream = new PDPageContentStream(document,
-									new PDPage());
-							final InputStream is = Files.newInputStream(Util.toPath(file))) {
+					if (getOS2Windows(
+							testAndApply(Objects::nonNull, is, new TTFParser()::parseEmbedded, null)) == null) {
 						//
-						if (getOS2Windows(
-								testAndApply(Objects::nonNull, is, new TTFParser()::parseEmbedded, null)) == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-					} // try
+						continue;
 						//
-					Util.add(list2, Pair.of(font, file));
+					} // if
+						//
+				} // try
 					//
-				} // if
-					//
-			} // for
+				Util.add(list2, Pair.of(font, file));
 				//
-		} // if
+			} // if
+				//
+		} // for
 			//
 		list2.add(0, null);
 		//
