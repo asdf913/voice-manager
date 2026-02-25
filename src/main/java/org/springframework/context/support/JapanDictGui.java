@@ -942,7 +942,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 											URI::new, null)),
 									File::new, null));
 					//
-				} // if
+				} // for
 					//
 			} // if
 				//
