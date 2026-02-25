@@ -110,7 +110,6 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.d2ab.function.ObjIntPredicate;
 import org.javatuples.Unit;
-import org.javatuples.valueintf.IValue0;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -1123,13 +1122,9 @@ class JapanDictGuiTest {
 				//
 			} // if
 				//
-			System.out.println(method);
-			//
 			Instruction instruction = null;
 			//
 			ConstantPoolGen cpg = null;
-			//
-			IValue0<OperatingSystem> operatingSystem = null;
 			//
 			Collection<OperatingSystem> collection = null;
 			//
@@ -1147,16 +1142,20 @@ class JapanDictGuiTest {
 				if (instruction instanceof INVOKESTATIC invokestatic) {
 					//
 					if (Boolean.logicalOr(
+							//
 							// org.oxbow.swingbits.util.OperatingSystemUtil.getOperatingSystem()
+							//
 							Boolean.logicalAnd(i == 0,
 									!Util.and(
 											Objects.equals(invokestatic.getClassName(cpg),
 													"org.oxbow.swingbits.util.OperatingSystemUtil"),
 											Objects.equals(invokestatic.getMethodName(cpg), "getOperatingSystem"),
 											Objects.equals(Arrays.toString(invokestatic.getArgumentTypes(cpg)), "[]"))),
-							// java.lang.Objects.equals(java.lang.Object,java.lang.Object)
+							//
+							// java.util.Objects.equals(java.lang.Object,java.lang.Object)
+							//
 							Boolean.logicalAnd(i == 2,
-									!Util.and(Objects.equals(invokestatic.getClassName(cpg), "java.lang.Objects"),
+									!Util.and(Objects.equals(invokestatic.getClassName(cpg), "java.util.Objects"),
 											Objects.equals(invokestatic.getMethodName(cpg), "equals"),
 											Objects.equals(Arrays.toString(invokestatic.getArgumentTypes(cpg)),
 													"[java.lang.Object, java.lang.Object]"))))) {
@@ -1170,7 +1169,7 @@ class JapanDictGuiTest {
 					if (Objects.equals(TypeUtil.getClassName(getstatic.getReferenceType(cpg)),
 							"org.oxbow.swingbits.util.OperatingSystem")) {
 						//
-						if (operatingSystem != null) {
+						if (IterableUtils.size(collection) > 1) {
 							//
 							throw new IllegalStateException();
 							//
@@ -1194,19 +1193,13 @@ class JapanDictGuiTest {
 						} // for
 					} // if
 						//
-					System.out.println(i + " " + getstatic.getReferenceType(cpg) + "." + getstatic.getFieldName(cpg));
-					//
-				} else {
-					//
-					System.out.println(i + " " + instruction);
-					//
 				} // if
 					//
 				if (instruction instanceof ARETURN) {
 					//
-					return null;
+					break;
 					//
-				} //
+				} // if
 					//
 			} // for
 				//
