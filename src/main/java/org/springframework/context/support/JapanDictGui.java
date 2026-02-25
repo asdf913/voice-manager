@@ -844,60 +844,35 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} else if (Objects.equals(operatingSystem, OperatingSystem.MACOS)) {
 			//
-			final CoreFoundation coreFoundation = Native.load("CoreFoundation", CoreFoundation.class);
+			final Iterable<File> files = CTFontManagerCopyAvailableFontURLs();
 			//
-			Pointer ctFontManagerCopyAvailableFontURLs = null;
-			//
-			try {
+			for (int i = 0; i < IterableUtils.size(files); i++) {
 				//
-				if ((ctFontManagerCopyAvailableFontURLs = CoreText
-						.CTFontManagerCopyAvailableFontURLs(Native.load("CoreText", CoreText.class))) != null
-						&& coreFoundation != null) {
+				if (Util.exists(file = IterableUtils.get(files, i)) && Util.isFile(file)
+						&& Objects.equals(
+								getMessage(findMatch(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), file)),
+								"TrueType font data")
+						&& (font = Font.createFont(Font.TRUETYPE_FONT, file)) != null && font.canDisplay('あ')) {
 					//
-					final long cfArrayGetCount = coreFoundation.CFArrayGetCount(ctFontManagerCopyAvailableFontURLs);
-					//
-					for (long i = 0; i < cfArrayGetCount; i++) {
+					try (final PDDocument document = new PDDocument();
+							final PDPageContentStream pageContentStream = new PDPageContentStream(document,
+									new PDPage());
+							final InputStream is = Files.newInputStream(Util.toPath(file))) {
 						//
-						if (Util.exists(
-								file = testAndApply(Objects::nonNull,
-										getPath(testAndApply(Objects::nonNull, cfStringToString(coreFoundation,
-												coreFoundation.CFURLGetString(coreFoundation.CFArrayGetValueAtIndex(
-														ctFontManagerCopyAvailableFontURLs, i))),
-												URI::new, null)),
-										File::new, null))
-								&& Util.isFile(file)
-								&& Objects.equals(getMessage(
-										findMatch(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), file)),
-										"TrueType font data")
-								&& (font = Font.createFont(Font.TRUETYPE_FONT, file)) != null && font.canDisplay('あ')) {
+						if (getOS2Windows(
+								testAndApply(Objects::nonNull, is, new TTFParser()::parseEmbedded, null)) == null) {
 							//
-							try (final PDDocument document = new PDDocument();
-									final PDPageContentStream pageContentStream = new PDPageContentStream(document,
-											new PDPage());
-									final InputStream is = Files.newInputStream(Util.toPath(file))) {
-								//
-								if (getOS2Windows(testAndApply(Objects::nonNull, is, new TTFParser()::parseEmbedded,
-										null)) == null) {
-									//
-									continue;
-									//
-								} // if
-									//
-							} // try
-								//
-							Util.add(list2, Pair.of(font, file));
+							continue;
 							//
 						} // if
 							//
-					} // if
+					} // try
 						//
+					Util.add(list2, Pair.of(font, file));
+					//
 				} // if
 					//
-			} finally {
-				//
-				CoreFoundation.CFRelease(coreFoundation, ctFontManagerCopyAvailableFontURLs);
-				//
-			} // try
+			} // for
 				//
 		} // if
 			//
@@ -931,6 +906,53 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream,
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
+		//
+	}
+
+	private static Iterable<File> CTFontManagerCopyAvailableFontURLs() throws URISyntaxException {
+		//
+		if (!Objects.equals(OperatingSystemUtil.getOperatingSystem(), OperatingSystem.MACOS)) {
+			//
+			return null;
+			//
+		} // if
+			//
+		List<File> list = null;
+		//
+		final CoreFoundation coreFoundation = Native.load("CoreFoundation", CoreFoundation.class);
+		//
+		Pointer ctFontManagerCopyAvailableFontURLs = null;
+		//
+		try {
+			//
+			if ((ctFontManagerCopyAvailableFontURLs = CoreText
+					.CTFontManagerCopyAvailableFontURLs(Native.load("CoreText", CoreText.class))) != null
+					&& coreFoundation != null) {
+				//
+				final long cfArrayGetCount = coreFoundation.CFArrayGetCount(ctFontManagerCopyAvailableFontURLs);
+				//
+				for (long i = 0; i < cfArrayGetCount; i++) {
+					//
+					Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new),
+							testAndApply(Objects::nonNull,
+									getPath(testAndApply(Objects::nonNull,
+											cfStringToString(coreFoundation,
+													coreFoundation.CFURLGetString(coreFoundation.CFArrayGetValueAtIndex(
+															ctFontManagerCopyAvailableFontURLs, i))),
+											URI::new, null)),
+									File::new, null));
+					//
+				} // if
+					//
+			} // if
+				//
+		} finally {
+			//
+			CoreFoundation.CFRelease(coreFoundation, ctFontManagerCopyAvailableFontURLs);
+			//
+		} // try
+			//
+		return list;
 		//
 	}
 

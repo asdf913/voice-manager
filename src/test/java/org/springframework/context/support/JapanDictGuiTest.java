@@ -70,10 +70,16 @@ import javax.swing.text.JTextComponent;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.Code;
+import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.generic.ARETURN;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.GETSTATIC;
+import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.TypeUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
@@ -104,6 +110,7 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.d2ab.function.ObjIntPredicate;
 import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -754,6 +761,15 @@ class JapanDictGuiTest {
 					//
 				result = Narcissus.invokeStaticMethod(m, os);
 				//
+				if (Objects.equals(OperatingSystemUtil.getOperatingSystem(),
+						getOperatingSystem(Util.getClass(instance), m))) {
+					//
+					Assertions.assertNull(result, toString);
+					//
+					continue;
+					//
+				} // if
+					//
 				if (or(Boolean.logicalAnd(isPrimitive(returnType = Util.getReturnType(m)),
 						!Objects.equals(returnType, Void.TYPE)),
 						Boolean.logicalAnd(Objects.equals(name, "getJapanDictEntry"),
@@ -776,7 +792,9 @@ class JapanDictGuiTest {
 						Boolean.logicalAnd(Objects.equals(name, "createStringPDRectangleEntryListCellRenderer"),
 								Arrays.equals(parameterTypes, new Class<?>[] { ListCellRenderer.class })),
 						Boolean.logicalAnd(Objects.equals(name, "createFontFileEntryListCellRenderer"),
-								Arrays.equals(parameterTypes, new Class<?>[] { ListCellRenderer.class })))) {
+								Arrays.equals(parameterTypes, new Class<?>[] { ListCellRenderer.class })),
+						Boolean.logicalAnd(Objects.equals(name, "CTFontManagerCopyAvailableFontURLs"),
+								Arrays.equals(parameterTypes, new Class<?>[] {})))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -976,6 +994,15 @@ class JapanDictGuiTest {
 					//
 				result = Narcissus.invokeStaticMethod(m, os);
 				//
+				if (Objects.equals(OperatingSystemUtil.getOperatingSystem(),
+						getOperatingSystem(Util.getClass(instance), m))) {
+					//
+					Assertions.assertNull(result, toString);
+					//
+					continue;
+					//
+				} // if
+					//
 				if (or(Boolean.logicalAnd(isPrimitive(returnType = Util.getReturnType(m)),
 						!Objects.equals(returnType, Void.TYPE)),
 						Boolean.logicalAnd(Objects.equals(name, "append"),
@@ -1015,7 +1042,9 @@ class JapanDictGuiTest {
 						Boolean.logicalAnd(Objects.equals(name, "createFontFileEntryListCellRenderer"),
 								Arrays.equals(parameterTypes, new Class<?>[] { ListCellRenderer.class })),
 						Boolean.logicalAnd(Objects.equals(name, "name"),
-								Arrays.equals(parameterTypes, new Class<?>[] { BrowserType.class })))) {
+								Arrays.equals(parameterTypes, new Class<?>[] { BrowserType.class })),
+						Boolean.logicalAnd(Objects.equals(name, "CTFontManagerCopyAvailableFontURLs"),
+								Arrays.equals(parameterTypes, new Class<?>[] {})))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -1067,6 +1096,125 @@ class JapanDictGuiTest {
 			} // if
 				//
 		} // for
+			//
+	}
+
+	private static OperatingSystem getOperatingSystem(final Class<?> clz, final Method method) throws Throwable {
+		//
+		try (final InputStream is = Util.getResourceAsStream(clz,
+				"/" + StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/") + ".class")) {
+			//
+			final JavaClass javaClass = ClassParserUtil
+					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
+			//
+			final Instruction[] instructions = InstructionListUtil.getInstructions(testAndApply(Objects::nonNull,
+					getCode(getCode(JavaClassUtil.getMethod(javaClass, method))), InstructionList::new, null));
+			//
+			if (!CollectionUtils.isEqualCollection(
+					Util.toList(Util.map(testAndApply(Objects::nonNull, instructions, Arrays::stream, null).limit(6),
+							x -> x != null ? x.getName() : null)),
+					Arrays.asList("invokestatic", "getstatic", "invokestatic", "ifne", "aconst_null", "areturn"))) {
+				//
+				return null;
+				//
+			} // if
+				//
+			System.out.println(method);
+			//
+			Instruction instruction = null;
+			//
+			ConstantPoolGen cpg = null;
+			//
+			IValue0<OperatingSystem> operatingSystem = null;
+			//
+			Collection<OperatingSystem> collection = null;
+			//
+			for (int i = 0; instructions != null && i < instructions.length; i++) {
+				//
+				if ((instruction = ArrayUtils.get(instructions, i)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				cpg = ObjectUtils.getIfNull(cpg,
+						() -> new ConstantPoolGen(javaClass != null ? javaClass.getConstantPool() : null));
+				//
+				if (instruction instanceof INVOKESTATIC invokestatic) {
+					//
+					if (Boolean.logicalOr(
+							// org.oxbow.swingbits.util.OperatingSystemUtil.getOperatingSystem()
+							Boolean.logicalAnd(i == 0,
+									!Util.and(
+											Objects.equals(invokestatic.getClassName(cpg),
+													"org.oxbow.swingbits.util.OperatingSystemUtil"),
+											Objects.equals(invokestatic.getMethodName(cpg), "getOperatingSystem"),
+											Objects.equals(Arrays.toString(invokestatic.getArgumentTypes(cpg)), "[]"))),
+							// java.lang.Objects.equals(java.lang.Object,java.lang.Object)
+							Boolean.logicalAnd(i == 2,
+									!Util.and(Objects.equals(invokestatic.getClassName(cpg), "java.lang.Objects"),
+											Objects.equals(invokestatic.getMethodName(cpg), "equals"),
+											Objects.equals(Arrays.toString(invokestatic.getArgumentTypes(cpg)),
+													"[java.lang.Object, java.lang.Object]"))))) {
+						//
+						return null;
+						//
+					} // if
+						//
+				} else if (instruction instanceof GETSTATIC getstatic) {
+					//
+					if (Objects.equals(TypeUtil.getClassName(getstatic.getReferenceType(cpg)),
+							"org.oxbow.swingbits.util.OperatingSystem")) {
+						//
+						if (operatingSystem != null) {
+							//
+							throw new IllegalStateException();
+							//
+						} // if
+							//
+						final OperatingSystem[] values = OperatingSystem.values();
+						//
+						OperatingSystem value = null;
+						//
+						for (int j = 0; values != null && j < values.length; j++) {
+							//
+							if (Objects.equals(Util.name(value = ArrayUtils.get(values, j)),
+									getstatic.getFieldName(cpg))
+									&& !Util.contains(collection = ObjectUtils.getIfNull(collection, ArrayList::new),
+											value)) {
+								//
+								Util.add(collection, value);
+								//
+							} // if
+								//
+						} // for
+					} // if
+						//
+					System.out.println(i + " " + getstatic.getReferenceType(cpg) + "." + getstatic.getFieldName(cpg));
+					//
+				} else {
+					//
+					System.out.println(i + " " + instruction);
+					//
+				} // if
+					//
+				if (instruction instanceof ARETURN) {
+					//
+					return null;
+					//
+				} //
+					//
+			} // for
+				//
+			if (IterableUtils.size(collection) > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			return testAndApply(x -> IterableUtils.size(x) == 1, collection, x -> IterableUtils.get(x, 0), null);
+			//
+		} // try
 			//
 	}
 
