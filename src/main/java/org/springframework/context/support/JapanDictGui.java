@@ -491,7 +491,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	private interface CoreFoundation extends Library {
 
-		void CFRelease(final Pointer obj);
+		void CFRelease(@Nullable final Pointer obj);
 
 		long CFArrayGetCount(final Pointer array);
 
