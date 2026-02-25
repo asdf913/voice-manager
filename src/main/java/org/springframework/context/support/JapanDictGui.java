@@ -909,6 +909,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	@Nullable
 	private static Iterable<File> CTFontManagerCopyAvailableFontURLs() throws URISyntaxException {
 		//
 		if (!Objects.equals(OperatingSystemUtil.getOperatingSystem(), OperatingSystem.MACOS)) {
@@ -956,6 +957,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	@Nullable
 	private static ContentInfo findMatch(@Nullable final ContentInfoUtil instance, @Nullable final File file)
 			throws IOException {
 		//
@@ -974,6 +976,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	@Nullable
 	private static OS2WindowsMetricsTable getOS2Windows(@Nullable final TrueTypeFont instance) throws IOException {
 		//
 		if (instance == null) {
@@ -988,10 +991,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	@Nullable
 	private static String getPath(@Nullable final URI instance) {
 		return instance != null ? instance.getPath() : null;
 	}
 
+	@Nullable
 	private static String cfStringToString(@Nullable final CoreFoundation coreFoundation,
 			@Nullable final Pointer cfStr) {
 		//
