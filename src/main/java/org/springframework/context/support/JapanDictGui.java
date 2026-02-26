@@ -531,7 +531,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		int FcPatternGetString(final Pointer p, final String object, final int n, final PointerByReference s);
 
-		private static int FcPatternGetString(final FontConfig instance, final Pointer p, final String object,
+		private static int FcPatternGetString(@Nullable final FontConfig instance, final Pointer p, final String object,
 				final int n, final PointerByReference s) {
 			return instance != null ? instance.FcPatternGetString(p, object, n, s) : 0;
 		}
@@ -986,7 +986,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static Pointer getPointer(final Pointer instance, final long offset) {
+	private static Pointer getPointer(@Nullable final Pointer instance, final long offset) {
 		return instance != null ? instance.getPointer(offset) : null;
 	}
 
