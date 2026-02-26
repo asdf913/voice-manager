@@ -919,6 +919,8 @@ class JapanDictGuiTest {
 							Arrays.equals(parameterTypes,
 									new Class<?>[] { Boolean.TYPE, Boolean.TYPE, boolean[].class })),
 					Boolean.logicalAnd(Objects.equals(name, "getString"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Pointer.class, Long.TYPE })),
+					Boolean.logicalAnd(Objects.equals(name, "getPointer"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Pointer.class, Long.TYPE })))) {
 				//
 				continue;
