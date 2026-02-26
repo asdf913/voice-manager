@@ -889,15 +889,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				File file = null;
 				//
-				Pointer value = null;
-				//
 				for (int i = 0; i < fontSet.nfont; i++) {
 					//
 					if (fc != null && fontSet.fonts != null
 							&& fc.FcPatternGetString(fontSet.fonts.getPointer(i * Native.POINTER_SIZE), "file", 0,
 									fileRef = new PointerByReference()) == 0
-							&& Util.exists(file = testAndApply(Objects::nonNull,
-									(value = fileRef.getValue()) != null ? value.getString(0) : null, File::new, null))
+							&& Util.exists(file = testAndApply(Objects::nonNull, getString(fileRef.getValue(), 0),
+									File::new, null))
 							&& Util.isFile(file)) {
 						//
 						Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), file);
@@ -982,6 +980,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
 		//
+	}
+
+	private static String getString(final Pointer instance, final long offset) {
+		return instance != null ? instance.getString(offset) : null;
 	}
 
 	@Nullable
