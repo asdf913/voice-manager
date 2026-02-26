@@ -933,6 +933,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	@Nullable
 	private static Iterable<File> FcFontList() {
 		//
 		if (!Objects.equals(OperatingSystemUtil.getOperatingSystem(), OperatingSystem.LINUX)) {
