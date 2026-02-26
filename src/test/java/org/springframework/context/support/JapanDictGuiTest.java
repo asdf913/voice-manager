@@ -347,7 +347,7 @@ class JapanDictGuiTest {
 
 		private Boolean test, booleanValue, equals, CFStringGetCString;
 
-		private Integer size, length, columnCount, sum;
+		private Integer size, length, columnCount, sum, FcPatternGetString;
 
 		private int[] selectedIndices;
 
@@ -560,6 +560,15 @@ class JapanDictGuiTest {
 				//
 				return null;
 				//
+			} else if (Objects.equals(method != null ? Util.getName(method.getDeclaringClass()) : null,
+					"org.springframework.context.support.JapanDictGui$FontConfig")) {
+				//
+				if (Objects.equals(name, "FcPatternGetString")) {
+					//
+					return FcPatternGetString;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -2815,8 +2824,16 @@ class JapanDictGuiTest {
 		//
 		String toString = null;
 		//
-		Class<?> parameterType = null;
+		Class<?> parameterType, returnType = null;
 		//
+		Object invoke = null;
+		//
+		if (ih != null) {
+			//
+			ih.FcPatternGetString = Integer.valueOf(ZERO);
+			//
+		} // if
+			//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
@@ -2827,21 +2844,47 @@ class JapanDictGuiTest {
 				//
 				// null
 				//
+			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
+			//
+			parameterTypes = Util.getParameterTypes(m);
+			//
+			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
+				//
+				if (Objects.equals(parameterType = ArrayUtils.get(parameterTypes, j), Integer.TYPE)) {
+					//
+					Util.add(collection, Integer.valueOf(0));
+					//
+				} else {
+					//
+					Util.add(collection, null);
+					//
+				} // if
+					//
+			} // for
+				//
 			toString = Util.toString(m);
+			//
+			returnType = Util.getReturnType(m);
 			//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
-				Assertions.assertNull(
-						Narcissus.invokeStaticMethod(m, toArray(Collections.nCopies(m.getParameterCount(), null))),
-						toString);
+				invoke = Narcissus.invokeStaticMethod(m, toArray(collection));
 				//
+				if (Boolean.logicalAnd(!Objects.equals(returnType, Void.TYPE), isPrimitive(returnType))) {
+					//
+					Assertions.assertNotNull(invoke, toString);
+					//
+				} else {
+					//
+					Assertions.assertNull(invoke, toString);
+					//
+				} // if
+					//
 			} // if
 				//
 				// non-null
 				//
-			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
-			//
-			parameterTypes = m.getParameterTypes();
+			Util.clear(collection);
 			//
 			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
 				//
@@ -2861,10 +2904,22 @@ class JapanDictGuiTest {
 					//
 			} // for
 				//
+			toString = Util.toString(m);
+			//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
-				Assertions.assertNull(Narcissus.invokeStaticMethod(m, toArray(collection)), toString);
+				invoke = Narcissus.invokeStaticMethod(m, toArray(collection));
 				//
+				if (Boolean.logicalAnd(!Objects.equals(returnType, Void.TYPE), isPrimitive(returnType))) {
+					//
+					Assertions.assertNotNull(invoke, toString);
+					//
+				} else {
+					//
+					Assertions.assertNull(invoke, toString);
+					//
+				} // if
+					//
 			} // if
 				//
 		} // for

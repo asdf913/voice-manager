@@ -531,6 +531,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		int FcPatternGetString(final Pointer p, final String object, final int n, final PointerByReference s);
 
+		private static int FcPatternGetString(final FontConfig instance, final Pointer p, final String object,
+				final int n, final PointerByReference s) {
+			return instance != null ? instance.FcPatternGetString(p, object, n, s) : 0;
+		}
+
 		private static void FcFontSetDestroy(final FontConfig instance, final Pointer fs) {
 			if (instance != null) {
 				instance.FcFontSetDestroy(fs);
@@ -891,9 +896,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				for (int i = 0; i < fontSet.nfont; i++) {
 					//
-					if (fc != null && fontSet.fonts != null
-							&& fc.FcPatternGetString(fontSet.fonts.getPointer(i * Native.POINTER_SIZE), "file", 0,
-									fileRef = new PointerByReference()) == 0
+					if (fontSet.fonts != null
+							&& FontConfig.FcPatternGetString(fc, fontSet.fonts.getPointer(i * Native.POINTER_SIZE),
+									"file", 0, fileRef = new PointerByReference()) == 0
 							&& Util.exists(file = testAndApply(Objects::nonNull, getString(fileRef.getValue(), 0),
 									File::new, null))
 							&& Util.isFile(file)) {
