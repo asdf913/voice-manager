@@ -987,7 +987,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static String getString(final Pointer instance, final long offset) {
+	private static String getString(@Nullable final Pointer instance, final long offset) {
 		return instance != null ? instance.getString(offset) : null;
 	}
 
