@@ -524,7 +524,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		Pointer FcPatternCreate();
 
-		Pointer FcObjectSetBuild(final String s1, final String s2, final String s3, final String s4, final Pointer p);
+		Pointer FcObjectSetBuild(final String s1, final String s2, final String s3, final String s4,
+				@Nullable final Pointer p);
 
 		Pointer FcFontList(final Pointer config, final Pointer pat, final Pointer os);
 
@@ -532,8 +533,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		int FcPatternGetString(final Pointer p, final String object, final int n, final PointerByReference s);
 
-		private static int FcPatternGetString(@Nullable final FontConfig instance, final Pointer p, final String object,
-				final int n, final PointerByReference s) {
+		private static int FcPatternGetString(@Nullable final FontConfig instance, @Nullable final Pointer p,
+				final String object, final int n, final PointerByReference s) {
 			return instance != null ? instance.FcPatternGetString(p, object, n, s) : 0;
 		}
 
