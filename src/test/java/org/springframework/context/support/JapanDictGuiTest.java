@@ -561,14 +561,11 @@ class JapanDictGuiTest {
 				return null;
 				//
 			} else if (Objects.equals(method != null ? Util.getName(method.getDeclaringClass()) : null,
-					"org.springframework.context.support.JapanDictGui$FontConfig")) {
+					"org.springframework.context.support.JapanDictGui$FontConfig")
+					&& Objects.equals(name, "FcPatternGetString")) {
 				//
-				if (Objects.equals(name, "FcPatternGetString")) {
-					//
-					return FcPatternGetString;
-					//
-				} // if
-					//
+				return FcPatternGetString;
+				//
 			} // if
 				//
 			throw new Throwable(name);
