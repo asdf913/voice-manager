@@ -1052,6 +1052,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	@Nullable
 	private static OS2WindowsMetricsTable getOS2Windows(final File file) throws IOException {
 		//
 		try (final PDDocument document = new PDDocument();
