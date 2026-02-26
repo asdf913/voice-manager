@@ -90,6 +90,7 @@ import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiFunction;
+import org.apache.commons.lang3.function.FailableBiPredicate;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableLongConsumer;
@@ -195,7 +196,7 @@ class JapanDictGuiTest {
 		(METHOD_TEST_AND_ACCEPT3_LONG = Util.getDeclaredMethod(clz, "testAndAccept", LongPredicate.class, Long.TYPE,
 				FailableLongConsumer.class)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_ACCEPT4_BI_PREDICATE = Util.getDeclaredMethod(clz, "testAndAccept", BiPredicate.class,
+		(METHOD_TEST_AND_ACCEPT4_BI_PREDICATE = Util.getDeclaredMethod(clz, "testAndAccept", FailableBiPredicate.class,
 				Object.class, Object.class, FailableBiConsumer.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT5 = Util.getDeclaredMethod(clz, "testAndAccept", BiPredicate.class, Object.class,
@@ -393,14 +394,11 @@ class JapanDictGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof BiPredicate) {
+			} else if (Boolean.logicalOr(proxy instanceof BiPredicate, proxy instanceof FailableBiPredicate)
+					&& Objects.equals(name, "test")) {
 				//
-				if (Objects.equals(name, "test")) {
-					//
-					return test;
-					//
-				} // if
-					//
+				return test;
+				//
 			} else if (proxy instanceof FailableFunction && Objects.equals(name, "apply")) {
 				//
 				return null;
@@ -1428,9 +1426,10 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT3_OBJECT, null, predicate, null, null));
 		//
-		final BiPredicate<?, ?> biPredicate = org.meeuw.functional.Predicates.biAlwaysTrue();
+		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT4_BI_PREDICATE, null, FailableBiPredicate.truePredicate(),
+				null, null, null));
 		//
-		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT4_BI_PREDICATE, null, biPredicate, null, null, null));
+		final BiPredicate<?, ?> biPredicate = org.meeuw.functional.Predicates.biAlwaysTrue();
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_ACCEPT5, null, biPredicate, null, null, null, null));
 		//

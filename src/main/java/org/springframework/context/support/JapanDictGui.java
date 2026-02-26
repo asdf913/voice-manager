@@ -128,6 +128,7 @@ import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiConsumerUtil;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableBiFunctionUtil;
+import org.apache.commons.lang3.function.FailableBiPredicate;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -935,13 +936,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							"TrueType font data")
 					&& (font = Font.createFont(Font.TRUETYPE_FONT, file)) != null && font.canDisplay('あ')) {
 				//
-				if (getOS2Windows(file) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				Util.add(list2, Pair.of(font, file));
+				testAndAccept((a, b) -> getOS2Windows(b) != null, font, file, (a, b) -> Util.add(list2, Pair.of(a, b)));
 				//
 			} // if
 				//
@@ -4581,9 +4576,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, @Nullable final T t,
-			@Nullable final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
-		if (Util.test(instance, t, u)) {
+	private static <T, U, E extends Throwable> void testAndAccept(final FailableBiPredicate<T, U, E> instance,
+			@Nullable final T t, @Nullable final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
+		if (instance != null && instance.test(t, u)) {
 			FailableBiConsumerUtil.accept(consumer, t, u);
 		} // if
 	}
