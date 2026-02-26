@@ -560,6 +560,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				return Arrays.asList("nfont", "fonts");
 			}
 
+			@Override
+			public boolean equals(final Object o) {
+				return super.equals(o);
+			}
+
 		}
 
 	}
