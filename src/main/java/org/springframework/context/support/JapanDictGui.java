@@ -546,6 +546,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 			public int nfont;
 
+			@Nullable
 			public Pointer fonts;
 
 			private FcFontSet(final Pointer pointer) {
@@ -990,6 +991,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		return instance != null ? instance.getPointer(offset) : null;
 	}
 
+	@Nullable
 	private static String getString(@Nullable final Pointer instance, final long offset) {
 		return instance != null ? instance.getString(offset) : null;
 	}
