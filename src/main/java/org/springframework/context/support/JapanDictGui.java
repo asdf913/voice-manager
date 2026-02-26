@@ -935,18 +935,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							"TrueType font data")
 					&& (font = Font.createFont(Font.TRUETYPE_FONT, file)) != null && font.canDisplay('あ')) {
 				//
-				try (final PDDocument document = new PDDocument();
-						final PDPageContentStream pageContentStream = new PDPageContentStream(document, new PDPage());
-						final InputStream is = Files.newInputStream(Util.toPath(file))) {
+				if (getOS2Windows(file) == null) {
 					//
-					if (getOS2Windows(
-							testAndApply(Objects::nonNull, is, new TTFParser()::parseEmbedded, null)) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-				} // try
+					continue;
+					//
+				} // if
 					//
 				Util.add(list2, Pair.of(font, file));
 				//
@@ -1062,6 +1055,20 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return instance.findMatch(file);
 		//
+	}
+
+	private static OS2WindowsMetricsTable getOS2Windows(final File file) throws IOException {
+		//
+		try (final PDDocument document = new PDDocument();
+				final PDPageContentStream pageContentStream = new PDPageContentStream(document, new PDPage());
+				final InputStream is = testAndApply(Objects::nonNull,
+						file != null && file.getPath() != null ? Util.toPath(file) : null, Files::newInputStream,
+						null)) {
+			//
+			return getOS2Windows(testAndApply(Objects::nonNull, is, new TTFParser()::parseEmbedded, null));
+			//
+		} // try
+			//
 	}
 
 	@Nullable
