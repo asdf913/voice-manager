@@ -1065,7 +1065,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	@Nullable
-	private static OS2WindowsMetricsTable getOS2Windows(final File file) throws IOException {
+	private static OS2WindowsMetricsTable getOS2Windows(@Nullable final File file) throws IOException {
 		//
 		try (final PDDocument document = new PDDocument();
 				final PDPageContentStream pageContentStream = new PDPageContentStream(document, new PDPage());
@@ -4589,7 +4589,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 	}
 
-	private static <T, U, E extends Throwable> void testAndAccept(final FailableBiPredicate<T, U, E> instance,
+	private static <T, U, E extends Throwable> void testAndAccept(@Nullable final FailableBiPredicate<T, U, E> instance,
 			@Nullable final T t, @Nullable final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
 		if (instance != null && instance.test(t, u)) {
 			FailableBiConsumerUtil.accept(consumer, t, u);
