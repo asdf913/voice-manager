@@ -2928,4 +2928,38 @@ class JapanDictGuiTest {
 			//
 	}
 
+	@Test
+	void testFcFontSet() {
+		//
+		final Class<?> clz = Util.forName("org.springframework.context.support.JapanDictGui$FontConfig$FcFontSet");
+		//
+		final Method[] ms = Util.getDeclaredMethods(clz);
+		//
+		Method m = null;
+		//
+		Object fcFontSet = null;
+		//
+		int parameterCount = 0;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Boolean.logicalOr(isPrimitive(Util.getReturnType(m)),
+					Boolean.logicalAnd(Objects.equals(Util.getName(m), "getFieldOrder"), parameterCount == 0))) {
+				//
+				Assertions.assertNotNull(Narcissus.invokeMethod(
+						fcFontSet = ObjectUtils.getIfNull(fcFontSet, () -> Narcissus.allocateInstance(clz)), m,
+						toArray(Collections.nCopies(m.getParameterCount(), null))), Util.toString(m));
+				//
+			} // if
+				//
+		} // for
+			//
+	}
+
 }
