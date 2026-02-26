@@ -895,16 +895,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					//
 					if (fc != null && fontSet.fonts != null
 							&& fc.FcPatternGetString(fontSet.fonts.getPointer(i * Native.POINTER_SIZE), "file", 0,
-									fileRef = new PointerByReference()) == 0) {
+									fileRef = new PointerByReference()) == 0
+							&& Util.exists(file = testAndApply(Objects::nonNull,
+									(value = fileRef.getValue()) != null ? value.getString(0) : null, File::new, null))
+							&& Util.isFile(file)) {
 						//
-						if (Util.exists(file = testAndApply(Objects::nonNull,
-								(value = fileRef.getValue()) != null ? value.getString(0) : null, File::new, null))
-								&& Util.isFile(file)) {
-							//
-							Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), file);
-							//
-						} // if
-							//
+						Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), file);
+						//
 					} // if
 						//
 				} // for
