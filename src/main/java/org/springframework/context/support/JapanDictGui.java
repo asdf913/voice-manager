@@ -531,7 +531,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		void FcFontSetDestroy(final Pointer fs);
 
-		int FcPatternGetString(final Pointer p, final String object, final int n, final PointerByReference s);
+		int FcPatternGetString(@Nullable final Pointer p, final String object, final int n, final PointerByReference s);
 
 		private static int FcPatternGetString(@Nullable final FontConfig instance, @Nullable final Pointer p,
 				final String object, final int n, final PointerByReference s) {
