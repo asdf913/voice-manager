@@ -2798,4 +2798,74 @@ class JapanDictGuiTest {
 		return instance != null ? instance.getName() : null;
 	}
 
+	@Test
+	void testFontConfig() {
+		//
+		final Method[] ms = Util
+				.getDeclaredMethods(Util.forName("org.springframework.context.support.JapanDictGui$FontConfig"));
+		//
+		Method m = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
+		Collection<Object> collection = null;
+		//
+		String toString = null;
+		//
+		Class<?> parameterType = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
+				//
+				continue;
+				//
+			} // if
+				//
+				// null
+				//
+			toString = Util.toString(m);
+			//
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				Assertions.assertNull(
+						Narcissus.invokeStaticMethod(m, toArray(Collections.nCopies(m.getParameterCount(), null))),
+						toString);
+				//
+			} // if
+				//
+				// non-null
+				//
+			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
+			//
+			parameterTypes = m.getParameterTypes();
+			//
+			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
+				//
+				if (isInterface(parameterType = ArrayUtils.get(parameterTypes, j))) {
+					//
+					Util.add(collection, Reflection.newProxy(parameterType, ih));
+					//
+				} else if (Objects.equals(parameterType, Integer.TYPE)) {
+					//
+					Util.add(collection, Integer.valueOf(0));
+					//
+				} else {
+					//
+					Util.add(collection, Narcissus.allocateInstance(parameterType));
+					//
+				} // if
+					//
+			} // for
+				//
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				Assertions.assertNull(Narcissus.invokeStaticMethod(m, toArray(collection)), toString);
+				//
+			} // if
+				//
+		} // for
+			//
+	}
+
 }

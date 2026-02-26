@@ -531,6 +531,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		int FcPatternGetString(final Pointer p, final String object, final int n, final PointerByReference s);
 
+		private static void FcFontSetDestroy(final FontConfig instance, final Pointer fs) {
+			if (instance != null) {
+				instance.FcFontSetDestroy(fs);
+			}
+		}
+
 		class FcFontSet extends Structure {
 
 			public int nfont;
@@ -907,12 +913,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 			} finally {
 				//
-				if (fc != null) {
-					//
-					fc.FcFontSetDestroy(fsPtr);
-					//
-				} // if
-					//
+				FontConfig.FcFontSetDestroy(fc, fsPtr);
+				//
 			} // try
 				//
 		} // if
