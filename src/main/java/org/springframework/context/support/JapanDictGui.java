@@ -907,6 +907,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		list2.add(0, null);
 		//
+		Util.sort(list2, (a, b) -> ObjectUtils.compare(getName(Util.getKey(a)), getName(Util.getKey(b))));
+		//
 		Narcissus.setField(this, getFieldByName(this, "cbmFont"), Util.newInstance(
 				Util.getDeclaredConstructor(DefaultComboBoxModel.class, Object[].class), (Object) Util.toArray(list2)));
 		//
@@ -936,6 +938,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
 		//
+	}
+
+	private static String getName(final Font instance) {
+		return instance != null ? instance.getName() : null;
 	}
 
 	@Nullable
