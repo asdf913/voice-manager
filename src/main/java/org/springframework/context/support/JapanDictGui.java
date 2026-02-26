@@ -873,51 +873,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} else if (Objects.equals(operatingSystem, OperatingSystem.LINUX)) {
 			//
-			final FontConfig fc = Native.load("fontconfig", FontConfig.class);
+			files = FcFontList();
 			//
-			Pointer fsPtr = null;
-			//
-			try {
-				//
-				if (fc != null) {
-					//
-					fsPtr = fc.FcFontList(fc.FcInitLoadConfigAndFonts(), fc.FcPatternCreate(),
-							fc.FcObjectSetBuild("family", "style", "lang", "file", null));
-					//
-				} // if
-					//
-				final FontConfig.FcFontSet fontSet = new FontConfig.FcFontSet(fsPtr);
-				//
-				fontSet.read();
-				//
-				PointerByReference fileRef = null;
-				//
-				Collection<File> collection = null;
-				//
-				File file = null;
-				//
-				for (int i = 0; i < fontSet.nfont; i++) {
-					//
-					if (FontConfig.FcPatternGetString(fc, getPointer(fontSet.fonts, i * Native.POINTER_SIZE), "file", 0,
-							fileRef = new PointerByReference()) == 0
-							&& Util.exists(file = testAndApply(Objects::nonNull, getString(fileRef.getValue(), 0),
-									File::new, null))
-							&& Util.isFile(file)) {
-						//
-						Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), file);
-						//
-					} // if
-						//
-				} // for
-					//
-				files = collection;
-				//
-			} finally {
-				//
-				FontConfig.FcFontSetDestroy(fc, fsPtr);
-				//
-			} // try
-				//
 		} // if
 			//
 		File file = null;
@@ -972,6 +929,61 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream,
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
+		//
+	}
+
+	private static Iterable<File> FcFontList() {
+		//
+		if (!Objects.equals(OperatingSystemUtil.getOperatingSystem(), OperatingSystem.LINUX)) {
+			//
+			return null;
+			//
+		} // if
+			//
+		Collection<File> collection = null;
+		//
+		final FontConfig fc = Native.load("fontconfig", FontConfig.class);
+		//
+		Pointer fsPtr = null;
+		//
+		try {
+			//
+			if (fc != null) {
+				//
+				fsPtr = fc.FcFontList(fc.FcInitLoadConfigAndFonts(), fc.FcPatternCreate(),
+						fc.FcObjectSetBuild("family", "style", "lang", "file", null));
+				//
+			} // if
+				//
+			final FontConfig.FcFontSet fontSet = new FontConfig.FcFontSet(fsPtr);
+			//
+			fontSet.read();
+			//
+			PointerByReference fileRef = null;
+			//
+			File file = null;
+			//
+			for (int i = 0; i < fontSet.nfont; i++) {
+				//
+				if (FontConfig.FcPatternGetString(fc, getPointer(fontSet.fonts, i * Native.POINTER_SIZE), "file", 0,
+						fileRef = new PointerByReference()) == 0
+						&& Util.exists(file = testAndApply(Objects::nonNull, getString(fileRef.getValue(), 0),
+								File::new, null))
+						&& Util.isFile(file)) {
+					//
+					Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), file);
+					//
+				} // if
+					//
+			} // for
+				//
+		} finally {
+			//
+			FontConfig.FcFontSetDestroy(fc, fsPtr);
+			//
+		} // try
+			//
+		return collection;
 		//
 	}
 

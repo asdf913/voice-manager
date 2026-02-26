@@ -796,6 +796,8 @@ class JapanDictGuiTest {
 						Boolean.logicalAnd(Objects.equals(name, "createFontFileEntryListCellRenderer"),
 								Arrays.equals(parameterTypes, new Class<?>[] { ListCellRenderer.class })),
 						Boolean.logicalAnd(Objects.equals(name, "CTFontManagerCopyAvailableFontURLs"),
+								Arrays.equals(parameterTypes, new Class<?>[] {})),
+						Boolean.logicalAnd(Objects.equals(name, "FcFontList"),
 								Arrays.equals(parameterTypes, new Class<?>[] {})))) {
 					//
 					Assertions.assertNotNull(result, toString);
@@ -1053,6 +1055,8 @@ class JapanDictGuiTest {
 						Boolean.logicalAnd(Objects.equals(name, "name"),
 								Arrays.equals(parameterTypes, new Class<?>[] { BrowserType.class })),
 						Boolean.logicalAnd(Objects.equals(name, "CTFontManagerCopyAvailableFontURLs"),
+								Arrays.equals(parameterTypes, new Class<?>[] {})),
+						Boolean.logicalAnd(Objects.equals(name, "FcFontList"),
 								Arrays.equals(parameterTypes, new Class<?>[] {})))) {
 					//
 					Assertions.assertNotNull(result, toString);
