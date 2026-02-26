@@ -970,6 +970,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Font instance) {
 		return instance != null ? instance.getName() : null;
 	}
