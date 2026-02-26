@@ -897,6 +897,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		final List<Entry<Font, File>> list2 = new ArrayList<>();
 		//
+		final Collection<String> sha512Hexs = new ArrayList<>();
+		//
 		for (int i = 0; i < IterableUtils.size(files); i++) {
 			//
 			if (and(file = IterableUtils.get(files, i), Util::exists, Util::isFile)
@@ -905,7 +907,21 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							"TrueType font data")
 					&& (font = Font.createFont(Font.TRUETYPE_FONT, file)) != null && font.canDisplay('あ')) {
 				//
-				testAndAccept((a, b) -> getOS2Windows(b) != null, font, file, (a, b) -> Util.add(list2, Pair.of(a, b)));
+				testAndAccept((a, b) -> getOS2Windows(b) != null, font, file, (a, b) -> {
+					//
+					final String sha512Hex = testAndApply(Objects::nonNull,
+							testAndApply(Objects::nonNull, Util.toPath(b), Files::readAllBytes, null),
+							DigestUtils::sha512Hex, null);
+					//
+					if (!Util.contains(sha512Hexs, sha512Hex)) {
+						//
+						Util.add(list2, Pair.of(a, b));
+						//
+						Util.add(sha512Hexs, sha512Hex);
+						//
+					} // if
+						//
+				});
 				//
 			} // if
 				//
@@ -913,30 +929,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		list2.add(0, null);
 		//
-		String sha512Hex = null;
-		//
-		for (int i = IterableUtils.size(list2) - 1; i >= 0; i--) {
-			//
-			sha512Hex = testAndApply(
-					Objects::nonNull, testAndApply(Objects::nonNull,
-							Util.toPath(Util.getValue(IterableUtils.get(list2, i))), Files::readAllBytes, null),
-					DigestUtils::sha512Hex, null);
-			//
-			for (int j = Math.min(IterableUtils.size(list2) - 1, i) - 1; j >= 0; j--) {
-				//
-				if (Objects.equals(sha512Hex,
-						testAndApply(Objects::nonNull, testAndApply(Objects::nonNull,
-								Util.toPath(Util.getValue(IterableUtils.get(list2, j))), Files::readAllBytes, null),
-								DigestUtils::sha512Hex, null))) {
-					//
-					list2.remove(j);
-					//
-				} // if
-					//
-			} // for
-				//
-		} // for
-			//
 		Util.sort(list2, (a, b) -> ObjectUtils.compare(getName(Util.getKey(a)), getName(Util.getKey(b))));
 		//
 		Narcissus.setField(this, getFieldByName(this, "cbmFont"), Util.newInstance(
