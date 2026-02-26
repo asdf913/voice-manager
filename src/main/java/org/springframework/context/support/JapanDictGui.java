@@ -929,7 +929,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		for (int i = 0; i < IterableUtils.size(files); i++) {
 			//
-			if (Util.exists(file = IterableUtils.get(files, i)) && Util.isFile(file)
+			if (and(file = IterableUtils.get(files, i), x -> Util.exists(x), x -> Util.isFile(x))
 					&& Objects.equals(
 							getMessage(findMatch(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), file)),
 							"TrueType font data")
