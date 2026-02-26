@@ -2849,7 +2849,7 @@ class JapanDictGuiTest {
 			//
 			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
 				//
-				if (Objects.equals(parameterType = ArrayUtils.get(parameterTypes, j), Integer.TYPE)) {
+				if (Objects.equals(ArrayUtils.get(parameterTypes, j), Integer.TYPE)) {
 					//
 					Util.add(collection, Integer.valueOf(0));
 					//
