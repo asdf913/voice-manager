@@ -232,8 +232,10 @@ import com.sun.jna.Library;
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
+import com.sun.jna.Structure;
 import com.sun.jna.platform.win32.KnownFolders;
 import com.sun.jna.platform.win32.Shell32Util;
+import com.sun.jna.ptr.PointerByReference;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import it.unimi.dsi.fastutil.chars.CharIntPair;
@@ -515,6 +517,39 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 	}
 
+	private interface FontConfig extends Library {
+
+		Pointer FcInitLoadConfigAndFonts();
+
+		Pointer FcPatternCreate();
+
+		Pointer FcObjectSetBuild(final String s1, final String s2, final String s3, final String s4, final Pointer p);
+
+		Pointer FcFontList(final Pointer config, final Pointer pat, final Pointer os);
+
+		void FcFontSetDestroy(final Pointer fs);
+
+		int FcPatternGetString(final Pointer p, final String object, final int n, final PointerByReference s);
+
+		class FcFontSet extends Structure {
+
+			public int nfont;
+
+			public Pointer fonts;
+
+			private FcFontSet(final Pointer pointer) {
+				super(pointer);
+			}
+
+			@Override
+			protected List<String> getFieldOrder() {
+				return Arrays.asList("nfont", "fonts");
+			}
+
+		}
+
+	}
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
@@ -725,20 +760,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			setCellRenderer(tc, dtcr);
 			//
-			if (Objects.equals(operatingSystem, OperatingSystem.LINUX)) {
-				//
-				testAndAccept((a, b) -> b == 0, tc, i, (a, b) -> setMaxWidth(a, 58));
-				//
-				testAndAccept((a, b) -> b == 1, tc, i, (a, b) -> setMaxWidth(a, 103));
-				//
-			} else if (Objects.equals(operatingSystem, OperatingSystem.MACOS)) {
-				//
-				testAndAccept((a, b) -> b == 0, tc, i, (a, b) -> setMaxWidth(a, 59));
-				//
-				testAndAccept((a, b) -> b == 1, tc, i, (a, b) -> setMaxWidth(a, 102));
-				//
-			} // if
-				//
+			testAndAccept((a, b) -> b == 0, tc, i, (a, b) -> setMaxWidth(a, 58));
+			//
+			testAndAccept((a, b) -> b == 1, tc, i, (a, b) -> setMaxWidth(a, 103));
+			//
 		});
 		//
 		setPreferredScrollableViewportSize(jTableStroke, new Dimension(
@@ -833,6 +858,63 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			files = CTFontManagerCopyAvailableFontURLs();
 			//
+		} else if (Objects.equals(operatingSystem, OperatingSystem.LINUX)) {
+			//
+			final FontConfig fc = Native.load("fontconfig", FontConfig.class);
+			//
+			Pointer fsPtr = null;
+			//
+			try {
+				//
+				if (fc != null) {
+					//
+					fsPtr = fc.FcFontList(fc.FcInitLoadConfigAndFonts(), fc.FcPatternCreate(),
+							fc.FcObjectSetBuild("family", "style", "lang", "file", null));
+					//
+				} // if
+					//
+				final FontConfig.FcFontSet fontSet = new FontConfig.FcFontSet(fsPtr);
+				//
+				fontSet.read();
+				//
+				PointerByReference fileRef = null;
+				//
+				Collection<File> collection = null;
+				//
+				File file = null;
+				//
+				Pointer value = null;
+				//
+				for (int i = 0; i < fontSet.nfont; i++) {
+					//
+					if (fc != null && fontSet.fonts != null
+							&& fc.FcPatternGetString(fontSet.fonts.getPointer(i * Native.POINTER_SIZE), "file", 0,
+									fileRef = new PointerByReference()) == 0) {
+						//
+						if (Util.exists(file = testAndApply(Objects::nonNull,
+								(value = fileRef.getValue()) != null ? value.getString(0) : null, File::new, null))
+								&& Util.isFile(file)) {
+							//
+							Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), file);
+							//
+						} // if
+							//
+					} // if
+						//
+				} // for
+					//
+				files = collection;
+				//
+			} finally {
+				//
+				if (fc != null) {
+					//
+					fc.FcFontSetDestroy(fsPtr);
+					//
+				} // if
+					//
+			} // try
+				//
 		} // if
 			//
 		File file = null;
