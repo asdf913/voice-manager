@@ -3284,12 +3284,12 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					try (final ByteArrayInputStream bais = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new,
 							null)) {
 						//
+						final ContentInfo contentInfo = testAndApply(Objects::nonNull, bs,
+								new ContentInfoUtil()::findMatch, null);
+						//
 						instance.trueTypeFont = testAndApply(
 								x -> Boolean.logicalAnd(x != null,
-										StringsUtil.equals(Strings.CI,
-												getName(testAndApply(Objects::nonNull, bs,
-														new ContentInfoUtil()::findMatch, null)),
-												"OpenType")),
+										StringsUtil.equals(Strings.CI, getName(contentInfo), "OpenType")),
 								bais, new OTFParser()::parseEmbedded, null);
 						//
 					} // try
