@@ -921,26 +921,20 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							"TrueType font data")
 					&& (font = Font.createFont(Font.TRUETYPE_FONT, file)) != null && font.canDisplay('あ')) {
 				//
-				try (final PDDocument document = new PDDocument();
-						final PDPageContentStream pageContentStream = new PDPageContentStream(document, new PDPage());
-						final InputStream is = testAndApply(Objects::nonNull,
-								file != null && file.getPath() != null ? Util.toPath(file) : null,
-								Files::newInputStream, null)) {
+				final TrueTypeFont ttf = getTrueTypeFont(file);
+				//
+				if ((isEmbeddingPermitted = Util.cast(Boolean.class,
+						Narcissus.invokeMethod(Narcissus.allocateInstance(clz),
+								Util.getDeclaredMethod(Util.forName("org.apache.pdfbox.pdmodel.font.TrueTypeEmbedder"),
+										"isEmbeddingPermitted", TrueTypeFont.class),
+								ttf))) != null
+						&& !isEmbeddingPermitted.booleanValue()) {
 					//
-					if ((isEmbeddingPermitted = Util.cast(Boolean.class, Narcissus.invokeMethod(
-							Narcissus.allocateInstance(clz),
-							Util.getDeclaredMethod(Util.forName("org.apache.pdfbox.pdmodel.font.TrueTypeEmbedder"),
-									"isEmbeddingPermitted", TrueTypeFont.class),
-							testAndApply(Objects::nonNull, is, new TTFParser()::parseEmbedded, null)))) != null
-							&& !isEmbeddingPermitted.booleanValue()) {
-						//
-						continue;
-						//
-					} // if
-						//
-				} // try
+					continue;
 					//
-				testAndAccept((a, b) -> getOS2Windows(b) != null, font, file, (a, b) -> {
+				} // if
+					//
+				testAndAccept((a, b) -> getOS2Windows(ttf) != null, font, file, (a, b) -> {
 					//
 					final String sha512Hex = testAndApply(Objects::nonNull,
 							testAndApply(Objects::nonNull, Util.toPath(b), Files::readAllBytes, null),
@@ -993,6 +987,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
 		//
+	}
+
+	private static TrueTypeFont getTrueTypeFont(final File file) throws IOException {
+		//
+		try (final InputStream is = testAndApply(Objects::nonNull,
+				file != null && file.getPath() != null ? Util.toPath(file) : null, Files::newInputStream, null)) {
+			//
+			return testAndApply(Objects::nonNull, is, new TTFParser()::parseEmbedded, null);
+			//
+		} // try
+			//
 	}
 
 	@Nullable
@@ -1131,21 +1136,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		return instance.findMatch(file);
 		//
-	}
-
-	@Nullable
-	private static OS2WindowsMetricsTable getOS2Windows(@Nullable final File file) throws IOException {
-		//
-		try (final PDDocument document = new PDDocument();
-				final PDPageContentStream pageContentStream = new PDPageContentStream(document, new PDPage());
-				final InputStream is = testAndApply(Objects::nonNull,
-						file != null && file.getPath() != null ? Util.toPath(file) : null, Files::newInputStream,
-						null)) {
-			//
-			return getOS2Windows(testAndApply(Objects::nonNull, is, new TTFParser()::parseEmbedded, null));
-			//
-		} // try
-			//
 	}
 
 	@Nullable
