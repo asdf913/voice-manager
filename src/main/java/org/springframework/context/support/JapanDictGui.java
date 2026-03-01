@@ -121,6 +121,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
@@ -909,10 +910,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		final Collection<String> sha512Hexs = new ArrayList<>();
 		//
-		final Class<?> clz = Util.forName("org.apache.pdfbox.pdmodel.font.PDCIDFontType2Embedder");
-		//
-		Boolean isEmbeddingPermitted = null;
-		//
 		for (int i = 0; i < IterableUtils.size(files); i++) {
 			//
 			if (and(file = IterableUtils.get(files, i), Util::exists, Util::isFile)
@@ -923,32 +920,23 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 				final TrueTypeFont ttf = getTrueTypeFont(file);
 				//
-				if ((isEmbeddingPermitted = Util.cast(Boolean.class,
-						Narcissus.invokeMethod(Narcissus.allocateInstance(clz),
-								Util.getDeclaredMethod(Util.forName("org.apache.pdfbox.pdmodel.font.TrueTypeEmbedder"),
-										"isEmbeddingPermitted", TrueTypeFont.class),
-								ttf))) != null
-						&& !isEmbeddingPermitted.booleanValue()) {
-					//
-					continue;
-					//
-				} // if
-					//
-				testAndAccept((a, b) -> getOS2Windows(ttf) != null, font, file, (a, b) -> {
-					//
-					final String sha512Hex = testAndApply(Objects::nonNull,
-							testAndApply(Objects::nonNull, Util.toPath(b), Files::readAllBytes, null),
-							DigestUtils::sha512Hex, null);
-					//
-					if (!Util.contains(sha512Hexs, sha512Hex)) {
-						//
-						Util.add(list2, Pair.of(a, b));
-						//
-						Util.add(sha512Hexs, sha512Hex);
-						//
-					} // if
-						//
-				});
+				testAndAccept(
+						(a, b) -> Boolean.logicalAnd(getOS2Windows(ttf) != null, isEmbeddingPermitted(ttf, false)),
+						font, file, (a, b) -> {
+							//
+							final String sha512Hex = testAndApply(Objects::nonNull,
+									testAndApply(Objects::nonNull, Util.toPath(b), Files::readAllBytes, null),
+									DigestUtils::sha512Hex, null);
+							//
+							if (!Util.contains(sha512Hexs, sha512Hex)) {
+								//
+								Util.add(list2, Pair.of(a, b));
+								//
+								Util.add(sha512Hexs, sha512Hex);
+								//
+							} // if
+								//
+						});
 				//
 			} // if
 				//
@@ -986,6 +974,67 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(JapanDictGui.class), Arrays::stream,
 						null), x -> Util.isAssignableFrom(AbstractButton.class, Util.getType(x))),
 				x -> Util.addActionListener(Util.cast(AbstractButton.class, Narcissus.getField(this, x)), this));
+		//
+	}
+
+	private static boolean isEmbeddingPermitted(final TrueTypeFont ttf, final boolean defaultValue) {
+		//
+		if (ttf != null) {
+			//
+			// org.apache.fontbox.ttf.TrueTypeFont.tables
+			//
+			final Iterable<Field> fs = Util.toList(Util.filter(
+					Util.stream(testAndApply(Objects::nonNull, Util.getClass(ttf), FieldUtils::getAllFieldsList, null)),
+					f -> Objects.equals(Util.getName(f), "tables")));
+			//
+			testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+			//
+			if (f != null && Narcissus.getField(ttf, f) == null) {
+				//
+				return defaultValue;
+				//
+			} // if
+				//
+		} // if
+			//
+		final Class<?> clz = Util.forName("org.apache.pdfbox.pdmodel.font.PDCIDFontType2Embedder");
+		//
+		// org.apache.pdfbox.pdmodel.font.TrueTypeEmbedder.isEmbeddingPermitted(org.apache.fontbox.ttf.TrueTypeFont)
+		//
+		Iterable<Method> ms = Util
+				.toList(Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredMethods(clz), Arrays::stream, null),
+						m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "isEmbeddingPermitted"),
+								Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { TrueTypeFont.class }))));
+		//
+		if (IterableUtils.isEmpty(ms)) {
+			//
+			ms = Util.toList(Util.filter(
+					testAndApply(Objects::nonNull, Util.getDeclaredMethods(clz.getSuperclass()), Arrays::stream, null),
+					m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "isEmbeddingPermitted"),
+							Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { TrueTypeFont.class }))));
+			//
+		} // if
+			//
+		testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		return BooleanUtils
+				.toBooleanDefaultIfNull(
+						Util.cast(Boolean.class,
+								testAndApply(x -> Boolean.logicalAnd(x != null, ttf != null),
+										testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0),
+												null),
+										m -> Narcissus.invokeMethod(Narcissus.allocateInstance(clz), m, ttf), null)),
+						defaultValue);
 		//
 	}
 
