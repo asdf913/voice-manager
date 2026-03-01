@@ -928,14 +928,14 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 									testAndApply(Objects::nonNull, Util.toPath(b), Files::readAllBytes, null),
 									DigestUtils::sha512Hex, null);
 							//
-							if (!Util.contains(sha512Hexs, sha512Hex)) {
+							testAndRun(!Util.contains(sha512Hexs, sha512Hex), () -> {
 								//
 								Util.add(list2, Pair.of(a, b));
 								//
 								Util.add(sha512Hexs, sha512Hex);
 								//
-							} // if
-								//
+							});
+							//
 						});
 				//
 			} // if
