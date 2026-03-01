@@ -785,10 +785,20 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			setCellRenderer(tc, dtcr);
 			//
-			testAndAccept((a, b) -> b == 0, tc, i, (a, b) -> setMaxWidth(a, 58));
-			//
-			testAndAccept((a, b) -> b == 1, tc, i, (a, b) -> setMaxWidth(a, 103));
-			//
+			if (Objects.equals(operatingSystem, OperatingSystem.MACOS)) {
+				//
+				testAndAccept((a, b) -> b == 0, tc, i, (a, b) -> setMaxWidth(a, 59));
+				//
+				testAndAccept((a, b) -> b == 1, tc, i, (a, b) -> setMaxWidth(a, 102));
+				//
+			} else {
+				//
+				testAndAccept((a, b) -> b == 0, tc, i, (a, b) -> setMaxWidth(a, 58));
+				//
+				testAndAccept((a, b) -> b == 1, tc, i, (a, b) -> setMaxWidth(a, 103));
+				//
+			} // if
+				//
 		});
 		//
 		setPreferredScrollableViewportSize(jTableStroke, new Dimension(
