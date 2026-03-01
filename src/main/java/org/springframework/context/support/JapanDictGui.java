@@ -899,6 +899,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		final Collection<String> sha512Hexs = new ArrayList<>();
 		//
+		final Class<?> clz = Util.forName("org.apache.pdfbox.pdmodel.font.PDCIDFontType2Embedder");
+		//
+		Boolean isEmbeddingPermitted = null;
+		//
 		for (int i = 0; i < IterableUtils.size(files); i++) {
 			//
 			if (and(file = IterableUtils.get(files, i), Util::exists, Util::isFile)
@@ -907,6 +911,25 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							"TrueType font data")
 					&& (font = Font.createFont(Font.TRUETYPE_FONT, file)) != null && font.canDisplay('あ')) {
 				//
+				try (final PDDocument document = new PDDocument();
+						final PDPageContentStream pageContentStream = new PDPageContentStream(document, new PDPage());
+						final InputStream is = testAndApply(Objects::nonNull,
+								file != null && file.getPath() != null ? Util.toPath(file) : null,
+								Files::newInputStream, null)) {
+					//
+					if ((isEmbeddingPermitted = Util.cast(Boolean.class, Narcissus.invokeMethod(
+							Narcissus.allocateInstance(clz),
+							Util.getDeclaredMethod(Util.forName("org.apache.pdfbox.pdmodel.font.TrueTypeEmbedder"),
+									"isEmbeddingPermitted", TrueTypeFont.class),
+							testAndApply(Objects::nonNull, is, new TTFParser()::parseEmbedded, null)))) != null
+							&& !isEmbeddingPermitted.booleanValue()) {
+						//
+						continue;
+						//
+					} // if
+						//
+				} // try
+					//
 				testAndAccept((a, b) -> getOS2Windows(b) != null, font, file, (a, b) -> {
 					//
 					final String sha512Hex = testAndApply(Objects::nonNull,
