@@ -977,7 +977,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static boolean isEmbeddingPermitted(final TrueTypeFont ttf, final boolean defaultValue) {
+	private static boolean isEmbeddingPermitted(@Nullable final TrueTypeFont ttf, final boolean defaultValue) {
 		//
 		if (ttf != null) {
 			//
@@ -1038,7 +1038,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 	}
 
-	private static TrueTypeFont getTrueTypeFont(final File file) throws IOException {
+	private static TrueTypeFont getTrueTypeFont(@Nullable final File file) throws IOException {
 		//
 		try (final InputStream is = testAndApply(Objects::nonNull,
 				file != null && file.getPath() != null ? Util.toPath(file) : null, Files::newInputStream, null)) {
