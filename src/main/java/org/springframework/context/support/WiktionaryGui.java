@@ -62,6 +62,8 @@ import org.springframework.beans.factory.InitializingBean;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 
@@ -323,7 +325,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		@Note("IPA")
 		private String ipa;
 
-		private String hiragana, pitchAccent, pitchAccentPattern;
+		@Note("Hiragana")
+		private String hiragana;
+
+		private String  pitchAccent, pitchAccentPattern;
 
 	}
 
@@ -443,9 +448,9 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 									//
 								try {
 									//
-									we = ObjectUtils.getIfNull(objectMapper != null ? objectMapper.readValue(
-											ObjectMapperUtil.writeValueAsBytes(objectMapper, we), WiktionaryEntry.class)
-											: null, we);
+									we = ObjectUtils.getIfNull(readValue(objectMapper,
+											ObjectMapperUtil.writeValueAsBytes(objectMapper, we),
+											WiktionaryEntry.class), we);
 									//
 								} catch (final IOException e) {
 									//
@@ -500,6 +505,20 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		} // if
 			//
+	}
+
+	private static <T> T readValue(final ObjectMapper instance, final byte[] src, final Class<T> valueType)
+			throws StreamReadException, DatabindException, IOException {
+		//
+		if (instance == null
+				|| Narcissus.getField(instance, getFieldByName(Util.getClass(instance), "_jsonFactory")) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance.readValue(src, valueType);
+		//
 	}
 
 	@Nullable
