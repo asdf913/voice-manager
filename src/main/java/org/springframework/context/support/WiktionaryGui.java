@@ -402,11 +402,13 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 				while ((e1 = ElementUtil.nextElementSibling(e1)) != null) {
 					//
-					if (CollectionUtils.isEqualCollection(classNames(e1), Arrays.asList("mw-heading", "mw-heading4"))
-							&& Objects.equals(
+					if (Boolean.logicalAnd(
+							CollectionUtils.isEqualCollection(classNames(e1),
+									Arrays.asList("mw-heading", "mw-heading4")),
+							Objects.equals(
 									ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
 											ElementUtil.select(e1, "h4"), x -> IterableUtils.get(x, 0), null)),
-									"Pronunciation")) {
+									"Pronunciation"))) {
 						//
 						if (IterableUtils
 								.size(ss = Util.toList(Util.filter(
