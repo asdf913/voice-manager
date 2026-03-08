@@ -435,13 +435,11 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 												x -> Objects.equals(NodeUtil.attr(x, "class"), "Latn"))),
 										x -> IterableUtils.get(x, 0), null));
 								//
-								we.pitchAccentPattern = testAndApply(
-										x -> CollectionUtils
-												.isNotEmpty(x),
-										Util.toList(Util.map(Util.filter(stream(e2),
+								we.pitchAccentPattern = testAndApply(CollectionUtils::isNotEmpty, Util.toList(Util.map(
+										Util.filter(stream(e2),
 												x -> x != null && StringsUtil.equals(Strings.CI, x.tagName(), "a")
 														&& NodeUtil.hasAttr(x, "title")),
-												x -> NodeUtil.attr(x, "title"))),
+										x -> NodeUtil.attr(x, "title"))),
 										x -> IterableUtils.get(x, IterableUtils.size(x) - 1), null);
 								//
 								Util.add(wes = ObjectUtils.getIfNull(wes, ArrayList::new), we);
