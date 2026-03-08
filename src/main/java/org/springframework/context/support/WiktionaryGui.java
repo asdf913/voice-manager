@@ -121,7 +121,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		final Dimension pd = Util.getPreferredSize(jsp = new JScrollPane(jTable));
 		//
-		jsp.setPreferredSize(new Dimension((int) getWidth(pd), 0));
+		setPreferredSize(jsp, new Dimension((int) getWidth(pd), 0));
 		//
 		add(jsp);
 		//
@@ -171,6 +171,12 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			}
 		});
 		//
+	}
+
+	private static void setPreferredSize(final Component instance, final Dimension preferredSize) {
+		if (instance != null) {
+			instance.setPreferredSize(preferredSize);
+		}
 	}
 
 	private static double getWidth(final Dimension instance) {
@@ -467,15 +473,9 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 			Util.forEach(wes, x -> Util.addRow(dtmWiktionaryEntry, new Object[] { x }));
 			//
-			final Dimension pd = Util.getPreferredSize(jsp);
+			setPreferredSize(jsp, new Dimension((int) getWidth(Util.getPreferredSize(jsp)),
+					IterableUtils.size(wes) * (new JTable().getRowHeight() + 3)));
 			//
-			if (jsp != null) {
-				//
-				jsp.setPreferredSize(
-						new Dimension((int) getWidth(pd), IterableUtils.size(wes) * (new JTable().getRowHeight() + 3)));
-				//
-			} // if
-				//
 			pack(window);
 			//
 		} // if

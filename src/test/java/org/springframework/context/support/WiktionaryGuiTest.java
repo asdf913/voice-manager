@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import javax.swing.JLabel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -336,6 +338,10 @@ class WiktionaryGuiTest {
 					//
 					Util.add(collection, Object.class);
 					//
+				} else if (Objects.equals(parameterType, Component.class)) {
+					//
+					Util.add(collection, new JLabel());
+					//
 				} else if (isArray(parameterType)) {
 					//
 					Util.add(collection, Array.newInstance(getComponentType(parameterType), 0));
@@ -410,6 +416,7 @@ class WiktionaryGuiTest {
 				//
 		} // for
 			//
+
 	}
 
 	private static boolean isInterface(final Class<?> instance) {
