@@ -138,14 +138,6 @@ class WiktionaryGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof BiPredicate) {
-				//
-				if (Objects.equals(name, "test")) {
-					//
-					return test;
-					//
-				} // if
-					//
 			} else if (proxy instanceof Function && Objects.equals(name, "apply")) {
 				//
 				return null;
@@ -158,6 +150,14 @@ class WiktionaryGuiTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof BiPredicate) {
+				//
+				if (Objects.equals(name, "test")) {
+					//
+					return test;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
