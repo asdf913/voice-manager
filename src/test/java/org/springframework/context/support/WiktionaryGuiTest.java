@@ -146,14 +146,6 @@ class WiktionaryGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof TableModel) {
-				//
-				if (Objects.equals(name, "getValueAt")) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} else if (proxy instanceof Function && Objects.equals(name, "apply")) {
 				//
 				return null;
@@ -162,6 +154,14 @@ class WiktionaryGuiTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof TableModel) {
+				//
+				if (Objects.equals(name, "getValueAt")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
