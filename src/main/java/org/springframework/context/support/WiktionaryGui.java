@@ -127,48 +127,43 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		final TableCellRenderer tcr = jTable.getDefaultRenderer(Object.class);
 		//
-		jTable.setDefaultRenderer(Object.class, new TableCellRenderer() {
-
-			@Override
-			public Component getTableCellRendererComponent(final JTable table, final Object value,
-					final boolean isSelected, final boolean hasFocus, final int row, final int column) {
+		jTable.setDefaultRenderer(Object.class, (table, value, isSelected, hasFocus, row, column) -> {
+			//
+			final Component c = WiktionaryGui.getTableCellRendererComponent(tcr, table, value, isSelected, hasFocus,
+					row, column);
+			//
+			final WiktionaryEntry we = Util.cast(WiktionaryEntry.class, getValueAt(getModel(table), row, 0));
+			//
+			if (we != null) {
 				//
-				final Component c = WiktionaryGui.getTableCellRendererComponent(tcr, table, value, isSelected, hasFocus,
-						row, column);
+				final JLabel jLabel = Util.cast(JLabel.class, c);
 				//
-				final WiktionaryEntry we = Util.cast(WiktionaryEntry.class, getValueAt(getModel(table), row, 0));
-				//
-				if (we != null) {
+				if (column == 0) {
 					//
-					final JLabel jLabel = Util.cast(JLabel.class, c);
+					Util.setText(jLabel, we.language);
 					//
-					if (column == 0) {
-						//
-						Util.setText(jLabel, we.language);
-						//
-					} else if (column == 1) {
-						//
-						Util.setText(jLabel, we.ipa);
-						//
-					} else if (column == 2) {
-						//
-						Util.setText(jLabel, we.hiragana);
-						//
-					} else if (column == 3) {
-						//
-						Util.setText(jLabel, we.pitchAccent);
-						//
-					} else if (column == 4) {
-						//
-						Util.setText(jLabel, we.pitchAccentPattern);
-						//
-					} // if
-						//
+				} else if (column == 1) {
+					//
+					Util.setText(jLabel, we.ipa);
+					//
+				} else if (column == 2) {
+					//
+					Util.setText(jLabel, we.hiragana);
+					//
+				} else if (column == 3) {
+					//
+					Util.setText(jLabel, we.pitchAccent);
+					//
+				} else if (column == 4) {
+					//
+					Util.setText(jLabel, we.pitchAccentPattern);
+					//
 				} // if
 					//
-				return c;
+			} // if
 				//
-			}
+			return c;
+			//
 		});
 		//
 	}
