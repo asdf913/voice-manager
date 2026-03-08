@@ -174,7 +174,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		}
 	}
 
-	private static double getWidth(final Dimension instance) {
+	private static double getWidth(@Nullable final Dimension instance) {
 		return instance != null ? instance.getWidth() : 0;
 	}
 
@@ -184,20 +184,21 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		}
 	}
 
-	private static TableColumn getColumn(final TableColumnModel instance, final int columnIndex) {
+	private static TableColumn getColumn(@Nullable final TableColumnModel instance, final int columnIndex) {
 		return instance != null ? instance.getColumn(columnIndex) : null;
 	}
 
-	private static Object getValueAt(final TableModel instance, final int row, final int column) {
+	private static Object getValueAt(@Nullable final TableModel instance, final int row, final int column) {
 		return instance != null ? instance.getValueAt(row, column) : null;
 	}
 
-	private static TableModel getModel(final JTable instance) {
+	private static TableModel getModel(@Nullable final JTable instance) {
 		return instance != null ? instance.getModel() : null;
 	}
 
-	private static Component getTableCellRendererComponent(final TableCellRenderer instance, final JTable table,
-			final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column) {
+	private static Component getTableCellRendererComponent(@Nullable final TableCellRenderer instance,
+			final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row,
+			final int column) {
 		return instance != null
 				? instance.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
 				: null;
@@ -239,7 +240,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		return Util.forName("org.junit.jupiter.api.Test") != null;
 	}
 
-	private static void pack(final Window instance) {
+	private static void pack(@Nullable final Window instance) {
 		//
 		if (instance == null) {
 			//
@@ -477,7 +478,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 	}
 
-	private static Stream<Element> stream(final Element instance) {
+	private static Stream<Element> stream(@Nullable final Element instance) {
 		return instance != null ? instance.stream() : null;
 	}
 
