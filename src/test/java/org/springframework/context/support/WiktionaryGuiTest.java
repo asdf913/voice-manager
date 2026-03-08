@@ -152,6 +152,10 @@ class WiktionaryGuiTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof Function && Objects.equals(name, "apply")) {
+				//
+				return null;
+				//
 			} else if (proxy instanceof TableCellRenderer) {
 				//
 				if (Objects.equals(name, "getTableCellRendererComponent")) {
@@ -160,10 +164,6 @@ class WiktionaryGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Function && Objects.equals(name, "apply")) {
-				//
-				return null;
-				//
 			} // if
 				//
 			throw new Throwable(name);
