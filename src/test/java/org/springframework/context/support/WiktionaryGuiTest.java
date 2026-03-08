@@ -160,14 +160,10 @@ class WiktionaryGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Function) {
+			} else if (proxy instanceof Function && Objects.equals(name, "apply")) {
 				//
-				if (Objects.equals(name, "apply")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
