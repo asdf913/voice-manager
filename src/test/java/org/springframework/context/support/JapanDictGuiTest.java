@@ -647,7 +647,7 @@ class JapanDictGuiTest {
 										Util.filter(Util.stream(collection),
 												x -> StringsUtil.startsWith(Strings.CI, x, "CONNECTIVITY:")),
 										x -> StringUtils.trim(StringUtils.substringAfter(x, ':')))),
-								x -> IterableUtils.size(x) == 0, null));
+								x -> IterableUtils.get(x, 0), null));
 				//
 			} // try
 				//
