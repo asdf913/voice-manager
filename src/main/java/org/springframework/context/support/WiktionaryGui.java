@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -401,27 +402,23 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 				while ((e1 = ElementUtil.nextElementSibling(e1)) != null) {
 					//
-					if (CollectionUtils.isEqualCollection(e1.classNames(), Arrays.asList("mw-heading", "mw-heading4"))
+					if (CollectionUtils.isEqualCollection(classNames(e1), Arrays.asList("mw-heading", "mw-heading4"))
 							&& Objects.equals(
 									ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
 											ElementUtil.select(e1, "h4"), x -> IterableUtils.get(x, 0), null)),
 									"Pronunciation")) {
 						//
 						if (IterableUtils
-								.size(ss = Util
-										.toList(Util.filter(
-												Util.map(Util.filter(
-														stream(ElementUtil.nextElementSibling(e1)),
+								.size(ss = Util.toList(Util.filter(
+										Util.map(
+												Util.filter(stream(ElementUtil.nextElementSibling(e1)),
 														x -> StringsUtil.startsWith(Strings.CI, ElementUtil.html(x),
 																"IPA")),
-														x -> ElementUtil.text(testAndApply(
-																y -> IterableUtils.size(y) == 1,
-																Util.toList(Util.filter(stream(ElementUtil.parent(x)),
-																		y -> Util.contains(
-																				y != null ? y.classNames() : null,
-																				"IPA"))),
-																y -> IterableUtils.get(y, 0), null))),
-												Objects::nonNull))) == 1) {
+												x -> ElementUtil.text(testAndApply(y -> IterableUtils.size(y) == 1,
+														Util.toList(Util.filter(stream(ElementUtil.parent(x)),
+																y -> Util.contains(classNames(y), "IPA"))),
+														y -> IterableUtils.get(y, 0), null))),
+										Objects::nonNull))) == 1) {
 							//
 							(we = new WiktionaryEntry()).language = language;
 							//
@@ -485,7 +482,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 								//
 						} // if
 							//
-					} else if (CollectionUtils.isEqualCollection(e1.classNames(),
+					} else if (CollectionUtils.isEqualCollection(classNames(e1),
 							Arrays.asList("mw-heading", "mw-heading2"))) {
 						//
 						break;
@@ -505,6 +502,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		} // if
 			//
+	}
+
+	private static Set<String> classNames(final Element instance) {
+		return instance != null ? instance.classNames() : null;
 	}
 
 	@Nullable

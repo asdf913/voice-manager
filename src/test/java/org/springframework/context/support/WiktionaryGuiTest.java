@@ -22,6 +22,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
 import javax.swing.JLabel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
@@ -299,7 +300,7 @@ class WiktionaryGuiTest {
 		//
 		Object[] os = null;
 		//
-		String toString = null;
+		String toString, name = null;
 		//
 		Object result = null;
 		//
@@ -361,10 +362,12 @@ class WiktionaryGuiTest {
 				//
 				result = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Boolean.logicalAnd(isPrimitive(returnType = Util.getReturnType(m)),
-						!Objects.equals(returnType, Void.TYPE))
-						|| Boolean.logicalAnd(Objects.equals(Util.getName(m), "stream"),
-								Arrays.equals(parameterTypes, new Class<?>[] { Element.class }))) {
+				if (or(Boolean.logicalAnd(isPrimitive(returnType = Util.getReturnType(m)),
+						!Objects.equals(returnType, Void.TYPE)),
+						Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "stream"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Element.class })),
+						Boolean.logicalAnd(Objects.equals(name, "classNames"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Element.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -411,7 +414,30 @@ class WiktionaryGuiTest {
 				//
 		} // for
 			//
+	}
 
+	private static boolean or(final boolean a, final boolean b, @Nullable final boolean... bs) {
+		//
+		boolean result = Boolean.logicalOr(a, b);
+		//
+		if (result) {
+			//
+			return result;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (result |= bs[i]) {
+				//
+				return result;
+				//
+			} // if
+				//
+		} // for
+			//
+		return result;
+		//
 	}
 
 	private static boolean isInterface(final Class<?> instance) {
