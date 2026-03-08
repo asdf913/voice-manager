@@ -467,9 +467,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 										Util.toList(
 												Util.map(
 														Util.filter(stream(e2),
-																x -> StringsUtil.equals(Strings.CI,
-																		ElementUtil.tagName(x), "a")
-																		&& NodeUtil.hasAttr(x, "title")),
+																x -> Boolean.logicalAnd(
+																		StringsUtil.equals(Strings.CI,
+																				ElementUtil.tagName(x), "a"),
+																		NodeUtil.hasAttr(x, "title"))),
 														x -> NodeUtil.attr(x, "title"))),
 										x -> IterableUtils.get(x, IterableUtils.size(x) - 1), null);
 								//
