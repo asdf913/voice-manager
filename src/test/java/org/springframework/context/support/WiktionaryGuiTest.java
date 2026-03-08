@@ -161,14 +161,10 @@ class WiktionaryGuiTest {
 				//
 				return test;
 				//
-			} else if (proxy instanceof Predicate) {
+			} else if (proxy instanceof Predicate && Objects.equals(name, "test")) {
 				//
-				if (Objects.equals(name, "test")) {
-					//
-					return test;
-					//
-				} // if
-					//
+				return test;
+				//
 			} // if
 				//
 			throw new Throwable(name);
