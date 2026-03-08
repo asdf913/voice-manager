@@ -507,8 +507,9 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 	}
 
+	@Nullable
 	private static <T> T readValue(final ObjectMapper instance, final byte[] src, final Class<T> valueType)
-			throws 	IOException {
+			throws IOException {
 		//
 		if (instance == null
 				|| Narcissus.getField(instance, getFieldByName(Util.getClass(instance), "_jsonFactory")) == null) {
