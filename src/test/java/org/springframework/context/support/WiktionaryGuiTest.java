@@ -137,15 +137,7 @@ class WiktionaryGuiTest {
 				//
 			final String name = Util.getName(method);
 			//
-			if (proxy instanceof TableColumnModel) {
-				//
-				if (Objects.equals(name, "getColumn")) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Function && Objects.equals(name, "apply")) {
+			if (proxy instanceof Function && Objects.equals(name, "apply")) {
 				//
 				return null;
 				//
@@ -165,6 +157,14 @@ class WiktionaryGuiTest {
 				//
 				return test;
 				//
+			} else if (proxy instanceof TableColumnModel) {
+				//
+				if (Objects.equals(name, "getColumn")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
