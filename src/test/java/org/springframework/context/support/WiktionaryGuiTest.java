@@ -158,14 +158,10 @@ class WiktionaryGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof TableCellRenderer) {
+			} else if (proxy instanceof TableCellRenderer && Objects.equals(name, "getTableCellRendererComponent")) {
 				//
-				if (Objects.equals(name, "getTableCellRendererComponent")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
