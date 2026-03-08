@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.charset.Charset;
@@ -14,6 +15,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -35,16 +38,28 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.oxbow.swingbits.util.OperatingSystem;
 import org.oxbow.swingbits.util.OperatingSystemUtil;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
 class WiktionaryGuiTest {
+
+	private static Method METHOD_READ_VALUE = null;
+
+	@BeforeAll
+	static void beforeAll() throws NoSuchMethodException {
+		//
+		(METHOD_READ_VALUE = Util.getDeclaredMethod(WiktionaryGui.class, "readValue", ObjectMapper.class, byte[].class,
+				Class.class)).setAccessible(true);
+		//
+	}
 
 	private WiktionaryGui instance = null;
 
@@ -430,6 +445,18 @@ class WiktionaryGuiTest {
 			//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent("", 0, null)));
 		//
+	}
+
+	@Test
+	void testReadValue() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertEquals(Collections.emptyMap(),
+				invoke(METHOD_READ_VALUE, null, new ObjectMapper(), Util.getBytes("{}"), Map.class));
+	}
+
+	private static Object invoke(final Method method, final Object instance, final Object... args)
+			throws IllegalAccessException, InvocationTargetException {
+		return method != null ? method.invoke(instance, args) : null;
 	}
 
 }
