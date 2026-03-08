@@ -8,6 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -303,7 +307,16 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 
 	private static class WiktionaryEntry {
 
-		private String language, ipa, hiragana, pitchAccent, pitchAccentPattern;
+		@Target(ElementType.FIELD)
+		@Retention(RetentionPolicy.RUNTIME)
+		private @interface Note {
+			String value();
+		}
+
+		@Note("Language")
+		private String language;
+
+		private String ipa, hiragana, pitchAccent, pitchAccentPattern;
 
 	}
 
