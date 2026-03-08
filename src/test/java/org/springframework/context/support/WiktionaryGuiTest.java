@@ -150,14 +150,10 @@ class WiktionaryGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof BiPredicate) {
+			} else if (proxy instanceof BiPredicate && Objects.equals(name, "test")) {
 				//
-				if (Objects.equals(name, "test")) {
-					//
-					return test;
-					//
-				} // if
-					//
+				return test;
+				//
 			} // if
 				//
 			throw new Throwable(name);
