@@ -383,7 +383,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	}
 
 	@Nullable
-	private static Iterable<WiktionaryEntry> getWiktionaryEntries(final String html) {
+	private static Iterable<WiktionaryEntry> getWiktionaryEntries(@Nullable final String html) {
 		//
 		if (html == null || Narcissus.getField(html, getFieldByName(Util.getClass(html), "value")) == null) {
 			//
