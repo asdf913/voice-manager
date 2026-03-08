@@ -510,7 +510,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	}
 
 	@Nullable
-	private static <T> T readValue(final ObjectMapper instance, final byte[] src, final Class<T> valueType)
+	private static <T> T readValue(@Nullable final ObjectMapper instance, final byte[] src, final Class<T> valueType)
 			throws IOException {
 		//
 		if (instance == null
