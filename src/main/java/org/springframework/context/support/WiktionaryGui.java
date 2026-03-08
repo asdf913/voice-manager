@@ -506,7 +506,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		}
 	}
 
-	private static Set<String> classNames(final Element instance) {
+	private static Set<String> classNames(@Nullable final Element instance) {
 		return instance != null ? instance.classNames() : null;
 	}
 
