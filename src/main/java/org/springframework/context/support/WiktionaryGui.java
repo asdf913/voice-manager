@@ -188,18 +188,22 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		}
 	}
 
+	@Nullable
 	private static TableColumn getColumn(@Nullable final TableColumnModel instance, final int columnIndex) {
 		return instance != null ? instance.getColumn(columnIndex) : null;
 	}
 
+	@Nullable
 	private static Object getValueAt(@Nullable final TableModel instance, final int row, final int column) {
 		return instance != null ? instance.getValueAt(row, column) : null;
 	}
 
+	@Nullable
 	private static TableModel getModel(@Nullable final JTable instance) {
 		return instance != null ? instance.getModel() : null;
 	}
 
+	@Nullable
 	private static Component getTableCellRendererComponent(@Nullable final TableCellRenderer instance,
 			final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row,
 			final int column) {
@@ -494,6 +498,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 	}
 
+	@Nullable
 	private static Stream<Element> stream(@Nullable final Element instance) {
 		return instance != null ? instance.stream() : null;
 	}
