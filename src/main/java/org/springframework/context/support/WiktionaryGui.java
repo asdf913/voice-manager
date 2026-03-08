@@ -27,6 +27,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -339,12 +340,9 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		if (Objects.equals(Util.getSource(evt), btnExecute)) {
 			//
-			for (int i = Util.getRowCount(dtmWiktionaryEntry) - 1; i >= 0; i--) {
-				//
-				Util.removeRow(dtmWiktionaryEntry, i);
-				//
-			} // for
-				//
+			Util.forEach(IntStream.iterate(Util.getRowCount(dtmWiktionaryEntry) - 1, i -> i >= 0, i -> i - 1),
+					i -> Util.removeRow(dtmWiktionaryEntry, i));
+			//
 			String html = null;
 			//
 			final String encoding = "utf-8";
