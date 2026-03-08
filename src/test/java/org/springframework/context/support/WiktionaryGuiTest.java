@@ -48,20 +48,29 @@ import org.junit.jupiter.api.Test;
 import org.oxbow.swingbits.util.OperatingSystem;
 import org.oxbow.swingbits.util.OperatingSystemUtil;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
 class WiktionaryGuiTest {
 
-	private static Method METHOD_READ_VALUE = null;
+	private static Method METHOD_READ_VALUE, METHOD_GET_WIKTIONARY_ENTRIES = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
 		//
-		(METHOD_READ_VALUE = WiktionaryGui.class.getDeclaredMethod("readValue", ObjectMapper.class, byte[].class,
-				Class.class)).setAccessible(true);
+		final Class<?> clz = WiktionaryGui.class;
+		//
+		(METHOD_READ_VALUE = Util.getDeclaredMethod(clz, "readValue", ObjectMapper.class, byte[].class, Class.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_WIKTIONARY_ENTRIES = Util.getDeclaredMethod(clz, "getWiktionaryEntries", String.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -73,10 +82,14 @@ class WiktionaryGuiTest {
 
 	private OperatingSystem operatingSystem = null;
 
+	private ObjectMapper objectMapper = null;
+
 	@BeforeEach
 	void beforeEach() throws IOException {
 		//
 		instance = Util.cast(WiktionaryGui.class, Narcissus.allocateInstance(WiktionaryGui.class));
+		//
+		objectMapper = new ObjectMapper();
 		//
 		if (Objects.equals(operatingSystem = OperatingSystemUtil.getOperatingSystem(), OperatingSystem.LINUX)) {
 			//
@@ -480,12 +493,30 @@ class WiktionaryGuiTest {
 	void testReadValue() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertEquals(Collections.emptyMap(),
-				invoke(METHOD_READ_VALUE, null, new ObjectMapper(), Util.getBytes("{}"), Map.class));
+				invoke(METHOD_READ_VALUE, null, objectMapper, Util.getBytes("{}"), Map.class));
+		//
 	}
 
 	private static Object invoke(final Method method, final Object instance, final Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
+	}
+
+	@Test
+	void testGetWiktionaryEntries() throws IllegalAccessException, InvocationTargetException, JsonProcessingException {
+		//
+		Assertions.assertEquals(
+				"[{\"language\":\"Japanese\",\"ipa\":\"[it͡ɕi]\",\"hiragana\":null,\"pitchAccent\":null,\"pitchAccentPattern\":null}]",
+				ObjectMapperUtil.writeValueAsString(
+						objectMapper != null ? objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY) : null,
+						invoke(METHOD_GET_WIKTIONARY_ENTRIES, null,
+								"<html><body><div class=\"mw-heading mw-heading2\"><h2>Japanese</h2></div><div class=\"mw-heading mw-heading4\"><h4>Pronunciation</h4></div><ul><li><span class=\"usage-label-accent\"></span></li><li>IPA(key): <span class=\"IPA nowrap\">[it͡ɕi]</span></li></ul></body></html>")));
+		//
+		Assertions.assertEquals(
+				"[{\"language\":\"Japanese\",\"ipa\":\"[it͡ɕi]\",\"hiragana\":\"いち\",\"pitchAccent\":\"[ìchíꜜ]\",\"pitchAccentPattern\":\"尾高型\"}]",
+				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_GET_WIKTIONARY_ENTRIES, null,
+						"<html><body><div class=\"mw-heading mw-heading2\"><h2>Japanese</h2></div><div class=\"mw-heading mw-heading4\"><h4>Pronunciation</h4></div><ul><li><span class=\"usage-label-accent\"></span><span lang=\"ja\" class=\"Jpan\">いち</span><span class=\"Latn\">[ìchíꜜ]</span><a title=\"尾高型\"></a></li><li>IPA(key): <span class=\"IPA nowrap\">[it͡ɕi]</span></li></ul></body></html>")));
+		//
 	}
 
 }

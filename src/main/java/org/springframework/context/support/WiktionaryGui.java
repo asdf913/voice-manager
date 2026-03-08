@@ -369,124 +369,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 			} // try
 				//
-			final Document document = testAndApply(Objects::nonNull, html, x -> Jsoup.parse(x, ""), null);
+			final Iterable<WiktionaryEntry> wes = getWiktionaryEntries(html);
 			//
-			final Iterable<Element> es1 = ElementUtil.select(document, ".mw-heading.mw-heading2");
-			//
-			String language = null;
-			//
-			Element e1, e2 = null;
-			//
-			WiktionaryEntry we = null;
-			//
-			Iterable<String> ss = null;
-			//
-			Collection<WiktionaryEntry> wes = null;
-			//
-			Iterable<Element> es2 = null;
-			//
-			ObjectMapper objectMapper = null;
-			//
-			for (int i = 0; i < IterableUtils.size(es1); i++) {
-				//
-				language = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-						ElementUtil.select(e1 = IterableUtils.get(es1, i), "h2"), x -> IterableUtils.get(x, 0), null));
-				//
-				while ((e1 = ElementUtil.nextElementSibling(e1)) != null) {
-					//
-					if (Boolean.logicalAnd(
-							CollectionUtils.isEqualCollection(classNames(e1),
-									Arrays.asList("mw-heading", "mw-heading4")),
-							Objects.equals(
-									ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-											ElementUtil.select(e1, "h4"), x -> IterableUtils.get(x, 0), null)),
-									"Pronunciation"))) {
-						//
-						if (IterableUtils
-								.size(ss = Util.toList(Util.filter(
-										Util.map(
-												Util.filter(stream(ElementUtil.nextElementSibling(e1)),
-														x -> StringsUtil.startsWith(Strings.CI, ElementUtil.html(x),
-																"IPA")),
-												x -> ElementUtil.text(testAndApply(y -> IterableUtils.size(y) == 1,
-														Util.toList(Util.filter(stream(ElementUtil.parent(x)),
-																y -> Util.contains(classNames(y), "IPA"))),
-														y -> IterableUtils.get(y, 0), null))),
-										Objects::nonNull))) == 1) {
-							//
-							(we = new WiktionaryEntry()).language = language;
-							//
-							we.ipa = IterableUtils.get(ss, 0);
-							//
-							es2 = Util.toList(
-									Util.filter(Util.stream(ElementUtil.children(ElementUtil.nextElementSibling(e1))),
-											x -> Util.anyMatch(stream(x),
-													y -> Objects.equals(y.className(), "usage-label-accent"))));
-							//
-							for (int j = 0; j < IterableUtils.size(es2); j++) {
-								//
-								if ((e2 = IterableUtils.get(es2, j)) == null) {
-									//
-									continue;
-									//
-								} // if
-									//
-								try {
-									//
-									we = ObjectUtils
-											.getIfNull(
-													readValue(
-															objectMapper = ObjectUtils.getIfNull(objectMapper,
-																	() -> new ObjectMapper().setVisibility(
-																			PropertyAccessor.ALL, Visibility.ANY)),
-															ObjectMapperUtil.writeValueAsBytes(objectMapper, we),
-															WiktionaryEntry.class),
-													we);
-									//
-								} catch (final IOException e) {
-									//
-									throw new RuntimeException(e);
-									//
-								} // try
-									//
-								we.hiragana = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-										Util.toList(Util.filter(stream(e2),
-												x -> Objects.equals(NodeUtil.attr(x, "lang"), "ja"))),
-										x -> IterableUtils.get(x, 0), null));
-								//
-								we.pitchAccent = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-										Util.toList(Util.filter(stream(e2),
-												x -> Objects.equals(NodeUtil.attr(x, "class"), "Latn"))),
-										x -> IterableUtils.get(x, 0), null));
-								//
-								we.pitchAccentPattern = testAndApply(CollectionUtils::isNotEmpty,
-										Util.toList(
-												Util.map(
-														Util.filter(stream(e2),
-																x -> Boolean.logicalAnd(
-																		StringsUtil.equals(Strings.CI,
-																				ElementUtil.tagName(x), "a"),
-																		NodeUtil.hasAttr(x, "title"))),
-														x -> NodeUtil.attr(x, "title"))),
-										x -> IterableUtils.get(x, IterableUtils.size(x) - 1), null);
-								//
-								Util.add(wes = ObjectUtils.getIfNull(wes, ArrayList::new), we);
-								//
-							} // for
-								//
-						} // if
-							//
-					} else if (CollectionUtils.isEqualCollection(classNames(e1),
-							Arrays.asList("mw-heading", "mw-heading2"))) {
-						//
-						break;
-						//
-					} // if
-						//
-				} // while
-					//
-			} // for
-				//
 			Util.forEach(wes, x -> Util.addRow(dtmWiktionaryEntry, new Object[] { x }));
 			//
 			setPreferredSize(jsp, new Dimension((int) getWidth(Util.getPreferredSize(jsp)),
@@ -496,6 +380,136 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		} // if
 			//
+	}
+
+	private static Iterable<WiktionaryEntry> getWiktionaryEntries(final String html) {
+		//
+		if (html == null || Narcissus.getField(html, getFieldByName(Util.getClass(html), "value")) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Document document = Jsoup.parse(html, "");
+		//
+		final Iterable<Element> es1 = ElementUtil.select(document, ".mw-heading.mw-heading2");
+		//
+		String language = null;
+		//
+		Element e1, e2 = null;
+		//
+		WiktionaryEntry we = null;
+		//
+		Iterable<String> ss = null;
+		//
+		Collection<WiktionaryEntry> wes = null;
+		//
+		Iterable<Element> es2 = null;
+		//
+		ObjectMapper objectMapper = null;
+		//
+		for (int i = 0; i < IterableUtils.size(es1); i++) {
+			//
+			language = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+					ElementUtil.select(e1 = IterableUtils.get(es1, i), "h2"), x -> IterableUtils.get(x, 0), null));
+			//
+			while ((e1 = ElementUtil.nextElementSibling(e1)) != null) {
+				//
+				if (Boolean.logicalAnd(
+						CollectionUtils.isEqualCollection(classNames(e1), Arrays.asList("mw-heading", "mw-heading4")),
+						Objects.equals(
+								ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+										ElementUtil.select(e1, "h4"), x -> IterableUtils.get(x, 0), null)),
+								"Pronunciation"))) {
+					//
+					if (IterableUtils
+							.size(ss = Util
+									.toList(Util.filter(
+											Util.map(
+													Util.filter(stream(ElementUtil.nextElementSibling(e1)),
+															x -> StringsUtil.startsWith(Strings.CI, ElementUtil.html(x),
+																	"IPA")),
+													x -> ElementUtil.text(testAndApply(y -> IterableUtils.size(y) == 1,
+															Util.toList(Util.filter(stream(ElementUtil.parent(x)),
+																	y -> Util.contains(classNames(y), "IPA"))),
+															y -> IterableUtils.get(y, 0), null))),
+											Objects::nonNull))) == 1) {
+						//
+						(we = new WiktionaryEntry()).language = language;
+						//
+						we.ipa = IterableUtils.get(ss, 0);
+						//
+						es2 = Util.toList(
+								Util.filter(Util.stream(ElementUtil.children(ElementUtil.nextElementSibling(e1))),
+										x -> Util.anyMatch(stream(x),
+												y -> Objects.equals(y.className(), "usage-label-accent"))));
+						//
+						for (int j = 0; j < IterableUtils.size(es2); j++) {
+							//
+							if ((e2 = IterableUtils.get(es2, j)) == null) {
+								//
+								continue;
+								//
+							} // if
+								//
+							try {
+								//
+								we = ObjectUtils
+										.getIfNull(
+												readValue(
+														objectMapper = ObjectUtils.getIfNull(objectMapper,
+																() -> new ObjectMapper().setVisibility(
+																		PropertyAccessor.ALL, Visibility.ANY)),
+														ObjectMapperUtil.writeValueAsBytes(objectMapper, we),
+														WiktionaryEntry.class),
+												we);
+								//
+							} catch (final IOException e) {
+								//
+								throw new RuntimeException(e);
+								//
+							} // try
+								//
+							we.hiragana = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+									Util.toList(Util.filter(stream(e2),
+											x -> Objects.equals(NodeUtil.attr(x, "lang"), "ja"))),
+									x -> IterableUtils.get(x, 0), null));
+							//
+							we.pitchAccent = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+									Util.toList(Util.filter(stream(e2),
+											x -> Objects.equals(NodeUtil.attr(x, "class"), "Latn"))),
+									x -> IterableUtils.get(x, 0), null));
+							//
+							we.pitchAccentPattern = testAndApply(CollectionUtils::isNotEmpty,
+									Util.toList(
+											Util.map(
+													Util.filter(stream(e2),
+															x -> Boolean.logicalAnd(
+																	StringsUtil.equals(Strings.CI,
+																			ElementUtil.tagName(x), "a"),
+																	NodeUtil.hasAttr(x, "title"))),
+													x -> NodeUtil.attr(x, "title"))),
+									x -> IterableUtils.get(x, IterableUtils.size(x) - 1), null);
+							//
+							Util.add(wes = ObjectUtils.getIfNull(wes, ArrayList::new), we);
+							//
+						} // for
+							//
+					} // if
+						//
+				} else if (CollectionUtils.isEqualCollection(classNames(e1),
+						Arrays.asList("mw-heading", "mw-heading2"))) {
+					//
+					break;
+					//
+				} // if
+					//
+			} // while
+				//
+		} // for
+			//
+		return wes;
+		//
 	}
 
 	private static void setRequestProperty(@Nullable final URLConnection instance, final String key,
