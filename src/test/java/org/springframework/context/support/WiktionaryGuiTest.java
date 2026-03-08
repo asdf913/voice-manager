@@ -56,7 +56,7 @@ class WiktionaryGuiTest {
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
 		//
-		(METHOD_READ_VALUE = Util.getDeclaredMethod(WiktionaryGui.class, "readValue", ObjectMapper.class, byte[].class,
+		(METHOD_READ_VALUE = WiktionaryGui.class.getDeclaredMethod("readValue", ObjectMapper.class, byte[].class,
 				Class.class)).setAccessible(true);
 		//
 	}
