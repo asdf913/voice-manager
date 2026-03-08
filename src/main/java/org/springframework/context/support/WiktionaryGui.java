@@ -328,7 +328,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		@Note("Hiragana")
 		private String hiragana;
 
-		private String  pitchAccent, pitchAccentPattern;
+		private String pitchAccent, pitchAccentPattern;
 
 	}
 
@@ -508,7 +508,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	}
 
 	private static <T> T readValue(final ObjectMapper instance, final byte[] src, final Class<T> valueType)
-			throws StreamReadException, DatabindException, IOException {
+			throws 	IOException {
 		//
 		if (instance == null
 				|| Narcissus.getField(instance, getFieldByName(Util.getClass(instance), "_jsonFactory")) == null) {
