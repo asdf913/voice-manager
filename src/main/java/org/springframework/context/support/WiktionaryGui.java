@@ -168,7 +168,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
-	private static void setPreferredSize(final Component instance, final Dimension preferredSize) {
+	private static void setPreferredSize(@Nullable final Component instance, final Dimension preferredSize) {
 		if (instance != null) {
 			instance.setPreferredSize(preferredSize);
 		}
