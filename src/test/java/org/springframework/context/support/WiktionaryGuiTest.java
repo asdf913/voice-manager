@@ -10,9 +10,12 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.URI;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -341,7 +344,7 @@ class WiktionaryGuiTest {
 					//
 				} else if (Objects.equals(parameterType, URLConnection.class)) {
 					//
-					Util.add(collection, Util.openConnection(Util.toURL(Util.toURI(new File("pom.xml")))));
+					Util.add(collection, Util.openConnection(Util.toURL(toUri(Paths.get("pom.xml")))));
 					//
 				} else if (isArray(parameterType)) {
 					//
@@ -419,6 +422,10 @@ class WiktionaryGuiTest {
 				//
 		} // for
 			//
+	}
+
+	private static URI toUri(final Path instance) {
+		return instance != null ? instance.toUri() : null;
 	}
 
 	private static boolean or(final boolean a, final boolean b, @Nullable final boolean... bs) {
