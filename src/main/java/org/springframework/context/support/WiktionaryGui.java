@@ -442,18 +442,17 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 									//
 								} // if
 									//
-								if (objectMapper == null) {
-									//
-									(objectMapper = new ObjectMapper()).setVisibility(PropertyAccessor.ALL,
-											Visibility.ANY);
-									//
-								} // if
-									//
 								try {
 									//
-									we = ObjectUtils.getIfNull(readValue(objectMapper,
-											ObjectMapperUtil.writeValueAsBytes(objectMapper, we),
-											WiktionaryEntry.class), we);
+									we = ObjectUtils
+											.getIfNull(
+													readValue(
+															objectMapper = ObjectUtils.getIfNull(objectMapper,
+																	() -> new ObjectMapper().setVisibility(
+																			PropertyAccessor.ALL, Visibility.ANY)),
+															ObjectMapperUtil.writeValueAsBytes(objectMapper, we),
+															WiktionaryEntry.class),
+													we);
 									//
 								} catch (final IOException e) {
 									//
