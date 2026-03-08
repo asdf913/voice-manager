@@ -356,15 +356,9 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				final URLConnection urlConnection = Util.openConnection(new URL(Util
 						.toString(new StringBuilder("https://www.wiktionary.org/wiki/").append(Util.getText(tfText)))));
 				//
-				final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class, urlConnection);
+				setRequestProperty(Util.cast(HttpURLConnection.class, urlConnection), "User-Agent",
+						"Mozilla/5.0 (X11; Linux x86_64) AppleW;ebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36");
 				//
-				if (httpURLConnection != null) {
-					//
-					httpURLConnection.setRequestProperty("User-Agent",
-							"Mozilla/5.0 (X11; Linux x86_64) AppleW;ebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36");
-					//
-				} // if
-					//
 				html = IOUtils.toString(is = Util.getInputStream(urlConnection), encoding);
 				//
 			} catch (final IOException e) {
@@ -504,6 +498,12 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		} // if
 			//
+	}
+
+	private static void setRequestProperty(final URLConnection instance, final String key, final String value) {
+		if (instance != null) {
+			instance.setRequestProperty(key, value);
+		}
 	}
 
 	private static Set<String> classNames(final Element instance) {

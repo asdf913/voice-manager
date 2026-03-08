@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -286,7 +287,7 @@ class WiktionaryGuiTest {
 	}
 
 	@Test
-	void testNotNull() {
+	void testNotNull() throws IOException {
 		//
 		final Method[] ms = WiktionaryGui.class.getDeclaredMethods();
 		//
@@ -337,6 +338,10 @@ class WiktionaryGuiTest {
 				} else if (Objects.equals(parameterType, Component.class)) {
 					//
 					Util.add(collection, new JLabel());
+					//
+				} else if (Objects.equals(parameterType, URLConnection.class)) {
+					//
+					Util.add(collection, Util.openConnection(Util.toURL(Util.toURI(new File("pom.xml")))));
 					//
 				} else if (isArray(parameterType)) {
 					//
