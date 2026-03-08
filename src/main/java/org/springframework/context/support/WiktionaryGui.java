@@ -177,7 +177,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		return instance != null ? instance.getWidth() : 0;
 	}
 
-	private static void setMinWidth(final TableColumn instance, final int minWidth) {
+	private static void setMinWidth(@Nullable final TableColumn instance, final int minWidth) {
 		if (instance != null) {
 			instance.setMinWidth(minWidth);
 		}
@@ -287,7 +287,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
-	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+	private static <T, U> void testAndAccept(@Nullable final BiPredicate<T, U> instance, final T t, final U u,
 			final BiConsumer<T, U> consumer) {
 		if (instance != null && instance.test(t, u)) {
 			Util.accept(consumer, t, u);
