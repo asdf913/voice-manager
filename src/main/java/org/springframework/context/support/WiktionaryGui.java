@@ -24,6 +24,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -293,6 +294,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		} // if
 	}
 
+	@Nullable
 	private static <T> T testAndGet(final boolean condition, final Supplier<T> supplier) {
 		return condition ? Util.get(supplier) : null;
 	}
