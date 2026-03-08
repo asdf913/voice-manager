@@ -492,8 +492,17 @@ class WiktionaryGuiTest {
 	@Test
 	void testReadValue() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertEquals(Collections.emptyMap(),
-				invoke(METHOD_READ_VALUE, null, objectMapper, Util.getBytes("{}"), Map.class));
+		Assertions.assertNull(invoke(METHOD_READ_VALUE, null, null, null, null));
+		//
+		final byte[] bs = Util.getBytes("{}");
+		//
+		Assertions.assertNull(invoke(METHOD_READ_VALUE, null, objectMapper, bs, null));
+		//
+		final Class<?> clz = Map.class;
+		//
+		Assertions.assertNull(invoke(METHOD_READ_VALUE, null, objectMapper, null, clz));
+		//
+		Assertions.assertEquals(Collections.emptyMap(), invoke(METHOD_READ_VALUE, null, objectMapper, bs, clz));
 		//
 	}
 
