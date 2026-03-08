@@ -15,7 +15,6 @@ import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -344,7 +343,7 @@ class WiktionaryGuiTest {
 					//
 				} else if (Objects.equals(parameterType, URLConnection.class)) {
 					//
-					Util.add(collection, Util.openConnection(Util.toURL(toUri(Paths.get("pom.xml")))));
+					Util.add(collection, Util.openConnection(Util.toURL(toUri(Path.of("pom.xml")))));
 					//
 				} else if (isArray(parameterType)) {
 					//
