@@ -154,14 +154,10 @@ class WiktionaryGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof TableModel) {
+			} else if (proxy instanceof TableModel && Objects.equals(name, "getValueAt")) {
 				//
-				if (Objects.equals(name, "getValueAt")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
