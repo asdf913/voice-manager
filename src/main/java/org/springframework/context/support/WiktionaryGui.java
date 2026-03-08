@@ -320,7 +320,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		@Note("Language")
 		private String language;
 
-		private String ipa, hiragana, pitchAccent, pitchAccentPattern;
+		@Note("IPA")
+		private String ipa;
+
+		private String hiragana, pitchAccent, pitchAccentPattern;
 
 	}
 
