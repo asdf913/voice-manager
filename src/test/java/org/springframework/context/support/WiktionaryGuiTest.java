@@ -157,14 +157,10 @@ class WiktionaryGuiTest {
 				//
 				return test;
 				//
-			} else if (proxy instanceof TableColumnModel) {
+			} else if (proxy instanceof TableColumnModel && Objects.equals(name, "getColumn")) {
 				//
-				if (Objects.equals(name, "getColumn")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
