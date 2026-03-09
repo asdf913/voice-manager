@@ -484,6 +484,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
+	@Nullable
 	private static Iterable<WiktionaryEntry> getWiktionaryEntries(final WiktionaryEntry instance,
 			final ObjectMapper objectMapper, final Iterable<Element> es) {
 		//
