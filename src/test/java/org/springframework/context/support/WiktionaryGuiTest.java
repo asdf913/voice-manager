@@ -59,7 +59,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class WiktionaryGuiTest {
 
-	private static Method METHOD_READ_VALUE, METHOD_GET_WIKTIONARY_ENTRIES = null;
+	private static Method METHOD_READ_VALUE, METHOD_GET_WIKTIONARY_ENTRIES1, METHOD_GET_WIKTIONARY_ENTRIES3 = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -69,8 +69,12 @@ class WiktionaryGuiTest {
 		(METHOD_READ_VALUE = Util.getDeclaredMethod(clz, "readValue", ObjectMapper.class, byte[].class, Class.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_WIKTIONARY_ENTRIES = Util.getDeclaredMethod(clz, "getWiktionaryEntries", String.class))
+		(METHOD_GET_WIKTIONARY_ENTRIES1 = Util.getDeclaredMethod(clz, "getWiktionaryEntries", String.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_WIKTIONARY_ENTRIES3 = Util.getDeclaredMethod(clz, "getWiktionaryEntries",
+				Util.forName("org.springframework.context.support.WiktionaryGui$WiktionaryEntry"), ObjectMapper.class,
+				Iterable.class)).setAccessible(true);
 		//
 	}
 
@@ -154,6 +158,12 @@ class WiktionaryGuiTest {
 				//
 			final String name = Util.getName(method);
 			//
+			if (proxy instanceof Iterable && Objects.equals(name, "iterator")) {
+				//
+				return null;
+				//
+			} // if
+				//
 			if (proxy instanceof Function && Objects.equals(name, "apply")) {
 				//
 				return null;
@@ -518,13 +528,18 @@ class WiktionaryGuiTest {
 				"[{\"language\":\"Japanese\",\"ipa\":\"[it͡ɕi]\",\"hiragana\":null,\"pitchAccent\":null,\"pitchAccentPattern\":null}]",
 				ObjectMapperUtil.writeValueAsString(
 						objectMapper != null ? objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY) : null,
-						invoke(METHOD_GET_WIKTIONARY_ENTRIES, null,
+						invoke(METHOD_GET_WIKTIONARY_ENTRIES1, null,
 								"<html><body><div class=\"mw-heading mw-heading2\"><h2>Japanese</h2></div><div class=\"mw-heading mw-heading4\"><h4>Pronunciation</h4></div><ul><li><span class=\"usage-label-accent\"></span></li><li>IPA(key): <span class=\"IPA nowrap\">[it͡ɕi]</span></li></ul></body></html>")));
 		//
 		Assertions.assertEquals(
 				"[{\"language\":\"Japanese\",\"ipa\":\"[it͡ɕi]\",\"hiragana\":\"いち\",\"pitchAccent\":\"[ìchíꜜ]\",\"pitchAccentPattern\":\"尾高型\"}]",
-				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_GET_WIKTIONARY_ENTRIES, null,
+				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_GET_WIKTIONARY_ENTRIES1, null,
 						"<html><body><div class=\"mw-heading mw-heading2\"><h2>Japanese</h2></div><div class=\"mw-heading mw-heading4\"><h4>Pronunciation</h4></div><ul><li><span class=\"usage-label-accent\"></span><span lang=\"ja\" class=\"Jpan\">いち</span><span class=\"Latn\">[ìchíꜜ]</span><a title=\"尾高型\"></a></li><li>IPA(key): <span class=\"IPA nowrap\">[it͡ɕi]</span></li></ul></body></html>")));
+		//
+		Assertions.assertNull(invoke(METHOD_GET_WIKTIONARY_ENTRIES3, null, null, null, Collections.singleton(null)));
+		//
+		Assertions.assertNull(invoke(METHOD_GET_WIKTIONARY_ENTRIES3, null, null, null,
+				Collections.singleton(Narcissus.allocateInstance(Element.class))));
 		//
 	}
 

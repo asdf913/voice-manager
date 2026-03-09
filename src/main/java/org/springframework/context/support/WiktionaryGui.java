@@ -421,34 +421,32 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	private static Iterable<WiktionaryEntry> getWiktionaryEntries(final String language, final Element element,
 			final ObjectMapper objectMapper) {
 		//
-		Element e2 = null;
-		//
 		WiktionaryEntry we = null;
 		//
 		Iterable<String> ss = null;
 		//
-		Collection<WiktionaryEntry> wes = null;
+		Collection<WiktionaryEntry> collection = null;
 		//
-		Iterable<Element> es2 = null;
+		Element e = element;
 		//
-		Element e1 = element;
+		Iterable<WiktionaryEntry> wes = null;
 		//
-		while ((e1 = ElementUtil.nextElementSibling(e1)) != null) {
+		while ((e = ElementUtil.nextElementSibling(e)) != null) {
 			//
 			if (Boolean
 					.logicalAnd(
-							CollectionUtils.isEqualCollection(classNames(e1),
+							CollectionUtils.isEqualCollection(classNames(e),
 									Arrays.asList("mw-heading", "mw-heading4")),
 							Objects.equals(
 									ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-											ElementUtil.select(e1, "h4"), x -> IterableUtils.get(x, 0), null)),
+											ElementUtil.select(e, "h4"), x -> IterableUtils.get(x, 0), null)),
 									"Pronunciation"))) {
 				//
 				if (IterableUtils
 						.size(ss = Util
 								.toList(Util.filter(
 										Util.map(
-												Util.filter(stream(ElementUtil.nextElementSibling(e1)),
+												Util.filter(stream(ElementUtil.nextElementSibling(e)),
 														x -> StringsUtil.startsWith(Strings.CI, ElementUtil.html(x),
 																"IPA")),
 												x -> ElementUtil.text(testAndApply(y -> IterableUtils.size(y) == 1,
@@ -461,54 +459,20 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 					we.ipa = IterableUtils.get(ss, 0);
 					//
-					es2 = Util.toList(Util.filter(Util.stream(ElementUtil.children(ElementUtil.nextElementSibling(e1))),
-							x -> Util.anyMatch(stream(x), y -> Objects.equals(y.className(), "usage-label-accent"))));
+					wes = getWiktionaryEntries(we, objectMapper, Util.toList(Util.filter(
+							Util.stream(ElementUtil.children(ElementUtil.nextElementSibling(e))),
+							x -> Util.anyMatch(stream(x), y -> Objects.equals(y.className(), "usage-label-accent")))));
 					//
-					for (int j = 0; j < IterableUtils.size(es2); j++) {
+					for (int j = 0; j < IterableUtils.size(wes); j++) {
 						//
-						if ((e2 = IterableUtils.get(es2, j)) == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-						try {
-							//
-							we = ObjectUtils.getIfNull(readValue(objectMapper,
-									ObjectMapperUtil.writeValueAsBytes(objectMapper, we), WiktionaryEntry.class), we);
-							//
-						} catch (final IOException e) {
-							//
-							throw new RuntimeException(e);
-							//
-						} // try
-							//
-						we.hiragana = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-								Util.toList(
-										Util.filter(stream(e2), x -> Objects.equals(NodeUtil.attr(x, "lang"), "ja"))),
-								x -> IterableUtils.get(x, 0), null));
-						//
-						we.pitchAccent = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-								Util.toList(Util.filter(stream(e2),
-										x -> Objects.equals(NodeUtil.attr(x, "class"), "Latn"))),
-								x -> IterableUtils.get(x, 0), null));
-						//
-						we.pitchAccentPattern = testAndApply(CollectionUtils::isNotEmpty,
-								Util.toList(Util.map(
-										Util.filter(stream(e2),
-												x -> Boolean.logicalAnd(
-														StringsUtil.equals(Strings.CI, ElementUtil.tagName(x), "a"),
-														NodeUtil.hasAttr(x, "title"))),
-										x -> NodeUtil.attr(x, "title"))),
-								x -> IterableUtils.get(x, IterableUtils.size(x) - 1), null);
-						//
-						Util.add(wes = ObjectUtils.getIfNull(wes, ArrayList::new), we);
+						Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new),
+								IterableUtils.get(wes, j));
 						//
 					} // for
 						//
 				} // if
 					//
-			} else if (CollectionUtils.isEqualCollection(classNames(e1), Arrays.asList("mw-heading", "mw-heading2"))) {
+			} else if (CollectionUtils.isEqualCollection(classNames(e), Arrays.asList("mw-heading", "mw-heading2"))) {
 				//
 				break;
 				//
@@ -516,7 +480,57 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 		} // while
 			//
-		return wes;
+		return collection;
+		//
+	}
+
+	private static Iterable<WiktionaryEntry> getWiktionaryEntries(final WiktionaryEntry instance,
+			final ObjectMapper objectMapper, final Iterable<Element> es) {
+		//
+		Element e = null;
+		//
+		WiktionaryEntry we = null;
+		//
+		Collection<WiktionaryEntry> collection = null;
+		//
+		for (int j = 0; j < IterableUtils.size(es); j++) {
+			//
+			try {
+				//
+				if ((e = IterableUtils.get(es, j)) == null || (we = ObjectUtils.getIfNull(readValue(objectMapper,
+						ObjectMapperUtil.writeValueAsBytes(objectMapper, instance), WiktionaryEntry.class),
+						we)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+			} catch (final IOException ex) {
+				//
+				throw new RuntimeException(ex);
+				//
+			} // try
+				//
+			we.hiragana = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+					Util.toList(Util.filter(stream(e), x -> Objects.equals(NodeUtil.attr(x, "lang"), "ja"))),
+					x -> IterableUtils.get(x, 0), null));
+			//
+			we.pitchAccent = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+					Util.toList(Util.filter(stream(e), x -> Objects.equals(NodeUtil.attr(x, "class"), "Latn"))),
+					x -> IterableUtils.get(x, 0), null));
+			//
+			we.pitchAccentPattern = testAndApply(CollectionUtils::isNotEmpty,
+					Util.toList(Util.map(Util.filter(stream(e),
+							x -> Boolean.logicalAnd(StringsUtil.equals(Strings.CI, ElementUtil.tagName(x), "a"),
+									NodeUtil.hasAttr(x, "title"))),
+							x -> NodeUtil.attr(x, "title"))),
+					x -> IterableUtils.get(x, IterableUtils.size(x) - 1), null);
+			//
+			Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), we);
+			//
+		} // for
+			//
+		return collection;
 		//
 	}
 
