@@ -344,10 +344,13 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		@Note("Hiragana")
 		private String hiragana;
 
+		@Note("Hiragana CSS Selector")
+		private String hiraganaCssSelector;
+
 		@Note("Pitch Accent")
 		private String pitchAccent;
 
-		private String pitchAccentPattern, hiraganaCssSelector;
+		private String pitchAccentPattern;
 
 		private byte[] hiraganaImage;
 
