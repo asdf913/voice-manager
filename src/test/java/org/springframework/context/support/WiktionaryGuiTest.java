@@ -42,6 +42,7 @@ import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.function.FailablePredicate;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -198,11 +199,8 @@ class WiktionaryGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof BiPredicate && Objects.equals(name, "test")) {
-				//
-				return test;
-				//
-			} else if (proxy instanceof Predicate && Objects.equals(name, "test")) {
+			} else if (Boolean.logicalAnd(Objects.equals(name, "test"),
+					Boolean.logicalOr(proxy instanceof FailablePredicate, proxy instanceof BiPredicate))) {
 				//
 				return test;
 				//

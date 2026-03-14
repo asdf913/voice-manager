@@ -26,7 +26,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -63,9 +62,11 @@ import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.apache.http.HttpStatus;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -400,10 +401,17 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 				final URLConnection urlConnection = Util.openConnection(new URL(url));
 				//
-				setRequestProperty(Util.cast(HttpURLConnection.class, urlConnection), "User-Agent",
+				setRequestProperty(urlConnection, "User-Agent",
 						"Mozilla/5.0 (X11; Linux x86_64) AppleW;ebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36");
 				//
-				html = IOUtils.toString(is = Util.getInputStream(urlConnection), encoding);
+				html = testAndApply(Objects::nonNull, is = testAndApply(x -> {
+					//
+					final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class, urlConnection);
+					//
+					return httpURLConnection != null && httpURLConnection.getResponseCode() == HttpStatus.SC_OK;
+					//
+				}, urlConnection, Util::getInputStream, null), x -> IOUtils.toString(x, encoding), null);
+				;
 				//
 			} catch (final IOException e) {
 				//
@@ -481,6 +489,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		} // if
 			//
+
 	}
 
 	private static String getMimeType(@Nullable final ContentInfo instance) {
@@ -697,10 +706,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		return instance != null ? instance.stream() : null;
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(final FailablePredicate<T, E> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
-		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
