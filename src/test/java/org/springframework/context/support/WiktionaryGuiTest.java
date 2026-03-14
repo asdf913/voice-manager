@@ -525,14 +525,14 @@ class WiktionaryGuiTest {
 	void testGetWiktionaryEntries() throws IllegalAccessException, InvocationTargetException, JsonProcessingException {
 		//
 		Assertions.assertEquals(
-				"[{\"language\":\"Japanese\",\"ipa\":\"[it͡ɕi]\",\"hiragana\":null,\"pitchAccent\":null,\"pitchAccentPattern\":null}]",
+				"[{\"language\":\"Japanese\",\"ipa\":\"[it͡ɕi]\",\"hiragana\":null,\"pitchAccent\":null,\"pitchAccentPattern\":null,\"hiraganaCssSelector\":null,\"hiraganaImage\":null}]",
 				ObjectMapperUtil.writeValueAsString(
 						objectMapper != null ? objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY) : null,
 						invoke(METHOD_GET_WIKTIONARY_ENTRIES1, null,
 								"<html><body><div class=\"mw-heading mw-heading2\"><h2>Japanese</h2></div><div class=\"mw-heading mw-heading4\"><h4>Pronunciation</h4></div><ul><li><span class=\"usage-label-accent\"></span></li><li>IPA(key): <span class=\"IPA nowrap\">[it͡ɕi]</span></li></ul></body></html>")));
 		//
 		Assertions.assertEquals(
-				"[{\"language\":\"Japanese\",\"ipa\":\"[it͡ɕi]\",\"hiragana\":\"いち\",\"pitchAccent\":\"[ìchíꜜ]\",\"pitchAccentPattern\":\"尾高型\"}]",
+				"[{\"language\":\"Japanese\",\"ipa\":\"[it͡ɕi]\",\"hiragana\":\"いち\",\"pitchAccent\":\"[ìchíꜜ]\",\"pitchAccentPattern\":\"尾高型\",\"hiraganaCssSelector\":\"html > body > ul > li:nth-child(1) > span.Jpan\",\"hiraganaImage\":null}]",
 				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_GET_WIKTIONARY_ENTRIES1, null,
 						"<html><body><div class=\"mw-heading mw-heading2\"><h2>Japanese</h2></div><div class=\"mw-heading mw-heading4\"><h4>Pronunciation</h4></div><ul><li><span class=\"usage-label-accent\"></span><span lang=\"ja\" class=\"Jpan\">いち</span><span class=\"Latn\">[ìchíꜜ]</span><a title=\"尾高型\"></a></li><li>IPA(key): <span class=\"IPA nowrap\">[it͡ɕi]</span></li></ul></body></html>")));
 		//

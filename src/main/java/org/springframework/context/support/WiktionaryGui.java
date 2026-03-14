@@ -32,6 +32,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -52,6 +53,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -66,6 +68,14 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.microsoft.playwright.Browser;
+import com.microsoft.playwright.BrowserTypeUtil;
+import com.microsoft.playwright.BrowserUtil;
+import com.microsoft.playwright.ElementHandleUtil;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.PageUtil;
+import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.PlaywrightUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
@@ -111,8 +121,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		add(new JLabel("Entry"));
 		//
-		final JTable jTable = new JTable(dtmWiktionaryEntry = new DefaultTableModel(
-				new Object[] { "Language", "IPA", "Hiragana", "Pitch Accent", "Pitch Accent Pattern" }, 0) {
+		final JTable jTable = new JTable(dtmWiktionaryEntry = new DefaultTableModel(new Object[] { "Language", "IPA",
+				"Hiragana", "Hiragana Image", "Pitch Accent", "Pitch Accent Pattern" }, 0) {
 
 			@Override
 			public boolean isCellEditable(final int row, final int column) {
@@ -158,9 +168,13 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 				} else if (column == 3) {
 					//
-					Util.setText(jLabel, we.pitchAccent);
+					return new JLabel(testAndApply(Objects::nonNull, we.hiraganaImage, ImageIcon::new, null));
 					//
 				} else if (column == 4) {
+					//
+					Util.setText(jLabel, we.pitchAccent);
+					//
+				} else if (column == 5) {
 					//
 					Util.setText(jLabel, we.pitchAccentPattern);
 					//
@@ -331,7 +345,9 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		@Note("Pitch Accent")
 		private String pitchAccent;
 
-		private String pitchAccentPattern;
+		private String pitchAccentPattern, hiraganaCssSelector;
+
+		private byte[] hiraganaImage;
 
 	}
 
@@ -349,10 +365,12 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 			InputStream is = null;
 			//
+			final String url = Util
+					.toString(new StringBuilder("https://www.wiktionary.org/wiki/").append(Util.getText(tfText)));
+			//
 			try {
 				//
-				final URLConnection urlConnection = Util.openConnection(new URL(Util
-						.toString(new StringBuilder("https://www.wiktionary.org/wiki/").append(Util.getText(tfText)))));
+				final URLConnection urlConnection = Util.openConnection(new URL(url));
 				//
 				setRequestProperty(Util.cast(HttpURLConnection.class, urlConnection), "User-Agent",
 						"Mozilla/5.0 (X11; Linux x86_64) AppleW;ebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36");
@@ -371,6 +389,32 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 			final Iterable<WiktionaryEntry> wes = getWiktionaryEntries(html);
 			//
+			WiktionaryEntry we = null;
+			//
+			String hiraganaCssSelector = null;
+			//
+			try (final Playwright playwright = Playwright.create();
+					final Browser browser = BrowserTypeUtil.launch(PlaywrightUtil.chromium(playwright));
+					final Page page = BrowserUtil.newPage(browser)) {
+				//
+				PageUtil.navigate(page, url);
+				//
+				for (int i = 0; i < IterableUtils.size(wes); i++) {
+					//
+					if ((we = IterableUtils.get(wes, i)) == null
+							|| StringUtils.isBlank(hiraganaCssSelector = we.hiraganaCssSelector)) {
+						//
+						continue;
+						//
+					} // if
+						//
+					we.hiraganaImage = ElementHandleUtil
+							.screenshot(page != null ? page.querySelector(hiraganaCssSelector) : null);
+					//
+				} // for
+					//
+			} // try
+				//
 			Util.forEach(wes, x -> Util.addRow(dtmWiktionaryEntry, new Object[] { x }));
 			//
 			setPreferredSize(jsp, new Dimension((int) getWidth(Util.getPreferredSize(jsp)),
@@ -488,7 +532,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	private static Iterable<WiktionaryEntry> getWiktionaryEntries(final WiktionaryEntry instance,
 			final ObjectMapper objectMapper, final Iterable<Element> es) {
 		//
-		Element e = null;
+		Element e1, e2 = null;
 		//
 		WiktionaryEntry we = null;
 		//
@@ -498,7 +542,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 			try {
 				//
-				if ((e = IterableUtils.get(es, j)) == null || (we = ObjectUtils.getIfNull(readValue(objectMapper,
+				if ((e1 = IterableUtils.get(es, j)) == null || (we = ObjectUtils.getIfNull(readValue(objectMapper,
 						ObjectMapperUtil.writeValueAsBytes(objectMapper, instance), WiktionaryEntry.class),
 						we)) == null) {
 					//
@@ -512,16 +556,18 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 			} // try
 				//
-			we.hiragana = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-					Util.toList(Util.filter(stream(e), x -> Objects.equals(NodeUtil.attr(x, "lang"), "ja"))),
+			we.hiragana = ElementUtil.text(e2 = testAndApply(x -> IterableUtils.size(x) == 1,
+					Util.toList(Util.filter(stream(e1), x -> Objects.equals(NodeUtil.attr(x, "lang"), "ja"))),
 					x -> IterableUtils.get(x, 0), null));
 			//
+			we.hiraganaCssSelector = e2 != null ? e2.cssSelector() : null;
+			//
 			we.pitchAccent = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-					Util.toList(Util.filter(stream(e), x -> Objects.equals(NodeUtil.attr(x, "class"), "Latn"))),
+					Util.toList(Util.filter(stream(e1), x -> Objects.equals(NodeUtil.attr(x, "class"), "Latn"))),
 					x -> IterableUtils.get(x, 0), null));
 			//
 			we.pitchAccentPattern = testAndApply(CollectionUtils::isNotEmpty,
-					Util.toList(Util.map(Util.filter(stream(e),
+					Util.toList(Util.map(Util.filter(stream(e1),
 							x -> Boolean.logicalAnd(StringsUtil.equals(Strings.CI, ElementUtil.tagName(x), "a"),
 									NodeUtil.hasAttr(x, "title"))),
 							x -> NodeUtil.attr(x, "title"))),
