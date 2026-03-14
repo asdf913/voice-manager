@@ -455,10 +455,9 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 								//
 								final byte[] bs = x.hiraganaImage;
 								//
-								final ContentInfo ci = testAndApply(Objects::nonNull, bs,
-										new ContentInfoUtil()::findMatch, null);
-								//
-								if (ci == null || !StringsUtil.startsWith(Strings.CI, ci.getMimeType(), "image/")) {
+								if (!StringsUtil.startsWith(Strings.CI, getMimeType(
+										testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null)),
+										"image/")) {
 									//
 									return null;
 									//
@@ -482,6 +481,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		} // if
 			//
+	}
+
+	private static String getMimeType(final ContentInfo instance) {
+		return instance != null ? instance.getMimeType() : null;
 	}
 
 	private static int getHeight(@Nullable final Image instance, final ImageObserver imageObserver) {
