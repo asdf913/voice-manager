@@ -168,7 +168,9 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 				} else if (column == 3) {
 					//
-					return new JLabel(testAndApply(Objects::nonNull, we.hiraganaImage, ImageIcon::new, null));
+					final ImageIcon imageIcon = testAndApply(Objects::nonNull, we.hiraganaImage, ImageIcon::new, null);
+					//
+					return new JLabel(imageIcon);
 					//
 				} else if (column == 4) {
 					//
