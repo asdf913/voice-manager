@@ -3,9 +3,11 @@ package org.springframework.context.support;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
@@ -23,14 +25,15 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
+import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -40,6 +43,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -56,7 +60,11 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.StringsUtil;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
+import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -68,6 +76,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.j256.simplemagic.ContentInfo;
+import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserTypeUtil;
 import com.microsoft.playwright.BrowserUtil;
@@ -93,6 +103,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	private JScrollPane jsp = null;
 
 	private Window window = null;
+
+	private JTable jTable = null;
 
 	private WiktionaryGui() {
 		//
@@ -121,8 +133,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		add(new JLabel("Entry"));
 		//
-		final JTable jTable = new JTable(dtmWiktionaryEntry = new DefaultTableModel(new Object[] { "Language", "IPA",
-				"Hiragana", "Hiragana Image", "Pitch Accent", "Pitch Accent Pattern" }, 0) {
+		final TableColumnModel tcm = (jTable = new JTable(dtmWiktionaryEntry = new DefaultTableModel(new Object[] {
+				"Language", "IPA", "Hiragana", "Hiragana Image", "Pitch Accent", "Pitch Accent Pattern" }, 0) {
 
 			@Override
 			public boolean isCellEditable(final int row, final int column) {
@@ -131,9 +143,17 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 			}
 
-		});
+		})).getColumnModel();
 		//
-		setMinWidth(getColumn(jTable.getColumnModel(), 4), 105);
+		setMinWidth(getColumn(tcm, 0), 40);
+		//
+		setMinWidth(getColumn(tcm, 2), 50);
+		//
+		setMinWidth(getColumn(tcm, 3), 100);
+		//
+		setMinWidth(getColumn(tcm, 4), 70);
+		//
+		setMinWidth(getColumn(tcm, 5), 115);
 		//
 		final Dimension pd = Util.getPreferredSize(jsp = new JScrollPane(jTable));
 		//
@@ -152,7 +172,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 			if (we != null) {
 				//
-				final JLabel jLabel = Util.cast(JLabel.class, c);
+				JLabel jLabel = Util.cast(JLabel.class, c);
 				//
 				if (column == 0) {
 					//
@@ -170,7 +190,9 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 					final ImageIcon imageIcon = testAndApply(Objects::nonNull, we.hiraganaImage, ImageIcon::new, null);
 					//
-					return new JLabel(imageIcon);
+					(jLabel = new JLabel(imageIcon)).setHorizontalAlignment(SwingConstants.LEFT);
+					//
+					return jLabel;
 					//
 				} else if (column == 4) {
 					//
@@ -422,8 +444,44 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 			Util.forEach(wes, x -> Util.addRow(dtmWiktionaryEntry, new Object[] { x }));
 			//
+			final int maxImageHeight = Util
+					.orElse(Util.max(Util.mapToInt(FailableStreamUtil.stream(FailableStreamUtil.map(
+							testAndApply(Objects::nonNull,
+									testAndApply(Objects::nonNull, Util.spliterator(wes),
+											x -> StreamSupport.stream(x, false), null),
+									FailableStream::new, null),
+							x -> {
+								//
+								final byte[] bs = x.hiraganaImage;
+								//
+								final ContentInfo ci = testAndApply(Objects::nonNull, bs,
+										new ContentInfoUtil()::findMatch, null);
+								//
+								if (ci == null || !StringsUtil.startsWith(Strings.CI, ci.getMimeType(), "image/")) {
+									//
+									return null;
+									//
+								} // if
+									//
+								try (final InputStream bais = testAndApply(Objects::nonNull, bs,
+										ByteArrayInputStream::new, null)) {
+									//
+									final Image image = testAndApply(Objects::nonNull, bais, ImageIO::read, null);
+									//
+									return image != null ? image.getHeight(null) : null;
+									//
+								} // try
+									//
+							})), x -> Util.intValue(x, 0))), 0);
+			//
+			if (jTable != null) {
+				//
+				jTable.setRowHeight(maxImageHeight);
+				//
+			} // if
+				//
 			setPreferredSize(jsp, new Dimension((int) getWidth(Util.getPreferredSize(jsp)),
-					IterableUtils.size(wes) * (new JTable().getRowHeight() + 3)));
+					IterableUtils.size(wes) * (Math.max(new JTable().getRowHeight(), maxImageHeight) + 3)));
 			//
 			pack(window);
 			//
@@ -631,9 +689,11 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		return instance != null ? instance.stream() : null;
 	}
 
-	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
-			@Nullable final Function<T, R> functionFalse) {
-		return Util.test(predicate, value) ? Util.apply(functionTrue, value) : Util.apply(functionFalse, value);
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
+		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
 }

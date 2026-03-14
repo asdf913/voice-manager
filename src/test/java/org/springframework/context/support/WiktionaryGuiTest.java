@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiPredicate;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
@@ -180,7 +179,7 @@ class WiktionaryGuiTest {
 				//
 			} // if
 				//
-			if (proxy instanceof Function && Objects.equals(name, "apply")) {
+			if (proxy instanceof FailableFunction && Objects.equals(name, "apply")) {
 				//
 				return null;
 				//
