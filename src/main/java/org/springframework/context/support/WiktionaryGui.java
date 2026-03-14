@@ -474,12 +474,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 									//
 							})), x -> Util.intValue(x, 0))), 0);
 			//
-			if (jTable != null) {
-				//
-				jTable.setRowHeight(maxImageHeight);
-				//
-			} // if
-				//
+			setRowHeight(jTable, maxImageHeight);
+			//
 			setPreferredSize(jsp, new Dimension((int) getWidth(Util.getPreferredSize(jsp)),
 					IterableUtils.size(wes) * (Math.max(new JTable().getRowHeight(), maxImageHeight) + 3)));
 			//
@@ -487,6 +483,12 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		} // if
 			//
+	}
+
+	private static void setRowHeight(final JTable instance, final int rowHeight) {
+		if (instance != null && rowHeight > 0) {
+			instance.setRowHeight(rowHeight);
+		}
 	}
 
 	@Nullable

@@ -26,6 +26,7 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 import javax.swing.JLabel;
+import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -62,7 +63,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class WiktionaryGuiTest {
 
-	private static Method METHOD_READ_VALUE, METHOD_GET_WIKTIONARY_ENTRIES1, METHOD_GET_WIKTIONARY_ENTRIES3 = null;
+	private static Method METHOD_READ_VALUE, METHOD_GET_WIKTIONARY_ENTRIES1, METHOD_GET_WIKTIONARY_ENTRIES3,
+			METHOD_SET_ROW_HEIGHT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -78,6 +80,9 @@ class WiktionaryGuiTest {
 		(METHOD_GET_WIKTIONARY_ENTRIES3 = Util.getDeclaredMethod(clz, "getWiktionaryEntries",
 				Util.forName("org.springframework.context.support.WiktionaryGui$WiktionaryEntry"), ObjectMapper.class,
 				Iterable.class)).setAccessible(true);
+		//
+		(METHOD_SET_ROW_HEIGHT = Util.getDeclaredMethod(clz, "setRowHeight", JTable.class, Integer.TYPE))
+				.setAccessible(true);
 		//
 	}
 
@@ -552,6 +557,13 @@ class WiktionaryGuiTest {
 		//
 		Assertions.assertNull(invoke(METHOD_GET_WIKTIONARY_ENTRIES3, null, null, null,
 				Collections.singleton(Narcissus.allocateInstance(Element.class))));
+		//
+	}
+
+	@Test
+	void testSetRowHeight() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_SET_ROW_HEIGHT, null, new JTable(), Integer.valueOf(1)));
 		//
 	}
 
