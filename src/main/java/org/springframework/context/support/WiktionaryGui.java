@@ -583,7 +583,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
-	private static String cssSelector(final Element instance) {
+	private static String cssSelector(@Nullable final Element instance) {
 		//
 		if (instance == null || Narcissus.getField(instance, getFieldByName(Util.getClass(instance), "tag")) == null) {
 			//
