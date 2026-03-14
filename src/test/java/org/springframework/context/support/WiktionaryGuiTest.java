@@ -49,10 +49,14 @@ import org.oxbow.swingbits.util.OperatingSystem;
 import org.oxbow.swingbits.util.OperatingSystemUtil;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonInclude.Value;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper.Builder;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -93,7 +97,19 @@ class WiktionaryGuiTest {
 		//
 		instance = Util.cast(WiktionaryGui.class, Narcissus.allocateInstance(WiktionaryGui.class));
 		//
-		objectMapper = new ObjectMapper();
+		final Builder builder = JsonMapper.builder();
+		//
+		if (builder != null) {
+			//
+			builder.enable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY);
+			//
+			builder.visibility(PropertyAccessor.ALL, Visibility.ANY);
+			//
+			builder.defaultPropertyInclusion(Value.ALL_NON_NULL);
+			//
+		} // if
+			//
+		objectMapper = builder != null ? builder.build() : null;
 		//
 		if (Objects.equals(operatingSystem = OperatingSystemUtil.getOperatingSystem(), OperatingSystem.LINUX)) {
 			//
@@ -524,15 +540,12 @@ class WiktionaryGuiTest {
 	@Test
 	void testGetWiktionaryEntries() throws IllegalAccessException, InvocationTargetException, JsonProcessingException {
 		//
-		Assertions.assertEquals(
-				"[{\"language\":\"Japanese\",\"ipa\":\"[it͡ɕi]\",\"hiragana\":null,\"pitchAccent\":null,\"pitchAccentPattern\":null,\"hiraganaCssSelector\":null,\"hiraganaImage\":null}]",
-				ObjectMapperUtil.writeValueAsString(
-						objectMapper != null ? objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY) : null,
-						invoke(METHOD_GET_WIKTIONARY_ENTRIES1, null,
-								"<html><body><div class=\"mw-heading mw-heading2\"><h2>Japanese</h2></div><div class=\"mw-heading mw-heading4\"><h4>Pronunciation</h4></div><ul><li><span class=\"usage-label-accent\"></span></li><li>IPA(key): <span class=\"IPA nowrap\">[it͡ɕi]</span></li></ul></body></html>")));
+		Assertions.assertEquals("[{\"ipa\":\"[it͡ɕi]\",\"language\":\"Japanese\"}]",
+				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_GET_WIKTIONARY_ENTRIES1, null,
+						"<html><body><div class=\"mw-heading mw-heading2\"><h2>Japanese</h2></div><div class=\"mw-heading mw-heading4\"><h4>Pronunciation</h4></div><ul><li><span class=\"usage-label-accent\"></span></li><li>IPA(key): <span class=\"IPA nowrap\">[it͡ɕi]</span></li></ul></body></html>")));
 		//
 		Assertions.assertEquals(
-				"[{\"language\":\"Japanese\",\"ipa\":\"[it͡ɕi]\",\"hiragana\":\"いち\",\"pitchAccent\":\"[ìchíꜜ]\",\"pitchAccentPattern\":\"尾高型\",\"hiraganaCssSelector\":\"html > body > ul > li:nth-child(1) > span.Jpan\",\"hiraganaImage\":null}]",
+				"[{\"hiragana\":\"いち\",\"hiraganaCssSelector\":\"html > body > ul > li:nth-child(1) > span.Jpan\",\"ipa\":\"[it͡ɕi]\",\"language\":\"Japanese\",\"pitchAccent\":\"[ìchíꜜ]\",\"pitchAccentPattern\":\"尾高型\"}]",
 				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_GET_WIKTIONARY_ENTRIES1, null,
 						"<html><body><div class=\"mw-heading mw-heading2\"><h2>Japanese</h2></div><div class=\"mw-heading mw-heading4\"><h4>Pronunciation</h4></div><ul><li><span class=\"usage-label-accent\"></span><span lang=\"ja\" class=\"Jpan\">いち</span><span class=\"Latn\">[ìchíꜜ]</span><a title=\"尾高型\"></a></li><li>IPA(key): <span class=\"IPA nowrap\">[it͡ɕi]</span></li></ul></body></html>")));
 		//
