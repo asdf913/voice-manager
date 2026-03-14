@@ -484,7 +484,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 	}
 
-	private static int getHeight(final Image instance, final ImageObserver imageObserver) {
+	private static int getHeight(@Nullable final Image instance, final ImageObserver imageObserver) {
 		return instance != null ? instance.getHeight(imageObserver) : 0;
 	}
 
