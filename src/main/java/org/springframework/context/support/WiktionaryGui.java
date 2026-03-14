@@ -488,7 +488,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		return instance != null ? instance.getHeight(imageObserver) : 0;
 	}
 
-	private static void setRowHeight(final JTable instance, final int rowHeight) {
+	private static void setRowHeight(@Nullable final JTable instance, final int rowHeight) {
 		if (instance != null && rowHeight > 0) {
 			instance.setRowHeight(rowHeight);
 		}
