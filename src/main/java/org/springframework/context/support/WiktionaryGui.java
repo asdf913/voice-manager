@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.ImageObserver;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -466,9 +467,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 								try (final InputStream bais = testAndApply(Objects::nonNull, bs,
 										ByteArrayInputStream::new, null)) {
 									//
-									final Image image = testAndApply(Objects::nonNull, bais, ImageIO::read, null);
-									//
-									return image != null ? image.getHeight(null) : null;
+									return getHeight(testAndApply(Objects::nonNull, bais, ImageIO::read, null), null);
 									//
 								} // try
 									//
@@ -483,6 +482,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		} // if
 			//
+	}
+
+	private static int getHeight(final Image instance, final ImageObserver imageObserver) {
+		return instance != null ? instance.getHeight(imageObserver) : 0;
 	}
 
 	private static void setRowHeight(final JTable instance, final int rowHeight) {
