@@ -562,7 +562,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					Util.toList(Util.filter(stream(e1), x -> Objects.equals(NodeUtil.attr(x, "lang"), "ja"))),
 					x -> IterableUtils.get(x, 0), null));
 			//
-			we.hiraganaCssSelector = e2 != null ? e2.cssSelector() : null;
+			we.hiraganaCssSelector = cssSelector(e2);
 			//
 			we.pitchAccent = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
 					Util.toList(Util.filter(stream(e1), x -> Objects.equals(NodeUtil.attr(x, "class"), "Latn"))),
@@ -580,6 +580,18 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		} // for
 			//
 		return collection;
+		//
+	}
+
+	private static String cssSelector(final Element instance) {
+		//
+		if (instance == null || Narcissus.getField(instance, getFieldByName(Util.getClass(instance), "tag")) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance.cssSelector();
 		//
 	}
 
