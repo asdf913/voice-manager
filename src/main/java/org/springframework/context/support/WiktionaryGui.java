@@ -411,7 +411,6 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					return httpURLConnection != null && httpURLConnection.getResponseCode() == HttpStatus.SC_OK;
 					//
 				}, urlConnection, Util::getInputStream, null), x -> IOUtils.toString(x, encoding), null);
-				;
 				//
 			} catch (final IOException e) {
 				//
