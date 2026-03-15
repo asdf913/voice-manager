@@ -557,6 +557,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 
 	}
 
+	@Nullable
 	private static ElementHandle querySelector(@Nullable final Page instance, final String selector) {
 		return instance != null ? instance.querySelector(selector) : null;
 	}
