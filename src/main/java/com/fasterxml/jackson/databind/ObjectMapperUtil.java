@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -28,7 +29,7 @@ public interface ObjectMapperUtil {
 		//
 		if (instance == null || content == null
 				|| Narcissus.getField(content, getFieldByName(getClass(content), "value")) == null
-				|| valueType == null) {
+				|| StringUtils.isBlank(content) || valueType == null) {
 			//
 			return null;
 			//
