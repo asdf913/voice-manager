@@ -543,7 +543,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					setContents(clipboard,
 							new StringSelection(ObjectMapperUtil.writeValueAsString(
 									new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY),
-									tm != null ? tm.getValueAt(selectedIndices[0], 0) : null)),
+									getValueAt(tm, selectedIndices[0], 0))),
 							null);
 					//
 				} catch (final JsonProcessingException e) {
