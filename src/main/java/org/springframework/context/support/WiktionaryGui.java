@@ -104,7 +104,16 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 
 	private JTextComponent tfText = null;
 
-	private AbstractButton btnExecute, btnCopy = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("Execute")
+	private AbstractButton btnExecute = null;
+
+	private AbstractButton btnCopy = null;
 
 	private DefaultTableModel dtmWiktionaryEntry = null;
 
@@ -382,12 +391,6 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	}
 
 	private static class WiktionaryEntry {
-
-		@Target(ElementType.FIELD)
-		@Retention(RetentionPolicy.RUNTIME)
-		private @interface Note {
-			String value();
-		}
 
 		@Note("Language")
 		private String language;
