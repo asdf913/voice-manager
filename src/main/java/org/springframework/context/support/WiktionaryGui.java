@@ -524,7 +524,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		} else if (Objects.equals(source, btnCopy)) {
 			//
-			final int[] selectedIndices = lsm != null ? lsm.getSelectedIndices() : null;
+			final int[] selectedIndices = getSelectedIndices(lsm);
 			//
 			if (selectedIndices != null && selectedIndices.length > 1) {
 				//
@@ -556,6 +556,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 		} // if
 			//
+	}
+
+	private static int[] getSelectedIndices(final ListSelectionModel instance) {
+		return instance != null ? instance.getSelectedIndices() : null;
 	}
 
 	private static Clipboard getSystemClipboard(final Toolkit instance) {
