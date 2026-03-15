@@ -4,7 +4,10 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.Window;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.ImageObserver;
@@ -43,6 +46,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
@@ -76,6 +80,7 @@ import org.springframework.beans.factory.InitializingBean;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.j256.simplemagic.ContentInfo;
@@ -99,7 +104,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 
 	private JTextComponent tfText = null;
 
-	private AbstractButton btnExecute = null;
+	private AbstractButton btnExecute, btnCopy = null;
 
 	private DefaultTableModel dtmWiktionaryEntry = null;
 
@@ -108,6 +113,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	private Window window = null;
 
 	private JTable jTable = null;
+
+	private TableModel tm = null;
+
+	private ListSelectionModel lsm = null;
 
 	private WiktionaryGui() {
 		//
@@ -131,8 +140,6 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		add(new JLabel());
 		//
 		add(btnExecute = new JButton("Execute"), wrap);
-		//
-		btnExecute.addActionListener(this);
 		//
 		add(new JLabel("Entry"));
 		//
@@ -158,11 +165,15 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		setMinWidth(getColumn(tcm, 5), 115);
 		//
+		lsm = jTable.getSelectionModel();
+		//
+		tm = jTable.getModel();
+		//
 		final Dimension pd = Util.getPreferredSize(jsp = new JScrollPane(jTable));
 		//
 		setPreferredSize(jsp, new Dimension((int) getWidth(pd), 0));
 		//
-		add(jsp);
+		add(jsp, wrap);
 		//
 		final TableCellRenderer tcr = jTable.getDefaultRenderer(Object.class);
 		//
@@ -212,6 +223,23 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			return c;
 			//
 		});
+		//
+		add(new JLabel());
+		//
+		add(btnCopy = new JButton("Copy"));
+		//
+		Util.forEach(Util.map(testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()), Arrays::stream, null),
+				f -> Util.cast(AbstractButton.class,
+						Util.isStatic(f) ? Narcissus.getStaticField(f) : Narcissus.getField(this, f))),
+				x -> {
+					//
+					if (x != null) {
+						//
+						x.addActionListener(this);
+						//
+					} // if
+						//
+				});
 		//
 	}
 
@@ -384,7 +412,9 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		if (Objects.equals(Util.getSource(evt), btnExecute)) {
+		final Object source = Util.getSource(evt);
+		//
+		if (Objects.equals(source, btnExecute)) {
 			//
 			Util.forEach(IntStream.iterate(Util.getRowCount(dtmWiktionaryEntry) - 1, i -> i >= 0, i -> i - 1),
 					i -> Util.removeRow(dtmWiktionaryEntry, i));
@@ -486,6 +516,42 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 			pack(window);
 			//
+		} else if (Objects.equals(source, btnCopy)) {
+			//
+			final int[] selectedIndices = lsm != null ? lsm.getSelectedIndices() : null;
+			//
+			if (selectedIndices != null && selectedIndices.length > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			if (selectedIndices != null && selectedIndices.length == 1) {
+				//
+				final Toolkit toolkit = Toolkit.getDefaultToolkit();
+				//
+				final Clipboard clipboard = toolkit != null && !GraphicsEnvironment.isHeadless() && !isTestMode()
+						? toolkit.getSystemClipboard()
+						: null;
+				//
+				if (clipboard != null) {
+					//
+					try {
+						//
+						clipboard.setContents(new StringSelection(ObjectMapperUtil.writeValueAsString(
+								new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY),
+								tm.getValueAt(selectedIndices[0], 0))), null);
+						//
+					} catch (final JsonProcessingException e) {
+						//
+						throw new RuntimeException(e);
+						//
+					} // try
+						//
+				} // if
+					//
+			} // if
+				//
 		} // if
 			//
 

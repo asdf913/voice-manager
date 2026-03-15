@@ -26,8 +26,11 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -42,6 +45,7 @@ import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.FailablePredicate;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -95,6 +99,8 @@ class WiktionaryGuiTest {
 
 	private ObjectMapper objectMapper = null;
 
+	private IH ih = null;
+
 	@BeforeEach
 	void beforeEach() throws IOException {
 		//
@@ -113,6 +119,8 @@ class WiktionaryGuiTest {
 		} // if
 			//
 		objectMapper = builder != null ? builder.build() : null;
+		//
+		ih = new IH();
 		//
 		if (Objects.equals(operatingSystem = OperatingSystemUtil.getOperatingSystem(), OperatingSystem.LINUX)) {
 			//
@@ -166,6 +174,8 @@ class WiktionaryGuiTest {
 
 		private Boolean test = null;
 
+		private int[] selectedIndices = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -207,6 +217,10 @@ class WiktionaryGuiTest {
 			} else if (proxy instanceof Page && Objects.equals(name, "querySelector")) {
 				//
 				return null;
+				//
+			} else if (proxy instanceof ListSelectionModel && Objects.equals(name, "getSelectedIndices")) {
+				//
+				return selectedIndices;
 				//
 			} // if
 				//
@@ -350,10 +364,12 @@ class WiktionaryGuiTest {
 		//
 		Object result = null;
 		//
-		final IH ih = new IH();
-		//
-		ih.test = Boolean.TRUE;
-		//
+		if ((ih = ObjectUtils.getIfNull(ih, IH::new)) != null) {
+			//
+			ih.test = Boolean.TRUE;
+			//
+		} // if
+			//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
@@ -511,7 +527,7 @@ class WiktionaryGuiTest {
 	}
 
 	@Test
-	void testActionPerformed() {
+	void testActionPerformed() throws IllegalAccessException {
 		//
 		if (instance == null) {
 			//
@@ -520,6 +536,24 @@ class WiktionaryGuiTest {
 		} // if
 			//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent("", 0, null)));
+		//
+		final AbstractButton btnCopy = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnCopy", btnCopy, true);
+		//
+		final ActionEvent actionEvent = new ActionEvent(btnCopy, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
+		FieldUtils.writeDeclaredField(instance, "lsm", Reflection.newProxy(ListSelectionModel.class, ih), true);
+		//
+		if (ih != null) {
+			//
+			ih.selectedIndices = new int[] { -1 };
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
 		//
 	}
 
