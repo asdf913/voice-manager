@@ -60,6 +60,7 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper.Builder;
 import com.google.common.reflect.Reflection;
+import com.microsoft.playwright.Page;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
@@ -200,6 +201,10 @@ class WiktionaryGuiTest {
 				return test;
 				//
 			} else if (proxy instanceof TableColumnModel && Objects.equals(name, "getColumn")) {
+				//
+				return null;
+				//
+			} else if (proxy instanceof Page && Objects.equals(name, "querySelector")) {
 				//
 				return null;
 				//

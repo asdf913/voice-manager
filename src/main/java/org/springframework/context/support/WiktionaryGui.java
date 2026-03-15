@@ -83,6 +83,7 @@ import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserTypeUtil;
 import com.microsoft.playwright.BrowserUtil;
+import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.ElementHandleUtil;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.PageUtil;
@@ -443,8 +444,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 						//
 					} // if
 						//
-					we.hiraganaImage = ElementHandleUtil
-							.screenshot(page != null ? page.querySelector(hiraganaCssSelector) : null);
+					we.hiraganaImage = ElementHandleUtil.screenshot(querySelector(page, hiraganaCssSelector));
 					//
 				} // for
 					//
@@ -489,6 +489,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		} // if
 			//
 
+	}
+
+	private static ElementHandle querySelector(final Page instance, final String selector) {
+		return instance != null ? instance.querySelector(selector) : null;
 	}
 
 	@Nullable
