@@ -534,10 +534,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 			if (selectedIndices != null && selectedIndices.length == 1) {
 				//
-				final Toolkit toolkit = Toolkit.getDefaultToolkit();
-				//
-				final Clipboard clipboard = toolkit != null && !GraphicsEnvironment.isHeadless() && !isTestMode()
-						? toolkit.getSystemClipboard()
+				final Clipboard clipboard = !GraphicsEnvironment.isHeadless() && !isTestMode()
+						? getSystemClipboard(Toolkit.getDefaultToolkit())
 						: null;
 				//
 				try {
@@ -558,6 +556,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 		} // if
 			//
+	}
+
+	private static Clipboard getSystemClipboard(final Toolkit instance) {
+		return instance != null && !GraphicsEnvironment.isHeadless() ? instance.getSystemClipboard() : null;
 	}
 
 	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner) {

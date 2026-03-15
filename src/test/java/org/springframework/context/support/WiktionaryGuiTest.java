@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Component;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -415,6 +416,10 @@ class WiktionaryGuiTest {
 				} else if (Objects.equals(parameterType, Image.class)) {
 					//
 					Util.add(collection, new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
+					//
+				} else if (Objects.equals(parameterType, Toolkit.class)) {
+					//
+					Util.add(collection, Toolkit.getDefaultToolkit());
 					//
 				} else {
 					//
