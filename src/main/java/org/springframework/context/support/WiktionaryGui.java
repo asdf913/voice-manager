@@ -7,7 +7,9 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.ImageObserver;
@@ -538,26 +540,30 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 						? toolkit.getSystemClipboard()
 						: null;
 				//
-				if (clipboard != null) {
+				try {
 					//
-					try {
-						//
-						clipboard.setContents(new StringSelection(ObjectMapperUtil.writeValueAsString(
-								new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY),
-								tm.getValueAt(selectedIndices[0], 0))), null);
-						//
-					} catch (final JsonProcessingException e) {
-						//
-						throw new RuntimeException(e);
-						//
-					} // try
-						//
-				} // if
+					setContents(clipboard,
+							new StringSelection(ObjectMapperUtil.writeValueAsString(
+									new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY),
+									tm != null ? tm.getValueAt(selectedIndices[0], 0) : null)),
+							null);
+					//
+				} catch (final JsonProcessingException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
 					//
 			} // if
 				//
 		} // if
 			//
+	}
+
+	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner) {
+		if (instance != null) {
+			instance.setContents(contents, owner);
+		}
 	}
 
 	@Nullable
