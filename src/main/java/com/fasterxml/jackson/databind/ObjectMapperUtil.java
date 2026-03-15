@@ -22,9 +22,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-public interface ObjectMapperUtil {
+public abstract class ObjectMapperUtil {
 
-	static <T> T readValue(final ObjectMapper instance, final String content, final Class<T> valueType)
+	private static final String _JSON_FACTORY = "_jsonFactory";
+
+	private ObjectMapperUtil() {
+		//
+	}
+
+	public static <T> T readValue(final ObjectMapper instance, final String content, final Class<T> valueType)
 			throws JsonProcessingException {
 		//
 		if (instance == null || content == null
@@ -39,11 +45,11 @@ public interface ObjectMapperUtil {
 		//
 	}
 
-	static <T> T readValue(final ObjectMapper instance, final InputStream src, final Class<T> valueType)
+	public static <T> T readValue(final ObjectMapper instance, final InputStream src, final Class<T> valueType)
 			throws IOException {
 		//
 		if (instance == null || src == null || valueType == null
-				|| Narcissus.getField(instance, getFieldByName(getClass(instance), "_jsonFactory")) == null) {
+				|| Narcissus.getField(instance, getFieldByName(getClass(instance), _JSON_FACTORY)) == null) {
 			//
 			return null;
 			//
@@ -53,10 +59,11 @@ public interface ObjectMapperUtil {
 		//
 	}
 
-	static <T> T readValue(final ObjectMapper instance, final byte[] src, final Class<T> valueType) throws IOException {
+	public static <T> T readValue(final ObjectMapper instance, final byte[] src, final Class<T> valueType)
+			throws IOException {
 		//
 		if (instance == null || src == null || valueType == null
-				|| Narcissus.getField(instance, getFieldByName(getClass(instance), "_jsonFactory")) == null) {
+				|| Narcissus.getField(instance, getFieldByName(getClass(instance), _JSON_FACTORY)) == null) {
 			//
 			return null;
 			//
@@ -117,10 +124,11 @@ public interface ObjectMapperUtil {
 		return instance != null ? instance.getClass() : null;
 	}
 
-	static String writeValueAsString(final ObjectMapper instance, final Object value) throws JsonProcessingException {
+	public static String writeValueAsString(final ObjectMapper instance, final Object value)
+			throws JsonProcessingException {
 		//
 		if (instance == null
-				|| Narcissus.getField(instance, getFieldByName(getClass(instance), "_jsonFactory")) == null) {
+				|| Narcissus.getField(instance, getFieldByName(getClass(instance), _JSON_FACTORY)) == null) {
 			//
 			return null;
 			//
@@ -130,10 +138,11 @@ public interface ObjectMapperUtil {
 		//
 	}
 
-	static byte[] writeValueAsBytes(final ObjectMapper instance, final Object value) throws JsonProcessingException {
+	public static byte[] writeValueAsBytes(final ObjectMapper instance, final Object value)
+			throws JsonProcessingException {
 		//
 		if (instance == null
-				|| Narcissus.getField(instance, getFieldByName(getClass(instance), "_jsonFactory")) == null) {
+				|| Narcissus.getField(instance, getFieldByName(getClass(instance), _JSON_FACTORY)) == null) {
 			//
 			return null;
 			//
