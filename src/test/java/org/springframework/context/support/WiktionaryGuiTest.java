@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -66,16 +65,12 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class WiktionaryGuiTest {
 
-	private static Method METHOD_READ_VALUE, METHOD_GET_WIKTIONARY_ENTRIES1, METHOD_GET_WIKTIONARY_ENTRIES3,
-			METHOD_SET_ROW_HEIGHT = null;
+	private static Method METHOD_GET_WIKTIONARY_ENTRIES1, METHOD_GET_WIKTIONARY_ENTRIES3, METHOD_SET_ROW_HEIGHT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
 		//
 		final Class<?> clz = WiktionaryGui.class;
-		//
-		(METHOD_READ_VALUE = Util.getDeclaredMethod(clz, "readValue", ObjectMapper.class, byte[].class, Class.class))
-				.setAccessible(true);
 		//
 		(METHOD_GET_WIKTIONARY_ENTRIES1 = Util.getDeclaredMethod(clz, "getWiktionaryEntries", String.class))
 				.setAccessible(true);
@@ -520,23 +515,6 @@ class WiktionaryGuiTest {
 		} // if
 			//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent("", 0, null)));
-		//
-	}
-
-	@Test
-	void testReadValue() throws IllegalAccessException, InvocationTargetException {
-		//
-		Assertions.assertNull(invoke(METHOD_READ_VALUE, null, null, null, null));
-		//
-		final byte[] bs = Util.getBytes("{}");
-		//
-		Assertions.assertNull(invoke(METHOD_READ_VALUE, null, objectMapper, bs, null));
-		//
-		final Class<?> clz = Map.class;
-		//
-		Assertions.assertNull(invoke(METHOD_READ_VALUE, null, objectMapper, null, clz));
-		//
-		Assertions.assertEquals(Collections.emptyMap(), invoke(METHOD_READ_VALUE, null, objectMapper, bs, clz));
 		//
 	}
 

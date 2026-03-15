@@ -623,8 +623,9 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 			try {
 				//
-				if ((e1 = IterableUtils.get(es, j)) == null || (we = ObjectUtils.getIfNull(readValue(objectMapper,
-						ObjectMapperUtil.writeValueAsBytes(objectMapper, instance), WiktionaryEntry.class),
+				if ((e1 = IterableUtils.get(es, j)) == null || (we = ObjectUtils.getIfNull(
+						ObjectMapperUtil.readValue(objectMapper,
+								ObjectMapperUtil.writeValueAsBytes(objectMapper, instance), WiktionaryEntry.class),
 						we)) == null) {
 					//
 					continue;
@@ -685,21 +686,6 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	@Nullable
 	private static Set<String> classNames(@Nullable final Element instance) {
 		return instance != null ? instance.classNames() : null;
-	}
-
-	@Nullable
-	private static <T> T readValue(@Nullable final ObjectMapper instance, @Nullable final byte[] src,
-			@Nullable final Class<T> valueType) throws IOException {
-		//
-		if (instance == null || src == null || valueType == null
-				|| Narcissus.getField(instance, getFieldByName(Util.getClass(instance), "_jsonFactory")) == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		return instance.readValue(src, valueType);
-		//
 	}
 
 	@Nullable

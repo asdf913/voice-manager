@@ -16,6 +16,7 @@ import org.junit.jupiter.api.function.Executable;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
@@ -78,7 +79,8 @@ public class AssertionsUtil {
 									//
 							});
 			//
-			final Map<?, ?> map = objectMapper.readValue(objectMapper.writeValueAsBytes(th), Map.class);
+			final Map<?, ?> map = ObjectMapperUtil.readValue(objectMapper, objectMapper.writeValueAsBytes(th),
+					Map.class);
 			//
 			Assertions.assertEquals(json,
 					toString(map.entrySet().stream()
@@ -89,7 +91,8 @@ public class AssertionsUtil {
 
 		} else {
 			//
-			final Map<?, ?> map = objectMapper.readValue(objectMapper.writeValueAsBytes(throwable), Map.class);
+			final Map<?, ?> map = ObjectMapperUtil.readValue(objectMapper, objectMapper.writeValueAsBytes(throwable),
+					Map.class);
 			//
 			Assertions.assertEquals(json,
 					toString(map.entrySet().stream()

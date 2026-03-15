@@ -3673,9 +3673,8 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		private static <T> T clone(@Nullable final ObjectMapper objectMapper, @Nullable final Class<T> clz,
 				@Nullable final T instance) throws IOException {
 			//
-			return objectMapper != null && clz != null
-					? objectMapper.readValue(ObjectMapperUtil.writeValueAsBytes(objectMapper, instance), clz)
-					: null;
+			return ObjectMapperUtil.readValue(objectMapper, ObjectMapperUtil.writeValueAsBytes(objectMapper, instance),
+					clz);
 			//
 		}
 
