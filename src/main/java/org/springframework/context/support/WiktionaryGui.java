@@ -692,9 +692,9 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		return instance != null ? instance.stream() : null;
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final FailablePredicate<T, E> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
-			throws E {
+	private static <T, R, E extends Throwable> R testAndApply(@Nullable final FailablePredicate<T, E> predicate,
+			final T value, final FailableFunction<T, R, E> functionTrue,
+			@Nullable final FailableFunction<T, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
