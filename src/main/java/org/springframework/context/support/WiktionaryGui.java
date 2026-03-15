@@ -123,9 +123,9 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 
 	private JTable jTable = null;
 
-	private TableModel tm = null;
+	private transient TableModel tm = null;
 
-	private ListSelectionModel lsm = null;
+	private transient ListSelectionModel lsm = null;
 
 	private WiktionaryGui() {
 		//
