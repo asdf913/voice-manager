@@ -554,7 +554,6 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 		} // if
 			//
-
 	}
 
 	@Nullable
