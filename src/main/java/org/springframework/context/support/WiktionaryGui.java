@@ -228,10 +228,11 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		add(btnCopy = new JButton("Copy"));
 		//
-		Util.forEach(Util.map(testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()), Arrays::stream, null),
-				f -> Util.cast(AbstractButton.class,
-						Util.isStatic(f) ? Narcissus.getStaticField(f) : Narcissus.getField(this, f))),
-				x -> {
+		final Stream<Field> stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()), Arrays::stream,
+				null);
+		//
+		Util.forEach(Util.map(stream, f -> Util.cast(AbstractButton.class,
+				Util.isStatic(f) ? Narcissus.getStaticField(f) : Narcissus.getField(this, f))), x -> {
 					//
 					if (x != null) {
 						//
