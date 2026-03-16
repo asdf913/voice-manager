@@ -553,13 +553,11 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 			if (length(selectedIndices) == 1) {
 				//
-				final Clipboard clipboard = testAndGet(
-						Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
-						() -> getSystemClipboard(Toolkit.getDefaultToolkit()), null);
-				//
 				try {
 					//
-					setContents(clipboard,
+					setContents(
+							testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
+									() -> getSystemClipboard(Toolkit.getDefaultToolkit()), null),
 							new StringSelection(ObjectMapperUtil.writeValueAsString(
 									new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY),
 									getValueAt(tm, selectedIndices != null ? selectedIndices[0] : 0, 0))),
