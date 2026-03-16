@@ -534,9 +534,9 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 			if (selectedIndices != null && selectedIndices.length == 1) {
 				//
-				final Clipboard clipboard = Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
-						? getSystemClipboard(Toolkit.getDefaultToolkit())
-						: null;
+				final Clipboard clipboard = testAndGet(
+						Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
+						() -> getSystemClipboard(Toolkit.getDefaultToolkit()), null);
 				//
 				try {
 					//
@@ -556,6 +556,11 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 		} // if
 			//
+	}
+
+	private static <T> T testAndGet(final boolean condition, final Supplier<T> supplierTrue,
+			final Supplier<T> supplierFalse) {
+		return condition ? Util.get(supplierTrue) : Util.get(supplierFalse);
 	}
 
 	private static int[] getSelectedIndices(final ListSelectionModel instance) {

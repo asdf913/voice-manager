@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
@@ -71,7 +72,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class WiktionaryGuiTest {
 
-	private static Method METHOD_GET_WIKTIONARY_ENTRIES1, METHOD_GET_WIKTIONARY_ENTRIES3, METHOD_SET_ROW_HEIGHT = null;
+	private static Method METHOD_GET_WIKTIONARY_ENTRIES1, METHOD_GET_WIKTIONARY_ENTRIES3, METHOD_SET_ROW_HEIGHT,
+			METHOD_TEST_AND_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -86,6 +88,9 @@ class WiktionaryGuiTest {
 				Iterable.class)).setAccessible(true);
 		//
 		(METHOD_SET_ROW_HEIGHT = Util.getDeclaredMethod(clz, "setRowHeight", JTable.class, Integer.TYPE))
+				.setAccessible(true);
+		//
+		(METHOD_TEST_AND_GET = Util.getDeclaredMethod(clz, "testAndGet", Boolean.TYPE, Supplier.class, Supplier.class))
 				.setAccessible(true);
 		//
 	}
@@ -222,6 +227,10 @@ class WiktionaryGuiTest {
 			} else if (proxy instanceof ListSelectionModel && Objects.equals(name, "getSelectedIndices")) {
 				//
 				return selectedIndices;
+				//
+			} else if (proxy instanceof Supplier && Objects.equals(name, "get")) {
+				//
+				return null;
 				//
 			} // if
 				//
@@ -590,6 +599,13 @@ class WiktionaryGuiTest {
 	void testSetRowHeight() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_SET_ROW_HEIGHT, null, new JTable(), Integer.valueOf(1)));
+		//
+	}
+
+	@Test
+	void testTestAndGet() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_GET, null, Boolean.TRUE, null, null));
 		//
 	}
 
