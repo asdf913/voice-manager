@@ -413,6 +413,14 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 
 		private byte[] hiraganaImage;
 
+		private String getHiraganaCssSelector() {
+			return hiraganaCssSelector;
+		}
+
+		private static String getHiraganaCssSelector(final WiktionaryEntry instance) {
+			return instance != null ? instance.getHiraganaCssSelector() : null;
+		}
+
 	}
 
 	@Override
@@ -473,15 +481,19 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 				for (int i = 0; i < IterableUtils.size(wes); i++) {
 					//
-					if ((we = IterableUtils.get(wes, i)) == null
-							|| StringUtils.isBlank(hiraganaCssSelector = we.hiraganaCssSelector)) {
+					if (StringUtils.isBlank(hiraganaCssSelector = WiktionaryEntry
+							.getHiraganaCssSelector(we = IterableUtils.get(wes, i)))) {
 						//
 						continue;
 						//
 					} // if
 						//
-					we.hiraganaImage = ElementHandleUtil.screenshot(querySelector(page, hiraganaCssSelector));
-					//
+					if (we != null) {
+						//
+						we.hiraganaImage = ElementHandleUtil.screenshot(querySelector(page, hiraganaCssSelector));
+						//
+					} // if
+						//
 				} // for
 					//
 			} // try

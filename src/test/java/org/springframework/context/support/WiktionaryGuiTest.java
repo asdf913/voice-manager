@@ -619,4 +619,89 @@ class WiktionaryGuiTest {
 		//
 	}
 
+	@Test
+	void testWiktionaryEntry() {
+		//
+		final Class<?> clz = Util.forName("org.springframework.context.support.WiktionaryGui$WiktionaryEntry");
+		//
+		final Method[] ms = Util.getDeclaredMethods(clz);
+		//
+		final Object wiktionaryEntry = Narcissus.allocateInstance(clz);
+		//
+		Method m = null;
+		//
+		Object[] os = null;
+		//
+		String toString = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
+				//
+				continue;
+				//
+			} // if
+				//
+			os = toArray(Collections.nCopies(m.getParameterCount(), null));
+			//
+			toString = Util.toString(m);
+			//
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(Narcissus.invokeMethod(wiktionaryEntry, m, os), toString);
+				//
+			} // if
+				//
+		} // for
+			//
+		Collection<Object> collection = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
+				//
+				continue;
+				//
+			} // if
+				//
+			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
+			//
+			parameterTypes = Util.getParameterTypes(m);
+			//
+			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
+			//
+			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
+				//
+				if (Objects.equals(ArrayUtils.get(parameterTypes, j), clz)) {
+					//
+					Util.add(collection, wiktionaryEntry);
+					//
+				} // if
+					//
+			} // for
+				//
+			os = toArray(collection);
+			//
+			toString = Util.toString(m);
+			//
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(Narcissus.invokeMethod(wiktionaryEntry, m, os), toString);
+				//
+			} // if
+				//
+		} // for
+			// s
+	}
+
 }
