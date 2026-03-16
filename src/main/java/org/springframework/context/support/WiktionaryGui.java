@@ -534,7 +534,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 			if (selectedIndices != null && selectedIndices.length == 1) {
 				//
-				final Clipboard clipboard = !GraphicsEnvironment.isHeadless() && !isTestMode()
+				final Clipboard clipboard = Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
 						? getSystemClipboard(Toolkit.getDefaultToolkit())
 						: null;
 				//
