@@ -570,7 +570,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 	}
 
-	private static int length(final int[] instance) {
+	private static int length(@Nullable final int[] instance) {
 		return instance != null ? instance.length : 0;
 	}
 
