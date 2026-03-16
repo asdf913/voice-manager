@@ -563,6 +563,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 	}
 
+	@Nullable
 	private static Image toImage(final byte[] bs) throws IOException {
 		//
 		if (!StringsUtil.startsWith(Strings.CI,
