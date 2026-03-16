@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +29,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
+import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -73,7 +75,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class WiktionaryGuiTest {
 
 	private static Method METHOD_GET_WIKTIONARY_ENTRIES1, METHOD_GET_WIKTIONARY_ENTRIES3, METHOD_SET_ROW_HEIGHT,
-			METHOD_TEST_AND_GET, METHOD_TEST_AND_RUN = null;
+			METHOD_TEST_AND_GET, METHOD_TEST_AND_RUN, METHOD_TO_IMAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -95,6 +97,8 @@ class WiktionaryGuiTest {
 		//
 		(METHOD_TEST_AND_RUN = Util.getDeclaredMethod(clz, "testAndRun", Boolean.TYPE, Runnable.class))
 				.setAccessible(true);
+		//
+		(METHOD_TO_IMAGE = Util.getDeclaredMethod(clz, "toImage", byte[].class)).setAccessible(true);
 		//
 	}
 
@@ -616,6 +620,23 @@ class WiktionaryGuiTest {
 	void testTestAndRun() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_RUN, null, Boolean.TRUE, null));
+		//
+	}
+
+	@Test
+	void testToImage() throws IllegalAccessException, InvocationTargetException, IOException {
+		//
+		byte[] bs = null;
+		//
+		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			ImageIO.write(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), "png", baos);
+			//
+			bs = baos.toByteArray();
+			//
+		} // try
+			//
+		Assertions.assertNotNull(invoke(METHOD_TO_IMAGE, null, bs));
 		//
 	}
 

@@ -515,23 +515,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 									FailableStream::new, null),
 							x -> {
 								//
-								final byte[] bs = x.hiraganaImage;
+								final byte[] bs = x != null ? x.hiraganaImage : null;
 								//
-								if (!StringsUtil.startsWith(Strings.CI, getMimeType(
-										testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null)),
-										"image/")) {
-									//
-									return null;
-									//
-								} // if
-									//
-								try (final InputStream bais = testAndApply(Objects::nonNull, bs,
-										ByteArrayInputStream::new, null)) {
-									//
-									return getHeight(testAndApply(Objects::nonNull, bais, ImageIO::read, null), null);
-									//
-								} // try
-									//
+								return getHeight(toImage(bs), null);
+								//
 							})), x -> Util.intValue(x, 0))), 0);
 			//
 			setRowHeight(jTable, maxImageHeight);
@@ -572,6 +559,23 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			} // if
 				//
 		} // if
+			//
+	}
+
+	private static Image toImage(final byte[] bs) throws IOException {
+		//
+		if (!StringsUtil.startsWith(Strings.CI,
+				getMimeType(testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null)), "image/")) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try (final InputStream bais = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
+			//
+			return testAndApply(Objects::nonNull, bais, ImageIO::read, null);
+			//
+		} // try
 			//
 	}
 
