@@ -682,6 +682,10 @@ class WiktionaryGuiTest {
 					//
 					Util.add(collection, wiktionaryEntry);
 					//
+				} else {
+					//
+					Util.add(collection, null);
+					//
 				} // if
 					//
 			} // for
