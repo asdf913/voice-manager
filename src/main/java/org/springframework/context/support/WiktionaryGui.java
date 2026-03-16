@@ -577,6 +577,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		return instance != null ? instance.getSelectedIndices() : null;
 	}
 
+	@Nullable
 	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		return instance != null && !GraphicsEnvironment.isHeadless() ? instance.getSystemClipboard() : null;
 	}
