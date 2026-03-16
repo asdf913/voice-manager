@@ -526,13 +526,13 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 			final int[] selectedIndices = getSelectedIndices(lsm);
 			//
-			testAndRun(selectedIndices != null && selectedIndices.length > 1, () -> {
+			testAndRun(length(selectedIndices) > 1, () -> {
 				//
 				throw new IllegalStateException();
 				//
 			});
 			//
-			if (selectedIndices != null && selectedIndices.length == 1) {
+			if (length(selectedIndices) == 1) {
 				//
 				final Clipboard clipboard = testAndGet(
 						Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
@@ -543,7 +543,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					setContents(clipboard,
 							new StringSelection(ObjectMapperUtil.writeValueAsString(
 									new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY),
-									getValueAt(tm, selectedIndices[0], 0))),
+									getValueAt(tm, selectedIndices != null ? selectedIndices[0] : 0, 0))),
 							null);
 					//
 				} catch (final JsonProcessingException e) {
@@ -556,6 +556,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 		} // if
 			//
+	}
+
+	private static int length(final int[] instance) {
+		return instance != null ? instance.length : 0;
 	}
 
 	private static void testAndRun(final boolean condition, final Runnable runnable) {
