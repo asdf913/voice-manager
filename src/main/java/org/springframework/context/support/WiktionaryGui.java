@@ -573,7 +573,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		return condition ? Util.get(supplierTrue) : Util.get(supplierFalse);
 	}
 
-	private static int[] getSelectedIndices(final ListSelectionModel instance) {
+	private static int[] getSelectedIndices(@Nullable final ListSelectionModel instance) {
 		return instance != null ? instance.getSelectedIndices() : null;
 	}
 
