@@ -73,7 +73,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class WiktionaryGuiTest {
 
 	private static Method METHOD_GET_WIKTIONARY_ENTRIES1, METHOD_GET_WIKTIONARY_ENTRIES3, METHOD_SET_ROW_HEIGHT,
-			METHOD_TEST_AND_GET = null;
+			METHOD_TEST_AND_GET, METHOD_TEST_AND_RUN = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -91,6 +91,9 @@ class WiktionaryGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_TEST_AND_GET = Util.getDeclaredMethod(clz, "testAndGet", Boolean.TYPE, Supplier.class, Supplier.class))
+				.setAccessible(true);
+		//
+		(METHOD_TEST_AND_RUN = Util.getDeclaredMethod(clz, "testAndRun", Boolean.TYPE, Runnable.class))
 				.setAccessible(true);
 		//
 	}
@@ -606,6 +609,13 @@ class WiktionaryGuiTest {
 	void testTestAndGet() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_GET, null, Boolean.TRUE, null, null));
+		//
+	}
+
+	@Test
+	void testTestAndRun() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_RUN, null, Boolean.TRUE, null));
 		//
 	}
 

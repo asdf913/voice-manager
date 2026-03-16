@@ -526,12 +526,12 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 			final int[] selectedIndices = getSelectedIndices(lsm);
 			//
-			if (selectedIndices != null && selectedIndices.length > 1) {
+			testAndRun(selectedIndices != null && selectedIndices.length > 1, () -> {
 				//
 				throw new IllegalStateException();
 				//
-			} // if
-				//
+			});
+			//
 			if (selectedIndices != null && selectedIndices.length == 1) {
 				//
 				final Clipboard clipboard = testAndGet(
@@ -554,6 +554,16 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 			} // if
 				//
+		} // if
+			//
+	}
+
+	private static void testAndRun(final boolean condition, final Runnable runnable) {
+		//
+		if (condition) {
+			//
+			Util.run(runnable);
+			//
 		} // if
 			//
 	}
