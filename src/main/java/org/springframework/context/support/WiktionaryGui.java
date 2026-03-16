@@ -417,7 +417,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			return hiraganaCssSelector;
 		}
 
-		private static String getHiraganaCssSelector(final WiktionaryEntry instance) {
+		private static String getHiraganaCssSelector(@Nullable final WiktionaryEntry instance) {
 			return instance != null ? instance.getHiraganaCssSelector() : null;
 		}
 
