@@ -213,7 +213,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 				} else if (column == 3) {
 					//
-					final ImageIcon imageIcon = testAndApply(Objects::nonNull, we.hiraganaImage, ImageIcon::new, null);
+					final ImageIcon imageIcon = testAndApply(Objects::nonNull, WiktionaryEntry.getHiraganaImage(we),
+							ImageIcon::new, null);
 					//
 					(jLabel = new JLabel(imageIcon)).setHorizontalAlignment(SwingConstants.LEFT);
 					//
@@ -422,6 +423,14 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			return instance != null ? instance.getHiraganaCssSelector() : null;
 		}
 
+		private byte[] getHiraganaImage() {
+			return hiraganaImage;
+		}
+
+		private static byte[] getHiraganaImage(final WiktionaryEntry instance) {
+			return instance != null ? instance.getHiraganaImage() : null;
+		}
+
 		private void setHiraganaImage(final byte[] hiraganaImage) {
 			this.hiraganaImage = hiraganaImage;
 		}
@@ -516,7 +525,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 									FailableStream::new, null),
 							x -> {
 								//
-								final byte[] bs = x != null ? x.hiraganaImage : null;
+								final byte[] bs = WiktionaryEntry.getHiraganaImage(x);
 								//
 								return getHeight(toImage(bs), null);
 								//
