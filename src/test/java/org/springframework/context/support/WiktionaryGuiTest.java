@@ -758,20 +758,20 @@ class WiktionaryGuiTest {
 		//
 		final Class<?> clz = Util.forName("org.springframework.context.support.WiktionaryGui$IH");
 		//
-		final InvocationHandler ih = Util.cast(InvocationHandler.class, Narcissus.allocateInstance(clz));
+		final InvocationHandler invocationHandler = Util.cast(InvocationHandler.class, Narcissus.allocateInstance(clz));
 		//
-		if (ih != null) {
+		if (invocationHandler != null) {
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(null, null, null));
+			Assertions.assertThrows(Throwable.class, () -> invocationHandler.invoke(null, null, null));
 			//
-			final Transferable transferable = Reflection.newProxy(Transferable.class, ih);
+			final Transferable transferable = Reflection.newProxy(Transferable.class, invocationHandler);
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(transferable, null, null));
+			Assertions.assertThrows(Throwable.class, () -> invocationHandler.invoke(transferable, null, null));
 			//
-			Assertions.assertNull(ih.invoke(transferable,
+			Assertions.assertNull(invocationHandler.invoke(transferable,
 					Util.getDeclaredMethod(Transferable.class, "getTransferData", DataFlavor.class), null));
 			//
-			Assertions.assertNotNull(ih.invoke(transferable,
+			Assertions.assertNotNull(invocationHandler.invoke(transferable,
 					Util.getDeclaredMethod(Transferable.class, "getTransferDataFlavors"), null));
 			//
 		} // if
