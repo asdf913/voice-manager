@@ -176,8 +176,12 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		setMinWidth(getColumn(tcm, 5), 115);
 		//
-		lsm = jTable.getSelectionModel();
-		//
+		if ((lsm = jTable.getSelectionModel()) != null) {
+			//
+			lsm.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			//
+		} // if
+			//
 		tm = jTable.getModel();
 		//
 		final Dimension pd = Util.getPreferredSize(jsp = new JScrollPane(jTable));
