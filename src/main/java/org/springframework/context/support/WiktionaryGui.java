@@ -539,7 +539,17 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 			pack(window);
 			//
-		} else if (Objects.equals(source, btnCopy)) {
+			return;
+			//
+		} // if
+			//
+		actionPerformed1(source);
+		//
+	}
+
+	private void actionPerformed1(final Object source) {
+		//
+		if (Objects.equals(source, btnCopy)) {
 			//
 			final int[] selectedIndices = getSelectedIndices(lsm);
 			//
