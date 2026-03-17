@@ -750,7 +750,7 @@ class WiktionaryGuiTest {
 			} // if
 				//
 		} // for
-			// s
+			//
 	}
 
 	@Test
