@@ -3,6 +3,8 @@ package org.springframework.context.support;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -558,13 +560,15 @@ class WiktionaryGuiTest {
 			//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent("", 0, null)));
 		//
+		// btnCopy
+		//
 		final AbstractButton btnCopy = new JButton();
 		//
 		FieldUtils.writeDeclaredField(instance, "btnCopy", btnCopy, true);
 		//
-		final ActionEvent actionEvent = new ActionEvent(btnCopy, 0, null);
+		final ActionEvent actionEventBtnCopy = new ActionEvent(btnCopy, 0, null);
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopy));
 		//
 		FieldUtils.writeDeclaredField(instance, "lsm", Reflection.newProxy(ListSelectionModel.class, ih), true);
 		//
@@ -574,7 +578,27 @@ class WiktionaryGuiTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopy));
+		//
+		// btnCopy
+		//
+		final AbstractButton btnCopyHiraganaImage = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnCopyHiraganaImage", btnCopyHiraganaImage, true);
+		//
+		final ActionEvent actionEventBtnCopyHiraganaImage = new ActionEvent(btnCopyHiraganaImage, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopyHiraganaImage));
+		//
+		FieldUtils.writeDeclaredField(instance, "lsm", Reflection.newProxy(ListSelectionModel.class, ih), true);
+		//
+		if (ih != null) {
+			//
+			ih.selectedIndices = new int[] { -1 };
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopyHiraganaImage));
 		//
 	}
 
@@ -727,6 +751,31 @@ class WiktionaryGuiTest {
 				//
 		} // for
 			// s
+	}
+
+	@Test
+	void testIH() throws Throwable {
+		//
+		final Class<?> clz = Util.forName("org.springframework.context.support.WiktionaryGui$IH");
+		//
+		final InvocationHandler ih = Util.cast(InvocationHandler.class, Narcissus.allocateInstance(clz));
+		//
+		if (ih != null) {
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(null, null, null));
+			//
+			final Transferable transferable = Reflection.newProxy(Transferable.class, ih);
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(transferable, null, null));
+			//
+			Assertions.assertNull(ih.invoke(transferable,
+					Util.getDeclaredMethod(Transferable.class, "getTransferData", DataFlavor.class), null));
+			//
+			Assertions.assertNotNull(ih.invoke(transferable,
+					Util.getDeclaredMethod(Transferable.class, "getTransferDataFlavors"), null));
+			//
+		} // if
+			//
 	}
 
 }

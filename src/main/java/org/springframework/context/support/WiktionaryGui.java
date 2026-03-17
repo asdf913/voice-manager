@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
@@ -21,6 +22,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -85,6 +88,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Browser;
@@ -115,7 +119,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
-	private AbstractButton btnCopy = null;
+	private AbstractButton btnCopy, btnCopyHiraganaImage = null;
 
 	private DefaultTableModel dtmWiktionaryEntry = null;
 
@@ -146,7 +150,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		final String wrap = "wrap";
 		//
-		add(tfText = new JTextField(), String.format("growx,%1$s", wrap));
+		add(tfText = new JTextField(), String.format("growx,%1$s,span %2$s", wrap, 2));
 		//
 		add(new JLabel());
 		//
@@ -188,7 +192,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		setPreferredSize(jsp, new Dimension((int) getWidth(pd), 0));
 		//
-		add(jsp, wrap);
+		add(jsp, String.format("%1$s,span %2$s", wrap, 2));
 		//
 		final TableCellRenderer tcr = jTable.getDefaultRenderer(Object.class);
 		//
@@ -243,6 +247,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		add(new JLabel());
 		//
 		add(btnCopy = new JButton("Copy"));
+		//
+		add(btnCopyHiraganaImage = new JButton("Copy Hiragana Image"));
 		//
 		final Stream<Field> stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()), Arrays::stream,
 				null);
@@ -546,6 +552,35 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
+	private static class IH implements InvocationHandler {
+
+		private Image image = null;
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String name = Util.getName(method);
+			//
+			if (proxy instanceof Transferable) {
+				//
+				if (Objects.equals(name, "getTransferDataFlavors")) {
+					//
+					return new DataFlavor[] { DataFlavor.imageFlavor };
+					//
+				} else if (Objects.equals(name, "getTransferData")) {
+					//
+					return image;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(name);
+			//
+		}
+
+	}
+
 	private void actionPerformed1(final Object source) {
 		//
 		if (Objects.equals(source, btnCopy)) {
@@ -576,6 +611,38 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 				} // try
 					//
+			} // if
+				//
+		} else if (Objects.equals(source, btnCopyHiraganaImage)) {
+			//
+			final int[] selectedIndices = getSelectedIndices(lsm);
+			//
+			testAndRun(length(selectedIndices) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			if (length(selectedIndices) == 1) {
+				//
+				final IH ih = new IH();
+				//
+				try {
+					//
+					ih.image = toImage(WiktionaryEntry.getHiraganaImage(Util.cast(WiktionaryEntry.class,
+							getValueAt(tm, selectedIndices != null ? selectedIndices[0] : 0, 0))));
+					//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
+				setContents(
+						testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
+								() -> getSystemClipboard(Toolkit.getDefaultToolkit()), null),
+						Reflection.newProxy(Transferable.class, ih), null);
+				//
 			} // if
 				//
 		} // if
