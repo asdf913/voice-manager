@@ -247,10 +247,11 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		final Stream<Field> stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()), Arrays::stream,
 				null);
 		//
-		Util.forEach(Util.map(stream, f -> Util.cast(AbstractButton.class,
-				Util.isStatic(f) ? Narcissus.getStaticField(f) : Narcissus.getField(this, f))), x -> {
-					Util.addActionListener(x, this);
-				});
+		Util.forEach(
+				Util.map(stream,
+						f -> Util.cast(AbstractButton.class,
+								Util.isStatic(f) ? Narcissus.getStaticField(f) : Narcissus.getField(this, f))),
+				x -> Util.addActionListener(x, this));
 		//
 	}
 
