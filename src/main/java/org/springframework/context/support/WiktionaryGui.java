@@ -427,6 +427,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			return hiraganaImage;
 		}
 
+		@Nullable
 		private static byte[] getHiraganaImage(@Nullable final WiktionaryEntry instance) {
 			return instance != null ? instance.getHiraganaImage() : null;
 		}
