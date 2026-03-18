@@ -652,7 +652,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 	}
 
-	private static int get(final int[] instance, final int index, final int defaultValue) {
+	private static int get(@Nullable final int[] instance, final int index, final int defaultValue) {
 		return instance != null && instance.length > index ? instance[index] : defaultValue;
 	}
 
