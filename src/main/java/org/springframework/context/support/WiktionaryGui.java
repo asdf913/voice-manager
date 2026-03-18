@@ -605,7 +605,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 									() -> getSystemClipboard(Toolkit.getDefaultToolkit()), null),
 							new StringSelection(ObjectMapperUtil.writeValueAsString(
 									new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY),
-									getValueAt(tm, selectedIndices != null ? selectedIndices[0] : 0, 0))),
+									getValueAt(tm, get(selectedIndices, 0, 0), 0))),
 							null);
 					//
 				} catch (final JsonProcessingException e) {
@@ -632,8 +632,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 				try {
 					//
-					ih.image = toImage(WiktionaryEntry.getHiraganaImage(Util.cast(WiktionaryEntry.class,
-							getValueAt(tm, selectedIndices != null ? selectedIndices[0] : 0, 0))));
+					ih.image = toImage(WiktionaryEntry.getHiraganaImage(
+							Util.cast(WiktionaryEntry.class, getValueAt(tm, get(selectedIndices, 0, 0), 0))));
 					//
 				} catch (final IOException e) {
 					//
@@ -650,6 +650,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 		} // if
 			//
+	}
+
+	private static int get(final int[] instance, final int index, final int defaultValue) {
+		return instance != null && instance.length > index ? instance[index] : defaultValue;
 	}
 
 	@Nullable
