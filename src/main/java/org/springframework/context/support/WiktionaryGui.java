@@ -629,7 +629,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 
 	}
 
-	private static boolean actionPerformed1(final WiktionaryGui instance, final Object source) {
+	private static boolean actionPerformed1(@Nullable final WiktionaryGui instance, final Object source) {
 		//
 		if (instance == null) {
 			//
@@ -709,7 +709,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
-	private static boolean actionPerformed2(final WiktionaryGui instance, final Object source) {
+	private static boolean actionPerformed2(@Nullable final WiktionaryGui instance, final Object source) {
 		//
 		if (instance == null) {
 			//
