@@ -1,6 +1,7 @@
 package org.springframework.context.support;
 
 import java.awt.Component;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
@@ -460,7 +461,10 @@ class WiktionaryGuiTest {
 						Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "stream"),
 								Arrays.equals(parameterTypes, new Class<?>[] { Element.class })),
 						Boolean.logicalAnd(Objects.equals(name, "classNames"),
-								Arrays.equals(parameterTypes, new Class<?>[] { Element.class })))) {
+								Arrays.equals(parameterTypes, new Class<?>[] { Element.class })),
+						Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(),
+								Boolean.logicalAnd(Objects.equals(name, "getSystemClipboard"),
+										Arrays.equals(parameterTypes, new Class<?>[] { Toolkit.class }))))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
