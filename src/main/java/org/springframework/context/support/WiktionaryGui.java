@@ -261,7 +261,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				null);
 		//
 		Util.forEach(Util.map(stream, f -> Util.cast(AbstractButton.class,
-				Util.isStatic(f) ? Narcissus.getStaticField(f) : Narcissus.getField(this, f))), x -> {
+				testAndGet(Util.isStatic(f), () -> Narcissus.getStaticField(f), () -> Narcissus.getField(this, f)))),
+				x -> {
 					//
 					Util.addActionListener(x, this);
 					//
