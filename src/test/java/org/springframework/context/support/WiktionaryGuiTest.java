@@ -782,7 +782,7 @@ class WiktionaryGuiTest {
 	}
 
 	@Test
-	void testSetRowSelectionInterval() throws IllegalAccessException, InvocationTargetException, IOException {
+	void testSetRowSelectionInterval() throws IllegalAccessException, InvocationTargetException {
 		//
 		final Integer zero = Integer.valueOf(0);
 		//
