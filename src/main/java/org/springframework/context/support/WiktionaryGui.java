@@ -571,11 +571,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 							size == 1 ? Math.max(rowHeight, maxImageHeight) * 2 - 8
 									: size * (Math.max(rowHeight, maxImageHeight) + 3)));
 			//
-			testAndRun(size == 1, () -> {
-				//
-				setRowSelectionInterval(jTable, 0, 0);
-				//
-			});
+			testAndRun(size == 1, () -> setRowSelectionInterval(jTable, 0, 0));
 			//
 			pack(window);
 			//
