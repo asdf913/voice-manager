@@ -968,6 +968,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
+	@Nullable
 	private static Iterable<WiktionaryEntry> getWiktionaryEntries2(final String language, final Element element,
 			final ObjectMapper objectMapper) {
 		//
