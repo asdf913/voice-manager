@@ -126,7 +126,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	@Note("Copy")
 	private AbstractButton btnCopy = null;
 
-	private AbstractButton btnCopyHiraganaImage, btnSaveHiraganaImage = null;
+	@Note("Copy Hiragana Image")
+	private AbstractButton btnCopyHiraganaImage = null;
+
+	private AbstractButton btnSaveHiraganaImage = null;
 
 	private DefaultTableModel dtmWiktionaryEntry = null;
 
