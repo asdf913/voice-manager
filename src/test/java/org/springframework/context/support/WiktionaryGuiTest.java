@@ -35,6 +35,7 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -68,7 +69,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class WiktionaryGuiTest {
 
 	private static Method METHOD_GET_WIKTIONARY_ENTRIES1, METHOD_GET_WIKTIONARY_ENTRIES3, METHOD_SET_ROW_HEIGHT,
-			METHOD_TEST_AND_GET, METHOD_TEST_AND_RUN, METHOD_TO_IMAGE, METHOD_TEST_AND_GET_AS_BOOLEAN = null;
+			METHOD_TEST_AND_GET, METHOD_TEST_AND_RUN, METHOD_TO_IMAGE, METHOD_TEST_AND_GET_AS_BOOLEAN,
+			METHOD_SET_ROW_SELECTION_INTERVAL = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -95,6 +97,9 @@ class WiktionaryGuiTest {
 		//
 		(METHOD_TEST_AND_GET_AS_BOOLEAN = Util.getDeclaredMethod(clz, "testAndGetAsBoolean", Boolean.TYPE,
 				BooleanSupplier.class)).setAccessible(true);
+		//
+		(METHOD_SET_ROW_SELECTION_INTERVAL = Util.getDeclaredMethod(clz, "setRowSelectionInterval", JTable.class,
+				Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -773,6 +778,18 @@ class WiktionaryGuiTest {
 			//
 		Assertions.assertEquals(ih != null ? ih.getAsBoolean : null,
 				invoke(METHOD_TEST_AND_GET_AS_BOOLEAN, null, Boolean.TRUE, booleanSupplier));
+		//
+	}
+
+	@Test
+	void testSetRowSelectionInterval() throws IllegalAccessException, InvocationTargetException, IOException {
+		//
+		final Integer zero = Integer.valueOf(0);
+		//
+		Assertions.assertNull(invoke(METHOD_SET_ROW_SELECTION_INTERVAL, null, new JTable(), zero, zero));
+		//
+		Assertions.assertNull(
+				invoke(METHOD_SET_ROW_SELECTION_INTERVAL, null, new JTable(new DefaultTableModel(1, 1)), zero, zero));
 		//
 	}
 
