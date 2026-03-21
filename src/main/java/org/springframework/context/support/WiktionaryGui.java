@@ -54,6 +54,8 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -104,7 +106,7 @@ import com.microsoft.playwright.PlaywrightUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
-public class WiktionaryGui extends JPanel implements InitializingBean, ActionListener {
+public class WiktionaryGui extends JPanel implements InitializingBean, ActionListener, ListSelectionListener {
 
 	private static final long serialVersionUID = -1375311207524968996L;
 
@@ -187,6 +189,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 			lsm.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			//
+			lsm.addListSelectionListener(this);
+			//
 		} // if
 			//
 		tm = jTable.getModel();
@@ -256,11 +260,18 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		final Stream<Field> stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()), Arrays::stream,
 				null);
 		//
-		Util.forEach(
-				Util.map(stream,
-						f -> Util.cast(AbstractButton.class,
-								Util.isStatic(f) ? Narcissus.getStaticField(f) : Narcissus.getField(this, f))),
-				x -> Util.addActionListener(x, this));
+		Util.forEach(Util.map(stream, f -> Util.cast(AbstractButton.class,
+				Util.isStatic(f) ? Narcissus.getStaticField(f) : Narcissus.getField(this, f))), x -> {
+					//
+					Util.addActionListener(x, this);
+					//
+					if (!Objects.equals(x, btnExecute)) {
+						//
+						Util.setEnabled(x, false);
+						//
+					} // if
+						//
+				});
 		//
 	}
 
@@ -546,6 +557,18 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					IterableUtils.size(wes) * (Math.max(new JTable().getRowHeight(), maxImageHeight) + 3)));
 			//
 			pack(window);
+			//
+			final Stream<Field> stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()),
+					Arrays::stream, null);
+			//
+			Util.forEach(
+					Util.filter(
+							Util.map(stream,
+									f -> Util.cast(AbstractButton.class,
+											Util.isStatic(f) ? Narcissus.getStaticField(f)
+													: Narcissus.getField(this, f))),
+							x -> !Objects.equals(x, btnExecute)),
+					x -> Util.setEnabled(x, false));
 			//
 			return;
 			//
@@ -921,6 +944,39 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			@Nullable final FailableFunction<T, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	@Override
+	public void valueChanged(final ListSelectionEvent evt) {
+		//
+		if (Objects.equals(Util.getSource(evt), lsm)) {
+			//
+			final int[] selectedIndices = getSelectedIndices(lsm);
+			//
+			testAndRun(length(selectedIndices) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			if (length(selectedIndices) == 1) {
+				//
+				final Stream<Field> stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()),
+						Arrays::stream, null);
+				//
+				Util.forEach(
+						Util.filter(
+								Util.map(stream,
+										f -> Util.cast(AbstractButton.class,
+												Util.isStatic(f) ? Narcissus.getStaticField(f)
+														: Narcissus.getField(this, f))),
+								x -> !Objects.equals(x, btnExecute)),
+						x -> Util.setEnabled(x, true));
+				//
+			} // if
+				//
+		} // if
+			//
 	}
 
 }

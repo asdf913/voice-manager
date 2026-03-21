@@ -38,6 +38,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -60,6 +61,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.oxbow.swingbits.util.OperatingSystem;
 import org.oxbow.swingbits.util.OperatingSystemUtil;
+import org.springframework.util.ReflectionUtils;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude.Value;
@@ -188,7 +190,7 @@ class WiktionaryGuiTest {
 
 	private static class IH implements InvocationHandler {
 
-		private Boolean test = null;
+		private Boolean test, equals = null;
 
 		private int[] selectedIndices = null;
 
@@ -198,6 +200,12 @@ class WiktionaryGuiTest {
 			if (Objects.equals(Void.TYPE, Util.getReturnType(method))) {
 				//
 				return null;
+				//
+			} // if
+				//
+			if (ReflectionUtils.isEqualsMethod(method)) {
+				//
+				return equals;
 				//
 			} // if
 				//
@@ -780,6 +788,43 @@ class WiktionaryGuiTest {
 			//
 		} // if
 			//
+	}
+
+	@Test
+	void testValueChanged() throws Throwable {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> instance.valueChanged(new ListSelectionEvent("", 0, 0, false)));
+		//
+		final ListSelectionModel lsm = Reflection.newProxy(ListSelectionModel.class, ih);
+		//
+		if (ih != null) {
+			//
+			ih.equals = Boolean.FALSE;
+			//
+			ih.selectedIndices = new int[1];
+			//
+		} // if
+			//
+		FieldUtils.writeDeclaredField(instance, "lsm", lsm, true);
+		//
+		final ListSelectionEvent lse = new ListSelectionEvent(lsm, 0, 0, false);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.valueChanged(lse));
+		//
+		if (ih != null) {
+			//
+			ih.selectedIndices = new int[2];
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> instance.valueChanged(lse));
+		//
 	}
 
 }
