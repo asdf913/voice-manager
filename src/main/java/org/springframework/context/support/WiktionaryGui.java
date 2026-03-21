@@ -583,8 +583,21 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		} // if
 			//
-		actionPerformed1(source);
+		final Iterable<BiPredicate<WiktionaryGui, Object>> predicates = Arrays.asList(WiktionaryGui::actionPerformed1,
+				WiktionaryGui::actionPerformed2);
 		//
+		BiPredicate<WiktionaryGui, Object> predicate = null;
+		//
+		for (int i = 0; i < IterableUtils.size(predicates); i++) {
+			//
+			if ((predicate = IterableUtils.get(predicates, i)) != null && Util.test(predicate, this, source)) {
+				//
+				return;
+				//
+			} // if
+				//
+		} // for
+			//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -616,11 +629,17 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 
 	}
 
-	private void actionPerformed1(final Object source) {
+	private static boolean actionPerformed1(final WiktionaryGui instance, final Object source) {
 		//
-		if (Objects.equals(source, btnCopy)) {
+		if (instance == null) {
 			//
-			final int[] selectedIndices = getSelectedIndices(lsm);
+			return false;
+			//
+		} // if
+			//
+		if (Objects.equals(source, instance.btnCopy)) {
+			//
+			final int[] selectedIndices = getSelectedIndices(instance.lsm);
 			//
 			testAndRun(length(selectedIndices) > 1, () -> {
 				//
@@ -637,7 +656,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 									() -> getSystemClipboard(Toolkit.getDefaultToolkit()), null),
 							new StringSelection(ObjectMapperUtil.writeValueAsString(
 									new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY),
-									getValueAt(tm, get(selectedIndices, 0, 0), 0))),
+									getValueAt(instance.tm, get(selectedIndices, 0, 0), 0))),
 							null);
 					//
 				} catch (final JsonProcessingException e) {
@@ -648,9 +667,11 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 			} // if
 				//
-		} else if (Objects.equals(source, btnCopyHiraganaImage)) {
+			return true;
 			//
-			final int[] selectedIndices = getSelectedIndices(lsm);
+		} else if (Objects.equals(source, instance.btnCopyHiraganaImage)) {
+			//
+			final int[] selectedIndices = getSelectedIndices(instance.lsm);
 			//
 			testAndRun(length(selectedIndices) > 1, () -> {
 				//
@@ -665,7 +686,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				try {
 					//
 					ih.image = toImage(WiktionaryEntry.getHiraganaImage(
-							Util.cast(WiktionaryEntry.class, getValueAt(tm, get(selectedIndices, 0, 0), 0))));
+							Util.cast(WiktionaryEntry.class, getValueAt(instance.tm, get(selectedIndices, 0, 0), 0))));
 					//
 				} catch (final IOException e) {
 					//
@@ -680,9 +701,25 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 			} // if
 				//
-		} else if (Objects.equals(source, btnSaveHiraganaImage)) {
+			return true;
 			//
-			final int[] selectedIndices = getSelectedIndices(lsm);
+		} // if
+			//
+		return false;
+		//
+	}
+
+	private static boolean actionPerformed2(final WiktionaryGui instance, final Object source) {
+		//
+		if (instance == null) {
+			//
+			return false;
+			//
+		} // if
+			//
+		if (Objects.equals(source, instance.btnSaveHiraganaImage)) {
+			//
+			final int[] selectedIndices = getSelectedIndices(instance.lsm);
 			//
 			testAndRun(length(selectedIndices) > 1, () -> {
 				//
@@ -699,8 +736,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					if (testAndGetAsBoolean(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 							() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
 						//
-						FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), WiktionaryEntry.getHiraganaImage(
-								Util.cast(WiktionaryEntry.class, getValueAt(tm, get(selectedIndices, 0, 0), 0))));
+						FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), WiktionaryEntry.getHiraganaImage(Util
+								.cast(WiktionaryEntry.class, getValueAt(instance.tm, get(selectedIndices, 0, 0), 0))));
 						//
 					} // if
 						//
@@ -712,8 +749,12 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 			} // if
 				//
+			return true;
+			//
 		} // if
 			//
+		return false;
+		//
 	}
 
 	private static boolean testAndGetAsBoolean(final boolean condition, final BooleanSupplier booleanSupplier) {
