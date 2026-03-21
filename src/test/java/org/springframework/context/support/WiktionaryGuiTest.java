@@ -592,7 +592,7 @@ class WiktionaryGuiTest {
 			//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopy));
 		//
-		// btnCopy
+		// btnCopyHiraganaImage
 		//
 		final AbstractButton btnCopyHiraganaImage = new JButton();
 		//
@@ -611,6 +611,20 @@ class WiktionaryGuiTest {
 		} // if
 			//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopyHiraganaImage));
+		//
+		// btnSaveHiraganaImage
+		//
+		final AbstractButton btnSaveHiraganaImage = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnSaveHiraganaImage", btnSaveHiraganaImage, true);
+		//
+		final ActionEvent actionEventBtnSaveHiraganaImage = new ActionEvent(btnSaveHiraganaImage, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnSaveHiraganaImage));
+		//
+		FieldUtils.writeDeclaredField(instance, "lsm", Reflection.newProxy(ListSelectionModel.class, ih), true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnSaveHiraganaImage));
 		//
 	}
 

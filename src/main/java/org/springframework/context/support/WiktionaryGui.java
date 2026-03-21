@@ -45,6 +45,7 @@ import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -66,6 +67,7 @@ import javax.swing.text.JTextComponent;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -124,7 +126,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	@Note("Copy")
 	private AbstractButton btnCopy = null;
 
-	private AbstractButton btnCopyHiraganaImage = null;
+	private AbstractButton btnCopyHiraganaImage, btnSaveHiraganaImage = null;
 
 	private DefaultTableModel dtmWiktionaryEntry = null;
 
@@ -159,7 +161,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		add(new JLabel());
 		//
-		add(btnExecute = new JButton("Execute"), wrap);
+		add(btnExecute = new JButton("Execute"), String.format("%1$s,span %2$s", wrap, 2));
 		//
 		add(new JLabel("Entry"));
 		//
@@ -199,7 +201,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		setPreferredSize(jsp, new Dimension((int) getWidth(pd), 0));
 		//
-		add(jsp, String.format("%1$s,span %2$s", wrap, 2));
+		add(jsp, String.format("%1$s,span %2$s", wrap, 3));
 		//
 		final TableCellRenderer tcr = jTable.getDefaultRenderer(Object.class);
 		//
@@ -256,6 +258,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		add(btnCopy = new JButton("Copy"));
 		//
 		add(btnCopyHiraganaImage = new JButton("Copy Hiragana Image"));
+		//
+		add(btnSaveHiraganaImage = new JButton("Save Hiragana Image"));
 		//
 		final Stream<Field> stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()), Arrays::stream,
 				null);
@@ -670,6 +674,38 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 								() -> getSystemClipboard(Toolkit.getDefaultToolkit()), null),
 						Reflection.newProxy(Transferable.class, ih), null);
 				//
+			} // if
+				//
+		} else if (Objects.equals(source, btnSaveHiraganaImage)) {
+			//
+			final int[] selectedIndices = getSelectedIndices(lsm);
+			//
+			testAndRun(length(selectedIndices) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			if (length(selectedIndices) == 1) {
+				//
+				try {
+					//
+					final JFileChooser jfc = new JFileChooser();
+					//
+					if (!GraphicsEnvironment.isHeadless() && !isTestMode()
+							&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+						//
+						FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), WiktionaryEntry.getHiraganaImage(
+								Util.cast(WiktionaryEntry.class, getValueAt(tm, get(selectedIndices, 0, 0), 0))));
+						//
+					} // if
+						//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
 			} // if
 				//
 		} // if
