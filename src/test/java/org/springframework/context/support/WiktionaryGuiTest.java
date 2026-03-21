@@ -105,7 +105,7 @@ class WiktionaryGuiTest {
 	private IH ih = null;
 
 	@BeforeEach
-	void beforeEach() throws IOException {
+	void beforeEach() {
 		//
 		instance = Util.cast(WiktionaryGui.class, Narcissus.allocateInstance(WiktionaryGui.class));
 		//
