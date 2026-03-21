@@ -695,7 +695,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 					final JFileChooser jfc = new JFileChooser();
 					//
-					if (!GraphicsEnvironment.isHeadless() && !isTestMode()
+					if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
 							&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 						//
 						FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), WiktionaryEntry.getHiraganaImage(
