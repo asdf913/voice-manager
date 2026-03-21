@@ -953,59 +953,81 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		if (IterableUtils.isEmpty(collection)) {
 			//
-			e = element;
+			wes = getWiktionaryEntries2(language, element, objectMapper);
 			//
-			while ((e = ElementUtil.nextElementSibling(e)) != null) {
+			for (int i = 0; i < IterableUtils.size(wes); i++) {
 				//
-				if (Boolean.logicalAnd(
-						CollectionUtils.isEqualCollection(classNames(e), Arrays.asList("mw-heading", "mw-heading3")),
-						Objects.equals(
-								ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-										ElementUtil.select(e, "h3"), x -> IterableUtils.get(x, 0), null)),
-								"Pronunciation"))) {
-					//
-					if (IterableUtils
-							.size(ss = Util
-									.toList(Util.filter(
-											Util.map(
-													Util.filter(stream(ElementUtil.nextElementSibling(e)),
-															x -> StringsUtil.startsWith(Strings.CI, ElementUtil.html(x),
-																	"IPA")),
-													x -> ElementUtil.text(testAndApply(y -> IterableUtils.size(y) == 1,
-															Util.toList(Util.filter(stream(ElementUtil.parent(x)),
-																	y -> Util.contains(classNames(y), "IPA"))),
-															y -> IterableUtils.get(y, 0), null))),
-											Objects::nonNull))) == 1) {
-						//
-						(we = new WiktionaryEntry()).language = language;
-						//
-						we.ipa = IterableUtils.get(ss, 0);
-						//
-						wes = getWiktionaryEntries(we, objectMapper,
-								Util.toList(Util.filter(
-										Util.stream(ElementUtil.children(ElementUtil.nextElementSibling(e))),
-										x -> Util.anyMatch(stream(x),
-												y -> Objects.equals(y.className(), "usage-label-accent")))));
-						//
-						for (int j = 0; j < IterableUtils.size(wes); j++) {
-							//
-							Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new),
-									IterableUtils.get(wes, j));
-							//
-						} // for
-							//
-					} // if
-						//
-				} else if (CollectionUtils.isEqualCollection(classNames(e),
-						Arrays.asList("mw-heading", "mw-heading2"))) {
-					//
-					break;
-					//
-				} // if
-					//
-			} // while
+				Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), IterableUtils.get(wes, i));
+				//
+			} // for
 				//
 		} // if
+			//
+		return collection;
+		//
+	}
+
+	private static Iterable<WiktionaryEntry> getWiktionaryEntries2(final String language, final Element element,
+			final ObjectMapper objectMapper) {
+		//
+		WiktionaryEntry we = null;
+		//
+		Iterable<String> ss = null;
+		//
+		Collection<WiktionaryEntry> collection = null;
+		//
+		Element e = element;
+		//
+		Iterable<WiktionaryEntry> wes = null;
+		//
+		while ((e = ElementUtil.nextElementSibling(e)) != null) {
+			//
+			if (Boolean
+					.logicalAnd(
+							CollectionUtils.isEqualCollection(classNames(e),
+									Arrays.asList("mw-heading", "mw-heading3")),
+							Objects.equals(
+									ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+											ElementUtil.select(e, "h3"), x -> IterableUtils.get(x, 0), null)),
+									"Pronunciation"))) {
+				//
+				if (IterableUtils
+						.size(ss = Util
+								.toList(Util.filter(
+										Util.map(
+												Util.filter(stream(ElementUtil.nextElementSibling(e)),
+														x -> StringsUtil.startsWith(Strings.CI, ElementUtil.html(x),
+																"IPA")),
+												x -> ElementUtil.text(testAndApply(y -> IterableUtils.size(y) == 1,
+														Util.toList(Util.filter(stream(ElementUtil.parent(x)),
+																y -> Util.contains(classNames(y), "IPA"))),
+														y -> IterableUtils.get(y, 0), null))),
+										Objects::nonNull))) == 1) {
+					//
+					(we = new WiktionaryEntry()).language = language;
+					//
+					we.ipa = IterableUtils.get(ss, 0);
+					//
+					wes = getWiktionaryEntries(we, objectMapper, Util.toList(Util.filter(
+							Util.stream(ElementUtil.children(ElementUtil.nextElementSibling(e))),
+							x -> Util.anyMatch(stream(x), y -> Objects.equals(y.className(), "usage-label-accent")))));
+					//
+					for (int j = 0; j < IterableUtils.size(wes); j++) {
+						//
+						Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new),
+								IterableUtils.get(wes, j));
+						//
+					} // for
+						//
+				} // if
+					//
+			} else if (CollectionUtils.isEqualCollection(classNames(e), Arrays.asList("mw-heading", "mw-heading2"))) {
+				//
+				break;
+				//
+			} // if
+				//
+		} // while
 			//
 		return collection;
 		//
