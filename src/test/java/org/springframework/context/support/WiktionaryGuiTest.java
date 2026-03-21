@@ -9,9 +9,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -19,8 +17,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.function.BiPredicate;
-import java.util.function.Predicate;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
@@ -43,15 +39,9 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-import org.apache.commons.collections4.IterableUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
-import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableFunction;
-import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.nodes.Element;
@@ -59,8 +49,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.oxbow.swingbits.util.OperatingSystem;
-import org.oxbow.swingbits.util.OperatingSystemUtil;
 import org.springframework.util.ReflectionUtils;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -80,7 +68,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class WiktionaryGuiTest {
 
 	private static Method METHOD_GET_WIKTIONARY_ENTRIES1, METHOD_GET_WIKTIONARY_ENTRIES3, METHOD_SET_ROW_HEIGHT,
-			METHOD_TEST_AND_GET, METHOD_TEST_AND_RUN, METHOD_TO_IMAGE = null;
+			METHOD_TEST_AND_GET, METHOD_TEST_AND_RUN, METHOD_TO_IMAGE, METHOD_TEST_AND_GET_AS_BOOLEAN = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -105,15 +93,12 @@ class WiktionaryGuiTest {
 		//
 		(METHOD_TO_IMAGE = Util.getDeclaredMethod(clz, "toImage", byte[].class)).setAccessible(true);
 		//
+		(METHOD_TEST_AND_GET_AS_BOOLEAN = Util.getDeclaredMethod(clz, "testAndGetAsBoolean", Boolean.TYPE,
+				BooleanSupplier.class)).setAccessible(true);
+		//
 	}
 
 	private WiktionaryGui instance = null;
-
-	private boolean nmcliExists = false;
-
-	private String connectivity = null;
-
-	private OperatingSystem operatingSystem = null;
 
 	private ObjectMapper objectMapper = null;
 
@@ -140,57 +125,12 @@ class WiktionaryGuiTest {
 		//
 		ih = new IH();
 		//
-		if (Objects.equals(operatingSystem = OperatingSystemUtil.getOperatingSystem(), OperatingSystem.LINUX)) {
-			//
-			final Charset charset = StandardCharsets.UTF_8;
-			//
-			try (final InputStream is = getInputStream(start(new ProcessBuilder(new String[] { "which", "nmcli" })))) {
-				//
-				nmcliExists = Util.exists(testAndApply(Objects::nonNull,
-						StringUtils.trim(IOUtils.toString(is, charset)), File::new, null));
-				//
-			} // try
-				//
-			try (final InputStream is = getInputStream(
-					start(nmcliExists ? new ProcessBuilder(new String[] { "nmcli", "-mode", "multiline", "general" })
-							: null))) {
-				//
-				final Collection<String> collection = testAndApply(Objects::nonNull, is,
-						x -> IOUtils.readLines(x, charset), null);
-				//
-				connectivity = Util
-						.toString(testAndApply(
-								x -> IterableUtils
-										.size(x) == 1,
-								Util.toList(Util.map(
-										Util.filter(Util.stream(collection),
-												x -> StringsUtil.startsWith(Strings.CI, x, "CONNECTIVITY:")),
-										x -> StringUtils.trim(StringUtils.substringAfter(x, ':')))),
-								x -> IterableUtils.get(x, 0), null));
-				//
-			} // try
-				//
-		} // if
-			//
-	}
-
-	private static <T, R, E extends Exception> R testAndApply(final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
-		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
-				: FailableFunctionUtil.apply(functionFalse, value);
-	}
-
-	private static Process start(final ProcessBuilder instance) throws IOException {
-		return instance != null ? instance.start() : null;
-	}
-
-	private static InputStream getInputStream(final Process instance) {
-		return instance != null ? instance.getInputStream() : null;
+		//
 	}
 
 	private static class IH implements InvocationHandler {
 
-		private Boolean test, equals = null;
+		private Boolean test, equals, getAsBoolean = null;
 
 		private int[] selectedIndices = null;
 
@@ -250,6 +190,10 @@ class WiktionaryGuiTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof BooleanSupplier && Objects.equals(name, "getAsBoolean")) {
+				//
+				return getAsBoolean;
+				//
 			} // if
 				//
 			throw new Throwable(name);
@@ -277,6 +221,12 @@ class WiktionaryGuiTest {
 		//
 		Object result = null;
 		//
+		if (ih != null) {
+			//
+			ih.getAsBoolean = Boolean.FALSE;
+			//
+		} // if
+			//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
@@ -328,27 +278,6 @@ class WiktionaryGuiTest {
 					//
 			} else {
 				//
-				if (Objects.equals(Util.getName(m), "actionPerformed")
-						&& Arrays.equals(parameterTypes, new Class<?>[] { ActionEvent.class })
-						&& Objects.equals(operatingSystem, OperatingSystem.LINUX)
-						&& !StringsUtil.equals(Strings.CI, connectivity, "full") && nmcliExists) {
-					//
-					final Method m1 = m;
-					//
-					final Object[] os1 = os;
-					//
-					Assertions
-							.assertThrows(RuntimeException.class,
-									() -> Narcissus.invokeMethod(
-											instance = ObjectUtils.getIfNull(instance,
-													() -> Util.cast(WiktionaryGui.class,
-															Narcissus.allocateInstance(WiktionaryGui.class))),
-											m1, os1));
-					//
-					continue;
-					//
-				} // if
-					//
 				Assertions
 						.assertNull(
 								Narcissus
@@ -484,27 +413,6 @@ class WiktionaryGuiTest {
 					//
 			} else {
 				//
-				if (Objects.equals(Util.getName(m), "actionPerformed")
-						&& Arrays.equals(parameterTypes, new Class<?>[] { ActionEvent.class })
-						&& Objects.equals(operatingSystem, OperatingSystem.LINUX)
-						&& !StringsUtil.equals(Strings.CI, connectivity, "full") && nmcliExists) {
-					//
-					final Method m1 = m;
-					//
-					final Object[] os1 = os;
-					//
-					Assertions
-							.assertThrows(RuntimeException.class,
-									() -> Narcissus.invokeMethod(
-											instance = ObjectUtils.getIfNull(instance,
-													() -> Util.cast(WiktionaryGui.class,
-															Narcissus.allocateInstance(WiktionaryGui.class))),
-											m1, os1));
-					//
-					continue;
-					//
-				} // if
-					//
 				Assertions
 						.assertNull(
 								Narcissus
@@ -838,6 +746,33 @@ class WiktionaryGuiTest {
 		} // if
 			//
 		Assertions.assertThrows(IllegalStateException.class, () -> instance.valueChanged(lse));
+		//
+	}
+
+	@Test
+	void testTestAndGetAsBoolean() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertEquals(Boolean.FALSE, invoke(METHOD_TEST_AND_GET_AS_BOOLEAN, null, Boolean.TRUE, null));
+		//
+		final BooleanSupplier booleanSupplier = Reflection.newProxy(BooleanSupplier.class, ih);
+		//
+		if (ih != null) {
+			//
+			ih.getAsBoolean = Boolean.FALSE;
+			//
+		} // if
+			//
+		Assertions.assertEquals(ih != null ? ih.getAsBoolean : null,
+				invoke(METHOD_TEST_AND_GET_AS_BOOLEAN, null, Boolean.TRUE, booleanSupplier));
+		//
+		if (ih != null) {
+			//
+			ih.getAsBoolean = Boolean.TRUE;
+			//
+		} // if
+			//
+		Assertions.assertEquals(ih != null ? ih.getAsBoolean : null,
+				invoke(METHOD_TEST_AND_GET_AS_BOOLEAN, null, Boolean.TRUE, booleanSupplier));
 		//
 	}
 

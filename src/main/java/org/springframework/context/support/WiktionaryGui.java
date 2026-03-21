@@ -34,6 +34,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -695,8 +696,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 					final JFileChooser jfc = new JFileChooser();
 					//
-					if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
-							&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+					if (testAndGetAsBoolean(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
+							() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
 						//
 						FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), WiktionaryEntry.getHiraganaImage(
 								Util.cast(WiktionaryEntry.class, getValueAt(tm, get(selectedIndices, 0, 0), 0))));
@@ -713,6 +714,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 		} // if
 			//
+	}
+
+	private static boolean testAndGetAsBoolean(final boolean condition, final BooleanSupplier booleanSupplier) {
+		return condition && booleanSupplier != null && booleanSupplier.getAsBoolean();
 	}
 
 	private static int get(@Nullable final int[] instance, final int index, final int defaultValue) {
