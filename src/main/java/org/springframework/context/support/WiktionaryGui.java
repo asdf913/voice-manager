@@ -113,6 +113,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 
 	private static final long serialVersionUID = -1375311207524968996L;
 
+	private static final String MW_HEADING = "mw-heading";
+
 	private JTextComponent tfText = null;
 
 	@Target(ElementType.FIELD)
@@ -906,8 +908,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 			if (Boolean
 					.logicalAnd(
-							CollectionUtils.isEqualCollection(classNames(e),
-									Arrays.asList("mw-heading", "mw-heading4")),
+							CollectionUtils.isEqualCollection(classNames(e), Arrays.asList(MW_HEADING, "mw-heading4")),
 							Objects.equals(
 									ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
 											ElementUtil.select(e, "h4"), x -> IterableUtils.get(x, 0), null)),
@@ -943,7 +944,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 						//
 				} // if
 					//
-			} else if (CollectionUtils.isEqualCollection(classNames(e), Arrays.asList("mw-heading", "mw-heading2"))) {
+			} else if (CollectionUtils.isEqualCollection(classNames(e), Arrays.asList(MW_HEADING, "mw-heading2"))) {
 				//
 				break;
 				//
@@ -984,8 +985,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 			if (Boolean
 					.logicalAnd(
-							CollectionUtils.isEqualCollection(classNames(e),
-									Arrays.asList("mw-heading", "mw-heading3")),
+							CollectionUtils.isEqualCollection(classNames(e), Arrays.asList(MW_HEADING, "mw-heading3")),
 							Objects.equals(
 									ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
 											ElementUtil.select(e, "h3"), x -> IterableUtils.get(x, 0), null)),
@@ -1021,7 +1021,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 						//
 				} // if
 					//
-			} else if (CollectionUtils.isEqualCollection(classNames(e), Arrays.asList("mw-heading", "mw-heading2"))) {
+			} else if (CollectionUtils.isEqualCollection(classNames(e), Arrays.asList(MW_HEADING, "mw-heading2"))) {
 				//
 				break;
 				//
