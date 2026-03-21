@@ -612,7 +612,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 	}
 
-	private static void setRowSelectionInterval(final JTable instance, final int row, final int column) {
+	private static void setRowSelectionInterval(@Nullable final JTable instance, final int row, final int column) {
 		if (instance != null && getModel(instance) != null && instance.getRowCount() > row) {
 			instance.setRowSelectionInterval(row, column);
 		}
