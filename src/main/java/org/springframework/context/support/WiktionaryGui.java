@@ -670,11 +670,11 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 	}
 
-	private static int getWidth(final Image instnace, final ImageObserver getWidth) {
+	private static int getWidth(@Nullable final Image instnace, final ImageObserver getWidth) {
 		return instnace != null ? instnace.getWidth(getWidth) : 0;
 	}
 
-	private static ElementHandle querySelector(final ElementHandle instnace, final String selector) {
+	private static ElementHandle querySelector(@Nullable final ElementHandle instnace, final String selector) {
 		return instnace != null ? instnace.querySelector(selector) : null;
 	}
 
