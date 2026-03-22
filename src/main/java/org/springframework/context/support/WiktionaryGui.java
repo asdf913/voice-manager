@@ -524,7 +524,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			this.textImage = textImage;
 		}
 
-		private static void setTextImage(final WiktionaryEntry instance, final byte[] textImage) {
+		private static void setTextImage(@Nullable final WiktionaryEntry instance, final byte[] textImage) {
 			if (instance != null) {
 				instance.setTextImage(textImage);
 			}
