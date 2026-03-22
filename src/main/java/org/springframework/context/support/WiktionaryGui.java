@@ -516,7 +516,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			return textCssSelector;
 		}
 
-		private static String getTextCssSelector(final WiktionaryEntry instance) {
+		private static String getTextCssSelector(@Nullable final WiktionaryEntry instance) {
 			return instance != null ? instance.getTextCssSelector() : null;
 		}
 
