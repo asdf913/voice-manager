@@ -512,6 +512,24 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			}
 		}
 
+		private String getTextCssSelector() {
+			return textCssSelector;
+		}
+
+		private static String getTextCssSelector(final WiktionaryEntry instance) {
+			return instance != null ? instance.getTextCssSelector() : null;
+		}
+
+		private void setTextImage(final byte[] textImage) {
+			this.textImage = textImage;
+		}
+
+		private static void setTextImage(final WiktionaryEntry instance, final byte[] textImage) {
+			if (instance != null) {
+				instance.setTextImage(textImage);
+			}
+		}
+
 	}
 
 	@Override
@@ -576,7 +594,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 							WiktionaryEntry.getHiraganaCssSelector(we), (a, b) -> WiktionaryEntry.setHiraganaImage(a,
 									ElementHandleUtil.screenshot(querySelector(page, b))));
 					//
-					if (we != null && StringUtils.isNotBlank(cssSelector = we.textCssSelector)) {
+					if (StringUtils.isNotBlank(cssSelector = WiktionaryEntry.getTextCssSelector(we))) {
 						//
 						try (final InputStream is2 = new ByteArrayInputStream(ElementHandleUtil.screenshot(
 								querySelector(querySelector(querySelector(page, cssSelector), ".."), "..")));
@@ -591,7 +609,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 							//
 							ImageIO.write(bufferedImage, "png", baos);
 							//
-							we.textImage = baos.toByteArray();
+							WiktionaryEntry.setTextImage(we, baos.toByteArray());
 							//
 						} catch (final IOException e) {
 							//
