@@ -1107,7 +1107,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 																						"strong"),
 																				x -> IterableUtils.get(x, 0), null),
 																		"ruby"))),
-														x -> TextNodeUtil.text(x)),
+														TextNodeUtil::text),
 												Collectors.joining()))
 						&& ElementUtil.childrenSize(testAndApply(x -> IterableUtils.size(x) == 1,
 								ElementUtil.select(ElementUtil.nextElementSibling(e), "strong"),
