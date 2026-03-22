@@ -1123,8 +1123,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 																textNodes(ElementUtil.select(
 																		testAndApply(x -> IterableUtils.size(x) == 1,
 																				ElementUtil.select(ElementUtil
-																						.nextElementSibling(e),
-																						STRONG),
+																						.nextElementSibling(e), STRONG),
 																				x -> IterableUtils.get(x, 0), null),
 																		"ruby"))),
 														TextNodeUtil::text),
@@ -1134,8 +1133,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 								x -> IterableUtils.get(x, 0), null)) == StringUtils.length(text)) {
 					//
 					we.textCssSelector = cssSelector(testAndApply(x -> IterableUtils.size(x) == 1,
-							ElementUtil.select(ElementUtil.nextElementSibling(e), STRONG),
-							x -> IterableUtils.get(x, 0), null));
+							ElementUtil.select(ElementUtil.nextElementSibling(e), STRONG), x -> IterableUtils.get(x, 0),
+							null));
 					//
 				} // if
 					//
