@@ -678,7 +678,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		return condition ? valueTrue : valueFalse;
 	}
 
-	private static int getWidth(@Nullable final Image instnace, final ImageObserver getWidth) {
+	private static int getWidth(@Nullable final Image instnace, @Nullable final ImageObserver getWidth) {
 		return instnace != null ? instnace.getWidth(getWidth) : 0;
 	}
 
