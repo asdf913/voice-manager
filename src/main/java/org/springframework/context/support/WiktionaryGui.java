@@ -310,7 +310,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
-	private static int getIconWidth(final ImageIcon instance) {
+	private static int getIconWidth(@Nullable final ImageIcon instance) {
 		return instance != null ? instance.getIconWidth() : 0;
 	}
 
@@ -324,7 +324,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		return instance != null ? instance.getWidth() : 0;
 	}
 
-	private static int getMinWidth(final TableColumn instance) {
+	private static int getMinWidth(@Nullable final TableColumn instance) {
 		return instance != null ? instance.getMinWidth() : 0;
 	}
 
@@ -1137,7 +1137,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
-	private static List<TextNode> textNodes(final Elements instance) {
+	private static List<TextNode> textNodes(@Nullable final Elements instance) {
 		return instance != null ? instance.textNodes() : null;
 	}
 
