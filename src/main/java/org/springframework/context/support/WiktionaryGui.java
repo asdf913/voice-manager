@@ -445,8 +445,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
-	private static <T, U> void testAndAccept(@Nullable final BiPredicate<T, U> instance, @Nullable final T t, final U u,
-			final BiConsumer<T, U> consumer) {
+	private static <T, U> void testAndAccept(@Nullable final BiPredicate<T, U> instance, @Nullable final T t,
+			@Nullable final U u, final BiConsumer<T, U> consumer) {
 		if (instance != null && instance.test(t, u)) {
 			Util.accept(consumer, t, u);
 		} // if
