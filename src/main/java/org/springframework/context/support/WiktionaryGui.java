@@ -121,6 +121,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 
 	private static final String MW_HEADING = "mw-heading";
 
+	private static final String STRONG = "strong";
+
 	private JTextComponent tfText = null;
 
 	@Target(ElementType.FIELD)
@@ -1110,17 +1112,17 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 																		testAndApply(x -> IterableUtils.size(x) == 1,
 																				ElementUtil.select(ElementUtil
 																						.nextElementSibling(e),
-																						"strong"),
+																						STRONG),
 																				x -> IterableUtils.get(x, 0), null),
 																		"ruby"))),
 														TextNodeUtil::text),
 												Collectors.joining()))
 						&& ElementUtil.childrenSize(testAndApply(x -> IterableUtils.size(x) == 1,
-								ElementUtil.select(ElementUtil.nextElementSibling(e), "strong"),
+								ElementUtil.select(ElementUtil.nextElementSibling(e), STRONG),
 								x -> IterableUtils.get(x, 0), null)) == StringUtils.length(text)) {
 					//
 					we.textCssSelector = cssSelector(testAndApply(x -> IterableUtils.size(x) == 1,
-							ElementUtil.select(ElementUtil.nextElementSibling(e), "strong"),
+							ElementUtil.select(ElementUtil.nextElementSibling(e), STRONG),
 							x -> IterableUtils.get(x, 0), null));
 					//
 				} // if
