@@ -576,13 +576,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 						//
 					} // if
 						//
-					if (StringUtils.isNotBlank(cssSelector = WiktionaryEntry.getHiraganaCssSelector(we))) {
-						//
-						WiktionaryEntry.setHiraganaImage(we,
-								ElementHandleUtil.screenshot(querySelector(page, cssSelector)));
-						//
-					} // if
-						//
+					testAndAccept((a, b) -> StringUtils.isNotBlank(b), we, WiktionaryEntry.getHiraganaCssSelector(we),
+							(a, b) -> WiktionaryEntry.setHiraganaImage(a,
+									ElementHandleUtil.screenshot(querySelector(page, b))));
+					//
 					if (StringUtils.isNotBlank(cssSelector = we.textCssSelector)) {
 						//
 						try (final InputStream is2 = new ByteArrayInputStream(ElementHandleUtil.screenshot(
