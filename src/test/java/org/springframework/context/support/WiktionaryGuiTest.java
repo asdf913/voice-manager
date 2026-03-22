@@ -132,7 +132,6 @@ class WiktionaryGuiTest {
 		//
 		ih = new IH();
 		//
-		//
 	}
 
 	private static class IH implements InvocationHandler {
