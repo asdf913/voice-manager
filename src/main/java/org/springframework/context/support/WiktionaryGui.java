@@ -1137,6 +1137,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
+	@Nullable
 	private static List<TextNode> textNodes(@Nullable final Elements instance) {
 		return instance != null ? instance.textNodes() : null;
 	}
