@@ -683,7 +683,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 	}
 
-	private static int getHeight(final BufferedImage instance) {
+	private static int getHeight(@Nullable final BufferedImage instance) {
 		//
 		if (instance == null) {
 			//
@@ -707,8 +707,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
-	private static BufferedImage getSubimage(final BufferedImage instance, final int x, final int y, final int w,
-			final int h) {
+	private static BufferedImage getSubimage(@Nullable final BufferedImage instance, final int x, final int y,
+			final int w, final int h) {
 		//
 		if (instance == null) {
 			//
