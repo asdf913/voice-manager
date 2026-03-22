@@ -13,8 +13,10 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
@@ -30,6 +32,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -86,6 +89,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.nodes.TextNodeUtil;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -172,7 +178,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		add(new JLabel("Entry"));
 		//
 		final TableColumnModel tcm = (jTable = new JTable(dtmWiktionaryEntry = new DefaultTableModel(new Object[] {
-				"Language", "IPA", "Hiragana", "Hiragana Image", "Pitch Accent", "Pitch Accent Pattern" }, 0) {
+				"Language", "IPA", "Hiragana", "Hiragana Image", "Pitch Accent", "Pitch Accent Pattern", "Text" }, 0) {
 
 			@Override
 			public boolean isCellEditable(final int row, final int column) {
@@ -192,6 +198,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		setMinWidth(getColumn(tcm, 4), 70);
 		//
 		setMinWidth(getColumn(tcm, 5), 115);
+		//
+		setMinWidth(getColumn(tcm, 6), 20);
 		//
 		if ((lsm = jTable.getSelectionModel()) != null) {
 			//
@@ -241,6 +249,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 					(jLabel = new JLabel(imageIcon)).setHorizontalAlignment(SwingConstants.LEFT);
 					//
+					final TableColumn tc = getColumn(tcm, column);
+					//
+					setMinWidth(tc, Math.max(getMinWidth(tc), getIconWidth(imageIcon)));
+					//
 					return jLabel;
 					//
 				} else if (column == 4) {
@@ -250,6 +262,18 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				} else if (column == 5) {
 					//
 					Util.setText(jLabel, we.pitchAccentPattern);
+					//
+				} else if (column == 6) {
+					//
+					final ImageIcon imageIcon = testAndApply(Objects::nonNull, we.textImage, ImageIcon::new, null);
+					//
+					(jLabel = new JLabel(imageIcon)).setHorizontalAlignment(SwingConstants.LEFT);
+					//
+					final TableColumn tc = getColumn(tcm, column);
+					//
+					setMinWidth(tc, Math.max(getMinWidth(tc), getIconWidth(imageIcon)));
+					//
+					return jLabel;
 					//
 				} // if
 					//
@@ -286,6 +310,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
+	private static int getIconWidth(final ImageIcon instance) {
+		return instance != null ? instance.getIconWidth() : 0;
+	}
+
 	private static void setPreferredSize(@Nullable final Component instance, final Dimension preferredSize) {
 		if (instance != null) {
 			instance.setPreferredSize(preferredSize);
@@ -294,6 +322,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 
 	private static double getWidth(@Nullable final Dimension instance) {
 		return instance != null ? instance.getWidth() : 0;
+	}
+
+	private static int getMinWidth(final TableColumn instance) {
+		return instance != null ? instance.getMinWidth() : 0;
 	}
 
 	private static void setMinWidth(@Nullable final TableColumn instance, final int minWidth) {
@@ -440,9 +472,9 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		@Note("Pitch Accent")
 		private String pitchAccent;
 
-		private String pitchAccentPattern;
+		private String pitchAccentPattern, textCssSelector;
 
-		private byte[] hiraganaImage;
+		private byte[] hiraganaImage, textImage;
 
 		private String getHiraganaCssSelector() {
 			return hiraganaCssSelector;
@@ -522,7 +554,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 			WiktionaryEntry we = null;
 			//
-			String hiraganaCssSelector = null;
+			String cssSelector = null;
 			//
 			try (final Playwright playwright = Playwright.create();
 					final Browser browser = BrowserTypeUtil.launch(PlaywrightUtil.chromium(playwright));
@@ -532,16 +564,44 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 				for (int i = 0; i < IterableUtils.size(wes); i++) {
 					//
-					if (StringUtils.isBlank(hiraganaCssSelector = WiktionaryEntry
-							.getHiraganaCssSelector(we = IterableUtils.get(wes, i)))) {
+					if ((we = IterableUtils.get(wes, i)) == null) {
 						//
 						continue;
 						//
 					} // if
 						//
-					WiktionaryEntry.setHiraganaImage(we,
-							ElementHandleUtil.screenshot(querySelector(page, hiraganaCssSelector)));
-					//
+					if (StringUtils.isNotBlank(cssSelector = WiktionaryEntry.getHiraganaCssSelector(we))) {
+						//
+						WiktionaryEntry.setHiraganaImage(we,
+								ElementHandleUtil.screenshot(querySelector(page, cssSelector)));
+						//
+					} // if
+						//
+					if (StringUtils.isNotBlank(cssSelector = we.textCssSelector)) {
+						//
+						try (final InputStream is2 = new ByteArrayInputStream(ElementHandleUtil.screenshot(
+								querySelector(querySelector(querySelector(page, cssSelector), ".."), "..")));
+								final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+							//
+							BufferedImage bufferedImage = ImageIO.read(is2);
+							//
+							bufferedImage = bufferedImage != null ? bufferedImage.getSubimage(0, 0,
+									getWidth(toImage(ElementHandleUtil.screenshot(querySelector(page, cssSelector))),
+											null),
+									bufferedImage.getHeight()) : null;
+							//
+							ImageIO.write(bufferedImage, "png", baos);
+							//
+							we.textImage = baos.toByteArray();
+							//
+						} catch (final IOException e) {
+							//
+							throw new RuntimeException(e);
+							//
+						} // try
+							//
+					} // if
+						//
 				} // for
 					//
 			} // try
@@ -573,10 +633,6 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 							size == 1 ? Math.max(rowHeight, maxImageHeight) * 2 - 8
 									: size * (Math.max(rowHeight, maxImageHeight) + 3)));
 			//
-			testAndRun(size == 1, () -> setRowSelectionInterval(jTable, 0, 0));
-			//
-			pack(window);
-			//
 			final Stream<Field> stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()),
 					Arrays::stream, null);
 			//
@@ -588,6 +644,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 													() -> Narcissus.getField(this, f)))),
 							x -> !Objects.equals(x, btnExecute)),
 					x -> Util.setEnabled(x, false));
+			//
+			testAndRun(size == 1, () -> setRowSelectionInterval(jTable, 0, 0));
+			//
+			pack(window);
 			//
 			return;
 			//
@@ -608,6 +668,14 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 		} // for
 			//
+	}
+
+	private static int getWidth(final Image instnace, final ImageObserver getWidth) {
+		return instnace != null ? instnace.getWidth(getWidth) : 0;
+	}
+
+	private static ElementHandle querySelector(final ElementHandle instnace, final String selector) {
+		return instnace != null ? instnace.querySelector(selector) : null;
 	}
 
 	private static void setRowSelectionInterval(@Nullable final JTable instance, final int row, final int column) {
@@ -874,10 +942,13 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		ObjectMapper objectMapper = null;
 		//
+		final String text = ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+				ElementUtil.select(document, "#firstHeading"), x -> IterableUtils.get(x, 0), null));
+		//
 		for (int i = 0; i < IterableUtils.size(es1); i++) {
 			//
 			Util.addAll(collection = ObjectUtils.getIfNull(collection, ArrayList::new),
-					IterableUtils.toList(getWiktionaryEntries(
+					IterableUtils.toList(getWiktionaryEntries(text,
 							ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
 									ElementUtil.select(e1 = IterableUtils.get(es1, i), "h2"),
 									x -> IterableUtils.get(x, 0), null)),
@@ -891,8 +962,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	}
 
 	@Nullable
-	private static Iterable<WiktionaryEntry> getWiktionaryEntries(final String language, final Element element,
-			final ObjectMapper objectMapper) {
+	private static Iterable<WiktionaryEntry> getWiktionaryEntries(final String text, final String language,
+			final Element element, final ObjectMapper objectMapper) {
 		//
 		WiktionaryEntry we = null;
 		//
@@ -954,7 +1025,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		if (IterableUtils.isEmpty(collection)) {
 			//
-			wes = getWiktionaryEntries2(language, element, objectMapper);
+			wes = getWiktionaryEntries2(text, language, element, objectMapper);
 			//
 			for (int i = 0; i < IterableUtils.size(wes); i++) {
 				//
@@ -969,8 +1040,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	}
 
 	@Nullable
-	private static Iterable<WiktionaryEntry> getWiktionaryEntries2(final String language, final Element element,
-			final ObjectMapper objectMapper) {
+	private static Iterable<WiktionaryEntry> getWiktionaryEntries2(final String text, final String language,
+			final Element element, final ObjectMapper objectMapper) {
 		//
 		WiktionaryEntry we = null;
 		//
@@ -984,26 +1055,28 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		while ((e = ElementUtil.nextElementSibling(e)) != null) {
 			//
-			if (Boolean
-					.logicalAnd(
-							CollectionUtils.isEqualCollection(classNames(e), Arrays.asList(MW_HEADING, "mw-heading3")),
-							Objects.equals(
-									ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-											ElementUtil.select(e, "h3"), x -> IterableUtils.get(x, 0), null)),
-									"Pronunciation"))) {
+			if (CollectionUtils.isEqualCollection(classNames(e), Arrays.asList(MW_HEADING, "mw-heading3"))) {
 				//
-				if (IterableUtils
-						.size(ss = Util
-								.toList(Util.filter(
-										Util.map(
-												Util.filter(stream(ElementUtil.nextElementSibling(e)),
-														x -> StringsUtil.startsWith(Strings.CI, ElementUtil.html(x),
-																"IPA")),
-												x -> ElementUtil.text(testAndApply(y -> IterableUtils.size(y) == 1,
-														Util.toList(Util.filter(stream(ElementUtil.parent(x)),
-																y -> Util.contains(classNames(y), "IPA"))),
-														y -> IterableUtils.get(y, 0), null))),
-										Objects::nonNull))) == 1) {
+				if (Boolean
+						.logicalAnd(Objects.equals(ElementUtil
+								.text(testAndApply(x -> IterableUtils.size(x) == 1, ElementUtil.select(e, "h3"),
+										x -> IterableUtils.get(x, 0), null)),
+								"Pronunciation"),
+								IterableUtils
+										.size(ss = Util
+												.toList(Util.filter(
+														Util.map(
+																Util.filter(stream(ElementUtil.nextElementSibling(e)),
+																		x -> StringsUtil.startsWith(Strings.CI,
+																				ElementUtil.html(x), "IPA")),
+																x -> ElementUtil.text(testAndApply(
+																		y -> IterableUtils.size(y) == 1,
+																		Util.toList(Util.filter(
+																				stream(ElementUtil.parent(x)),
+																				y -> Util.contains(classNames(y),
+																						"IPA"))),
+																		y -> IterableUtils.get(y, 0), null))),
+														Objects::nonNull))) == 1)) {
 					//
 					(we = new WiktionaryEntry()).language = language;
 					//
@@ -1020,6 +1093,30 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 						//
 					} // for
 						//
+				} else if ((we = testAndApply(x -> IterableUtils.size(x) > 0, wes,
+						x -> IterableUtils.get(x, IterableUtils.size(x) - 1), null)) != null
+						&& StringsUtil
+								.equals(Strings.CI, text,
+										Util.collect(
+												Util.map(
+														Util.stream(
+																textNodes(ElementUtil.select(
+																		testAndApply(x -> IterableUtils.size(x) == 1,
+																				ElementUtil.select(ElementUtil
+																						.nextElementSibling(e),
+																						"strong"),
+																				x -> IterableUtils.get(x, 0), null),
+																		"ruby"))),
+														x -> TextNodeUtil.text(x)),
+												Collectors.joining()))
+						&& ElementUtil.childrenSize(testAndApply(x -> IterableUtils.size(x) == 1,
+								ElementUtil.select(ElementUtil.nextElementSibling(e), "strong"),
+								x -> IterableUtils.get(x, 0), null)) == StringUtils.length(text)) {
+					//
+					we.textCssSelector = cssSelector(testAndApply(x -> IterableUtils.size(x) == 1,
+							ElementUtil.select(ElementUtil.nextElementSibling(e), "strong"),
+							x -> IterableUtils.get(x, 0), null));
+					//
 				} // if
 					//
 			} else if (CollectionUtils.isEqualCollection(classNames(e), Arrays.asList(MW_HEADING, "mw-heading2"))) {
@@ -1032,6 +1129,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		return collection;
 		//
+	}
+
+	private static List<TextNode> textNodes(final Elements instance) {
+		return instance != null ? instance.textNodes() : null;
 	}
 
 	@Nullable

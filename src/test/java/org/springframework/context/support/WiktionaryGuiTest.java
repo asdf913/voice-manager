@@ -46,6 +46,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,6 +63,7 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper.Builder;
 import com.google.common.reflect.Reflection;
+import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Page;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -184,6 +186,10 @@ class WiktionaryGuiTest {
 				return null;
 				//
 			} else if (proxy instanceof Page && Objects.equals(name, "querySelector")) {
+				//
+				return null;
+				//
+			} else if (proxy instanceof ElementHandle && Objects.equals(name, "querySelector")) {
 				//
 				return null;
 				//
@@ -406,7 +412,9 @@ class WiktionaryGuiTest {
 								Arrays.equals(parameterTypes, new Class<?>[] { Element.class })),
 						Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(),
 								Boolean.logicalAnd(Objects.equals(name, "getSystemClipboard"),
-										Arrays.equals(parameterTypes, new Class<?>[] { Toolkit.class }))))) {
+										Arrays.equals(parameterTypes, new Class<?>[] { Toolkit.class }))),
+						Boolean.logicalAnd(Objects.equals(name, "textNodes"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Elements.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
