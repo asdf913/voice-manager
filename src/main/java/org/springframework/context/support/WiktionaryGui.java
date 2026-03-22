@@ -516,6 +516,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			return textCssSelector;
 		}
 
+		@Nullable
 		private static String getTextCssSelector(@Nullable final WiktionaryEntry instance) {
 			return instance != null ? instance.getTextCssSelector() : null;
 		}
@@ -706,6 +707,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
+	@Nullable
 	private static BufferedImage getSubimage(@Nullable final BufferedImage instance, final int x, final int y,
 			final int w, final int h) {
 		//
