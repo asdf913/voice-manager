@@ -634,10 +634,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 			final int size = IterableUtils.size(wes);
 			//
-			setPreferredSize(jsp,
-					new Dimension((int) getWidth(Util.getPreferredSize(jsp)),
-							size == 1 ? Math.max(rowHeight, maxImageHeight) * 2 - 8
-									: size * (Math.max(rowHeight, maxImageHeight) + 3)));
+			setPreferredSize(jsp, new Dimension((int) getWidth(Util.getPreferredSize(jsp)), iif(size == 1,
+					Math.max(rowHeight, maxImageHeight) * 2 - 8, size * (Math.max(rowHeight, maxImageHeight) + 3))));
 			//
 			final Stream<Field> stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()),
 					Arrays::stream, null);
@@ -674,6 +672,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 		} // for
 			//
+	}
+
+	private static int iif(final boolean condition, final int valueTrue, final int valueFalse) {
+		return condition ? valueTrue : valueFalse;
 	}
 
 	private static int getWidth(@Nullable final Image instnace, final ImageObserver getWidth) {
