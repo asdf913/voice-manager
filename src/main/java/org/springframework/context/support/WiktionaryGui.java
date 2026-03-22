@@ -580,8 +580,6 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 			WiktionaryEntry we = null;
 			//
-			String cssSelector = null;
-			//
 			try (final Playwright playwright = Playwright.create();
 					final Browser browser = BrowserTypeUtil.launch(PlaywrightUtil.chromium(playwright));
 					final Page page = BrowserUtil.newPage(browser)) {
@@ -594,29 +592,30 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 							WiktionaryEntry.getHiraganaCssSelector(we), (a, b) -> WiktionaryEntry.setHiraganaImage(a,
 									ElementHandleUtil.screenshot(querySelector(page, b))));
 					//
-					if (StringUtils.isNotBlank(cssSelector = WiktionaryEntry.getTextCssSelector(we))) {
-						//
-						try (final InputStream is2 = new ByteArrayInputStream(ElementHandleUtil.screenshot(
-								querySelector(querySelector(querySelector(page, cssSelector), ".."), "..")));
-								final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-							//
-							final BufferedImage bufferedImage = ImageIO.read(is2);
-							//
-							ImageIO.write(getSubimage(bufferedImage, 0, 0,
-									getWidth(toImage(ElementHandleUtil.screenshot(querySelector(page, cssSelector))),
-											null),
-									getHeight(bufferedImage)), "png", baos);
-							//
-							WiktionaryEntry.setTextImage(we, baos.toByteArray());
-							//
-						} catch (final IOException e) {
-							//
-							throw new RuntimeException(e);
-							//
-						} // try
-							//
-					} // if
-						//
+					testAndAccept((a, b) -> StringUtils.isNotBlank(b), we, WiktionaryEntry.getTextCssSelector(we),
+							(a, b) -> {
+								//
+								try (final InputStream is2 = new ByteArrayInputStream(ElementHandleUtil
+										.screenshot(querySelector(querySelector(querySelector(page, b), ".."), "..")));
+										final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+									//
+									final BufferedImage bufferedImage = ImageIO.read(is2);
+									//
+									ImageIO.write(getSubimage(bufferedImage, 0, 0,
+											getWidth(toImage(ElementHandleUtil.screenshot(querySelector(page, b))),
+													null),
+											getHeight(bufferedImage)), "png", baos);
+									//
+									WiktionaryEntry.setTextImage(a, baos.toByteArray());
+									//
+								} catch (final IOException e) {
+									//
+									throw new RuntimeException(e);
+									//
+								} // try
+									//
+							});
+					//
 				} // for
 					//
 			} // try
