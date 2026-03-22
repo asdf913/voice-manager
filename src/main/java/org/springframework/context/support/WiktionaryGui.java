@@ -600,14 +600,12 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 								querySelector(querySelector(querySelector(page, cssSelector), ".."), "..")));
 								final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 							//
-							BufferedImage bufferedImage = ImageIO.read(is2);
+							final BufferedImage bufferedImage = ImageIO.read(is2);
 							//
-							bufferedImage = bufferedImage != null ? bufferedImage.getSubimage(0, 0,
+							ImageIO.write(getSubimage(bufferedImage, 0, 0,
 									getWidth(toImage(ElementHandleUtil.screenshot(querySelector(page, cssSelector))),
 											null),
-									bufferedImage.getHeight()) : null;
-							//
-							ImageIO.write(bufferedImage, "png", baos);
+									getHeight(bufferedImage)), "png", baos);
 							//
 							WiktionaryEntry.setTextImage(we, baos.toByteArray());
 							//
@@ -683,6 +681,55 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 		} // for
 			//
+	}
+
+	private static int getHeight(final BufferedImage instance) {
+		//
+		if (instance == null) {
+			//
+			return 0;
+			//
+		} // if
+			//
+		final Iterable<Field> fs = Util
+				.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(instance))),
+						x -> Objects.equals(Util.getName(x), "raster")));
+		//
+		testAndRun(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		return testAndApply(Objects::nonNull,
+				testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
+				x -> Narcissus.getField(instance, x), null) != null ? instance.getHeight() : 0;
+		//
+	}
+
+	private static BufferedImage getSubimage(final BufferedImage instance, final int x, final int y, final int w,
+			final int h) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Iterable<Field> fs = Util
+				.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(instance))),
+						a -> Objects.equals(Util.getName(a), "raster")));
+		//
+		testAndRun(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		return testAndApply(Objects::nonNull,
+				testAndApply(a -> IterableUtils.size(a) == 1, fs, a -> IterableUtils.get(a, 0), null),
+				a -> Narcissus.getField(instance, a), null) != null ? instance.getSubimage(x, y, w, h) : null;
+		//
 	}
 
 	private static int iif(final boolean condition, final int valueTrue, final int valueFalse) {
