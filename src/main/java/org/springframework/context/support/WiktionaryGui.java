@@ -572,17 +572,11 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 				for (int i = 0; i < IterableUtils.size(wes); i++) {
 					//
-					if ((we = IterableUtils.get(wes, i)) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					testAndAccept((a, b) -> StringUtils.isNotBlank(b), we, WiktionaryEntry.getHiraganaCssSelector(we),
-							(a, b) -> WiktionaryEntry.setHiraganaImage(a,
+					testAndAccept((a, b) -> StringUtils.isNotBlank(b), we = IterableUtils.get(wes, i),
+							WiktionaryEntry.getHiraganaCssSelector(we), (a, b) -> WiktionaryEntry.setHiraganaImage(a,
 									ElementHandleUtil.screenshot(querySelector(page, b))));
 					//
-					if (StringUtils.isNotBlank(cssSelector = we.textCssSelector)) {
+					if (we != null && StringUtils.isNotBlank(cssSelector = we.textCssSelector)) {
 						//
 						try (final InputStream is2 = new ByteArrayInputStream(ElementHandleUtil.screenshot(
 								querySelector(querySelector(querySelector(page, cssSelector), ".."), "..")));
