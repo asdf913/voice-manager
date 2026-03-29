@@ -140,7 +140,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	@Note("Copy Hiragana Image")
 	private AbstractButton btnCopyHiraganaImage = null;
 
-	private AbstractButton btnSaveHiraganaImage = null;
+	private AbstractButton btnSaveHiraganaImage, btnCopyTextImage, btnSaveTextImage = null;
 
 	private DefaultTableModel dtmWiktionaryEntry = null;
 
@@ -287,11 +287,19 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		add(new JLabel());
 		//
-		add(btnCopy = new JButton("Copy"));
+		add(btnCopy = new JButton("Copy"), wrap);
 		//
-		add(btnCopyHiraganaImage = new JButton("Copy Hiragana Image"));
+		add(new JLabel("Hiragana"));
 		//
-		add(btnSaveHiraganaImage = new JButton("Save Hiragana Image"));
+		add(btnCopyHiraganaImage = new JButton("Copy Image"));
+		//
+		add(btnSaveHiraganaImage = new JButton("Save Image"), wrap);
+		//
+		add(new JLabel("Text"));
+		//
+		add(btnCopyTextImage = new JButton("Copy Image"));
+		//
+		add(btnSaveTextImage = new JButton("Save Image"));
 		//
 		final Stream<Field> stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()), Arrays::stream,
 				null);
@@ -903,7 +911,80 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 			return true;
 			//
-		} // if
+		} else if (Objects.equals(source, instance.btnCopyTextImage)) {
+			//
+			final int[] selectedIndices = getSelectedIndices(instance.lsm);
+			//
+			testAndRun(length(selectedIndices) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			if (length(selectedIndices) == 1) {
+				//
+				final IH ih = new IH();
+				//
+				final WiktionaryEntry wiktionaryEntry = Util.cast(WiktionaryEntry.class,
+						getValueAt(instance.tm, get(selectedIndices, 0, 0), 0));
+				//
+				try {
+					//
+					ih.image = toImage(wiktionaryEntry != null ? wiktionaryEntry.textImage : null);
+					//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
+				setContents(
+						testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
+								() -> getSystemClipboard(Toolkit.getDefaultToolkit()), null),
+						Reflection.newProxy(Transferable.class, ih), null);
+				//
+			} // if
+				//
+			return true;
+			//
+		} else if (Objects.equals(source, instance.btnSaveTextImage)) {
+			//
+			final int[] selectedIndices = getSelectedIndices(instance.lsm);
+			//
+			testAndRun(length(selectedIndices) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			if (length(selectedIndices) == 1) {
+				//
+				try {
+					//
+					final JFileChooser jfc = new JFileChooser();
+					//
+					if (testAndGetAsBoolean(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
+							() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
+						//
+						final WiktionaryEntry wiktionaryEntry = Util.cast(WiktionaryEntry.class,
+								getValueAt(instance.tm, get(selectedIndices, 0, 0), 0));
+						//
+						FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
+								wiktionaryEntry != null ? wiktionaryEntry.textImage : null);
+						//
+					} // if
+						//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
+			} // if
+				//
+			return true;
+			//
+		} // if // if
 			//
 		return false;
 		//

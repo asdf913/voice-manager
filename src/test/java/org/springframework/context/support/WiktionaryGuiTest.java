@@ -546,6 +546,46 @@ class WiktionaryGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnSaveHiraganaImage));
 		//
+		// btnCopyTextImage
+		//
+		final AbstractButton btnCopyTextImage = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnCopyTextImage", btnCopyTextImage, true);
+		//
+		final ActionEvent actionEventBtnCopyTextImage = new ActionEvent(btnCopyTextImage, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopyTextImage));
+		//
+		FieldUtils.writeDeclaredField(instance, "lsm", Reflection.newProxy(ListSelectionModel.class, ih), true);
+		//
+		if (ih != null) {
+			//
+			ih.selectedIndices = new int[] { -1 };
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopyTextImage));
+		//
+		// btnSaveTextImage
+		//
+		final AbstractButton btnSaveTextImage = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnSaveTextImage", btnSaveTextImage, true);
+		//
+		final ActionEvent actionEventBtnSaveTextImage = new ActionEvent(btnSaveTextImage, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnSaveTextImage));
+		//
+		FieldUtils.writeDeclaredField(instance, "lsm", Reflection.newProxy(ListSelectionModel.class, ih), true);
+		//
+		if (ih != null) {
+			//
+			ih.selectedIndices = new int[] { -1 };
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnSaveTextImage));
+		//
 	}
 
 	private static Object invoke(final Method method, final Object instance, final Object... args)
