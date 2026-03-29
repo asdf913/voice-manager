@@ -542,6 +542,14 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			}
 		}
 
+		private byte[] getTextImage() {
+			return textImage;
+		}
+
+		private static byte[] getTextImage(final WiktionaryEntry instance) {
+			return instance != null ? instance.getTextImage() : null;
+		}
+
 	}
 
 	@Override
@@ -928,12 +936,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 				final IH ih = new IH();
 				//
-				final WiktionaryEntry wiktionaryEntry = Util.cast(WiktionaryEntry.class,
-						getValueAt(instance.tm, get(selectedIndices, 0, 0), 0));
-				//
 				try {
 					//
-					ih.image = toImage(wiktionaryEntry != null ? wiktionaryEntry.textImage : null);
+					ih.image = toImage(WiktionaryEntry.getTextImage(
+							Util.cast(WiktionaryEntry.class, getValueAt(instance.tm, get(selectedIndices, 0, 0), 0))));
 					//
 				} catch (final IOException e) {
 					//
@@ -969,11 +975,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					if (testAndGetAsBoolean(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 							() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
 						//
-						final WiktionaryEntry wiktionaryEntry = Util.cast(WiktionaryEntry.class,
-								getValueAt(instance.tm, get(selectedIndices, 0, 0), 0));
-						//
-						FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
-								wiktionaryEntry != null ? wiktionaryEntry.textImage : null);
+						FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), WiktionaryEntry.getTextImage(Util
+								.cast(WiktionaryEntry.class, getValueAt(instance.tm, get(selectedIndices, 0, 0), 0))));
 						//
 					} // if
 						//
