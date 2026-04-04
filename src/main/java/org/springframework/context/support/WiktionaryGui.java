@@ -966,7 +966,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
-	private static boolean actionPerformed3(final WiktionaryGui instance, final Object source) {
+	private static boolean actionPerformed3(@Nullable final WiktionaryGui instance, final Object source) {
 		//
 		if (instance == null) {
 			//
