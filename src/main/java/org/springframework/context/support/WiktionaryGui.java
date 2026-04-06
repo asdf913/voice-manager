@@ -223,7 +223,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		setPreferredSize(jsp, new Dimension((int) getWidth(pd), 0));
 		//
-		add(jsp, String.format("%1$s,span %2$s", wrap, 3));
+		add(jsp, String.format("%1$s,span %2$s,wmin %3$s", wrap, 3, getWidth(Util.getPreferredSize(jTable))));
 		//
 		final TableCellRenderer tcr = jTable.getDefaultRenderer(Object.class);
 		//
