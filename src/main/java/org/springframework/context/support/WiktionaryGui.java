@@ -836,9 +836,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					final ObjectMapper objectMapper = new ObjectMapper();
 					//
 					testAndAccept((a, b) -> Util.isSelected(b), objectMapper, instance.btnEnableIndentOutput,
-							(a, b) -> {
-								enable(a, SerializationFeature.INDENT_OUTPUT);
-							});
+							(a, b) -> enable(a, SerializationFeature.INDENT_OUTPUT));
 					//
 					setContents(
 							testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
