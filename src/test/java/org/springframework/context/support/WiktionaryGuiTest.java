@@ -61,6 +61,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper.Builder;
 import com.google.common.reflect.Reflection;
@@ -414,7 +415,9 @@ class WiktionaryGuiTest {
 								Boolean.logicalAnd(Objects.equals(name, "getSystemClipboard"),
 										Arrays.equals(parameterTypes, new Class<?>[] { Toolkit.class }))),
 						Boolean.logicalAnd(Objects.equals(name, "textNodes"),
-								Arrays.equals(parameterTypes, new Class<?>[] { Elements.class })))) {
+								Arrays.equals(parameterTypes, new Class<?>[] { Elements.class })),
+						Boolean.logicalAnd(Objects.equals(name, "enable"), Arrays.equals(parameterTypes,
+								new Class<?>[] { ObjectMapper.class, SerializationFeature.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//

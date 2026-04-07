@@ -835,12 +835,11 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 					final ObjectMapper objectMapper = new ObjectMapper();
 					//
-					if (Util.isSelected(instance.btnEnableIndentOutput)) {
-						//
-						objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-						//
-					} // if
-						//
+					testAndAccept((a, b) -> Util.isSelected(b), objectMapper, instance.btnEnableIndentOutput,
+							(a, b) -> {
+								enable(a, SerializationFeature.INDENT_OUTPUT);
+							});
+					//
 					setContents(
 							testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 									() -> getSystemClipboard(Toolkit.getDefaultToolkit()), null),
@@ -896,6 +895,15 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		} // if
 			//
 		return false;
+		//
+	}
+
+	private static ObjectMapper enable(final ObjectMapper instance, final SerializationFeature serializationFeature) {
+		//
+		return instance != null
+				&& Narcissus.getField(instance, getFieldByName(Util.getClass(instance), "_serializationConfig")) != null
+						? instance.enable(serializationFeature)
+						: instance;
 		//
 	}
 
