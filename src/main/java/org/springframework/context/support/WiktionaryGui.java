@@ -148,7 +148,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	@Note("Copy Text Image")
 	private AbstractButton btnCopyTextImage = null;
 
-	private AbstractButton btnEnableIndentOutput, btnSaveTextImage = null;
+	@Note("Save Text Image")
+	private AbstractButton btnSaveTextImage = null;
+
+	private AbstractButton btnEnableIndentOutput = null;
 
 	private DefaultTableModel dtmWiktionaryEntry = null;
 
