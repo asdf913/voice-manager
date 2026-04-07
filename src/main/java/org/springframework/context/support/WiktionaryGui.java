@@ -49,6 +49,7 @@ import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -99,6 +100,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
@@ -146,7 +148,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	@Note("Copy Text Image")
 	private AbstractButton btnCopyTextImage = null;
 
-	private AbstractButton btnSaveTextImage = null;
+	private AbstractButton btnEnableIndentOutput, btnSaveTextImage = null;
 
 	private DefaultTableModel dtmWiktionaryEntry = null;
 
@@ -292,6 +294,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		});
 		//
 		add(new JLabel());
+		//
+		add(btnEnableIndentOutput = new JCheckBox("Indent Output"));
 		//
 		add(btnCopy = new JButton("Copy"), wrap);
 		//
@@ -826,11 +830,19 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 				try {
 					//
+					final ObjectMapper objectMapper = new ObjectMapper();
+					//
+					if (Util.isSelected(instance.btnEnableIndentOutput)) {
+						//
+						objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+						//
+					} // if
+						//
 					setContents(
 							testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 									() -> getSystemClipboard(Toolkit.getDefaultToolkit()), null),
 							new StringSelection(ObjectMapperUtil.writeValueAsString(
-									new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY),
+									objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY),
 									getValueAt(instance.tm, get(selectedIndices, 0, 0), 0))),
 							null);
 					//

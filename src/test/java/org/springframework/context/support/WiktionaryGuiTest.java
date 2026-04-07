@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -510,6 +511,14 @@ class WiktionaryGuiTest {
 			//
 		} // if
 			//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopy));
+		//
+		final AbstractButton btnEnableIndentOutput = new JCheckBox();
+		//
+		btnEnableIndentOutput.setSelected(true);
+		//
+		FieldUtils.writeDeclaredField(instance, "btnEnableIndentOutput", btnEnableIndentOutput, true);
+		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopy));
 		//
 		// btnCopyHiraganaImage
