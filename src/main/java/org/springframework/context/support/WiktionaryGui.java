@@ -903,8 +903,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		return instance != null
 				&& Narcissus.getField(instance, getFieldByName(Util.getClass(instance), "_serializationConfig")) != null
-						? instance.enable(serializationFeature)
-						: instance;
+				&& serializationFeature != null ? instance.enable(serializationFeature) : instance;
 		//
 	}
 

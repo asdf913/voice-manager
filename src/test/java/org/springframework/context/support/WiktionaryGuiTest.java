@@ -74,7 +74,7 @@ class WiktionaryGuiTest {
 
 	private static Method METHOD_GET_WIKTIONARY_ENTRIES1, METHOD_GET_WIKTIONARY_ENTRIES3, METHOD_SET_ROW_HEIGHT,
 			METHOD_TEST_AND_GET, METHOD_TEST_AND_RUN, METHOD_TO_IMAGE, METHOD_TEST_AND_GET_AS_BOOLEAN,
-			METHOD_SET_ROW_SELECTION_INTERVAL = null;
+			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_ENABLE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -104,6 +104,9 @@ class WiktionaryGuiTest {
 		//
 		(METHOD_SET_ROW_SELECTION_INTERVAL = Util.getDeclaredMethod(clz, "setRowSelectionInterval", JTable.class,
 				Integer.TYPE, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_ENABLE = Util.getDeclaredMethod(clz, "enable", ObjectMapper.class, SerializationFeature.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -849,6 +852,13 @@ class WiktionaryGuiTest {
 		//
 		Assertions.assertNull(
 				invoke(METHOD_SET_ROW_SELECTION_INTERVAL, null, new JTable(new DefaultTableModel(1, 1)), zero, zero));
+		//
+	}
+
+	@Test
+	void testEnable() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertSame(objectMapper, invoke(METHOD_ENABLE, null, objectMapper, null));
 		//
 	}
 
