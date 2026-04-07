@@ -896,6 +896,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
+	@Nullable
 	private static ObjectMapper enable(@Nullable final ObjectMapper instance,
 			final SerializationFeature serializationFeature) {
 		//
