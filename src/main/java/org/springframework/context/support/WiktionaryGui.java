@@ -898,7 +898,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
-	private static ObjectMapper enable(final ObjectMapper instance, final SerializationFeature serializationFeature) {
+	private static ObjectMapper enable(@Nullable final ObjectMapper instance,
+			final SerializationFeature serializationFeature) {
 		//
 		return instance != null
 				&& Narcissus.getField(instance, getFieldByName(Util.getClass(instance), "_serializationConfig")) != null
