@@ -87,7 +87,6 @@ class BufferedImageTypeFactoryBeanTest {
 	private static void setValue(final BufferedImageTypeFactoryBean instance, final Object value) {
 		if (instance != null) {
 			instance.setValue(value);
-			;
 		}
 	}
 
