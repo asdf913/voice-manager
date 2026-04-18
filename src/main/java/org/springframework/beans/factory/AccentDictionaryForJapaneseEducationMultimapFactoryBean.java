@@ -275,7 +275,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 				final StringBuilder sb = new StringBuilder(
 						StringUtils.defaultString(StringUtils.substringAfter(text, '(')));
 				//
-				if (sb.length() > 0 && sb.charAt(sb.length() - 1) == ')') {
+				if (!sb.isEmpty() && sb.charAt(sb.length() - 1) == ')') {
 					//
 					sb.deleteCharAt(sb.length() - 1);
 					//
