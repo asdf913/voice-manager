@@ -235,14 +235,10 @@ class CustomBeanFactoryPostProcessorTest {
 				//
 			final String methodName = getName(method);
 			//
-			if (proxy instanceof InputStreamSource) {
+			if (proxy instanceof InputStreamSource && Objects.equals(methodName, "getInputStream")) {
 				//
-				if (Objects.equals(methodName, "getInputStream")) {
-					//
-					return inputStream;
-					//
-				} // if
-					//
+				return inputStream;
+				//
 			} // if
 				//
 			if (proxy instanceof Iterable) {
@@ -301,14 +297,10 @@ class CustomBeanFactoryPostProcessorTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof ConfigurableEnvironment) {
+			} else if (proxy instanceof ConfigurableEnvironment && Objects.equals(methodName, "getPropertySources")) {
 				//
-				if (Objects.equals(methodName, "getPropertySources")) {
-					//
-					return propertySources;
-					//
-				} // if
-					//
+				return propertySources;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

@@ -119,14 +119,10 @@ class CustomBeanPostProcessorTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Title) {
+			} else if (proxy instanceof Title && Objects.equals(methodName, "value")) {
 				//
-				if (Objects.equals(methodName, "value")) {
-					//
-					return value;
-					//
-				} // if
-					//
+				return value;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -149,14 +145,10 @@ class CustomBeanPostProcessorTest {
 			//
 			final String methodName = thisMethod != null ? thisMethod.getName() : null;
 			//
-			if (self instanceof Component) {
+			if (self instanceof Component && Objects.equals(methodName, "getPreferredSize")) {
 				//
-				if (Objects.equals(methodName, "getPreferredSize")) {
-					//
-					return preferredSize;
-					//
-				} // if
-					//
+				return preferredSize;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

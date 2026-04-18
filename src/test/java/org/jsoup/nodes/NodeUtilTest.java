@@ -108,14 +108,11 @@ class NodeUtilTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof NodeVisitor) {
+			} else if (proxy instanceof NodeVisitor
+					&& Objects.equals(Void.TYPE, method != null ? method.getReturnType() : null)) {
 				//
-				if (Objects.equals(Void.TYPE, method != null ? method.getReturnType() : null)) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

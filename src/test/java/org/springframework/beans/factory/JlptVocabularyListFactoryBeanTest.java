@@ -111,20 +111,16 @@ class JlptVocabularyListFactoryBeanTest {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
-			if (proxy instanceof InputStreamSource) {
+			if (proxy instanceof InputStreamSource && Objects.equals(methodName, "getInputStream")) {
 				//
-				if (Objects.equals(methodName, "getInputStream")) {
+				if (inputStream != null && reset) {
 					//
-					if (inputStream != null && reset) {
-						//
-						inputStream.reset();
-						//
-					} // if
-						//
-					return inputStream;
+					inputStream.reset();
 					//
 				} // if
 					//
+				return inputStream;
+				//
 			} // if
 				//
 			if (proxy instanceof Resource) {
@@ -158,14 +154,10 @@ class JlptVocabularyListFactoryBeanTest {
 					return numericCellValue;
 				} // if
 					//
-			} else if (proxy instanceof FormulaEvaluator) {
+			} else if (proxy instanceof FormulaEvaluator && Objects.equals(methodName, "evaluate")) {
 				//
-				if (Objects.equals(methodName, "evaluate")) {
-					//
-					return evaluate;
-					//
-				} // if
-					//
+				return evaluate;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

@@ -104,14 +104,11 @@ class StringMultiMapFromResourceFactoryBeanTest {
 					//
 				} // if
 					//
-			} else if (method != null && Objects.equals(CLASS_OBJECT_INT_MAP, method.getDeclaringClass())) {
+			} else if (method != null && Objects.equals(CLASS_OBJECT_INT_MAP, method.getDeclaringClass())
+					&& Objects.equals(methodName, "containsKey")) {
 				//
-				if (Objects.equals(methodName, "containsKey")) {
-					//
-					return containsKey;
-					//
-				} // if
-					//
+				return containsKey;
+				//
 			} // if
 				//
 			if (proxy instanceof Iterable) {

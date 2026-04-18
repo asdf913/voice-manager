@@ -83,24 +83,16 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			//
 			final String methodName = getName(method);
 			//
-			if (proxy instanceof InputStreamSource) {
+			if (proxy instanceof InputStreamSource && Objects.equals(methodName, "getInputStream")) {
 				//
-				if (Objects.equals(methodName, "getInputStream")) {
-					//
-					return inputStream;
-					//
-				} // if
-					//
+				return inputStream;
+				//
 			} // if
 				//
-			if (proxy instanceof Resource) {
+			if (proxy instanceof Resource && Objects.equals(methodName, "exists")) {
 				//
-				if (Objects.equals(methodName, "exists")) {
-					//
-					return exists;
-					//
-				} // if
-					//
+				return exists;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

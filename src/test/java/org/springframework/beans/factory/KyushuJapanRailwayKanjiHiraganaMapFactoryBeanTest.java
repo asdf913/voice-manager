@@ -62,14 +62,10 @@ class KyushuJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 			final String methodName = thisMethod != null ? thisMethod.getName() : null;
 			//
-			if (self instanceof Element) {
+			if (self instanceof Element && Objects.equals(methodName, "select") && args != null && args.length > 0) {
 				//
-				if (Objects.equals(methodName, "select") && args != null && args.length > 0) {
-					//
-					return MapUtils.getObject(getSelect(), args[0]);
-					//
-				} // if
-					//
+				return MapUtils.getObject(getSelect(), args[0]);
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

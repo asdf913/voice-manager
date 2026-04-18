@@ -92,14 +92,11 @@ class CellUtilTest {
 					//
 				} // if
 					//
-			} else if (Class.forName("org.apache.poi.xssf.streaming.SXSSFCell$Value").isInstance(proxy)) {
+			} else if (Class.forName("org.apache.poi.xssf.streaming.SXSSFCell$Value").isInstance(proxy)
+					&& Objects.equals(methodName, "getType")) {
 				//
-				if (Objects.equals(methodName, "getType")) {
-					//
-					return type;
-					//
-				} // if
-					//
+				return type;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

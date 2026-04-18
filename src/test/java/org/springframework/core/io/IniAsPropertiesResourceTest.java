@@ -191,12 +191,12 @@ class IniAsPropertiesResourceTest {
 			//
 			final String methodName = getName(thisMethod);
 			//
-			if (self instanceof Reader) {
-				if (Objects.equals(methodName, "ready")) {
-					return ready;
-				}
-			}
-			//
+			if (self instanceof Reader && Objects.equals(methodName, "ready")) {
+				//
+				return ready;
+				//
+			} // if
+				//
 			throw new Throwable(methodName);
 			//
 		}

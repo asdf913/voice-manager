@@ -45,24 +45,16 @@ class JouYouKanJiListFactoryBeanTest {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
-			if (proxy instanceof InputStreamSource) {
+			if (proxy instanceof InputStreamSource && Objects.equals(methodName, "getInputStream")) {
 				//
-				if (Objects.equals(methodName, "getInputStream")) {
-					//
-					return inputStream;
-					//
-				} // if
-					//
+				return inputStream;
+				//
 			} // if
 				//
-			if (proxy instanceof Resource) {
+			if (proxy instanceof Resource && Objects.equals(methodName, "exists")) {
 				//
-				if (Objects.equals(methodName, "exists")) {
-					//
-					return exists;
-					//
-				} // if
-					//
+				return exists;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

@@ -174,27 +174,19 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Row) {
+			} else if (proxy instanceof Row && Objects.equals(methodName, "getPhysicalNumberOfCells")) {
 				//
-				if (Objects.equals(methodName, "getPhysicalNumberOfCells")) {
-					//
-					return physicalNumberOfCells;
-					//
-				} // if
-					//
+				return physicalNumberOfCells;
+				//
 			} // if
 				//
 			final Class<?> clz = Class
 					.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean$Link");
 			//
-			if (clz != null && clz.isInstance(proxy)) {
+			if (clz != null && clz.isInstance(proxy) && Util.contains(Arrays.asList("getUrl", "setUrl"), methodName)) {
 				//
-				if (Util.contains(Arrays.asList("getUrl", "setUrl"), methodName)) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

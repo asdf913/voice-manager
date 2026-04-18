@@ -147,14 +147,10 @@ class JouYouKanjiGuiTest {
 				//
 			final String methodName = Util.getName(method);
 			//
-			if (proxy instanceof Iterable) {
+			if (proxy instanceof Iterable && Objects.equals(methodName, "spliterator")) {
 				//
-				if (Objects.equals(methodName, "spliterator")) {
-					//
-					return spliterator;
-					//
-				} // if
-					//
+				return spliterator;
+				//
 			} // if
 				//
 			if (proxy instanceof Sheet) {
@@ -173,14 +169,10 @@ class JouYouKanjiGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Row) {
+			} else if (proxy instanceof Row && Objects.equals(methodName, "getFirstCellNum")) {
 				//
-				if (Objects.equals(methodName, "getFirstCellNum")) {
-					//
-					return firstCellNum;
-					//
-				} // if
-					//
+				return firstCellNum;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -197,14 +189,10 @@ class JouYouKanjiGuiTest {
 			//
 			final String methodName = thisMethod != null ? thisMethod.getName() : null;
 			//
-			if (self instanceof Component) {
+			if (self instanceof Component && Objects.equals(methodName, "getPreferredSize")) {
 				//
-				if (Objects.equals(methodName, "getPreferredSize")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

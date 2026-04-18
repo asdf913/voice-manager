@@ -66,14 +66,10 @@ class ProtocolUtilTest {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
-			if (proxy instanceof Stream) {
+			if (proxy instanceof Stream && Objects.equals(methodName, "map")) {
 				//
-				if (Objects.equals(methodName, "map")) {
-					//
-					return stream;
-					//
-				} // if
-					//
+				return stream;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

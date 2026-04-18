@@ -134,14 +134,10 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
-			if (proxy instanceof Iterable) {
+			if (proxy instanceof Iterable && Objects.equals(methodName, "iterator")) {
 				//
-				if (Objects.equals(methodName, "iterator")) {
-					//
-					return iterator;
-					//
-				} // if
-					//
+				return iterator;
+				//
 			} // if
 				//
 			if (proxy instanceof RenderedImage) {
@@ -180,14 +176,10 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof IntStream) {
+			} else if (proxy instanceof IntStream && Objects.equals(methodName, "reduce")) {
 				//
-				if (Objects.equals(methodName, "reduce")) {
-					//
-					return optionalInt;
-					//
-				} // if
-					//
+				return optionalInt;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -216,14 +208,10 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 					//
 				} // if
 					//
-			} else if (self instanceof Graphics) {
+			} else if (self instanceof Graphics && Objects.equals(methodName, "drawImage")) {
 				//
-				if (Objects.equals(methodName, "drawImage")) {
-					//
-					return drawImage;
-					//
-				} // if
-					//
+				return drawImage;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

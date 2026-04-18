@@ -20,14 +20,10 @@ class BeanFactoryUtilTest {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
-			if (proxy instanceof BeanFactory) {
+			if (proxy instanceof BeanFactory && Objects.equals(methodName, "getBean")) {
 				//
-				if (Objects.equals(methodName, "getBean")) {
-					//
-					return bean;
-					//
-				} // if
-					//
+				return bean;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

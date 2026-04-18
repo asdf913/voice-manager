@@ -20,14 +20,10 @@ class TagUtilTest {
 			//
 			final String methodName = thisMethod != null ? thisMethod.getName() : null;
 			//
-			if (self instanceof Tag) {
+			if (self instanceof Tag && Objects.equals(methodName, "attr")) {
 				//
-				if (Objects.equals(methodName, "attr")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

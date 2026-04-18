@@ -79,14 +79,10 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Sheet) {
+			} else if (proxy instanceof Sheet && Objects.equals(methodName, "iterator")) {
 				//
-				if (Objects.equals(methodName, "iterator")) {
-					//
-					return iteratorRow;
-					//
-				} // if
-					//
+				return iteratorRow;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

@@ -165,24 +165,20 @@ class MainTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof PropertyResolver) {
+			} else if (proxy instanceof PropertyResolver && Objects.equals(methodName, "getProperty") && args != null
+					&& args.length > 0) {
 				//
-				if (Objects.equals(methodName, "getProperty") && args != null && args.length > 0) {
-					//
-					return MapUtils.getObject(getProperties(), args[0]);
-					//
-				} // if
-					//
+				return MapUtils.getObject(getProperties(), args[0]);
+				//
 			} // if
 				//
-			if (proxy instanceof ConfigurableListableBeanFactory) {
+			if (proxy instanceof ConfigurableListableBeanFactory && Objects.equals(methodName, "getBeanDefinition")
+					&& args != null && args.length > 0)
+
+			{
 				//
-				if (Objects.equals(methodName, "getBeanDefinition") && args != null && args.length > 0) {
-					//
-					return MapUtils.getObject(getBeanDefinitions(), args[0]);
-					//
-				} // if
-					//
+				return MapUtils.getObject(getBeanDefinitions(), args[0]);
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

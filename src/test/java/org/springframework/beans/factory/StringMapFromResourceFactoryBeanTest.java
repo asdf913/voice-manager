@@ -132,14 +132,10 @@ class StringMapFromResourceFactoryBeanTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof FormulaEvaluator) {
+			} else if (proxy instanceof FormulaEvaluator && Objects.equals(methodName, "evaluate")) {
 				//
-				if (Objects.equals(methodName, "evaluate")) {
-					//
-					return cellValue;
-					//
-				} // if
-					//
+				return cellValue;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

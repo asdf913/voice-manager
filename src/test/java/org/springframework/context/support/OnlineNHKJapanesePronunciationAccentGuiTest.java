@@ -145,14 +145,10 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				//
 			final String methodName = Util.getName(method);
 			//
-			if (proxy instanceof Iterable) {
+			if (proxy instanceof Iterable && Objects.equals(methodName, "iterator")) {
 				//
-				if (Objects.equals(methodName, "iterator")) {
-					//
-					return iterator;
-					//
-				} // if
-					//
+				return iterator;
+				//
 			} // if
 				//
 			if (proxy instanceof Iterator) {
@@ -217,14 +213,10 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
-			if (self instanceof Toolkit) {
+			if (self instanceof Toolkit && Objects.equals(methodName, "getSystemClipboard")) {
 				//
-				if (Objects.equals(methodName, "getSystemClipboard")) {
-					//
-					return systemClipboard;
-					//
-				} // if
-					//
+				return systemClipboard;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

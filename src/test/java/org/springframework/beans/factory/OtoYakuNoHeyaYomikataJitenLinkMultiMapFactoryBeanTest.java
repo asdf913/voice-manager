@@ -126,14 +126,10 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof XPath) {
+			} else if (proxy instanceof XPath && Objects.equals(methodName, "evaluate")) {
 				//
-				if (Objects.equals(methodName, "evaluate")) {
-					//
-					return evaluate;
-					//
-				} // if
-					//
+				return evaluate;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

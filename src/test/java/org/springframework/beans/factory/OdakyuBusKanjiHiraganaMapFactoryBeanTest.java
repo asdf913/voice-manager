@@ -73,14 +73,10 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
-			if (proxy instanceof Iterable) {
+			if (proxy instanceof Iterable && Objects.equals(methodName, "iterator")) {
 				//
-				if (Objects.equals(methodName, "iterator")) {
-					//
-					return iterator;
-					//
-				} // if
-					//
+				return iterator;
+				//
 			} // if
 				//
 			if (proxy instanceof Entry) {
@@ -95,16 +91,11 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Map) {
+			} else if (proxy instanceof Map && Objects.equals(methodName, "entrySet")) {
 				//
-				if (Objects.equals(methodName, "entrySet")) {
-					//
-					return entrySet;
-					//
-				} // if
-					//
+				return entrySet;
+				//
 			} // if
-				//
 				//
 			throw new Throwable(methodName);
 			//

@@ -47,14 +47,10 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 			final String methodName = getName(thisMethod);
 			//
-			if (self instanceof Node) {
+			if (self instanceof Node && Objects.equals(methodName, "childNodes")) {
 				//
-				if (Objects.equals(methodName, "childNodes")) {
-					//
-					return childNodes;
-					//
-				} // if
-					//
+				return childNodes;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

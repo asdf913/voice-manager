@@ -106,24 +106,16 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
-			if (self instanceof Node) {
+			if (self instanceof Node && Objects.equals(methodName, "childNodeSize")) {
 				//
-				if (Objects.equals(methodName, "childNodeSize")) {
-					//
-					return IterableUtils.size(childNodes);
-					//
-				} // if
-					//
+				return IterableUtils.size(childNodes);
+				//
 			} // if
 				//
-			if (self instanceof Element) {
+			if (self instanceof Element && Objects.equals(methodName, "text")) {
 				//
-				if (Objects.equals(methodName, "text")) {
-					//
-					return text;
-					//
-				} // if
-					//
+				return text;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

@@ -145,14 +145,10 @@ class MapReportGuiTest {
 			//
 			final String methodName = Util.getName(method);
 			//
-			if (proxy instanceof BeanFactory) {
+			if (proxy instanceof BeanFactory && Objects.equals(methodName, "getBean")) {
 				//
-				if (Objects.equals(methodName, "getBean")) {
-					//
-					return bean;
-					//
-				} // if
-					//
+				return bean;
+				//
 			} // if
 				//
 			if (proxy instanceof ListableBeanFactory) {
@@ -171,14 +167,10 @@ class MapReportGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Iterable) {
+			} else if (proxy instanceof Iterable && Objects.equals(methodName, "iterator")) {
 				//
-				if (Objects.equals(methodName, "iterator")) {
-					//
-					return iterator;
-					//
-				} // if
-					//
+				return iterator;
+				//
 			} // if
 				//
 			if (proxy instanceof ConfigurableListableBeanFactory) {
@@ -259,14 +251,10 @@ class MapReportGuiTest {
 					//
 				} // if
 					//
-			} else if (self instanceof Component) {
+			} else if (self instanceof Component && Objects.equals(methodName, "getPreferredSize")) {
 				//
-				if (Objects.equals(methodName, "getPreferredSize")) {
-					//
-					return preferredSize;
-					//
-				} // if
-					//
+				return preferredSize;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

@@ -76,14 +76,10 @@ class IpaSymbolGuiTest {
 				//
 			final String methodName = Util.getName(thisMethod);
 			//
-			if (self instanceof Component) {
+			if (self instanceof Component && Objects.equals(methodName, "getPreferredSize")) {
 				//
-				if (Objects.equals(methodName, "getPreferredSize")) {
-					//
-					return preferredSize;
-					//
-				} // if
-					//
+				return preferredSize;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

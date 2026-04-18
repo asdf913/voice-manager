@@ -123,14 +123,10 @@ class UtilTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Map) {
+			} else if (proxy instanceof Map && Objects.equals(methodName, "putAll")) {
 				//
-				if (Objects.equals(methodName, "putAll")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

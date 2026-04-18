@@ -103,14 +103,10 @@ class GaKuNenBeTsuKanJiGuiTest {
 			//
 			final String methodName = Util.getName(method);
 			//
-			if (proxy instanceof Iterable) {
+			if (proxy instanceof Iterable && Objects.equals(methodName, "iterator")) {
 				//
-				if (Objects.equals(methodName, "iterator")) {
-					//
-					return iterator;
-					//
-				} // if
-					//
+				return iterator;
+				//
 			} // if
 				//
 			if (proxy instanceof Multimap) {
@@ -129,14 +125,10 @@ class GaKuNenBeTsuKanJiGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Stream) {
+			} else if (proxy instanceof Stream && Objects.equals(methodName, "max")) {
 				//
-				if (Objects.equals(methodName, "max")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -161,14 +153,10 @@ class GaKuNenBeTsuKanJiGuiTest {
 				//
 			final String methodName = Util.getName(thisMethod);
 			//
-			if (self instanceof Component) {
+			if (self instanceof Component && Objects.equals(methodName, "getPreferredSize")) {
 				//
-				if (Objects.equals(methodName, "getPreferredSize")) {
-					//
-					return preferredSize;
-					//
-				} // if
-					//
+				return preferredSize;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

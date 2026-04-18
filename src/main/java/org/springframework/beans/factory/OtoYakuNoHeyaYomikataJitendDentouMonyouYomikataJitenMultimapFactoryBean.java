@@ -1745,21 +1745,16 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							MultimapUtil::put);
 					//
 				} else if (Boolean.logicalAnd(StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21)),
-						StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22)))) {
+						StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22)))
+						&& Boolean.logicalAnd(StringsUtil.equals(org.apache.commons.lang3.Strings.CS, csk, g11),
+								StringUtils.length(csk) == 2)) {
 					//
-					if (Boolean.logicalAnd(StringsUtil.equals(org.apache.commons.lang3.Strings.CS, csk, g11),
-							StringUtils.length(csk) == 2)) {
-						//
-						MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								ImmutableMultimap.of(
-										csk = StringUtils.substring(csk, (length = StringUtils.length(csk)) - 1,
-												length),
-										csv, StringUtils.substringBefore(g11, csk),
-										StringUtils.substringBefore(g12, csv), StringUtils.substringBefore(g21, csk),
-										StringUtils.substringBefore(g22, csv)));
-						//
-					} // if
-						//
+					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							ImmutableMultimap.of(
+									csk = StringUtils.substring(csk, (length = StringUtils.length(csk)) - 1, length),
+									csv, StringUtils.substringBefore(g11, csk), StringUtils.substringBefore(g12, csv),
+									StringUtils.substringBefore(g21, csk), StringUtils.substringBefore(g22, csv)));
+					//
 				} // if
 					//
 			} // if

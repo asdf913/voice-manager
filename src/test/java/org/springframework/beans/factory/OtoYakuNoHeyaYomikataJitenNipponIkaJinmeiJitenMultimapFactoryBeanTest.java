@@ -95,14 +95,10 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Map) {
+			} else if (proxy instanceof Map && Objects.equals(methodName, "entrySet")) {
 				//
-				if (Objects.equals(methodName, "entrySet")) {
-					//
-					return entrySet;
-					//
-				} // if
-					//
+				return entrySet;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

@@ -156,14 +156,10 @@ class JlptLevelGuiTest {
 				//
 			final String methodName = Util.getName(method);
 			//
-			if (proxy instanceof Iterable) {
+			if (proxy instanceof Iterable && Objects.equals(methodName, "iterator")) {
 				//
-				if (Objects.equals(methodName, "iterator")) {
-					//
-					return iterator;
-					//
-				} // if
-					//
+				return iterator;
+				//
 			} // if
 				//
 			if (proxy instanceof Stream) {
@@ -202,14 +198,10 @@ class JlptLevelGuiTest {
 					//
 				} // if
 					//
-			} else if (self instanceof Toolkit) {
+			} else if (self instanceof Toolkit && Objects.equals(methodName, "getSystemClipboard")) {
 				//
-				if (Objects.equals(methodName, "getSystemClipboard")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

@@ -105,14 +105,10 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Iterable) {
+			} else if (proxy instanceof Iterable && Objects.equals(methodName, "iterator")) {
 				//
-				if (Objects.equals(methodName, "iterator")) {
-					//
-					return iterator;
-					//
-				} // if
-					//
+				return iterator;
+				//
 			} // if
 				//
 			if (proxy instanceof Resource) {
