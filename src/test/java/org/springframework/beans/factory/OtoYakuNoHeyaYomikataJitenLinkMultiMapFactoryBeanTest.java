@@ -143,7 +143,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 	private IH ih = null;
 
 	@BeforeEach
-	public void before() {
+	void before() {
 		//
 		instance = new OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean();
 		//

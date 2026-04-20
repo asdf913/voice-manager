@@ -98,7 +98,7 @@ class OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBeanTest {
 	private ObjectMapper objectMapper = null;
 
 	@BeforeEach
-	public void before() {
+	void before() {
 		//
 		instance = new OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBean();
 		//
