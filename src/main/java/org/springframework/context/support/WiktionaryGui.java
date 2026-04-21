@@ -948,7 +948,21 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 			return true;
 			//
-		} else if (Objects.equals(source, instance.btnCopyTextImage)) {
+		} // if
+			//
+		return false;
+		//
+	}
+
+	private static boolean actionPerformed3(@Nullable final WiktionaryGui instance, final Object source) {
+		//
+		if (instance == null) {
+			//
+			return false;
+			//
+		} // if
+			//
+		if (Objects.equals(source, instance.btnCopyTextImage)) {
 			//
 			final int[] selectedIndices = getSelectedIndices(instance.lsm);
 			//
@@ -982,21 +996,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 			return true;
 			//
-		} // if
-			//
-		return false;
-		//
-	}
-
-	private static boolean actionPerformed3(@Nullable final WiktionaryGui instance, final Object source) {
-		//
-		if (instance == null) {
-			//
-			return false;
-			//
-		} // if
-			//
-		if (Objects.equals(source, instance.btnSaveTextImage)) {
+		} else if (Objects.equals(source, instance.btnSaveTextImage)) {
 			//
 			final int[] selectedIndices = getSelectedIndices(instance.lsm);
 			//
