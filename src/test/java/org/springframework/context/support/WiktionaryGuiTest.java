@@ -58,6 +58,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude.Value;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.AnnotationIntrospector;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
@@ -69,12 +70,14 @@ import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Page;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyUtil;
 
 class WiktionaryGuiTest {
 
 	private static Method METHOD_GET_WIKTIONARY_ENTRIES1, METHOD_GET_WIKTIONARY_ENTRIES3, METHOD_SET_ROW_HEIGHT,
 			METHOD_TEST_AND_GET, METHOD_TEST_AND_RUN, METHOD_TO_IMAGE, METHOD_TEST_AND_GET_AS_BOOLEAN,
-			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_ENABLE = null;
+			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_ENABLE, METHOD_SET_ANNOTATION_INTROSPECTOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -107,6 +110,9 @@ class WiktionaryGuiTest {
 		//
 		(METHOD_ENABLE = Util.getDeclaredMethod(clz, "enable", ObjectMapper.class, SerializationFeature.class))
 				.setAccessible(true);
+		//
+		(METHOD_SET_ANNOTATION_INTROSPECTOR = Util.getDeclaredMethod(clz, "setAnnotationIntrospector",
+				ObjectMapper.class, AnnotationIntrospector.class)).setAccessible(true);
 		//
 	}
 
@@ -217,6 +223,19 @@ class WiktionaryGuiTest {
 
 	}
 
+	private static class MH implements MethodHandler {
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			final String methodName = Util.getName(thisMethod);
+			//
+			return new Throwable(methodName);
+			//
+		}
+	}
+
 	@Test
 	void testNull() {
 		//
@@ -318,7 +337,7 @@ class WiktionaryGuiTest {
 	}
 
 	@Test
-	void testNotNull() throws IOException {
+	void testNotNull() throws Throwable {
 		//
 		final Method[] ms = WiktionaryGui.class.getDeclaredMethods();
 		//
@@ -342,6 +361,8 @@ class WiktionaryGuiTest {
 			//
 		} // if
 			//
+		MH mh = null;
+		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
@@ -392,6 +413,11 @@ class WiktionaryGuiTest {
 					//
 					Util.add(collection, Toolkit.getDefaultToolkit());
 					//
+				} else if (Objects.equals(parameterType, AnnotationIntrospector.class)) {
+					//
+					Util.add(collection, ProxyUtil.createProxy(AnnotationIntrospector.class,
+							mh = ObjectUtils.getIfNull(mh, MH::new)));
+					//
 				} else {
 					//
 					Util.add(collection, Narcissus.allocateInstance(parameterType));
@@ -419,8 +445,12 @@ class WiktionaryGuiTest {
 										Arrays.equals(parameterTypes, new Class<?>[] { Toolkit.class }))),
 						Boolean.logicalAnd(Objects.equals(name, "textNodes"),
 								Arrays.equals(parameterTypes, new Class<?>[] { Elements.class })),
-						Boolean.logicalAnd(Objects.equals(name, "enable"), Arrays.equals(parameterTypes,
-								new Class<?>[] { ObjectMapper.class, SerializationFeature.class })))) {
+						Boolean.logicalAnd(Objects.equals(name, "enable"),
+								Arrays.equals(parameterTypes,
+										new Class<?>[] { ObjectMapper.class, SerializationFeature.class })),
+						Boolean.logicalAnd(Objects.equals(name, "setAnnotationIntrospector"),
+								Arrays.equals(parameterTypes,
+										new Class<?>[] { ObjectMapper.class, AnnotationIntrospector.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -859,6 +889,13 @@ class WiktionaryGuiTest {
 	void testEnable() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertSame(objectMapper, invoke(METHOD_ENABLE, null, objectMapper, null));
+		//
+	}
+
+	@Test
+	void testSetAnnotationIntrospector() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertSame(objectMapper, invoke(METHOD_SET_ANNOTATION_INTROSPECTOR, null, objectMapper, null));
 		//
 	}
 

@@ -99,6 +99,7 @@ import org.springframework.beans.factory.InitializingBean;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.AnnotationIntrospector;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -861,19 +862,16 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 					testAndAccept(Util.isSelected(instance.btnIgnoreCssSelector), objectMapper, x -> {
 						//
-						if (x != null) {
-							//
-							x.setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
-								@Override
-								public boolean hasIgnoreMarker(final AnnotatedMember m) {
-									return m != null && (m.hasAnnotation(WiktionaryEntry.CssSelector.class)
-											|| super.hasIgnoreMarker(m));
-								}
-							});
-							//
-						} // if
-							//
-
+						setAnnotationIntrospector(x, new JacksonAnnotationIntrospector() {
+							@Override
+							public boolean hasIgnoreMarker(final AnnotatedMember m) {
+								//
+								return m != null && (m.hasAnnotation(WiktionaryEntry.CssSelector.class)
+										|| super.hasIgnoreMarker(m));
+								//
+							}
+						});
+						//
 					});
 					//
 					setContents(
@@ -931,6 +929,16 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		} // if
 			//
 		return false;
+		//
+	}
+
+	private static ObjectMapper setAnnotationIntrospector(final ObjectMapper instance,
+			final AnnotationIntrospector annotationIntrospector) {
+		//
+		return instance != null
+				&& Narcissus.getField(instance, getFieldByName(Util.getClass(instance), "_serializationConfig")) != null
+						? instance.setAnnotationIntrospector(annotationIntrospector)
+						: instance;
 		//
 	}
 
