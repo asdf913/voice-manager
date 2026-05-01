@@ -38,6 +38,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -473,6 +474,12 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
+	private static <T> void testAndAccept(final boolean condition, final T value, final Consumer<T> consumer) {
+		if (condition) {
+			Util.accept(consumer, value);
+		} // if
+	}
+
 	private static <T, U> void testAndAccept(@Nullable final BiPredicate<T, U> instance, @Nullable final T t,
 			@Nullable final U u, final BiConsumer<T, U> consumer) {
 		if (instance != null && instance.test(t, u)) {
@@ -849,14 +856,14 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 					final ObjectMapper objectMapper = new ObjectMapper();
 					//
-					testAndAccept((a, b) -> Util.isSelected(b), objectMapper, instance.btnEnableIndentOutput,
-							(a, b) -> enable(a, SerializationFeature.INDENT_OUTPUT));
+					testAndAccept(Util.isSelected(instance.btnEnableIndentOutput), objectMapper,
+							x -> enable(x, SerializationFeature.INDENT_OUTPUT));
 					//
-					testAndAccept((a, b) -> Util.isSelected(b), objectMapper, instance.btnIgnoreCssSelector, (a, b) -> {
+					testAndAccept(Util.isSelected(instance.btnIgnoreCssSelector), objectMapper, x -> {
 						//
-						if (a != null) {
+						if (x != null) {
 							//
-							a.setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
+							x.setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
 								@Override
 								public boolean hasIgnoreMarker(final AnnotatedMember m) {
 									return m != null && (m.hasAnnotation(WiktionaryEntry.CssSelector.class)
@@ -866,6 +873,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 							//
 						} // if
 							//
+
 					});
 					//
 					setContents(
