@@ -63,6 +63,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.introspect.Annotated;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper.Builder;
 import com.google.common.reflect.Reflection;
@@ -77,7 +78,8 @@ class WiktionaryGuiTest {
 
 	private static Method METHOD_GET_WIKTIONARY_ENTRIES1, METHOD_GET_WIKTIONARY_ENTRIES3, METHOD_SET_ROW_HEIGHT,
 			METHOD_TEST_AND_GET, METHOD_TEST_AND_RUN, METHOD_TO_IMAGE, METHOD_TEST_AND_GET_AS_BOOLEAN,
-			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_ENABLE, METHOD_SET_ANNOTATION_INTROSPECTOR = null;
+			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_ENABLE, METHOD_SET_ANNOTATION_INTROSPECTOR,
+			METHOD_HAS_ANNOTATION = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -114,6 +116,9 @@ class WiktionaryGuiTest {
 		(METHOD_SET_ANNOTATION_INTROSPECTOR = Util.getDeclaredMethod(clz, "setAnnotationIntrospector",
 				ObjectMapper.class, AnnotationIntrospector.class)).setAccessible(true);
 		//
+		(METHOD_HAS_ANNOTATION = Util.getDeclaredMethod(clz, "hasAnnotation", Annotated.class, Class.class))
+				.setAccessible(true);
+		//
 	}
 
 	private WiktionaryGui instance = null;
@@ -121,6 +126,8 @@ class WiktionaryGuiTest {
 	private ObjectMapper objectMapper = null;
 
 	private IH ih = null;
+
+	private MH mh = null;
 
 	@BeforeEach
 	void beforeEach() {
@@ -142,6 +149,8 @@ class WiktionaryGuiTest {
 		objectMapper = builder != null ? builder.build() : null;
 		//
 		ih = new IH();
+		//
+		mh = new MH();
 		//
 	}
 
@@ -225,12 +234,20 @@ class WiktionaryGuiTest {
 
 	private static class MH implements MethodHandler {
 
+		private Boolean hasAnnotation = null;
+
 		@Override
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
+			if (self instanceof Annotated && Objects.equals(methodName, "hasAnnotation")) {
+				//
+				return hasAnnotation;
+				//
+			} // if
+				//
 			return new Throwable(methodName);
 			//
 		}
@@ -361,8 +378,12 @@ class WiktionaryGuiTest {
 			//
 		} // if
 			//
-		MH mh = null;
-		//
+		if (mh != null) {
+			//
+			mh.hasAnnotation = Boolean.FALSE;
+			//
+		} // if
+			//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()) {
@@ -413,10 +434,9 @@ class WiktionaryGuiTest {
 					//
 					Util.add(collection, Toolkit.getDefaultToolkit());
 					//
-				} else if (Objects.equals(parameterType, AnnotationIntrospector.class)) {
+				} else if (Util.contains(Arrays.asList(AnnotationIntrospector.class, Annotated.class), parameterType)) {
 					//
-					Util.add(collection, ProxyUtil.createProxy(AnnotationIntrospector.class,
-							mh = ObjectUtils.getIfNull(mh, MH::new)));
+					Util.add(collection, ProxyUtil.createProxy(parameterType, mh));
 					//
 				} else {
 					//
@@ -896,6 +916,14 @@ class WiktionaryGuiTest {
 	void testSetAnnotationIntrospector() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertSame(objectMapper, invoke(METHOD_SET_ANNOTATION_INTROSPECTOR, null, objectMapper, null));
+		//
+	}
+
+	@Test
+	void testHasAnnotation() throws Throwable {
+		//
+		Assertions.assertEquals(mh != null ? mh.hasAnnotation = Boolean.TRUE : null,
+				invoke(METHOD_HAS_ANNOTATION, null, ProxyUtil.createProxy(Annotated.class, mh), null));
 		//
 	}
 

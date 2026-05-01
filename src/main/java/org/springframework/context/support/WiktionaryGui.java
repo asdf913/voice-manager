@@ -103,6 +103,7 @@ import com.fasterxml.jackson.databind.AnnotationIntrospector;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.introspect.Annotated;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.google.common.reflect.Reflection;
@@ -866,8 +867,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 							@Override
 							public boolean hasIgnoreMarker(final AnnotatedMember m) {
 								//
-								return m != null && (m.hasAnnotation(WiktionaryEntry.CssSelector.class)
-										|| super.hasIgnoreMarker(m));
+								return hasAnnotation(m, WiktionaryEntry.CssSelector.class) || super.hasIgnoreMarker(m);
 								//
 							}
 						});
@@ -930,6 +930,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		return false;
 		//
+	}
+
+	private static boolean hasAnnotation(final Annotated instance, final Class<?> clz) {
+		return instance != null && instance.hasAnnotation(clz);
 	}
 
 	private static ObjectMapper setAnnotationIntrospector(final ObjectMapper instance,
