@@ -101,6 +101,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
@@ -151,7 +153,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	@Note("Save Text Image")
 	private AbstractButton btnSaveTextImage = null;
 
-	private AbstractButton btnEnableIndentOutput = null;
+	private AbstractButton btnEnableIndentOutput, btnIgnoreCssSelector = null;
 
 	private DefaultTableModel dtmWiktionaryEntry = null;
 
@@ -299,6 +301,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		add(new JLabel());
 		//
 		add(btnEnableIndentOutput = new JCheckBox("Indent Output"));
+		//
+		add(btnIgnoreCssSelector = new JCheckBox("Ignore CSS Selector"));
 		//
 		add(btnCopy = new JButton("Copy"), wrap);
 		//
@@ -489,6 +493,12 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		@Note("Hiragana")
 		private String hiragana;
 
+		@Target(ElementType.FIELD)
+		@Retention(RetentionPolicy.RUNTIME)
+		private @interface CssSelector {
+		}
+
+		@CssSelector
 		@Note("Hiragana CSS Selector")
 		private String hiraganaCssSelector;
 
@@ -498,6 +508,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		@Note("Pitch Accent Pattern")
 		private String pitchAccentPattern;
 
+		@CssSelector
 		private String textCssSelector;
 
 		@Note("Hiragana Image")
@@ -837,6 +848,22 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 					testAndAccept((a, b) -> Util.isSelected(b), objectMapper, instance.btnEnableIndentOutput,
 							(a, b) -> enable(a, SerializationFeature.INDENT_OUTPUT));
+					//
+					testAndAccept((a, b) -> Util.isSelected(b), objectMapper, instance.btnIgnoreCssSelector, (a, b) -> {
+						//
+						if (a != null) {
+							//
+							a.setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
+								@Override
+								public boolean hasIgnoreMarker(final AnnotatedMember m) {
+									return m != null && (m.hasAnnotation(WiktionaryEntry.CssSelector.class)
+											|| super.hasIgnoreMarker(m));
+								}
+							});
+							//
+						} // if
+							//
+					});
 					//
 					setContents(
 							testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
