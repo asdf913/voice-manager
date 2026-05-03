@@ -378,6 +378,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
+	@Nullable
 	private static String value(@Nullable final Property instance) {
 		return instance != null ? instance.value() : null;
 	}
