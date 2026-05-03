@@ -2420,4 +2420,8 @@ public abstract class Util {
 		}
 	}
 
+	static String getColumnName(final JTable instance, final int column) {
+		return instance != null && getModel(instance) != null ? instance.getColumnName(column) : null;
+	}
+
 }

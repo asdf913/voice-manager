@@ -1464,7 +1464,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		return (table, value, isSelected, hasFocus, row, column) -> {
 			//
-			final String columnName = getColumnName(table, column);
+			final String columnName = Util.getColumnName(table, column);
 			//
 			final Object object = getValueAt(Util.getModel(table), row, 0);
 			//
@@ -1560,11 +1560,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Nullable
 	private static Object getValueAt(@Nullable final TableModel instance, final int row, final int column) {
 		return instance != null ? instance.getValueAt(row, column) : null;
-	}
-
-	@Nullable
-	private static String getColumnName(@Nullable final JTable instance, final int column) {
-		return instance != null && Util.getModel(instance) != null ? instance.getColumnName(column) : null;
 	}
 
 	@Nullable

@@ -1307,7 +1307,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				final Integer column = Util.cast(Integer.class, ArrayUtils.get(args, 4));
 				//
-				final String columnName = column != null ? getColumnName(jTable, column.intValue()) : null;
+				final String columnName = column != null ? Util.getColumnName(jTable, column.intValue()) : null;
 				//
 				if (column != null && Util.contains(Arrays.asList(COPY, DOWNLOAD, PLAY), columnName)) {
 					//
@@ -1361,7 +1361,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				final Integer column = Util.cast(Integer.class, ArrayUtils.get(args, 5));
 				//
 				final String columnName = column != null
-						? getColumnName(Util.cast(JTable.class, ArrayUtils.get(args, 0)), column.intValue())
+						? Util.getColumnName(Util.cast(JTable.class, ArrayUtils.get(args, 0)), column.intValue())
 						: null;
 				//
 				if (Util.contains(Arrays.asList(COPY, DOWNLOAD, PLAY), columnName)) {
@@ -1385,11 +1385,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		@Nullable
 		private static Object getValueAt(@Nullable final JTable instance, final int row, final int column) {
 			return instance != null ? instance.getValueAt(row, column) : null;
-		}
-
-		@Nullable
-		private static String getColumnName(@Nullable final JTable instance, final int column) {
-			return instance != null ? instance.getColumnName(column) : null;
 		}
 
 	}
