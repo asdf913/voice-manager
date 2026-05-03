@@ -332,9 +332,9 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		add(btnSaveTextImage = new JButton("Save Image"));
 		//
-		Stream<Field> stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()), Arrays::stream, null);
+		final List<Field> fs = testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()), Arrays::asList, null);
 		//
-		Util.forEach(Util.map(stream, f -> Util.cast(AbstractButton.class,
+		Util.forEach(Util.map(Util.stream(fs), f -> Util.cast(AbstractButton.class,
 				testAndGet(Util.isStatic(f), () -> Narcissus.getStaticField(f), () -> Narcissus.getField(this, f)))),
 				x -> {
 					//
@@ -344,34 +344,37 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 				});
 		//
-		stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()), Arrays::stream, null);
+		Util.forEach(fs, createFieldConsumer(this, System.getProperties()));
 		//
-		final Map<?, ?> properties = System.getProperties();
+	}
+
+	private static Consumer<Field> createFieldConsumer(final Object instance, final Map<?, ?> map) {
 		//
-		Util.forEach(stream, f -> {
+		return f -> {
 			//
 			if (Util.isAnnotationPresent(f, Property.class)) {
 				//
 				final String value = value(Util.getAnnotation(f, Property.class));
 				//
-				final String key = StringUtils.joinWith(".", Util.getName(Util.getClass(this)), value);
+				final String key = StringUtils.joinWith(".", Util.getName(Util.getClass(instance)), value);
 				//
-				final AbstractButton abs = Util.cast(AbstractButton.class, testAndGet(Util.isStatic(f),
-						() -> Narcissus.getStaticField(f), () -> Narcissus.getField(this, f)));
+				final AbstractButton abs = Util.cast(AbstractButton.class,
+						testAndGet(Util.isStatic(f), () -> Narcissus.getStaticField(f),
+								() -> instance != null ? Narcissus.getField(instance, f) : null));
 				//
-				if (Util.containsKey(properties, value)) {
+				if (Util.containsKey(map, value)) {
 					//
-					setSelected(abs, Boolean.parseBoolean(Util.toString(Util.get(properties, value))));
+					setSelected(abs, Boolean.parseBoolean(Util.toString(Util.get(map, value))));
 					//
-				} else if (Util.containsKey(properties, key)) {
+				} else if (Util.containsKey(map, key)) {
 					//
-					setSelected(abs, Boolean.parseBoolean(Util.toString(Util.get(properties, key))));
+					setSelected(abs, Boolean.parseBoolean(Util.toString(Util.get(map, key))));
 					//
 				} // if
 					//
 			} // if
 				//
-		});
+		};
 		//
 	}
 

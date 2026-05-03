@@ -10,7 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -22,9 +24,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
@@ -41,11 +46,14 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Assertions;
@@ -78,8 +86,8 @@ class WiktionaryGuiTest {
 
 	private static Method METHOD_GET_WIKTIONARY_ENTRIES1, METHOD_GET_WIKTIONARY_ENTRIES3, METHOD_SET_ROW_HEIGHT,
 			METHOD_TEST_AND_GET, METHOD_TEST_AND_RUN, METHOD_TO_IMAGE, METHOD_TEST_AND_GET_AS_BOOLEAN,
-			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_ENABLE, METHOD_SET_ANNOTATION_INTROSPECTOR,
-			METHOD_HAS_ANNOTATION = null;
+			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_ENABLE, METHOD_SET_ANNOTATION_INTROSPECTOR, METHOD_HAS_ANNOTATION,
+			METHOD_CREATE_FIELD_CONSUMER, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -118,6 +126,12 @@ class WiktionaryGuiTest {
 		//
 		(METHOD_HAS_ANNOTATION = Util.getDeclaredMethod(clz, "hasAnnotation", Annotated.class, Class.class))
 				.setAccessible(true);
+		//
+		(METHOD_CREATE_FIELD_CONSUMER = Util.getDeclaredMethod(clz, "createFieldConsumer", Object.class, Map.class))
+				.setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY = Util.getDeclaredMethod(clz, "testAndApply", FailablePredicate.class, Object.class,
+				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 	}
 
@@ -184,6 +198,10 @@ class WiktionaryGuiTest {
 			} // if
 				//
 			if (proxy instanceof FailableFunction && Objects.equals(name, "apply")) {
+				//
+				return null;
+				//
+			} else if (proxy instanceof BiFunction && Objects.equals(name, "apply")) {
 				//
 				return null;
 				//
@@ -321,8 +339,11 @@ class WiktionaryGuiTest {
 				//
 				result = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Boolean.logicalAnd(isPrimitive(returnType = Util.getReturnType(m)),
-						!Objects.equals(returnType, Void.TYPE))) {
+				if (Boolean.logicalOr(
+						Boolean.logicalAnd(isPrimitive(returnType = Util.getReturnType(m)),
+								!Objects.equals(returnType, Void.TYPE)),
+						Boolean.logicalAnd(Objects.equals(Util.getName(m), "createFieldConsumer"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Object.class, Map.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -479,7 +500,9 @@ class WiktionaryGuiTest {
 										new Class<?>[] { ObjectMapper.class, SerializationFeature.class })),
 						Boolean.logicalAnd(Objects.equals(name, "setAnnotationIntrospector"),
 								Arrays.equals(parameterTypes,
-										new Class<?>[] { ObjectMapper.class, AnnotationIntrospector.class })))) {
+										new Class<?>[] { ObjectMapper.class, AnnotationIntrospector.class })),
+						Boolean.logicalAnd(Objects.equals(name, "createFieldConsumer"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Object.class, Map.class })))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -934,6 +957,77 @@ class WiktionaryGuiTest {
 		Assertions.assertEquals(mh != null ? mh.hasAnnotation = Boolean.TRUE : null,
 				invoke(METHOD_HAS_ANNOTATION, null, ProxyUtil.createProxy(Annotated.class, mh), null));
 		//
+	}
+
+	@Test
+	void testCreateFieldConsumer() throws Throwable {
+		//
+		final Iterable<Field> fs = Util
+				.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(instance))), f -> {
+					//
+					try {
+						//
+						return Util.anyMatch(
+								testAndApply(Objects::nonNull, f != null ? f.getDeclaredAnnotations() : null,
+										Arrays::stream, null),
+								a -> Objects.equals(Util.getName(Util.annotationType(a)),
+										"org.springframework.context.support.WiktionaryGui$Property"));
+						//
+					} catch (final Throwable e) {
+						//
+						throw e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException(e);
+						//
+					} // try
+						//
+				}));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			final Field field = IterableUtils.get(fs, 0);
+			//
+			final Method method = Util.getDeclaredMethod(Consumer.class, "accept", Object.class);
+			//
+			Narcissus.invokeMethod(invoke(METHOD_CREATE_FIELD_CONSUMER, null, null, null), method, field);
+			//
+			Narcissus.invokeMethod(invoke(METHOD_CREATE_FIELD_CONSUMER, null, instance, null), method, field);
+			//
+			final Iterable<Annotation> as = Util.toList(
+					Util.filter(testAndApply(Objects::nonNull, field.getDeclaredAnnotations(), Arrays::stream, null),
+							a -> Objects.equals(Util.getName(Util.annotationType(a)),
+									"org.springframework.context.support.WiktionaryGui$Property")));
+			//
+			if (IterableUtils.size(as) == 1) {
+				//
+				final Annotation a = IterableUtils.get(as, 0);
+				//
+				final Object value = MethodUtils.invokeMethod(a, "value");
+				//
+				Narcissus.invokeMethod(Util.cast(Consumer.class,
+						invoke(METHOD_CREATE_FIELD_CONSUMER, null, instance, Collections.singletonMap(value, "true"))),
+						method, field);
+				//
+				Narcissus
+						.invokeMethod(
+								Util.cast(Consumer.class,
+										invoke(METHOD_CREATE_FIELD_CONSUMER, null, instance,
+												Collections.singletonMap(StringUtils.joinWith(".",
+														Util.getName(Util.getClass(instance)), value), "true"))),
+								method, field);
+				//
+			} // if
+				//
+		} // if
+			//
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final FailablePredicate<T, E> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
+			throws Throwable {
+		try {
+			return (R) invoke(METHOD_TEST_AND_APPLY, null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }
