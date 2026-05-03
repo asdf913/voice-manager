@@ -1818,7 +1818,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class,
 						Util.openConnection(Util.toURL(uri)));
 				//
-				setRequestProperty(httpURLConnection, USER_AGENT, getUserAgent());
+				Util.setRequestProperty(httpURLConnection, USER_AGENT, getUserAgent());
 				//
 				if (httpURLConnection != null) {
 					//
@@ -2889,7 +2889,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				Util.openConnection(Util.toURL(URIBuilderUtil.build(testAndApply(Objects::nonNull,
 						japanDictEntry != null ? japanDictEntry.pageUrl : null, URIBuilder::new, null)))));
 		//
-		setRequestProperty(httpURLConnection, USER_AGENT, userAgent);
+		Util.setRequestProperty(httpURLConnection, USER_AGENT, userAgent);
 		//
 		try (final InputStream is = Util.getInputStream(httpURLConnection)) {
 			//
@@ -4430,7 +4430,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class, Util.openConnection(Util.toURL(
 				testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x), url, URI::new, null))));
 		//
-		setRequestProperty(httpURLConnection, USER_AGENT, userAgent);
+		Util.setRequestProperty(httpURLConnection, USER_AGENT, userAgent);
 		//
 		if (httpURLConnection == null || !HttpStatus.isSuccess(httpURLConnection.getResponseCode())) {
 			//
@@ -4555,13 +4555,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Nullable
 	private static InputStream getInputStream(@Nullable final URLConnection instance) throws IOException {
 		return instance != null ? instance.getInputStream() : null;
-	}
-
-	private static void setRequestProperty(@Nullable final URLConnection instance, final String key,
-			final String value) {
-		if (instance != null) {
-			instance.setRequestProperty(key, value);
-		}
 	}
 
 	private static void setText(@Nullable final String text, @Nullable final JTextComponent... jtcs) {

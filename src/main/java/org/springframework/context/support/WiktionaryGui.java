@@ -654,7 +654,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 				final URLConnection urlConnection = Util.openConnection(new URL(url));
 				//
-				setRequestProperty(urlConnection, "User-Agent",
+				Util.setRequestProperty(urlConnection, "User-Agent",
 						"Mozilla/5.0 (X11; Linux x86_64) AppleW;ebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36");
 				//
 				html = testAndApply(Objects::nonNull, is = testAndApply(x -> {
@@ -1489,13 +1489,6 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		return instance.cssSelector();
 		//
-	}
-
-	private static void setRequestProperty(@Nullable final URLConnection instance, final String key,
-			final String value) {
-		if (instance != null) {
-			instance.setRequestProperty(key, value);
-		}
 	}
 
 	@Nullable
