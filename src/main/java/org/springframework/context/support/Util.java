@@ -2422,6 +2422,7 @@ public abstract class Util {
 		}
 	}
 
+	@Nullable
 	static String getColumnName(@Nullable final JTable instance, final int column) {
 		return instance != null && getModel(instance) != null ? instance.getColumnName(column) : null;
 	}
