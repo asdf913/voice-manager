@@ -1466,7 +1466,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			final String columnName = getColumnName(table, column);
 			//
-			final Object object = getValueAt(getModel(table), row, 0);
+			final Object object = getValueAt(Util.getModel(table), row, 0);
 			//
 			// org.springframework.context.support.JapanDictGui$JapanDictEntry
 			//
@@ -1558,18 +1558,13 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	@Nullable
-	private static TableModel getModel(@Nullable final JTable instance) {
-		return instance != null ? instance.getModel() : null;
-	}
-
-	@Nullable
 	private static Object getValueAt(@Nullable final TableModel instance, final int row, final int column) {
 		return instance != null ? instance.getValueAt(row, column) : null;
 	}
 
 	@Nullable
 	private static String getColumnName(@Nullable final JTable instance, final int column) {
-		return instance != null && getModel(instance) != null ? instance.getColumnName(column) : null;
+		return instance != null && Util.getModel(instance) != null ? instance.getColumnName(column) : null;
 	}
 
 	@Nullable
@@ -2206,7 +2201,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	private static void setRowSelectionInterval(@Nullable final JTable instance, final int row, final int column) {
-		if (instance != null && instance.getModel() != null) {
+		if (instance != null && Util.getModel(instance) != null) {
 			instance.setRowSelectionInterval(row, column);
 		}
 	}
@@ -4358,7 +4353,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	}
 
 	private static int getRowCount(@Nullable final JTable instance) {
-		return instance != null && instance.getModel() != null ? instance.getRowCount() : 0;
+		return instance != null && Util.getModel(instance) != null ? instance.getRowCount() : 0;
 	}
 
 	private static void browse(@Nullable final Desktop instance, final URI uri) throws IOException {

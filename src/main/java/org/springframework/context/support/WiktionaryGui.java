@@ -238,7 +238,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		} // if
 			//
-		tm = jTable.getModel();
+		tm = Util.getModel(jTable);
 		//
 		final Dimension pd = Util.getPreferredSize(jsp = new JScrollPane(jTable));
 		//
@@ -253,7 +253,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			final Component c = WiktionaryGui.getTableCellRendererComponent(tcr, table, value, isSelected, hasFocus,
 					row, column);
 			//
-			final WiktionaryEntry we = Util.cast(WiktionaryEntry.class, getValueAt(getModel(table), row, 0));
+			final WiktionaryEntry we = Util.cast(WiktionaryEntry.class, getValueAt(Util.getModel(table), row, 0));
 			//
 			if (we != null) {
 				//
@@ -421,11 +421,6 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	@Nullable
 	private static Object getValueAt(@Nullable final TableModel instance, final int row, final int column) {
 		return instance != null ? instance.getValueAt(row, column) : null;
-	}
-
-	@Nullable
-	private static TableModel getModel(@Nullable final JTable instance) {
-		return instance != null ? instance.getModel() : null;
 	}
 
 	@Nullable
@@ -846,7 +841,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	}
 
 	private static void setRowSelectionInterval(@Nullable final JTable instance, final int row, final int column) {
-		if (instance != null && getModel(instance) != null && instance.getRowCount() > row) {
+		if (instance != null && Util.getModel(instance) != null && instance.getRowCount() > row) {
 			instance.setRowSelectionInterval(row, column);
 		}
 	}

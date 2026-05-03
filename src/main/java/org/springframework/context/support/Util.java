@@ -71,10 +71,12 @@ import javax.swing.Icon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.bcel.classfile.ClassParser;
@@ -2406,6 +2408,10 @@ public abstract class Util {
 		if (instance != null) {
 			instance.setRequestProperty(key, value);
 		}
+	}
+
+	static TableModel getModel(final JTable instance) {
+		return instance != null ? instance.getModel() : null;
 	}
 
 }
