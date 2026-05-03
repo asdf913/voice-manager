@@ -2414,4 +2414,10 @@ public abstract class Util {
 		return instance != null ? instance.getModel() : null;
 	}
 
+	static void setRowSelectionInterval(final JTable instance, final int row, final int column) {
+		if (instance != null && getModel(instance) != null) {
+			instance.setRowSelectionInterval(row, column);
+		}
+	}
+
 }

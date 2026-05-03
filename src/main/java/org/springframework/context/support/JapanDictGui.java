@@ -1871,7 +1871,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					)), getHeight(preferredSize))));
 			//
 			testAndRun(Boolean.logicalAnd(Util.getRowCount(dtm) == 1, getColumnCount(dtm) > 0),
-					() -> setRowSelectionInterval(jTable, 0, 0));
+					() -> Util.setRowSelectionInterval(jTable, 0, 0));
 			//
 			// Stroke With Number Image
 			//
@@ -2198,12 +2198,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				//
 		} // for
 			//
-	}
-
-	private static void setRowSelectionInterval(@Nullable final JTable instance, final int row, final int column) {
-		if (instance != null && Util.getModel(instance) != null) {
-			instance.setRowSelectionInterval(row, column);
-		}
 	}
 
 	private static int getColumnCount(@Nullable final TableModel instance) {

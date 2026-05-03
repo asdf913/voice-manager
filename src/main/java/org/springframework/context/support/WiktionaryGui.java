@@ -752,7 +752,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 							x -> !Objects.equals(x, btnExecute)),
 					x -> Util.setEnabled(x, false));
 			//
-			testAndRun(size == 1, () -> setRowSelectionInterval(jTable, 0, 0));
+			testAndRun(size == 1, () -> Util.setRowSelectionInterval(jTable, 0, 0));
 			//
 			pack(window);
 			//
@@ -838,12 +838,6 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	@Nullable
 	private static ElementHandle querySelector(@Nullable final ElementHandle instnace, final String selector) {
 		return instnace != null ? instnace.querySelector(selector) : null;
-	}
-
-	private static void setRowSelectionInterval(@Nullable final JTable instance, final int row, final int column) {
-		if (instance != null && Util.getModel(instance) != null && instance.getRowCount() > row) {
-			instance.setRowSelectionInterval(row, column);
-		}
 	}
 
 	private static class IH implements InvocationHandler {

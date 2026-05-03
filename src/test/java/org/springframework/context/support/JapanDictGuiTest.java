@@ -164,9 +164,8 @@ class JapanDictGuiTest {
 			METHOD_TO_DURATION, METHOD_TO_BUFFERED_IMAGE, METHOD_GET_COLUMN_NAME,
 			METHOD_GET_TABLE_CELL_RENDERER_COMPONENT, METHOD_GET_STROKE_IMAGE, METHOD_AND2, METHOD_AND3,
 			METHOD_PREPARE_RENDERER, METHOD_GET_CELL_RENDERER, METHOD_GET_COLUMN_COUNT,
-			METHOD_SET_ROW_SELECTION_INTERVAL, METHOD_CREATE_TABLE_CELL_RENDERER,
-			METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE, METHOD_FILTER,
-			METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW, METHOD_OR,
+			METHOD_CREATE_TABLE_CELL_RENDERER, METHOD_CREATE_PITCH_ACCENT_LIST_CELL_RENDERER, METHOD_SET_PREFERRED_SIZE,
+			METHOD_FILTER, METHOD_ADD_PARAMETERS, METHOD_GET_JWT, METHOD_ADD_ROWS, METHOD_GET_SELECTED_ROW, METHOD_OR,
 			METHOD_GET_MIN_MAX, METHOD_THEN_ACCEPT_ASYNC, METHOD_SET_STROKE_IMAGE_AND_STROKE_WITH_NUMBER_IMAGE,
 			METHOD_COPY_FIELD, METHOD_GET_LINK_MULTI_MAP_ELEMENT, METHOD_GET_LINK_MULTI_MAP_STRING,
 			METHOD_TEST_AND_RUN_THROWS, METHOD_CREATE_STRING_PD_RECTANGLE_ENTRY_LIST_CELL_RENDERER,
@@ -269,9 +268,6 @@ class JapanDictGuiTest {
 				Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_COLUMN_COUNT = Util.getDeclaredMethod(clz, "getColumnCount", JTable.class)).setAccessible(true);
-		//
-		(METHOD_SET_ROW_SELECTION_INTERVAL = Util.getDeclaredMethod(clz, "setRowSelectionInterval", JTable.class,
-				Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_CREATE_TABLE_CELL_RENDERER = Util.getDeclaredMethod(clz, "createTableCellRenderer",
 				TableCellRenderer.class)).setAccessible(true);
@@ -1857,14 +1853,6 @@ class JapanDictGuiTest {
 		//
 		Assertions.assertEquals(Integer.valueOf(ONE),
 				invoke(METHOD_GET_COLUMN_COUNT, null, new JTable(new DefaultTableModel(new Object[] { null }, ZERO))));
-		//
-	}
-
-	@Test
-	void testSetRowSelectionInterval() throws IllegalAccessException, InvocationTargetException {
-		//
-		Assertions.assertNull(invoke(METHOD_SET_ROW_SELECTION_INTERVAL, null,
-				new JTable(new DefaultTableModel(new Object[] { null }, ONE)), ZERO, ZERO));
 		//
 	}
 
