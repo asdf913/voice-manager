@@ -382,7 +382,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
-	private static void setSelected(final AbstractButton instance, final boolean selected) {
+	private static void setSelected(@Nullable final AbstractButton instance, final boolean selected) {
 		if (instance != null) {
 			instance.setSelected(selected);
 		}
