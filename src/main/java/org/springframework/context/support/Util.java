@@ -2411,6 +2411,7 @@ public abstract class Util {
 		}
 	}
 
+	@Nullable
 	static TableModel getModel(@Nullable final JTable instance) {
 		return instance != null ? instance.getModel() : null;
 	}
