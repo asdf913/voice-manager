@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -156,9 +157,16 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	@Note("Save Text Image")
 	private AbstractButton btnSaveTextImage = null;
 
-	@Note("Enable Indent Output")
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Property {
+		String value();
+	}
+
+	@Property("indentOutput")
 	private AbstractButton btnEnableIndentOutput = null;
 
+	@Property("ignoreCssSelector")
 	private AbstractButton btnIgnoreCssSelector = null;
 
 	private DefaultTableModel dtmWiktionaryEntry = null;
@@ -324,8 +332,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		add(btnSaveTextImage = new JButton("Save Image"));
 		//
-		final Stream<Field> stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()), Arrays::stream,
-				null);
+		Stream<Field> stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()), Arrays::stream, null);
 		//
 		Util.forEach(Util.map(stream, f -> Util.cast(AbstractButton.class,
 				testAndGet(Util.isStatic(f), () -> Narcissus.getStaticField(f), () -> Narcissus.getField(this, f)))),
@@ -340,6 +347,38 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					} // if
 						//
 				});
+		//
+		stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()), Arrays::stream, null);
+		//
+		final Map<?, ?> properties = System.getProperties();
+		//
+		Util.forEach(stream, f -> {
+			//
+			final AbstractButton abs = Util.cast(AbstractButton.class,
+					testAndGet(Util.isStatic(f), () -> Narcissus.getStaticField(f), () -> Narcissus.getField(this, f)));
+			//
+			Property property = null;
+			//
+			if (Util.isAnnotationPresent(f, Property.class) && abs != null
+					&& (property = Util.getAnnotation(f, Property.class)) != null) {
+				//
+				final String value = property.value();
+				//
+				final String key = StringUtils.joinWith(".", Util.getName(Util.getClass(this)), value);
+				//
+				if (Util.containsKey(properties, value)) {
+					//
+					abs.setSelected(Boolean.parseBoolean(Util.toString(Util.get(properties, value))));
+					//
+				} else if (Util.containsKey(properties, key)) {
+					//
+					abs.setSelected(Boolean.parseBoolean(Util.toString(Util.get(properties, key))));
+					//
+				} // if
+					//
+			} // if
+				//
+		});
 		//
 	}
 
