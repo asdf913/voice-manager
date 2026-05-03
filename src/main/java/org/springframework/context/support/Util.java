@@ -2415,13 +2415,13 @@ public abstract class Util {
 		return instance != null ? instance.getModel() : null;
 	}
 
-	static void setRowSelectionInterval(final JTable instance, final int row, final int column) {
+	static void setRowSelectionInterval(@Nullable final JTable instance, final int row, final int column) {
 		if (instance != null && getModel(instance) != null) {
 			instance.setRowSelectionInterval(row, column);
 		}
 	}
 
-	static String getColumnName(final JTable instance, final int column) {
+	static String getColumnName(@Nullable final JTable instance, final int column) {
 		return instance != null && getModel(instance) != null ? instance.getColumnName(column) : null;
 	}
 
