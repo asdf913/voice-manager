@@ -434,7 +434,11 @@ class WiktionaryGuiTest {
 					//
 					Util.add(collection, Toolkit.getDefaultToolkit());
 					//
-				} else if (Util.contains(Arrays.asList(AnnotationIntrospector.class, Annotated.class), parameterType)) {
+				} else if (Objects.equals(parameterType, AbstractButton.class)) {
+					//
+					Util.add(collection, new JButton());
+					//
+				} else if (parameterType != null && Modifier.isAbstract(parameterType.getModifiers())) {
 					//
 					Util.add(collection, ProxyUtil.createProxy(parameterType, mh));
 					//
@@ -496,6 +500,10 @@ class WiktionaryGuiTest {
 				//
 		} // for
 			//
+	}
+
+	private static String getName(final Module instance) {
+		return instance != null ? instance.getName() : null;
 	}
 
 	private static URI toUri(final Path instance) {

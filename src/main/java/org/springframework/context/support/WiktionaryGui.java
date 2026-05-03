@@ -359,7 +359,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 			Property property = null;
 			//
-			if (Util.isAnnotationPresent(f, Property.class) && abs != null
+			if (Util.isAnnotationPresent(f, Property.class)
 					&& (property = Util.getAnnotation(f, Property.class)) != null) {
 				//
 				final String value = property.value();
@@ -368,11 +368,11 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 				if (Util.containsKey(properties, value)) {
 					//
-					abs.setSelected(Boolean.parseBoolean(Util.toString(Util.get(properties, value))));
+					setSelected(abs, Boolean.parseBoolean(Util.toString(Util.get(properties, value))));
 					//
 				} else if (Util.containsKey(properties, key)) {
 					//
-					abs.setSelected(Boolean.parseBoolean(Util.toString(Util.get(properties, key))));
+					setSelected(abs, Boolean.parseBoolean(Util.toString(Util.get(properties, key))));
 					//
 				} // if
 					//
@@ -380,6 +380,12 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 		});
 		//
+	}
+
+	private static void setSelected(final AbstractButton instance, final boolean selected) {
+		if (instance != null) {
+			instance.setSelected(selected);
+		}
 	}
 
 	private static int getIconWidth(@Nullable final ImageIcon instance) {
