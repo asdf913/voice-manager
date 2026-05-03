@@ -2402,7 +2402,7 @@ public abstract class Util {
 		return instance != null ? instance.spliterator() : null;
 	}
 
-	static void setRequestProperty(final URLConnection instance, final String key, final String value) {
+	static void setRequestProperty(@Nullable final URLConnection instance, final String key, final String value) {
 		if (instance != null) {
 			instance.setRequestProperty(key, value);
 		}
