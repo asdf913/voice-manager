@@ -969,11 +969,11 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 	}
 
-	private static boolean hasAnnotation(final Annotated instance, final Class<?> clz) {
+	private static boolean hasAnnotation(@Nullable final Annotated instance, final Class<?> clz) {
 		return instance != null && instance.hasAnnotation(clz);
 	}
 
-	private static ObjectMapper setAnnotationIntrospector(final ObjectMapper instance,
+	private static ObjectMapper setAnnotationIntrospector(@Nullable final ObjectMapper instance,
 			final AnnotationIntrospector annotationIntrospector) {
 		//
 		return instance != null
