@@ -340,12 +340,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 					Util.addActionListener(x, this);
 					//
-					if (!Objects.equals(x, btnExecute)) {
-						//
-						Util.setEnabled(x, false);
-						//
-					} // if
-						//
+					testAndRun(!Objects.equals(x, btnExecute), () -> Util.setEnabled(x, false));
+					//
 				});
 		//
 		stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()), Arrays::stream, null);
@@ -362,7 +358,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 				final AbstractButton abs = Util.cast(AbstractButton.class, testAndGet(Util.isStatic(f),
 						() -> Narcissus.getStaticField(f), () -> Narcissus.getField(this, f)));
-				//s
+				//
 				if (Util.containsKey(properties, value)) {
 					//
 					setSelected(abs, Boolean.parseBoolean(Util.toString(Util.get(properties, value))));
