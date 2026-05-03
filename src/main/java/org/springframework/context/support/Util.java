@@ -76,6 +76,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 
@@ -2422,6 +2423,13 @@ public abstract class Util {
 
 	static String getColumnName(final JTable instance, final int column) {
 		return instance != null && getModel(instance) != null ? instance.getColumnName(column) : null;
+	}
+
+	static Component getTableCellRendererComponent(final TableCellRenderer instance, final JTable table,
+			final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column) {
+		return instance != null
+				? instance.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+				: null;
 	}
 
 }

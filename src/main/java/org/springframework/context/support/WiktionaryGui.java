@@ -250,8 +250,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		jTable.setDefaultRenderer(Object.class, (table, value, isSelected, hasFocus, row, column) -> {
 			//
-			final Component c = WiktionaryGui.getTableCellRendererComponent(tcr, table, value, isSelected, hasFocus,
-					row, column);
+			final Component c = Util.getTableCellRendererComponent(tcr, table, value, isSelected, hasFocus, row,
+					column);
 			//
 			final WiktionaryEntry we = Util.cast(WiktionaryEntry.class, getValueAt(Util.getModel(table), row, 0));
 			//
@@ -421,15 +421,6 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	@Nullable
 	private static Object getValueAt(@Nullable final TableModel instance, final int row, final int column) {
 		return instance != null ? instance.getValueAt(row, column) : null;
-	}
-
-	@Nullable
-	private static Component getTableCellRendererComponent(@Nullable final TableCellRenderer instance,
-			final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row,
-			final int column) {
-		return instance != null
-				? instance.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
-				: null;
 	}
 
 	public static void main(final String[] args) throws Exception {

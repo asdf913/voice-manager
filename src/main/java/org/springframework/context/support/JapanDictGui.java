@@ -1472,7 +1472,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			final JapanDictEntry entry = Util.cast(JapanDictEntry.class, ObjectUtils.getIfNull(value, () -> object));
 			//
-			final Component c = JapanDictGui.getTableCellRendererComponent(tcr, table, value, isSelected, hasFocus, row,
+			final Component c = Util.getTableCellRendererComponent(tcr, table, value, isSelected, hasFocus, row,
 					column);
 			//
 			final JLabel jLabel = Util.cast(JLabel.class, c);
@@ -1546,15 +1546,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		if (instance != null) {
 			instance.setPreferredScrollableViewportSize(size);
 		}
-	}
-
-	@Nullable
-	private static Component getTableCellRendererComponent(@Nullable final TableCellRenderer instance,
-			final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row,
-			final int column) {
-		return instance != null
-				? instance.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
-				: null;
 	}
 
 	@Nullable
