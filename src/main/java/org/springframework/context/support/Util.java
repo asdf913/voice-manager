@@ -2425,7 +2425,7 @@ public abstract class Util {
 		return instance != null && getModel(instance) != null ? instance.getColumnName(column) : null;
 	}
 
-	static Component getTableCellRendererComponent(final TableCellRenderer instance, final JTable table,
+	static Component getTableCellRendererComponent(@Nullable final TableCellRenderer instance, final JTable table,
 			final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column) {
 		return instance != null
 				? instance.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
