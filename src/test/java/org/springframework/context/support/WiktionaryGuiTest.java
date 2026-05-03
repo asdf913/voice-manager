@@ -224,6 +224,11 @@ class WiktionaryGuiTest {
 				//
 				return getAsBoolean;
 				//
+			} else if (Objects.equals(Util.getName(Util.getDeclaringClass(method)),
+					"org.springframework.context.support.WiktionaryGui$Property") && Objects.equals(name, "value")) {
+				//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);

@@ -354,18 +354,15 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		Util.forEach(stream, f -> {
 			//
-			final AbstractButton abs = Util.cast(AbstractButton.class,
-					testAndGet(Util.isStatic(f), () -> Narcissus.getStaticField(f), () -> Narcissus.getField(this, f)));
-			//
-			Property property = null;
-			//
-			if (Util.isAnnotationPresent(f, Property.class)
-					&& (property = Util.getAnnotation(f, Property.class)) != null) {
+			if (Util.isAnnotationPresent(f, Property.class)) {
 				//
-				final String value = property.value();
+				final String value = value(Util.getAnnotation(f, Property.class));
 				//
 				final String key = StringUtils.joinWith(".", Util.getName(Util.getClass(this)), value);
 				//
+				final AbstractButton abs = Util.cast(AbstractButton.class, testAndGet(Util.isStatic(f),
+						() -> Narcissus.getStaticField(f), () -> Narcissus.getField(this, f)));
+				//s
 				if (Util.containsKey(properties, value)) {
 					//
 					setSelected(abs, Boolean.parseBoolean(Util.toString(Util.get(properties, value))));
@@ -380,6 +377,10 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 		});
 		//
+	}
+
+	private static String value(final Property instance) {
+		return instance != null ? instance.value() : null;
 	}
 
 	private static void setSelected(@Nullable final AbstractButton instance, final boolean selected) {
