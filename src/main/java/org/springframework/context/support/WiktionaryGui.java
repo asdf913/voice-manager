@@ -900,18 +900,16 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					testAndAccept(Util.isSelected(instance.btnEnableIndentOutput), objectMapper,
 							x -> enable(x, SerializationFeature.INDENT_OUTPUT));
 					//
-					testAndAccept(Util.isSelected(instance.btnIgnoreCssSelector), objectMapper, x -> {
-						//
-						setAnnotationIntrospector(x, new JacksonAnnotationIntrospector() {
-							@Override
-							public boolean hasIgnoreMarker(final AnnotatedMember m) {
-								//
-								return hasAnnotation(m, WiktionaryEntry.CssSelector.class) || super.hasIgnoreMarker(m);
-								//
-							}
-						});
-						//
-					});
+					testAndAccept(Util.isSelected(instance.btnIgnoreCssSelector), objectMapper,
+							x -> setAnnotationIntrospector(x, new JacksonAnnotationIntrospector() {
+								@Override
+								public boolean hasIgnoreMarker(final AnnotatedMember m) {
+									//
+									return hasAnnotation(m, WiktionaryEntry.CssSelector.class)
+											|| super.hasIgnoreMarker(m);
+									//
+								}
+							}));
 					//
 					setContents(
 							testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
