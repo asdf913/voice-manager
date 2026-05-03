@@ -979,6 +979,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		return instance != null && instance.hasAnnotation(clz);
 	}
 
+	@Nullable
 	private static ObjectMapper setAnnotationIntrospector(@Nullable final ObjectMapper instance,
 			final AnnotationIntrospector annotationIntrospector) {
 		//
