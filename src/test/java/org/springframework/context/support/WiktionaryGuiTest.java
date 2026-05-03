@@ -502,10 +502,6 @@ class WiktionaryGuiTest {
 			//
 	}
 
-	private static String getName(final Module instance) {
-		return instance != null ? instance.getName() : null;
-	}
-
 	private static URI toUri(final Path instance) {
 		return instance != null ? instance.toUri() : null;
 	}
