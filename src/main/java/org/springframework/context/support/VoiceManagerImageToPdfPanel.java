@@ -361,8 +361,23 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
 				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
 			//
-			final ListCellRenderer lcr2 = ConverterUtil.convert(voiceIdListCellRendererConverter, Util.getRenderer(Util
-					.cast(JComboBox.class, jcbVoiceId = new JComboBox<>(Util.cast(ComboBoxModel.class, cbmVoiceId)))));
+			final Iterable<Method> ms = Util.toList(Util.filter(
+					testAndApply(Objects::nonNull, Util.getDeclaredMethods(ConverterUtil.class), Arrays::stream, null),
+					m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "convert"), Arrays
+							.equals(Util.getParameterTypes(m), new Class<?>[] { Converter.class, Object.class }))));
+			//
+			testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			final ListCellRenderer lcr2 = IterableUtils.size(ms) == 1
+					? Util.cast(ListCellRenderer.class,
+							Narcissus.invokeStaticMethod(IterableUtils.get(ms, 0), voiceIdListCellRendererConverter,
+									Util.getRenderer(Util.cast(JComboBox.class,
+											jcbVoiceId = new JComboBox<>(Util.cast(ComboBoxModel.class, cbmVoiceId))))))
+					: null;
 			//
 			testAndAccept(Objects::nonNull, lcr2, x -> jcbVoiceId.setRenderer(x));
 			//
