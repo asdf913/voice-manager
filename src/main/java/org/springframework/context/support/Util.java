@@ -383,7 +383,7 @@ public abstract class Util {
 		return instance != null && instance.isSelected();
 	}
 
-	static void setSelected(final AbstractButton instance, final boolean selected) {
+	static void setSelected(@Nullable final AbstractButton instance, final boolean selected) {
 		if (instance != null) {
 			instance.setSelected(selected);
 		}
