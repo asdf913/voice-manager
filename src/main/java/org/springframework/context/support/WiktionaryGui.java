@@ -253,7 +253,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			final Component c = Util.getTableCellRendererComponent(tcr, table, value, isSelected, hasFocus, row,
 					column);
 			//
-			final WiktionaryEntry we = Util.cast(WiktionaryEntry.class, getValueAt(Util.getModel(table), row, 0));
+			final WiktionaryEntry we = Util.cast(WiktionaryEntry.class, Util.getValueAt(Util.getModel(table), row, 0));
 			//
 			if (we != null) {
 				//
@@ -416,11 +416,6 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	@Nullable
 	private static TableColumn getColumn(@Nullable final TableColumnModel instance, final int columnIndex) {
 		return instance != null ? instance.getColumn(columnIndex) : null;
-	}
-
-	@Nullable
-	private static Object getValueAt(@Nullable final TableModel instance, final int row, final int column) {
-		return instance != null ? instance.getValueAt(row, column) : null;
 	}
 
 	public static void main(final String[] args) throws Exception {
@@ -903,7 +898,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 									() -> getSystemClipboard(Toolkit.getDefaultToolkit()), null),
 							new StringSelection(ObjectMapperUtil.writeValueAsString(
 									objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY),
-									getValueAt(instance.tm, get(selectedIndices, 0, 0), 0))),
+									Util.getValueAt(instance.tm, get(selectedIndices, 0, 0), 0))),
 							null);
 					//
 				} catch (final JsonProcessingException e) {
@@ -932,8 +927,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 				try {
 					//
-					ih.image = toImage(WiktionaryEntry.getHiraganaImage(
-							Util.cast(WiktionaryEntry.class, getValueAt(instance.tm, get(selectedIndices, 0, 0), 0))));
+					ih.image = toImage(WiktionaryEntry.getHiraganaImage(Util.cast(WiktionaryEntry.class,
+							Util.getValueAt(instance.tm, get(selectedIndices, 0, 0), 0))));
 					//
 				} catch (final IOException e) {
 					//
@@ -1008,8 +1003,9 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					if (testAndGetAsBoolean(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 							() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
 						//
-						FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), WiktionaryEntry.getHiraganaImage(Util
-								.cast(WiktionaryEntry.class, getValueAt(instance.tm, get(selectedIndices, 0, 0), 0))));
+						FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
+								WiktionaryEntry.getHiraganaImage(Util.cast(WiktionaryEntry.class,
+										Util.getValueAt(instance.tm, get(selectedIndices, 0, 0), 0))));
 						//
 					} // if
 						//
@@ -1053,8 +1049,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 				try {
 					//
-					ih.image = toImage(WiktionaryEntry.getTextImage(
-							Util.cast(WiktionaryEntry.class, getValueAt(instance.tm, get(selectedIndices, 0, 0), 0))));
+					ih.image = toImage(WiktionaryEntry.getTextImage(Util.cast(WiktionaryEntry.class,
+							Util.getValueAt(instance.tm, get(selectedIndices, 0, 0), 0))));
 					//
 				} catch (final IOException e) {
 					//
@@ -1090,8 +1086,9 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					if (testAndGetAsBoolean(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 							() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
 						//
-						FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), WiktionaryEntry.getTextImage(Util
-								.cast(WiktionaryEntry.class, getValueAt(instance.tm, get(selectedIndices, 0, 0), 0))));
+						FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
+								WiktionaryEntry.getTextImage(Util.cast(WiktionaryEntry.class,
+										Util.getValueAt(instance.tm, get(selectedIndices, 0, 0), 0))));
 						//
 					} // if
 						//

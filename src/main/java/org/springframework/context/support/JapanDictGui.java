@@ -1466,7 +1466,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			final String columnName = Util.getColumnName(table, column);
 			//
-			final Object object = getValueAt(Util.getModel(table), row, 0);
+			final Object object = Util.getValueAt(Util.getModel(table), row, 0);
 			//
 			// org.springframework.context.support.JapanDictGui$JapanDictEntry
 			//
@@ -1546,11 +1546,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		if (instance != null) {
 			instance.setPreferredScrollableViewportSize(size);
 		}
-	}
-
-	@Nullable
-	private static Object getValueAt(@Nullable final TableModel instance, final int row, final int column) {
-		return instance != null ? instance.getValueAt(row, column) : null;
 	}
 
 	@Nullable
@@ -1879,7 +1874,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			for (int i = 0; i < Util.getRowCount(dtm); i++) {
 				//
-				final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class, getValueAt(dtm, i, 0));
+				final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class, Util.getValueAt(dtm, i, 0));
 				//
 				(japanDictEntrySupplier = new JapanDictEntrySupplier()).browserTypeFunction = function;
 				//
@@ -2792,7 +2787,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		if (Objects.equals(source, instance.btnPlayAudio)) {
 			//
 			final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class,
-					getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0));
+					Util.getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0));
 			//
 			byte[] bs = JapanDictEntry.getAudioData(japanDictEntry);
 			//
@@ -3040,7 +3035,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			try {
 				//
 				final JapanDictEntry japanDictEntry = Util.cast(JapanDictEntry.class,
-						getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0));
+						Util.getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0));
 				//
 				byte[] bs = JapanDictEntry.getAudioData(japanDictEntry);
 				//
@@ -3255,12 +3250,11 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		} else if (Objects.equals(source, instance.btnCopyUrl)) {
 			//
 			testAndRun(!isTestMode(),
-					() -> Util
-							.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
-									new StringSelection(Util.toString(Link.getUrl(Util.cast(Link.class,
-											testAndApply(x -> getRowCount(x) > 0, instance.jTableLink,
-													x -> getValueAt(instance.dtmLink, getSelectedRow(x), 0), null))))),
-									null));
+					() -> Util.setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+							new StringSelection(Util.toString(Link.getUrl(Util.cast(Link.class,
+									testAndApply(x -> getRowCount(x) > 0, instance.jTableLink,
+											x -> Util.getValueAt(instance.dtmLink, getSelectedRow(x), 0), null))))),
+							null));
 			//
 			return true;
 			//
@@ -3270,7 +3264,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					() -> browse(Desktop.getDesktop(),
 							toURI(Link.getUrl(Util.cast(Link.class,
 									testAndApply(x -> getRowCount(x) > 0, instance.jTableLink,
-											x -> getValueAt(instance.dtmLink, getSelectedRow(x), 0), null))))),
+											x -> Util.getValueAt(instance.dtmLink, getSelectedRow(x), 0), null))))),
 					JapanDictGui::throwRuntimeException);
 			//
 			return true;
@@ -3384,7 +3378,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
 							toPdfByteArray(
 									Util.cast(JapanDictEntry.class,
-											getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0)),
+											Util.getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0)),
 									testAndApply(Objects::nonNull, ObjectUtils.getIfNull(ttf, instance.trueTypeFont),
 											x -> PDType0Font.load(document, x, false), null),
 									instance.getUserAgent(),
@@ -4830,7 +4824,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				&& (selectedIndices = getSelectedIndices(lsm)) != null && selectedIndices.length == 1
 				&& (selectedIndex = selectedIndices[0]) < getRowCount(jTable)) {
 			//
-			valueChanged(this, Util.cast(JapanDictEntry.class, getValueAt(dtm, selectedIndex, 0)));
+			valueChanged(this, Util.cast(JapanDictEntry.class, Util.getValueAt(dtm, selectedIndex, 0)));
 			//
 		} else if (Objects.equals(source, lsmLink)) {
 			//
@@ -5056,7 +5050,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		for (int i = 0; japanDictEntry != null && i < Util.getRowCount(dtm); i++) {
 			//
-			if ((temp = Util.cast(JapanDictEntry.class, getValueAt(dtm, i, 0))) != null
+			if ((temp = Util.cast(JapanDictEntry.class, Util.getValueAt(dtm, i, 0))) != null
 					&& Objects.equals(JapanDictEntry.getId(japanDictEntry), JapanDictEntry.getId(temp))) {
 				//
 				temp.strokeImage = ObjectUtils.getIfNull(JapanDictEntry.getStrokeImage(temp),
