@@ -3617,9 +3617,25 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 			if (cbmVoiceIdLocal != null) {
 				//
+				final Iterable<Method> ms = Util.toList(Util.filter(
+						testAndApply(Objects::nonNull, Util.getDeclaredMethods(ConverterUtil.class), Arrays::stream,
+								null),
+						m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "convert"), Arrays
+								.equals(Util.getParameterTypes(m), new Class<?>[] { Converter.class, Object.class }))));
+				//
+				if (IterableUtils.size(ms) > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
 				setRenderer(jcbVoiceIdLocal = new JComboBox<>(cbmVoiceIdLocal),
-						ConverterUtil.convert(voiceIdListCellRendererConverter,
-								Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceIdLocal))));
+						Util.cast(ListCellRenderer.class,
+								Narcissus.invokeStaticMethod(
+										testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(ms, 0),
+												null),
+										voiceIdListCellRendererConverter,
+										Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceIdLocal)))));
 				//
 			} // if
 				//
