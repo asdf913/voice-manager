@@ -2446,7 +2446,7 @@ public abstract class Util {
 		return instance != null ? instance.getValueAt(row, column) : null;
 	}
 
-	static int[] getSelectedIndices(final ListSelectionModel instance) {
+	static int[] getSelectedIndices(@Nullable final ListSelectionModel instance) {
 		return instance != null ? instance.getSelectedIndices() : null;
 	}
 
