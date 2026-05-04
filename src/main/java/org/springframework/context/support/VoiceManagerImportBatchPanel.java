@@ -2748,8 +2748,25 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 				(jcbVoiceIdLocal = new JComboBox<>(cbmVoiceIdLocal)).addItemListener(this);
 				//
-				final ListCellRenderer lcr = ConverterUtil.convert(voiceIdListCellRendererConverter,
-						Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceIdLocal)));
+				final Iterable<Method> ms = Util.toList(Util.filter(
+						testAndApply(Objects::nonNull, Util.getDeclaredMethods(ConverterUtil.class), Arrays::stream,
+								null),
+						m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "convert"), Arrays
+								.equals(Util.getParameterTypes(m), new Class<?>[] { Converter.class, Object.class }))));
+				//
+				if (IterableUtils.size(ms) > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				final ListCellRenderer lcr = Util
+						.cast(ListCellRenderer.class,
+								Narcissus.invokeStaticMethod(
+										testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(ms, 0),
+												null),
+										voiceIdListCellRendererConverter,
+										Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceIdLocal))));
 				//
 				final FailableBiConsumer<JComboBox<?>, ListCellRenderer<?>, RuntimeException> failableBiConsumer = (a,
 						b) -> setRenderer((JComboBox) a, b);
