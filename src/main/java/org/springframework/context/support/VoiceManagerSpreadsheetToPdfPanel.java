@@ -288,7 +288,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 							voiceIdListCellRendererConverter, Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceId))))
 					: null;
 			//
-			testAndAccept((a, b) -> a != null && b != null, jcbVoiceId, lcr1, (a, b) -> setRenderer(a, b));
+			testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null), jcbVoiceId, lcr1,
+					(a, b) -> setRenderer(a, b));
 			//
 			final String wrap = "wrap";
 			//
