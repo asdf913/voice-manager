@@ -355,7 +355,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		add(new JLabel("Voice"));
 		//
 		final String[] voiceIds = testAndApply(
-				x -> Util.forName("org.junit.jupiter.api.Test") == null && SpeechApi.isInstalled(x),
+				x -> Boolean.logicalAnd(Util.forName("org.junit.jupiter.api.Test") == null, SpeechApi.isInstalled(x)),
 				speechApi = ObjectUtils.getIfNull(speechApi, SpeechApiImpl::new), x -> SpeechApi.getVoiceIds(x), null);
 		//
 		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
