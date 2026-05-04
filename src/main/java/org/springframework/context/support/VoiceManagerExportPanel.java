@@ -1151,7 +1151,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		add(cbOverMp3Title = new JCheckBox("Over Mp3 Title"), String.format("%1$s,span %2$s", WRAP, 2));
 		//
-		cbOverMp3Title.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+		Util.setSelected(cbOverMp3Title, Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.overMp3Title")));
 		//
 		add(new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
@@ -1159,8 +1159,8 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		add(cbOrdinalPositionAsFileNamePrefix = new JCheckBox("Ordinal Position As File Name Prefix"),
 				String.format(SPAN_ONLY_FORMAT, 4));
 		//
-		cbOrdinalPositionAsFileNamePrefix
-				.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+		Util.setSelected(cbOrdinalPositionAsFileNamePrefix,
+				Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.ordinalPositionAsFileNamePrefix")));
 		//
 		add(new JLabel("Prefix"));
@@ -1173,7 +1173,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		add(cbJlptAsFolder = new JCheckBox("JLPT As Folder"), String.format(SPAN_ONLY_FORMAT, 3));
 		//
-		cbJlptAsFolder.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+		Util.setSelected(cbJlptAsFolder, Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.jlptAsFolder")));
 		//
 		add(new JLabel("Folder Name Prefix"));
@@ -1186,7 +1186,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		add(cbExportHtml = new JCheckBox("Export HTML"), String.format(SPAN_ONLY_FORMAT, 3));
 		//
-		cbExportHtml.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+		Util.setSelected(cbExportHtml, Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportHtml")));
 		//
 		// File Name
@@ -1215,29 +1215,30 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		add(cbExportListHtml = new JCheckBox("Export List"));
 		//
-		cbExportListHtml.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+		Util.setSelected(cbExportListHtml, Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportListHtml")));
 		//
 		// cbExportWebSpeechSynthesisHtml
 		//
 		add(cbExportWebSpeechSynthesisHtml = new JCheckBox("Export Web Speech Synthesis HTML"));
 		//
-		cbExportWebSpeechSynthesisHtml
-				.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+		Util.setSelected(cbExportWebSpeechSynthesisHtml,
+				Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.exportWebSpeechSynthesisHtml")));
 		//
 		// ZIP
 		//
 		add(cbExportHtmlAsZip = new JCheckBox("Zip"));
 		//
-		cbExportHtmlAsZip.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+		Util.setSelected(cbExportHtmlAsZip, Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportListHtmlAsZip")));
 		//
 		add(cbExportHtmlRemoveAfterZip = new JCheckBox("Remove Html After Zip"),
 				String.format("%1$s,span %2$s", WRAP, 2));
 		//
-		cbExportHtmlRemoveAfterZip.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManager.exportHtmlRemoveAfterZip")));
+		Util.setSelected(cbExportHtmlRemoveAfterZip,
+				Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.exportHtmlRemoveAfterZip")));
 		//
 		// Export List Sheet
 		//
@@ -1245,7 +1246,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		add(cbExportListSheet = new JCheckBox("Export List Sheet"), String.format("%1$s,span %2$s", WRAP, 3));
 		//
-		cbExportListSheet.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+		Util.setSelected(cbExportListSheet, Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportListSheet")));
 		//
 		// Export JLPT Sheet
@@ -1254,7 +1255,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		add(cbExportJlptSheet = new JCheckBox("Export JLPT Sheet"), String.format("%1$s,span %2$s", WRAP, 3));
 		//
-		cbExportJlptSheet.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+		Util.setSelected(cbExportJlptSheet, Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportJlptSheet")));
 		//
 		// Export Presentation
@@ -1265,20 +1266,21 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		setToolTipText(cbExportPresentation, "Open Document Format (odp) format, Libre Office is recommended");
 		//
-		cbExportPresentation.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+		Util.setSelected(cbExportPresentation, Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportPresentation")));
 		//
 		add(cbEmbedAudioInPresentation = new JCheckBox("Emded Audio In Presentation"),
 				String.format(SPAN_ONLY_FORMAT, 3));
 		//
-		cbEmbedAudioInPresentation.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManager.embedAudioInPresentation")));
+		Util.setSelected(cbEmbedAudioInPresentation,
+				Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.embedAudioInPresentation")));
 		//
 		add(cbHideAudioImageInPresentation = new JCheckBox("Hide Audio Image In Presentation"),
 				String.format(SPAN_ONLY_FORMAT, 2));
 		//
-		cbHideAudioImageInPresentation
-				.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+		Util.setSelected(cbHideAudioImageInPresentation,
+				Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.hideAudioImageInPresentation")));
 		//
 		add(new JLabel("Presentation Slide Duration"), String.format(SPAN_ONLY_FORMAT, 2));
@@ -1293,8 +1295,9 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		add(cbExportMicrosoftAccess = new JCheckBox("Export Microsoft Access"), String.format(SPAN_ONLY_FORMAT, 3));
 		//
-		cbExportMicrosoftAccess.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManager.exportMicrosoftAccess")));
+		Util.setSelected(cbExportMicrosoftAccess,
+				Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.exportMicrosoftAccess")));
 		//
 		final Map<?, ?> fileFormatDetails = new LinkedHashMap<>();
 		//

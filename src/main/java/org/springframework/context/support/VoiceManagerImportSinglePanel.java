@@ -1056,7 +1056,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		add(cbUseTtsVoice = new JCheckBox("TTS Voice"));
 		//
-		cbUseTtsVoice.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+		Util.setSelected(cbUseTtsVoice, Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.useTtsVoice")));
 		//
 		// Speech Rate

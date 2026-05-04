@@ -364,11 +364,11 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 				//
 				if (Util.containsKey(map, value)) {
 					//
-					setSelected(abs, Boolean.parseBoolean(Util.toString(Util.get(map, value))));
+					Util.setSelected(abs, Boolean.parseBoolean(Util.toString(Util.get(map, value))));
 					//
 				} else if (Util.containsKey(map, key)) {
 					//
-					setSelected(abs, Boolean.parseBoolean(Util.toString(Util.get(map, key))));
+					Util.setSelected(abs, Boolean.parseBoolean(Util.toString(Util.get(map, key))));
 					//
 				} // if
 					//
@@ -381,12 +381,6 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	@Nullable
 	private static String value(@Nullable final Property instance) {
 		return instance != null ? instance.value() : null;
-	}
-
-	private static void setSelected(@Nullable final AbstractButton instance, final boolean selected) {
-		if (instance != null) {
-			instance.setSelected(selected);
-		}
 	}
 
 	private static int getIconWidth(@Nullable final ImageIcon instance) {

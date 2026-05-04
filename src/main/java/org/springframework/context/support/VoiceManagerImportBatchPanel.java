@@ -676,8 +676,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		add(cbImportFileTemplateGenerateBlankRow = new JCheckBox("Generate a Blank Row"));
 		//
-		cbImportFileTemplateGenerateBlankRow
-				.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+		Util.setSelected(cbImportFileTemplateGenerateBlankRow,
+				Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.importFileTemplateGenerateBlankRow")));
 		//
 		add(btnImportFileTemplate = new JButton("Generate"), String.format("%1$s,span %2$s", WRAP, 3));

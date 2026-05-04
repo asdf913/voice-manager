@@ -180,7 +180,7 @@ public class MapReportGui extends JFrame
 					//
 					if (StringUtils.isNotBlank(string)) {
 						//
-						cbPrettyJson.setSelected(Boolean.valueOf(string));
+						Util.setSelected(cbPrettyJson, Boolean.valueOf(string));
 						//
 					} // if
 						//
