@@ -74,6 +74,7 @@ import javax.swing.JList;
 import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -2437,6 +2438,10 @@ public abstract class Util {
 
 	static Object getValueAt(final TableModel instance, final int row, final int column) {
 		return instance != null ? instance.getValueAt(row, column) : null;
+	}
+
+	static int[] getSelectedIndices(final ListSelectionModel instance) {
+		return instance != null ? instance.getSelectedIndices() : null;
 	}
 
 }

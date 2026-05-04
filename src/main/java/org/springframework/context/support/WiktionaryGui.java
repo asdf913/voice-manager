@@ -865,7 +865,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		if (Objects.equals(source, instance.btnCopy)) {
 			//
-			final int[] selectedIndices = getSelectedIndices(instance.lsm);
+			final int[] selectedIndices = Util.getSelectedIndices(instance.lsm);
 			//
 			testAndRun(length(selectedIndices) > 1, () -> {
 				//
@@ -913,7 +913,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		} else if (Objects.equals(source, instance.btnCopyHiraganaImage)) {
 			//
-			final int[] selectedIndices = getSelectedIndices(instance.lsm);
+			final int[] selectedIndices = Util.getSelectedIndices(instance.lsm);
 			//
 			testAndRun(length(selectedIndices) > 1, () -> {
 				//
@@ -986,7 +986,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		if (Objects.equals(source, instance.btnSaveHiraganaImage)) {
 			//
-			final int[] selectedIndices = getSelectedIndices(instance.lsm);
+			final int[] selectedIndices = Util.getSelectedIndices(instance.lsm);
 			//
 			testAndRun(length(selectedIndices) > 1, () -> {
 				//
@@ -1035,7 +1035,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		if (Objects.equals(source, instance.btnCopyTextImage)) {
 			//
-			final int[] selectedIndices = getSelectedIndices(instance.lsm);
+			final int[] selectedIndices = Util.getSelectedIndices(instance.lsm);
 			//
 			testAndRun(length(selectedIndices) > 1, () -> {
 				//
@@ -1069,7 +1069,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 		} else if (Objects.equals(source, instance.btnSaveTextImage)) {
 			//
-			final int[] selectedIndices = getSelectedIndices(instance.lsm);
+			final int[] selectedIndices = Util.getSelectedIndices(instance.lsm);
 			//
 			testAndRun(length(selectedIndices) > 1, () -> {
 				//
@@ -1151,11 +1151,6 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	private static <T> T testAndGet(final boolean condition, final Supplier<T> supplierTrue,
 			@Nullable final Supplier<T> supplierFalse) {
 		return condition ? Util.get(supplierTrue) : Util.get(supplierFalse);
-	}
-
-	@Nullable
-	private static int[] getSelectedIndices(@Nullable final ListSelectionModel instance) {
-		return instance != null ? instance.getSelectedIndices() : null;
 	}
 
 	@Nullable
@@ -1491,7 +1486,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		if (Objects.equals(Util.getSource(evt), lsm)) {
 			//
-			final int[] selectedIndices = getSelectedIndices(lsm);
+			final int[] selectedIndices = Util.getSelectedIndices(lsm);
 			//
 			testAndRun(length(selectedIndices) > 1, () -> {
 				//
