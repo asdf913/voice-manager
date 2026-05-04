@@ -272,8 +272,21 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 			} // if
 				//
-			final ListCellRenderer<?> lcr1 = ConverterUtil.convert(voiceIdListCellRendererConverter,
-					Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceId)));
+			final Iterable<Method> ms = Util.toList(Util.filter(
+					testAndApply(Objects::nonNull, Util.getDeclaredMethods(ConverterUtil.class), Arrays::stream, null),
+					m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "convert"), Arrays
+							.equals(Util.getParameterTypes(m), new Class<?>[] { Converter.class, Object.class }))));
+			//
+			testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			final ListCellRenderer<?> lcr1 = IterableUtils.size(ms) == 1
+					? Util.cast(ListCellRenderer.class, Narcissus.invokeStaticMethod(IterableUtils.get(ms, 0),
+							voiceIdListCellRendererConverter, Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceId))))
+					: null;
 			//
 			testAndAccept((a, b) -> a != null && b != null, jcbVoiceId, lcr1, (a, b) -> setRenderer(a, b));
 			//
