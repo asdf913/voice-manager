@@ -2442,10 +2442,12 @@ public abstract class Util {
 				: null;
 	}
 
+	@Nullable
 	static Object getValueAt(@Nullable final TableModel instance, final int row, final int column) {
 		return instance != null ? instance.getValueAt(row, column) : null;
 	}
 
+	@Nullable
 	static int[] getSelectedIndices(@Nullable final ListSelectionModel instance) {
 		return instance != null ? instance.getSelectedIndices() : null;
 	}
