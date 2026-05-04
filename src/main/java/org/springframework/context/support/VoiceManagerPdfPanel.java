@@ -2747,9 +2747,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static void debug(final PrintStream ps, final Transferable transferable) {
 		//
+		final Stream<Field> s = testAndApply(Objects::nonNull, Util.getDeclaredFields(DataFlavor.class), Arrays::stream,
+				null);
+		//
 		final FailableStream<Field> fs = testAndApply(Objects::nonNull,
-				Util.filter(
-						testAndApply(Objects::nonNull, Util.getDeclaredFields(DataFlavor.class), Arrays::stream, null),
+				Util.filter(s,
 						f -> Boolean.logicalAnd(Objects.equals(DataFlavor.class, Util.getType(f)), Util.isStatic(f))),
 				FailableStream::new, null);
 		//
