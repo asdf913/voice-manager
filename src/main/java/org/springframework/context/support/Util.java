@@ -2442,7 +2442,7 @@ public abstract class Util {
 				: null;
 	}
 
-	static Object getValueAt(final TableModel instance, final int row, final int column) {
+	static Object getValueAt(@Nullable final TableModel instance, final int row, final int column) {
 		return instance != null ? instance.getValueAt(row, column) : null;
 	}
 
