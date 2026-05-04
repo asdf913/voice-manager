@@ -1273,9 +1273,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 								Narcissus
 										.invokeStaticMethod(IterableUtils.get(ms, 0),
 												instance.voiceIdListCellRendererConverter,
-												Util.cast(JComboBox.class,
+												Util.getRenderer(Util.cast(JComboBox.class,
 														instance.jcbVoiceId = new JComboBox<>(
-																Util.cast(ComboBoxModel.class, instance.cbmVoiceId)))))
+																Util.cast(ComboBoxModel.class, instance.cbmVoiceId))))))
 						: null;
 				//
 				testAndAccept((a, b) -> b != null, instance.jcbVoiceId, lcr, VoiceManagerPdfPanel::setRenderer);
