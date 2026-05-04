@@ -434,7 +434,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 	}
 
-	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, final U u,
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, @Nullable final U u,
 			final BiConsumer<T, U> consumer) {
 		if (Util.test(predicate, t, u)) {
 			Util.accept(consumer, t, u);
