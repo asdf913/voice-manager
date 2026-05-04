@@ -949,9 +949,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final List<Entry<String, String>> list = testAndApply(Objects::nonNull, es3, IterableUtils::toList, null);
 		//
-		final List<Quartet<String, String, String, String>> quartets = Util.toList(
-				Util.map(Util.stream(testAndApply(Objects::nonNull, list, x -> Lists.cartesianProduct(x, x), null)),
-						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toQuartet));
+		final List<List<Entry<String, String>>> listOfEntries = testAndApply(Objects::nonNull, list,
+				x -> Lists.cartesianProduct(x, x), null);
+		//
+		final List<Quartet<String, String, String, String>> quartets = Util.toList(Util.map(Util.stream(listOfEntries),
+				OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toQuartet));
 		//
 		Quartet<String, String, String, String> quartet = null;
 		//
