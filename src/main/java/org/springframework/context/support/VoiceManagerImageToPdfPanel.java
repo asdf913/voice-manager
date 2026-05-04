@@ -372,14 +372,12 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				//
 			});
 			//
-			final ListCellRenderer lcr2 = IterableUtils.size(ms) == 1
+			testAndAccept(Objects::nonNull, IterableUtils.size(ms) == 1
 					? Util.cast(ListCellRenderer.class,
 							Narcissus.invokeStaticMethod(IterableUtils.get(ms, 0), voiceIdListCellRendererConverter,
 									Util.getRenderer(Util.cast(JComboBox.class,
 											jcbVoiceId = new JComboBox<>(Util.cast(ComboBoxModel.class, cbmVoiceId))))))
-					: null;
-			//
-			testAndAccept(Objects::nonNull, lcr2, x -> jcbVoiceId.setRenderer(x));
+					: null, x -> jcbVoiceId.setRenderer(x));
 			//
 			jcbVoiceId.addItemListener(this);
 			//
