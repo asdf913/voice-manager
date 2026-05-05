@@ -182,7 +182,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 					//
 				});
 				//
-				clickPlayButton(URL, page, Util.getText(tfText), getSelectedIndex(jcb));
+				clickPlayButton(URL, page, Util.getText(tfText), Util.getSelectedIndex(jcb));
 				//
 			} // try
 				//
@@ -230,32 +230,12 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 						//
 				});
 				//
-				clickPlayButton(URL, page, text, getSelectedIndex(jcb));
+				clickPlayButton(URL, page, text, Util.getSelectedIndex(jcb));
 				//
 			} // try
 				//
 		} // if
 			//
-	}
-
-	private static int getSelectedIndex(@Nullable final JComboBox<?> instance) {
-		//
-		final Iterable<Field> fs = Util.toList(Util.filter(
-				Util.stream(
-						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
-				f -> Objects.equals(Util.getName(f), "dataModel")));
-		//
-		if (IterableUtils.size(fs) > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		return instance != null && Narcissus.getField(instance,
-				testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) != null
-						? instance.getSelectedIndex()
-						: 0;
-		//
 	}
 
 	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) {

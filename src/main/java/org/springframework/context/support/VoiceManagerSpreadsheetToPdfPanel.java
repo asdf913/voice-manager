@@ -561,7 +561,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 	private void actionPerformedJcbSheet() {
 		//
 		testAndRunThrows(Boolean.logicalAnd(Objects.equals(Util.getText(tfException), MESSAGE_PLEASE_SELECT_A_SHEET),
-				getSelectedIndex(jcbSheet) > 0), () -> Util.setText(tfException, null));
+				Util.getSelectedIndex(jcbSheet) > 0), () -> Util.setText(tfException, null));
 		//
 		Util.setIcon(lblThumbnail, new ImageIcon());
 		//
@@ -592,7 +592,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		} // try
 			//
-		final int selectedIndex = getSelectedIndex(jcbSheet);
+		final int selectedIndex = Util.getSelectedIndex(jcbSheet);
 		//
 		try (final PDDocument pdDocument = selectedIndex > 0 ? createPDDocument(file, selectedIndex - 1, false)
 				: null) {
@@ -652,37 +652,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		setPreferredSize(jsp, new Dimension((int) getWidth(Util.getPreferredSize(jsp)),
 				Math.max(IterableUtils.size(dataIterable), 1) * 17 + 22));
-		//
-	}
-
-	private static int getSelectedIndex(@Nullable final JComboBox<?> instance) {
-		//
-		if (instance == null) {
-			//
-			return -1;
-			//
-		} // if
-			//
-		final Iterable<Field> fs = Util.toList(Util.filter(
-				Util.stream(
-						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
-				f -> Objects.equals(Util.getName(f), "dataModel")));
-		//
-		if (IterableUtils.size(fs) > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		final Field field = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-		//
-		if (field != null && Narcissus.getField(instance, field) == null) {
-			//
-			return -1;
-			//
-		} // if
-			//
-		return instance.getSelectedIndex();
 		//
 	}
 
@@ -1004,7 +973,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 			} // if
 				//
-			if ((selectedIndex = getSelectedIndex(jcbSheet)) < 1) {
+			if ((selectedIndex = Util.getSelectedIndex(jcbSheet)) < 1) {
 				//
 				testAndRunThrows(file != null, () -> Util.setText(tfException, MESSAGE_PLEASE_SELECT_A_SHEET));
 				//

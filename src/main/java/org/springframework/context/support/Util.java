@@ -2458,6 +2458,25 @@ public abstract class Util {
 		return instance != null ? instance.getColumnModel() : null;
 	}
 
+	static int getSelectedIndex(final JComboBox<?> instance) {
+		//
+		final Iterable<Field> fs = toList(
+				filter(stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
+						f -> Objects.equals(getName(f), "dataModel")));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		return instance != null && Narcissus.getField(instance,
+				testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) != null
+						? instance.getSelectedIndex()
+						: 0;
+		//
+	}
+
 	@Nullable
 	static TableColumn getColumn(@Nullable final TableColumnModel instance, final int columnIndex) {
 		return instance != null ? instance.getColumn(columnIndex) : null;

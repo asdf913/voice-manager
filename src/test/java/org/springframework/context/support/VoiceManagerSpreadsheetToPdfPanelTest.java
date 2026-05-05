@@ -96,7 +96,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_OR, METHOD_TEST_AND_APPLY, METHOD_TEST_AND_GET,
 			METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY, METHOD_TO_DATA, METHOD_GET_LAYOUT_MANAGER,
 			METHOD_SET_PREFERRED_SIZE, METHOD_WRITE_VOICE_TO_FILE, METHOD_FOR_EACH_REMAINING, METHOD_GET_HEIGHT,
-			METHOD_GET_SELECTED_INDEX, METHOD_IS_ALL_FIELDS_NULL_OR_BLANK = null;
+			METHOD_IS_ALL_FIELDS_NULL_OR_BLANK = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -160,8 +160,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", Dimension2D.class, Double.TYPE)).setAccessible(true);
-		//
-		(METHOD_GET_SELECTED_INDEX = clz.getDeclaredMethod("getSelectedIndex", JComboBox.class)).setAccessible(true);
 		//
 		(METHOD_IS_ALL_FIELDS_NULL_OR_BLANK = clz.getDeclaredMethod("isAllFieldsNullOrBlank", Object.class,
 				Iterable.class)).setAccessible(true);
@@ -1093,26 +1091,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			final Object obj = METHOD_GET_HEIGHT.invoke(null, instance, defaultValue);
 			if (obj instanceof Double) {
 				return ((Double) obj).doubleValue();
-			}
-			throw new Throwable(Util.getName(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetSelectedIndex() throws Throwable {
-		//
-		Assertions.assertEquals(-1,
-				getSelectedIndex(Util.cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class))));
-		//
-	}
-
-	private static int getSelectedIndex(final JComboBox<?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_SELECTED_INDEX.invoke(null, instance);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
