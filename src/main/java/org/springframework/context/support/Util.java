@@ -2454,6 +2454,7 @@ public abstract class Util {
 		return instance != null ? instance.getColumnModel() : null;
 	}
 
+	@Nullable
 	static TableColumn getColumn(@Nullable final TableColumnModel instance, final int columnIndex) {
 		return instance != null ? instance.getColumn(columnIndex) : null;
 	}
