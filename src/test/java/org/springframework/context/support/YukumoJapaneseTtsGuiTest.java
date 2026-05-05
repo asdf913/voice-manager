@@ -29,6 +29,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.StringsUtil;
+import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
@@ -46,7 +47,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class YukumoJapaneseTtsGuiTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_APPLY_AND_ACCEPT = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_APPLY_AND_ACCEPT, METHOD_ACCEPT_AND_ACCEPT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -57,6 +58,9 @@ class YukumoJapaneseTtsGuiTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_APPLY_AND_ACCEPT = Util.getDeclaredMethod(clz, "applyAndAccept", FailableFunction.class, Object.class,
+				Consumer.class)).setAccessible(true);
+		//
+		(METHOD_ACCEPT_AND_ACCEPT = Util.getDeclaredMethod(clz, "acceptAndAccept", FailableConsumer.class, Object.class,
 				Consumer.class)).setAccessible(true);
 		//
 
@@ -104,10 +108,15 @@ class YukumoJapaneseTtsGuiTest {
 			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
 			throws Throwable {
 		try {
-			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+			return (R) invoke(METHOD_TEST_AND_APPLY, null, predicate, value, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	private static Object invoke(final Method method, final Object instance, final Object... args)
+			throws IllegalAccessException, InvocationTargetException {
+		return method != null ? method.invoke(instance, args) : null;
 	}
 
 	private static Process start(final ProcessBuilder instance) throws IOException {
@@ -376,7 +385,7 @@ class YukumoJapaneseTtsGuiTest {
 	}
 
 	@Test
-	void testApplyAndAccept() throws Exception {
+	void testApplyAndAccept() throws IllegalAccessException, InvocationTargetException {
 		//
 		final FailableFunction<?, ?, ?> failableFunction = x -> {
 			//
@@ -384,9 +393,20 @@ class YukumoJapaneseTtsGuiTest {
 			//
 		};
 		//
-		Assertions.assertNull(
-				METHOD_APPLY_AND_ACCEPT != null ? METHOD_APPLY_AND_ACCEPT.invoke(null, failableFunction, null, null)
-						: null);
+		Assertions.assertNull(invoke(METHOD_APPLY_AND_ACCEPT, null, failableFunction, null, null));
+		//
+	}
+
+	@Test
+	void testAcceptAndAccept() throws IllegalAccessException, InvocationTargetException {
+		//
+		final FailableConsumer<?, ?> failableConsumer = x -> {
+			//
+			throw new RuntimeException();
+			//
+		};
+		//
+		Assertions.assertNull(invoke(METHOD_ACCEPT_AND_ACCEPT, null, failableConsumer, null, null));
 		//
 	}
 

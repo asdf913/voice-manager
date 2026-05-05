@@ -32,6 +32,10 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringsUtil;
+import org.apache.commons.lang3.function.FailableConsumer;
+import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -130,27 +134,11 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 						//
 					} // if
 						//
-					final byte[] bs = applyAndAccept(YukumoJapaneseTtsGui::readAllBytes, url(x),
+					acceptAndAccept(YukumoJapaneseTtsGui::play,
+							applyAndAccept(YukumoJapaneseTtsGui::readAllBytes, url(x),
+									e -> LoggerUtil.error(LOG, getMessage(e), e)),
 							e -> LoggerUtil.error(LOG, getMessage(e), e));
 					//
-					final ContentInfo ci = testAndApply(Objects::nonNull, bs, y -> new ContentInfoUtil().findMatch(y),
-							null);
-					//
-					if (Objects.equals(getMessage(ci), "Audio file with ID3 version 2.4, MP3 encoding")) {
-						//
-						try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new,
-								null)) {
-							//
-							PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
-							//
-						} catch (final IOException | JavaLayerException e) {
-							//
-							LoggerUtil.error(LOG, e.getMessage(), e);
-							//
-						} // try
-							//
-					} // if
-						//
 				});
 				//
 				clickPlayButton(URL, page, Util.getText(tfText));
@@ -179,7 +167,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 					final ContentInfo ci = testAndApply(Objects::nonNull, bs, y -> new ContentInfoUtil().findMatch(y),
 							null);
 					//
-					if (Objects.equals(getMessage(ci), "Audio file with ID3 version 2.4, MP3 encoding")) {
+					if (StringsUtil.startsWith(Strings.CI, getMessage(ci), "Audio file with ID3 version 2.4")) {
 						//
 						final JFileChooser jfc = new JFileChooser();
 						//
@@ -208,6 +196,31 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 			} // try
 				//
 		} // if
+			//
+	}
+
+	private static <T, E extends Exception> void acceptAndAccept(final FailableConsumer<T, E> consumer, final T value,
+			final Consumer<Throwable> throwableConsumer) {
+		//
+		try {
+			//
+			FailableConsumerUtil.accept(consumer, value);
+			//
+		} catch (final Throwable throwable) {
+			//
+			Util.accept(throwableConsumer, throwable);
+			//
+		} // try
+			//
+	}
+
+	private static void play(final byte[] bs) throws IOException, JavaLayerException {
+		//
+		try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
+			//
+			PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
+			//
+		} // try
 			//
 	}
 
