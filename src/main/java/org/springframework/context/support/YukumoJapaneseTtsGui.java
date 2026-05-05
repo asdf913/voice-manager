@@ -525,7 +525,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 	}
 
 	private static <T> T testAndGet(final boolean condition, final Supplier<T> supplierTrue,
-			final Supplier<T> supplierFalse) {
+			@Nullable final Supplier<T> supplierFalse) {
 		return condition ? Util.get(supplierTrue) : Util.get(supplierFalse);
 	}
 
