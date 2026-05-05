@@ -23,7 +23,6 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
@@ -115,7 +114,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 							//
 							try (final InputStream is = Util.openStream(new URL(x.url()))) {
 								//
-								bs = IOUtils.toByteArray(is);
+								bs = readAllBytes(is);
 								//
 							} catch (final IOException e) {
 								//
@@ -170,7 +169,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 							//
 							try (final InputStream is = Util.openStream(new URL(x.url()))) {
 								//
-								bs = IOUtils.toByteArray(is);
+								bs = readAllBytes(is);
 								//
 							} catch (final IOException e) {
 								//
@@ -222,6 +221,10 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 				//
 		} // if
 			//
+	}
+
+	private static byte[] readAllBytes(final InputStream instance) throws IOException {
+		return instance != null ? instance.readAllBytes() : null;
 	}
 
 	private static void clickPlayButton(final String url, final Page page, final String text) {
