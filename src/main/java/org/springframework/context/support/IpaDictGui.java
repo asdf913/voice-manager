@@ -8,6 +8,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.Transient;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -68,9 +69,9 @@ public class IpaDictGui extends JPanel implements InitializingBean, ActionListen
 
 	private DefaultListModel<String> dlm = null;
 
-	private ListSelectionModel lsm = null;
+	private transient ListSelectionModel lsm = null;
 
-	private Multimap<String, String> multimap = null;
+	private transient Multimap<String, String> multimap = null;
 
 	private IpaDictGui() {
 		//
