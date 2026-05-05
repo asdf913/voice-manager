@@ -259,7 +259,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 		//
 	}
 
-	private static Path getPath(final String first, final String text, final String[] fileExtensions,
+	private static Path getPath(final String first, final String text, @Nullable final String[] fileExtensions,
 			final String fileExtension) {
 		//
 		final Iterable<Field> fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(String.class)),
