@@ -39,6 +39,7 @@ import org.oxbow.swingbits.util.OperatingSystemUtil;
 
 import com.google.common.reflect.Reflection;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.Request;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
@@ -77,6 +78,10 @@ class YukumoJapaneseTtsGuiTest {
 				return null;
 				//
 			} else if (proxy instanceof Page && Util.contains(Arrays.asList("navigate", "querySelectorAll"), name)) {
+				//
+				return null;
+				//
+			} else if (proxy instanceof Request && Util.contains(Arrays.asList("url", "resourceType"), name)) {
 				//
 				return null;
 				//

@@ -122,7 +122,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 				//
 				onRequest(page, x -> {
 					//
-					if (x != null && Objects.equals(x.resourceType(), "media")) {
+					if (Objects.equals(resourceType(x), "media")) {
 						//
 						byte[] bs = null;
 						//
@@ -173,11 +173,11 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 				//
 				onRequest(page, x -> {
 					//
-					if (x != null && Objects.equals(x.resourceType(), "media")) {
+					if (Objects.equals(resourceType(x), "media")) {
 						//
 						byte[] bs = null;
 						//
-						try (final InputStream is = Util.openStream(new URL(x.url()))) {
+						try (final InputStream is = Util.openStream(new URL(url(x)))) {
 							//
 							bs = readAllBytes(is);
 							//
@@ -229,6 +229,14 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 				//
 		} // if
 			//
+	}
+
+	private static String url(final Request instance) {
+		return instance != null ? instance.url() : null;
+	}
+
+	private static String resourceType(final Request instance) {
+		return instance != null ? instance.resourceType() : null;
 	}
 
 	private static void onRequest(@Nullable final Page instance, final Consumer<Request> handler) {
