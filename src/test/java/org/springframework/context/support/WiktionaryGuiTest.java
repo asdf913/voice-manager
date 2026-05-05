@@ -502,10 +502,6 @@ class WiktionaryGuiTest {
 			//
 	}
 
-	private static URI toUri(final Path instance) {
-		return instance != null ? instance.toUri() : null;
-	}
-
 	private static boolean or(final boolean a, final boolean b, @Nullable final boolean... bs) {
 		//
 		boolean result = Boolean.logicalOr(a, b);
