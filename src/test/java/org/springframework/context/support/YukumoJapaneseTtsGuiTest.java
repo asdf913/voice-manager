@@ -36,6 +36,7 @@ import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.d2ab.collection.ints.IntCollection;
+import org.d2ab.collection.ints.IntList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +53,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class YukumoJapaneseTtsGuiTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_APPLY_AND_ACCEPT, METHOD_ACCEPT_AND_ACCEPT, METHOD_IIF,
-			METHOD_TEST_AND_ACCEPT, METHOD_TEST_AND_GET, METHOD_GET_ITEM_AT = null;
+			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_GET, METHOD_GET_ITEM_AT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -70,7 +71,10 @@ class YukumoJapaneseTtsGuiTest {
 		//
 		(METHOD_IIF = Util.getDeclaredMethod(clz, "iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_ACCEPT = Util.getDeclaredMethod(clz, "testAndAccept", BiPredicate.class, Object.class,
+		(METHOD_TEST_AND_ACCEPT3 = Util.getDeclaredMethod(clz, "testAndAccept", Predicate.class, Object.class,
+				Consumer.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT4 = Util.getDeclaredMethod(clz, "testAndAccept", BiPredicate.class, Object.class,
 				Object.class, BiConsumer.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_GET = Util.getDeclaredMethod(clz, "testAndGet", Boolean.TYPE, Supplier.class, Supplier.class))
@@ -85,6 +89,8 @@ class YukumoJapaneseTtsGuiTest {
 
 		private Boolean test, addInt = null;
 
+		private Integer getInt = null;
+
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
 			if (Objects.equals(Util.getReturnType(method), Void.TYPE)) {
@@ -95,6 +101,12 @@ class YukumoJapaneseTtsGuiTest {
 				//
 			final String name = Util.getName(method);
 			//
+			if (proxy instanceof IntCollection && Objects.equals(name, "addInt")) {
+				//
+				return addInt;
+				//
+			} // if
+				//
 			if (Boolean.logicalOr(proxy instanceof Predicate, proxy instanceof BiPredicate)
 					&& Objects.equals(name, "test")) {
 				//
@@ -116,9 +128,9 @@ class YukumoJapaneseTtsGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof IntCollection && Objects.equals(name, "addInt")) {
+			} else if (proxy instanceof IntList && Objects.equals(name, "getInt")) {
 				//
-				return addInt;
+				return getInt;
 				//
 			} // if
 				//
@@ -314,6 +326,8 @@ class YukumoJapaneseTtsGuiTest {
 			//
 			ih.test = ih.addInt = Boolean.FALSE;
 			//
+			ih.getInt = Integer.valueOf(0);
+			//
 		} // if
 			//
 		Object[] os = null;
@@ -489,7 +503,10 @@ class YukumoJapaneseTtsGuiTest {
 		} // if
 			//
 		Assertions.assertNull(
-				invoke(METHOD_TEST_AND_ACCEPT, null, Reflection.newProxy(BiPredicate.class, ih), null, null, null));
+				invoke(METHOD_TEST_AND_ACCEPT3, null, Reflection.newProxy(Predicate.class, ih), null, null));
+		//
+		Assertions.assertNull(
+				invoke(METHOD_TEST_AND_ACCEPT4, null, Reflection.newProxy(BiPredicate.class, ih), null, null, null));
 		//
 	}
 

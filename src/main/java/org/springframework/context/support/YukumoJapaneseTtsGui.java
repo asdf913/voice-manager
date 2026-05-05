@@ -486,28 +486,23 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 								//
 						} // for
 							//
-						if (intList != null) {
+						testAndRun(IterableUtils.size(intList) > 1, () -> {
 							//
-							final int size = intList.size();
+							throw new IllegalArgumentException();
 							//
-							testAndRun(size > 1, () -> {
-								//
-								throw new IllegalArgumentException();
-								//
-							});
-							//
-							if (size == 1) {
-								//
-								Util.setSelectedIndex(instance.jcb, intList.getInt(0));
-								//
-							} // if
-								//
-						} // if
-							//
+						});
+						//
+						testAndAccept(x -> IterableUtils.size(x) == 1, intList,
+								x -> Util.setSelectedIndex(instance.jcb, getInt(x, 0, 0)));
+						//
 					} // if
 						//
 				});
 		//
+	}
+
+	private static int getInt(final IntList instance, final int index, final int defaultValue) {
+		return instance != null ? instance.getInt(index) : defaultValue;
 	}
 
 	private static void addInt(final IntCollection instance, final int x) {
@@ -527,6 +522,12 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 	private static <T> T testAndGet(final boolean condition, final Supplier<T> supplierTrue,
 			@Nullable final Supplier<T> supplierFalse) {
 		return condition ? Util.get(supplierTrue) : Util.get(supplierFalse);
+	}
+
+	private static <T> void testAndAccept(final Predicate<T> instance, final T value, final Consumer<T> consumer) {
+		if (Util.test(instance, value)) {
+			Util.accept(consumer, value);
+		} // if
 	}
 
 	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
