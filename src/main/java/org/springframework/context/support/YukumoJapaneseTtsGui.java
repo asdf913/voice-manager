@@ -48,6 +48,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.d2ab.collection.ints.IntCollection;
 import org.d2ab.collection.ints.IntList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -477,10 +478,9 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 						//
 						for (int i = 0; i < Util.getSize(cbm); i++) {
 							//
-							if (Objects.equals(getItemAt(instance.jcb, i), string)
-									&& (intList = ObjectUtils.getIfNull(intList, IntList::create)) != null) {
+							if (Objects.equals(getItemAt(instance.jcb, i), string)) {
 								//
-								intList.addInt(i);
+								addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i);
 								//
 							} // if
 								//
@@ -508,6 +508,12 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 						//
 				});
 		//
+	}
+
+	private static void addInt(final IntCollection instance, final int x) {
+		if (instance != null) {
+			instance.addInt(x);
+		}
 	}
 
 	private static Object getItemAt(final JComboBox<?> instance, final int index) {

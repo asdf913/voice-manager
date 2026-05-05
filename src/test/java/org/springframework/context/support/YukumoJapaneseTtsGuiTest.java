@@ -35,6 +35,7 @@ import org.apache.commons.lang3.StringsUtil;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.d2ab.collection.ints.IntCollection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -82,7 +83,7 @@ class YukumoJapaneseTtsGuiTest {
 
 	private static class IH implements InvocationHandler {
 
-		private Boolean test = null;
+		private Boolean test, addInt = null;
 
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -114,6 +115,10 @@ class YukumoJapaneseTtsGuiTest {
 			} else if (proxy instanceof Supplier && Objects.equals(name, "get")) {
 				//
 				return null;
+				//
+			} else if (proxy instanceof IntCollection && Objects.equals(name, "addInt")) {
+				//
+				return addInt;
 				//
 			} // if
 				//
@@ -307,7 +312,7 @@ class YukumoJapaneseTtsGuiTest {
 		//
 		if (ih != null) {
 			//
-			ih.test = Boolean.FALSE;
+			ih.test = ih.addInt = Boolean.FALSE;
 			//
 		} // if
 			//
