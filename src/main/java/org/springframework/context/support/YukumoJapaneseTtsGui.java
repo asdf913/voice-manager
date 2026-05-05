@@ -242,7 +242,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 		return instance != null ? instance.readAllBytes() : null;
 	}
 
-	private static void clickPlayButton(final String url, @Nullable final Page page, final String text) {
+	private static void clickPlayButton(final String url, @Nullable final Page page, @Nullable final String text) {
 		//
 		PageUtil.navigate(page, url);
 		//
