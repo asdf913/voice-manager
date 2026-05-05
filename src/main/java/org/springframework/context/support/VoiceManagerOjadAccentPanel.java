@@ -3090,12 +3090,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 								ElementHandleUtil.screenshot(eh = IterableUtils.get(katsuyoEhs, i)),
 								e -> LoggerUtil.error(LOG, e.getMessage(), e));
 						//
-						textAndImage.curveImage = toBufferedImage(ElementHandleUtil.screenshot(querySelector(
-								querySelector(querySelector(querySelector(querySelector(eh, ".."), ".."), ".."), ".."),
-								CANVAS)), e -> LoggerUtil.error(LOG, e.getMessage(), e));
+						textAndImage.curveImage = toBufferedImage(ElementHandleUtil
+								.screenshot(ElementHandleUtil.querySelector(ElementHandleUtil.querySelector(
+										ElementHandleUtil.querySelector(ElementHandleUtil
+												.querySelector(ElementHandleUtil.querySelector(eh, ".."), ".."), ".."),
+										".."), CANVAS)),
+								e -> LoggerUtil.error(LOG, e.getMessage(), e));
 						//
 						textAndImage.voiceUrlImages = getVoiceUrlImages(ElementHandleUtil.querySelectorAll(
-								querySelector(querySelector(querySelector(eh, ".."), ".."), ".."),
+								ElementHandleUtil.querySelector(ElementHandleUtil
+										.querySelector(ElementHandleUtil.querySelector(eh, ".."), ".."), ".."),
 								".katsuyo_proc_button a"), page, "mp3");
 						//
 						textAndImage.conjugation = StringUtils
@@ -3420,15 +3424,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			// 坂
 			//
-			(textAndImage = new TextAndImage()).kanji = StringUtils.trim(ElementHandleUtil.textContent(querySelector(
-					testAndApply(x -> IterableUtils.size(x) == 1, words, x -> IterableUtils.get(x, 0), null),
-					CSS_SELECTOR_MIDASHI)));
+			(textAndImage = new TextAndImage()).kanji = StringUtils
+					.trim(ElementHandleUtil.textContent(ElementHandleUtil.querySelector(
+							testAndApply(x -> IterableUtils.size(x) == 1, words, x -> IterableUtils.get(x, 0), null),
+							CSS_SELECTOR_MIDASHI)));
 			//
 			textAndImage.accentImage = toBufferedImage(ElementHandleUtil.screenshot(eh = IterableUtils.get(ehs, 0)),
 					e -> LoggerUtil.error(LOG, e.getMessage(), e));
 			//
 			textAndImage.curveImage = toBufferedImage(
-					ElementHandleUtil.screenshot(querySelector(querySelector(querySelector(eh, ".."), ".."), CANVAS)),
+					ElementHandleUtil.screenshot(ElementHandleUtil.querySelector(
+							ElementHandleUtil.querySelector(ElementHandleUtil.querySelector(eh, ".."), ".."), CANVAS)),
 					e -> LoggerUtil.error(LOG, e.getMessage(), e));
 			//
 			textAndImage.hiragana = StringUtils.trim(ElementHandleUtil.textContent(eh));
@@ -3454,15 +3460,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			for (int i = 0; i < IterableUtils.size(words); i++) {
 				//
-				(textAndImage = new TextAndImage()).kanji = StringUtils.trim(ElementHandleUtil
-						.textContent(querySelector(word = IterableUtils.get(words, i), CSS_SELECTOR_MIDASHI)));
+				(textAndImage = new TextAndImage()).kanji = StringUtils.trim(ElementHandleUtil.textContent(
+						ElementHandleUtil.querySelector(word = IterableUtils.get(words, i), CSS_SELECTOR_MIDASHI)));
 				//
 				textAndImage.accentImage = toBufferedImage(ElementHandleUtil.screenshot(eh = IterableUtils.get(ehs, i)),
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
-				textAndImage.curveImage = toBufferedImage(
-						ElementHandleUtil
-								.screenshot(querySelector(querySelector(querySelector(eh, ".."), ".."), CANVAS)),
+				textAndImage.curveImage = toBufferedImage(ElementHandleUtil.screenshot(ElementHandleUtil.querySelector(
+						ElementHandleUtil.querySelector(ElementHandleUtil.querySelector(eh, ".."), ".."), CANVAS)),
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
 				textAndImage.hiragana = StringUtils.trim(ElementHandleUtil.textContent(eh));
@@ -3523,13 +3528,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					e -> LoggerUtil.error(LOG, e.getMessage(), e));
 			//
 			textAndImage.curveImage = toBufferedImage(
-					ElementHandleUtil.screenshot(querySelector(querySelector(querySelector(eh, ".."), ".."), CANVAS)),
+					ElementHandleUtil.screenshot(ElementHandleUtil.querySelector(
+							ElementHandleUtil.querySelector(ElementHandleUtil.querySelector(eh, ".."), ".."), CANVAS)),
 					e -> LoggerUtil.error(LOG, e.getMessage(), e));
 			//
 			textAndImage.hiragana = StringUtils.trim(ElementHandleUtil.textContent(eh));
 			//
-			ws = StringUtils.split(StringUtils.trim(
-					ElementHandleUtil.textContent(querySelector(IterableUtils.get(words, 0), CSS_SELECTOR_MIDASHI))),
+			ws = StringUtils.split(StringUtils.trim(ElementHandleUtil
+					.textContent(ElementHandleUtil.querySelector(IterableUtils.get(words, 0), CSS_SELECTOR_MIDASHI))),
 					'・');
 			//
 			if (Boolean.logicalAnd(length(ws) == 2, IterableUtils.size(ehs) > 1)) {
@@ -3551,7 +3557,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				textAndImage.kanji = Util.toString(tsb);
 				//
 				textAndImage.voiceUrlImages = getVoiceUrlImages(ElementHandleUtil.querySelectorAll(
-						querySelector(querySelector(eh, ".."), ".."), ".katsuyo_proc_button a"), page, "mp3");
+						ElementHandleUtil.querySelector(ElementHandleUtil.querySelector(eh, ".."), ".."),
+						".katsuyo_proc_button a"), page, "mp3");
 				//
 				textAndImage.conjugation = StringUtils
 						.trim(ElementHandleUtil.textContent(testAndApply(x -> IterableUtils.size(ths) > x + 2, i,
@@ -3594,8 +3601,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		ElementHandle eh = null;
 		//
-		final String[] ws = StringUtils.split(StringUtils.trim(
-				ElementHandleUtil.textContent(querySelector(IterableUtils.get(words, 0), CSS_SELECTOR_MIDASHI))), '・');
+		final String[] ws = StringUtils.split(StringUtils.trim(ElementHandleUtil
+				.textContent(ElementHandleUtil.querySelector(IterableUtils.get(words, 0), CSS_SELECTOR_MIDASHI))), '・');
 		//
 		int size = IterableUtils.size(ehs);
 		//
@@ -3631,9 +3638,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				(textAndImage = new TextAndImage()).accentImage = toBufferedImage(ElementHandleUtil.screenshot(eh),
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
-				textAndImage.curveImage = toBufferedImage(
-						ElementHandleUtil
-								.screenshot(querySelector(querySelector(querySelector(eh, ".."), ".."), CANVAS)),
+				textAndImage.curveImage = toBufferedImage(ElementHandleUtil.screenshot(ElementHandleUtil.querySelector(
+						ElementHandleUtil.querySelector(ElementHandleUtil.querySelector(eh, ".."), ".."), CANVAS)),
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
 				textAndImage.kanji = ArrayUtils.get(ws, i);
@@ -3641,7 +3647,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				textAndImage.hiragana = StringUtils.trim(ElementHandleUtil.textContent(eh));
 				//
 				textAndImage.voiceUrlImages = getVoiceUrlImages(ElementHandleUtil.querySelectorAll(
-						querySelector(querySelector(eh, ".."), ".."), ".katsuyo_proc_button a"), page, "mp3");
+						ElementHandleUtil.querySelector(ElementHandleUtil.querySelector(eh, ".."), ".."),
+						".katsuyo_proc_button a"), page, "mp3");
 				//
 				textAndImage.conjugation = StringUtils
 						.trim(ElementHandleUtil.textContent(testAndApply(x -> IterableUtils.size(ths) > x + 2, i,
@@ -3714,8 +3721,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					id = ElementHandleUtil.getAttribute(word = IterableUtils.get(words, i), "id"));
 			//
 			if (Boolean.logicalAnd(
-					StringUtils.isNotBlank(textContent = StringUtils
-							.trim(ElementHandleUtil.textContent(querySelector(word, "td:nth-child(2)")))),
+					StringUtils.isNotBlank(textContent = StringUtils.trim(
+							ElementHandleUtil.textContent(ElementHandleUtil.querySelector(word, "td:nth-child(2)")))),
 					!StringUtils.contains(textContent, '・'))) {
 				//
 				// 求
@@ -3726,7 +3733,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
 				textAndImage.curveImage = toBufferedImage(
-						ElementHandleUtil.screenshot(querySelector(word,
+						ElementHandleUtil.screenshot(ElementHandleUtil.querySelector(word,
 								String.format("td:nth-child(%1$s) .katsuyo_proc_accent_curve canvas", 3))),
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
@@ -3737,7 +3744,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				setPartOfSpeech(textAndImage, getPartOfSpeech(document, id));
 				//
 				textAndImage.voiceUrlImages = getVoiceUrlImages(ElementHandleUtil.querySelectorAll(
-						querySelector(querySelector(eh, ".."), ".."), ".katsuyo_proc_button a"), page, "mp3");
+						ElementHandleUtil.querySelector(ElementHandleUtil.querySelector(eh, ".."), ".."),
+						".katsuyo_proc_button a"), page, "mp3");
 				//
 				textAndImage.conjugation = testAndApply(x -> IterableUtils.size(x) == 1, conjugations,
 						x -> IterableUtils.get(x, 0), null);
@@ -3750,12 +3758,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				for (int j = 0; j < 2; j++) {
 					//
-					(textAndImage = new TextAndImage()).accentImage = toBufferedImage(ElementHandleUtil.screenshot(
-							eh = querySelector(word, String.format("td:nth-child(%1$s) .accented_word", j + 3))),
+					(textAndImage = new TextAndImage()).accentImage = toBufferedImage(
+							ElementHandleUtil.screenshot(eh = ElementHandleUtil.querySelector(word,
+									String.format("td:nth-child(%1$s) .accented_word", j + 3))),
 							e -> LoggerUtil.error(LOG, e.getMessage(), e));
 					//
 					textAndImage.curveImage = toBufferedImage(
-							ElementHandleUtil.screenshot(querySelector(word,
+							ElementHandleUtil.screenshot(ElementHandleUtil.querySelector(word,
 									String.format("td:nth-child(%1$s) .katsuyo_proc_accent_curve canvas", j + 3))),
 							e -> LoggerUtil.error(LOG, e.getMessage(), e));
 					//
@@ -3763,9 +3772,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					setPartOfSpeech(textAndImage, getPartOfSpeech(document, id));
 					//
-					textAndImage.voiceUrlImages = getVoiceUrlImages(ElementHandleUtil.querySelectorAll(
-							querySelector(querySelector(querySelector(eh, ".."), ".."), ".."),
-							".katsuyo_proc_button a"), page, "mp3");
+					textAndImage.voiceUrlImages = getVoiceUrlImages(
+							ElementHandleUtil.querySelectorAll(
+									ElementHandleUtil.querySelector(ElementHandleUtil
+											.querySelector(ElementHandleUtil.querySelector(eh, ".."), ".."), ".."),
+									".katsuyo_proc_button a"),
+							page, "mp3");
 					//
 					textAndImage.conjugation = getConjugation(conjugations, j);
 					//
@@ -3938,7 +3950,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		for (int j = start; j < Integer.MAX_VALUE; j++) {
 			//
-			if (querySelector(word, String.format("td:nth-child(%1$s)", j)) == null) {
+			if (ElementHandleUtil.querySelector(word, String.format("td:nth-child(%1$s)", j)) == null) {
 				//
 				end = Integer.valueOf(j);
 				//
@@ -3954,8 +3966,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		for (int j = start; end != null && j < end.intValue(); j++) {
 			//
-			if (StringUtils.isBlank(StringUtils.trim(
-					ElementHandleUtil.textContent(eh = querySelector(word, String.format("td:nth-child(%1$s)", j)))))) {
+			if (StringUtils.isBlank(StringUtils.trim(ElementHandleUtil.textContent(
+					eh = ElementHandleUtil.querySelector(word, String.format("td:nth-child(%1$s)", j)))))) {
 				//
 				continue;
 				//
@@ -3967,7 +3979,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			});
 			//
-			iValue0 = Unit.with(querySelector(eh, cssSelector));
+			iValue0 = Unit.with(ElementHandleUtil.querySelector(eh, cssSelector));
 			//
 		} // for
 			//
@@ -4065,11 +4077,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		return null;
 		//
-	}
-
-	@Nullable
-	private static ElementHandle querySelector(@Nullable final ElementHandle instance, final String selector) {
-		return instance != null ? instance.querySelector(selector) : null;
 	}
 
 	public static void main(final String[] args) throws Exception {

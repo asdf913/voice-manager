@@ -20,4 +20,8 @@ public interface ElementHandleUtil {
 		return instance != null ? instance.textContent() : null;
 	}
 
+	static ElementHandle querySelector(final ElementHandle instnace, final String selector) {
+		return instnace != null ? instnace.querySelector(selector) : null;
+	}
+
 }

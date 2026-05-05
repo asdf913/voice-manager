@@ -28,8 +28,9 @@ class ElementHandleUtilTest {
 			//
 			final String name = getName(method);
 			//
-			if (proxy instanceof ElementHandle && IterableUtils
-					.contains(Arrays.asList("getAttribute", "querySelectorAll", "textContent", "screenshot"), name)) {
+			if (proxy instanceof ElementHandle && IterableUtils.contains(
+					Arrays.asList("getAttribute", "querySelectorAll", "textContent", "screenshot", "querySelector"),
+					name)) {
 				//
 				return null;
 				//

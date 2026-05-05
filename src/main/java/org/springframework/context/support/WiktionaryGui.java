@@ -671,8 +671,9 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					testAndAccept((a, b) -> StringUtils.isNotBlank(b), we, WiktionaryEntry.getTextCssSelector(we),
 							(a, b) -> {
 								//
-								try (final InputStream is2 = new ByteArrayInputStream(ElementHandleUtil
-										.screenshot(querySelector(querySelector(querySelector(page, b), ".."), "..")));
+								try (final InputStream is2 = new ByteArrayInputStream(
+										ElementHandleUtil.screenshot(ElementHandleUtil.querySelector(
+												ElementHandleUtil.querySelector(querySelector(page, b), ".."), "..")));
 										final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 									//
 									final BufferedImage bufferedImage = ImageIO.read(is2);
@@ -814,11 +815,6 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 
 	private static int getWidth(@Nullable final Image instnace, @Nullable final ImageObserver getWidth) {
 		return instnace != null ? instnace.getWidth(getWidth) : 0;
-	}
-
-	@Nullable
-	private static ElementHandle querySelector(@Nullable final ElementHandle instnace, final String selector) {
-		return instnace != null ? instnace.querySelector(selector) : null;
 	}
 
 	private static class IH implements InvocationHandler {

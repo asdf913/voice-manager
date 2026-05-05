@@ -146,12 +146,11 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private static Class<?> CLASS_TEXT_AND_IMAGE, CLASS_IMAGE_DIMENSION_POSITION = null;
 
-	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR, METHOD_PACK,
-			METHOD_GET_KANJI, METHOD_GET_HEIGHT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_LENGTH_OBJECT_ARRAY,
-			METHOD_LENGTH_DOUBLE_ARRAY, METHOD_TO_TEXT_AND_IMAGES, METHOD_TO_TEXT_AND_IMAGES1,
-			METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY, METHOD_TO_BYTE_ARRAY, METHOD_GET_IF_NULL,
-			METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER, METHOD_SAVE_IMAGE,
-			METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS,
+	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_PACK, METHOD_GET_KANJI,
+			METHOD_GET_HEIGHT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_LENGTH_OBJECT_ARRAY, METHOD_LENGTH_DOUBLE_ARRAY,
+			METHOD_TO_TEXT_AND_IMAGES, METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY,
+			METHOD_TO_BYTE_ARRAY, METHOD_GET_IF_NULL, METHOD_ATTRIBUTE, METHOD_CREATE_TEXT_AND_IMAGE_LIST_CELL_RENDERER,
+			METHOD_SAVE_IMAGE, METHOD_TEST_AND_RUN_THROWS, METHOD_GET_PART_OF_SPEECH, METHOD_PREVIOUS_ELEMENT_SIBLINGS,
 			METHOD_GET_PROPERTY, METHOD_GET_VOICE_URL_IMAGES, METHOD_MATCHES, METHOD_CREATE_TEXT_AND_IMAGE_CONSUMER,
 			METHOD_TEST_AND_ACCEPT_INT_PREDICATE, METHOD_TEST_AND_ACCEPT_PREDICATE3, METHOD_TEST_AND_ACCEPT_PREDICATE5,
 			METHOD_GET_MOST_OCCURENCE_COLOR, METHOD_SET_RGB, METHOD_SET_PART_OF_SPEECH, METHOD_ADJUST_IMAGE_COLOR,
@@ -177,9 +176,6 @@ class VoiceManagerOjadAccentPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_FIND_MATCH = clz.getDeclaredMethod("findMatch", ContentInfoUtil.class, byte[].class))
-				.setAccessible(true);
-		//
-		(METHOD_QUERY_SELECTOR = clz.getDeclaredMethod("querySelector", ElementHandle.class, String.class))
 				.setAccessible(true);
 		//
 		(METHOD_PACK = clz.getDeclaredMethod("pack", Window.class)).setAccessible(true);
@@ -960,27 +956,6 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof ContentInfo) {
 				return (ContentInfo) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testQuerySelector() throws Throwable {
-		//
-		Assertions.assertNull(querySelector(elementHandle, null));
-		//
-	}
-
-	private static ElementHandle querySelector(final ElementHandle instance, final String selector) throws Throwable {
-		try {
-			final Object obj = METHOD_QUERY_SELECTOR.invoke(null, instance, selector);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof ElementHandle) {
-				return (ElementHandle) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
