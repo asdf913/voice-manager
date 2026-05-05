@@ -3178,7 +3178,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static void adjustImageColor(final Iterable<TextAndImage> textAndImages) {
+	private static void adjustImageColor(@Nullable final Iterable<TextAndImage> textAndImages) {
 		//
 		if (Boolean.logicalAnd(Objects.equals(OperatingSystem.LINUX, OperatingSystemUtil.getOperatingSystem()),
 				IterableUtils.size(textAndImages) > 1)) {
