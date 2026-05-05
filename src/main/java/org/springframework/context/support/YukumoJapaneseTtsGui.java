@@ -14,6 +14,8 @@ import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -448,6 +450,17 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 				//
 		} // if
 			//
+		testAndAccept(Util::containsKey, System.getProperties(),
+				"org.springframework.context.support.YukumoJapaneseTtsGui.text",
+				(a, b) -> Util.setText(instance.tfText, Util.toString(Util.get(a, b))));
+		//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (Util.test(instance, t, u)) {
+			Util.accept(consumer, t, u);
+		} // if
 	}
 
 	private static boolean isTestMode() {

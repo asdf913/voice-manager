@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -38,6 +40,7 @@ import org.junit.jupiter.api.Test;
 import org.oxbow.swingbits.util.OperatingSystem;
 import org.oxbow.swingbits.util.OperatingSystemUtil;
 
+import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Request;
@@ -46,7 +49,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class YukumoJapaneseTtsGuiTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_APPLY_AND_ACCEPT, METHOD_ACCEPT_AND_ACCEPT, METHOD_IIF = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_APPLY_AND_ACCEPT, METHOD_ACCEPT_AND_ACCEPT, METHOD_IIF,
+			METHOD_TEST_AND_ACCEPT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -64,6 +68,9 @@ class YukumoJapaneseTtsGuiTest {
 		//
 		(METHOD_IIF = Util.getDeclaredMethod(clz, "iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
 		//
+		(METHOD_TEST_AND_ACCEPT = Util.getDeclaredMethod(clz, "testAndAccept", BiPredicate.class, Object.class,
+				Object.class, BiConsumer.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -80,7 +87,8 @@ class YukumoJapaneseTtsGuiTest {
 				//
 			final String name = Util.getName(method);
 			//
-			if (proxy instanceof Predicate && Objects.equals(name, "test")) {
+			if (Boolean.logicalOr(proxy instanceof Predicate, proxy instanceof BiPredicate)
+					&& Objects.equals(name, "test")) {
 				//
 				return test;
 				//
@@ -452,6 +460,20 @@ class YukumoJapaneseTtsGuiTest {
 		final Object object = new Object();
 		//
 		Assertions.assertSame(object, invoke(METHOD_IIF, null, Boolean.FALSE, null, object));
+		//
+	}
+
+	@Test
+	void testTestAndAccept() throws IllegalAccessException, InvocationTargetException {
+		//
+		if (ih != null) {
+			//
+			ih.test = Boolean.TRUE;
+			//
+		} // if
+			//
+		Assertions.assertNull(
+				invoke(METHOD_TEST_AND_ACCEPT, null, Reflection.newProxy(BiPredicate.class, ih), null, null, null));
 		//
 	}
 
