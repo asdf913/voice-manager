@@ -237,6 +237,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 		}
 	}
 
+	@Nullable
 	private static byte[] readAllBytes(@Nullable final InputStream instance) throws IOException {
 		return instance != null ? instance.readAllBytes() : null;
 	}
