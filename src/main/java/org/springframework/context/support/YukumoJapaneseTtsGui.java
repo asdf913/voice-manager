@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -463,16 +464,18 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 					//
 					final String string = Util.toString(Util.get(a, b));
 					//
+					final ComboBoxModel<?> cbm = getModel(instance.jcb);
+					//
 					if (NumberUtils.isDigits(string) && instance.jcb != null) {
 						//
-						testAndAccept((c, d) -> d != null, instance.jcb.getModel(),
-								instance.jcb.getItemAt(Integer.valueOf(string)), Util::setSelectedItem);
+						testAndAccept((c, d) -> d != null, cbm, instance.jcb.getItemAt(Integer.valueOf(string)),
+								Util::setSelectedItem);
 						//
 					} else {
 						//
 						IntList intList = null;
 						//
-						for (int i = 0; instance.jcb != null && i < Util.getSize(instance.jcb.getModel()); i++) {
+						for (int i = 0; i < Util.getSize(cbm); i++) {
 							//
 							if (Objects.equals(instance.jcb.getItemAt(i), string)
 									&& (intList = ObjectUtils.getIfNull(intList, IntList::create)) != null) {
@@ -503,6 +506,10 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 						//
 				});
 		//
+	}
+
+	private static <T> ComboBoxModel<T> getModel(final JComboBox<T> instance) {
+		return instance != null ? instance.getModel() : null;
 	}
 
 	private static <T> T testAndGet(final boolean condition, final Supplier<T> supplierTrue,
