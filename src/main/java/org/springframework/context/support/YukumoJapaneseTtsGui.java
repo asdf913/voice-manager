@@ -441,7 +441,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 		//
 		instance.afterPropertiesSet();
 		//
-		final JFrame jFrame = testAndGet(!GraphicsEnvironment.isHeadless(), () -> new JFrame(), null);
+		final JFrame jFrame = testAndGet(!GraphicsEnvironment.isHeadless(), JFrame::new, null);
 		//
 		if (jFrame != null) {
 			//
