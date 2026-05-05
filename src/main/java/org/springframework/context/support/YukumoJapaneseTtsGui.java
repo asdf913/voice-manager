@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -236,7 +237,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 			//
 	}
 
-	private static byte[] readAllBytes(final InputStream instance) throws IOException {
+	private static byte[] readAllBytes(@Nullable final InputStream instance) throws IOException {
 		return instance != null ? instance.readAllBytes() : null;
 	}
 
