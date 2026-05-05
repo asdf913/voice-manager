@@ -130,18 +130,9 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 						//
 					} // if
 						//
-					byte[] bs = null;
+					final byte[] bs = applyAndAccept(YukumoJapaneseTtsGui::readAllBytes, url(x),
+							e -> LoggerUtil.error(LOG, getMessage(e), e));
 					//
-					try (final InputStream is = Util.openStream(new URL(x.url()))) {
-						//
-						bs = readAllBytes(is);
-						//
-					} catch (final IOException e) {
-						//
-						LoggerUtil.error(LOG, e.getMessage(), e);
-						//
-					} // try
-						//
 					if (Objects.equals(
 							getMessage(
 									testAndApply(Objects::nonNull, bs, y -> new ContentInfoUtil().findMatch(y), null)),
@@ -182,18 +173,9 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 						//
 					} // if
 						//
-					byte[] bs = null;
+					final byte[] bs = applyAndAccept(YukumoJapaneseTtsGui::readAllBytes, url(x),
+							e -> LoggerUtil.error(LOG, getMessage(e), e));
 					//
-					try (final InputStream is = Util.openStream(new URL(url(x)))) {
-						//
-						bs = readAllBytes(is);
-						//
-					} catch (final IOException e) {
-						//
-						LoggerUtil.error(LOG, e.getMessage(), e);
-						//
-					} // try
-						//
 					final ContentInfo ci = testAndApply(Objects::nonNull, bs, y -> new ContentInfoUtil().findMatch(y),
 							null);
 					//
@@ -227,6 +209,54 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 				//
 		} // if
 			//
+	}
+
+	private static String getMessage(final Throwable instance) {
+		return instance != null ? instance.getMessage() : null;
+	}
+
+	private static byte[] readAllBytes(final String url) throws IOException {
+		//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(testAndApply(Objects::nonNull, Util.getClass(url), FieldUtils::getAllFieldsList, null)),
+				f -> Objects.equals(Util.getName(f), "value")));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		try (final InputStream is = Util
+				.openStream(
+						testAndApply(
+								s -> s != null
+										&& Narcissus.getField(s,
+												testAndApply(f -> IterableUtils.size(f) == 1, fs,
+														f -> IterableUtils.get(f, 0), null)) != null,
+								url, URL::new, null))) {
+			//
+			return readAllBytes(is);
+			//
+		} // try
+			//
+	}
+
+	private static <T, R, E extends Exception> R applyAndAccept(final FailableFunction<T, R, E> function, final T value,
+			final Consumer<Throwable> throwableConsumer) {
+		//
+		try {
+			//
+			return FailableFunctionUtil.apply(function, value);
+			//
+		} catch (final Throwable throwable) {
+			//
+			Util.accept(throwableConsumer, throwable);
+			//
+		} // try
+			//
+		return null;
+		//
 	}
 
 	private static Path getPath(final String first, final String text, final String[] fileExtensions,

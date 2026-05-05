@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import javax.swing.AbstractButton;
@@ -45,14 +46,20 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class YukumoJapaneseTtsGuiTest {
 
-	private static Method METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_APPLY_AND_ACCEPT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
 		//
-		(METHOD_TEST_AND_APPLY = Util.getDeclaredMethod(JapanDictGui.class, "testAndApply", Predicate.class,
-				Object.class, FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		final Class<?> clz = YukumoJapaneseTtsGui.class;
 		//
+		(METHOD_TEST_AND_APPLY = Util.getDeclaredMethod(clz, "testAndApply", Predicate.class, Object.class,
+				FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		//
+		(METHOD_APPLY_AND_ACCEPT = Util.getDeclaredMethod(clz, "applyAndAccept", FailableFunction.class, Object.class,
+				Consumer.class)).setAccessible(true);
+		//
+
 	}
 
 	private static class IH implements InvocationHandler {
@@ -365,6 +372,21 @@ class YukumoJapaneseTtsGuiTest {
 		FieldUtils.writeDeclaredField(instance, "btnDownload", btnDownload, true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnDownload, 0, null)));
+		//
+	}
+
+	@Test
+	void testApplyAndAccept() throws Exception {
+		//
+		final FailableFunction<?, ?, ?> failableFunction = x -> {
+			//
+			throw new RuntimeException();
+			//
+		};
+		//
+		Assertions.assertNull(
+				METHOD_APPLY_AND_ACCEPT != null ? METHOD_APPLY_AND_ACCEPT.invoke(null, failableFunction, null, null)
+						: null);
 		//
 	}
 
