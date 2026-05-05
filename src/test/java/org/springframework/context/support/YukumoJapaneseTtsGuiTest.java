@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
@@ -50,7 +51,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class YukumoJapaneseTtsGuiTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_APPLY_AND_ACCEPT, METHOD_ACCEPT_AND_ACCEPT, METHOD_IIF,
-			METHOD_TEST_AND_ACCEPT, METHOD_TEST_AND_GET = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_TEST_AND_GET, METHOD_GET_ITEM_AT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -72,6 +73,9 @@ class YukumoJapaneseTtsGuiTest {
 				Object.class, BiConsumer.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_GET = Util.getDeclaredMethod(clz, "testAndGet", Boolean.TYPE, Supplier.class, Supplier.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_ITEM_AT = Util.getDeclaredMethod(clz, "getItemAt", JComboBox.class, Integer.TYPE))
 				.setAccessible(true);
 		//
 	}
@@ -490,6 +494,15 @@ class YukumoJapaneseTtsGuiTest {
 		Assertions.assertNull(invoke(METHOD_TEST_AND_GET, null, Boolean.TRUE, null, null));
 		//
 		Assertions.assertNull(invoke(METHOD_TEST_AND_GET, null, Boolean.FALSE, null, null));
+		//
+	}
+
+	@Test
+	void testGetItemAt() throws IllegalAccessException, InvocationTargetException {
+		//
+		final Object object = new Object();
+		//
+		Assertions.assertSame(object, invoke(METHOD_GET_ITEM_AT, null, new JComboBox<>(new Object[] { object }), 0));
 		//
 	}
 

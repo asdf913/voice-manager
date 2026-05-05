@@ -466,9 +466,9 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 					//
 					final ComboBoxModel<?> cbm = getModel(instance.jcb);
 					//
-					if (NumberUtils.isDigits(string) && instance.jcb != null) {
+					if (NumberUtils.isDigits(string)) {
 						//
-						testAndAccept((c, d) -> d != null, cbm, instance.jcb.getItemAt(Integer.valueOf(string)),
+						testAndAccept((c, d) -> d != null, cbm, getItemAt(instance.jcb, Integer.valueOf(string)),
 								Util::setSelectedItem);
 						//
 					} else {
@@ -477,7 +477,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 						//
 						for (int i = 0; i < Util.getSize(cbm); i++) {
 							//
-							if (Objects.equals(instance.jcb.getItemAt(i), string)
+							if (Objects.equals(getItemAt(instance.jcb, i), string)
 									&& (intList = ObjectUtils.getIfNull(intList, IntList::create)) != null) {
 								//
 								intList.addInt(i);
@@ -508,6 +508,10 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 						//
 				});
 		//
+	}
+
+	private static Object getItemAt(final JComboBox<?> instance, final int index) {
+		return instance != null && getModel(instance) != null ? instance.getItemAt(index) : null;
 	}
 
 	private static <T> ComboBoxModel<T> getModel(final JComboBox<T> instance) {
