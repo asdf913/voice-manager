@@ -134,12 +134,8 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 				final Browser browser = BrowserTypeUtil.launch(PlaywrightUtil.chromium(playwright));
 				final Page page = BrowserUtil.newPage(browser)) {
 			//
-			if (!isTestMode()) {
-				//
-				PageUtil.navigate(page, URL);
-				//
-			} // if
-				//
+			testAndRun(!isTestMode(), () -> PageUtil.navigate(page, URL));
+			//
 			final Iterable<ElementHandle> es = PageUtil.querySelectorAll(page, "option");
 			//
 			for (int i = 0; i < IterableUtils.size(es); i++) {
@@ -150,6 +146,12 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 				//
 		} // try
 			//
+	}
+
+	private static <T> void testAndRun(final boolean condition, final Runnable runnable) {
+		if (condition) {
+			Util.run(runnable);
+		}
 	}
 
 	@Override
@@ -447,12 +449,8 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 			//
 			jFrame.pack();
 			//
-			if (!isTestMode()) {
-				//
-				jFrame.setVisible(true);
-				//
-			} // if
-				//
+			testAndRun(!isTestMode(), () -> jFrame.setVisible(true));
+			//
 		} // if
 			//
 		final Map<?, ?> map = System.getProperties();
