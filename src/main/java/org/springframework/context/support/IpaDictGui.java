@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -209,7 +210,7 @@ public class IpaDictGui extends JPanel implements InitializingBean, ActionListen
 			//
 	}
 
-	private static <T> void addElement(final DefaultListModel<T> instance, final T value) {
+	private static <T> void addElement(@Nullable final DefaultListModel<T> instance, final T value) {
 		//
 		if (instance == null) {
 			//
@@ -238,7 +239,7 @@ public class IpaDictGui extends JPanel implements InitializingBean, ActionListen
 		//
 	}
 
-	private static void removeAllElements(final DefaultListModel<?> instance) {
+	private static void removeAllElements(@Nullable final DefaultListModel<?> instance) {
 		//
 		if (instance == null) {
 			//
