@@ -14,7 +14,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -47,7 +46,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class YukumoJapaneseTtsGuiTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_APPLY_AND_ACCEPT, METHOD_ACCEPT_AND_ACCEPT = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_APPLY_AND_ACCEPT, METHOD_ACCEPT_AND_ACCEPT, METHOD_IIF = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -63,7 +62,8 @@ class YukumoJapaneseTtsGuiTest {
 		(METHOD_ACCEPT_AND_ACCEPT = Util.getDeclaredMethod(clz, "acceptAndAccept", FailableConsumer.class, Object.class,
 				Consumer.class)).setAccessible(true);
 		//
-
+		(METHOD_IIF = Util.getDeclaredMethod(clz, "iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -193,6 +193,8 @@ class YukumoJapaneseTtsGuiTest {
 		//
 		Class<?>[] parameterTypes = null;
 		//
+		Collection<Object> collection = null;
+		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()
@@ -202,7 +204,23 @@ class YukumoJapaneseTtsGuiTest {
 				//
 			} // if
 				//
-			os = Util.toArray(Collections.nCopies(parameterTypes.length, null));
+			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
+			//
+			for (int j = 0; j < parameterTypes.length; j++) {
+				//
+				if (Objects.equals(ArrayUtils.get(parameterTypes, j), Boolean.TYPE)) {
+					//
+					Util.add(collection, Boolean.TRUE);
+					//
+				} else {
+					//
+					Util.add(collection, null);
+					//
+				} // if
+					//
+			} // for
+				//
+			os = Util.toArray(collection);
 			//
 			name = Util.getName(m);
 			//
@@ -302,6 +320,10 @@ class YukumoJapaneseTtsGuiTest {
 					//
 					Util.add(collection, new ByteArrayInputStream(new byte[] {}));
 					//
+				} else if (Objects.equals(parameterType, Boolean.TYPE)) {
+					//
+					Util.add(collection, Boolean.TRUE);
+					//
 				} else {
 					//
 					Util.add(collection, Narcissus.allocateInstance(parameterType));
@@ -321,8 +343,11 @@ class YukumoJapaneseTtsGuiTest {
 				if (Objects.equals(Util.getReturnType(m), Boolean.TYPE)
 						|| Boolean.logicalAnd(Objects.equals(name, "readAllBytes"),
 								Arrays.equals(parameterTypes, new Class<?>[] { InputStream.class }))
-						|| Boolean.logicalAnd(Objects.equals(name, "getPath"), Arrays.equals(parameterTypes,
-								new Class<?>[] { String.class, String.class, String[].class, String.class }))) {
+						|| Boolean.logicalAnd(Objects.equals(name, "getPath"),
+								Arrays.equals(parameterTypes,
+										new Class<?>[] { String.class, String.class, String[].class, String.class }))
+						|| Boolean.logicalAnd(Objects.equals(name, "iif"), Arrays.equals(parameterTypes,
+								new Class<?>[] { Boolean.TYPE, Object.class, Object.class }))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -408,6 +433,15 @@ class YukumoJapaneseTtsGuiTest {
 		};
 		//
 		Assertions.assertNull(invoke(METHOD_ACCEPT_AND_ACCEPT, null, failableConsumer, null, null));
+		//
+	}
+
+	@Test
+	void testIif() throws IllegalAccessException, InvocationTargetException {
+		//
+		final Object object = new Object();
+		//
+		Assertions.assertSame(object, invoke(METHOD_IIF, null, Boolean.FALSE, null, object));
 		//
 	}
 

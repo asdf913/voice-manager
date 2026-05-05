@@ -170,9 +170,8 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 					final JFileChooser jfc = new JFileChooser();
 					//
 					jfc.setSelectedFile(Util.toFile(getPath(".", text, getFileExtensions(ci),
-							StringsUtil.startsWith(Strings.CI, getMessage(ci), "Audio file with ID3 version 2.4")
-									? "mp3"
-									: null)));
+							iif(StringsUtil.startsWith(Strings.CI, getMessage(ci), "Audio file with ID3 version 2.4"),
+									"mp3", null))));
 					//
 					if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 						//
@@ -196,6 +195,10 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 				//
 		} // if
 			//
+	}
+
+	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) {
+		return condition ? trueValue : falseValue;
 	}
 
 	private static <T, E extends Exception> void acceptAndAccept(final FailableConsumer<T, E> consumer, final T value,
