@@ -224,10 +224,12 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 			//
 	}
 
+	@Nullable
 	private static String getMessage(@Nullable final Throwable instance) {
 		return instance != null ? instance.getMessage() : null;
 	}
 
+	@Nullable
 	private static byte[] readAllBytes(final String url) throws IOException {
 		//
 		final Iterable<Field> fs = Util.toList(Util.filter(
@@ -255,6 +257,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 			//
 	}
 
+	@Nullable
 	private static <T, R, E extends Exception> R applyAndAccept(final FailableFunction<T, R, E> function, final T value,
 			final Consumer<Throwable> throwableConsumer) {
 		//
