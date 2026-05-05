@@ -277,7 +277,10 @@ class YukumoJapaneseTtsGuiTest {
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()
-					|| (parameterTypes = m.getParameterTypes()) == null) {
+					|| (parameterTypes = m.getParameterTypes()) == null
+					|| Util.and(StringsUtil.equals(Strings.CI, "true", System.getenv("GITHUB_ACTIONS")),
+							Objects.equals(name = Util.getName(m), "play"),
+							Arrays.equals(parameterTypes, new Class<?>[] { byte[].class }))) {
 				//
 				continue;
 				//
@@ -310,8 +313,6 @@ class YukumoJapaneseTtsGuiTest {
 			os = Util.toArray(collection);
 			//
 			toString = Objects.toString(m);
-			//
-			name = Util.getName(m);
 			//
 			if (Util.isStatic(m)) {
 				//
