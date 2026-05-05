@@ -40,7 +40,6 @@ import org.junit.jupiter.api.Test;
 import org.oxbow.swingbits.util.OperatingSystem;
 import org.oxbow.swingbits.util.OperatingSystemUtil;
 
-import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Request;
