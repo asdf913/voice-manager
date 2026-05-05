@@ -4,10 +4,10 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -188,11 +188,11 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 								//
 								final String[] fileExtensions = ci.getFileExtensions();
 								//
-								jfc.setSelectedFile(new File(".",
+								jfc.setSelectedFile(Util.toFile(Path.of(".",
 										String.join(".", text,
 												fileExtensions != null && fileExtensions.length == 1
 														? ArrayUtils.get(fileExtensions, 0)
-														: "mp3")));
+														: "mp3"))));
 								//
 								if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 									//
