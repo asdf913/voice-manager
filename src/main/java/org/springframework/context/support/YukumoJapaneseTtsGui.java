@@ -13,6 +13,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
@@ -35,6 +36,7 @@ import javax.swing.text.JTextComponent;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.StringsUtil;
@@ -42,7 +44,9 @@ import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.d2ab.collection.ints.IntList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -450,9 +454,55 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 				//
 		} // if
 			//
-		testAndAccept(Util::containsKey, System.getProperties(),
-				"org.springframework.context.support.YukumoJapaneseTtsGui.text",
+		final Map<?, ?> map = System.getProperties();
+		//
+		testAndAccept(Util::containsKey, map, "org.springframework.context.support.YukumoJapaneseTtsGui.text",
 				(a, b) -> Util.setText(instance.tfText, Util.toString(Util.get(a, b))));
+		//
+		testAndAccept(Util::containsKey, map, "org.springframework.context.support.YukumoJapaneseTtsGui.voice",
+				(a, b) -> {
+					//
+					final String string = Util.toString(Util.get(a, b));
+					//
+					if (NumberUtils.isDigits(string) && instance.jcb != null) {
+						//
+						testAndAccept((c, d) -> d != null, instance.jcb.getModel(),
+								instance.jcb.getItemAt(Integer.valueOf(string)), Util::setSelectedItem);
+						//
+					} else {
+						//
+						IntList intList = null;
+						//
+						for (int i = 0; instance.jcb != null && i < Util.getSize(instance.jcb.getModel()); i++) {
+							//
+							if (Objects.equals(instance.jcb.getItemAt(i), string)
+									&& (intList = ObjectUtils.getIfNull(intList, IntList::create)) != null) {
+								//
+								intList.addInt(i);
+								//
+							} // if
+								//
+						} // for
+							//
+						if (intList != null) {
+							//
+							final int size = intList.size();
+							//
+							if (size > 1) {
+								//
+								throw new IllegalArgumentException();
+								//
+							} else if (size == 1) {
+								//
+								Util.setSelectedIndex(instance.jcb, intList.getInt(0));
+								//
+							} // if
+								//
+						} // if
+							//
+					} // if
+						//
+				});
 		//
 	}
 
