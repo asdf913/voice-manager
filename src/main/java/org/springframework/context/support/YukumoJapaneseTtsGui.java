@@ -231,7 +231,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 			//
 	}
 
-	private static void onRequest(final Page instance, final Consumer<Request> handler) {
+	private static void onRequest(@Nullable final Page instance, final Consumer<Request> handler) {
 		if (instance != null) {
 			instance.onRequest(handler);
 		}
