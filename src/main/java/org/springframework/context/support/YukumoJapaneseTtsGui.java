@@ -150,7 +150,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 			//
 	}
 
-	private static <T> void testAndRun(final boolean condition, final Runnable runnable) {
+	private static void testAndRun(final boolean condition, final Runnable runnable) {
 		if (condition) {
 			Util.run(runnable);
 		}
