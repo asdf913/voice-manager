@@ -274,6 +274,7 @@ public class IpaDictGui extends JPanel implements InitializingBean, ActionListen
 		}
 	}
 
+	@Nullable
 	private static Clipboard getSystemClipboard(final Toolkit instance) {
 		//
 		if (instance == null
