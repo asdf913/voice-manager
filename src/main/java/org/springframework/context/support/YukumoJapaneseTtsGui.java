@@ -490,11 +490,13 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 							//
 							final int size = intList.size();
 							//
-							if (size > 1) {
+							testAndRun(size > 1, () -> {
 								//
 								throw new IllegalArgumentException();
 								//
-							} else if (size == 1) {
+							});
+							//
+							if (size == 1) {
 								//
 								Util.setSelectedIndex(instance.jcb, intList.getInt(0));
 								//
