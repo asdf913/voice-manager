@@ -774,7 +774,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 
 		};
 		//
-		final TableColumnModel tcmStroke = jTableStroke.getColumnModel();
+		final TableColumnModel tcmStroke = Util.getColumnModel(jTableStroke);
 		//
 		Util.forEach(IntStream.iterate(0, i -> i < getColumnCount(tcmStroke), i -> i + 1), i -> {
 			//
@@ -825,7 +825,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		jTableLink.setDefaultRenderer(Object.class,
 				createTableCellRenderer(jTableLink.getDefaultRenderer(Object.class)));
 		//
-		final TableColumnModel tcm = getColumnModel(jTableLink);
+		final TableColumnModel tcm = Util.getColumnModel(jTableLink);
 		//
 		setMinWidth(getColumn(tcm, 0), 87);
 		//
@@ -1394,11 +1394,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		};
 		//
-	}
-
-	@Nullable
-	private static TableColumnModel getColumnModel(@Nullable final JTable instance) {
-		return instance != null ? instance.getColumnModel() : null;
 	}
 
 	@Nullable
@@ -2188,18 +2183,18 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 	@Nullable
 	private static Component prepareRenderer(@Nullable final JTable instance,
 			@Nullable final TableCellRenderer tableCellRenderer, final int row, final int column) {
-		return instance != null && getColumnModel(instance) != null && tableCellRenderer != null
+		return instance != null && Util.getColumnModel(instance) != null && tableCellRenderer != null
 				? instance.prepareRenderer(tableCellRenderer, row, column)
 				: null;
 	}
 
 	@Nullable
 	private static TableCellRenderer getCellRenderer(@Nullable final JTable instance, final int row, final int column) {
-		return instance != null && getColumnModel(instance) != null ? instance.getCellRenderer(row, column) : null;
+		return instance != null && Util.getColumnModel(instance) != null ? instance.getCellRenderer(row, column) : null;
 	}
 
 	private static int getColumnCount(@Nullable final JTable instance) {
-		return instance != null && getColumnModel(instance) != null ? instance.getColumnCount() : 0;
+		return instance != null && Util.getColumnModel(instance) != null ? instance.getColumnCount() : 0;
 	}
 
 	private static JapanDictEntry getJapanDictEntry(final Element e, final Pattern patternHiragana,

@@ -206,17 +206,18 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		add(new JLabel("Entry"));
 		//
-		final TableColumnModel tcm = (jTable = new JTable(dtmWiktionaryEntry = new DefaultTableModel(new Object[] {
-				"Language", "IPA", "Hiragana", "Hiragana Image", "Pitch Accent", "Pitch Accent Pattern", "Text" }, 0) {
+		final TableColumnModel tcm = Util.getColumnModel(
+				jTable = new JTable(dtmWiktionaryEntry = new DefaultTableModel(new Object[] { "Language", "IPA",
+						"Hiragana", "Hiragana Image", "Pitch Accent", "Pitch Accent Pattern", "Text" }, 0) {
 
-			@Override
-			public boolean isCellEditable(final int row, final int column) {
-				//
-				return false;
-				//
-			}
+					@Override
+					public boolean isCellEditable(final int row, final int column) {
+						//
+						return false;
+						//
+					}
 
-		})).getColumnModel();
+				}));
 		//
 		setMinWidth(getColumn(tcm, 0), 40);
 		//

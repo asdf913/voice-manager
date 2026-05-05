@@ -78,6 +78,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 
@@ -2445,6 +2446,10 @@ public abstract class Util {
 	@Nullable
 	static Object getValueAt(@Nullable final TableModel instance, final int row, final int column) {
 		return instance != null ? instance.getValueAt(row, column) : null;
+	}
+
+	static TableColumnModel getColumnModel(final JTable instance) {
+		return instance != null ? instance.getColumnModel() : null;
 	}
 
 	@Nullable
