@@ -884,7 +884,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 								}
 							}));
 					//
-					setContents(
+					Util.setContents(
 							testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 									() -> getSystemClipboard(Toolkit.getDefaultToolkit()), null),
 							new StringSelection(ObjectMapperUtil.writeValueAsString(
@@ -927,7 +927,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 				} // try
 					//
-				setContents(
+				Util.setContents(
 						testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 								() -> getSystemClipboard(Toolkit.getDefaultToolkit()), null),
 						Reflection.newProxy(Transferable.class, ih), null);
@@ -1049,7 +1049,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 				} // try
 					//
-				setContents(
+				Util.setContents(
 						testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 								() -> getSystemClipboard(Toolkit.getDefaultToolkit()), null),
 						Reflection.newProxy(Transferable.class, ih), null);
@@ -1147,13 +1147,6 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 	@Nullable
 	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		return instance != null && !GraphicsEnvironment.isHeadless() ? instance.getSystemClipboard() : null;
-	}
-
-	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
-			@Nullable final ClipboardOwner owner) {
-		if (instance != null) {
-			instance.setContents(contents, owner);
-		}
 	}
 
 	@Nullable

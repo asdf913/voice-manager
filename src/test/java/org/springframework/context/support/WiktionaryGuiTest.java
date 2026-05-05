@@ -197,18 +197,6 @@ class WiktionaryGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof BiFunction && Objects.equals(name, "apply")) {
-				//
-				return null;
-				//
-			} else if (proxy instanceof TableCellRenderer && Objects.equals(name, "getTableCellRendererComponent")) {
-				//
-				return null;
-				//
-			} else if (proxy instanceof TableModel && Objects.equals(name, "getValueAt")) {
-				//
-				return null;
-				//
 			} else if (Boolean.logicalAnd(Objects.equals(name, "test"),
 					Boolean.logicalOr(proxy instanceof FailablePredicate, proxy instanceof BiPredicate))) {
 				//
@@ -219,10 +207,6 @@ class WiktionaryGuiTest {
 				return null;
 				//
 			} else if (proxy instanceof Page && Objects.equals(name, "querySelector")) {
-				//
-				return null;
-				//
-			} else if (proxy instanceof ElementHandle && Objects.equals(name, "querySelector")) {
 				//
 				return null;
 				//
@@ -436,10 +420,6 @@ class WiktionaryGuiTest {
 					//
 					Util.add(collection, new JLabel());
 					//
-				} else if (Objects.equals(parameterType, URLConnection.class)) {
-					//
-					Util.add(collection, Util.openConnection(Util.toURL(toUri(Path.of("pom.xml")))));
-					//
 				} else if (isArray(parameterType)) {
 					//
 					Util.add(collection, Array.newInstance(getComponentType(parameterType), 0));
@@ -455,10 +435,6 @@ class WiktionaryGuiTest {
 				} else if (Objects.equals(parameterType, Toolkit.class)) {
 					//
 					Util.add(collection, Toolkit.getDefaultToolkit());
-					//
-				} else if (Objects.equals(parameterType, AbstractButton.class)) {
-					//
-					Util.add(collection, new JButton());
 					//
 				} else if (parameterType != null && Modifier.isAbstract(parameterType.getModifiers())) {
 					//
