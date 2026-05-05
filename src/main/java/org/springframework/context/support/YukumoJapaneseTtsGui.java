@@ -19,7 +19,9 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -50,11 +52,13 @@ import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserTypeUtil;
 import com.microsoft.playwright.BrowserUtil;
 import com.microsoft.playwright.ElementHandle;
+import com.microsoft.playwright.ElementHandleUtil;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.PageUtil;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.PlaywrightUtil;
 import com.microsoft.playwright.Request;
+import com.microsoft.playwright.options.SelectOption;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javazoom.jl.decoder.JavaLayerException;
@@ -83,6 +87,8 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 
 	private AbstractButton btnDownload = null;
 
+	private JComboBox<String> jcb = null;
+
 	private YukumoJapaneseTtsGui() {
 		//
 	}
@@ -102,6 +108,10 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 		//
 		add(tfText = new JTextField(), String.format("wmin %1$s", 100));
 		//
+		final DefaultComboBoxModel<String> dcbm = new DefaultComboBoxModel<>();
+		//
+		add(jcb = new JComboBox<>(dcbm));
+		//
 		add(btnPlay = new JButton("Play"));
 		//
 		add(btnDownload = new JButton("Download"), "wrap");
@@ -113,6 +123,26 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 						f -> Util.cast(AbstractButton.class, Narcissus.getField(this, f))),
 				x -> Util.addActionListener(x, this));
 		//
+		try (final Playwright playwright = Playwright.create();
+				final Browser browser = BrowserTypeUtil.launch(PlaywrightUtil.chromium(playwright));
+				final Page page = BrowserUtil.newPage(browser)) {
+			//
+			if (!isTestMode()) {
+				//
+				PageUtil.navigate(page, URL);
+				//
+			} // if
+				//
+			final Iterable<ElementHandle> es = PageUtil.querySelectorAll(page, "option");
+			//
+			for (int i = 0; i < IterableUtils.size(es); i++) {
+				//
+				Util.addElement(dcbm, ElementHandleUtil.textContent(IterableUtils.get(es, i)));
+				//
+			} // for
+				//
+		} // try
+			//
 	}
 
 	@Override
@@ -141,7 +171,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 					//
 				});
 				//
-				clickPlayButton(URL, page, Util.getText(tfText));
+				clickPlayButton(URL, page, Util.getText(tfText), jcb != null ? jcb.getSelectedIndex() : 0);
 				//
 			} // try
 				//
@@ -189,7 +219,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 						//
 				});
 				//
-				clickPlayButton(URL, page, text);
+				clickPlayButton(URL, page, text, jcb != null ? jcb.getSelectedIndex() : 0);
 				//
 			} // try
 				//
@@ -337,7 +367,8 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 		return instance != null ? instance.readAllBytes() : null;
 	}
 
-	private static void clickPlayButton(final String url, @Nullable final Page page, @Nullable final String text) {
+	private static void clickPlayButton(final String url, @Nullable final Page page, @Nullable final String text,
+			final int index) {
 		//
 		PageUtil.navigate(page, url);
 		//
@@ -347,6 +378,13 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 		if (element != null && text != null) {
 			//
 			element.fill(text);
+			//
+		} // if
+			//
+		if ((element = testAndApply(x -> IterableUtils.size(x) == 1, PageUtil.querySelectorAll(page, "select"),
+				x -> IterableUtils.get(x, 0), null)) != null) {
+			//
+			element.selectOption(new SelectOption().setIndex(index));
 			//
 		} // if
 			//

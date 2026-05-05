@@ -193,6 +193,8 @@ class YukumoJapaneseTtsGuiTest {
 		//
 		Class<?>[] parameterTypes = null;
 		//
+		Class<?> parameterType = null;
+		//
 		Collection<Object> collection = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
@@ -208,9 +210,13 @@ class YukumoJapaneseTtsGuiTest {
 			//
 			for (int j = 0; j < parameterTypes.length; j++) {
 				//
-				if (Objects.equals(ArrayUtils.get(parameterTypes, j), Boolean.TYPE)) {
+				if (Objects.equals(parameterType = ArrayUtils.get(parameterTypes, j), Boolean.TYPE)) {
 					//
 					Util.add(collection, Boolean.TRUE);
+					//
+				} else if (Objects.equals(parameterType, Integer.TYPE)) {
+					//
+					Util.add(collection, Integer.valueOf(0));
 					//
 				} else {
 					//
@@ -323,6 +329,10 @@ class YukumoJapaneseTtsGuiTest {
 				} else if (Objects.equals(parameterType, Boolean.TYPE)) {
 					//
 					Util.add(collection, Boolean.TRUE);
+					//
+				} else if (Objects.equals(parameterType, Integer.TYPE)) {
+					//
+					Util.add(collection, Integer.valueOf(0));
 					//
 				} else {
 					//
