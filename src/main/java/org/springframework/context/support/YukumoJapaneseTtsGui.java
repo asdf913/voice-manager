@@ -511,10 +511,12 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 		}
 	}
 
+	@Nullable
 	private static Object getItemAt(@Nullable final JComboBox<?> instance, final int index) {
 		return instance != null && getModel(instance) != null ? instance.getItemAt(index) : null;
 	}
 
+	@Nullable
 	private static <T> ComboBoxModel<T> getModel(@Nullable final JComboBox<T> instance) {
 		return instance != null ? instance.getModel() : null;
 	}
