@@ -124,36 +124,39 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 				//
 				onRequest(page, x -> {
 					//
-					if (Objects.equals(resourceType(x), "media")) {
+					if (!Objects.equals(resourceType(x), "media")) {
 						//
-						byte[] bs = null;
+						return;
 						//
-						try (final InputStream is = Util.openStream(new URL(x.url()))) {
+					} // if
+						//
+					byte[] bs = null;
+					//
+					try (final InputStream is = Util.openStream(new URL(x.url()))) {
+						//
+						bs = readAllBytes(is);
+						//
+					} catch (final IOException e) {
+						//
+						LoggerUtil.error(LOG, e.getMessage(), e);
+						//
+					} // try
+						//
+					if (Objects.equals(
+							getMessage(
+									testAndApply(Objects::nonNull, bs, y -> new ContentInfoUtil().findMatch(y), null)),
+							"Audio file with ID3 version 2.4, MP3 encoding")) {
+						//
+						try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new,
+								null)) {
 							//
-							bs = readAllBytes(is);
+							PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
 							//
-						} catch (final IOException e) {
+						} catch (final IOException | JavaLayerException e) {
 							//
 							LoggerUtil.error(LOG, e.getMessage(), e);
 							//
 						} // try
-							//
-						if (Objects.equals(getMessage(
-								testAndApply(Objects::nonNull, bs, y -> new ContentInfoUtil().findMatch(y), null)),
-								"Audio file with ID3 version 2.4, MP3 encoding")) {
-							//
-							try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new,
-									null)) {
-								//
-								PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
-								//
-							} catch (final IOException | JavaLayerException e) {
-								//
-								LoggerUtil.error(LOG, e.getMessage(), e);
-								//
-							} // try
-								//
-						} // if
 							//
 					} // if
 						//
@@ -173,42 +176,44 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 				//
 				onRequest(page, x -> {
 					//
-					if (Objects.equals(resourceType(x), "media")) {
+					if (!Objects.equals(resourceType(x), "media")) {
 						//
-						byte[] bs = null;
+						return;
 						//
-						try (final InputStream is = Util.openStream(new URL(url(x)))) {
-							//
-							bs = readAllBytes(is);
-							//
-						} catch (final IOException e) {
-							//
-							LoggerUtil.error(LOG, e.getMessage(), e);
-							//
-						} // try
-							//
-						final ContentInfo ci = testAndApply(Objects::nonNull, bs,
-								y -> new ContentInfoUtil().findMatch(y), null);
+					} // if
 						//
-						if (Objects.equals(getMessage(ci), "Audio file with ID3 version 2.4, MP3 encoding")) {
+					byte[] bs = null;
+					//
+					try (final InputStream is = Util.openStream(new URL(url(x)))) {
+						//
+						bs = readAllBytes(is);
+						//
+					} catch (final IOException e) {
+						//
+						LoggerUtil.error(LOG, e.getMessage(), e);
+						//
+					} // try
+						//
+					final ContentInfo ci = testAndApply(Objects::nonNull, bs, y -> new ContentInfoUtil().findMatch(y),
+							null);
+					//
+					if (Objects.equals(getMessage(ci), "Audio file with ID3 version 2.4, MP3 encoding")) {
+						//
+						final JFileChooser jfc = new JFileChooser();
+						//
+						jfc.setSelectedFile(Util.toFile(getPath(".", text, getFileExtensions(ci), "mp3")));
+						//
+						if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 							//
-							final JFileChooser jfc = new JFileChooser();
-							//
-							jfc.setSelectedFile(Util.toFile(getPath(".", text, getFileExtensions(ci), "mp3")));
-							//
-							if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+							try {
 								//
-								try {
-									//
-									FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
-									//
-								} catch (final IOException e) {
-									//
-									LoggerUtil.error(LOG, e.getMessage(), e);
-									//
-								} // try
-									//
-							} // if
+								FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
+								//
+							} catch (final IOException e) {
+								//
+								LoggerUtil.error(LOG, e.getMessage(), e);
+								//
+							} // try
 								//
 						} // if
 							//
