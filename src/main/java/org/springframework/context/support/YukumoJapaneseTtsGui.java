@@ -227,7 +227,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 			//
 	}
 
-	private static int getSelectedIndex(final JComboBox<?> instance) {
+	private static int getSelectedIndex(@Nullable final JComboBox<?> instance) {
 		//
 		final Iterable<Field> fs = Util.toList(Util.filter(
 				Util.stream(
