@@ -159,7 +159,8 @@ public class IpaDictGui extends JPanel implements InitializingBean, ActionListen
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T t,
-			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
 		return Util.test(predicate, t) ? FailableFunctionUtil.apply(functionTrue, t)
 				: FailableFunctionUtil.apply(functionFalse, t);
 	}
