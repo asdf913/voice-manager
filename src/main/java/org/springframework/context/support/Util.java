@@ -2448,6 +2448,7 @@ public abstract class Util {
 		return instance != null ? instance.getValueAt(row, column) : null;
 	}
 
+	@Nullable
 	static TableColumnModel getColumnModel(@Nullable final JTable instance) {
 		return instance != null ? instance.getColumnModel() : null;
 	}
