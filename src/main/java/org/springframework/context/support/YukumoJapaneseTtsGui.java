@@ -6,6 +6,10 @@ import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Objects;
@@ -59,7 +63,16 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 
 	private JTextComponent tfText = null;
 
-	private AbstractButton btnPlay, btnDownload = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("Play")
+	private AbstractButton btnPlay = null;
+
+	private AbstractButton btnDownload = null;
 
 	private YukumoJapaneseTtsGui() {
 		//
