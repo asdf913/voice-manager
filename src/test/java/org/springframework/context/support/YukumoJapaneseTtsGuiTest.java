@@ -236,7 +236,7 @@ class YukumoJapaneseTtsGuiTest {
 				//
 				result = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Objects.equals(Util.getReturnType(m), Boolean.TYPE)
+				if (Util.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE), Util.getReturnType(m))
 						|| Boolean.logicalAnd(Objects.equals(name, "getPath"), Arrays.equals(parameterTypes,
 								new Class<?>[] { String.class, String.class, String[].class, String.class }))) {
 					//
@@ -350,7 +350,7 @@ class YukumoJapaneseTtsGuiTest {
 				//
 				result = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Objects.equals(Util.getReturnType(m), Boolean.TYPE)
+				if (Util.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE), Util.getReturnType(m))
 						|| Boolean.logicalAnd(Objects.equals(name, "readAllBytes"),
 								Arrays.equals(parameterTypes, new Class<?>[] { InputStream.class }))
 						|| Boolean.logicalAnd(Objects.equals(name, "getPath"),
