@@ -10,6 +10,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Objects;
@@ -30,6 +31,7 @@ import javax.swing.text.JTextComponent;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -192,13 +194,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 							//
 							final JFileChooser jfc = new JFileChooser();
 							//
-							final String[] fileExtensions = getFileExtensions(ci);
-							//
-							jfc.setSelectedFile(Util.toFile(Path.of(".",
-									String.join(".", text,
-											fileExtensions != null && fileExtensions.length == 1
-													? ArrayUtils.get(fileExtensions, 0)
-													: "mp3"))));
+							jfc.setSelectedFile(Util.toFile(getPath(".", text, getFileExtensions(ci), "mp3")));
 							//
 							if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 								//
@@ -226,6 +222,35 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 				//
 		} // if
 			//
+	}
+
+	private static Path getPath(final String first, final String text, final String[] fileExtensions,
+			final String fileExtension) {
+		//
+		final Iterable<Field> fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(String.class)),
+				f -> Objects.equals(Util.getName(f), "value")));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		final Predicate<String> predicate = x -> x == null || Narcissus.getField(x, f) == null;
+		//
+		final FailableFunction<String, String, RuntimeException> function = x -> "";
+		//
+		final FailableFunction<String, String, RuntimeException> identity = FailableFunction.identity();
+		//
+		return Path
+				.of(testAndApply(predicate, first, function, identity),
+						String.join(".", testAndApply(predicate, text, function, identity),
+								StringUtils.defaultString(fileExtensions != null && fileExtensions.length == 1
+										? ArrayUtils.get(fileExtensions, 0)
+										: testAndApply(predicate, fileExtension, function, identity))));
+		//
 	}
 
 	private static String[] getFileExtensions(final ContentInfo instance) {

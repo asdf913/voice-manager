@@ -171,7 +171,7 @@ class YukumoJapaneseTtsGuiTest {
 		//
 		Object[] os = null;
 		//
-		String toString = null;
+		String name, toString = null;
 		//
 		Object result = null;
 		//
@@ -188,13 +188,17 @@ class YukumoJapaneseTtsGuiTest {
 				//
 			os = Util.toArray(Collections.nCopies(parameterTypes.length, null));
 			//
+			name = Util.getName(m);
+			//
 			toString = Util.toString(m);
 			//
 			if (Util.isStatic(m)) {
 				//
 				result = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Objects.equals(Util.getReturnType(m), Boolean.TYPE)) {
+				if (Objects.equals(Util.getReturnType(m), Boolean.TYPE)
+						|| Boolean.logicalAnd(Objects.equals(name, "getPath"), Arrays.equals(parameterTypes,
+								new Class<?>[] { String.class, String.class, String[].class, String.class }))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
@@ -299,7 +303,9 @@ class YukumoJapaneseTtsGuiTest {
 				//
 				if (Objects.equals(Util.getReturnType(m), Boolean.TYPE)
 						|| Boolean.logicalAnd(Objects.equals(name, "readAllBytes"),
-								Arrays.equals(parameterTypes, new Class<?>[] { InputStream.class }))) {
+								Arrays.equals(parameterTypes, new Class<?>[] { InputStream.class }))
+						|| Boolean.logicalAnd(Objects.equals(name, "getPath"), Arrays.equals(parameterTypes,
+								new Class<?>[] { String.class, String.class, String[].class, String.class }))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
