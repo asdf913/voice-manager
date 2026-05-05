@@ -133,10 +133,10 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 					final byte[] bs = applyAndAccept(YukumoJapaneseTtsGui::readAllBytes, url(x),
 							e -> LoggerUtil.error(LOG, getMessage(e), e));
 					//
-					if (Objects.equals(
-							getMessage(
-									testAndApply(Objects::nonNull, bs, y -> new ContentInfoUtil().findMatch(y), null)),
-							"Audio file with ID3 version 2.4, MP3 encoding")) {
+					final ContentInfo ci = testAndApply(Objects::nonNull, bs, y -> new ContentInfoUtil().findMatch(y),
+							null);
+					//
+					if (Objects.equals(getMessage(ci), "Audio file with ID3 version 2.4, MP3 encoding")) {
 						//
 						try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new,
 								null)) {
