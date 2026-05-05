@@ -152,7 +152,7 @@ public class IpaDictGui extends JPanel implements InitializingBean, ActionListen
 			//
 	}
 
-	private static void setSelectionMode(final ListSelectionModel instance, final int selectionMode) {
+	private static void setSelectionMode(@Nullable final ListSelectionModel instance, final int selectionMode) {
 		if (instance != null) {
 			instance.setSelectionMode(selectionMode);
 		}
@@ -268,14 +268,15 @@ public class IpaDictGui extends JPanel implements InitializingBean, ActionListen
 		//
 	}
 
-	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner) {
+	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
+			final ClipboardOwner owner) {
 		if (instance != null) {
 			instance.setContents(contents, owner);
 		}
 	}
 
 	@Nullable
-	private static Clipboard getSystemClipboard(final Toolkit instance) {
+	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		//
 		if (instance == null
 				|| Boolean.logicalAnd(Objects.equals(Util.getName(Util.getClass(instance)), "sun.awt.HeadlessToolkit"),
