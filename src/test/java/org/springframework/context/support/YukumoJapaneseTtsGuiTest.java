@@ -19,6 +19,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -49,7 +50,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class YukumoJapaneseTtsGuiTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_APPLY_AND_ACCEPT, METHOD_ACCEPT_AND_ACCEPT, METHOD_IIF,
-			METHOD_TEST_AND_ACCEPT = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_TEST_AND_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -69,6 +70,9 @@ class YukumoJapaneseTtsGuiTest {
 		//
 		(METHOD_TEST_AND_ACCEPT = Util.getDeclaredMethod(clz, "testAndAccept", BiPredicate.class, Object.class,
 				Object.class, BiConsumer.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_GET = Util.getDeclaredMethod(clz, "testAndGet", Boolean.TYPE, Supplier.class, Supplier.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -100,6 +104,10 @@ class YukumoJapaneseTtsGuiTest {
 				return null;
 				//
 			} else if (proxy instanceof Request && Util.contains(Arrays.asList("url", "resourceType"), name)) {
+				//
+				return null;
+				//
+			} else if (proxy instanceof Supplier && Objects.equals(name, "get")) {
 				//
 				return null;
 				//
@@ -473,6 +481,15 @@ class YukumoJapaneseTtsGuiTest {
 			//
 		Assertions.assertNull(
 				invoke(METHOD_TEST_AND_ACCEPT, null, Reflection.newProxy(BiPredicate.class, ih), null, null, null));
+		//
+	}
+
+	@Test
+	void testTestAndGet() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_GET, null, Boolean.TRUE, null, null));
+		//
+		Assertions.assertNull(invoke(METHOD_TEST_AND_GET, null, Boolean.FALSE, null, null));
 		//
 	}
 

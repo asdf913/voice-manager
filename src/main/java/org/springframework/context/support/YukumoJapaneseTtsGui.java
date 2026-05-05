@@ -19,6 +19,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
@@ -436,7 +437,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 		//
 		instance.afterPropertiesSet();
 		//
-		final JFrame jFrame = !GraphicsEnvironment.isHeadless() ? new JFrame() : null;
+		final JFrame jFrame = testAndGet(!GraphicsEnvironment.isHeadless(), () -> new JFrame(), null);
 		//
 		if (jFrame != null) {
 			//
@@ -504,6 +505,11 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 						//
 				});
 		//
+	}
+
+	private static <T> T testAndGet(final boolean condition, final Supplier<T> supplierTrue,
+			final Supplier<T> supplierFalse) {
+		return condition ? Util.get(supplierTrue) : Util.get(supplierFalse);
 	}
 
 	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
