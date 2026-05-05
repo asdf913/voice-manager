@@ -1,7 +1,7 @@
 package org.springframework.context.support;
 
-import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -115,8 +115,6 @@ class YukumoJapaneseTtsGuiTest {
 	private boolean nmcliExists = false;
 
 	private String connectivity = null;
-
-	private final boolean isHeadless = GraphicsEnvironment.isHeadless();
 
 	@BeforeEach
 	void beforeEach() throws Throwable {
@@ -249,7 +247,7 @@ class YukumoJapaneseTtsGuiTest {
 		//
 		String toString = null;
 		//
-		Object result = null;
+		Object name, result = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
@@ -272,6 +270,10 @@ class YukumoJapaneseTtsGuiTest {
 					//
 					Util.add(collection, Array.newInstance(parameterType.getComponentType(), 0));
 					//
+				} else if (Objects.equals(parameterType, InputStream.class)) {
+					//
+					Util.add(collection, new ByteArrayInputStream(new byte[] {}));
+					//
 				} else {
 					//
 					Util.add(collection, Narcissus.allocateInstance(parameterType));
@@ -284,11 +286,15 @@ class YukumoJapaneseTtsGuiTest {
 			//
 			toString = Objects.toString(m);
 			//
+			name = Util.getName(m);
+			//
 			if (Util.isStatic(m)) {
 				//
 				result = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Objects.equals(Util.getReturnType(m), Boolean.TYPE)) {
+				if (Objects.equals(Util.getReturnType(m), Boolean.TYPE)
+						|| Boolean.logicalAnd(Objects.equals(name, "readAllBytes"),
+								Arrays.equals(parameterTypes, new Class<?>[] { InputStream.class }))) {
 					//
 					Assertions.assertNotNull(result, toString);
 					//
