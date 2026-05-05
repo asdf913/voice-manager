@@ -505,7 +505,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 		return instance != null ? instance.getInt(index) : defaultValue;
 	}
 
-	private static void addInt(final IntCollection instance, final int x) {
+	private static void addInt(@Nullable final IntCollection instance, final int x) {
 		if (instance != null) {
 			instance.addInt(x);
 		}
