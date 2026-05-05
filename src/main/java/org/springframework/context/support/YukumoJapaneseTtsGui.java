@@ -136,11 +136,9 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 							//
 						} // try
 							//
-						final ContentInfo ci = testAndApply(Objects::nonNull, bs,
-								y -> new ContentInfoUtil().findMatch(y), null);
-						//
-						if (ci != null
-								&& Objects.equals(ci.getMessage(), "Audio file with ID3 version 2.4, MP3 encoding")) {
+						if (Objects.equals(getMessage(
+								testAndApply(Objects::nonNull, bs, y -> new ContentInfoUtil().findMatch(y), null)),
+								"Audio file with ID3 version 2.4, MP3 encoding")) {
 							//
 							try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new,
 									null)) {
@@ -190,12 +188,11 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 						final ContentInfo ci = testAndApply(Objects::nonNull, bs,
 								y -> new ContentInfoUtil().findMatch(y), null);
 						//
-						if (ci != null
-								&& Objects.equals(ci.getMessage(), "Audio file with ID3 version 2.4, MP3 encoding")) {
+						if (Objects.equals(getMessage(ci), "Audio file with ID3 version 2.4, MP3 encoding")) {
 							//
 							final JFileChooser jfc = new JFileChooser();
 							//
-							final String[] fileExtensions = ci.getFileExtensions();
+							final String[] fileExtensions = getFileExtensions(ci);
 							//
 							jfc.setSelectedFile(Util.toFile(Path.of(".",
 									String.join(".", text,
@@ -229,6 +226,14 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 				//
 		} // if
 			//
+	}
+
+	private static String[] getFileExtensions(final ContentInfo instance) {
+		return instance != null ? instance.getFileExtensions() : null;
+	}
+
+	private static String getMessage(final ContentInfo instance) {
+		return instance != null ? instance.getMessage() : null;
 	}
 
 	private static String url(final Request instance) {
