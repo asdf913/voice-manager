@@ -253,19 +253,19 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 		//
 	}
 
-	private static String[] getFileExtensions(final ContentInfo instance) {
+	private static String[] getFileExtensions(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getFileExtensions() : null;
 	}
 
-	private static String getMessage(final ContentInfo instance) {
+	private static String getMessage(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMessage() : null;
 	}
 
-	private static String url(final Request instance) {
+	private static String url(@Nullable final Request instance) {
 		return instance != null ? instance.url() : null;
 	}
 
-	private static String resourceType(final Request instance) {
+	private static String resourceType(@Nullable final Request instance) {
 		return instance != null ? instance.resourceType() : null;
 	}
 
