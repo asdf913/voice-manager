@@ -13,6 +13,7 @@ import java.lang.annotation.Target;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
@@ -47,6 +48,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.PageUtil;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.PlaywrightUtil;
+import com.microsoft.playwright.Request;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javazoom.jl.decoder.JavaLayerException;
@@ -118,49 +120,45 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 					final Browser browser = BrowserTypeUtil.launch(PlaywrightUtil.chromium(playwright));
 					final Page page = BrowserUtil.newPage(browser)) {
 				//
-				if (page != null) {
+				onRequest(page, x -> {
 					//
-					page.onRequest(x -> {
+					if (x != null && Objects.equals(x.resourceType(), "media")) {
 						//
-						if (x != null && Objects.equals(x.resourceType(), "media")) {
+						byte[] bs = null;
+						//
+						try (final InputStream is = Util.openStream(new URL(x.url()))) {
 							//
-							byte[] bs = null;
+							bs = readAllBytes(is);
 							//
-							try (final InputStream is = Util.openStream(new URL(x.url()))) {
+						} catch (final IOException e) {
+							//
+							LoggerUtil.error(LOG, e.getMessage(), e);
+							//
+						} // try
+							//
+						final ContentInfo ci = testAndApply(Objects::nonNull, bs,
+								y -> new ContentInfoUtil().findMatch(y), null);
+						//
+						if (ci != null
+								&& Objects.equals(ci.getMessage(), "Audio file with ID3 version 2.4, MP3 encoding")) {
+							//
+							try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new,
+									null)) {
 								//
-								bs = readAllBytes(is);
+								PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
 								//
-							} catch (final IOException e) {
+							} catch (final IOException | JavaLayerException e) {
 								//
 								LoggerUtil.error(LOG, e.getMessage(), e);
 								//
 							} // try
 								//
-							final ContentInfo ci = testAndApply(Objects::nonNull, bs,
-									y -> new ContentInfoUtil().findMatch(y), null);
-							//
-							if (ci != null && Objects.equals(ci.getMessage(),
-									"Audio file with ID3 version 2.4, MP3 encoding")) {
-								//
-								try (final InputStream is = testAndApply(Objects::nonNull, bs,
-										ByteArrayInputStream::new, null)) {
-									//
-									PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
-									//
-								} catch (final IOException | JavaLayerException e) {
-									//
-									LoggerUtil.error(LOG, e.getMessage(), e);
-									//
-								} // try
-									//
-							} // if
-								//
 						} // if
 							//
-					});
-					//
-				} // if
-					//
+					} // if
+						//
+				});
+				//
 				clickPlayButton(URL, page, Util.getText(tfText));
 				//
 			} // try
@@ -173,68 +171,70 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 				//
 				final String text = Util.getText(tfText);
 				//
-				if (page != null) {
+				onRequest(page, x -> {
 					//
-					page.onRequest(x -> {
+					if (x != null && Objects.equals(x.resourceType(), "media")) {
 						//
-						if (x != null && Objects.equals(x.resourceType(), "media")) {
+						byte[] bs = null;
+						//
+						try (final InputStream is = Util.openStream(new URL(x.url()))) {
 							//
-							byte[] bs = null;
+							bs = readAllBytes(is);
 							//
-							try (final InputStream is = Util.openStream(new URL(x.url()))) {
-								//
-								bs = readAllBytes(is);
-								//
-							} catch (final IOException e) {
-								//
-								LoggerUtil.error(LOG, e.getMessage(), e);
-								//
-							} // try
-								//
-							final ContentInfo ci = testAndApply(Objects::nonNull, bs,
-									y -> new ContentInfoUtil().findMatch(y), null);
+						} catch (final IOException e) {
 							//
-							if (ci != null && Objects.equals(ci.getMessage(),
-									"Audio file with ID3 version 2.4, MP3 encoding")) {
+							LoggerUtil.error(LOG, e.getMessage(), e);
+							//
+						} // try
+							//
+						final ContentInfo ci = testAndApply(Objects::nonNull, bs,
+								y -> new ContentInfoUtil().findMatch(y), null);
+						//
+						if (ci != null
+								&& Objects.equals(ci.getMessage(), "Audio file with ID3 version 2.4, MP3 encoding")) {
+							//
+							final JFileChooser jfc = new JFileChooser();
+							//
+							final String[] fileExtensions = ci.getFileExtensions();
+							//
+							jfc.setSelectedFile(Util.toFile(Path.of(".",
+									String.join(".", text,
+											fileExtensions != null && fileExtensions.length == 1
+													? ArrayUtils.get(fileExtensions, 0)
+													: "mp3"))));
+							//
+							if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 								//
-								final JFileChooser jfc = new JFileChooser();
-								//
-								final String[] fileExtensions = ci.getFileExtensions();
-								//
-								jfc.setSelectedFile(Util.toFile(Path.of(".",
-										String.join(".", text,
-												fileExtensions != null && fileExtensions.length == 1
-														? ArrayUtils.get(fileExtensions, 0)
-														: "mp3"))));
-								//
-								if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+								try {
 									//
-									try {
-										//
-										FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
-										//
-									} catch (final IOException e) {
-										//
-										LoggerUtil.error(LOG, e.getMessage(), e);
-										//
-									} // try
-										//
-								} // if
+									FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
+									//
+								} catch (final IOException e) {
+									//
+									LoggerUtil.error(LOG, e.getMessage(), e);
+									//
+								} // try
 									//
 							} // if
 								//
 						} // if
 							//
-					});
-					//
-				} // if
-					//
+					} // if
+						//
+				});
+				//
 				clickPlayButton(URL, page, text);
 				//
 			} // try
 				//
 		} // if
 			//
+	}
+
+	private static void onRequest(final Page instance, final Consumer<Request> handler) {
+		if (instance != null) {
+			instance.onRequest(handler);
+		}
 	}
 
 	private static byte[] readAllBytes(@Nullable final InputStream instance) throws IOException {
