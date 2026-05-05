@@ -199,7 +199,7 @@ public class IpaDictGui extends JPanel implements InitializingBean, ActionListen
 					//
 				} else if (selectedIndices.length == 1 && !isTestMode()) {
 					//
-					setContents(getSystemClipboard(getToolkit()),
+					Util.setContents(getSystemClipboard(getToolkit()),
 							new StringSelection(Util.getElementAt(dlm, selectedIndices[0])), null);
 					//
 				} // if
@@ -266,13 +266,6 @@ public class IpaDictGui extends JPanel implements InitializingBean, ActionListen
 			//
 		instance.removeAllElements();
 		//
-	}
-
-	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
-			@Nullable final ClipboardOwner owner) {
-		if (instance != null) {
-			instance.setContents(contents, owner);
-		}
 	}
 
 	@Nullable
