@@ -9,6 +9,10 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.InputStream;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
@@ -51,7 +55,16 @@ public class IpaDictGui extends JPanel implements InitializingBean, ActionListen
 
 	private JTextComponent tfText = null;
 
-	private AbstractButton btnExecute, btnCopy = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("Execute")
+	private AbstractButton btnExecute = null;
+
+	private AbstractButton btnCopy = null;
 
 	private DefaultListModel<String> dlm = null;
 
