@@ -160,10 +160,9 @@ class AivisSpeechRestApiJPanelTest {
 			METHOD_GET_FILE_EXTENSION_DOCUMENT_SUPPLIER, METHOD_GET_CONTENT_TYPE_CONTENT_INFO,
 			METHOD_GET_CONTENT_TYPE_FILE, METHOD_IS_SUPPORTED_AUDIO_FORMAT, METHOD_TEST_AND_TEST,
 			METHOD_SH_GET_KNOWN_FOLDER_PATH, METHOD_LIST_FILES, METHOD_NEXT_ALPHA_NUMERIC, METHOD_GET_MESSAGE,
-			METHOD_SET, METHOD_IS_CLIENT_ERROR, METHOD_VERSION, METHOD_GET_MODEL, METHOD_CORE_VERSIONS,
-			METHOD_TO_ITERABLE, METHOD_SUPPORTED_DEVICES, METHOD_TO_MAP, METHOD_ENGINE_MANIFEST, METHOD_CREATE_JPANEL,
-			METHOD_IS_IMAGE, METHOD_TO_BYTES, METHOD_MIN, METHOD_TO_ARRAY, METHOD_TEST_AND_GET,
-			METHOD_GET_SCHEMES = null;
+			METHOD_SET, METHOD_IS_CLIENT_ERROR, METHOD_VERSION, METHOD_CORE_VERSIONS, METHOD_TO_ITERABLE,
+			METHOD_SUPPORTED_DEVICES, METHOD_TO_MAP, METHOD_ENGINE_MANIFEST, METHOD_CREATE_JPANEL, METHOD_IS_IMAGE,
+			METHOD_TO_BYTES, METHOD_MIN, METHOD_TO_ARRAY, METHOD_TEST_AND_GET, METHOD_GET_SCHEMES = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -301,8 +300,6 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		(METHOD_VERSION = clz.getDeclaredMethod("version", String.class, HostAndPort.class, ObjectMapper.class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_MODEL = clz.getDeclaredMethod("getModel", JComboBox.class)).setAccessible(true);
 		//
 		(METHOD_CORE_VERSIONS = clz.getDeclaredMethod("coreVersions", String.class, HostAndPort.class,
 				ObjectMapper.class)).setAccessible(true);
@@ -543,8 +540,6 @@ class AivisSpeechRestApiJPanelTest {
 
 	private Entry<org.apache.bcel.classfile.Method, Class<?>> methodThrowExceptionIfOnlyOneParameterIsNull = null;
 
-	private JComboBox<?> jComboBox = null;
-
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
@@ -593,8 +588,6 @@ class AivisSpeechRestApiJPanelTest {
 		} // if
 			//
 		methodThrowExceptionIfOnlyOneParameterIsNull = getMethodThrowExceptionIfOnlyOneParameterIsNull(clz);
-		//
-		jComboBox = Util.cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class));
 		//
 	}
 
@@ -2421,13 +2414,6 @@ class AivisSpeechRestApiJPanelTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
-	}
-
-	@Test
-	void testGetModel() throws Throwable {
-		//
-		Assertions.assertNull(invoke(METHOD_GET_MODEL, null, jComboBox));
-		//
 	}
 
 	@Test

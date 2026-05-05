@@ -470,7 +470,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			jcbLanguage
 					.setRenderer(createListCellRenderer(jcbLanguage.getRenderer(), Util.getPreferredSize(jcbLanguage)));
 			//
-			testAndAccept(x -> Util.getSize(getModel(x)) > 0, jcbLanguage, x -> Util.setSelectedIndex(x, 0));
+			testAndAccept(x -> Util.getSize(Util.getModel(x)) > 0, jcbLanguage, x -> Util.setSelectedIndex(x, 0));
 			//
 			final String wrap = "wrap";
 			//
@@ -1757,7 +1757,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
 			//
-			Util.forEach(Stream.of(null, findEntryWithLongestValue(getModel(jcb))),
+			Util.forEach(Stream.of(null, findEntryWithLongestValue(Util.getModel(jcb))),
 					x -> testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null), jcb, m,
 							(a, b) -> Narcissus.invokeMethod(a, b, x)));
 			//
@@ -4164,7 +4164,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					int index = NumberUtils.toInt(string);
 					//
-					final int size = Util.getSize(getModel(jcbTextAndImage));
+					final int size = Util.getSize(Util.getModel(jcbTextAndImage));
 					//
 					if (index >= size) {
 						//
@@ -4198,11 +4198,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		if (test(predicate, value) && consumer != null) {
 			consumer.accept(value);
 		}
-	}
-
-	@Nullable
-	private static <E> ComboBoxModel<E> getModel(@Nullable final JComboBox<E> instance) {
-		return instance != null ? instance.getModel() : null;
 	}
 
 }

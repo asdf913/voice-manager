@@ -75,7 +75,6 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -1011,11 +1010,6 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static <T> ComboBoxModel<T> getModel(@Nullable final JComboBox<T> instance) {
-		return instance != null ? instance.getModel() : null;
 	}
 
 	@Nullable

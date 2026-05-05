@@ -465,7 +465,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 					//
 					final String string = Util.toString(Util.get(a, b));
 					//
-					final ComboBoxModel<?> cbm = getModel(instance.jcb);
+					final ComboBoxModel<?> cbm = Util.getModel(instance.jcb);
 					//
 					if (NumberUtils.isDigits(string)) {
 						//
@@ -513,14 +513,10 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 
 	@Nullable
 	private static Object getItemAt(@Nullable final JComboBox<?> instance, final int index) {
-		return instance != null && getModel(instance) != null ? instance.getItemAt(index) : null;
+		return instance != null && Util.getModel(instance) != null ? instance.getItemAt(index) : null;
 	}
 
 	@Nullable
-	private static <T> ComboBoxModel<T> getModel(@Nullable final JComboBox<T> instance) {
-		return instance != null ? instance.getModel() : null;
-	}
-
 	private static <T> T testAndGet(final boolean condition, final Supplier<T> supplierTrue,
 			@Nullable final Supplier<T> supplierFalse) {
 		return condition ? Util.get(supplierTrue) : Util.get(supplierFalse);
