@@ -218,17 +218,17 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 
 				}));
 		//
-		setMinWidth(getColumn(tcm, 0), 40);
+		setMinWidth(Util.getColumn(tcm, 0), 40);
 		//
-		setMinWidth(getColumn(tcm, 2), 50);
+		setMinWidth(Util.getColumn(tcm, 2), 50);
 		//
-		setMinWidth(getColumn(tcm, 3), 100);
+		setMinWidth(Util.getColumn(tcm, 3), 100);
 		//
-		setMinWidth(getColumn(tcm, 4), 70);
+		setMinWidth(Util.getColumn(tcm, 4), 70);
 		//
-		setMinWidth(getColumn(tcm, 5), 115);
+		setMinWidth(Util.getColumn(tcm, 5), 115);
 		//
-		setMinWidth(getColumn(tcm, 6), 20);
+		setMinWidth(Util.getColumn(tcm, 6), 20);
 		//
 		if ((lsm = jTable.getSelectionModel()) != null) {
 			//
@@ -278,7 +278,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 					(jLabel = new JLabel(imageIcon)).setHorizontalAlignment(SwingConstants.LEFT);
 					//
-					final TableColumn tc = getColumn(tcm, column);
+					final TableColumn tc = Util.getColumn(tcm, column);
 					//
 					setMinWidth(tc, Math.max(getMinWidth(tc), getIconWidth(imageIcon)));
 					//
@@ -298,7 +298,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 					(jLabel = new JLabel(imageIcon)).setHorizontalAlignment(SwingConstants.LEFT);
 					//
-					final TableColumn tc = getColumn(tcm, column);
+					final TableColumn tc = Util.getColumn(tcm, column);
 					//
 					setMinWidth(tc, Math.max(getMinWidth(tc), getIconWidth(imageIcon)));
 					//
@@ -405,11 +405,6 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		if (instance != null) {
 			instance.setMinWidth(minWidth);
 		}
-	}
-
-	@Nullable
-	private static TableColumn getColumn(@Nullable final TableColumnModel instance, final int columnIndex) {
-		return instance != null ? instance.getColumn(columnIndex) : null;
 	}
 
 	public static void main(final String[] args) throws Exception {

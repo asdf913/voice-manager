@@ -778,7 +778,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		Util.forEach(IntStream.iterate(0, i -> i < getColumnCount(tcmStroke), i -> i + 1), i -> {
 			//
-			final TableColumn tc = getColumn(tcmStroke, i);
+			final TableColumn tc = Util.getColumn(tcmStroke, i);
 			//
 			final DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
 			//
@@ -805,8 +805,8 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		setPreferredScrollableViewportSize(jTableStroke, new Dimension(
 				(int) getWidth(preferredSize = Util.getPreferredSize(jTableStroke)), (int) getHeight(preferredSize)));
 		//
-		add(this, new JScrollPane(jTableStroke), String.format("span %1$s,%2$s,wmin %3$s", 2, growx,
-				sum(IntStream.range(0, getColumnCount(tcmStroke)).map(i -> getColumn(tcmStroke, i).getMaxWidth()))));
+		add(this, new JScrollPane(jTableStroke), String.format("span %1$s,%2$s,wmin %3$s", 2, growx, sum(
+				IntStream.range(0, getColumnCount(tcmStroke)).map(i -> Util.getColumn(tcmStroke, i).getMaxWidth()))));
 		//
 		add(this, new JLabel(), wrap);
 		//
@@ -827,9 +827,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		final TableColumnModel tcm = Util.getColumnModel(jTableLink);
 		//
-		setMinWidth(getColumn(tcm, 0), 87);
+		setMinWidth(Util.getColumn(tcm, 0), 87);
 		//
-		setMinWidth(getColumn(tcm, 1), 475);
+		setMinWidth(Util.getColumn(tcm, 1), 475);
 		//
 		setPreferredScrollableViewportSize(jTableLink, new Dimension(
 				(int) getWidth(preferredSize = Util.getPreferredSize(jTableLink)), (int) getHeight(preferredSize)));
@@ -1394,11 +1394,6 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		};
 		//
-	}
-
-	@Nullable
-	private static TableColumn getColumn(@Nullable final TableColumnModel instance, final int columnIndex) {
-		return instance != null ? instance.getColumn(columnIndex) : null;
 	}
 
 	private static void setMinWidth(@Nullable final TableColumn instance, final int minWidth) {
