@@ -2457,7 +2457,7 @@ public abstract class Util {
 		return instance != null ? instance.getColumnModel() : null;
 	}
 
-	static int getSelectedIndex(final JComboBox<?> instance) {
+	static int getSelectedIndex(@Nullable final JComboBox<?> instance) {
 		//
 		final Iterable<Field> fs = toList(
 				filter(stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
