@@ -2153,8 +2153,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				boolean ffplayExists = false;
 				//
-				try (final InputStream is = getInputStream(
-						start(new ProcessBuilder(new String[] { "which", "ffplay" })))) {
+				try (final InputStream is = getInputStream(start(new ProcessBuilder("which", "ffplay")))) {
 					//
 					ffplayExists = Util.exists(testAndApply(Objects::nonNull,
 							StringUtils.trim(IOUtils.toString(is, StandardCharsets.UTF_8)), File::new, null));
