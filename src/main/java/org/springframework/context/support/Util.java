@@ -174,8 +174,7 @@ public abstract class Util {
 
 	@Nullable
 	static IntStream map(@Nullable final IntStream instance, @Nullable final IntUnaryOperator mapper) {
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
-				? instance.map(mapper)
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
 				: instance;
 	}
 
@@ -195,7 +194,7 @@ public abstract class Util {
 
 	static <T> boolean anyMatch(@Nullable final Stream<T> instance, @Nullable final Predicate<? super T> predicate) {
 		//
-		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
+		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
 				&& instance.anyMatch(predicate);
 		//
 	}
@@ -214,7 +213,7 @@ public abstract class Util {
 	@Nullable
 	static <T> Optional<T> max(@Nullable final Stream<T> instance, @Nullable final Comparator<? super T> comparator) {
 		//
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || comparator != null)
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || comparator != null)
 				? instance.max(comparator)
 				: null;
 		//
@@ -224,7 +223,7 @@ public abstract class Util {
 	static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
 			@Nullable final ToIntFunction<? super T> function) {
 		//
-		return instance != null && (function != null || Proxy.isProxyClass(Util.getClass(instance)))
+		return instance != null && (function != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.mapToInt(function)
 				: null;
 		//
@@ -248,7 +247,7 @@ public abstract class Util {
 	}
 
 	static <T> void forEach(@Nullable final Stream<T> instance, @Nullable final Consumer<? super T> action) {
-		if (instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || action != null)) {
+		if (instance != null && (Proxy.isProxyClass(getClass(instance)) || action != null)) {
 			instance.forEach(action);
 		}
 	}
@@ -1988,8 +1987,8 @@ public abstract class Util {
 			//
 		} // if
 			//
-		final List<Field> fs = Util.toList(Util.filter(FieldUtils.getAllFieldsList(Util.getClass(instance)).stream(),
-				f -> Objects.equals(Util.getName(f), "parentPattern")));
+		final List<Field> fs = toList(filter(FieldUtils.getAllFieldsList(getClass(instance)).stream(),
+				f -> Objects.equals(getName(f), "parentPattern")));
 		//
 		if (IterableUtils.size(fs) > 1) {
 			//
@@ -2135,8 +2134,8 @@ public abstract class Util {
 			//
 		} // if
 			//
-		final List<Field> fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(URL.class)),
-				f -> Objects.equals(Util.getName(f), "handler")));
+		final List<Field> fs = toList(
+				filter(stream(FieldUtils.getAllFieldsList(URL.class)), f -> Objects.equals(getName(f), "handler")));
 		//
 		if (IterableUtils.size(fs) > 1) {
 			//
@@ -2180,12 +2179,12 @@ public abstract class Util {
 			//
 		} // if
 			//
-		final Stream<Field> stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)),
+		final Stream<Field> stream = testAndApply(Objects::nonNull, getDeclaredFields(getClass(instance)),
 				Arrays::stream, null);
 		//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
-				Util.toList(Util.filter(stream, x -> Objects.equals(Util.getName(x), "dataModel"))),
-				x -> IterableUtils.get(x, 0), null);
+				toList(filter(stream, x -> Objects.equals(getName(x), "dataModel"))), x -> IterableUtils.get(x, 0),
+				null);
 		//
 		return f == null || Narcissus.getField(instance, f) != null ? instance.getSelectedItem() : null;
 		//
@@ -2287,7 +2286,7 @@ public abstract class Util {
 	static <E> void sort(@Nullable final List<E> instance, @Nullable final Comparator<? super E> comparator) {
 		//
 		if (instance != null
-				&& (Proxy.isProxyClass(Util.getClass(instance)) || (instance.size() > 1 && comparator != null))) {
+				&& (Proxy.isProxyClass(getClass(instance)) || (instance.size() > 1 && comparator != null))) {
 			//
 			instance.sort(comparator);
 			//
@@ -2337,10 +2336,9 @@ public abstract class Util {
 			//
 		} // if
 			//
-		final List<Field> fs = Util.toList(Util.filter(
-				Util.stream(
-						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
-				x -> Objects.equals(Util.getName(x), "raster")));
+		final List<Field> fs = toList(
+				filter(stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
+						x -> Objects.equals(getName(x), "raster")));
 		//
 		if (IterableUtils.size(fs) > 1) {
 			//
