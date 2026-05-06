@@ -138,6 +138,8 @@ public abstract class Util {
 
 	private static final String DELEGATE = "delegate";
 
+	private static final String DATA_MODEL = "dataModel";
+
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[] {};
 
 	private Util() {
@@ -2183,7 +2185,7 @@ public abstract class Util {
 				Arrays::stream, null);
 		//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
-				toList(filter(stream, x -> Objects.equals(getName(x), "dataModel"))), x -> IterableUtils.get(x, 0),
+				toList(filter(stream, x -> Objects.equals(getName(x), DATA_MODEL))), x -> IterableUtils.get(x, 0),
 				null);
 		//
 		return f == null || Narcissus.getField(instance, f) != null ? instance.getSelectedItem() : null;
@@ -2303,7 +2305,7 @@ public abstract class Util {
 		//
 		final Iterable<Field> fs = toList(
 				filter(stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
-						f -> Objects.equals(getName(f), "dataModel")));
+						f -> Objects.equals(getName(f), DATA_MODEL)));
 		//
 		if (IterableUtils.size(fs) > 1) {
 			//
@@ -2461,7 +2463,7 @@ public abstract class Util {
 		//
 		final Iterable<Field> fs = toList(
 				filter(stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
-						f -> Objects.equals(getName(f), "dataModel")));
+						f -> Objects.equals(getName(f), DATA_MODEL)));
 		//
 		if (IterableUtils.size(fs) > 1) {
 			//
