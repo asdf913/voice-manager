@@ -1572,8 +1572,13 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			try {
 				//
-				play(style != null ? style.styleInfo : null, Util.getSelectedIndex(instance.jcbVoiceSampleTranscript));
-				//
+				if (!StringsUtil.equals(Strings.CI, "true", System.getenv("GITHUB_ACTIONS"))) {
+					//
+					play(style != null ? style.styleInfo : null,
+							Util.getSelectedIndex(instance.jcbVoiceSampleTranscript));
+					//
+				} // if
+					//
 			} catch (final Exception e) {
 				//
 				if (e instanceof RuntimeException runtimeException) {
