@@ -2192,10 +2192,12 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static InputStream getInputStream(@Nullable final Process instance) {
 		return instance != null ? instance.getInputStream() : null;
 	}
 
+	@Nullable
 	private static Process start(@Nullable final ProcessBuilder instance) throws IOException {
 		return instance != null ? instance.start() : null;
 	}
