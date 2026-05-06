@@ -2447,7 +2447,7 @@ public abstract class Util {
 		return instance != null ? instance.getValueAt(row, column) : null;
 	}
 
-	static <T> ComboBoxModel<T> getModel(final JComboBox<T> instance) {
+	static <T> ComboBoxModel<T> getModel(@Nullable final JComboBox<T> instance) {
 		return instance != null ? instance.getModel() : null;
 	}
 
