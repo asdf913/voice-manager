@@ -1572,13 +1572,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			try {
 				//
-				if (!StringsUtil.equals(Strings.CI, "true", System.getenv("GITHUB_ACTIONS"))) {
-					//
-					play(style != null ? style.styleInfo : null,
-							Util.getSelectedIndex(instance.jcbVoiceSampleTranscript));
-					//
-				} // if
-					//
+				play(style != null ? style.styleInfo : null, Util.getSelectedIndex(instance.jcbVoiceSampleTranscript));
+				//
 			} catch (final Exception e) {
 				//
 				if (e instanceof RuntimeException runtimeException) {
@@ -2156,8 +2151,20 @@ public class AivisSpeechRestApiJPanel extends JPanel
 								StringUtils.join(".", Objects.toString(getFileExtension(bs), "m4a"))),
 						bs, FileUtils::writeByteArrayToFile);
 				//
-				final Process process = exec(Runtime.getRuntime(),
-						String.format("ffplay -autoexit -nodisp %1$s", Util.getAbsolutePath(file)));
+				boolean ffplayExists = false;
+				//
+				try (final InputStream is = getInputStream(
+						start(new ProcessBuilder(new String[] { "which", "ffplay" })))) {
+					//
+					ffplayExists = Util.exists(testAndApply(Objects::nonNull,
+							StringUtils.trim(IOUtils.toString(is, StandardCharsets.UTF_8)), File::new, null));
+					//
+				} // try
+					//
+				final Process process = ffplayExists
+						? exec(Runtime.getRuntime(),
+								String.format("ffplay -autoexit -nodisp %1$s", Util.getAbsolutePath(file)))
+						: null;
 				//
 				if (process != null) {
 					//
@@ -2183,6 +2190,14 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		throw new UnsupportedOperationException();
 		//
+	}
+
+	private static InputStream getInputStream(final Process instance) {
+		return instance != null ? instance.getInputStream() : null;
+	}
+
+	private static Process start(final ProcessBuilder instance) throws IOException {
+		return instance != null ? instance.start() : null;
 	}
 
 	private static boolean playWindows(@Nullable final byte[] bs) throws Exception {
