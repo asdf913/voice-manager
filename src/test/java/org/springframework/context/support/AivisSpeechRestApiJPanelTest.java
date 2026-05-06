@@ -2051,31 +2051,34 @@ class AivisSpeechRestApiJPanelTest {
 			//
 			Throwable targetException = null;
 			//
-			try {
-				//
-				invoke(METHOD_PLAY, null, styleInfo, 0);
-				//
-			} catch (final InvocationTargetException e) {
-				//
-				targetException = e.getTargetException();
-				//
-			} // try
-				//
-			final String className = Util.getName(Util.getClass(targetException));
-			//
 			if (Objects.equals(OperatingSystem.LINUX, operatingSystem)) {
 				//
-				Assertions.assertEquals("java.io.IOException", className);
-				//
-			} else if (Objects.equals(OperatingSystem.WINDOWS, operatingSystem)) {
-				//
-				Assertions.assertEquals("java.lang.UnsupportedOperationException", className);
+				Assertions.assertDoesNotThrow(() -> invoke(METHOD_PLAY, null, styleInfo, 0));
 				//
 			} else {
 				//
-				throw new IllegalStateException();
-				//
-			} //
+				try {
+					//
+					invoke(METHOD_PLAY, null, styleInfo, 0);
+					//
+				} catch (final InvocationTargetException e) {
+					//
+					targetException = e.getTargetException();
+					//
+				} // try
+					//
+				if (Objects.equals(OperatingSystem.WINDOWS, operatingSystem)) {
+					//
+					Assertions.assertEquals("java.lang.UnsupportedOperationException",
+							Util.getName(Util.getClass(targetException)));
+					//
+				} else {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // if
 				//
 		} else if (Objects.equals(exec, Boolean.TRUE)) {
 			//
