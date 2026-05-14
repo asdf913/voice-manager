@@ -472,9 +472,9 @@ class YukumoJapaneseTtsGuiTest {
 		//
 		FieldUtils.writeDeclaredField(instance, "btnPlay", btnPlay, true);
 		//
-		final ActionEvent actionEvent = new ActionEvent(btnPlay, 0, null);
+		final ActionEvent actionEventBtnPlay = new ActionEvent(btnPlay, 0, null);
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnPlay));
 		//
 		final Table<String, Integer, byte[]> table = HashBasedTable.create();
 		//
@@ -486,7 +486,7 @@ class YukumoJapaneseTtsGuiTest {
 		//
 		FieldUtils.writeDeclaredField(instance, "tfText", new JTextField(string), true);
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnPlay));
 		//
 		// btnDownload
 		//
@@ -494,7 +494,17 @@ class YukumoJapaneseTtsGuiTest {
 		//
 		FieldUtils.writeDeclaredField(instance, "btnDownload", btnDownload, true);
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnDownload, 0, null)));
+		final ActionEvent actionEventBtnDownload = new ActionEvent(btnDownload, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnDownload));
+		//
+		if (table != null) {
+			//
+			table.clear();
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnDownload));
 		//
 	}
 
