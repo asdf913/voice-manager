@@ -189,23 +189,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 					//
 				} // if
 					//
-				onRequest(page, x -> {
-					//
-					if (!Objects.equals(resourceType(x), "media")) {
-						//
-						return;
-						//
-					} // if
-						//
-					acceptAndAccept(y -> {
-						//
-						play(y);
-						//
-						TableUtil.put(table, text, selectedIndex, y);
-						//
-					}, applyAndAccept(YukumoJapaneseTtsGui::readAllBytes, url(x), consumer), consumer);
-					//
-				});
+				onRequest(page, x -> play(x, table, text, selectedIndex, consumer));
 				//
 				clickPlayButton(URL, page, text, selectedIndex);
 				//
@@ -261,6 +245,25 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 				//
 		} // if
 			//
+	}
+
+	private static void play(final Request request, final Table<String, Integer, byte[]> table, final String text,
+			final Integer selectedIndex, final Consumer<Throwable> consumer) {
+		//
+		if (!Objects.equals(resourceType(request), "media")) {
+			//
+			return;
+			//
+		} // if
+			//
+		acceptAndAccept(x -> {
+			//
+			play(x);
+			//
+			TableUtil.put(table, text, selectedIndex, x);
+			//
+		}, applyAndAccept(YukumoJapaneseTtsGui::readAllBytes, url(request), consumer), consumer);
+		//
 	}
 
 	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) {

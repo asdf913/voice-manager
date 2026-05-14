@@ -57,7 +57,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class YukumoJapaneseTtsGuiTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_APPLY_AND_ACCEPT, METHOD_ACCEPT_AND_ACCEPT, METHOD_IIF,
-			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_GET, METHOD_GET_ITEM_AT = null;
+			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_GET, METHOD_GET_ITEM_AT,
+			METHOD_PLAY = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -87,6 +88,9 @@ class YukumoJapaneseTtsGuiTest {
 		(METHOD_GET_ITEM_AT = Util.getDeclaredMethod(clz, "getItemAt", JComboBox.class, Integer.TYPE))
 				.setAccessible(true);
 		//
+		(METHOD_PLAY = Util.getDeclaredMethod(clz, "play", Request.class, Table.class, String.class, Integer.class,
+				Consumer.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -94,6 +98,8 @@ class YukumoJapaneseTtsGuiTest {
 		private Boolean test, addInt = null;
 
 		private Integer getInt = null;
+
+		private String resourceType = null;
 
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -124,10 +130,18 @@ class YukumoJapaneseTtsGuiTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof Request && Util.contains(Arrays.asList("url", "resourceType"), name)) {
+			} else if (proxy instanceof Request) {
 				//
-				return null;
-				//
+				if (Objects.equals(name, "url")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(name, "resourceType")) {
+					//
+					return resourceType;
+					//
+				} // if
+					//
 			} else if (proxy instanceof Supplier && Objects.equals(name, "get")) {
 				//
 				return null;
@@ -551,6 +565,21 @@ class YukumoJapaneseTtsGuiTest {
 		final Object object = new Object();
 		//
 		Assertions.assertSame(object, invoke(METHOD_GET_ITEM_AT, null, new JComboBox<>(new Object[] { object }), 0));
+		//
+	}
+
+	@Test
+	void testPlay() throws IllegalAccessException, InvocationTargetException {
+		//
+		final Request request = Reflection.newProxy(Request.class, ih);
+		//
+		if (ih != null) {
+			//
+			ih.resourceType = "media";
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(METHOD_PLAY, null, request, null, null, null, null));
 		//
 	}
 
