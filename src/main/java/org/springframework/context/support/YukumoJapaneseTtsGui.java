@@ -88,7 +88,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 
 	private JTextComponent tfText = null;
 
-	private Table<String, Integer, byte[]> table = null;
+	private transient Table<String, Integer, byte[]> table = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
