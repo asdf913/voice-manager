@@ -55,6 +55,9 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.InitializingBean;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+import com.google.common.collect.TableUtil;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Browser;
@@ -84,6 +87,8 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 	private static final String URL = "https://www.yukumo.net";
 
 	private JTextComponent tfText = null;
+
+	private Table<String, Integer, byte[]> table = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -167,6 +172,23 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 					final Browser browser = BrowserTypeUtil.launch(PlaywrightUtil.chromium(playwright));
 					final Page page = BrowserUtil.newPage(browser)) {
 				//
+				final String text = Util.getText(tfText);
+				//
+				final Integer selectedIndex = Integer.valueOf(Util.getSelectedIndex(jcb));
+				//
+				final Consumer<Throwable> consumer = e -> LoggerUtil.error(LOG, getMessage(e), e);
+				//
+				byte[] bs1 = null;
+				//
+				if (TableUtil.contains(table = ObjectUtils.getIfNull(table, HashBasedTable::create), text,
+						selectedIndex) && (bs1 = TableUtil.get(table, text, selectedIndex)) != null) {
+					//
+					acceptAndAccept(YukumoJapaneseTtsGui::play, bs1, consumer);
+					//
+					return;
+					//
+				} // if
+					//
 				onRequest(page, x -> {
 					//
 					if (!Objects.equals(resourceType(x), "media")) {
@@ -175,14 +197,17 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 						//
 					} // if
 						//
-					acceptAndAccept(YukumoJapaneseTtsGui::play,
-							applyAndAccept(YukumoJapaneseTtsGui::readAllBytes, url(x),
-									e -> LoggerUtil.error(LOG, getMessage(e), e)),
-							e -> LoggerUtil.error(LOG, getMessage(e), e));
+					acceptAndAccept(y -> {
+						//
+						play(y);
+						//
+						TableUtil.put(table, text, selectedIndex, y);
+						//
+					}, applyAndAccept(YukumoJapaneseTtsGui::readAllBytes, url(x), consumer), consumer);
 					//
 				});
 				//
-				clickPlayButton(URL, page, Util.getText(tfText), Util.getSelectedIndex(jcb));
+				clickPlayButton(URL, page, text, selectedIndex);
 				//
 			} // try
 				//

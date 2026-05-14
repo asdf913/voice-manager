@@ -24,6 +24,7 @@ import java.util.function.Supplier;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JTextField;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
@@ -44,6 +45,9 @@ import org.junit.jupiter.api.Test;
 import org.oxbow.swingbits.util.OperatingSystem;
 import org.oxbow.swingbits.util.OperatingSystemUtil;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+import com.google.common.collect.TableUtil;
 import com.google.common.reflect.Reflection;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Request;
@@ -448,8 +452,30 @@ class YukumoJapaneseTtsGuiTest {
 			//
 		} // if
 			//
-			// btnDownload
+			// btnPlay
 			//
+		final AbstractButton btnPlay = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnPlay", btnPlay, true);
+		//
+		final ActionEvent actionEvent = new ActionEvent(btnPlay, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
+		final Table<String, Integer, byte[]> table = HashBasedTable.create();
+		//
+		FieldUtils.writeDeclaredField(instance, "table", table, true);
+		//
+		final String string = "";
+		//
+		TableUtil.put(table, string, Integer.valueOf(0), new byte[] {});
+		//
+		FieldUtils.writeDeclaredField(instance, "tfText", new JTextField(string), true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
+		// btnDownload
+		//
 		final AbstractButton btnDownload = new JButton();
 		//
 		FieldUtils.writeDeclaredField(instance, "btnDownload", btnDownload, true);
