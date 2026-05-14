@@ -178,12 +178,12 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 				//
 				final Consumer<Throwable> consumer = e -> LoggerUtil.error(LOG, getMessage(e), e);
 				//
-				byte[] bs1 = null;
+				byte[] bs = null;
 				//
 				if (TableUtil.contains(table = ObjectUtils.getIfNull(table, HashBasedTable::create), text,
-						selectedIndex) && (bs1 = TableUtil.get(table, text, selectedIndex)) != null) {
+						selectedIndex) && (bs = TableUtil.get(table, text, selectedIndex)) != null) {
 					//
-					acceptAndAccept(YukumoJapaneseTtsGui::play, bs1, consumer);
+					acceptAndAccept(YukumoJapaneseTtsGui::play, bs, consumer);
 					//
 					return;
 					//
@@ -203,6 +203,21 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 				//
 				final String text = Util.getText(tfText);
 				//
+				final Integer selectedIndex = Integer.valueOf(Util.getSelectedIndex(jcb));
+				//
+				final Consumer<Throwable> consumer = e -> LoggerUtil.error(LOG, getMessage(e), e);
+				//
+				byte[] bs1 = null;
+				//
+				if (TableUtil.contains(table = ObjectUtils.getIfNull(table, HashBasedTable::create), text,
+						selectedIndex) && (bs1 = TableUtil.get(table, text, selectedIndex)) != null) {
+					//
+					acceptAndAccept(x -> save(x, text), bs1, consumer);
+					//
+					return;
+					//
+				} // if
+					//
 				onRequest(page, x -> {
 					//
 					if (!Objects.equals(resourceType(x), "media")) {
@@ -211,35 +226,40 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 						//
 					} // if
 						//
-					final byte[] bs = applyAndAccept(YukumoJapaneseTtsGui::readAllBytes, url(x),
-							e -> LoggerUtil.error(LOG, getMessage(e), e));
+					final byte[] bs2 = applyAndAccept(YukumoJapaneseTtsGui::readAllBytes, url(x), consumer);
 					//
-					final ContentInfo ci = testAndApply(Objects::nonNull, bs, y -> new ContentInfoUtil().findMatch(y),
-							null);
+					save(bs2, text);
 					//
-					final JFileChooser jfc = new JFileChooser();
+					TableUtil.put(table, text, selectedIndex, bs2);
 					//
-					jfc.setSelectedFile(Util.toFile(getPath(".", text, getFileExtensions(ci),
-							iif(StringsUtil.startsWith(Strings.CI, getMessage(ci), "Audio file with ID3 version 2.4"),
-									"mp3", null))));
-					//
-					if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-						//
-						try {
-							//
-							FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
-							//
-						} catch (final IOException e) {
-							//
-							LoggerUtil.error(LOG, e.getMessage(), e);
-							//
-						} // try
-							//
-					} // if
-						//
 				});
 				//
 				clickPlayButton(URL, page, text, Util.getSelectedIndex(jcb));
+				//
+			} // try
+				//
+		} // if
+			//
+	}
+
+	private static void save(final byte[] bs, final String text) {
+		//
+		final ContentInfo ci = testAndApply(Objects::nonNull, bs, y -> new ContentInfoUtil().findMatch(y), null);
+		//
+		final JFileChooser jfc = new JFileChooser();
+		//
+		jfc.setSelectedFile(Util.toFile(getPath(".", text, getFileExtensions(ci), iif(
+				StringsUtil.startsWith(Strings.CI, getMessage(ci), "Audio file with ID3 version 2.4"), "mp3", null))));
+		//
+		if (!isTestMode() && jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			//
+			try {
+				//
+				FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
+				//
+			} catch (final IOException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
 				//
 			} // try
 				//
