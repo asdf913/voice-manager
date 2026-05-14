@@ -290,8 +290,8 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 		return condition ? trueValue : falseValue;
 	}
 
-	private static <T, E extends Exception> void acceptAndAccept(final FailableConsumer<T, E> consumer, final T value,
-			final Consumer<Throwable> throwableConsumer) {
+	private static <T, E extends Exception> void acceptAndAccept(final FailableConsumer<T, E> consumer,
+			@Nullable final T value, final Consumer<Throwable> throwableConsumer) {
 		//
 		try {
 			//
