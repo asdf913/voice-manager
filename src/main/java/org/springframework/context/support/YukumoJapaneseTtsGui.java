@@ -286,7 +286,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 		//
 	}
 
-	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) {
+	private static <T> T iif(final boolean condition, final T trueValue, @Nullable final T falseValue) {
 		return condition ? trueValue : falseValue;
 	}
 
