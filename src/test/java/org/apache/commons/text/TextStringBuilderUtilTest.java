@@ -144,7 +144,7 @@ class TextStringBuilderUtilTest {
 		//
 		Assertions.assertSame(tsb, TextStringBuilderUtil.append(tsb, a));
 		//
-		Assertions.assertTrue(StringsUtil.equals(strings, tsb, StringUtils.repeat(a, 2)));
+		Assertions.assertTrue(StringsUtil.equals(strings, tsb, a.repeat(2)));
 		//
 	}
 
