@@ -863,7 +863,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 		} // for
 			//
-		Collections.sort(list1, JapanDictGui::compare);
+		list1.sort(JapanDictGui::compare);
 		//
 		list1.add(0, null);
 		//
