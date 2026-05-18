@@ -204,7 +204,7 @@ class ProtocolUtilTest {
 		//
 		Assertions.assertNull(toArray(null, null));
 		//
-		Assertions.assertNull(toArray(Collections.emptyList(), null));
+		Assertions.assertNull(toArray(List.of(), null));
 		//
 	}
 

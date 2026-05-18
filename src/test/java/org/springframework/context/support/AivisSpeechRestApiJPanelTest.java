@@ -33,6 +33,7 @@ import java.util.Base64.Decoder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -2450,7 +2451,7 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Assertions.assertThrows(IllegalStateException.class, () -> toIterable(emptyMap));
 		//
-		final Iterable<?> iterable = Collections.emptyList();
+		final Iterable<?> iterable = List.of();
 		//
 		Assertions.assertSame(iterable, toIterable(iterable));
 		//
@@ -2597,7 +2598,7 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testToArray() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(invoke(METHOD_TO_ARRAY, null, Collections.emptyList(), null));
+		Assertions.assertNull(invoke(METHOD_TO_ARRAY, null, List.of(), null));
 		//
 	}
 

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -295,7 +296,7 @@ class FuriganaJcinfoFailableFunctionTest {
 		//
 		Assertions.assertNull(collect(stream, null));
 		//
-		Assertions.assertEquals(Collections.emptyList(), collect(stream, Collectors.toList()));
+		Assertions.assertEquals(List.of(), collect(stream, Collectors.toList()));
 		//
 		Assertions.assertNull(collect(stream, null));
 		//

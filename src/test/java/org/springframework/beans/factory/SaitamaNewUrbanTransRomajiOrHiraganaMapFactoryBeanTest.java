@@ -152,7 +152,7 @@ class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		if (constructor != null) {
 			//
-			constructor.setAccessible(true);	
+			constructor.setAccessible(true);
 			//
 		} // if
 			//
@@ -236,7 +236,7 @@ class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(getKey(null, null));
 		//
-		Assertions.assertNull(getKey(Collections.emptyList(), null));
+		Assertions.assertNull(getKey(List.of(), null));
 		//
 		final List<UnicodeBlock> list = Collections.singletonList(null);
 		//
@@ -271,7 +271,7 @@ class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(getValue(null, null));
 		//
-		Assertions.assertNull(getValue(Collections.emptyList(), null));
+		Assertions.assertNull(getValue(List.of(), null));
 		//
 		List<UnicodeBlock> list = Collections.singletonList(null);
 		//

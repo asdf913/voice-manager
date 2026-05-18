@@ -110,7 +110,7 @@ class JouYouKanJiListFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Collections.emptyList(), FactoryBeanUtil.getObject(instance));
+		Assertions.assertEquals(List.of(), FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -136,7 +136,7 @@ class JouYouKanJiListFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Collections.emptyList(), FactoryBeanUtil.getObject(instance));
+		Assertions.assertEquals(List.of(), FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//

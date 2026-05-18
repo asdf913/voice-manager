@@ -1161,7 +1161,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testToArray() throws Throwable {
 		//
-		Assertions.assertNull(toArray(Collections.emptyList(), null));
+		Assertions.assertNull(toArray(List.of(), null));
 		//
 		Assertions.assertNull(toArray(Stream.empty(), null));
 		//

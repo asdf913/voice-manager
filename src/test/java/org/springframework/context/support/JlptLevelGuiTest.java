@@ -256,7 +256,7 @@ class JlptLevelGuiTest {
 		//
 		if (instance != null) {
 			//
-			instance.setJlptLevels(Collections.emptyList());
+			instance.setJlptLevels(List.of());
 			//
 		} // if
 			//
@@ -767,7 +767,7 @@ class JlptLevelGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> forEach(null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> forEach(Collections.emptyList(), null));
+		Assertions.assertDoesNotThrow(() -> forEach(List.of(), null));
 		//
 		final Iterable<?> iterable = Reflection.newProxy(Iterable.class, ih);
 		//

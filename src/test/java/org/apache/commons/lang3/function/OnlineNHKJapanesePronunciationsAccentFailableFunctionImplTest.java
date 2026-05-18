@@ -589,7 +589,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		Assertions.assertDoesNotThrow(() -> forEach(null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> forEach(Collections.emptyList(), null));
+		Assertions.assertDoesNotThrow(() -> forEach(List.of(), null));
 		//
 		Assertions.assertDoesNotThrow(() -> forEach(Collections.singleton(null), x -> {
 		}));

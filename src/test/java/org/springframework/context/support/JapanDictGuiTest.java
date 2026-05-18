@@ -1902,7 +1902,7 @@ class JapanDictGuiTest {
 		//
 		final Object object = Narcissus.allocateInstance(URIBuilder.class);
 		//
-		Assertions.assertSame(object, invoke(METHOD_ADD_PARAMETERS, null, object, Collections.emptyList()));
+		Assertions.assertSame(object, invoke(METHOD_ADD_PARAMETERS, null, object, List.of()));
 		//
 	}
 

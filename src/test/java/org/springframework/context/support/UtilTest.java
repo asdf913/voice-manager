@@ -438,7 +438,7 @@ class UtilTest {
 		//
 		Assertions.assertFalse(Util.contains(null, null));
 		//
-		Assertions.assertFalse(Util.contains(Collections.emptyList(), null));
+		Assertions.assertFalse(Util.contains(List.of(), ""));
 		//
 	}
 

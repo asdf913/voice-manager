@@ -315,7 +315,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, iterable));
 		//
-		final List<String> emptyList = Collections.emptyList();
+		final List<String> emptyList = List.of();
 		//
 		Assertions.assertEquals(emptyList, get(imageFormatOrders, instance));
 		//

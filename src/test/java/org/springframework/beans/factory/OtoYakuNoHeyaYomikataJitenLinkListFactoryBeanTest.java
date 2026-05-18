@@ -509,7 +509,7 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 		//
 		Assertions.assertNull(getLinks(Collections.singletonList(null)));
 		//
-		Assertions.assertEquals(Collections.emptyList(), getLinks(Collections.singletonList(element)));
+		Assertions.assertEquals(List.of(), getLinks(Collections.singletonList(element)));
 		//
 	}
 

@@ -1056,7 +1056,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> forEachRemaining(Reflection.newProxy(Iterator.class, ih), null));
 		//
-		final Iterable<?> iterable = Collections.emptyList();
+		final Iterable<?> iterable = List.of();
 		//
 		Assertions.assertDoesNotThrow(() -> forEachRemaining(Util.iterator(iterable), null));
 		//
