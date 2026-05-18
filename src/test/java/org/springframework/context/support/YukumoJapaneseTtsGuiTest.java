@@ -205,7 +205,7 @@ class YukumoJapaneseTtsGuiTest {
 			try (final InputStream is = getInputStream(start(new ProcessBuilder(new String[] { "which", "nmcli" })))) {
 				//
 				nmcliExists = Util.exists(testAndApply(Objects::nonNull,
-						StringUtils.trim(IOUtils.toString(is, charset)), File::new, null));
+						StringUtils.trim(new String(is != null ? is.readAllBytes() : null, charset)), File::new, null));
 				//
 			} // try
 				//

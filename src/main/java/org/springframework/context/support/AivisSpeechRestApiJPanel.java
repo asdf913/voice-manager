@@ -512,8 +512,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		try (final InputStream is = Util.getInputStream(Util.openConnection(url))) {
 			//
-			final String string = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8),
-					null);
+			final String string = testAndApply(Objects::nonNull, is,
+					x -> new String(x != null ? x.readAllBytes() : null, StandardCharsets.UTF_8), null);
 			//
 			return getSchemes(string);
 			//
@@ -2156,7 +2156,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				try (final InputStream is = getInputStream(start(new ProcessBuilder("which", "ffplay")))) {
 					//
 					ffplayExists = Util.exists(testAndApply(Objects::nonNull,
-							StringUtils.trim(IOUtils.toString(is, StandardCharsets.UTF_8)), File::new, null));
+							StringUtils.trim(new String(is != null ? is.readAllBytes() : null, StandardCharsets.UTF_8)),
+							File::new, null));
 					//
 				} // try
 					//
@@ -2737,7 +2738,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			try (final InputStream is = httpURLConnection.getErrorStream()) {
 				//
 				final String string = testAndApply(Objects::nonNull, is,
-						x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
+						x -> new String(x != null ? x.readAllBytes() : null, StandardCharsets.UTF_8), null);
 				//
 				throw new RuntimeException(string);
 				//
@@ -2865,7 +2866,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			try (final InputStream is = httpURLConnection.getErrorStream()) {
 				//
 				final String string = testAndApply(Objects::nonNull, is,
-						x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
+						x -> new String(x != null ? x.readAllBytes() : null, StandardCharsets.UTF_8), null);
 				//
 				throw new RuntimeException(string);
 				//
@@ -2875,7 +2876,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 			try (final InputStream is = Util.getInputStream(httpURLConnection)) {
 				//
-				return testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
+				return testAndApply(Objects::nonNull, is,
+						x -> new String(x != null ? x.readAllBytes() : null, StandardCharsets.UTF_8), null);
 				//
 			} // try
 				//

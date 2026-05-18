@@ -2861,55 +2861,60 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 			//
 			final ObjectMapper objectMapper = new ObjectMapper();
 			//
-			final Iterable<Element> es = Util.toList(FailableStreamUtil
-					.stream(filter(new FailableStream<>(Util.stream(ElementUtil.select(testAndApply(Objects::nonNull,
-							testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null),
-							Jsoup::parse, null), "a[data-reading]"))), x -> {
-								//
-								final Iterable<?> iterable = Util.cast(Iterable.class, ObjectMapperUtil
-										.readValue(objectMapper, NodeUtil.attr(x, DATA_READING), Object.class));
-								//
-								NameValuePair nvp = null;
-								//
-								boolean found = false;
-								//
-								String value = null;
-								//
-								for (int i = 0; i < IterableUtils.size(queryParams); i++) {
-									//
-									if ((nvp = IterableUtils.get(queryParams, i)) == null) {
+			final Iterable<Element> es = Util
+					.toList(FailableStreamUtil
+							.stream(filter(new FailableStream<>(Util.stream(ElementUtil.select(
+									testAndApply(Objects::nonNull,
+											testAndApply(Objects::nonNull, is,
+													x -> new String(x != null ? x.readAllBytes() : null,
+															StandardCharsets.UTF_8),
+													null),
+											Jsoup::parse, null),
+									"a[data-reading]"))), x -> {
 										//
-										continue;
+										final Iterable<?> iterable = Util.cast(Iterable.class, ObjectMapperUtil
+												.readValue(objectMapper, NodeUtil.attr(x, DATA_READING), Object.class));
 										//
-									} // if
+										NameValuePair nvp = null;
 										//
-									for (int j = 0; j < IterableUtils.size(iterable); j++) {
+										boolean found = false;
 										//
-										if (Boolean
-												.logicalOr(
+										String value = null;
+										//
+										for (int i = 0; i < IterableUtils.size(queryParams); i++) {
+											//
+											if ((nvp = IterableUtils.get(queryParams, i)) == null) {
+												//
+												continue;
+												//
+											} // if
+												//
+											for (int j = 0; j < IterableUtils.size(iterable); j++) {
+												//
+												if (Boolean.logicalOr(
 														!Objects.equals(IterableUtils.get(iterable, j),
 																(value = getValue(nvp))),
 														NumberUtils.isParsable(value))) {
+													//
+													continue;
+													//
+												} // if
+													//
+												testAndRun(found, () -> {
+													//
+													throw new IllegalStateException();
+													//
+												});
+												//
+												found = true;
+												//
+											} // for
+												//
+										} // for
 											//
-											continue;
-											//
-										} // if
-											//
-										testAndRun(found, () -> {
-											//
-											throw new IllegalStateException();
-											//
-										});
+										return found;
 										//
-										found = true;
-										//
-									} // for
-										//
-								} // for
-									//
-								return found;
-								//
-							})));
+									})));
 			//
 			testAndRun(IterableUtils.size(es) > 1, () -> {
 				//

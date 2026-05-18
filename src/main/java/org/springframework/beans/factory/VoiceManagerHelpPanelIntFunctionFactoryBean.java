@@ -536,7 +536,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 				//
 			final Elements elements = ElementUtil.select(testAndApply(Objects::nonNull,
 					(is = openStream(testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null))) != null
-							? IOUtils.toString(is, StandardCharsets.UTF_8)
+							? new String(is != null ? is.readAllBytes() : null, StandardCharsets.UTF_8)
 							: null,
 					Jsoup::parse, null), ".relatedtopics a[href]");
 			//

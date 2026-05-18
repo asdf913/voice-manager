@@ -79,8 +79,9 @@ public final class ATagUtil {
 			setRequestProperty(urlConnection, "User-Agent",
 					"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36");
 			//
-			final Document document = testAndApply(Objects::nonNull, testAndApply(Objects::nonNull,
-					is = getInputStream(urlConnection), x -> IOUtils.toString(x, StandardCharsets.UTF_8), null),
+			final Document document = testAndApply(Objects::nonNull,
+					testAndApply(Objects::nonNull, is = getInputStream(urlConnection),
+							x -> new String(x != null ? x.readAllBytes() : null, StandardCharsets.UTF_8), null),
 					Jsoup::parse, null);
 			//
 			Elements elements = ElementUtil.getElementsByTag(document, "title");
