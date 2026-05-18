@@ -3172,7 +3172,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 					//
 				} // if
 					//
-				FileUtils.copyFile(selectedFile, file);
+				Files.copy(Util.toPath(selectedFile), Util.toPath(file));
 				//
 				length = length(file);
 				//
@@ -3184,7 +3184,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 				if (!Util.exists(file)) {
 					//
-					FileUtils.copyFile(selectedFile, file);
+					Files.copy(Util.toPath(selectedFile), Util.toPath(file));
 					//
 				} // if
 					//

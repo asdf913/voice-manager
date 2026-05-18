@@ -3037,7 +3037,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 					//
 				} // if
 					//
-				FileUtils.copyFile(selectedFile, file);
+				Files.copy(Util.toPath(selectedFile), Util.toPath(file));
 				//
 				length = length(file);
 				//
@@ -3049,7 +3049,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 				if (!Util.exists(file)) {
 					//
-					FileUtils.copyFile(selectedFile, file);
+					Files.copy(Util.toPath(selectedFile), Util.toPath(file));
 					//
 				} // if
 					//

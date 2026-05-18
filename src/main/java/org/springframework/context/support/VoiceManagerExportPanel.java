@@ -3471,16 +3471,16 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 						//
 					append(fileName, Util.toString(getValue(expressionParser, evaluationContext, value)));
 					//
-					// org.apache.commons.io.FileUtils.copyFile(java.io.File,java.io.File)
+					// org.apache.commons.io.Files.copy(java.io.File,java.io.File)
 					//
 					final String k = key;
 					//
-					FileUtils.copyFile(fileSource,
-							fileDestination = Util.toFile(Path.of(Util.toString(testAndApply(Objects::nonNull,
+					Files.copy(Util.toPath(fileSource), Util
+							.toPath(fileDestination = Util.toFile(Path.of(Util.toString(testAndApply(Objects::nonNull,
 									folder = getIfNull(folder,
 											() -> testAndApply(Objects::nonNull, outputFolder, File::new, null)),
 									x -> Util.toFile(Path.of(Util.getAbsolutePath(x), k)),
-									x -> Util.toFile(Path.of(k)))), Util.toString(fileName))));
+									x -> Util.toFile(Path.of(k)))), Util.toString(fileName)))));
 					//
 					TableUtil.put(voiceFileNames, getParent(fileDestination), Util.toString(fileName), voice);
 					//
@@ -3710,7 +3710,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				Util.deleteOnExit(tempFile);
 				//
-				FileUtils.copyFile(file, tempFile);
+				Files.copy(Util.toPath(file), Util.toPath(tempFile));
 				//
 				final Mp3File mp3File = new Mp3File(tempFile);
 				//
