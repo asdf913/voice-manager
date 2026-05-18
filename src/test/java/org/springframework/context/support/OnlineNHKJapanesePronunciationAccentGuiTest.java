@@ -311,7 +311,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		// java.lang.Iterable
 		//
-		final Iterable<String> iterable = Collections.emptySet();
+		final Iterable<String> iterable = Set.of();
 		//
 		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, iterable));
 		//

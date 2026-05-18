@@ -207,7 +207,7 @@ public final class ClassInfoUtil {
 	}
 
 	private static <T> void removeIf(final Collection<T> instance, final Predicate<T> predicate) {
-		if (instance != null && predicate != null) {
+		if (instance != null && !instance.isEmpty() && predicate != null) {
 			instance.removeIf(predicate);
 		}
 	}

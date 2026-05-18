@@ -876,7 +876,7 @@ class VoiceManagerTest {
 	@Test
 	void testForEach() {
 		//
-		final Collection<?> collection = Collections.emptySet();
+		final Collection<?> collection = Set.of();
 		//
 		Assertions.assertDoesNotThrow(() -> forEach(collection, null));
 		//

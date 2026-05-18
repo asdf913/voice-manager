@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -318,9 +319,9 @@ class ClassInfoUtilTest {
 		//
 		Assertions.assertDoesNotThrow(() -> removeIf(null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> removeIf(Collections.emptySet(), null));
+		Assertions.assertDoesNotThrow(() -> removeIf(Set.of(), null));
 		//
-		Assertions.assertDoesNotThrow(() -> removeIf(Collections.emptySet(), Predicates.alwaysFalse()));
+		Assertions.assertDoesNotThrow(() -> removeIf(Set.of(), Predicates.alwaysFalse()));
 		//
 	}
 

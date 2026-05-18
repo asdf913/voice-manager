@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
@@ -621,7 +622,7 @@ class SpeechApiOnlineImplTest {
 	@Test
 	void testGetOptions() throws Throwable {
 		//
-		Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.emptySet(), getOptions(htmlSelect)));
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(), getOptions(htmlSelect)));
 		//
 	}
 

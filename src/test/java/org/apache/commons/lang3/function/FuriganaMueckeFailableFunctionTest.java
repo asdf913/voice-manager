@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -341,8 +342,7 @@ class FuriganaMueckeFailableFunctionTest {
 	@Test
 	void testGetElementsByTagName() throws Throwable {
 		//
-		Assertions.assertTrue(
-				CollectionUtils.isEqualCollection(getElementsByTagName(htmlPage, null), Collections.emptySet()));
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(getElementsByTagName(htmlPage, null), Set.of()));
 		//
 	}
 

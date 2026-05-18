@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Supplier;
@@ -887,7 +888,7 @@ class UtilTest {
 	@Test
 	void testRemove() throws Throwable {
 		//
-		Assertions.assertFalse(remove(Collections.emptySet(), null));
+		Assertions.assertFalse(remove(Set.of(), null));
 		//
 	}
 

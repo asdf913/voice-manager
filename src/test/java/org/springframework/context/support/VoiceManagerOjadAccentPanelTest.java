@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
@@ -1408,7 +1409,7 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertNull(toTextAndImages2(null, null, words, null, null));
 		//
-		Assertions.assertNull(toTextAndImages2(null, null, words, Collections.emptySet(), null));
+		Assertions.assertNull(toTextAndImages2(null, null, words, Set.of(), null));
 		//
 		final Class<?> clz = Util.getClass(instance);
 		//
@@ -2370,7 +2371,7 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertNull(flatMap(stream, null));
 		//
-		Assertions.assertNotNull(flatMap(Stream.of(Collections.emptySet()), Collection::stream));
+		Assertions.assertNotNull(flatMap(Stream.of(Set.of()), Collection::stream));
 		//
 	}
 

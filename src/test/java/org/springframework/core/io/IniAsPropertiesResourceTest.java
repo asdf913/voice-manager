@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -469,7 +470,7 @@ class IniAsPropertiesResourceTest {
 		//
 		Assertions.assertEquals("[null]", toString(getSection(true, map, null, null, null)));
 		//
-		Assertions.assertEquals("[null]", toString(getSection(true, map, null, null, Collections.emptySet())));
+		Assertions.assertEquals("[null]", toString(getSection(true, map, null, null, Set.of())));
 		//
 		Assertions.assertEquals("[null]", toString(getSection(true, map, null, null, Collections.singleton(null))));
 		//
@@ -775,7 +776,7 @@ class IniAsPropertiesResourceTest {
 		//
 		Assertions.assertNull(toArray(null));
 		//
-		Assertions.assertArrayEquals(new Object[] {}, toArray(Collections.emptySet()));
+		Assertions.assertArrayEquals(new Object[] {}, toArray(Set.of()));
 		//
 	}
 
