@@ -17,6 +17,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -163,7 +164,7 @@ class VoiceManagerOjadAccentPanelTest {
 			METHOD_CREATE_LIST_CELL_RENDERER2, METHOD_GET_ACCENT_IMAGE_WIDTH, METHOD_GET_CURVE_IMAGE_WIDTH,
 			METHOD_FOR_EACH_ORDERED, METHOD_SET, METHOD_CREATE_DEFAULT_TABLE_MODEL,
 			METHOD_FIND_ENTRY_WITH_LONGEST_VALUE, METHOD_CREATE_FONT, METHOD_CREATE_TO_INT_FUNCTION, METHOD_ADD_2,
-			METHOD_ADD_3 = null;
+			METHOD_ADD_3, METHOD_READ_ALL_BYTES = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -339,6 +340,8 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_ADD_3 = clz.getDeclaredMethod("add", Container.class, Component.class, Object.class))
 				.setAccessible(true);
+		//
+		(METHOD_READ_ALL_BYTES = clz.getDeclaredMethod("readAllBytes", InputStream.class)).setAccessible(true);
 		//
 	}
 
@@ -2413,4 +2416,16 @@ class VoiceManagerOjadAccentPanelTest {
 		}
 	}
 
+	@Test
+	void testReadAllBytes() throws IllegalAccessException, InvocationTargetException, IOException {
+		//
+		final byte[] bs = new byte[] {};
+		//
+		try (final InputStream is = new ByteArrayInputStream(bs)) {
+			//
+			Assertions.assertTrue(Objects.deepEquals(bs, invoke(METHOD_READ_ALL_BYTES, null, is)));
+			//
+		} // try
+			//
+	}
 }
