@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -99,13 +100,17 @@ class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(getKanjiHiraganaRomaji((String) null));
 		//
-		Assertions.assertNull(getKanjiHiraganaRomaji(Collections.singletonList(null)));
+		final List<Element> elements = new ArrayList<>();
 		//
-		final ObjectMapper objectMapper = new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY);
+		Util.add(elements, null);
+		//
+		Assertions.assertNull(getKanjiHiraganaRomaji(elements));
 		//
 		Assertions.assertEquals("{\"kanji\":null,\"hiragana\":null,\"romaji\":null}",
-				ObjectMapperUtil.writeValueAsString(objectMapper, getKanjiHiraganaRomaji(
-						Collections.nCopies(2, Util.cast(Element.class, Narcissus.allocateInstance(Element.class))))));
+				ObjectMapperUtil.writeValueAsString(
+						new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY),
+						getKanjiHiraganaRomaji(Collections.nCopies(2,
+								Util.cast(Element.class, Narcissus.allocateInstance(Element.class))))));
 		//
 	}
 

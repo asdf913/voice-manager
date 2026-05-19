@@ -4,8 +4,10 @@ import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -157,11 +159,17 @@ class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	@Test
 	void testCreateTable() throws Throwable {
 		//
-		Assertions.assertNull(createTable(Collections.singletonList(null)));
+		final List<Element> elements = new ArrayList<>();
+		//
+		Util.add(elements, null);
+		//
+		Assertions.assertNull(createTable(elements));
 		//
 		final Element element = cast(Element.class, Narcissus.allocateInstance(Element.class));
 		//
-		final Iterable<Element> elements = Arrays.asList(element);
+		elements.clear();
+		//
+		Util.add(elements, element);
 		//
 		Assertions.assertNull(createTable(elements));
 		//

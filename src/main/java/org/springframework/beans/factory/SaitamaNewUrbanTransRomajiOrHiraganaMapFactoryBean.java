@@ -247,11 +247,11 @@ public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean extends StringMa
 				//
 				kanjiHiraganaRomaji.romaji = s;
 				//
-			} else if (Objects.equals(unicodeBlocks, Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS))) {
+			} else if (Objects.equals(unicodeBlocks, List.of(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS))) {
 				//
 				kanjiHiraganaRomaji.kanji = s;
 				//
-			} else if (Objects.equals(unicodeBlocks, Collections.singletonList(UnicodeBlock.HIRAGANA))) {
+			} else if (Objects.equals(unicodeBlocks, List.of(UnicodeBlock.HIRAGANA))) {
 				//
 				kanjiHiraganaRomaji.hiragana = s;
 				//

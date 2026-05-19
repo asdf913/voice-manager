@@ -2,6 +2,7 @@ package org.springframework.beans.factory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -46,11 +47,17 @@ class ToykoMetroKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(instance != null ? instance.getObject() : null);
 		//
-		Assertions.assertNull(getObject(Collections.singletonList(null)));
+		final List<Element> elements = new ArrayList<>();
+		//
+		Util.add(elements, null);
+		//
+		Assertions.assertNull(getObject(elements));
 		//
 		final Element elemnet = new Element("a");
 		//
-		final List<Element> elements = Collections.singletonList(elemnet);
+		elements.clear();
+		//
+		Util.add(elements, elemnet);
 		//
 		Assertions.assertNull(getObject(elements));
 		//

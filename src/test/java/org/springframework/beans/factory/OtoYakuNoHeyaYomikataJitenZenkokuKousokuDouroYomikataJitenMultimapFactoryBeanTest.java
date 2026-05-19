@@ -215,7 +215,7 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		if (!isSystemPropertiesContainsTestGetObject) {
 			//
-			Assertions.assertEquals(Collections.singletonList(UnicodeBlock.BASIC_LATIN), getUnicodeBlocks("12"));
+			Assertions.assertEquals(List.of(UnicodeBlock.BASIC_LATIN), getUnicodeBlocks("12"));
 			//
 		} // if
 			//

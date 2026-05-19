@@ -296,11 +296,11 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				//
 			} // try
 				//
-			value = Unit.with(Collections.singletonList(string));
+			value = Unit.with(List.of(string));
 			//
 		} else if (Boolean.logicalOr(object instanceof Number, object instanceof Boolean)) {
 			//
-			value = Unit.with(Collections.singletonList(Util.toString(object)));
+			value = Unit.with(List.of(Util.toString(object)));
 			//
 		} // if
 			//

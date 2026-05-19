@@ -263,10 +263,9 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 				//
 			} // if
 				//
-			if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-					getUnicodeBlocks(s1 = ElementUtil.text(e)))
+			if (Objects.equals(List.of(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), getUnicodeBlocks(s1 = ElementUtil.text(e)))
 					&& (size = IterableUtils.size(nextElementSiblings = ElementUtil.nextElementSiblings(e))) > 1
-					&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
+					&& Objects.equals(List.of(UnicodeBlock.HIRAGANA),
 							getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s2);
@@ -1442,7 +1441,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 							ss[i]))
 							&& Util.groupCount(matcher) > 3
 							&& Objects.equals(getUnicodeBlocks(g2 = Util.group(matcher, 2)),
-									Collections.singletonList(UnicodeBlock.KATAKANA))
+									List.of(UnicodeBlock.KATAKANA))
 							&& (ss2 = StringUtils.split(Util.group(matcher, 4),
 									KanaConverter.convertKana(g2, KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA))) != null
 							&& ss2.length == 2)) {

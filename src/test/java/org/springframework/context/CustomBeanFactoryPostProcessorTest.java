@@ -12,6 +12,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -383,11 +384,18 @@ class CustomBeanFactoryPostProcessorTest {
 		//
 		Assertions.assertDoesNotThrow(() -> addPropertySourceToPropertySourcesToLast(null, map));
 		//
-		Assertions.assertDoesNotThrow(
-				() -> addPropertySourceToPropertySourcesToLast(null, Collections.singletonList(null)));
+		final List<PropertySource<?>> list = new ArrayList<>();
 		//
-		ih.iterator = null;
+		list.add(null);
 		//
+		Assertions.assertDoesNotThrow(() -> addPropertySourceToPropertySourcesToLast(null, list));
+		//
+		if (ih != null) {
+			//
+			ih.iterator = null;
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(
 				() -> addPropertySourceToPropertySourcesToLast(null, Reflection.newProxy(Iterable.class, ih)));
 		//

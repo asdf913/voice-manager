@@ -193,7 +193,7 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setLinks(Collections.singletonList(link));
+			instance.setLinks(List.of(link));
 			//
 		} // if
 			//
@@ -319,7 +319,7 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(getUnicodeBlocks(null));
 		//
-		Assertions.assertEquals(Collections.singletonList(UnicodeBlock.BASIC_LATIN), getUnicodeBlocks("AA"));
+		Assertions.assertEquals(List.of(UnicodeBlock.BASIC_LATIN), getUnicodeBlocks("AA"));
 		//
 	}
 

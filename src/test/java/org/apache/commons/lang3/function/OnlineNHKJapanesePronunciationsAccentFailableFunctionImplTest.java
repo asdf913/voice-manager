@@ -419,7 +419,9 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		Assertions.assertNull(createMergedBufferedImage(null, null, ZERO));
 		//
-		final List<String> list = Collections.singletonList(null);
+		final List<String> list = new ArrayList<>();
+		//
+		list.add(null);
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
 				"{localizedMessage=URI is not absolute, message=URI is not absolute}",
@@ -833,13 +835,16 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 	@Test
 	void testCreatePronunciations() throws Throwable {
 		//
-		Assertions.assertNull(createPronunciations(null, Collections.singletonList(null), null));
+		final List<Element> list = new ArrayList<>();
 		//
-		Assertions.assertEquals("[{}]", ObjectMapperUtil.writeValueAsString(
-				new ObjectMapper().setSerializationInclusion(Include.NON_NULL),
-				createPronunciations(null,
-						Collections.singletonList(cast(Element.class, Narcissus.allocateInstance(Element.class))),
-						null)));
+		list.add(null);
+		//
+		Assertions.assertNull(createPronunciations(null, list, null));
+		//
+		Assertions.assertEquals("[{}]",
+				ObjectMapperUtil.writeValueAsString(new ObjectMapper().setSerializationInclusion(Include.NON_NULL),
+						createPronunciations(null,
+								List.of(cast(Element.class, Narcissus.allocateInstance(Element.class))), null)));
 		//
 	}
 

@@ -855,7 +855,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		if (ih != null) {
 			//
-			ih.cells = Collections.singletonList(cell);
+			ih.cells = List.of(cell);
 			//
 			ih.cellType = CellType.FORMULA;
 			//
@@ -963,7 +963,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		if (ih != null) {
 			//
-			ih.cells = Collections.singletonList(cell);
+			ih.cells = List.of(cell);
 			//
 		} // if
 			//

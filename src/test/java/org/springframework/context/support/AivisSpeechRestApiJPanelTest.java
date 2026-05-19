@@ -2104,7 +2104,11 @@ class AivisSpeechRestApiJPanelTest {
 				//
 				Assertions.assertNull(invoke(METHOD_PLAY, null, styleInfo, 0));
 				//
-				FieldUtils.writeDeclaredField(styleInfo, "voiceSamples", Collections.singletonList(null), true);
+				final Collection<?> list = new ArrayList<>();
+				//
+				Util.add(list, null);
+				//
+				FieldUtils.writeDeclaredField(styleInfo, "voiceSamples", list, true);
 				//
 				Assertions.assertNull(invoke(METHOD_PLAY, null, styleInfo, 0));
 				//

@@ -68,15 +68,15 @@ class VoiceManagerImportSinglePanelTest {
 		//
 		instance.setImageWriterSpiFormats(string);
 		//
-		Assertions.assertEquals(Narcissus.getField(instance, imageWriterSpiFormats), Collections.singletonList(string));
+		Assertions.assertEquals(Narcissus.getField(instance, imageWriterSpiFormats), List.of(string));
 		//
 		instance.setImageWriterSpiFormats(new String[] { Util.toString(string) });
 		//
-		Assertions.assertEquals(Narcissus.getField(instance, imageWriterSpiFormats), Collections.singletonList(string));
+		Assertions.assertEquals(Narcissus.getField(instance, imageWriterSpiFormats), List.of(string));
 		//
 		instance.setImageWriterSpiFormats(IteratorUtils.asEnumeration(Util.iterator(Collections.singleton(string))));
 		//
-		Assertions.assertEquals(Narcissus.getField(instance, imageWriterSpiFormats), Collections.singletonList(string));
+		Assertions.assertEquals(Narcissus.getField(instance, imageWriterSpiFormats), List.of(string));
 		//
 		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setImageWriterSpiFormats(Map.of()));
 		//

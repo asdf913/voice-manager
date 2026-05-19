@@ -1108,7 +1108,11 @@ class VoiceManagerTest {
 	@Test
 	void testGetTabIndexByTitle() throws Throwable {
 		//
-		Assertions.assertNull(getTabIndexByTitle(Collections.singletonList(null), null));
+		final List<?> list = new ArrayList<>();
+		//
+		Util.add(list, null);
+		//
+		Assertions.assertNull(getTabIndexByTitle(list, null));
 		//
 	}
 

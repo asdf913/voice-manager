@@ -5,6 +5,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -100,8 +101,12 @@ class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		final ObjectMapper objectMapper = new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY);
 		//
-		Assertions.assertEquals("{\"kanji\":null,\"hiragana\":null,\"romaji\":null}", ObjectMapperUtil
-				.writeValueAsString(objectMapper, getKanjiHiraganaRomaji(Collections.singletonList(null))));
+		final List<String> list = new ArrayList<>();
+		//
+		Util.add(list, null);
+		//
+		Assertions.assertEquals("{\"kanji\":null,\"hiragana\":null,\"romaji\":null}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, getKanjiHiraganaRomaji(list)));
 		//
 		Assertions.assertEquals("{\"kanji\":null,\"hiragana\":null,\"romaji\":null}", ObjectMapperUtil
 				.writeValueAsString(objectMapper, getKanjiHiraganaRomaji(Arrays.asList(null, "", "NS 01"))));
@@ -238,7 +243,9 @@ class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(getKey(List.of(), null));
 		//
-		final List<UnicodeBlock> list = Collections.singletonList(null);
+		final List<UnicodeBlock> list = new ArrayList<>();
+		//
+		Util.add(list, null);
 		//
 		Assertions.assertEquals(Unit.with(null), getKey(list, null));
 		//
@@ -273,7 +280,9 @@ class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(getValue(List.of(), null));
 		//
-		List<UnicodeBlock> list = Collections.singletonList(null);
+		List<UnicodeBlock> list = new ArrayList<>();
+		//
+		Util.add(list, null);
 		//
 		Assertions.assertEquals(Unit.with(null), getValue(list, null));
 		//

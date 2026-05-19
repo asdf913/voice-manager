@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -105,7 +106,11 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testCreateMap() throws Throwable {
 		//
-		Assertions.assertNull(createMap(Collections.singletonList(null)));
+		final List<Element> elements = new ArrayList<>();
+		//
+		Util.add(elements, null);
+		//
+		Assertions.assertNull(createMap(elements));
 		//
 		final Element element = cast(Element.class, Narcissus.allocateInstance(Element.class));
 		//
@@ -122,17 +127,23 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		final List<Element> elements = Collections.singletonList(element);
+		elements.clear();
+		//
+		Util.add(elements, element);
 		//
 		Assertions.assertNull(createMap(elements));
 		//
-		mh.childNodes = Collections.singletonList(null);
+		final List<Node> nodes = new ArrayList<>();
+		//
+		Util.add(nodes, null);
+		//
+		mh.childNodes = nodes;
 		//
 		Assertions.assertNull(createMap(elements));
 		//
 		final TextNode textNode = cast(TextNode.class, Narcissus.allocateInstance(TextNode.class));
 		//
-		mh.childNodes = Collections.singletonList(textNode);
+		mh.childNodes = List.of(textNode);
 		//
 		Assertions.assertEquals("{null=null}", Util.toString(createMap(elements)));
 		//

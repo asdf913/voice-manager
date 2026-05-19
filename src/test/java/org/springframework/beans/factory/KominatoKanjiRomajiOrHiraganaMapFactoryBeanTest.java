@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -124,7 +125,11 @@ class KominatoKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(getKanjiHiraganaRomaji((String) null));
 		//
-		Assertions.assertNull(getKanjiHiraganaRomaji(Collections.singletonList(null)));
+		final List<Element> elements = new ArrayList<>();
+		//
+		Util.add(elements, null);
+		//
+		Assertions.assertNull(getKanjiHiraganaRomaji(elements));
 		//
 		final ObjectMapper objectMapper = new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY);
 		//

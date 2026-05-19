@@ -327,9 +327,9 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(getUnicodeBlocks(null));
 		//
-		Assertions.assertEquals(Collections.singletonList(UnicodeBlock.BASIC_LATIN), getUnicodeBlocks(" "));
+		Assertions.assertEquals(List.of(UnicodeBlock.BASIC_LATIN), getUnicodeBlocks(" "));
 		//
-		Assertions.assertEquals(Collections.singletonList(UnicodeBlock.BASIC_LATIN), getUnicodeBlocks("  "));
+		Assertions.assertEquals(List.of(UnicodeBlock.BASIC_LATIN), getUnicodeBlocks("  "));
 		//
 	}
 

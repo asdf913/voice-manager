@@ -111,13 +111,17 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 					//
 			} else {
 				//
-				this.values = Unit.with(Collections.singletonList(Util.toString(object)));
+				final List<String> list = new ArrayList<>();
+				//
+				Util.add(list, Util.toString(object));
+				//
+				this.values = Unit.with(list);
 				//
 			} // if
 				//
 		} catch (final JsonProcessingException e) {
 			//
-			this.values = Unit.with(Collections.singletonList(string));
+			this.values = Unit.with(List.of(string));
 			//
 			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//

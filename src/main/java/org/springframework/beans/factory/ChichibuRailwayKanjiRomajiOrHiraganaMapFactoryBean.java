@@ -281,12 +281,11 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringMa
 					//
 				} // if
 					//
-				if (Objects.equals(unicodeBlocks, Collections.singletonList(UnicodeBlock.HIRAGANA))
-						&& kanjiHiraganaRomaji != null) {
+				if (Objects.equals(unicodeBlocks, List.of(UnicodeBlock.HIRAGANA)) && kanjiHiraganaRomaji != null) {
 					//
 					kanjiHiraganaRomaji.hiragana = s;
 					//
-				} else if (Objects.equals(unicodeBlocks, Collections.singletonList(UnicodeBlock.BASIC_LATIN))
+				} else if (Objects.equals(unicodeBlocks, List.of(UnicodeBlock.BASIC_LATIN))
 						&& kanjiHiraganaRomaji != null) {
 					//
 					kanjiHiraganaRomaji.romaji = s;

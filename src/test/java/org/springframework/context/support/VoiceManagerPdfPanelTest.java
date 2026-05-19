@@ -363,7 +363,9 @@ class VoiceManagerPdfPanelTest {
 			//
 		} // if
 			//
-		final Collection<?> singletonList = Collections.singletonList(null);
+		final Collection<?> singletonList = new ArrayList<>();
+		//
+		Util.add(singletonList, null);
 		//
 		Assertions.assertEquals(singletonList, Narcissus.getField(instance, field));
 		//
@@ -383,11 +385,11 @@ class VoiceManagerPdfPanelTest {
 		//
 		instance.setImageFormatOrders(object);
 		//
-		Assertions.assertEquals(Collections.singletonList(Util.toString(object)), Narcissus.getField(instance, field));
+		Assertions.assertEquals(List.of(Util.toString(object)), Narcissus.getField(instance, field));
 		//
 		instance.setImageFormatOrders(object = Integer.valueOf(0));
 		//
-		Assertions.assertEquals(Collections.singletonList(Util.toString(object)), Narcissus.getField(instance, field));
+		Assertions.assertEquals(List.of(Util.toString(object)), Narcissus.getField(instance, field));
 		//
 	}
 
@@ -450,37 +452,31 @@ class VoiceManagerPdfPanelTest {
 		//
 		instance.setTextAligns(Boolean.toString(b));
 		//
-		Assertions.assertEquals(Unit.with(Collections.singletonList(Boolean.toString(b))),
-				FieldUtils.readField(textAligns, instance));
+		Assertions.assertEquals(Unit.with(List.of(Boolean.toString(b))), FieldUtils.readField(textAligns, instance));
 		//
 		final int one = 1;
 		//
 		instance.setTextAligns(Integer.toString(one));
 		//
-		Assertions.assertEquals(Unit.with(Collections.singletonList(Integer.toString(one))),
-				FieldUtils.readField(textAligns, instance));
+		Assertions.assertEquals(Unit.with(List.of(Integer.toString(one))), FieldUtils.readField(textAligns, instance));
 		//
 		instance.setTextAligns(String.format("[%1$s]", one));
 		//
-		Assertions.assertEquals(Unit.with(Collections.singletonList(Integer.toString(one))),
-				FieldUtils.readField(textAligns, instance));
+		Assertions.assertEquals(Unit.with(List.of(Integer.toString(one))), FieldUtils.readField(textAligns, instance));
 		//
 		String string = "";
 		//
 		instance.setTextAligns(string);
 		//
-		Assertions.assertEquals(Unit.with(Collections.singletonList(string)),
-				FieldUtils.readField(textAligns, instance));
+		Assertions.assertEquals(Unit.with(List.of(string)), FieldUtils.readField(textAligns, instance));
 		//
 		instance.setTextAligns(StringUtils.join("\"", string, "\""));
 		//
-		Assertions.assertEquals(Unit.with(Collections.singletonList(string)),
-				FieldUtils.readField(textAligns, instance));
+		Assertions.assertEquals(Unit.with(List.of(string)), FieldUtils.readField(textAligns, instance));
 		//
 		instance.setTextAligns(string = " ");
 		//
-		Assertions.assertEquals(Unit.with(Collections.singletonList(string)),
-				FieldUtils.readField(textAligns, instance));
+		Assertions.assertEquals(Unit.with(List.of(string)), FieldUtils.readField(textAligns, instance));
 		//
 	}
 

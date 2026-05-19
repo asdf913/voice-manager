@@ -327,7 +327,7 @@ class JouYouKanjiGuiTest {
 		//
 		if (instance != null) {
 			//
-			FieldUtils.writeDeclaredField(instance, "jouYouKanJiList", Unit.with(Collections.singletonList(" ")), true);
+			FieldUtils.writeDeclaredField(instance, "jouYouKanJiList", Unit.with(List.of(" ")), true);
 			//
 		} // if
 			//

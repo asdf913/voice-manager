@@ -2,6 +2,7 @@ package org.springframework.beans.factory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -48,14 +49,19 @@ class OdakyuKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
-		Assertions.assertNull(getObject(Collections.singletonList(null)));
+		final List<Element> elements = new ArrayList<>();
 		//
-		Assertions.assertNull(getObject(
-				Collections.singletonList(Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
+		Util.add(elements, null);
+		//
+		Assertions.assertNull(getObject(elements));
+		//
+		Assertions.assertNull(getObject(List.of(Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
 		//
 		final Element element = new Element("a");
 		//
-		final List<Element> elements = Collections.singletonList(element);
+		elements.clear();
+		//
+		Util.add(elements, element);
 		//
 		Assertions.assertNull(getObject(elements));
 		//

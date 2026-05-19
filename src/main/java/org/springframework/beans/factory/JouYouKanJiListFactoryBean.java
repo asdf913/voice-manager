@@ -89,7 +89,7 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 					//
 				} else if (is != null) {
 					//
-					return Unit.with(object != null ? Collections.singletonList(Util.toString(object)) : null);
+					return Unit.with(object != null ? List.of(Util.toString(object)) : null);
 					//
 				} // if
 					//

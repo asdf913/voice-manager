@@ -133,7 +133,7 @@ class JouYouKanJiListFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Collections.singletonList(Integer.toString(one)), FactoryBeanUtil.getObject(instance));
+		Assertions.assertEquals(List.of(Integer.toString(one)), FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//

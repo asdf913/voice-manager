@@ -708,11 +708,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // try
 				//
-			value = Unit.with(Collections.singletonList(string));
+			value = Unit.with(List.of(string));
 			//
 		} else if (Boolean.logicalOr(object instanceof Number, object instanceof Boolean)) {
 			//
-			value = Unit.with(Collections.singletonList(Util.toString(object)));
+			value = Unit.with(List.of(Util.toString(object)));
 			//
 		} // if
 			//
@@ -828,7 +828,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			if (StringUtils.isBlank(s1)) {
 				//
-				textAligns = Unit.with(Collections.singletonList(s1));
+				textAligns = Unit.with(List.of(s1));
 				//
 				return;
 				//
@@ -840,7 +840,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				if (result instanceof String s2) {
 					//
-					textAligns = Unit.with(Collections.singletonList(s2));
+					textAligns = Unit.with(List.of(s2));
 					//
 					return;
 					//
@@ -858,7 +858,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} else if (instance instanceof Number || instance instanceof Boolean) {
 			//
-			textAligns = Unit.with(Collections.singletonList(Util.toString(instance)));
+			textAligns = Unit.with(List.of(Util.toString(instance)));
 			//
 			return;
 			//

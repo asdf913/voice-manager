@@ -3,6 +3,7 @@ package org.springframework.beans.factory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -91,7 +92,11 @@ class SeibuRailwayKanjiRomajiMapFactoryBeanTest {
 	@Test
 	void testCreateMap() throws Throwable {
 		//
-		Assertions.assertNull(createMap(Collections.singletonList(null)));
+		final List<Element> elements = new ArrayList<>();
+		//
+		Util.add(elements, null);
+		//
+		Assertions.assertNull(createMap(elements));
 		//
 		final Element element1 = cast(Element.class, Narcissus.allocateInstance(Element.class));
 		//
@@ -123,7 +128,7 @@ class SeibuRailwayKanjiRomajiMapFactoryBeanTest {
 		//
 		Util.put(map, null, null);
 		//
-		Assertions.assertEquals(map, createMap(Collections.singletonList(element1)));
+		Assertions.assertEquals(map, createMap(List.of(element1)));
 		//
 		Assertions.assertEquals(map, createMap(Collections.nCopies(2, element1)));
 		//

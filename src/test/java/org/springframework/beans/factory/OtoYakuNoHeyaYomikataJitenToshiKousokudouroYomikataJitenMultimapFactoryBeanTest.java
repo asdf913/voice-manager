@@ -157,7 +157,7 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 		//
 		if (!isSystemPropertiesContainsTestGetObject) {
 			//
-			Assertions.assertEquals(Collections.singletonList(UnicodeBlock.BASIC_LATIN), getUnicodeBlocks("  "));
+			Assertions.assertEquals(List.of(UnicodeBlock.BASIC_LATIN), getUnicodeBlocks("  "));
 			//
 		} // if
 			//

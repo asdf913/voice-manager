@@ -5,6 +5,7 @@ import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -147,25 +148,23 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(getObject(null, null, null));
 		//
-		Assertions.assertNull(getObject(null, Collections.singletonList(null), null));
+		final List<Object> list = new ArrayList<>();
+		//
+		Util.add(list, null);
+		//
+		Assertions.assertNull(getObject(null, list, null));
 		//
 		final Map<Object, ?> map = new LinkedHashMap<>();
 		//
 		Util.put(map, "code", null);
 		//
-		Assertions.assertNull(getObject(null, Collections.singletonList(map), null));
+		Assertions.assertNull(getObject(null, List.of(map), null));
 		//
-		Assertions
-				.assertNull(getObject(null,
-						Collections.singletonList(
-								ObjectMapperUtil.readValue(objectMapper, "{\"code\":null,\"count\":0}", Object.class)),
-						null));
+		Assertions.assertNull(getObject(null,
+				List.of(ObjectMapperUtil.readValue(objectMapper, "{\"code\":null,\"count\":0}", Object.class)), null));
 		//
-		Assertions.assertEquals(Map.of(),
-				getObject(null,
-						Collections.singletonList(
-								ObjectMapperUtil.readValue(objectMapper, "{\"code\":null,\"count\":1}", Object.class)),
-						null));
+		Assertions.assertEquals(Map.of(), getObject(null,
+				List.of(ObjectMapperUtil.readValue(objectMapper, "{\"code\":null,\"count\":1}", Object.class)), null));
 		//
 	}
 
@@ -187,22 +186,26 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testCreateMap() throws Throwable {
 		//
-		Assertions.assertNull(createMap(Collections.singletonList(null)));
+		final List<Object> list = new ArrayList<>();
+		//
+		Util.add(list, null);
+		//
+		Assertions.assertNull(createMap(list));
 		//
 		final Map<Object, Object> map = new LinkedHashMap<>();
 		//
 		Util.put(map, null, null);
 		//
-		Assertions.assertNull(createMap(Collections.singletonList(map)));
+		Assertions.assertNull(createMap(List.of(map)));
 		//
 		map.clear();
 		//
 		Util.put(map, "name", null);
 		//
-		Assertions.assertNull(createMap(Collections.singletonList(map)));
+		Assertions.assertNull(createMap(List.of(map)));
 		//
-		Assertions.assertNull(createMap(Collections.singletonList(
-				ObjectMapperUtil.readValue(objectMapper, "{\"name\":null,\"ruby\":null}", Object.class))));
+		Assertions.assertNull(createMap(
+				List.of(ObjectMapperUtil.readValue(objectMapper, "{\"name\":null,\"ruby\":null}", Object.class))));
 		//
 		Assertions.assertNull(createMap(Collections
 				.singletonList(ObjectMapperUtil.readValue(objectMapper, "{\"name\":1,\"ruby\":null}", Object.class))));
@@ -211,8 +214,8 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		Util.put(map, "一", null);
 		//
-		Assertions.assertEquals(map, createMap(Collections.singletonList(
-				ObjectMapperUtil.readValue(objectMapper, "{\"name\":\"一\",\"ruby\":null}", Object.class))));
+		Assertions.assertEquals(map, createMap(
+				List.of(ObjectMapperUtil.readValue(objectMapper, "{\"name\":\"一\",\"ruby\":null}", Object.class))));
 		//
 	}
 

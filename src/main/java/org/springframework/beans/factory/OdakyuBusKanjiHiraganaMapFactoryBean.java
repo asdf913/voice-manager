@@ -248,7 +248,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 				//
 			} // for
 				//
-			return Objects.equals(Collections.singletonList(unicodeBlock), unicodeBlocks);
+			return Objects.equals(List.of(unicodeBlock), unicodeBlocks);
 			//
 		} // if
 			//

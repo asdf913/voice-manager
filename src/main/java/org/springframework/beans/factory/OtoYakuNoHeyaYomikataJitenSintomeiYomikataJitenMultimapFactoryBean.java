@@ -199,7 +199,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 			//
 			while (Util.find(m) && Util.groupCount(m) > 1) {
 				//
-				if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+				if (Objects.equals(List.of(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 						getUnicodeBlocks(s1 = Util.group(m, 1)))) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
@@ -286,7 +286,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 			//
 			while (Util.find(m4) && Util.groupCount(m4) > 1) {
 				//
-				if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+				if (Objects.equals(List.of(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 						getUnicodeBlocks(s41 = Util.group(m4, 1)))) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s41,
@@ -321,7 +321,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 			//
 			while (Util.find(m) && Util.groupCount(m) > 1) {
 				//
-				if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+				if (Objects.equals(List.of(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 						getUnicodeBlocks(s1 = Util.group(m, 1)))) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,

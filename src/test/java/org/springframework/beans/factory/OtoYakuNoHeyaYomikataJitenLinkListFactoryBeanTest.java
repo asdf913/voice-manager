@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -506,9 +507,13 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 	@Test
 	void testGetLinks() throws Throwable {
 		//
-		Assertions.assertNull(getLinks(Collections.singletonList(null)));
+		final List<Element> elements = new ArrayList<>();
 		//
-		Assertions.assertEquals(List.of(), getLinks(Collections.singletonList(element)));
+		Util.add(elements, null);
+		//
+		Assertions.assertNull(getLinks(elements));
+		//
+		Assertions.assertEquals(List.of(), getLinks(List.of(element)));
 		//
 	}
 

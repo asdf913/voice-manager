@@ -223,17 +223,16 @@ public class KominatoKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromRe
 				//
 			} // if
 				//
-			if (Objects.equals(unicodeBlocks, Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS))
+			if (Objects.equals(unicodeBlocks, List.of(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS))
 					&& kanjiHiraganaRomaji != null) {
 				//
 				kanjiHiraganaRomaji.kanji = string;
 				//
-			} else if (Objects.equals(unicodeBlocks, Collections.singletonList(UnicodeBlock.HIRAGANA))
-					&& kanjiHiraganaRomaji != null) {
+			} else if (Objects.equals(unicodeBlocks, List.of(UnicodeBlock.HIRAGANA)) && kanjiHiraganaRomaji != null) {
 				//
 				kanjiHiraganaRomaji.hiragana = string;
 				//
-			} else if (Objects.equals(unicodeBlocks, Collections.singletonList(UnicodeBlock.BASIC_LATIN))
+			} else if (Objects.equals(unicodeBlocks, List.of(UnicodeBlock.BASIC_LATIN))
 					&& kanjiHiraganaRomaji != null) {
 				//
 				kanjiHiraganaRomaji.romaji = string;

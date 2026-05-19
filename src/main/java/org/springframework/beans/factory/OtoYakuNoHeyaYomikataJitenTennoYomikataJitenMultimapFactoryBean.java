@@ -177,8 +177,8 @@ public class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean
 		final Matcher m = Util
 				.matcher(ObjectUtils.getIfNull(get(supplier), () -> Pattern.compile("^（(\\p{InHiragana}+)）$")), s2);
 		//
-		if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), getUnicodeBlocks(s1))
-				&& Util.matches(m) && Util.groupCount(m) > 0) {
+		if (Objects.equals(List.of(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), getUnicodeBlocks(s1)) && Util.matches(m)
+				&& Util.groupCount(m) > 0) {
 			//
 			return ImmutableMultimap.of(s1, Util.group(m, 1));
 			//

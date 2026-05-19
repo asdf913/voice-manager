@@ -4,7 +4,9 @@ import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -135,11 +137,15 @@ class TokyuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(instance != null ? instance.getObject() : null);
 		//
-		Assertions.assertNull(getObject(Collections.singletonList(null), null));
+		final List<Element> list = new ArrayList<>();
+		//
+		Util.add(list, null);
+		//
+		Assertions.assertNull(getObject(list, null));
 		//
 		final Element element = new Element("A");
 		//
-		Iterable<Element> elements = Collections.singletonList(element);
+		Iterable<Element> elements = List.of(element);
 		//
 		Assertions.assertNull(getObject(elements, null));
 		//
@@ -167,11 +173,15 @@ class TokyuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	@Test
 	void testGetRomajiOrHiraganaMap() throws Throwable {
 		//
-		Assertions.assertNull(getRomajiOrHiraganaMap(Collections.singletonList(null)));
+		final List<Element> list = new ArrayList<>();
+		//
+		Util.add(list, null);
+		//
+		Assertions.assertNull(getRomajiOrHiraganaMap(list));
 		//
 		final Element element = new Element("A");
 		//
-		Iterable<Element> elements = Collections.singletonList(element);
+		Iterable<Element> elements = List.of(element);
 		//
 		Assertions.assertNull(getRomajiOrHiraganaMap(elements));
 		//

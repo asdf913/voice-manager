@@ -239,7 +239,7 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 				//
 			} // for
 				//
-			return Objects.equals(Collections.singletonList(unicodeBlock), unicodeBlocks);
+			return Objects.equals(List.of(unicodeBlock), unicodeBlocks);
 			//
 		} // if
 			//

@@ -379,7 +379,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, EMPTY));
 		//
-		Assertions.assertEquals(Collections.singletonList(EMPTY), get(imageFormatOrders, instance));
+		Assertions.assertEquals(List.of(EMPTY), get(imageFormatOrders, instance));
 		//
 		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, "[]"));
 		//
@@ -407,7 +407,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, Boolean.toString(b)));
 		//
-		Assertions.assertEquals(Collections.singletonList(Boolean.toString(b)), get(imageFormatOrders, instance));
+		Assertions.assertEquals(List.of(Boolean.toString(b)), get(imageFormatOrders, instance));
 		//
 	}
 
