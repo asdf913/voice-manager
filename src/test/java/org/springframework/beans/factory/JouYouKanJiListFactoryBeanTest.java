@@ -1,5 +1,7 @@
 package org.springframework.beans.factory;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -24,13 +26,16 @@ import com.google.common.reflect.Reflection;
 
 class JouYouKanJiListFactoryBeanTest {
 
-	private static Method METHOD_GET_COLUMN_INDEX = null;
+	private static Method METHOD_GET_COLUMN_INDEX, METHOD_READ_ALL_BYTES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
-		(METHOD_GET_COLUMN_INDEX = JouYouKanJiListFactoryBean.class.getDeclaredMethod("getColumnIndex", List.class))
-				.setAccessible(true);
+		final Class<?> clz = JouYouKanJiListFactoryBean.class;
+		//
+		(METHOD_GET_COLUMN_INDEX = clz.getDeclaredMethod("getColumnIndex", List.class)).setAccessible(true);
+		//
+		(METHOD_READ_ALL_BYTES = clz.getDeclaredMethod("readAllBytes", InputStream.class)).setAccessible(true);
 		//
 	}
 
@@ -43,7 +48,7 @@ class JouYouKanJiListFactoryBeanTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			final String methodName = method != null ? method.getName() : null;
+			final String methodName = Util.getName(method);
 			//
 			if (proxy instanceof InputStreamSource && Objects.equals(methodName, "getInputStream")) {
 				//
@@ -152,24 +157,30 @@ class JouYouKanJiListFactoryBeanTest {
 	@Test
 	void testGetColumnIndex() throws Throwable {
 		//
-		Assertions.assertNull(getColumnIndex(null));
+		Assertions.assertNull(invoke(METHOD_GET_COLUMN_INDEX, null, (Object) null));
 		//
-		Assertions.assertNull(getColumnIndex(Arrays.asList(null, new Element("a"))));
+		Assertions.assertNull(invoke(METHOD_GET_COLUMN_INDEX, null, Arrays.asList(null, new Element("a"))));
 		//
 	}
 
-	private static Integer getColumnIndex(final List<Element> elements) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_COLUMN_INDEX.invoke(null, elements);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Integer) {
-				return (Integer) obj;
-			}
-			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
+	private static Object invoke(final Method method, final Object instance, final Object... args)
+			throws IllegalAccessException, InvocationTargetException {
+		return method != null && method.getDeclaringClass() != null ? method.invoke(instance, args) : null;
+	}
+
+	@Test
+	void testReadAllBytes() throws IllegalAccessException, InvocationTargetException, IOException {
+		//
+		Assertions.assertNull(invoke(METHOD_READ_ALL_BYTES, null, (Object) null));
+		//
+		final byte[] bs = new byte[] {};
+		//
+		try (final InputStream is = new ByteArrayInputStream(bs)) {
+			//
+			Assertions.assertTrue(Objects.deepEquals(bs, invoke(METHOD_READ_ALL_BYTES, null, is)));
+			//
+		} // try
+			//
 	}
 
 }

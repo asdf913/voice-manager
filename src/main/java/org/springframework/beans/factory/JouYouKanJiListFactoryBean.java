@@ -101,7 +101,7 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
 				//
 				final String string = testAndApply(Objects::nonNull, is,
-						x -> new String(x != null ? x.readAllBytes() : null, StandardCharsets.UTF_8), null);
+						x -> new String(readAllBytes(x), StandardCharsets.UTF_8), null);
 				//
 				if (string != null) {
 					//
@@ -115,6 +115,10 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 			//
 		return null;
 		//
+	}
+
+	private static byte[] readAllBytes(final InputStream instance) throws IOException {
+		return instance != null ? instance.readAllBytes() : null;
 	}
 
 	@Nullable
