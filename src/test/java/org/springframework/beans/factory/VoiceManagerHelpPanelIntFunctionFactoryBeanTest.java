@@ -1,6 +1,9 @@
 package org.springframework.beans.factory;
 
 import java.awt.Desktop;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,7 +33,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerHelpPanelIntFunctionFactoryBeanTest {
 
-	private static Method METHOD_CREATE_HYPER_LINK_LISTENER, METHOD_BROWSE = null;
+	private static Method METHOD_CREATE_HYPER_LINK_LISTENER, METHOD_BROWSE, METHOD_READ_ALL_BYTES = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -40,6 +43,8 @@ class VoiceManagerHelpPanelIntFunctionFactoryBeanTest {
 		(METHOD_CREATE_HYPER_LINK_LISTENER = clz.getDeclaredMethod("createHyperlinkListener")).setAccessible(true);
 		//
 		(METHOD_BROWSE = clz.getDeclaredMethod("browse", Desktop.class, URI.class)).setAccessible(true);
+		//
+		(METHOD_READ_ALL_BYTES = clz.getDeclaredMethod("readAllBytes", InputStream.class)).setAccessible(true);
 		//
 	}
 
@@ -155,7 +160,8 @@ class VoiceManagerHelpPanelIntFunctionFactoryBeanTest {
 	@Test
 	void testCreateHyperlinkListener() throws Throwable {
 		//
-		final HyperlinkListener hyperlinkListener = createHyperlinkListener();
+		final HyperlinkListener hyperlinkListener = Util.cast(HyperlinkListener.class,
+				invoke(METHOD_CREATE_HYPER_LINK_LISTENER, null));
 		//
 		Assertions.assertDoesNotThrow(() -> hyperlinkUpdate(hyperlinkListener, null));
 		//
@@ -170,34 +176,30 @@ class VoiceManagerHelpPanelIntFunctionFactoryBeanTest {
 		}
 	}
 
-	private static HyperlinkListener createHyperlinkListener() throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_HYPER_LINK_LISTENER.invoke(null);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof HyperlinkListener) {
-				return (HyperlinkListener) obj;
-			} // if
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
+	private static Object invoke(final Method method, final Object instance, final Object... args)
+			throws IllegalAccessException, InvocationTargetException {
+		return method != null && method.getDeclaringClass() != null ? method.invoke(instance, args) : null;
 	}
 
 	@Test
-	void testBrowse() {
+	void testBrowse() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertDoesNotThrow(
-				() -> browse(Util.cast(Desktop.class, Narcissus.allocateInstance(Desktop.class)), null));
+		Assertions.assertNull(
+				invoke(METHOD_BROWSE, null, Util.cast(Desktop.class, Narcissus.allocateInstance(Desktop.class)), null));
 		//
 	}
 
-	private static void browse(final Desktop instance, final URI uri) throws Throwable {
-		try {
-			METHOD_BROWSE.invoke(null, instance, uri);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
+	@Test
+	void testReadAllBytes() throws IllegalAccessException, InvocationTargetException, IOException {
+		//
+		final byte[] bs = new byte[] {};
+		//
+		try (final InputStream is = new ByteArrayInputStream(bs)) {
+			//
+			Assertions.assertTrue(Objects.deepEquals(bs, invoke(METHOD_READ_ALL_BYTES, null, is)));
+			//
+		} // try
+			//
 	}
 
 	@Test
