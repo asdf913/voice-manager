@@ -577,6 +577,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		//
 	}
 
+	@Nullable
 	private static byte[] readAllBytes(@Nullable final InputStream instance) throws IOException {
 		return instance != null ? instance.readAllBytes() : null;
 	}
