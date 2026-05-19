@@ -1602,7 +1602,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final Map<String, Component> emptyMap = Collections.emptyMap();
+		final Map<String, Component> emptyMap = Map.of();
 		//
 		Assertions.assertEquals(emptyMap, getTitledComponentMap(map, null));
 		//

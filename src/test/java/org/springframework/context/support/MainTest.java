@@ -236,7 +236,7 @@ class MainTest {
 		//
 		if (ih != null) {
 			//
-			ih.beansOfType = Collections.emptyMap();
+			ih.beansOfType = Map.of();
 			//
 		} // if
 			//

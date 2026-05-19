@@ -123,7 +123,7 @@ class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertSame(hiragana, get(unicodeBlock, instance));
 		//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setUnicodeBlock(Collections.emptyMap()));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setUnicodeBlock(Map.of()));
 		//
 		Assertions.assertThrows(IllegalStateException.class, () -> instance.setUnicodeBlock("h"));
 		//

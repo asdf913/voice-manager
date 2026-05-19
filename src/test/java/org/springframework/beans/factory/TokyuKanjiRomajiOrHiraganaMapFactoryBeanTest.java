@@ -110,8 +110,7 @@ class TokyuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertSame(romaji, get(romajiOrHiragana, instance));
 		//
-		Assertions.assertThrows(IllegalArgumentException.class,
-				() -> instance.setRomajiOrHiragana(Collections.emptyMap()));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setRomajiOrHiragana(Map.of()));
 		//
 	}
 

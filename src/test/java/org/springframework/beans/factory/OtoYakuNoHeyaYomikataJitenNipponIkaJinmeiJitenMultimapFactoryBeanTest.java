@@ -491,10 +491,10 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 				Util.toString(toMultimap(Collections.singletonMap(EMPTY, Collections.singleton(EMPTY)))));
 		//
 		Assertions.assertThrows(IllegalStateException.class,
-				() -> toMultimap(Collections.singletonMap(EMPTY, Collections.singleton(Collections.emptyMap()))));
+				() -> toMultimap(Collections.singletonMap(EMPTY, Collections.singleton(Map.of()))));
 		//
 		Assertions.assertThrows(IllegalStateException.class,
-				() -> toMultimap(Collections.singletonMap(EMPTY, Collections.emptyMap())));
+				() -> toMultimap(Collections.singletonMap(EMPTY, Map.of())));
 		//
 		if (ih != null) {
 			//

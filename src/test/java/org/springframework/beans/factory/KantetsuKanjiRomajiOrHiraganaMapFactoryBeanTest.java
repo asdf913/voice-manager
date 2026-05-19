@@ -105,7 +105,7 @@ class KantetsuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(getObject(null));
 		//
-		Assertions.assertEquals(Collections.emptyMap(), getObject(Stream.of((Object) null)));
+		Assertions.assertEquals(Map.of(), getObject(Stream.of((Object) null)));
 		//
 		final Constructor<?> constructor = getDeclaredConstructor(CLASS_KANJI_HIRAGANA_ROMAJI);
 		//
@@ -117,7 +117,7 @@ class KantetsuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			//
 		final Object kanjiHiraganaRomaji = newInstance(constructor);
 		//
-		Assertions.assertEquals(Collections.emptyMap(), getObject(Stream.of(kanjiHiraganaRomaji)));
+		Assertions.assertEquals(Map.of(), getObject(Stream.of(kanjiHiraganaRomaji)));
 		//
 		if (instance != null) {
 			//
@@ -127,13 +127,13 @@ class KantetsuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			//
 		FieldUtils.writeDeclaredField(kanjiHiraganaRomaji, "kanji", "1", true);
 		//
-		Assertions.assertEquals(Collections.emptyMap(), getObject(Stream.of(kanjiHiraganaRomaji)));
+		Assertions.assertEquals(Map.of(), getObject(Stream.of(kanjiHiraganaRomaji)));
 		//
 		final String kanji = "一";
 		//
 		FieldUtils.writeDeclaredField(kanjiHiraganaRomaji, "kanji", "一", true);
 		//
-		Assertions.assertEquals(Collections.emptyMap(), getObject(Stream.of(kanjiHiraganaRomaji)));
+		Assertions.assertEquals(Map.of(), getObject(Stream.of(kanjiHiraganaRomaji)));
 		//
 		if (instance != null) {
 			//
@@ -143,7 +143,7 @@ class KantetsuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			//
 		FieldUtils.writeDeclaredField(kanjiHiraganaRomaji, "hiragana", "1", true);
 		//
-		Assertions.assertEquals(Collections.emptyMap(), getObject(Stream.of(kanjiHiraganaRomaji)));
+		Assertions.assertEquals(Map.of(), getObject(Stream.of(kanjiHiraganaRomaji)));
 		//
 		final String hiragana = "いち";
 		//

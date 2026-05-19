@@ -937,7 +937,7 @@ class UtilTest {
 		//
 		Assertions.assertDoesNotThrow(() -> Util.forEach((Map) null, null));
 		//
-		final Map<?, ?> emptyMap = Collections.emptyMap();
+		final Map<?, ?> emptyMap = Map.of();
 		//
 		Assertions.assertDoesNotThrow(() -> Util.forEach(emptyMap, null));
 		//

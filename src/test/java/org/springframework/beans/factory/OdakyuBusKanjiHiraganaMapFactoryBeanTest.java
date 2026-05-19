@@ -156,7 +156,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 								ObjectMapperUtil.readValue(objectMapper, "{\"code\":null,\"count\":0}", Object.class)),
 						null));
 		//
-		Assertions.assertEquals(Collections.emptyMap(),
+		Assertions.assertEquals(Map.of(),
 				getObject(null,
 						Collections.singletonList(
 								ObjectMapperUtil.readValue(objectMapper, "{\"code\":null,\"count\":1}", Object.class)),

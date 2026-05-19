@@ -110,14 +110,14 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		try (final InputStream is = new ByteArrayInputStream(getBytes("1,2"))) {
 			//
-			Assertions.assertEquals(Collections.emptyMap(), createMap(is, null));
+			Assertions.assertEquals(Map.of(), createMap(is, null));
 			//
 		} // try
 			//
 		try (final InputStream is = new ByteArrayInputStream(
 				getBytes(String.join(System.lineSeparator(), "1,2", "1,2,3")))) {
 			//
-			Assertions.assertEquals(Collections.emptyMap(), createMap(is, forName("utf-8")));
+			Assertions.assertEquals(Map.of(), createMap(is, forName("utf-8")));
 			//
 		} // try
 			//

@@ -98,7 +98,7 @@ class KyushuRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		final List<Element> elements = Collections.singletonList(element);
 		//
-		Assertions.assertEquals(Collections.emptyMap(), createMap(elements));
+		Assertions.assertEquals(Map.of(), createMap(elements));
 		//
 		if (childNode1 != null) {
 			//

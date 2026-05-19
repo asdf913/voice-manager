@@ -405,7 +405,7 @@ class WorkbookUtilTest {
 	@Test
 	void testPutAll() {
 		//
-		Assertions.assertDoesNotThrow(() -> putAll(Collections.emptyMap(), null));
+		Assertions.assertDoesNotThrow(() -> putAll(Map.of(), null));
 		//
 		Assertions.assertDoesNotThrow(() -> METHOD_PUT_ALL.invoke(null, Reflection.newProxy(Map.class, ih), null));
 		//

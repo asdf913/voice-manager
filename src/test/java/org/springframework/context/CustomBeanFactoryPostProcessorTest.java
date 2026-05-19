@@ -408,7 +408,7 @@ class CustomBeanFactoryPostProcessorTest {
 	@Test
 	void testGetSource() throws Throwable {
 		//
-		final Map<String, Object> map = Collections.emptyMap();
+		final Map<String, Object> map = Map.of();
 		//
 		Assertions.assertSame(map, getSource(new SystemEnvironmentPropertySource("A", map)));
 		//

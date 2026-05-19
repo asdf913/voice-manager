@@ -110,7 +110,7 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Collections.emptyMap(), FactoryBeanUtil.getObject(instance));
+		Assertions.assertEquals(Map.of(), FactoryBeanUtil.getObject(instance));
 		//
 		final File file = Path.of("pom.xml").toFile();
 		//
@@ -122,7 +122,7 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Collections.emptyMap(), FactoryBeanUtil.getObject(instance));
+		Assertions.assertEquals(Map.of(), FactoryBeanUtil.getObject(instance));
 		//
 	}
 

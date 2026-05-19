@@ -281,7 +281,7 @@ abstract class Util {
 	}
 
 	static <K, V> void putAll(@Nullable final Map<K, V> a, @Nullable final Map<? extends K, ? extends V> b) {
-		if (a != null && (b != null || Proxy.isProxyClass(getClass(a)))) {
+		if (a != null && ((b != null && !b.isEmpty()) || Proxy.isProxyClass(getClass(a)))) {
 			a.putAll(b);
 		}
 	}

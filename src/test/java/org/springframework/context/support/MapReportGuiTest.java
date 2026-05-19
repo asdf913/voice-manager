@@ -549,7 +549,7 @@ class MapReportGuiTest {
 		//
 		Assertions.assertNull(getValues(beanFactory, null, strings));
 		//
-		Assertions.assertEquals(Collections.singletonList(ih != null ? ih.bean = Collections.emptyMap() : null),
+		Assertions.assertEquals(Collections.singletonList(ih != null ? ih.bean = Map.of() : null),
 				getValues(beanFactory, Map.class, strings));
 		//
 	}

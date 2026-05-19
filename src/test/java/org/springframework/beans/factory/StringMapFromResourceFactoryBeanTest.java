@@ -274,7 +274,7 @@ class StringMapFromResourceFactoryBeanTest {
 				//
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
-			Assertions.assertEquals(Collections.emptyMap(), FactoryBeanUtil.getObject(instance));
+			Assertions.assertEquals(Map.of(), FactoryBeanUtil.getObject(instance));
 			//
 		} // try
 			//
@@ -300,7 +300,7 @@ class StringMapFromResourceFactoryBeanTest {
 				//
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
-			Assertions.assertEquals(Collections.emptyMap(), FactoryBeanUtil.getObject(instance));
+			Assertions.assertEquals(Map.of(), FactoryBeanUtil.getObject(instance));
 			//
 		} // try
 			//
@@ -328,7 +328,7 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 			final Map<String, String> map = FactoryBeanUtil.getObject(instance);
 			//
-			Assertions.assertEquals(Collections.emptyMap(), map);
+			Assertions.assertEquals(Map.of(), map);
 			//
 			Assertions.assertSame(map, FactoryBeanUtil.getObject(instance));
 			//

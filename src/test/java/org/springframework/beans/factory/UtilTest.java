@@ -382,7 +382,7 @@ class UtilTest {
 		//
 		Assertions.assertDoesNotThrow(() -> Util.putAll(null, null));
 		//
-		final Map<Object, Object> map = Collections.emptyMap();
+		final Map<Object, Object> map = Map.of();
 		//
 		Assertions.assertDoesNotThrow(() -> Util.putAll(map, null));
 		//

@@ -231,7 +231,7 @@ class FuriganaKanjikanaFailableFunctionTest {
 	@Test
 	void testGet() throws Throwable {
 		//
-		Assertions.assertNull(get(Collections.emptyMap(), null));
+		Assertions.assertNull(get(Map.of(), ""));
 		//
 	}
 
