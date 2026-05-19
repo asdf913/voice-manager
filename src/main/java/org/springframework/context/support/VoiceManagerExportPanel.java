@@ -1995,8 +1995,8 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 						//
 					} // if
 						//
-					FileUtils.writeStringToFile(
-							file = Util.toFile(Path.of(StringUtils.defaultIfBlank(Util.toString(sb), "export.html"))),
+					Files.writeString(Util.toPath(
+							file = Util.toFile(Path.of(StringUtils.defaultIfBlank(Util.toString(sb), "export.html")))),
 							Util.toString(writer), StandardCharsets.UTF_8);
 					//
 					Util.add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
