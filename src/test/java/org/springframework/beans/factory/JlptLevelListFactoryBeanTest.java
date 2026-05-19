@@ -82,7 +82,7 @@ class JlptLevelListFactoryBeanTest {
 		//
 		Assertions.assertEquals(Duration.ofMillis(l), get(timeout, instance));
 		//
-		Assertions.assertDoesNotThrow(() -> setTimeout(instance, String.format("PT%1$sS", l)));
+		Assertions.assertDoesNotThrow(() -> setTimeout(instance, "PT%1$sS".formatted(l)));
 		//
 		Assertions.assertEquals(Duration.ofMillis(l * 1000), get(timeout, instance));
 		//
@@ -123,7 +123,7 @@ class JlptLevelListFactoryBeanTest {
 		//
 		// java.util.List
 		//
-		Assertions.assertDoesNotThrow(() -> setValues(instance, String.format("[%1$s]", EMPTY)));
+		Assertions.assertDoesNotThrow(() -> setValues(instance, "[%1$s]".formatted(EMPTY)));
 		//
 		Assertions.assertEquals("[null]", Util.toString(get(values, instance)));
 		//
@@ -133,22 +133,22 @@ class JlptLevelListFactoryBeanTest {
 		//
 		Assertions.assertDoesNotThrow(() -> setValues(instance, Util.toString(zero)));
 		//
-		Assertions.assertEquals(String.format("[[%1$s]]", zero), Util.toString(get(values, instance)));
+		Assertions.assertEquals("[[%1$s]]".formatted(zero), Util.toString(get(values, instance)));
 		///
-		Assertions.assertDoesNotThrow(() -> setValues(instance, String.format("[%1$s]", zero)));
+		Assertions.assertDoesNotThrow(() -> setValues(instance, "[%1$s]".formatted(zero)));
 		//
-		Assertions.assertEquals(String.format("[[%1$s]]", zero), Util.toString(get(values, instance)));
+		Assertions.assertEquals("[[%1$s]]".formatted(zero), Util.toString(get(values, instance)));
 		//
 		// java.util.Map
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{}",
-				() -> setValues(instance, String.format("{\"%1$s\":%1$s}", zero)));
+				() -> setValues(instance, "{\"%1$s\":%1$s}".formatted(zero)));
 		//
 		// Invalid Format
 		//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
-			Assertions.assertDoesNotThrow(() -> setValues(instance, String.format("{%1$s:%1$s}", zero)));
+			Assertions.assertDoesNotThrow(() -> setValues(instance, "{%1$s:%1$s}".formatted(zero)));
 			//
 		} else {
 			//
@@ -158,7 +158,7 @@ class JlptLevelListFactoryBeanTest {
 					" at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 2], message=org.opentest4j.AssertionFailedError: Unexpected character ('0' (code 48)): was expecting double-quote to start field name",
 					" at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 2] ==> Unexpected exception thrown: com.fasterxml.jackson.core.JsonParseException: Unexpected character ('0' (code 48)): was expecting double-quote to start field name",
 					" at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 2]}"),
-					() -> setValues(instance, String.format("{%1$s:%1$s}", zero)));
+					() -> setValues(instance, "{%1$s:%1$s}".formatted(zero)));
 			//
 		} // if
 			//

@@ -71,7 +71,7 @@ public interface ProtocolUtil {
 		//
 		try (final InputStream is = clz != null
 				? clz.getResourceAsStream(
-						String.format("/%1$s.class", StringsUtil.replace(Strings.CS, clz.getName(), ".", "/")))
+						"/%1$s.class".formatted(StringsUtil.replace(Strings.CS, clz.getName(), ".", "/")))
 				: null) {
 			//
 			// org.jsoup.helper.HttpConnection$Response.execute(org.jsoup.helper.HttpConnection$Request,org.jsoup.helper.HttpConnection$Response)

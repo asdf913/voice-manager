@@ -560,7 +560,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 			panelDllPath.add(btnDllPathCopy = new JButton("Copy"));
 			//
-			add(panelDllPath, String.format("%1$s,span %2$s", WRAP, 2));
+			add(panelDllPath, "%1$s,span %2$s".formatted(WRAP, 2));
 			//
 		} // if
 			//
@@ -595,7 +595,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 		add(btnExportMicrosoftSpeechObjectLibraryInformation = new JButton(
 				Util.toString(append(btnExportMicrosoftSpeechObjectLibraryInformationName, "Information"))),
-				String.format("%1$s,span %2$s", WRAP, 2));
+				"%1$s,span %2$s".formatted(WRAP, 2));
 		//
 		final JPanel panelFile = new JPanel();
 		//
@@ -603,13 +603,13 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 		panelFile.setBorder(BorderFactory.createTitledBorder("File"));
 		//
-		panelFile.add(tfExportFile = new JTextField(), String.format(WMIN_ONLY_FORMAT, 300));
+		panelFile.add(tfExportFile = new JTextField(), WMIN_ONLY_FORMAT.formatted(300));
 		//
 		panelFile.add(btnExportCopy = new JButton("Copy"));
 		//
 		panelFile.add(btnExportBrowse = new JButton("Browse"));
 		//
-		add(panelFile, String.format(SPAN_ONLY_FORMAT, 2));
+		add(panelFile, SPAN_ONLY_FORMAT.formatted(2));
 		//
 		Util.forEach(Stream.of(tfDllPath, tfExportFile), x -> Util.setEditable(x, false));
 		//
@@ -747,7 +747,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		if (Objects.equals(source, btnExportMicrosoftSpeechObjectLibraryInformation)) {
 			//
 			final Path path = Path
-					.of(String.format("MicrosoftSpeechObjectLibrary_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date()));
+					.of("MicrosoftSpeechObjectLibrary_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx".formatted(new Date()));
 			//
 			final File file = Util.toFile(path);
 			//
@@ -946,7 +946,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 				//
 				if (!Util.containsKey(map, key)) {
 					//
-					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
+					throw new IllegalStateException(KEY_NOT_FOUND_MESSAGE.formatted(
 							testAndApply(IH::isArray, Util.cast(Class.class, key), Util::getSimpleName, x -> key)));
 					//
 				} // if

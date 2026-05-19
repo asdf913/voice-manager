@@ -363,7 +363,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 										String[]::new),
 								DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>())));
 		//
-		panel.add(tfHost = new JTextField(), String.format("wmin %1$spx", 100));
+		panel.add(tfHost = new JTextField(), "wmin %1$spx".formatted(100));
 		//
 		panel.add(new JLabel(":"));
 		//
@@ -389,21 +389,21 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		} // if
 			//
-		panel.add(tfPort = new JFormattedTextField(numberFormatter), String.format("wmin %1$spx", 42));
+		panel.add(tfPort = new JFormattedTextField(numberFormatter), "wmin %1$spx".formatted(42));
 		//
-		add(panel, String.format("span %1$s", 3));
+		add(panel, "span %1$s".formatted(3));
 		//
 		// Info
 		//
 		final String wrap = "wrap";
 		//
-		add(btnInfo = new JButton("Info"), String.format("%1$s,span %2$s", wrap, 3));
+		add(btnInfo = new JButton("Info"), "%1$s,span %2$s".formatted(wrap, 3));
 		//
 		Util.setVisible(btnInfo, false);
 		//
 		add(new JLabel());
 		//
-		add(btnSpeakers = new JButton("Speakers"), String.format("span %1$s,%2$s", 3, wrap));
+		add(btnSpeakers = new JButton("Speakers"), "span %1$s,%2$s".formatted(3, wrap));
 		//
 		add(new JLabel("Speaker"));
 		//
@@ -422,7 +422,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		});
 		//
-		add(jcbSpeaker, String.format("span %1$s", 2));
+		add(jcbSpeaker, "span %1$s".formatted(2));
 		//
 		add(jLabelPortrait = new JLabel());
 		//
@@ -449,7 +449,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		});
 		//
-		add(jcbStyle, String.format("span %1$s", 2));
+		add(jcbStyle, "span %1$s".formatted(2));
 		//
 		add(jLabelIcon = new JLabel());
 		//
@@ -459,22 +459,22 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		add(btnSaveIcon = new JButton("Save"), wrap);
 		//
-		add(new JLabel("Voice Sample Transcript"), String.format("span %1$s", 3));
+		add(new JLabel("Voice Sample Transcript"), "span %1$s".formatted(3));
 		//
 		add(jcbVoiceSampleTranscript = new JComboBox<>(dcbmVoiceSampleTranscript = new DefaultComboBoxModel<>()),
-				String.format("span %1$s", 1));
+				"span %1$s".formatted(1));
 		//
 		add(btnCopyVoiceSampleTranscriptToText = new JButton("Copy"));
 		//
-		add(btnPlayVoiceSampleTranscript = new JButton("Play"), String.format("%1$s,span %2$s", wrap, 2));
+		add(btnPlayVoiceSampleTranscript = new JButton("Play"), "%1$s,span %2$s".formatted(wrap, 2));
 		//
 		add(new JLabel("Text"));
 		//
-		add(tfText = new JTextField(), String.format("growx,span %1$s", 3));
+		add(tfText = new JTextField(), "growx,span %1$s".formatted(3));
 		//
-		add(btnAudioQuery = new JButton("Audio Query"), String.format("span %1$s", 2));
+		add(btnAudioQuery = new JButton("Audio Query"), "span %1$s".formatted(2));
 		//
-		add(btnViewAudioQuery = new JButton("View"), String.format("%1$s,span %2$s", wrap, 2));
+		add(btnViewAudioQuery = new JButton("View"), "%1$s,span %2$s".formatted(wrap, 2));
 		//
 		add(new JLabel());
 		//
@@ -1385,7 +1385,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			final Dimension screenSize = getScreenSize(Toolkit.getDefaultToolkit());
 			//
 			jPanel.add(new JScrollPane(jTextArea),
-					String.format("wmax %1$s", screenSize != null ? screenSize.getWidth() - 30 : "100%"));
+					"wmax %1$s".formatted(screenSize != null ? screenSize.getWidth() - 30 : "100%"));
 			//
 			testAndRun(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 					() -> JOptionPane.showMessageDialog(null, jPanel, "Audio Query", JOptionPane.PLAIN_MESSAGE));
@@ -1719,7 +1719,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 						Speaker.getName(Util.cast(Speaker.class, Util.getSelectedItem(instance.jcbSpeaker)))));
 				//
 				testAndAccept((a, b) -> StringUtils.isNotBlank(b), sb, style.name,
-						(a, b) -> append(a, String.format("(%1$s)", b)));
+						(a, b) -> append(a, "(%1$s)".formatted(b)));
 				//
 				final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
 				//
@@ -1801,7 +1801,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 						//
 					panel.add(
 							testAndApply(Objects::nonNull, image, x -> new JLabel(new ImageIcon(x)), x -> new JLabel()),
-							String.format("%1$s,span %2$s %3$s", wrap, 1, 5));
+							"%1$s,span %2$s %3$s".formatted(wrap, 1, 5));
 					//
 					panel.add(new JLabel("Brand Name"));
 					//
@@ -1839,16 +1839,16 @@ public class AivisSpeechRestApiJPanel extends JPanel
 				//
 				testAndAccept(Objects::nonNull,
 						createJPanel("Supported Devices", supportedDevices(scheme, hostAndPort, objectMapper)),
-						x -> panel.add(x, String.format("%1$s,span %2$s", growx, 2)));
+						x -> panel.add(x, "%1$s,span %2$s".formatted(growx, 2)));
 				//
 				testAndAccept(Objects::nonNull,
 						createJPanel("Supported Features",
 								testAndApply(Util::containsKey, engineManifest, "supported_features",
 										(a, b) -> toMap(Util.get(a, b)), null)),
-						x -> panel.add(x, String.format("%1$s,span %2$s,%3$s", growx, 2, wrap)));
+						x -> panel.add(x, "%1$s,span %2$s,%3$s".formatted(growx, 2, wrap)));
 				//
 				panel.add(instance.btnEngineManifest = ObjectUtils.getIfNull(instance.btnEngineManifest,
-						() -> new JButton("Engine Manifest")), String.format("span %1$s,align center", 3));
+						() -> new JButton("Engine Manifest")), "span %1$s,align center".formatted(3));
 				//
 				if (instance.btnEngineManifest != null) {
 					//
@@ -1903,7 +1903,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 								&& isImage(bs)) {
 							//
 							MethodUtils.invokeMethod(entry, "setValue",
-									new ImgTag().attr("src", String.format("data:%1$s;base64,%2$s",
+									new ImgTag().attr("src", "data:%1$s;base64,%2$s".formatted(
 											getMimeType(new ContentInfoUtil().findMatch(bs)), Util.getValue(entry))));
 							//
 						} // if
@@ -2044,7 +2044,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		final Class<?> clz = Util.getClass(instance);
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				String.format("/%1$s.class", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
+				"/%1$s.class".formatted(StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 			//
 			// java.awt.Toolkit.getSystemClipboard()
 			//
@@ -2158,7 +2158,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 					//
 				final Process process = ffplayExists
 						? exec(Runtime.getRuntime(),
-								String.format("ffplay -autoexit -nodisp %1$s", Util.getAbsolutePath(file)))
+								"ffplay -autoexit -nodisp %1$s".formatted(Util.getAbsolutePath(file)))
 						: null;
 				//
 				if (process != null) {
@@ -2220,8 +2220,9 @@ public class AivisSpeechRestApiJPanel extends JPanel
 								StringUtils.join(".", Objects.toString(getFileExtension(contentInfo)))),
 						bs, FileUtils::writeByteArrayToFile);
 				//
-				final Process process = exec(Runtime.getRuntime(), String.format(
-						"powershell -c (New-Object Media.SoundPlayer '%1$s').PlaySync();", Util.getAbsolutePath(file)));
+				final Process process = exec(Runtime.getRuntime(),
+						"powershell -c (New-Object Media.SoundPlayer '%1$s').PlaySync();"
+								.formatted(Util.getAbsolutePath(file)));
 				//
 				if (process != null) {
 					//
@@ -2282,7 +2283,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 							bs, FileUtils::writeByteArrayToFile);
 					//
 					final Process process = exec(Runtime.getRuntime(),
-							String.format("%1$s \"%2$s\"", Util.getAbsoluteFile(wmplayer), Util.getAbsolutePath(file)));
+							"%1$s \"%2$s\"".formatted(Util.getAbsoluteFile(wmplayer), Util.getAbsolutePath(file)));
 					//
 					if (process != null) {
 						//

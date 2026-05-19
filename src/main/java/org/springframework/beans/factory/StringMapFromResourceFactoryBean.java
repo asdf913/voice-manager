@@ -226,7 +226,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 					if ((sheet = WorkbookUtil.getSheet(wb, IValue0Util.getValue0(sheetName))) == null) {
 						//
 						throw new IllegalArgumentException(
-								String.format("Sheet [%1$s] not found", IValue0Util.getValue0(sheetName)));
+								"Sheet [%1$s] not found".formatted(IValue0Util.getValue0(sheetName)));
 						//
 					} // if
 						//

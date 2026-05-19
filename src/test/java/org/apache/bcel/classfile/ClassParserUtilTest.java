@@ -19,8 +19,8 @@ class ClassParserUtilTest {
 		Assertions.assertNull(
 				ClassParserUtil.parse(cast(ClassParser.class, Narcissus.allocateInstance(ClassParser.class))));
 		//
-		try (final InputStream is = ClassParserUtilTest.class.getResourceAsStream(String.format("/%1$s.class",
-				StringsUtil.replace(Strings.CS, ClassParserUtilTest.class.getName(), ".", "/")))) {
+		try (final InputStream is = ClassParserUtilTest.class.getResourceAsStream("/%1$s.class"
+				.formatted(StringsUtil.replace(Strings.CS, ClassParserUtilTest.class.getName(), ".", "/")))) {
 			//
 			final ClassParser classParser = new ClassParser(is, null);
 			//

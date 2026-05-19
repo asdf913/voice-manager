@@ -465,7 +465,7 @@ class VoiceManagerPdfPanelTest {
 		//
 		Assertions.assertEquals(Unit.with(List.of(Integer.toString(one))), FieldUtils.readField(textAligns, instance));
 		//
-		instance.setTextAligns(String.format("[%1$s]", one));
+		instance.setTextAligns("[%1$s]".formatted(one));
 		//
 		Assertions.assertEquals(Unit.with(List.of(Integer.toString(one))), FieldUtils.readField(textAligns, instance));
 		//
@@ -643,7 +643,7 @@ class VoiceManagerPdfPanelTest {
 		Object ldcwGetValue = null;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				String.format("/%1$s.class", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
+				"/%1$s.class".formatted(StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 			//
 			final org.apache.bcel.classfile.Method method = JavaClassUtil.getMethod(
 					ClassParserUtil.parse(new ClassParser(is, null)),
@@ -676,7 +676,7 @@ class VoiceManagerPdfPanelTest {
 				//
 		} // try
 			//
-		final String templateName = String.format("%1$s", ObjectUtils.getIfNull(ldcwGetValue, "pdf.html.ftl"));
+		final String templateName = "%1$s".formatted(ObjectUtils.getIfNull(ldcwGetValue, "pdf.html.ftl"));
 		//
 		tl.findTemplateSource(templateName);
 		//

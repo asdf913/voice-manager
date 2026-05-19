@@ -120,7 +120,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 			//
 		add(new JLabel("Text"));
 		//
-		add(tfText = new JTextField(), String.format("wmin %1$s", 100));
+		add(tfText = new JTextField(), "wmin %1$s".formatted(100));
 		//
 		final DefaultComboBoxModel<String> dcbm = new DefaultComboBoxModel<>();
 		//

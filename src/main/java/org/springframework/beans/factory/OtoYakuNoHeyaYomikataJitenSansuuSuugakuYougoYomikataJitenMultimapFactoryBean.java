@@ -275,8 +275,8 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 		final Supplier<StringBuilder> supplier = StringBuilder::new;
 		//
-		final Matcher matcher = Util.matcher(Pattern.compile(String.format("((%1$s)+)（(\\p{InHiragana}+)）",
-				Util.collect(Stream.of("CJKUnifiedIdeographs", "Hiragana"), supplier, (a, b) -> {
+		final Matcher matcher = Util.matcher(Pattern.compile("((%1$s)+)（(\\p{InHiragana}+)）"
+				.formatted(Util.collect(Stream.of("CJKUnifiedIdeographs", "Hiragana"), supplier, (a, b) -> {
 					//
 					if (StringUtils.isNotBlank(a)) {
 						//
@@ -286,7 +286,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 						//
 					if (a != null) {
 						//
-						a.append(String.format("\\p{In%1$s}", b));
+						a.append("\\p{In%1$s}".formatted(b));
 						//
 					} // if
 						//

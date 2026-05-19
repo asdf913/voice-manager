@@ -2018,22 +2018,22 @@ class JapanDictGuiTest {
 		//
 		int[] ints = new int[] { ONE };
 		//
-		Assertions.assertEquals(String.format("[%1$s,%2$s]", ONE, two), ObjectMapperUtil
-				.writeValueAsString(objectMapper, invoke(METHOD_GET_MIN_MAX, null, ints, Integer.valueOf(two))));
+		Assertions.assertEquals("[%1$s,%2$s]".formatted(ONE, two), ObjectMapperUtil.writeValueAsString(objectMapper,
+				invoke(METHOD_GET_MIN_MAX, null, ints, Integer.valueOf(two))));
 		//
 		final int three = 3;
 		//
-		Assertions.assertEquals(String.format("[%1$s,%2$s]", ONE, three), ObjectMapperUtil
-				.writeValueAsString(objectMapper, invoke(METHOD_GET_MIN_MAX, null, ints, Integer.valueOf(three))));
+		Assertions.assertEquals("[%1$s,%2$s]".formatted(ONE, three), ObjectMapperUtil.writeValueAsString(objectMapper,
+				invoke(METHOD_GET_MIN_MAX, null, ints, Integer.valueOf(three))));
 		//
-		Assertions.assertEquals(String.format("[%1$s]", ZERO), ObjectMapperUtil.writeValueAsString(objectMapper,
+		Assertions.assertEquals("[%1$s]".formatted(ZERO), ObjectMapperUtil.writeValueAsString(objectMapper,
 				invoke(METHOD_GET_MIN_MAX, null, ints, Integer.valueOf(ZERO))));
 		//
-		Assertions.assertEquals(String.format("[%1$s,%2$s]", ONE, three), ObjectMapperUtil.writeValueAsString(
-				objectMapper, invoke(METHOD_GET_MIN_MAX, null, new int[] { ONE, two }, Integer.valueOf(three))));
+		Assertions.assertEquals("[%1$s,%2$s]".formatted(ONE, three), ObjectMapperUtil.writeValueAsString(objectMapper,
+				invoke(METHOD_GET_MIN_MAX, null, new int[] { ONE, two }, Integer.valueOf(three))));
 		//
-		Assertions.assertEquals(String.format("[%1$s,%2$s]", ONE, two), ObjectMapperUtil.writeValueAsString(
-				objectMapper, invoke(METHOD_GET_MIN_MAX, null, new int[] { ONE, two }, Integer.valueOf(ONE))));
+		Assertions.assertEquals("[%1$s,%2$s]".formatted(ONE, two), ObjectMapperUtil.writeValueAsString(objectMapper,
+				invoke(METHOD_GET_MIN_MAX, null, new int[] { ONE, two }, Integer.valueOf(ONE))));
 		//
 	}
 

@@ -230,7 +230,7 @@ class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		final char c = ' ';
 		//
-		Assertions.assertEquals(String.format("{BASIC_LATIN=[%1$s]}", c),
+		Assertions.assertEquals("{BASIC_LATIN=[%1$s]}".formatted(c),
 				toString(createUnicodeBlockCharacterMultimap(new String(new char[] { c }))));
 		//
 	}

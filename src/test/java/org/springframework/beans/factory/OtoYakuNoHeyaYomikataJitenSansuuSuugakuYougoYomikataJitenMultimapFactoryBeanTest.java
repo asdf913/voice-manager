@@ -418,12 +418,12 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		Assertions.assertNull(toMultimap(null, (Iterable) null));
 		//
-		Assertions.assertEquals(String.format("{%1$s=[%1$s]}", space), Util.toString(toMultimap(space, Set.of(space))));
+		Assertions.assertEquals("{%1$s=[%1$s]}".formatted(space), Util.toString(toMultimap(space, Set.of(space))));
 		//
-		Assertions.assertEquals(String.format("{%1$s=[%1$s]}", space),
+		Assertions.assertEquals("{%1$s=[%1$s]}".formatted(space),
 				Util.toString(toMultimap(space, Collections.nCopies(2, space))));
 		//
-		Assertions.assertEquals(String.format("{%1$s=[%1$s]}", space),
+		Assertions.assertEquals("{%1$s=[%1$s]}".formatted(space),
 				Util.toString(toMultimap(String.join("・", space, space), Set.of(space))));
 		//
 	}

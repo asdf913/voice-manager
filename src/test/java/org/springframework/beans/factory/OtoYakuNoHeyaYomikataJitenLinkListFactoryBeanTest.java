@@ -254,7 +254,7 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 			//
 			final Workbook wb = createWorkbook(links);
 			//
-			final File file = Path.of(String.format("links_%1$tY%1$tm%1$td.xlsx", new Date())).toFile();
+			final File file = Path.of("links_%1$tY%1$tm%1$td.xlsx".formatted(new Date())).toFile();
 			//
 			System.out.println(file.getAbsolutePath());
 			//

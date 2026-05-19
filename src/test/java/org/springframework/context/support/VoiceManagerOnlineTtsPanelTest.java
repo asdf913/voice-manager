@@ -526,7 +526,7 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		try (final InputStream is = clz != null
 				? clz.getResourceAsStream(
-						String.format("/%1$s.class", StringsUtil.replace(Strings.CS, clz.getName(), ".", "/")))
+						"/%1$s.class".formatted(StringsUtil.replace(Strings.CS, clz.getName(), ".", "/")))
 				: null) {
 			//
 			return ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));

@@ -462,7 +462,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		final Class<?> clz = Util.getClass(instance);
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				String.format("/%1$s.class", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
+				"/%1$s.class".formatted(StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 			//
 			// java.awt.Toolkit.getScreenSize()
 			//

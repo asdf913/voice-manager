@@ -120,8 +120,7 @@ import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerTtsPanel extends JPanel implements Titled, InitializingBean, EnvironmentAware, ItemListener,
 		ActionListener, ChangeListener, ApplicationContextAware {
-
-	private static final long serialVersionUID = 8338161986346369694L;
+ static final long serialVersionUID = 8338161986346369694L;
 
 	private static Logger LOG = LoggerFactory.getLogger(VoiceManagerTtsPanel.class);
 
@@ -265,7 +264,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 					//
 					if (!Util.containsKey(os, key)) {
 						//
-						throw new IllegalStateException(String.format("Key [%1$s] Not Found",
+						throw new IllegalStateException("Key [%1$s] Not Found".formatted(
 								testAndApply(IH::isArray, Util.cast(Class.class, key), Util::getSimpleName, x -> key)));
 						//
 					} // if
@@ -341,7 +340,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		//
 		add(tfTextTts = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.text")),
-				String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 3));
+				"%1$s,%2$s,span %3$s".formatted(GROWX, WRAP, 3));
 		//
 		// Provider
 		//
@@ -349,15 +348,14 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		//
 		final Provider provider = Util.cast(Provider.class, speechApi);
 		//
-		add(tfProviderName = new JTextField(Provider.getProviderName(provider)),
-				String.format("%1$s,span %2$s", GROWX, 3));
+		add(tfProviderName = new JTextField(Provider.getProviderName(provider)), "%1$s,span %2$s".formatted(GROWX, 3));
 		//
 		final boolean isInstalled = SpeechApi.isInstalled(speechApi);
 		//
 		// Provider Version
 		//
 		testAndAccept(Objects::nonNull, tfProviderVersion = createProviderVersionJTextComponent(isInstalled, provider),
-				x -> add(x, String.format("span %1$s,width %2$s", 3, 64)));
+				x -> add(x, "span %1$s,width %2$s".formatted(3, 64)));
 		//
 		// Provider Platform
 		//
@@ -386,11 +384,11 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 			jcbVoiceId.setRenderer(voiceIdListCellRenderer);
 			//
-			add(jcbVoiceId, String.format("%1$s,span %2$s", GROWX, 3));
+			add(jcbVoiceId, "%1$s,span %2$s".formatted(GROWX, 3));
 			//
-			add(tfSpeechLanguageCode = new JTextField(), String.format("width %1$s,span %2$s", 30, 2));
+			add(tfSpeechLanguageCode = new JTextField(), "width %1$s,span %2$s".formatted(30, 2));
 			//
-			add(tfSpeechLanguageName = new JTextField(), String.format("%1$s,span %2$s,width %3$s", WRAP, 2, 230));
+			add(tfSpeechLanguageName = new JTextField(), "%1$s,span %2$s,width %3$s".formatted(WRAP, 2, 230));
 			//
 		} // if
 			//
@@ -430,7 +428,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 			add(tfSpeechRate = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 					"org.springframework.context.support.VoiceManager.speechRate")),
-					String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 3));
+					"%1$s,%2$s,span %3$s".formatted(GROWX, WRAP, 3));
 			//
 		} // if
 			//
@@ -445,7 +443,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		//
 		add(jsSpeechVolume = new JSlider(Util
 				.intValue(testAndApply(RangeUtil::hasLowerBound, speechVolumeRange, RangeUtil::lowerEndpoint, null), 0),
-				Util.intValue(upperEnpoint, 100)), String.format("%1$s,span %2$s", GROWX, 3));
+				Util.intValue(upperEnpoint, 100)), "%1$s,span %2$s".formatted(GROWX, 3));
 		//
 		setSpeechVolume(valueOf(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.speechVolume")), upperEnpoint);
@@ -456,7 +454,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		//
 		setPaintLabels(jsSpeechVolume, true);
 		//
-		add(tfSpeechVolume = new JTextField(), String.format("%1$s,width %2$s", WRAP, 27));
+		add(tfSpeechVolume = new JTextField(), "%1$s,width %2$s".formatted(WRAP, 27));
 		//
 		// Button(s)
 		//
@@ -519,7 +517,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		//
 		add(new JLabel("Elapsed"));
 		//
-		add(tfElapsed = new JTextField(), String.format("%1$s,span %2$s", GROWX, 2));
+		add(tfElapsed = new JTextField(), "%1$s,span %2$s".formatted(GROWX, 2));
 		//
 		Util.forEach(Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName, tfProviderName, tfProviderVersion,
 				tfProviderPlatform, tfSpeechVolume, tfElapsed), x -> Util.setEditable(x, false));
@@ -1180,7 +1178,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 						Util.intValue(RangeUtil.upperEndpoint(range), 0))
 				: null;
 		//
-		add(instance, jsSpeechRate, String.format("%1$s,span %2$s", GROWX, 7));
+		add(instance, jsSpeechRate, "%1$s,span %2$s".formatted(GROWX, 7));
 		//
 		setMajorTickSpacing(jsSpeechRate, 1);
 		//
@@ -1190,7 +1188,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		//
 		final JTextComponent tfSpeechRate = instance != null ? instance.tfSpeechRate = new JTextField() : null;
 		//
-		add(instance, tfSpeechRate, String.format("%1$s,width %2$s", WRAP, 24));
+		add(instance, tfSpeechRate, "%1$s,width %2$s".formatted(WRAP, 24));
 		//
 		Util.setEditable(tfSpeechRate, false);
 		//
@@ -1497,7 +1495,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			} else if (size > 1) {
 				//
 				throw new IllegalStateException(
-						String.format("There are more than one Voice %1$s found for Lanaguge \"%2$s\"",
+						"There are more than one Voice %1$s found for Lanaguge \"%2$s\"".formatted(
 								Util.toList(Util.map(Util.stream(temp), x -> StringUtils.wrap(Util.toString(x), "\""))),
 								voiceLanguage));
 				//

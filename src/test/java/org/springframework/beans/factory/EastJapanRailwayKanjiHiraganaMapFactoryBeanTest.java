@@ -209,8 +209,9 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		//
 		final String value = "value";
 		//
-		final Element element = Jsoup.parse(String.format(
-				"<span class=\"station_name01\">%1$s</span><span class=\"station_name02\">%2$s</span>", key, value));
+		final Element element = Jsoup
+				.parse("<span class=\"station_name01\">%1$s</span><span class=\"station_name02\">%2$s</span>"
+						.formatted(key, value));
 		//
 		Assertions.assertEquals(Pair.with(key, value), createPair(element));
 		//

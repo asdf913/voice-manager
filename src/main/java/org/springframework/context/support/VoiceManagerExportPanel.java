@@ -846,7 +846,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		final Class<?> clz = File.class;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				String.format(CLASS_RESOURCE_FORMAT, StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
+				CLASS_RESOURCE_FORMAT.formatted(StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 			//
 			final Object[] objectTypes = toArray(Util
 					.map(Stream.of("java.lang.String", "java.lang.String", "java.io.File"), ObjectType::getInstance));
@@ -976,7 +976,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				if (idx >= 0) {
 					//
 					(sb = new StringBuilder(StringUtils.defaultString(toString))).insert(idx,
-							String.format(" (%1$s)", fileFormat.getFileExtension()));
+							" (%1$s)".formatted(fileFormat.getFileExtension()));
 					//
 				} // if
 					//
@@ -1065,7 +1065,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 			// Microsoft Excel Format
 			//
-		add(new JLabel("Workbook Implementation"), String.format(SPAN_ONLY_FORMAT, 5));
+		add(new JLabel("Workbook Implementation"), SPAN_ONLY_FORMAT.formatted(5));
 		//
 		final List<Class<? extends Workbook>> classes = testAndApply(Objects::nonNull,
 				new Reflections("org.apache.poi").getSubTypesOf(Workbook.class), ArrayList::new, null);
@@ -1099,17 +1099,16 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 
 		});
 		//
-		add(jcbClass, String.format("%1$s,span %2$s", WRAP, 7));
+		add(jcbClass, "%1$s,span %2$s".formatted(WRAP, 7));
 		//
 		// Encryption Mode
 		//
-		add(new JLabel("Encryption Mode"), String.format(SPAN_ONLY_FORMAT, 5));
+		add(new JLabel("Encryption Mode"), SPAN_ONLY_FORMAT.formatted(5));
 		//
 		final EncryptionMode[] encryptionModes = EncryptionMode.values();
 		//
 		add(new JComboBox<>(cbmEncryptionMode = new DefaultComboBoxModel<>(
-				ArrayUtils.insert(0, encryptionModes, (EncryptionMode) null))),
-				String.format("%1$s,span %2$s", WRAP, 2));
+				ArrayUtils.insert(0, encryptionModes, (EncryptionMode) null))), "%1$s,span %2$s".formatted(WRAP, 2));
 		//
 		final Strings strings = Strings.CI;
 		//
@@ -1123,13 +1122,13 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		// ZIP Compression Level
 		//
-		add(new JLabel("ZIP Compression Level"), String.format(SPAN_ONLY_FORMAT, 5));
+		add(new JLabel("ZIP Compression Level"), SPAN_ONLY_FORMAT.formatted(5));
 		//
 		final CompressionLevel[] compressionLevels = CompressionLevel.values();
 		//
 		add(new JComboBox<>(cbmCompressionLevel = new DefaultComboBoxModel<>(
 				ArrayUtils.insert(0, compressionLevels, (CompressionLevel) null))),
-				String.format("%1$s,span %2$s", WRAP, 2));
+				"%1$s,span %2$s".formatted(WRAP, 2));
 		//
 		Util.setSelectedItem(cbmCompressionLevel,
 				Util.orElse(
@@ -1141,23 +1140,23 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		// Password
 		//
-		add(new JLabel(PASSWORD), String.format(SPAN_ONLY_FORMAT, 4));
+		add(new JLabel(PASSWORD), SPAN_ONLY_FORMAT.formatted(4));
 		//
 		add(tfExportPassword = new JPasswordField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportPassword")),
-				String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 2));
+				"%1$s,%2$s,span %3$s".formatted(GROWX, WRAP, 2));
 		//
-		add(new JLabel("Option(s)"), String.format(SPAN_ONLY_FORMAT, 4));
+		add(new JLabel("Option(s)"), SPAN_ONLY_FORMAT.formatted(4));
 		//
-		add(cbOverMp3Title = new JCheckBox("Over Mp3 Title"), String.format("%1$s,span %2$s", WRAP, 2));
+		add(cbOverMp3Title = new JCheckBox("Over Mp3 Title"), "%1$s,span %2$s".formatted(WRAP, 2));
 		//
 		Util.setSelected(cbOverMp3Title, Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.overMp3Title")));
 		//
-		add(new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
+		add(new JLabel(), SPAN_ONLY_FORMAT.formatted(4));
 		//
 		add(cbOrdinalPositionAsFileNamePrefix = new JCheckBox("Ordinal Position As File Name Prefix"),
-				String.format(SPAN_ONLY_FORMAT, 4));
+				SPAN_ONLY_FORMAT.formatted(4));
 		//
 		Util.setSelected(cbOrdinalPositionAsFileNamePrefix,
 				Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
@@ -1167,11 +1166,11 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		add(tfOrdinalPositionFileNamePrefix = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.ordinalPositionFileNamePrefix")),
-				String.format("%1$s,%2$s", GROWX, WRAP));
+				"%1$s,%2$s".formatted(GROWX, WRAP));
 		//
-		add(new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
+		add(new JLabel(), SPAN_ONLY_FORMAT.formatted(4));
 		//
-		add(cbJlptAsFolder = new JCheckBox("JLPT As Folder"), String.format(SPAN_ONLY_FORMAT, 3));
+		add(cbJlptAsFolder = new JCheckBox("JLPT As Folder"), SPAN_ONLY_FORMAT.formatted(3));
 		//
 		Util.setSelected(cbJlptAsFolder, Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.jlptAsFolder")));
@@ -1180,11 +1179,11 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		add(tfJlptFolderNamePrefix = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.jlptFolderNamePrefix")),
-				String.format("%1$s,wmin %2$s,span %3$s", WRAP, 100, 2));
+				"%1$s,wmin %2$s,span %3$s".formatted(WRAP, 100, 2));
 		//
-		add(new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
+		add(new JLabel(), SPAN_ONLY_FORMAT.formatted(4));
 		//
-		add(cbExportHtml = new JCheckBox("Export HTML"), String.format(SPAN_ONLY_FORMAT, 3));
+		add(cbExportHtml = new JCheckBox("Export HTML"), SPAN_ONLY_FORMAT.formatted(3));
 		//
 		Util.setSelected(cbExportHtml, Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportHtml")));
@@ -1195,23 +1194,20 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		add(tfExportHtmlFileName = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportHtmlFileName")),
-				String.format("wmin %1$s,span %2$s", 100, 2));
+				"wmin %1$s,span %2$s".formatted(100, 2));
 		//
 		final String[] fileExtensions = getFileExtensions(ContentType.HTML);
 		//
-		setToolTipText(
-				tfExportHtmlFileName, String
-						.format("If the File Name does not ends with %1$s, file extension \".%2$s\" will be appended.",
-								Util.collect(
-										Util.map(
-												testAndApply(Objects::nonNull, fileExtensions, Arrays::stream, null)
-														.sorted(),
-												x -> StringUtils.wrap(StringUtils.join('.', x), '"')),
-										Collectors.joining(" or ")),
-								StringUtils.defaultIfBlank(Util.orElse(Util.max(
-										fileExtensions != null ? Arrays.stream(fileExtensions) : null,
+		setToolTipText(tfExportHtmlFileName,
+				"If the File Name does not ends with %1$s, file extension \".%2$s\" will be appended.".formatted(
+						Util.collect(
+								Util.map(testAndApply(Objects::nonNull, fileExtensions, Arrays::stream, null).sorted(),
+										x -> StringUtils.wrap(StringUtils.join('.', x), '"')),
+								Collectors.joining(" or ")),
+						StringUtils.defaultIfBlank(
+								Util.orElse(Util.max(fileExtensions != null ? Arrays.stream(fileExtensions) : null,
 										(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null),
-										"")));
+								"")));
 		//
 		add(cbExportListHtml = new JCheckBox("Export List"));
 		//
@@ -1233,8 +1229,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		Util.setSelected(cbExportHtmlAsZip, Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportListHtmlAsZip")));
 		//
-		add(cbExportHtmlRemoveAfterZip = new JCheckBox("Remove Html After Zip"),
-				String.format("%1$s,span %2$s", WRAP, 2));
+		add(cbExportHtmlRemoveAfterZip = new JCheckBox("Remove Html After Zip"), "%1$s,span %2$s".formatted(WRAP, 2));
 		//
 		Util.setSelected(cbExportHtmlRemoveAfterZip,
 				Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
@@ -1242,58 +1237,57 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		// Export List Sheet
 		//
-		add(new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
+		add(new JLabel(), SPAN_ONLY_FORMAT.formatted(4));
 		//
-		add(cbExportListSheet = new JCheckBox("Export List Sheet"), String.format("%1$s,span %2$s", WRAP, 3));
+		add(cbExportListSheet = new JCheckBox("Export List Sheet"), "%1$s,span %2$s".formatted(WRAP, 3));
 		//
 		Util.setSelected(cbExportListSheet, Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportListSheet")));
 		//
 		// Export JLPT Sheet
 		//
-		add(new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
+		add(new JLabel(), SPAN_ONLY_FORMAT.formatted(4));
 		//
-		add(cbExportJlptSheet = new JCheckBox("Export JLPT Sheet"), String.format("%1$s,span %2$s", WRAP, 3));
+		add(cbExportJlptSheet = new JCheckBox("Export JLPT Sheet"), "%1$s,span %2$s".formatted(WRAP, 3));
 		//
 		Util.setSelected(cbExportJlptSheet, Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportJlptSheet")));
 		//
 		// Export Presentation
 		//
-		add(new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
+		add(new JLabel(), SPAN_ONLY_FORMAT.formatted(4));
 		//
-		add(cbExportPresentation = new JCheckBox("Export Presentation"), String.format(",span %1$s", 3));
+		add(cbExportPresentation = new JCheckBox("Export Presentation"), ",span %1$s".formatted(3));
 		//
 		setToolTipText(cbExportPresentation, "Open Document Format (odp) format, Libre Office is recommended");
 		//
 		Util.setSelected(cbExportPresentation, Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportPresentation")));
 		//
-		add(cbEmbedAudioInPresentation = new JCheckBox("Emded Audio In Presentation"),
-				String.format(SPAN_ONLY_FORMAT, 3));
+		add(cbEmbedAudioInPresentation = new JCheckBox("Emded Audio In Presentation"), SPAN_ONLY_FORMAT.formatted(3));
 		//
 		Util.setSelected(cbEmbedAudioInPresentation,
 				Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.embedAudioInPresentation")));
 		//
 		add(cbHideAudioImageInPresentation = new JCheckBox("Hide Audio Image In Presentation"),
-				String.format(SPAN_ONLY_FORMAT, 2));
+				SPAN_ONLY_FORMAT.formatted(2));
 		//
 		Util.setSelected(cbHideAudioImageInPresentation,
 				Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.hideAudioImageInPresentation")));
 		//
-		add(new JLabel("Presentation Slide Duration"), String.format(SPAN_ONLY_FORMAT, 2));
+		add(new JLabel("Presentation Slide Duration"), SPAN_ONLY_FORMAT.formatted(2));
 		//
 		add(tfPresentationSlideDuration = new JTextField(
 				StringUtils.defaultString(Util.toString(presentationSlideDuration))),
-				String.format("%1$s,wmin %2$spx", WRAP, 100));
+				"%1$s,wmin %2$spx".formatted(WRAP, 100));
 		//
 		// Export Microsoft Access
 		//
-		add(new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
+		add(new JLabel(), SPAN_ONLY_FORMAT.formatted(4));
 		//
-		add(cbExportMicrosoftAccess = new JCheckBox("Export Microsoft Access"), String.format(SPAN_ONLY_FORMAT, 3));
+		add(cbExportMicrosoftAccess = new JCheckBox("Export Microsoft Access"), SPAN_ONLY_FORMAT.formatted(3));
 		//
 		Util.setSelected(cbExportMicrosoftAccess,
 				Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
@@ -1347,11 +1341,11 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		setRenderer(jcbFileFormat, mafflcr);
 		//
-		add(jcbFileFormat, String.format("%1$s,span %2$s", WRAP, 5));
+		add(jcbFileFormat, "%1$s,span %2$s".formatted(WRAP, 5));
 		//
 		Util.setSelectedItem(cbmMicrosoftAccessFileFormat, microsoftAccessFileFormat);
 		//
-		add(new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
+		add(new JLabel(), SPAN_ONLY_FORMAT.formatted(4));
 		//
 		add(btnExport = new JButton("Export"), WRAP);
 		//
@@ -1363,7 +1357,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		add(tfPhraseTotal = new JTextField("0"));
 		//
-		add(progressBarExport = new JProgressBar(), String.format("%1$s,span %2$s", GROWX, 7));
+		add(progressBarExport = new JProgressBar(), "%1$s,span %2$s".formatted(GROWX, 7));
 		//
 		progressBarExport.setStringPainted(true);
 		//
@@ -1675,7 +1669,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				if (!Util.containsKey(map, key)) {
 					//
-					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
+					throw new IllegalStateException(KEY_NOT_FOUND_MESSAGE.formatted(
 							testAndApply(IH::isArray, Util.cast(Class.class, key), Util::getSimpleName, x -> key)));
 					//
 				} // if
@@ -1708,7 +1702,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				if (!Util.containsKey(map, key)) {
 					//
-					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
+					throw new IllegalStateException(KEY_NOT_FOUND_MESSAGE.formatted(key));
 					//
 				} // if
 					//
@@ -1736,7 +1730,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				if (!Util.containsKey(map, key)) {
 					//
-					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
+					throw new IllegalStateException(KEY_NOT_FOUND_MESSAGE.formatted(key));
 					//
 				} // if
 					//
@@ -1768,7 +1762,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				if (!Util.containsKey(map, key)) {
 					//
-					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
+					throw new IllegalStateException(KEY_NOT_FOUND_MESSAGE.formatted(key));
 					//
 				} // if
 					//
@@ -1800,7 +1794,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				if (!Util.containsKey(map, key)) {
 					//
-					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
+					throw new IllegalStateException(KEY_NOT_FOUND_MESSAGE.formatted(key));
 					//
 				} // if
 					//
@@ -1910,7 +1904,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 			final String fileExtension = getFileExtension(workbookSupplier);
 			//
-			final Path path = Path.of(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(),
+			final Path path = Path.of("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s".formatted(new Date(),
 					StringUtils.defaultIfEmpty(fileExtension, "xlsx")));
 			//
 			try (final OutputStream os = Files.newOutputStream(path)) {
@@ -2046,7 +2040,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 					final Multimap<String, Voice> multimap = getVoiceMultimapByListName(voices);
 					//
-					exportHtml(objectMap, multimap, Pair.of(exportHtmlTemplateFile, x -> String.format("%1$s.html", x)),
+					exportHtml(objectMap, multimap, Pair.of(exportHtmlTemplateFile, x -> "%1$s.html".formatted(x)),
 							null, files = ObjectUtils.getIfNull(files, ArrayList::new));
 					//
 					exportWebSpeechSynthesisHtml(exportWebSpeechSynthesisHtml, objectMap, multimap,
@@ -2058,7 +2052,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 						&& reduce(mapToLong(Util.stream(files), f -> longValue(length(f), 0)), 0, Long::sum) > 0) {
 					//
 					ObjectMap.setObject(objectMap, File.class, file = Util
-							.toFile(Path.of(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.zip", new Date()))));
+							.toFile(Path.of("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.zip".formatted(new Date()))));
 					//
 					ObjectMap.setObject(objectMap, EncryptionMethod.class, EncryptionMethod.ZIP_STANDARD);
 					//
@@ -2084,8 +2078,8 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 						Util.getSelectedItem(cbmMicrosoftAccessFileFormat));
 				//
 				ObjectMap.setObject(objectMap, File.class,
-						file = Util.toFile(Path.of(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s",
-								new Date(), StringUtils.substringAfter(getFileExtension(fileFormat), '.')))));
+						file = Util.toFile(Path.of("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s".formatted(new Date(),
+								StringUtils.substringAfter(getFileExtension(fileFormat), '.')))));
 				//
 				ObjectMap.setObject(objectMap, FileFormat.class, fileFormat);
 				//
@@ -2191,7 +2185,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			for (final String tableName : tableNames) {
 				//
 				try (final ResultSet rs = executeQuery(
-						prepareStatement(connection, String.format("select * from %1$s", tableName)))) {
+						prepareStatement(connection, "select * from %1$s".formatted(tableName)))) {
 					//
 					if (and(Objects::nonNull, rs, db, tableName)) {
 						//
@@ -2310,8 +2304,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 			exportHtml(objectMap, multimap,
 					//
-					Pair.of(exportWebSpeechSynthesisHtmlTemplateFile,
-							x -> String.format("%1$s.WebSpeechSynthesis.html", x)),
+					Pair.of(exportWebSpeechSynthesisHtmlTemplateFile, x -> "%1$s.WebSpeechSynthesis.html".formatted(x)),
 					//
 					exportWebSpeechSynthesisHtmlTemplateProperties
 					//
@@ -3498,7 +3491,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 					setMaximum(progressBar, count.intValue());
 					//
-					final String string = String.format("%1$s/%2$s (%3$s)", counter, count,
+					final String string = "%1$s/%2$s (%3$s)".formatted(counter, count,
 							format(percentNumberFormat, counter.intValue() * 1.0 / count.intValue()));
 					//
 					setToolTipText(progressBar, string);
@@ -3934,20 +3927,20 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 									fileExtensions != null && fileExtensions.length == 1 ? fileExtensions[0] : null,
 									"odp")))));
 					//
-					LoggerUtil.info(LOG,
-							String.format("%1$s/%2$s,Elapsed=%3$s,File=%4$s",
-									StringUtils.leftPad(Integer.toString(++counter),
-											StringUtils.length(Integer.toString(size))),
-									size,
-									//
-									// elapsed
-									//
-									StringUtils.leftPad(elapsedString = Util.toString(StopwatchUtil.elapsed(stopwatch)),
-											maxElapsedStringLength),
-									//
-									// File
-									//
-									Util.getAbsolutePath(file)));
+					LoggerUtil.info(LOG, "%1$s/%2$s,Elapsed=%3$s,File=%4$s".formatted(
+							//
+							StringUtils.leftPad(Integer.toString(++counter),
+									StringUtils.length(Integer.toString(size))),
+							size,
+							//
+							// elapsed
+							//
+							StringUtils.leftPad(elapsedString = Util.toString(StopwatchUtil.elapsed(stopwatch)),
+									maxElapsedStringLength),
+							//
+							// File
+							//
+							Util.getAbsolutePath(file)));
 					//
 					maxElapsedStringLength = Math.max(maxElapsedStringLength, StringUtils.length(elapsedString));
 					//

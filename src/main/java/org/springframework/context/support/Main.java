@@ -470,7 +470,7 @@ public class Main {
 	private static boolean isRaiseThrowableOnly(@Nullable final Class<?> clz, @Nullable final Method method) {
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				String.format("/%1$s.class", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
+				"/%1$s.class".formatted(StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 			//
 			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
 					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),
@@ -571,22 +571,24 @@ public class Main {
 		//
 		if (beans == null) {
 			//
-			Util.accept(consumer, String.format(
-					"org.springframework.beans.factory.ListableBeanFactory.getBeansOfType(%1$s) return null", clz));
+			Util.accept(consumer,
+					"org.springframework.beans.factory.ListableBeanFactory.getBeansOfType(%1$s) return null"
+							.formatted(clz));
 			//
 			return null;
 			//
 		} else if (beans.isEmpty()) {
 			//
-			Util.accept(consumer, String.format(
-					"org.springframework.beans.factory.ListableBeanFactory.getBeansOfType(%1$s) return empty", clz));
+			Util.accept(consumer,
+					"org.springframework.beans.factory.ListableBeanFactory.getBeansOfType(%1$s) return empty"
+							.formatted(clz));
 			//
 			return null;
 			//
 		} else if (beans.size() > 1) {
 			//
-			Util.accept(consumer, String.format(
-					"org.springframework.beans.factory.ListableBeanFactory.getBeansOfType(%1$s).size()>1", clz));
+			Util.accept(consumer, "org.springframework.beans.factory.ListableBeanFactory.getBeansOfType(%1$s).size()>1"
+					.formatted(clz));
 			//
 			return null;
 			//

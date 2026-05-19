@@ -998,13 +998,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		final int wmin = 30;
 		//
-		add(tfFontSize1 = new JTextField(Util.getKey(entry)), String.format("%1$s,wmin %2$s", GROWX, wmin));
+		add(tfFontSize1 = new JTextField(Util.getKey(entry)), "%1$s,wmin %2$s".formatted(GROWX, wmin));
 		//
 		final int span = 6;
 		//
 		add(new JComboBox<>(
 				cbmFontSize1 = new DefaultComboBoxModel<>(ArrayUtils.insert(0, ECSSUnit.values(), (ECSSUnit) null))),
-				String.format("%1$s,span %2$s", WRAP, span - 1));
+				"%1$s,span %2$s".formatted(WRAP, span - 1));
 		//
 		Util.setSelectedItem(cbmFontSize1, Util.getValue(entry));
 		//
@@ -1014,7 +1014,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(new JComboBox<>(cbmTextAlign1 = new DefaultComboBoxModel<>(ObjectUtils.getIfNull(
 				ArrayUtils.insert(0, Util.toArray(getTextAligns(), new String[] {}), (String) null), new String[] {}))),
-				String.format("%1$s,span %2$s", WRAP, span));
+				"%1$s,span %2$s".formatted(WRAP, span));
 		//
 		Util.setSelectedItem(cbmTextAlign1, textAlign);
 		//
@@ -1037,7 +1037,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
-		add(jsp, String.format("%1$s,span %2$s", GROWX, span - 2));
+		add(jsp, "%1$s,span %2$s".formatted(GROWX, span - 2));
 		//
 		JPanel panel = new JPanel();
 		//
@@ -1055,7 +1055,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		panel.add(btnPreviewRubyPdf = new JButton("Preview"), gbc);
 		//
-		add(panel, String.format("%1$s,%2$s,span %3$s,wmax %4$s", WRAP, GROWX, 3, 85.5));
+		add(panel, "%1$s,%2$s,span %3$s,wmax %4$s".formatted(WRAP, GROWX, 3, 85.5));
 		//
 		// Description
 		//
@@ -1063,11 +1063,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(tfFontSize3 = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManagerPdfPanel.fontSize3")),
-				String.format("%1$s,wmin %2$s", GROWX, wmin));
+				"%1$s,wmin %2$s".formatted(GROWX, wmin));
 		//
 		add(tfDescription = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManagerPdfPanel.description")),
-				String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, span - 1));
+				"%1$s,%2$s,span %3$s".formatted(WRAP, GROWX, span - 1));
 		//
 		// Font Size
 		//
@@ -1075,7 +1075,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(tfFontSize2 = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManagerPdfPanel.fontSize2")),
-				String.format("%1$s,%2$s,wmin %3$s", GROWX, WRAP, wmin));
+				"%1$s,%2$s,wmin %3$s".formatted(GROWX, WRAP, wmin));
 		//
 		Util.setSelectedItem(cbmFontSize1, Util.getValue(entry));
 		//
@@ -1087,7 +1087,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManagerPdfPanel.text")),
-				String.format("%1$s,span %2$s", GROWX, span - 1));
+				"%1$s,span %2$s".formatted(GROWX, span - 1));
 		//
 		add(btnCopyTextToHtml = new JButton("Copy"), WRAP);
 		//
@@ -1101,7 +1101,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						MigLayout::new)))
 				.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), IMAGE));
 		//
-		add(panel, String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, span + 1));
+		add(panel, "%1$s,%2$s,span %3$s".formatted(WRAP, GROWX, span + 1));
 		//
 		// Audio
 		//
@@ -1113,17 +1113,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						MigLayout::new)))
 				.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Audio"));
 		//
-		add(panel, String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, span + 1));
+		add(panel, "%1$s,%2$s,span %3$s".formatted(WRAP, GROWX, span + 1));
 		//
 		add(new JLabel());
 		//
-		add(btnExecute = new JButton("Execute"), String.format("%1$s,span %2$s", WRAP, 2));
+		add(btnExecute = new JButton("Execute"), "%1$s,span %2$s".formatted(WRAP, 2));
 		//
 		Util.setEnabled(btnExecute, Util.getSelectedItem(cbmVoiceId) != null);
 		//
 		add(new JLabel("Output"));
 		//
-		add(tfOutputFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, span - 2));
+		add(tfOutputFile = new JTextField(), "%1$s,span %2$s".formatted(GROWX, span - 2));
 		//
 		Util.setEditable(tfOutputFile, false);
 		//
@@ -1131,7 +1131,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		panel.add(btnBrowseOutputFolder = new JButton("Browse"));
 		//
-		add(panel, String.format("span %1$s", 2));
+		add(panel, "span %1$s".formatted(2));
 		//
 		Util.forEach(
 				Util.map(
@@ -1286,12 +1286,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				instance.jcbVoiceId.addItemListener(instance);
 				//
-				panel.add(instance.jcbVoiceId, String.format("span %1$s", 2));
+				panel.add(instance.jcbVoiceId, "span %1$s".formatted(2));
 				//
-				panel.add(instance.tfSpeechLanguageCode = new JTextField(), String.format("width %1$s", 30));
+				panel.add(instance.tfSpeechLanguageCode = new JTextField(), "width %1$s".formatted(30));
 				//
-				panel.add(instance.tfSpeechLanguageName = new JTextField(),
-						String.format("%1$s,width %2$s", WRAP, 230));
+				panel.add(instance.tfSpeechLanguageName = new JTextField(), "%1$s,width %2$s".formatted(WRAP, 230));
 				//
 				final String s = PropertyResolverUtil.getProperty(instance.propertyResolver,
 						"org.springframework.context.support.VoiceManagerPdfPanel.voiceId");
@@ -1315,7 +1314,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			panel.add(new JLabel("File"));
 			//
-			panel.add(instance.tfAudioFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, 4));
+			panel.add(instance.tfAudioFile = new JTextField(), "%1$s,span %2$s".formatted(GROWX, 4));
 			//
 			Util.setEditable(instance.tfAudioFile, false);
 			//
@@ -1354,7 +1353,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			Util.setSelectedItem(mcbmAudioFormatWrite, instance.audioFormat);
 			//
-			panel.add(jcbAudioFormat, String.format("%1$s,span %2$s", WRAP, 2));
+			panel.add(jcbAudioFormat, "%1$s,span %2$s".formatted(WRAP, 2));
 			//
 		} // if
 			//
@@ -1399,17 +1398,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			panel.add(
 					instance.tfImageUrl = new JTextField(PropertyResolverUtil.getProperty(instance.propertyResolver,
 							"org.springframework.context.support.VoiceManagerPdfPanel.imageUrl")),
-					String.format("%1$s,span %2$s", GROWX, span - 2));
+					"%1$s,span %2$s".formatted(GROWX, span - 2));
 			//
-			panel.add(instance.tfImageUrlStateCode = new JTextField(), String.format("wmin %1$s", 27));
+			panel.add(instance.tfImageUrlStateCode = new JTextField(), "wmin %1$s".formatted(27));
 			//
-			panel.add(instance.tfImageUrlMimeType = new JTextField(), String.format("%1$s,wmin %2$s", WRAP, 65));
+			panel.add(instance.tfImageUrlMimeType = new JTextField(), "%1$s,wmin %2$s".formatted(WRAP, 65));
 			//
 			// File
 			//
 			panel.add(new JLabel("File"));
 			//
-			panel.add(instance.tfImageFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, span - 1));
+			panel.add(instance.tfImageFile = new JTextField(), "%1$s,span %2$s".formatted(GROWX, span - 1));
 			//
 			Util.forEach(
 					Stream.of(instance.tfImageUrlStateCode, instance.tfImageUrlMimeType, instance.tfImageFile,
@@ -1438,14 +1437,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			instance.cbmImageFormat = mcbm;
 			//
-			panel.add(instance.btnPreserveImage = new JCheckBox("Prserve Image"),
-					String.format("%1$s,span %2$s", WRAP, 2));
+			panel.add(instance.btnPreserveImage = new JCheckBox("Prserve Image"), "%1$s,span %2$s".formatted(WRAP, 2));
 			//
 			// Original Size
 			//
 			panel.add(new JLabel("Original Size"));
 			//
-			panel.add(instance.cbIsOriginalSize = new JCheckBox(), String.format("%1$s,span %2$s", WRAP, 2));
+			panel.add(instance.cbIsOriginalSize = new JCheckBox(), "%1$s,span %2$s".formatted(WRAP, 2));
 			//
 		} // if
 			//
@@ -1742,7 +1740,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				final String captionOuterStyle = "captionOuterStyle";
 				//
-				Util.put(map, captionOuterStyle, Map.of("border", String.format("solid %1$spx", borderWidth)));
+				Util.put(map, captionOuterStyle, Map.of("border", "solid %1$spx".formatted(borderWidth)));
 				//
 				Files.writeString(pathHtml, generatePdfHtml(freeMarkerConfiguration, map), StandardCharsets.UTF_8);
 				//
@@ -1778,9 +1776,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				final Map<String, String> descriptionStyle = testAndApply(
 						(a, b) -> Boolean.logicalAnd(a != null, b != null),
 						Map.of("font-size",
-								String.format("%1$spx",
-										ObjectUtils.max(ObjectUtils.getIfNull(fontSize3, BigDecimal.ZERO),
-												new BigDecimal("40"))),
+								"%1$spx".formatted(ObjectUtils.max(ObjectUtils.getIfNull(fontSize3, BigDecimal.ZERO),
+										new BigDecimal("40"))),
 								position, absolute),
 						intIntPair, (a, b) -> new LinkedHashMap<>(a), (a, b) -> a);
 				//
@@ -1795,12 +1792,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				Util.put((Map) Util.cast(Map.class, Util.get(m1, captionStyleKey)), "visibility", "hidden");
 				//
-				Util.putAll(
-						(Map) Util.cast(Map.class,
-								Util.get(m1, descriptionStyleKey)),
+				Util.putAll((Map) Util.cast(Map.class, Util.get(m1, descriptionStyleKey)),
 						Util.collect(Util.map(Util.stream(
 								Sets.cartesianProduct(new LinkedHashSet<>(Arrays.asList("border-top", "border-bottom")),
-										Set.of(String.format("solid %1$spx", borderWidth)))),
+										Set.of("solid %1$spx".formatted(borderWidth)))),
 								x ->
 								//
 								testAndApply(y -> IterableUtils.size(y) == 2, x,
@@ -1842,14 +1837,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 								Util.get(m1 = Util.cast(Map.class, ObjectMapperUtil.readValue(getObjectMapper(),
 										ObjectMapperUtil.writeValueAsString(getObjectMapper(), map), Object.class)),
 										captionStyleKey)),
-						"color", String.format("rgb(%1$s,%2$s,%3$s)", colorCaption.getRed(), colorCaption.getGreen(),
+						"color", "rgb(%1$s,%2$s,%3$s)".formatted(colorCaption.getRed(), colorCaption.getGreen(),
 								colorCaption.getBlue()));
 				//
 				final Color colorDescription = new Color(0, 255, 0);
 				//
-				Util.put((Map) Util.cast(Map.class, Util.get(m1, descriptionStyleKey)), "color",
-						String.format("rgb(%1$s,%2$s,%3$s)", colorDescription.getRed(), colorDescription.getGreen(),
-								colorDescription.getBlue()));
+				Util.put((Map) Util.cast(Map.class, Util.get(m1, descriptionStyleKey)), "color", "rgb(%1$s,%2$s,%3$s)"
+						.formatted(colorDescription.getRed(), colorDescription.getGreen(), colorDescription.getBlue()));
 				//
 				Files.writeString(pathHtml, generatePdfHtml(freeMarkerConfiguration, m1), StandardCharsets.UTF_8);
 				//
@@ -2837,7 +2831,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		MutablePair<Method, Collection<Object>> entry = null;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				String.format("/%1$s.class", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
+				"/%1$s.class".formatted(StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 			//
 			// org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject.createFromByteArray(org.apache.pdfbox.pdmodel.PDDocument,byte[],java.lang.String)
 			//
@@ -3164,7 +3158,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					if (!Util.containsKey(getObjects(), key)) {
 						//
-						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
+						throw new IllegalStateException(KEY_NOT_FOUND_MESSAGE.formatted(
 								testAndApply(IH::isArray, Util.cast(Class.class, key), Util::getSimpleName, x -> key)));
 						//
 					} // if
@@ -3207,7 +3201,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				if (!Util.containsKey(map, key)) {
 					//
-					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
+					throw new IllegalStateException(KEY_NOT_FOUND_MESSAGE.formatted(
 							testAndApply(IH::isArray, Util.cast(Class.class, key), Util::getSimpleName, x -> key)));
 					//
 				} // if
@@ -3236,7 +3230,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				if (!Util.containsKey(map, key)) {
 					//
-					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
+					throw new IllegalStateException(KEY_NOT_FOUND_MESSAGE.formatted(key));
 					//
 				} // if
 					//
@@ -3455,9 +3449,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					cs.setFont(font, fontSize);
 					//
 					cs.newLineAtOffset(
-							(index - 1) * size + (size - getTextWidth(
-									value = String.format("%1$.2f s", toMillis(duration, 0) / 1000d), font, fontSize))
-									/ 2,
+							(index - 1) * size
+									+ (size - getTextWidth(value = "%1$.2f s".formatted(toMillis(duration, 0) / 1000d),
+											font, fontSize)) / 2,
 							lastHeight = lastHeight
 									- (PDFontDescriptorUtil
 											.getAscent(pdFontDescriptor = PDFontUtil.getFontDescriptor(font), 0) / 1000
@@ -3988,7 +3982,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				AudioSystem::getAudioFileFormat, null);
 		//
 		return testAndApply((a, b) -> a != null && b != null, fileFormat, getFormat(fileFormat),
-				(a, b) -> Duration.parse(String.format("PT%1$sS", a.getFrameLength() / b.getFrameRate())), null);
+				(a, b) -> Duration.parse("PT%1$sS".formatted(a.getFrameLength() / b.getFrameRate())), null);
 		//
 	}
 

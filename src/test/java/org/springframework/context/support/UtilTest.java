@@ -798,10 +798,8 @@ class UtilTest {
 		//
 		final Class<?> clz = Method.class;
 		//
-		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(
-						String.format("/%1$s.class", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))
-				: null) {
+		try (final InputStream is = clz != null ? clz.getResourceAsStream(
+				"/%1$s.class".formatted(StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/"))) : null) {
 			//
 			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
 					ClassParserUtil.parse(new ClassParser(is, null)),

@@ -312,7 +312,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(new JScrollPane(taText = new JTextArea(Util.toString(testAndApply(PropertyResolverUtil::containsProperty,
 				propertyResolver, String.join(".", Util.getName(Util.getClass(this)), "SYNTEXT"),
-				PropertyResolverUtil::getProperty, null)))), String.format("%1$s,growy,wmin %2$spx", wrap, width));
+				PropertyResolverUtil::getProperty, null)))), "%1$s,growy,wmin %2$spx".formatted(wrap, width));
 		//
 		// 話者
 		//
@@ -366,8 +366,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		Triple<String, String, String> triple = getTriple(pattern,
 				element = testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null));
 		//
-		final Function<Triple<?, ?, ?>, String> function = x -> iif(x != null, String.format("wmin %1$spx", width),
-				String.format("wmin %1$spx,%2$s", width, wrap));
+		final Function<Triple<?, ?, ?>, String> function = x -> iif(x != null, "wmin %1$spx".formatted(width),
+				"wmin %1$spx,%2$s".formatted(width, wrap));
 		//
 		add(tfQuality = new JTextField(
 				StringUtils.defaultString(testAndApply((a, b, c) -> PropertyResolverUtil.containsProperty(a, b),
@@ -449,17 +449,17 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(new JLabel("Elpased"));
 		//
-		add(tfElapsed = new JTextField(), String.format("%1$s,wmin %2$spx", wrap, width));
+		add(tfElapsed = new JTextField(), "%1$s,wmin %2$spx".formatted(wrap, width));
 		//
 		add(new JLabel("Output"));
 		//
-		add(tfUrl = new JTextField(), String.format("wmin %1$spx", width));
+		add(tfUrl = new JTextField(), "wmin %1$spx".formatted(width));
 		//
-		add(btnCopy = new JButton("Copy"), String.format("%1$s,span %2$s", wrap, 2));
+		add(btnCopy = new JButton("Copy"), "%1$s,span %2$s".formatted(wrap, 2));
 		//
 		add(new JLabel("Error"));
 		//
-		add(tfErrorMessage = new JTextField(), String.format("%1$s,wmin %2$spx", wrap, width));
+		add(tfErrorMessage = new JTextField(), "%1$s,wmin %2$spx".formatted(wrap, width));
 		//
 		Util.forEach(Arrays.asList(tfElapsed, tfUrl, tfErrorMessage), x -> Util.setEditable(x, false));
 		//

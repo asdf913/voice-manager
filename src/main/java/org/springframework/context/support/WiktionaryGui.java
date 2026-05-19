@@ -197,11 +197,11 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		final String wrap = "wrap";
 		//
-		add(tfText = new JTextField(), String.format("growx,%1$s,span %2$s", wrap, 2));
+		add(tfText = new JTextField(), "growx,%1$s,span %2$s".formatted(wrap, 2));
 		//
 		add(new JLabel());
 		//
-		add(btnExecute = new JButton("Execute"), String.format("%1$s,span %2$s", wrap, 2));
+		add(btnExecute = new JButton("Execute"), "%1$s,span %2$s".formatted(wrap, 2));
 		//
 		add(new JLabel("Entry"));
 		//
@@ -244,7 +244,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 		//
 		setPreferredSize(jsp, new Dimension((int) getWidth(pd), 0));
 		//
-		add(jsp, String.format("%1$s,span %2$s,wmin %3$s", wrap, 3, getWidth(Util.getPreferredSize(jTable))));
+		add(jsp, "%1$s,span %2$s,wmin %3$s".formatted(wrap, 3, getWidth(Util.getPreferredSize(jTable))));
 		//
 		final TableCellRenderer tcr = jTable.getDefaultRenderer(Object.class);
 		//

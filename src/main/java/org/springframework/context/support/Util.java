@@ -1554,7 +1554,7 @@ public abstract class Util {
 		final Class<?> clz = getDeclaringClass(method);
 		//
 		try (final InputStream is = getResourceAsStream(clz,
-				String.format("/%1$s.class", StringsUtil.replace(Strings.CS, getName(clz), ".", "/")))) {
+				"/%1$s.class".formatted(StringsUtil.replace(Strings.CS, getName(clz), ".", "/")))) {
 			//
 			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
 					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),
@@ -1712,7 +1712,7 @@ public abstract class Util {
 		final Class<?> clz = getDeclaringClass(method);
 		//
 		try (final InputStream is = getResourceAsStream(clz,
-				String.format("/%1$s.class", StringsUtil.replace(Strings.CS, getName(clz), ".", "/")))) {
+				"/%1$s.class".formatted(StringsUtil.replace(Strings.CS, getName(clz), ".", "/")))) {
 			//
 			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
 					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),

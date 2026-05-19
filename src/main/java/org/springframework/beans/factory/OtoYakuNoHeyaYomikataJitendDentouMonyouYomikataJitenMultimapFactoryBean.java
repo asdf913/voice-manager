@@ -223,9 +223,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 				} // if
 					//
-				if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+%1$s)\\p{InHalfwidthAndFullwidthForms}$",
-						g12)), IterableUtils.get(lines, j))) && Util.groupCount(m2) > 1) {
+				if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+%1$s)\\p{InHalfwidthAndFullwidthForms}$"
+								.formatted(g12)),
+						IterableUtils.get(lines, j))) && Util.groupCount(m2) > 1) {
 					//
 					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							ImmutableMultimap.of(g21 = Util.group(m2, 1), g22 = Util.group(m2, 2),
@@ -2111,9 +2112,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final Multimap<String, String> multimap = LinkedHashMultimap.create();
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst, kLast)), line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst, kLast)),
+				line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21))
 				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21))
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2)))
@@ -2124,9 +2126,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22, cpk, cpv, csk, csv,
 					StringUtils.substringBetween(g11, cpk, csk), StringUtils.substringBetween(g12, cpv, csv)));
 			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21))
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2)))) {
 			//
@@ -2142,9 +2145,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		String g23, g24, lcsk, lcsv, sav;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}%2$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst, kLast)), line)) && Util.groupCount(m2) > 3
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}%2$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst, kLast)),
+				line)) && Util.groupCount(m2) > 3
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24 = Util.group(m2, 4)))) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
@@ -2159,9 +2163,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		int indexOf;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$",
-				kFirst)), line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
 				&& StringUtils.countMatches(g22 = Util.group(m2, 2), 'ん') == 1
 				&& (indexOf = StringsUtil.indexOf(strings, g22, "ん")) == 1) {
 			//
@@ -2172,9 +2177,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							StringUtils.substring(g22, 0, indexOf + 1), StringUtils.substring(g21, 1, 2),
 							StringUtils.substring(g22, indexOf + 1)));
 			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst, kLast)), line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst, kLast)),
+				line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
 				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, Util.group(m2, 1)))
 				&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22 = Util.group(m2, 2)))) {
 			//
@@ -2184,9 +2190,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substringBefore(g21, csk),
 					StringUtils.substringBefore(g22, csv), csk, csv));
 			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InKatakana}\\p{InHiragana}]+\\p{InBasicLatin}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst, kLast)), line)) && Util.groupCount(m2) > 3
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InKatakana}\\p{InHiragana}]+\\p{InBasicLatin}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst, kLast)),
+				line)) && Util.groupCount(m2) > 3
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2)))
 				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21))
@@ -2236,9 +2243,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final Multimap<String, String> multimap = LinkedHashMultimap.create();
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s)(\\p{InHiragana}{3})(\\p{InCJKUnifiedIdeographs}+%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst, kLast)), line)) && Util.groupCount(m2) > 3
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s)(\\p{InHiragana}{3})(\\p{InCJKUnifiedIdeographs}+%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst, kLast)),
+				line)) && Util.groupCount(m2) > 3
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, Util.group(m2, 1)))
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24 = Util.group(m2, 4)))
 				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g23 = Util.group(m2, 3)))
@@ -2253,9 +2261,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		String g21;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst, kLast)), line)) && Util.groupCount(m2) > 3
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst, kLast)),
+				line)) && Util.groupCount(m2) > 3
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24 = Util.group(m2, 4)))
 				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g23 = Util.group(m2, 3)))
@@ -2271,9 +2280,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		String g22, lcsv, sak, sav;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}%2$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst, kLast)), line)) && Util.groupCount(m2) > 1
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}%2$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst, kLast)),
+				line)) && Util.groupCount(m2) > 1
 				&& StringsUtil.indexOf(strings, g22 = Util.group(m2, 2), lcsv = longestCommonSubstring(g12, g22)) > 0) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
@@ -2285,9 +2295,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			MultimapUtil.put(multimap, StringUtils.join(kLast, sak), StringUtils.join(lcsv, sav));
 			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{3}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}{2}$",
-				kFirst)), line)) && Util.groupCount(m2) > 1
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{3}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}{2}$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 1
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2)))) {
 			//
@@ -2298,9 +2309,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							StringUtils.substringAfter(g12, cpv), g21, g22, StringUtils.substringAfter(g21, cpk),
 							StringUtils.substringAfter(g22, cpv)));
 			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) && Util.groupCount(m2) > 3
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 3
 				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, Util.group(m2, 3)))
 				&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, Util.group(m2, 4)))) {
 			//
@@ -2308,9 +2320,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			MultimapUtil.put(multimap, csk, csv);
 			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{2}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}{2}$",
-				kFirst)), line)) && Util.groupCount(m2) > 3
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{2}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}{2}$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 3
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, Util.group(m2, 1)))
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24 = Util.group(m2, 4)))) {
 			//
@@ -2353,9 +2366,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final Multimap<String, String> multimap = LinkedHashMultimap.create();
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s)(\\p{InHiragana}{3})(\\p{InCJKUnifiedIdeographs}+%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst, kLast)), line)) && Util.groupCount(m2) > 3
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s)(\\p{InHiragana}{3})(\\p{InCJKUnifiedIdeographs}+%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst, kLast)),
+				line)) && Util.groupCount(m2) > 3
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, Util.group(m2, 1)))
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24 = Util.group(m2, 4)))
 				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g23 = Util.group(m2, 3)))
@@ -2370,9 +2384,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		String g21, g22, g25, g26, g27, g28;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) && Util
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst)),
+				line)) && Util
 						.groupCount(m2) > 7
 				&& StringUtils
 						.isNotBlank(
@@ -2398,9 +2413,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							StringUtils.substringBefore(g26, csv), g27, g28, StringUtils.substringBefore(g27, csk),
 							StringUtils.substringBefore(g28, csv)));
 			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst, kLast)), line)) && Util.groupCount(m2) > 2
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst, kLast)),
+				line)) && Util.groupCount(m2) > 2
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
 				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21)) && StringUtils.isNotBlank(csv = Strings
 						.commonSuffix(Strings.commonSuffix(g12, g22 = Util.group(m2, 2)), g23 = Util.group(m2, 3)))) {
@@ -2421,9 +2437,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		int indexOf;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{2}\\p{InHiragana}+\\p{InCJKUnifiedIdeographs}{2}$",
-				kFirst)), line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{2}\\p{InHiragana}+\\p{InCJKUnifiedIdeographs}{2}$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
 				&& StringUtils.countMatches(g22 = Util.group(m2, 2), 'ん') == 2) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
@@ -2434,9 +2451,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							StringUtils.substring(g21, 1, 2),
 							StringUtils.substring(g22, indexOf + 1, StringUtils.length(g22))));
 			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{3}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}",
-				kFirst)), line)) && Util.groupCount(m2) > 1
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{3}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 1
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2)))) {
 			//
@@ -2475,9 +2493,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		int indexOf;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{2})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) && Util.groupCount(m2) > 5) {
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{2})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 5) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
@@ -2486,9 +2505,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							StringUtils.substringBefore(g26 = Util.group(m2, 6), Util.group(m2, 2)), Util.group(m2, 5),
 							StringUtils.substringAfterLast(g26, Util.group(m2, 4))));
 			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}+$",
-				kFirst)), line)) && Util.groupCount(m2) > 1
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}+$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 1
 				&& Stream.of(g21 = Util.group(m2, 1), g22 = Util.group(m2, 2), g23 = Util.group(m2, 3))
 						.mapToInt(StringUtils::length).distinct().max().orElse(0) == 2) {
 			//
@@ -2503,9 +2523,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		final int countMatches;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
 				&& (indexOf = StringUtils.indexOf(g22 = Util.group(m2, 2), 'ん')) > 0
 				&& indexOf < (countMatches = StringUtils.length(g22)) - 1 && StringUtils.countMatches(g22, 'ん') == 1) {
 			//
@@ -2520,9 +2541,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		final String g11 = MapUtils.getObject(map, "g11");
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) && Util.groupCount(m2) > 1
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 1
 				&& StringUtils.isNotBlank(StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
 				&& StringUtils.length(g21) == 2
 				&& StringsUtil.endsWith(org.apache.commons.lang3.Strings.CS, g22 = Util.group(m2, 2), "ん")) {
@@ -2539,10 +2561,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		final int lastIndexOf, length;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) && Util.groupCount(m2) > 1
-				&& StringUtils.countMatches(g22 = Util.group(m2, 2), 'ん') == 2
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 1 && StringUtils.countMatches(g22 = Util.group(m2, 2), 'ん') == 2
 				&& (lastIndexOf = StringUtils.lastIndexOf(g22, 'ん')) == StringUtils.length(g22) - 1
 				&& (indexOf = StringUtils.indexOf(g22, 'ん')) == 1) {
 			//
@@ -2562,9 +2584,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		String csk, csv;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{Inkatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{Inkatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line))
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{Inkatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{Inkatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst)),
+				line))
 				&& Util.groupCount(m2) > 3
 				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(
 						Strings.commonSuffix(g21 = Util.group(m2, 1), g22 = Util.group(m2, 2)),
@@ -2605,9 +2628,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		String g21, g22, g23, csk, csv;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{Inkatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) && Util.groupCount(m2) > 2
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{Inkatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 2
 				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g21 = Util.group(m2, 1), g22 = Util.group(m2, 2)))
 				&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g23 = Util.group(m2, 3)))) {
 			//
@@ -2624,9 +2648,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		int indexOf;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{4}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+$",
-				kFirst)), line)) && Util.groupCount(m2) > 1
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{4}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 1
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
 				&& StringUtils.countMatches(g22 = Util.group(m2, 2), 'ん') == 1
 				&& (indexOf = StringUtils.indexOf(g22, 'ん')) == 1) {
@@ -2644,9 +2669,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final org.apache.commons.lang3.Strings strings = org.apache.commons.lang3.Strings.CS;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
-				kFirst)), line)) && Util.groupCount(m2) > 5
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 5
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, Util.group(m2, 1)))
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g26 = Util.group(m2, 6)))
 				&& StringUtils.length(g25 = Util.group(m2, 5)) == 2
@@ -2664,9 +2690,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		String g24;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{2})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
-				kFirst)), line)) && Util.groupCount(m2) > 3
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{2})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 3
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
 				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g23 = Util.group(m2, 3)))
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24 = Util.group(m2, 4)))
@@ -2682,9 +2709,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			MultimapUtil.putAll(multimap, ImmutableMultimap.of(g23, StringUtils.substringAfter(g24, g22),
 					StringUtils.substringBefore(g23, csk), StringUtils.substringBetween(g24, g22, csv)));
 			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) && Util.groupCount(m2) > 3) {
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 3) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
@@ -2697,9 +2725,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		final String lcsk, lcsv;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
-				kFirst)), line)) && Util.groupCount(m2) > 5
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 5
 				&& StringUtils.isNotBlank(lcsk = longestCommonSubstring(g21 = Util.group(m2, 1), Util.group(m2, 3)))
 				&& StringUtils.isNotBlank(lcsv = longestCommonSubstring(
 						StringUtils.substringBefore(g26 = Util.group(m2, 6), g22 = Util.group(m2, 2)),
@@ -2759,9 +2788,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final int length;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s)(\\p{InHiragana}{3})(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
-				kFirst)), line)) && Util.groupCount(m2) > 3
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s)(\\p{InHiragana}{3})(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 3
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, Util.group(m2, 1)))
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24 = Util.group(m2, 4)))) {
 			//
@@ -2789,9 +2819,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		TextStringBuilder tsbv = null;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s)(\\p{InHiragana}+)(%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{3}\\p{InHiragana}{2}[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$",
-				kFirst, kLast)), line)) && Util.groupCount(m2) > 2) {
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s)(\\p{InHiragana}+)(%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{3}\\p{InHiragana}{2}[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"
+						.formatted(kFirst, kLast)),
+				line)) && Util.groupCount(m2) > 2) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
@@ -2843,9 +2874,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String kLast = MapUtils.getObject(map, "kLast");
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{2}%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst, kLast)), line)) && Util.groupCount(m2) > 3
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{2}%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst, kLast)),
+				line)) && Util.groupCount(m2) > 3
 				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, Util.group(m2, 3)))
 				&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g24 = Util.group(m2, 4)))) {
 			//
@@ -2872,9 +2904,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		final String cpk, cpv;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) && Util.groupCount(m2) > 3) {
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 3) {
 			//
 			if (Boolean.logicalAnd(StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g23 = Util.group(m2, 3))),
 					StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g24 = Util.group(m2, 4))))) {
@@ -2907,10 +2940,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		TextStringBuilder tsbk = null, tsbv = null;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{3}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}{2}$",
-				kFirst)), line)) && Util.groupCount(m2) > 1
-				&& StringUtils.countMatches(g22 = Util.group(m2, 2), 'ん') == 2
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{3}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}{2}$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 1 && StringUtils.countMatches(g22 = Util.group(m2, 2), 'ん') == 2
 				&& (lastIndexOf = StringUtils.lastIndexOf(g22, 'ん')) == StringUtils.length(g22) - 1
 				&& lastIndexOf - StringUtils.indexOf(g22, 'ん') == 2) {
 			//
@@ -2968,9 +3001,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		TextStringBuilder tsbk = null, tsbv = null;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s)(の)(\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) && Util.groupCount(m2) > 1) {
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s)(の)(\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 1) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
@@ -3079,9 +3113,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		TextStringBuilder tsbk = null, tsbv = null;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{4})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{3}\\p{InHiragana}+\\p{InCJKUnifiedIdeographs}{2}$",
-				kFirst)), line)) && Util.groupCount(m2) > 1
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{4})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{3}\\p{InHiragana}+\\p{InCJKUnifiedIdeographs}{2}$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 1
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2)))) {
 			//
@@ -3160,9 +3195,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		final String g23, g24;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{2}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+[\\p{InHiragana}\\p{InCJKSymbolsAndPunctuation}]+$",
-				kFirst)), line))
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{2}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+[\\p{InHiragana}\\p{InCJKSymbolsAndPunctuation}]+$"
+						.formatted(kFirst)),
+				line))
 				&& Util.groupCount(m2) > 3
 				&& StringUtils.isNotBlank(
 						cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1), g23 = Util.group(m2, 3)))
@@ -3203,9 +3239,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			});
 			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{4})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
-				kFirst)), line)) && Util.groupCount(m2) > 1
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{4})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 1
 				&& StringUtils.isNotBlank(StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
 				&& StringUtils.countMatches(g22 = Util.group(m2, 2), "ん") == 3) {
 			//
@@ -3308,9 +3345,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		TextStringBuilder tsbk = null, tsbv = null;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{6})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) && Util.groupCount(m2) > 1
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{6})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 1
 				&& StringUtils.isNotBlank(StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
 				&& StringUtils.countMatches(g22 = Util.group(m2, 2), 'ん') == 4) {
 			//
@@ -3378,9 +3416,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		final String g24;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) && Util.groupCount(m2) > 1) {
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 1) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
@@ -3497,9 +3536,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		int lastIndexOf, indexOf, length;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line))
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst)),
+				line))
 				&& Util.groupCount(m2) > 1
 				&& StringUtils.isNotBlank(
 						cpk = StringUtils.getCommonPrefix(MapUtils.getObject(map, "g11"), g21 = Util.group(m2, 1)))
@@ -3607,27 +3647,34 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-		} else if ((Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{2}\\p{InHiragana}$",
-				kFirst)), line))
-				|| Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-						"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{6}$",
-						kFirst)), line))
-				|| Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-						"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{3}\\p{InCJKSymbolsAndPunctuation}\\p{InCJKUnifiedIdeographs}{2}+",
-						kFirst)), line))
-				|| Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-						"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{2}$",
-						kFirst)), line))
-				|| Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-						"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{3}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}{2}+$",
-						kFirst)), line))
-				|| Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-						"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{4}$",
-						kFirst)), line))
-				|| Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-						"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{4}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+$",
-						kFirst)), line)))
+		} else if ((Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{2}\\p{InHiragana}$"
+						.formatted(kFirst)),
+				line))
+				|| Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{6}$"
+								.formatted(kFirst)),
+						line))
+				|| Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{3}\\p{InCJKSymbolsAndPunctuation}\\p{InCJKUnifiedIdeographs}{2}+"
+								.formatted(kFirst)),
+						line))
+				|| Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{2}$"
+								.formatted(kFirst)),
+						line))
+				|| Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{3}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}{2}+$"
+								.formatted(kFirst)),
+						line))
+				|| Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{4}$"
+								.formatted(kFirst)),
+						line))
+				|| Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{4}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+$"
+								.formatted(kFirst)),
+						line)))
 				&& Util.groupCount(m2) > 1) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
@@ -3664,9 +3711,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		TextStringBuilder tsbk = null, tsbv = null;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line))
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(kFirst)),
+				line))
 				&& Util.groupCount(m2) > 1
 				&& StringUtils.isNotBlank(
 						StringUtils.getCommonPrefix(MapUtils.getObject(map, "g11"), g21 = Util.group(m2, 1)))
@@ -3760,9 +3808,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		if (Boolean.logicalOr((keyIntEquals(iop, i)),
 				StringsUtil.equals(org.apache.commons.lang3.Strings.CS, line, StringUtils.trim(PairUtil.right(iop))))
-				|| !Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-						"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-						kFirst)), line))
+				|| !Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+								.formatted(kFirst)),
+						line))
 				|| Util.groupCount(m2) <= 1 || StringUtils.length(g21 = Util.group(m2, 1)) != 3) {
 			//
 			return null;
@@ -3969,10 +4018,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final Multimap<String, String> multimap = LinkedHashMultimap.create();
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
-				kFirst)), line)) && Util.groupCount(m2) > 1
-				&& StringUtils.countMatches(g22 = Util.group(m2, 2), "ん") > 1) {
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$"
+						.formatted(kFirst)),
+				line)) && Util.groupCount(m2) > 1 && StringUtils.countMatches(g22 = Util.group(m2, 2), "ん") > 1) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
@@ -4372,8 +4421,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g12 = MapUtils.getObject(map, "g12");
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$", s)),
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(s)),
 				line)) && Util.groupCount(m2) > 1) {
 			//
 			IntCollectionUtil.addInt(intCollection, index);
@@ -4424,9 +4474,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 
 	private static Matcher toMatcher12B1(final String s, final PatternMap patternMap, final String line) {
 		//
-		return Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				s)), line);
+		return Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(s)),
+				line);
 		//
 	}
 
@@ -6361,7 +6412,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	private static String format(final String a, final Object b) {
-		return testAndApply((x, y) -> x != null, a, b, String::format, null);
+		return testAndApply((x, y) -> x != null, a, b, (x, y) -> x.formatted(y), null);
 	}
 
 	@Nullable
@@ -7866,11 +7917,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			return Pair.of(multimap, IntList.create(index));
 			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1), null),
-				testAndApply(x -> StringUtils.length(x) > 0, g11,
-						x -> StringUtils.substring(x, StringUtils.length(x) - 1), null))),
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(%1$s\\p{InCJKUnifiedIdeographs}%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+						.formatted(
+								testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1),
+										null),
+								testAndApply(x -> StringUtils.length(x) > 0, g11,
+										x -> StringUtils.substring(x, StringUtils.length(x) - 1), null))),
 				right)) && Util.groupCount(m2) > 1
 				&& StringUtils.length(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1))) == 1
 				&& StringUtils.length(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2))) == 2

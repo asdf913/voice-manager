@@ -385,7 +385,7 @@ class SpeechApiOnlineImplTest {
 		Collection<String> attributes = null;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				String.format("/%1$s.class", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
+				"/%1$s.class".formatted(StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 			//
 			final org.apache.bcel.classfile.Method method = JavaClassUtil.getMethod(
 					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),
@@ -791,7 +791,7 @@ class SpeechApiOnlineImplTest {
 		Map<String, Object> map = null;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				String.format("/%1$s.class", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
+				"/%1$s.class".formatted(StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 			//
 			final org.apache.bcel.classfile.Method method = JavaClassUtil.getMethod(
 					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),

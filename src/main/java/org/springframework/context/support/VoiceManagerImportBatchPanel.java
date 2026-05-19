@@ -463,7 +463,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		final Class<?> clz = File.class;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				String.format(CLASS_RESOURCE_FORMAT, StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
+				CLASS_RESOURCE_FORMAT.formatted(StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 			//
 			final Object[] objectTypes = toArray(Util
 					.map(Stream.of("java.lang.String", "java.lang.String", "java.io.File"), ObjectType::getInstance));
@@ -575,13 +575,13 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			jPanel.setLayout(new MigLayout());
 			//
-			add(jPanel, jcbVoiceId, String.format("%1$s,span %2$s", GROWX, 3));
+			add(jPanel, jcbVoiceId, "%1$s,span %2$s".formatted(GROWX, 3));
 			//
-			add(jPanel, tfSpeechLanguageCode = new JTextField(), String.format("wmin %1$s", 30));
+			add(jPanel, tfSpeechLanguageCode = new JTextField(), "wmin %1$s".formatted(30));
 			//
-			add(jPanel, tfSpeechLanguageName = new JTextField(), String.format("wmin %1$s", 230));
+			add(jPanel, tfSpeechLanguageName = new JTextField(), "wmin %1$s".formatted(230));
 			//
-			add(jPanel, String.format("%1$s,span %2$s", WRAP, 1));
+			add(jPanel, "%1$s,span %2$s".formatted(WRAP, 1));
 			//
 		} // if
 			//
@@ -608,7 +608,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 					toInteger(testAndApply(predicate, "max", function, null)));
 			//
 			add(jPanel, jsSpeechRate = new JSlider(Util.intValue(RangeUtil.lowerEndpoint(range), 0),
-					Util.intValue(RangeUtil.upperEndpoint(range), 0)), String.format("growx,wmin %1$s", 300));
+					Util.intValue(RangeUtil.upperEndpoint(range), 0)), "growx,wmin %1$s".formatted(300));
 			//
 			setMajorTickSpacing(jsSpeechRate, 1);
 			//
@@ -616,7 +616,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			setPaintLabels(jsSpeechRate, true);
 			//
-			add(jPanel, tfSpeechRate = new JTextField(), String.format("wmin %1$s", 25));
+			add(jPanel, tfSpeechRate = new JTextField(), "wmin %1$s".formatted(25));
 			//
 			Util.setEditable(tfSpeechRate, false);
 			//
@@ -647,7 +647,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				jsSpeechVolume = new JSlider(Util.intValue(
 						testAndApply(RangeUtil::hasLowerBound, speechVolumeRange, RangeUtil::lowerEndpoint, null), 0),
 						Util.intValue(upperEnpoint, 100)),
-				String.format("%1$s,wmin %2$s", GROWX, 300));
+				"%1$s,wmin %2$s".formatted(GROWX, 300));
 		//
 		setSpeechVolume(valueOf(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.speechVolume")), upperEnpoint);
@@ -658,18 +658,18 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		setPaintLabels(jsSpeechVolume, true);
 		//
-		add(jPanel, tfSpeechVolume = new JTextField(), String.format("wmin %1$s", 25));
+		add(jPanel, tfSpeechVolume = new JTextField(), "wmin %1$s".formatted(25));
 		//
 		tfSpeechVolume.setEnabled(false);
 		//
-		add(jPanel, String.format("%1$s,span %2$s", WRAP, 5));
+		add(jPanel, "%1$s,span %2$s".formatted(WRAP, 5));
 		//
 		add(new JLabel("Import"));
 		//
-		add(btnImport = new JButton("Import a Single Spreadsheet"), String.format(SPAN_ONLY_FORMAT, 2));
+		add(btnImport = new JButton("Import a Single Spreadsheet"), SPAN_ONLY_FORMAT.formatted(2));
 		//
 		add(btnImportWithinFolder = new JButton("Import SpreadSheet(s) Within a Folder"),
-				String.format("%1$s,span %2$s", WRAP, 2));
+				"%1$s,span %2$s".formatted(WRAP, 2));
 		//
 		add(new JLabel("Import Template"));
 		//
@@ -679,27 +679,27 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.importFileTemplateGenerateBlankRow")));
 		//
-		add(btnImportFileTemplate = new JButton("Generate"), String.format("%1$s,span %2$s", WRAP, 3));
+		add(btnImportFileTemplate = new JButton("Generate"), "%1$s,span %2$s".formatted(WRAP, 3));
 		//
 		// Progress
 		//
-		add(progressBarImport = new JProgressBar(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 5));
+		add(progressBarImport = new JProgressBar(), "%1$s,%2$s,span %3$s".formatted(GROWX, WRAP, 5));
 		//
 		progressBarImport.setStringPainted(true);
 		//
 		add(new JLabel("Current Processing File"));
 		//
-		final String wrap = String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 5);
+		final String wrap = "%1$s,%2$s,span %3$s".formatted(GROWX, WRAP, 5);
 		//
 		add(tfCurrentProcessingFile = new JTextField(), wrap);
 		//
 		add(new JLabel("Current Processing Sheet"));
 		//
-		add(tfCurrentProcessingSheetName = new JTextField(), String.format("%1$s,wmin %2$s,span %3$s", GROWX, 300, 2));
+		add(tfCurrentProcessingSheetName = new JTextField(), "%1$s,wmin %2$s,span %3$s".formatted(GROWX, 300, 2));
 		//
 		add(new JLabel("Voice"));
 		//
-		add(tfCurrentProcessingVoice = new JTextField(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 2));
+		add(tfCurrentProcessingVoice = new JTextField(), "%1$s,%2$s,span %3$s".formatted(GROWX, WRAP, 2));
 		//
 		add(new JLabel("Import Result"));
 		//
@@ -745,7 +745,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		if (!b) {
 			//
-			setToolTipText(btnExecute, String.format("Please create \"%1$s\" folder.", Util.getAbsolutePath(folder)));
+			setToolTipText(btnExecute, "Please create \"%1$s\" folder.".formatted(Util.getAbsolutePath(folder)));
 			//
 		} // if
 			//
@@ -1589,8 +1589,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			try {
 				//
-				infoOrPrintln(LOG, getSystemPrintStreamByFieldName("out"), String.format(
-						"%1$s %2$s/%3$s (%4$s) %5$s/%6$s",
+				infoOrPrintln(LOG, getSystemPrintStreamByFieldName("out"), "%1$s %2$s/%3$s (%4$s) %5$s/%6$s".formatted(
 						percentage != null
 								? StringUtils.leftPad(format(percentNumberFormat, Util.doubleValue(percentage, 0)), 5,
 										' ')
@@ -1637,7 +1636,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 					//
 					if (count != null) {
 						//
-						final String string = String.format("%1$s/%2$s (%3$s)", counter, count,
+						final String string = "%1$s/%2$s (%3$s)".formatted(counter, count,
 								format(percentNumberFormat, counter.intValue() * 1.0 / count.intValue()));
 						//
 						setToolTipText(progressBar, string);
@@ -1983,7 +1982,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 					testAndApply(Objects::nonNull, ms = getIfNull(ms, () -> Util.getMethods(Util.getClass(id3v1))),
 							Arrays::stream, null),
 					a -> Util.matches(
-							Util.matcher(Pattern.compile(String.format("get%1$s", StringUtils.capitalize(attribute))),
+							Util.matcher(Pattern.compile("get%1$s".formatted(StringUtils.capitalize(attribute))),
 									Util.getName(a)))))) == null
 					|| methods.isEmpty()) {
 				//
@@ -3164,7 +3163,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 					|| !Objects.equals(voiceOld.getFileDigest(), fileDigest)) {
 				//
 				final StringBuilder fileName = new StringBuilder(
-						String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS_%1$tL.%2$s", new Date(), fileExtension));
+						"%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS_%1$tL.%2$s".formatted(new Date(), fileExtension));
 				//
 				File file = Util.toFile(Path.of(voiceFolder, filePath = Util.toString(fileName)));
 				//
@@ -3544,7 +3543,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		} else if (!Util.exists(file)) {
 			//
 			Util.accept(errorMessageConsumer, voice,
-					String.format("File \"%1$s\" does not exist", Util.getAbsolutePath(file)));
+					"File \"%1$s\" does not exist".formatted(Util.getAbsolutePath(file)));
 			//
 			return false;
 			//
@@ -3788,7 +3787,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 					//
 					if (!Util.containsKey(os, key)) {
 						//
-						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
+						throw new IllegalStateException(KEY_NOT_FOUND_MESSAGE.formatted(
 								testAndApply(IH::isArray, Util.cast(Class.class, key), Util::getSimpleName, x -> key)));
 						//
 					} // if
@@ -3821,7 +3820,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 				if (!Util.containsKey(map, key)) {
 					//
-					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
+					throw new IllegalStateException(KEY_NOT_FOUND_MESSAGE.formatted(key));
 					//
 				} // if
 					//

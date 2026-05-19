@@ -330,7 +330,7 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			//
 			if (instance != null) {
 				//
-				instance.setTimeout(String.format("PT%1$sS", l));
+				instance.setTimeout("PT%1$sS".formatted(l));
 				//
 			} // if
 				//

@@ -415,7 +415,7 @@ class VoiceManagerRubyHtmlPanelTest {
 		List<Method> list = null;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				String.format("/%1$s.class", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
+				"/%1$s.class".formatted(StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 			//
 			final JavaClass javaClass = ClassParserUtil.parse(new ClassParser(is, null));
 			//

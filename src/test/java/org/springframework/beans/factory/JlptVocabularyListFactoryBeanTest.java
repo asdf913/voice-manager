@@ -322,7 +322,7 @@ class JlptVocabularyListFactoryBeanTest {
 			} // if
 				//
 			Assertions
-					.assertEquals(String.format("[{\"level\":\"%1$s\"}]", level),
+					.assertEquals("[{\"level\":\"%1$s\"}]".formatted(level),
 							ObjectMapperUtil.writeValueAsString(
 									new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY)
 											.setSerializationInclusion(Include.NON_NULL),
@@ -421,7 +421,7 @@ class JlptVocabularyListFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(String.format("[%1$s]", one != null ? one.intValue() : null),
+		Assertions.assertEquals("[%1$s]".formatted(one != null ? one.intValue() : null),
 				Util.toString(getIntegerValue(cell, null)));
 		//
 		// org.apache.poi.ss.usermodel.CellType.NUMERIC

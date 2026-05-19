@@ -107,10 +107,8 @@ class IpaMultimapFactoryBeanTest {
 		//
 		final String value = "VALUE";
 		//
-		try (final InputStream is = new ByteArrayInputStream(
-				String.format("{\"%1$s\":\"%2$s\"}", key, value).getBytes())) {
+		try (final InputStream is = new ByteArrayInputStream("{\"%1$s\":\"%2$s\"}".formatted(key, value).getBytes())) {
 			//
-
 			if (ih != null) {
 				//
 				ih.inputStream = is;

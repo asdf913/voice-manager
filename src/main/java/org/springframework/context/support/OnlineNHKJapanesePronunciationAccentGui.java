@@ -346,12 +346,11 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		testAndAccept(biPredicate,
 				tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui.text")),
-				String.format("%1$s,wmin %2$s,span %3$s", growx, "100px", 3), this::add);
+				"%1$s,wmin %2$s,span %3$s".formatted(growx, "100px", 3), this::add);
 		//
 		final String wrap = "wrap";
 		//
-		testAndAccept(biPredicate, btnExecute = new JButton("Execute"), String.format("%1$s,span %2$s", wrap, 2),
-				this::add);
+		testAndAccept(biPredicate, btnExecute = new JButton("Execute"), "%1$s,span %2$s".formatted(wrap, 2), this::add);
 		//
 		Util.addActionListener(btnExecute, this);
 		//
@@ -385,20 +384,20 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 		});
 		//
-		testAndAccept(biPredicate, jcbPronounication, String.format("%1$s,%2$s,span %3$s", wrap, growx, 3), this::add);
+		testAndAccept(biPredicate, jcbPronounication, "%1$s,%2$s,span %3$s".formatted(wrap, growx, 3), this::add);
 		//
 		testAndAccept(predicate, new JLabel("Audio"), this::add);
 		//
 		testAndAccept(predicate, btnPlayAudio = new JButton("Play"), this::add);
 		//
 		testAndAccept(biPredicate, new JComboBox<>(mcbmAudioFormat = new DefaultComboBoxModel<>()),
-				String.format("%1$s,span %2$s", growx, 2), this::add);
+				"%1$s,span %2$s".formatted(growx, 2), this::add);
 		//
 		testAndAccept(biPredicate, btnSaveAudio = new JButton("Save"), wrap, this::add);
 		//
 		testAndAccept(predicate, new JLabel("Image"), this::add);
 		//
-		testAndAccept(biPredicate, btnCopyPitchAccentImage = new JButton("Copy Image"), String.format("span %1$s", 2),
+		testAndAccept(biPredicate, btnCopyPitchAccentImage = new JButton("Copy Image"), "span %1$s".formatted(2),
 				this::add);
 		//
 		// Image Format

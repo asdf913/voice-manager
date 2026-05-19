@@ -2636,7 +2636,7 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		Assertions.assertEquals(ObjectMapperUtil.writeValueAsString(objectMapper, Set.of(http)),
 				ObjectMapperUtil.writeValueAsString(objectMapper,
-						invoke(METHOD_GET_SCHEMES, null, String.format("| %1$s       | H", http))));
+						invoke(METHOD_GET_SCHEMES, null, "| %1$s       | H".formatted(http))));
 		//
 	}
 

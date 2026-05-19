@@ -288,7 +288,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		} else {
 			//
 			final Pattern pattern = ObjectUtils.getIfNull(Util.get(arPattern),
-					() -> Pattern.compile(String.format("(\\p{In%1$s}+)\\s+\\((.+)\\)", unicodeBlock)));
+					() -> Pattern.compile("(\\p{In%1$s}+)\\s+\\((.+)\\)".formatted(unicodeBlock)));
 			//
 			Util.set(arPattern, pattern);
 			//

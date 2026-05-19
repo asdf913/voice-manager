@@ -192,13 +192,13 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		testAndAccept(predicate, new JLabel(), this::add);
 		//
 		testAndAccept(biPredicate, btnExportJouYouKanJi = new JButton("Export 常用漢字"),
-				String.format("%1$s,span %2$s", wrap, 3), this::add);
+				"%1$s,span %2$s".formatted(wrap, 3), this::add);
 		//
 		Util.addActionListener(btnExportJouYouKanJi, this);
 		//
 		testAndAccept(predicate, new JLabel("File"), this::add);
 		//
-		testAndAccept(biPredicate, tfExportFile = new JTextField(), String.format("growx,span %1$s", 3), this::add);
+		testAndAccept(biPredicate, tfExportFile = new JTextField(), "growx,span %1$s".formatted(3), this::add);
 		//
 		final List<Component> cs = Arrays.asList(tfText, jcbJouYouKanji);
 		//
@@ -251,7 +251,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		if (Objects.equals(Util.getSource(evt), btnExportJouYouKanJi)) {
 			//
-			final Path path = Path.of(String.format("常用漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date()));
+			final Path path = Path.of("常用漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx".formatted(new Date()));
 			//
 			final File file = Util.toFile(path);
 			//
@@ -342,7 +342,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 					//
 					if (!Util.containsKey(getObjects(), key)) {
 						//
-						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
+						throw new IllegalStateException(KEY_NOT_FOUND_MESSAGE.formatted(
 								testAndApply(IH::isArray, Util.cast(Class.class, key), Util::getSimpleName, x -> key)));
 						//
 					} // if
@@ -400,7 +400,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 						//
 						testAndApply(x -> IterableUtils.size(x) == 1,
 								ElementUtil.selectXpath(document,
-										String.format(xPathFormat, sheetName = ElementUtil.text(h3s.get(i)))),
+										xPathFormat.formatted(sheetName = ElementUtil.text(h3s.get(i)))),
 								x -> ElementUtil.children(IterableUtils.get(x, 0)), null)
 				//
 				);

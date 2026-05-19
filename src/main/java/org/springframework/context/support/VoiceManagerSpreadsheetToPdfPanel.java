@@ -267,7 +267,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			if (jcbVoiceId != null) {
 				//
-				add(jcbVoiceId, String.format("span %1$s", 2));
+				add(jcbVoiceId, "span %1$s".formatted(2));
 				//
 			} // if
 				//
@@ -292,8 +292,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			final String wrap = "wrap";
 			//
-			add(lblThumbnail = new JLabel(),
-					String.format("%1$s,span 1 %2$s,wmin %3$s,hmin %4$s", wrap, 8, 102, 159 + 29));
+			add(lblThumbnail = new JLabel(), "%1$s,span 1 %2$s,wmin %3$s,hmin %4$s".formatted(wrap, 8, 102, 159 + 29));
 			//
 			lblThumbnail.addMouseListener(this);
 			//
@@ -317,7 +316,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 			});
 			//
-			add(jcbPDRectangle, String.format("span %1$s,%2$s", 2, wrap));
+			add(jcbPDRectangle, "span %1$s,%2$s".formatted(2, wrap));
 			//
 			final MutableComboBoxModel mcbm = Util.cast(MutableComboBoxModel.class, cbmPDRectangle);
 			//
@@ -361,14 +360,14 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 			add(new JLabel("File"));
 			//
-			add(tfFile = new JTextField(), String.format("growx,span %1$s,%2$s", 2, wrap));
+			add(tfFile = new JTextField(), "growx,span %1$s,%2$s".formatted(2, wrap));
 			//
 			// Sheet
 			//
 			add(new JLabel("Sheet"));
 			//
 			add(jcbSheet = new JComboBox<>(cbmSheet = new DefaultComboBoxModel<>(new String[] { null })),
-					String.format("growx,span %1$s,%2$s", 2, wrap));
+					"growx,span %1$s,%2$s".formatted(2, wrap));
 			//
 			jcbSheet.addActionListener(this);
 			//
@@ -378,7 +377,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			add(jsp = new JScrollPane(new JTable(tableModel = new DefaultTableModel(
 					new Object[] { "text", "voice", "contents", "width", "height", "x", "y" }, 0))),
-					String.format("%1$s,span %2$s", wrap, 2));// TODO
+					"%1$s,span %2$s".formatted(wrap, 2));// TODO
 			//
 			setPreferredSize(jsp, new Dimension((int) getWidth(Util.getPreferredSize(jsp)), 39));
 			//
@@ -396,13 +395,13 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			add(new JLabel("Output File"));
 			//
-			add(tfOutputFile = new JTextField(), String.format("growx,span %1$s,%2$s,%3$s", 2, wrap, top));
+			add(tfOutputFile = new JTextField(), "growx,span %1$s,%2$s,%3$s".formatted(2, wrap, top));
 			//
 			// Exception
 			//
 			add(new JLabel("Execption"), top);
 			//
-			add(tfException = new JTextField(), String.format("growx,span %1$s,%2$s,%3$s", 2, wrap, top));
+			add(tfException = new JTextField(), "growx,span %1$s,%2$s,%3$s".formatted(2, wrap, top));
 			//
 		} // if
 			//
@@ -697,7 +696,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				testAndApply((a, b) -> b != null, Util.getKey(entry), file, Narcissus::invokeStaticMethod, null))) {
 			//
 			testAndRunThrows(file != null,
-					() -> Util.setText(tfException, String.format("Allowed file type %1$s", collection)));
+					() -> Util.setText(tfException, "Allowed file type %1$s".formatted(collection)));
 			//
 			return;
 			//
@@ -821,7 +820,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		IValue0<Method> method = null;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				String.format("/%1$s.class", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
+				"/%1$s.class".formatted(StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 			//
 			// org.apache.poi.ss.usermodel.WorkbookFactory.create(java.io.File,java.lang.String,boolean)
 			//
@@ -950,7 +949,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				testAndApply((a, b) -> b != null, Util.getKey(entry), file, Narcissus::invokeStaticMethod, null))) {
 			//
 			testAndRunThrows(file != null,
-					() -> Util.setText(tfException, String.format("Allowed file type %1$s", collection)));
+					() -> Util.setText(tfException, "Allowed file type %1$s".formatted(collection)));
 			//
 			return;
 			//

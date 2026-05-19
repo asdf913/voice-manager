@@ -683,7 +683,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		final Class<?> clz = File.class;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				String.format(CLASS_RESOURCE_FORMAT, StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
+				CLASS_RESOURCE_FORMAT.formatted(StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 			//
 			final Object[] objectTypes = toArray(Util
 					.map(Stream.of("java.lang.String", "java.lang.String", "java.io.File"), ObjectType::getInstance));
@@ -769,8 +769,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		add(new JLabel(LANGUAGE));
 		//
 		add(tfLanguage = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManager.language")),
-				String.format("%1$s,span %2$s", GROWX, 11));
+				"org.springframework.context.support.VoiceManager.language")), "%1$s,span %2$s".formatted(GROWX, 11));
 		//
 		// Source
 		//
@@ -778,7 +777,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		add(tfSource = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.source")),
-				String.format("%1$s,span %2$s,wmin %3$s", GROWX, 4, 50));
+				"%1$s,span %2$s,wmin %3$s".formatted(GROWX, 4, 50));
 		//
 		// Kanji
 		//
@@ -815,7 +814,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		add(new JComboBox<>(cbmGaKuNenBeTsuKanJi = testAndApply(Objects::nonNull,
 				ArrayUtils.insert(0, Util.toArray(gaKuNenBeTsuKanJiList, new String[] {}), (String) null),
-				DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>())), String.format(SPAN_ONLY_FORMAT, 2));
+				DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>())), SPAN_ONLY_FORMAT.formatted(2));
 		//
 		final String string = PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.gaKuNenBeTsuKanJi");
@@ -831,7 +830,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		add(new JLabel("常用漢字"));
 		//
 		add(new JComboBox<>(cbmJouYouKanJi = Util.get(booleanComboBoxModelSupplier)),
-				String.format("%1$s,span %2$s", WRAP, 1));
+				"%1$s,span %2$s".formatted(WRAP, 1));
 		//
 		Util.setSelectedItem(cbmJouYouKanJi,
 				testAndApply(StringUtils::isNotEmpty, PropertyResolverUtil.getProperty(propertyResolver,
@@ -842,14 +841,14 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		add(new JLabel("Text"));
 		//
 		add(tfTextImport = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManager.text")), String.format("%1$s,span %2$s", GROWX, 18));
+				"org.springframework.context.support.VoiceManager.text")), "%1$s,span %2$s".formatted(GROWX, 18));
 		//
 		addDocumentListener(tfTextImportDocument = tfTextImport.getDocument(), this);
 		//
 		(jcbJlptVocabulary = new JComboBox<JlptVocabulary>(mcbmJlptVocabulary = new DefaultComboBoxModel<>()))
 				.addItemListener(this);
 		//
-		add(jcbJlptVocabulary, String.format(SPAN_ONLY_FORMAT, 3));
+		add(jcbJlptVocabulary, SPAN_ONLY_FORMAT.formatted(3));
 		//
 		final ListCellRenderer<?> render = Util.getRenderer(jcbJlptVocabulary);
 		//
@@ -869,14 +868,14 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			}
 		});
 		//
-		add(btnCheckPronunciation = new JButton(PRONUNCIATION), String.format("%1$s,span %2$s", WRAP, 2));
+		add(btnCheckPronunciation = new JButton(PRONUNCIATION), "%1$s,span %2$s".formatted(WRAP, 2));
 		//
 		add(new JLabel());
 		//
 		add(btnConvertToHiraganaOrKatakana = new JButton("Convert To Hiragana or Katakana"),
-				String.format(SPAN_ONLY_FORMAT, 3));
+				SPAN_ONLY_FORMAT.formatted(3));
 		//
-		add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("%1$s,span %2$s", WRAP, 2));
+		add(btnConvertToRomaji = new JButton("Convert To Romaji"), "%1$s,span %2$s".formatted(WRAP, 2));
 		//
 		// Yomi
 		//
@@ -931,7 +930,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		add(tfIpaSymbol = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.ipaSymbol")),
-				String.format("%1$s,wmin %2$s,wmax %3$s,span %4$s", GROWX, 100, 200, 2));
+				"%1$s,wmin %2$s,wmax %3$s,span %4$s".formatted(GROWX, 100, 200, 2));
 		//
 		final List<Yomi> yomiList = Util.toList(Util.filter(testAndApply(Objects::nonNull, yomis, Arrays::stream, null),
 				y -> Objects.equals(Util.name(y), PropertyResolverUtil.getProperty(propertyResolver,
@@ -956,13 +955,13 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		final String tags = PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.listNames");
 		//
-		add(tfListNames = new JTextField(tags), String.format("%1$s,span %2$s", GROWX, 9));
+		add(tfListNames = new JTextField(tags), "%1$s,span %2$s".formatted(GROWX, 9));
 		//
 		tfListNames.addKeyListener(this);
 		//
-		add(jlListNames = new JLabel(), String.format(SPAN_ONLY_FORMAT, 5));
+		add(jlListNames = new JLabel(), SPAN_ONLY_FORMAT.formatted(5));
 		//
-		add(jlListNameCount = new JLabel(), String.format("wmax %1$s", 20));
+		add(jlListNameCount = new JLabel(), "wmax %1$s".formatted(20));
 		//
 		testAndRun(StringUtils.isNotBlank(tags), () -> keyReleased(new KeyEvent(tfListNames, 0, 0, 0, 0, ' ')));
 		//
@@ -988,8 +987,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		add(new JLabel(ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER));
 		//
 		add(tfRomaji = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManager.romaji")),
-				String.format("%1$s,span %2$s", GROWX, 23));
+				"org.springframework.context.support.VoiceManager.romaji")), "%1$s,span %2$s".formatted(GROWX, 23));
 		//
 		add(btnCopyRomaji = new JButton("Copy"), WRAP);
 		//
@@ -998,8 +996,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		add(new JLabel(HIRAGANA_WITH_FIRST_CAPTICALIZED_LETTER));
 		//
 		add(tfHiragana = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManager.hiragana")),
-				String.format("%1$s,span %2$s", GROWX, 9));
+				"org.springframework.context.support.VoiceManager.hiragana")), "%1$s,span %2$s".formatted(GROWX, 9));
 		//
 		add(btnCopyHiragana = new JButton("Copy"));
 		//
@@ -1007,17 +1004,16 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		// Katakana
 		//
-		add(new JLabel("Katakana"), String.format(SPAN_ONLY_FORMAT, 2));
+		add(new JLabel("Katakana"), SPAN_ONLY_FORMAT.formatted(2));
 		//
 		add(tfKatakana = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManager.katakana")),
-				String.format("%1$s,span %2$s", GROWX, 10));
+				"org.springframework.context.support.VoiceManager.katakana")), "%1$s,span %2$s".formatted(GROWX, 10));
 		//
 		add(btnCopyKatakana = new JButton("Copy"), WRAP);
 		//
 		// Pronunciation
 		//
-		add(new JLabel(PRONUNCIATION), String.format(SPAN_ONLY_FORMAT, 2));
+		add(new JLabel(PRONUNCIATION), SPAN_ONLY_FORMAT.formatted(2));
 		//
 		// TODO
 		//
@@ -1035,24 +1031,24 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} // if
 			//
-		add(jcbPronunciation, String.format("%1$s,span %2$s", GROWX, 3));
+		add(jcbPronunciation, "%1$s,span %2$s".formatted(GROWX, 3));
 		//
 		add(new JComboBox<>(mcbmPronounicationAudioFormat = new DefaultComboBoxModel<>()),
-				String.format(WMIN_ONLY_FORMAT, 94));
+				WMIN_ONLY_FORMAT.formatted(94));
 		//
 		add(btnPlayPronunciationAudio = new JButton("Play"), WRAP);
 		//
 		// Pronunciation Page URL
 		//
-		add(new JLabel("Pronunciation Page URL"), String.format(SPAN_ONLY_FORMAT, 3));
+		add(new JLabel("Pronunciation Page URL"), SPAN_ONLY_FORMAT.formatted(3));
 		//
 		add(tfPronunciationPageUrl = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.pronunciationPageUrl")),
-				String.format("%1$s,span %2$s", GROWX, 19));
+				"%1$s,span %2$s".formatted(GROWX, 19));
 		//
 		add(new JLabel("Status"));
 		//
-		add(tfPronunciationPageStatusCode = new JTextField(), String.format(WMIN_ONLY_FORMAT, 30));
+		add(tfPronunciationPageStatusCode = new JTextField(), WMIN_ONLY_FORMAT.formatted(30));
 		//
 		add(btnPronunciationPageUrlCheck = new JButton("Check"), WRAP);
 		//
@@ -1090,18 +1086,18 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		if (Boolean.logicalAnd(jsSpeechRate == null, tfSpeechRate == null)) {
 			//
-			add(panel2, new JLabel(SPEECH_RATE), String.format(ALIGN_FORMAT, "50%"));
+			add(panel2, new JLabel(SPEECH_RATE), ALIGN_FORMAT.formatted("50%"));
 			//
 			add(panel2,
 					tfSpeechRate = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 							"org.springframework.context.support.VoiceManager.speechRate")),
-					String.format(WMIN_ONLY_FORMAT, 27));
+					WMIN_ONLY_FORMAT.formatted(27));
 			//
 		} // if
 			//
 			// Speech Volume
 			//
-		add(panel2, new JLabel("Speech Volume"), String.format(ALIGN_FORMAT, "50%"));
+		add(panel2, new JLabel("Speech Volume"), ALIGN_FORMAT.formatted("50%"));
 		//
 		final Range<Integer> speechVolumeRange = createVolumeRange(speechApiInstance);
 		//
@@ -1112,7 +1108,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				jsSpeechVolume = new JSlider(Util.intValue(
 						testAndApply(RangeUtil::hasLowerBound, speechVolumeRange, RangeUtil::lowerEndpoint, null), 0),
 						Util.intValue(upperEnpoint, 100)),
-				String.format(WMIN_ONLY_FORMAT, width));
+				WMIN_ONLY_FORMAT.formatted(width));
 		//
 		setSpeechVolume(valueOf(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.speechVolume")), upperEnpoint);
@@ -1123,19 +1119,19 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		setPaintLabels(jsSpeechVolume, true);
 		//
-		add(panel2, tfSpeechVolume = new JTextField(), String.format("align %1$s %1$s,wmin %2$s", "50%", 27));
+		add(panel2, tfSpeechVolume = new JTextField(), "align %1$s %1$s,wmin %2$s".formatted("50%", 27));
 		//
 		// Audio Format
 		//
 		panel2.add(new JComboBox(cbmAudioFormatExecute = new DefaultComboBoxModel<Object>()));
 		//
-		add(panel2, String.format("%1$s,span %2$s", WRAP, 21));
+		add(panel2, "%1$s,span %2$s".formatted(WRAP, 21));
 		//
 		add(new JLabel(""));
 		//
 		add(new JLabel(""));
 		//
-		add(btnExecute = new JButton("Execute"), String.format(SPAN_ONLY_FORMAT, 3));
+		add(btnExecute = new JButton("Execute"), SPAN_ONLY_FORMAT.formatted(3));
 		//
 		Double maxPreferredWidth = ObjectUtils.max(getPreferredWidth(tfListNames),
 				getPreferredWidth(btnConvertToKatakana));
@@ -2430,7 +2426,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 				if (!Util.containsKey(map, key)) {
 					//
-					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
+					throw new IllegalStateException(KEY_NOT_FOUND_MESSAGE.formatted(
 							testAndApply(IH::isArray, Util.cast(Class.class, key), Util::getSimpleName, x -> key)));
 					//
 				} // if
@@ -2670,7 +2666,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 					testAndApply(Objects::nonNull, ms = getIfNull(ms, () -> Util.getMethods(Util.getClass(id3v1))),
 							Arrays::stream, null),
 					a -> Util.matches(
-							Util.matcher(Pattern.compile(String.format("get%1$s", StringUtils.capitalize(attribute))),
+							Util.matcher(Pattern.compile("get%1$s".formatted(StringUtils.capitalize(attribute))),
 									Util.getName(a)))))) == null
 					|| methods.isEmpty()) {
 				//
@@ -2927,7 +2923,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		} else if (!Util.exists(file)) {
 			//
 			testAndAccept((a, b) -> a != null, tmImportException,
-					String.format("File \"%1$s\" does not exist", Util.getAbsolutePath(file)),
+					"File \"%1$s\" does not exist".formatted(Util.getAbsolutePath(file)),
 					//
 					(a, b) -> Util.addRow(a, new Object[] { getText(voice), getRomaji(voice), b }),
 					//
@@ -3033,7 +3029,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 					|| !Objects.equals(voiceOld.getFileDigest(), fileDigest)) {
 				//
 				final StringBuilder fileName = new StringBuilder(
-						String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS_%1$tL.%2$s", new Date(), fileExtension));
+						"%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS_%1$tL.%2$s".formatted(new Date(), fileExtension));
 				//
 				File file = Util.toFile(Path.of(voiceFolder, filePath = Util.toString(fileName)));
 				//
@@ -3262,7 +3258,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		} else if (!Util.exists(file)) {
 			//
 			Util.accept(errorMessageConsumer, voice,
-					String.format("File \"%1$s\" does not exist", Util.getAbsolutePath(file)));
+					"File \"%1$s\" does not exist".formatted(Util.getAbsolutePath(file)));
 			//
 			return false;
 			//
@@ -4035,14 +4031,14 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} // if
 			//
-		add(container, new JLabel(SPEECH_RATE), String.format(ALIGN_FORMAT, "50%"));
+		add(container, new JLabel(SPEECH_RATE), ALIGN_FORMAT.formatted("50%"));
 		//
 		final JSlider jsSpeechRate = instance != null
 				? instance.jsSpeechRate = new JSlider(Util.intValue(RangeUtil.lowerEndpoint(range), 0),
 						Util.intValue(RangeUtil.upperEndpoint(range), 0))
 				: null;
 		//
-		add(container, jsSpeechRate, String.format(WMIN_ONLY_FORMAT, width));
+		add(container, jsSpeechRate, WMIN_ONLY_FORMAT.formatted(width));
 		//
 		setMajorTickSpacing(jsSpeechRate, 1);
 		//
@@ -4052,7 +4048,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		final JTextComponent tfSpeechRate = instance != null ? instance.tfSpeechRate = new JTextField() : null;
 		//
-		add(container, tfSpeechRate, String.format("align %1$s %1$s,width %2$s", "50%", 20));
+		add(container, tfSpeechRate, "align %1$s %1$s,width %2$s".formatted("50%", 20));
 		//
 		Util.setEditable(tfSpeechRate, false);
 		//

@@ -98,7 +98,7 @@ public class IpaDictGui extends JPanel implements InitializingBean, ActionListen
 		//
 		setSelectionMode(lsm = jList.getSelectionModel(), ListSelectionModel.SINGLE_SELECTION);
 		//
-		add(new JScrollPane(jList), String.format("growx,span %1$s,wrap", 2));
+		add(new JScrollPane(jList), "growx,span %1$s,wrap".formatted(2));
 		//
 		add(new JLabel());
 		//

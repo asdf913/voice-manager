@@ -1580,7 +1580,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		add(panel,
 				tfFolder = new JTextField(
 						Util.getAbsolutePath(testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null))),
-				String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 3));
+				"%1$s,%2$s,span %3$s".formatted(GROWX, WRAP, 3));
 		//
 		add(panel, new JLabel("File"));
 		//
@@ -1588,11 +1588,11 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(panel, new JLabel("Length"));
 		//
-		add(panel, tfFileLength = new JTextField(), String.format("%1$s,%2$s", GROWX, WRAP));
+		add(panel, tfFileLength = new JTextField(), "%1$s,%2$s".formatted(GROWX, WRAP));
 		//
 		add(panel, new JLabel("File Digest"));
 		//
-		add(panel, tfFileDigest = new JTextField(), String.format("%1$s,span %2$s", GROWX, 3));
+		add(panel, tfFileDigest = new JTextField(), "%1$s,span %2$s".formatted(GROWX, 3));
 		//
 		Util.forEach(Stream.of(tfFolder, tfFile, tfFileLength, tfFileDigest), x -> Util.setEditable(x, false));
 		//
@@ -1986,8 +1986,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 				if (range != null && !range.contains(q)) {
 					//
-					throw new IllegalStateException(String.format("Under VBR,\"quality\" cound be with in %1$s to %2$s",
-							RangeUtil.lowerEndpoint(range), RangeUtil.upperEndpoint(range)));
+					throw new IllegalStateException("Under VBR,\"quality\" cound be with in %1$s to %2$s"
+							.formatted(RangeUtil.lowerEndpoint(range), RangeUtil.upperEndpoint(range)));
 					//
 				} // if
 					//
@@ -2006,8 +2006,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			final Class<?> clz = Lame.class;
 			//
-			try (final InputStream is = Util.getResourceAsStream(clz, String.format(CLASS_RESOURCE_FORMAT,
-					StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
+			try (final InputStream is = Util.getResourceAsStream(clz,
+					CLASS_RESOURCE_FORMAT.formatted(StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 				//
 				final org.apache.bcel.classfile.Method[] ms = JavaClassUtil.getMethods(
 						ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)));
@@ -2097,8 +2097,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			final Class<?> clz = LameEncoder.class;
 			//
-			try (final InputStream is = Util.getResourceAsStream(clz, String.format(CLASS_RESOURCE_FORMAT,
-					StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
+			try (final InputStream is = Util.getResourceAsStream(clz,
+					CLASS_RESOURCE_FORMAT.formatted(StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 				//
 				final List<org.apache.bcel.classfile.Method> ms = Util
 						.toList(Util.filter(

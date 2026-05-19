@@ -3378,9 +3378,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 			} // if
 				//
-		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(\\p{InCJKUnifiedIdeographs}{2}%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+$",
-				g3)), line)) && Util.groupCount(m) > 1) {
+		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}{2}%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+$"
+						.formatted(g3)),
+				line)) && Util.groupCount(m) > 1) {
 			//
 			IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), index);
 			//
@@ -3438,9 +3439,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		for (int k = 0; k < IterableUtils.size(list); k++) {
 			//
-			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-					"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-					g1)), s = IterableUtils.get(list, k))) && Util.groupCount(m) > 1) {
+			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+					"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"
+							.formatted(g1)),
+					s = IterableUtils.get(list, k))) && Util.groupCount(m) > 1) {
 				//
 				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
 				//
@@ -3448,9 +3450,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						Util.group(m, 1), Util.group(m, 2));
 				//
 			} else if (StringUtils.length(g2) > 1 && Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-					String.format(
-							"^(\\p{InCJKUnifiedIdeographs}%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+",
-							StringUtils.substring(g2, 1, 2))),
+					"^(\\p{InCJKUnifiedIdeographs}%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+"
+							.formatted(StringUtils.substring(g2, 1, 2))),
 					s)) && Util.groupCount(m) > 1) {
 				//
 				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);

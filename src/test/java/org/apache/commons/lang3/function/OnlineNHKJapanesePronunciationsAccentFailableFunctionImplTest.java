@@ -676,8 +676,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		final String protocol = "http";
 		//
-		Assertions.assertEquals(protocol,
-				getProtocol(new URI(String.format("%1$s://www.google.com", protocol)).toURL()));
+		Assertions.assertEquals(protocol, getProtocol(new URI("%1$s://www.google.com".formatted(protocol)).toURL()));
 		//
 	}
 
@@ -702,7 +701,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		final String host = "www.google.com";
 		//
-		Assertions.assertEquals(host, getHost(new URI(String.format("http://%1$s", host)).toURL()));
+		Assertions.assertEquals(host, getHost(new URI("http://%1$s".formatted(host)).toURL()));
 		//
 	}
 

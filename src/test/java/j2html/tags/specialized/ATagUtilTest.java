@@ -178,10 +178,10 @@ class ATagUtilTest {
 		//
 		String url = "";
 		//
-		Assertions.assertEquals(String.format("<a href=\"%1$s\">null</a>", url),
+		Assertions.assertEquals("<a href=\"%1$s\">null</a>".formatted(url),
 				Objects.toString(ATagUtil.createByUrl(url)));
 		//
-		Assertions.assertEquals(String.format("<a href=\"%1$s\">null</a>", url = " "),
+		Assertions.assertEquals("<a href=\"%1$s\">null</a>".formatted(url = " "),
 				Objects.toString(ATagUtil.createByUrl(url)));
 		//
 	}

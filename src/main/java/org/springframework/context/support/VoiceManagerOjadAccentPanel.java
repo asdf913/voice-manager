@@ -501,7 +501,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final int span = 2;
 			//
-			add(panel, tfTextInput = new JTextField(), String.format("%1$s,%2$s,span %3$s", wrap, growx, span));
+			add(panel, tfTextInput = new JTextField(), "%1$s,%2$s,span %3$s".formatted(wrap, growx, span));
 			//
 			height += getHeight(Util.getPreferredSize(tfTextInput));
 			//
@@ -536,7 +536,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			height += getHeight(Util.getPreferredSize(jcbCategory));
 			//
-			add(panel, jcbCategory, String.format("%1$s,span %2$s", wrap, 2));
+			add(panel, jcbCategory, "%1$s,span %2$s".formatted(wrap, 2));
 			//
 			// アクセント型
 			//
@@ -565,7 +565,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			(jcbAccentType = new JComboBox<>(dcbm)).setRenderer(createListCellRenderer(jcbAccentType.getRenderer()));
 			//
-			add(panel, jcbAccentType, String.format("%1$s,span %2$s", wrap, 2));
+			add(panel, jcbAccentType, "%1$s,span %2$s".formatted(wrap, 2));
 			//
 			// 単語長
 			//
@@ -593,7 +593,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			(jcbMora = new JComboBox<>(dcbm)).setRenderer(createListCellRenderer(jcbMora.getRenderer()));
 			//
-			add(panel, jcbMora, String.format("%1$s,span %2$s", wrap, span));
+			add(panel, jcbMora, "%1$s,span %2$s".formatted(wrap, span));
 			//
 			// ピッチカーブ
 			//
@@ -621,9 +621,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			(jcbCurve = new JComboBox<>(dcbm)).setRenderer(createListCellRenderer(jcbCurve.getRenderer()));
 			//
-			add(panel, jcbCurve, String.format("%1$s,span %2$s", wrap, span));
+			add(panel, jcbCurve, "%1$s,span %2$s".formatted(wrap, span));
 			//
-			add(new JScrollPane(panel), String.format("%1$s,span %2$s,%3$s,hmax %4$s", wrap, 3, growx, height
+			add(new JScrollPane(panel), "%1$s,span %2$s,%3$s,hmax %4$s".formatted(wrap, 3, growx, height
 					+ iif(Objects.equals(OperatingSystemUtil.getOperatingSystem(), OperatingSystem.LINUX), 21, 24)));
 			//
 			add(new JLabel());
@@ -638,7 +638,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(btnExecute = new JButton(NodeUtil.attr(
 					testAndApply(x -> IterableUtils.size(x) == 1, es, x -> IterableUtils.get(x, 0), null), VALUE)),
-					String.format("%1$s,span %2$s", wrap, 2));
+					"%1$s,span %2$s".formatted(wrap, 2));
 			//
 			add(new JLabel("Text And Image"));
 			//
@@ -658,7 +658,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(jcbTextAndImage = new JComboBox<>(
 					mcbmTextAndImage = new DefaultComboBoxModel<>(new TextAndImage[] { null })),
-					String.format("%1$s,%2$s,span %3$s", wrap, growx, span));
+					"%1$s,%2$s,span %3$s".formatted(wrap, growx, span));
 			//
 			jcbTextAndImage.addActionListener(this);
 			//
@@ -674,29 +674,29 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(panalText, new JLabel("Part of Speech"));
 			//
-			add(panalText, tfPartOfSpeech = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
+			add(panalText, tfPartOfSpeech = new JTextField(), "%1$s,wmin %2$s".formatted(growx, 59));
 			//
 			add(panalText, btnCopyPartOfSpeech = new JButton(COPY), wrap);
 			//
 			add(panalText, new JLabel("Conjugation"));
 			//
-			add(panalText, tfConjugation = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
+			add(panalText, tfConjugation = new JTextField(), "%1$s,wmin %2$s".formatted(growx, 59));
 			//
 			add(panalText, btnCopyConjugation = new JButton(COPY), wrap);
 			//
 			add(panalText, new JLabel("Kanji"));
 			//
-			add(panalText, tfKanji = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
+			add(panalText, tfKanji = new JTextField(), "%1$s,wmin %2$s".formatted(growx, 59));
 			//
 			add(panalText, btnCopyKanji = new JButton(COPY), wrap);
 			//
 			add(panalText, new JLabel("Hiragana"));
 			//
-			add(panalText, tfHiragana = new JTextField(), String.format("%1$s,wmin %2$s", growx, 59));
+			add(panalText, tfHiragana = new JTextField(), "%1$s,wmin %2$s".formatted(growx, 59));
 			//
 			add(panalText, btnCopyHiragana = new JButton(COPY), wrap);
 			//
-			add(panalText, String.format("span %1$s,%2$s,%3$s", 3, growx, wrap));
+			add(panalText, "span %1$s,%2$s,%3$s".formatted(3, growx, wrap));
 			//
 			Collection<?> collection = Util.cast(Collection.class,
 					Narcissus.getField(panalText, Narcissus.findField(JPanel.class, COMPONENT)));
@@ -734,7 +734,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(panelImage, new JLabel("Accent"));
 			//
-			add(panelImage, lblAccent = new JLabel(), String.format("%1$s,span %2$s", wrap, span));
+			add(panelImage, lblAccent = new JLabel(), "%1$s,span %2$s".formatted(wrap, span));
 			//
 			add(panelImage, new JLabel());
 			//
@@ -746,7 +746,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(panelImage, new JLabel("Curve"));
 			//
-			add(panelImage, lblCurve = new JLabel(), String.format("%1$s,span %2$s", wrap, span));
+			add(panelImage, lblCurve = new JLabel(), "%1$s,span %2$s".formatted(wrap, span));
 			//
 			add(panelImage, new JLabel());
 			//
@@ -756,7 +756,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(panelImage, panel, wrap);
 			//
-			add(panelImage, String.format("span %1$s,%2$s,%3$s", 3, growx, wrap));
+			add(panelImage, "span %1$s,%2$s,%3$s".formatted(3, growx, wrap));
 			//
 			Util.forEach(Stream.of(btnCopyAccentImage, btnSaveAccentImage, btnCopyCurveImage, btnSaveCurveImage),
 					x -> setFont(x, createFont(getFont(x), toIntFunction)));
@@ -792,9 +792,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			testAndAccept((a, b) -> b instanceof TableCellEditor, jtVoice, proxy,
 					(a, b) -> jtVoice.setDefaultEditor(String.class, Util.cast(TableCellEditor.class, b)));
 			//
-			add(panelVoice, new JScrollPane(jtVoice), String.format("hmax %1$s", 56));
+			add(panelVoice, new JScrollPane(jtVoice), "hmax %1$s".formatted(56));
 			//
-			add(panelVoice, String.format("span %1$s,%2$s,%3$s", 3, growx, wrap));
+			add(panelVoice, "span %1$s,%2$s,%3$s".formatted(3, growx, wrap));
 			//
 			// PDF
 			//
@@ -830,7 +830,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(panelPdf, btnPdf = new JButton("PDF"));
 			//
-			add(panelPdf, String.format("span %1$s,%2$s", 3, growx));
+			add(panelPdf, "span %1$s,%2$s".formatted(3, growx));
 			//
 			final List<Field> fs = Util
 					.toList(Util.filter(
@@ -1127,8 +1127,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			label.setIcon(testAndApply(Objects::nonNull, getAccentImage(value), ImageIcon::new, x -> new ImageIcon()));
 			//
-			add(panel, label, String.format("right,wmin %1$s",
-					Util.orElse(Util.max(Util.map(IntStream.range(0, Util.getSize(model)), i -> {
+			add(panel, label, "right,wmin %1$s"
+					.formatted(Util.orElse(Util.max(Util.map(IntStream.range(0, Util.getSize(model)), i -> {
 						//
 						final TextAndImage textAndImage = Util.getElementAt(model, i);
 						//
@@ -1521,8 +1521,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final String format = Util.toString(Util.getSelectedItem(cbmImageFormat));
 			//
 			saveImage(getAccentImage(Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage))),
-					() -> Util
-							.toFile(Path.of(String.format("%1$s(%2$s).%3$s", Util.getText(tfKanji), "Accent", format))),
+					() -> Util.toFile(Path.of("%1$s(%2$s).%3$s".formatted(Util.getText(tfKanji), "Accent", format))),
 					format);
 			//
 		} else if (Objects.equals(source, btnSaveCurveImage)) {
@@ -1530,8 +1529,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final String format = Util.toString(Util.getSelectedItem(cbmImageFormat));
 			//
 			saveImage(getCurveImage(Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage))),
-					() -> Util
-							.toFile(Path.of(String.format("%1$s(%2$s).%3$s", Util.getText(tfKanji), "Curve", format))),
+					() -> Util.toFile(Path.of("%1$s(%2$s).%3$s".formatted(Util.getText(tfKanji), "Curve", format))),
 					format);
 			//
 		} else if (Objects.equals(source, btnPdf)) {
@@ -3030,7 +3028,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				// word
 				//
 			final Iterable<ElementHandle> words = testAndApply((a, b) -> StringUtils.isNotBlank(b), page, input.id,
-					(a, b) -> PageUtil.querySelectorAll(a, String.format("tr[id=\"%1$s\"]", b)),
+					(a, b) -> PageUtil.querySelectorAll(a, "tr[id=\"%1$s\"]".formatted(b)),
 					(a, b) -> PageUtil.querySelectorAll(a, "tr[id^=\"word\"]"));
 			//
 			testAndRunThrows(IterableUtils.size(words) > 1, () -> {
@@ -3696,7 +3694,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			if (Objects.equals("function", PageUtil.evaluate(page, "typeof get_pronounce_url"))) {
 				//
 				Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
-						Util.toString(PageUtil.evaluate(page, String.format("get_pronounce_url(\"%1$s\",\"%2$s\")",
+						Util.toString(PageUtil.evaluate(page, "get_pronounce_url(\"%1$s\",\"%2$s\")".formatted(
 								ElementHandleUtil.getAttribute(eh, "id"), StringUtils.defaultIfBlank(format, "mp3")))),
 						ElementHandleUtil.screenshot(eh));
 				//
@@ -3747,7 +3745,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				textAndImage.curveImage = toBufferedImage(
 						ElementHandleUtil.screenshot(ElementHandleUtil.querySelector(word,
-								String.format("td:nth-child(%1$s) .katsuyo_proc_accent_curve canvas", 3))),
+								"td:nth-child(%1$s) .katsuyo_proc_accent_curve canvas".formatted(3))),
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
 				textAndImage.kanji = textContent;
@@ -3773,12 +3771,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					(textAndImage = new TextAndImage()).accentImage = toBufferedImage(
 							ElementHandleUtil.screenshot(eh = ElementHandleUtil.querySelector(word,
-									String.format("td:nth-child(%1$s) .accented_word", j + 3))),
+									"td:nth-child(%1$s) .accented_word".formatted(j + 3))),
 							e -> LoggerUtil.error(LOG, e.getMessage(), e));
 					//
 					textAndImage.curveImage = toBufferedImage(
 							ElementHandleUtil.screenshot(ElementHandleUtil.querySelector(word,
-									String.format("td:nth-child(%1$s) .katsuyo_proc_accent_curve canvas", j + 3))),
+									"td:nth-child(%1$s) .katsuyo_proc_accent_curve canvas".formatted(j + 3))),
 							e -> LoggerUtil.error(LOG, e.getMessage(), e));
 					//
 					textAndImage.hiragana = StringUtils.trim(ElementHandleUtil.textContent(eh));
@@ -3963,7 +3961,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		for (int j = start; j < Integer.MAX_VALUE; j++) {
 			//
-			if (ElementHandleUtil.querySelector(word, String.format("td:nth-child(%1$s)", j)) == null) {
+			if (ElementHandleUtil.querySelector(word, "td:nth-child(%1$s)".formatted(j)) == null) {
 				//
 				end = Integer.valueOf(j);
 				//
@@ -3979,8 +3977,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		for (int j = start; end != null && j < end.intValue(); j++) {
 			//
-			if (StringUtils.isBlank(StringUtils.trim(ElementHandleUtil.textContent(
-					eh = ElementHandleUtil.querySelector(word, String.format("td:nth-child(%1$s)", j)))))) {
+			if (StringUtils.isBlank(StringUtils.trim(ElementHandleUtil
+					.textContent(eh = ElementHandleUtil.querySelector(word, "td:nth-child(%1$s)".formatted(j)))))) {
 				//
 				continue;
 				//

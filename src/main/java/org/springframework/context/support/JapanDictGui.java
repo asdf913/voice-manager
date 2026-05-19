@@ -588,7 +588,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		final int width = 100;
 		//
-		add(this, tfText = new JTextField(), String.format("%1$s,%2$s,span %3$s,wmax %4$s", growx, wrap, 3, width));
+		add(this, tfText = new JTextField(), "%1$s,%2$s,span %3$s,wmax %4$s".formatted(growx, wrap, 3, width));
 		//
 		try (final Playwright playwright = Playwright.create()) {
 			//
@@ -625,15 +625,15 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				new JComboBox<>(cbmBrowserType = new DefaultComboBoxModel<>(
 						toArray(Stream.concat(Stream.of((String) null), Util.stream(Util.keySet(userAgentMap))),
 								String[]::new))),
-				String.format("%1$s,span %2$s", wrap, 2));
+				"%1$s,span %2$s".formatted(wrap, 2));
 		//
 		add(this, new JLabel());
 		//
-		add(this, btnExecute = new JButton("Execute"), String.format("%1$s,span %2$s", wrap, 2));
+		add(this, btnExecute = new JButton("Execute"), "%1$s,span %2$s".formatted(wrap, 2));
 		//
 		add(this, new JLabel("Response Code"));
 		//
-		add(this, tfResponseCode = new JTextField(), String.format("%1$s,%2$s,span %3$s", growx, wrap, 3));
+		add(this, tfResponseCode = new JTextField(), "%1$s,%2$s,span %3$s".formatted(growx, wrap, 3));
 		//
 		add(this, new JLabel());
 		//
@@ -645,7 +645,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				return false;
 			}
 
-		})), String.format("%1$s,wmin %2$s,span %3$s", wrap, 100, 9));
+		})), "%1$s,wmin %2$s,span %3$s".formatted(wrap, 100, 9));
 		//
 		setSelectionMode(lsm = jTable.getSelectionModel(), ListSelectionModel.SINGLE_SELECTION);
 		//
@@ -687,25 +687,25 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(this, new JLabel(HIRAGANA));
 		//
-		add(this, tfHiragana = new JTextField(), String.format("%1$s,span %2$s,wmax %3$s", growx, 3, width));
+		add(this, tfHiragana = new JTextField(), "%1$s,span %2$s,wmax %3$s".formatted(growx, 3, width));
 		//
 		add(this, btnCopyHiragana = new JButton("Copy"));
 		//
 		add(this, new JLabel(KATAKANA));
 		//
-		add(this, tfKatakana = new JTextField(), String.format("%1$s,wmin %2$s", growx, width));
+		add(this, tfKatakana = new JTextField(), "%1$s,wmin %2$s".formatted(growx, width));
 		//
 		add(this, btnCopyKatakana = new JButton("Copy"));
 		//
 		add(this, new JLabel(ROMAJI));
 		//
-		add(this, tfRomaji = new JTextField(), String.format("%1$s,span %2$s,wmin %3$s", growx, 1, width));
+		add(this, tfRomaji = new JTextField(), "%1$s,span %2$s,wmin %3$s".formatted(growx, 1, width));
 		//
 		add(this, btnCopyRomaji = new JButton("Copy"), wrap);
 		//
 		add(this, new JLabel("Audio URL"));
 		//
-		add(this, tfAudioUrl = new JTextField(), String.format("%1$s,span %2$s,wmax %3$spx", growx, 3, 150));
+		add(this, tfAudioUrl = new JTextField(), "%1$s,span %2$s,wmax %3$spx".formatted(growx, 3, 150));
 		//
 		JPanel jPanel = new JPanel();
 		//
@@ -715,17 +715,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(jPanel, btnPlayAudio = new JButton("Play"));
 		//
-		add(this, jPanel, String.format("%1$s,span %2$s", wrap, 4));
+		add(this, jPanel, "%1$s,span %2$s".formatted(wrap, 4));
 		//
 		add(this, new JLabel(FURIGANA));
 		//
-		add(this, furiganaImage = new JLabel(), String.format("span %1$s", 5));
+		add(this, furiganaImage = new JLabel(), "span %1$s".formatted(5));
 		//
 		add(jPanel = new JPanel(), btnCopyFuriganaImage = new JButton("Copy"));
 		//
 		add(jPanel, btnSaveFuriganaImage = new JButton("Save"));
 		//
-		add(this, jPanel, String.format("%1$s,span %2$s", wrap, 2));
+		add(this, jPanel, "%1$s,span %2$s".formatted(wrap, 2));
 		//
 		add(this, new JLabel(PITCH_ACCENT));
 		//
@@ -739,29 +739,29 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		setRenderer(jcbPitchAccent, createPitchAccentListCellRenderer(jcbPitchAccent, jcbPitchAccent.getRenderer(),
 				Util.getPreferredSize(jcbPitchAccent)));
 		//
-		add(this, jcbPitchAccent, String.format("span %1$s", 5));
+		add(this, jcbPitchAccent, "span %1$s".formatted(5));
 		//
 		add(jPanel = new JPanel(), btnCopyPitchAccentImage = new JButton("Copy"));
 		//
 		add(jPanel, btnSavePitchAccentImage = new JButton("Save"));
 		//
-		add(this, jPanel, String.format("%1$s,span %2$s", wrap, 2));
+		add(this, jPanel, "%1$s,span %2$s".formatted(wrap, 2));
 		//
-		add(this, new JLabel(STROKE), String.format("span %1$s", 2));
+		add(this, new JLabel(STROKE), "span %1$s".formatted(2));
 		//
-		add(this, strokeImage = new JLabel(), String.format("span %1$s", 6));
+		add(this, strokeImage = new JLabel(), "span %1$s".formatted(6));
 		//
-		add(this, btnCopyStrokeImage = new JButton("Copy"), String.format("flowy,split %1$s", 2));
+		add(this, btnCopyStrokeImage = new JButton("Copy"), "flowy,split %1$s".formatted(2));
 		//
 		add(this, btnSaveStrokeImage = new JButton("Save"), growx);
 		//
 		add(this, new JLabel(), wrap);
 		//
-		add(this, new JLabel("Stroke with Number"), String.format("span %1$s", 2));
+		add(this, new JLabel("Stroke with Number"), "span %1$s".formatted(2));
 		//
-		add(this, strokeWithNumberImage = new JLabel(), String.format("span %1$s", 6));
+		add(this, strokeWithNumberImage = new JLabel(), "span %1$s".formatted(6));
 		//
-		add(this, btnCopyStrokeWithNumberImage = new JButton("Copy"), String.format("flowy,split %1$s", 2));
+		add(this, btnCopyStrokeWithNumberImage = new JButton("Copy"), "flowy,split %1$s".formatted(2));
 		//
 		add(this, btnSaveStrokeWithNumberImage = new JButton("Save"), growx);
 		//
@@ -806,7 +806,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		setPreferredScrollableViewportSize(jTableStroke, new Dimension(
 				(int) getWidth(preferredSize = Util.getPreferredSize(jTableStroke)), (int) getHeight(preferredSize)));
 		//
-		add(this, new JScrollPane(jTableStroke), String.format("span %1$s,%2$s,wmin %3$s", 2, growx, sum(
+		add(this, new JScrollPane(jTableStroke), "span %1$s,%2$s,wmin %3$s".formatted(2, growx, sum(
 				IntStream.range(0, getColumnCount(tcmStroke)).map(i -> Util.getColumn(tcmStroke, i).getMaxWidth()))));
 		//
 		add(this, new JLabel(), wrap);
@@ -821,7 +821,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						return false;
 					}
 
-				}), String.format("span %1$s,%2$s", 12, wrap));
+				}), "span %1$s,%2$s".formatted(12, wrap));
 		//
 		jTableLink.setDefaultRenderer(Object.class,
 				createTableCellRenderer(jTableLink.getDefaultRenderer(Object.class)));
@@ -843,7 +843,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		add(jPanel, btnBrowseUrl = new JButton("Browse"));
 		//
-		add(this, jPanel, String.format("span %1$s,%2$s", 2, wrap));
+		add(this, jPanel, "span %1$s,%2$s".formatted(2, wrap));
 		//
 		add(this, new JLabel());
 		//
@@ -1965,9 +1965,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		for (int i = 0; i < IterableUtils.size(ids); i++) {
 			//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), getLinkMultimap(
-					IterableUtils.get(ids, i),
-					ElementUtil.select(element, String.format("#collapseDicts%1$s li", IterableUtils.get(ids, i)))));
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					getLinkMultimap(IterableUtils.get(ids, i),
+							ElementUtil.select(element, "#collapseDicts%1$s li".formatted(IterableUtils.get(ids, i)))));
 			//
 		} // for
 			//
@@ -5114,7 +5114,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 										ElementHandleUtil.querySelectorAll(
 												testAndApply(y -> IterableUtils.size(y) > Util.intValue(index, 0),
 														PageUtil.querySelectorAll(page,
-																String.format("#entry-%1$s ruby", id)),
+																"#entry-%1$s ruby".formatted(id)),
 														y -> IterableUtils.get(y, Util.intValue(index, 0)), null),
 												".."),
 										y -> IterableUtils.get(y, 0), null)));
@@ -5131,9 +5131,9 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 						.getIfNull(
 								getPitchAccents(ElementHandleUtil.querySelectorAll(
 										testAndApply(x -> IterableUtils.size(x) > Util.intValue(index, 0),
-												PageUtil.querySelectorAll(page, String.format(
-														"#entry-%1$s ul li.list-group-item[lang='ja'] .d-flex.p-2",
-														id)),
+												PageUtil.querySelectorAll(page,
+														"#entry-%1$s ul li.list-group-item[lang='ja'] .d-flex.p-2"
+																.formatted(id)),
 												x -> IterableUtils.get(x, Util.intValue(index, 0)), null),
 										"div.d-flex")),
 								() -> JapanDictEntry.getPitchAccents(japanDictEntry));
@@ -5371,17 +5371,17 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				// Stroke With Number Image
 				//
 				check(testAndApply(x -> IterableUtils.size(x) == 1,
-						PageUtil.querySelectorAll(page, String.format("#dmak-show-stroke-check-%1$s", id)),
+						PageUtil.querySelectorAll(page, "#dmak-show-stroke-check-%1$s".formatted(id)),
 						x -> IterableUtils.get(x, 0), null));
 				//
 				click(testAndApply(x -> IterableUtils.size(x) == 1,
-						PageUtil.querySelectorAll(page, String.format("#dmak-reset-%1$s", id)),
-						x -> IterableUtils.get(x, 0), null));
+						PageUtil.querySelectorAll(page, "#dmak-reset-%1$s".formatted(id)), x -> IterableUtils.get(x, 0),
+						null));
 				//
 				final BufferedImage bufferedImage = chopImage(getStrokeImage(japanDictGui, page, japanDictEntry));
 				//
-				final Iterable<String> iterable = Util.toList(
-						Util.map(Util.stream(PageUtil.querySelectorAll(page, String.format("#dmak-%1$s tspan", id))),
+				final Iterable<String> iterable = Util
+						.toList(Util.map(Util.stream(PageUtil.querySelectorAll(page, "#dmak-%1$s tspan".formatted(id))),
 								ElementHandleUtil::textContent));
 				//
 				List<String> list = null;
@@ -5585,10 +5585,10 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				id, (a, b) -> b, null);
 		//
 		click(testAndApply(x -> IterableUtils.size(x) == 1,
-				PageUtil.querySelectorAll(page, String.format("#dmak-play-%1$s", idString)),
-				x -> IterableUtils.get(x, 0), null));
+				PageUtil.querySelectorAll(page, "#dmak-play-%1$s".formatted(idString)), x -> IterableUtils.get(x, 0),
+				null));
 		//
-		final String dmakCssSelector = String.format("#dmak-%1$s", idString);
+		final String dmakCssSelector = "#dmak-%1$s".formatted(idString);
 		//
 		if ((testAndApply(x -> IterableUtils.size(x) == 1, PageUtil.querySelectorAll(page, dmakCssSelector),
 				x -> IterableUtils.get(x, 0), null)) == null) {

@@ -62,7 +62,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean, App
 				} else {
 					//
 					LoggerUtil.info(LoggerFactory.getLogger(IH.class),
-							String.format("Please specify the \"%1$s\" system property", key));
+							"Please specify the \"%1$s\" system property".formatted(key));
 					//
 				} // if
 					//

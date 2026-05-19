@@ -287,7 +287,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 		});
 		//
-		add(jcbPDRectangle, String.format("%1$s,span %2$s", WRAP, 2));
+		add(jcbPDRectangle, "%1$s,span %2$s".formatted(WRAP, 2));
 		//
 		final MutableComboBoxModel mcbm = Util.cast(MutableComboBoxModel.class, cbmPDRectangle);
 		//
@@ -333,12 +333,12 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		add(tfFontSize = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManagerImageToPdfPanel.fontSize")),
-				String.format("wmin %1$s", 30));
+				"wmin %1$s".formatted(30));
 		//
 		final FontName[] fontNames = FontName.values();
 		//
 		add(new JComboBox<>(cbmFontName = new DefaultComboBoxModel<>(ArrayUtils.insert(0, fontNames, (FontName) null))),
-				String.format("span %1$s,%2$s", 3, WRAP));
+				"span %1$s,%2$s".formatted(3, WRAP));
 		//
 		if ((index = getIndex(cbmFontName,
 				getFontName("org.springframework.context.support.VoiceManagerImageToPdfPanel.fontName",
@@ -350,7 +350,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 		add(new JLabel("Text"));
 		//
-		add(tfText = new JTextField(), String.format("%1$s,span %2$s,%3$s", GROWX, 4, WRAP));
+		add(tfText = new JTextField(), "%1$s,span %2$s,%3$s".formatted(GROWX, 4, WRAP));
 		//
 		add(new JLabel("Voice"));
 		//
@@ -381,7 +381,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 			jcbVoiceId.addItemListener(this);
 			//
-			add(jcbVoiceId, String.format("span %1$s", 2));
+			add(jcbVoiceId, "span %1$s".formatted(2));
 			//
 			testAndAccept(PropertyResolverUtil::containsProperty, propertyResolver,
 					"org.springframework.context.support.VoiceManagerImageToPdfPanel.voiceId", (a, b) -> {
@@ -407,9 +407,9 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 		} // if
 			//
-		add(tfSpeechLanguageCode = new JTextField(), String.format("width %1$s", 30));
+		add(tfSpeechLanguageCode = new JTextField(), "width %1$s".formatted(30));
 		//
-		add(tfSpeechLanguageName = new JTextField(), String.format("%1$s,width %2$s,span %3$s", WRAP, 230, 2));
+		add(tfSpeechLanguageName = new JTextField(), "%1$s,width %2$s,span %3$s".formatted(WRAP, 230, 2));
 		//
 		JPanel panel = new JPanel();
 		//
@@ -426,21 +426,21 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		final int width = 356;
 		//
-		panel.add(tfImageUrl = new JTextField(), String.format("wmin %1$s,wmax %1$s", width - 34));
+		panel.add(tfImageUrl = new JTextField(), "wmin %1$s,wmax %1$s".formatted(width - 34));
 		//
-		panel.add(tfImageUrlStateCode = new JTextField(), String.format("wmin %1$s,%2$s", 27, WRAP));
+		panel.add(tfImageUrlStateCode = new JTextField(), "wmin %1$s,%2$s".formatted(27, WRAP));
 		//
 		panel.add(new JLabel("File"));
 		//
-		panel.add(tfImageFile = new JTextField(), String.format("wmin %1$s,wmax %1$s,span %2$s", width, 2));
+		panel.add(tfImageFile = new JTextField(), "wmin %1$s,wmax %1$s,span %2$s".formatted(width, 2));
 		//
 		panel.add(btnImageFile = new JButton("Select"));
 		//
-		add(panel, String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, 5));
+		add(panel, "%1$s,%2$s,span %3$s".formatted(WRAP, GROWX, 5));
 		//
 		add(new JLabel());
 		//
-		add(btnExecute = new JButton("Execute"), String.format("span %1$s,%2$s", 2, WRAP));
+		add(btnExecute = new JButton("Execute"), "span %1$s,%2$s".formatted(2, WRAP));
 		//
 		add(new JLabel("Output"));
 		//
@@ -453,11 +453,11 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		setLayoutConstraints(Util.cast(MigLayout.class, panel.getLayout()), "insets 0 0 0 0");
 		//
-		panel.add(tfOutputFile = new JTextField(), String.format("wmin %1$s", 378));
+		panel.add(tfOutputFile = new JTextField(), "wmin %1$s".formatted(378));
 		//
 		panel.add(btnCopyOutputFilePath = new JButton("Copy"));
 		//
-		add(panel, String.format("%1$s,span %2$s", GROWX, 4));
+		add(panel, "%1$s,span %2$s".formatted(GROWX, 4));
 		//
 		Util.forEach(Stream.of(btnExecute, btnImageFile, btnCopyOutputFilePath), x -> Util.addActionListener(x, this));
 		//
@@ -1348,7 +1348,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		MutablePair<Method, Collection<Object>> entry = null;
 		//
 		try (final InputStream is = Util.getResourceAsStream(clz,
-				String.format("/%1$s.class", StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
+				"/%1$s.class".formatted(StringsUtil.replace(Strings.CS, Util.getName(clz), ".", "/")))) {
 			//
 			// org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject.createFromFileByContent(java.io.File,org.apache.pdfbox.pdmodel.PDDocument)
 			//

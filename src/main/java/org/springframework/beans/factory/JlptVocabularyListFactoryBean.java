@@ -267,7 +267,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 					//
 				} else {
 					//
-					throw new UnsupportedOperationException(String.format("type=%1$s,cellType=%2$s", type, cellType));
+					throw new UnsupportedOperationException("type=%1$s,cellType=%2$s".formatted(type, cellType));
 					//
 				} // if
 					//
@@ -279,7 +279,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 					//
 				} else {
 					//
-					throw new UnsupportedOperationException(String.format("type=%1$s,cellType=%2$s", type, cellType));
+					throw new UnsupportedOperationException("type=%1$s,cellType=%2$s".formatted(type, cellType));
 					//
 				} // if
 					//
@@ -345,7 +345,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			if (result == null) {
 				//
 				throw new UnsupportedOperationException(
-						String.format("cellType=%1$s,cellValueType=%2$s", cellType, cellValueType));
+						"cellType=%1$s,cellValueType=%2$s".formatted(cellType, cellValueType));
 				//
 			} // if
 				//
@@ -393,7 +393,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			if (result == null) {
 				//
 				throw new UnsupportedOperationException(
-						String.format("cellType=%1$s,cellValueType=%2$s", cellType, cellValueType));
+						"cellType=%1$s,cellValueType=%2$s".formatted(cellType, cellValueType));
 				//
 			} // if
 				//

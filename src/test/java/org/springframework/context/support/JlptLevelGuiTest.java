@@ -587,9 +587,8 @@ class JlptLevelGuiTest {
 			} else {
 				//
 				AssertionsUtil.assertThrowsAndEquals(HeadlessException.class,
-						String.format("{localizedMessage=%1$s, message=%1$s}",
-								Narcissus.invokeStaticMethod(
-										GraphicsEnvironment.class.getDeclaredMethod("getHeadlessMessage"))),
+						"{localizedMessage=%1$s, message=%1$s}".formatted(Narcissus
+								.invokeStaticMethod(GraphicsEnvironment.class.getDeclaredMethod("getHeadlessMessage"))),
 						executable);
 				//
 			} // if
@@ -611,8 +610,10 @@ class JlptLevelGuiTest {
 	private static Class<? extends Throwable> getThrowingThrowableClass(final Class<?> clz, final Method method)
 			throws Throwable {
 		//
-		try (final InputStream is = clz != null ? clz.getResourceAsStream(String.format("/%1$s.class",
-				StringsUtil.replace(Strings.CS, clz != null ? clz.getName() : null, ".", "/"))) : null) {
+		try (final InputStream is = clz != null
+				? clz.getResourceAsStream("/%1$s.class"
+						.formatted(StringsUtil.replace(Strings.CS, clz != null ? clz.getName() : null, ".", "/")))
+				: null) {
 			//
 			final JavaClass javaClass = ClassParserUtil
 					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));

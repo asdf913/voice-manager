@@ -97,7 +97,7 @@ class UrlAnnotationResourceTest {
 		//
 		try (final InputStream is = clz != null
 				? clz.getResourceAsStream(
-						String.format("/%1$s.class", StringsUtil.replace(Strings.CS, clz.getName(), ".", "/")))
+						"/%1$s.class".formatted(StringsUtil.replace(Strings.CS, clz.getName(), ".", "/")))
 				: null) {
 			//
 			final org.apache.bcel.classfile.Method[] methods = JavaClassUtil.getMethods(
@@ -206,7 +206,7 @@ class UrlAnnotationResourceTest {
 		//
 		try (final InputStream is = clz != null
 				? clz.getResourceAsStream(
-						String.format("/%1$s.class", StringsUtil.replace(Strings.CS, clz.getName(), ".", "/")))
+						"/%1$s.class".formatted(StringsUtil.replace(Strings.CS, clz.getName(), ".", "/")))
 				: null) {
 			//
 			final org.apache.bcel.classfile.Method[] methods = JavaClassUtil.getMethods(
@@ -283,7 +283,7 @@ class UrlAnnotationResourceTest {
 		//
 		try (final InputStream is = clz != null
 				? clz.getResourceAsStream(
-						String.format("/%1$s.class", StringsUtil.replace(Strings.CS, clz.getName(), ".", "/")))
+						"/%1$s.class".formatted(StringsUtil.replace(Strings.CS, clz.getName(), ".", "/")))
 				: null) {
 			//
 			final org.apache.bcel.classfile.Method[] methods = JavaClassUtil.getMethods(

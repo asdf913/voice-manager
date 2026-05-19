@@ -166,7 +166,7 @@ public class MapReportGui extends JFrame
 		final JScrollPane jsp = new JScrollPane(
 				jTable = new JTable(dtm = new DefaultTableModel(new Object[] { "Key", "Old", "New" }, 0)));
 		//
-		testAndAccept(biPredicate, jsp, String.format("%1$s,span %2$s", wrap, 3), this::add);
+		testAndAccept(biPredicate, jsp, "%1$s,span %2$s".formatted(wrap, 3), this::add);
 		//
 		testAndAccept(predicate, new JLabel(), this::add);
 		//
@@ -304,7 +304,7 @@ public class MapReportGui extends JFrame
 						.range(0,
 								Util.orElse(Util.max(Util.mapToInt(Util.stream(Util.entrySet(asMap(mm))),
 										x -> IterableUtils.size(Util.getValue(x)))), 0))
-						.mapToObj(x -> String.format("Value %1$s", x + 1))));
+						.mapToObj(x -> "Value %1$s".formatted(x + 1))));
 		//
 		dtm = new DefaultTableModel(Util.toArray(columns), 0);
 		//

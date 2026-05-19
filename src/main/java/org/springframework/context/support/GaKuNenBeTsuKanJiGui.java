@@ -196,7 +196,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 		testAndAccept(predicate, new JLabel("Exported File"), this::add);
 		//
-		testAndAccept(biPredicate, tfExportFile = new JTextField(), String.format("growx,%1$s,span %2$s", wrap, 2),
+		testAndAccept(biPredicate, tfExportFile = new JTextField(), "growx,%1$s,span %2$s".formatted(wrap, 2),
 				this::add);
 		//
 		testAndAccept(predicate, new JLabel(""), this::add);
@@ -316,7 +316,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 		if (Objects.equals(source, btnExport)) {
 			//
-			final Path path = Path.of(String.format("学年別漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date()));
+			final Path path = Path.of("学年別漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx".formatted(new Date()));
 			//
 			final File file = Util.toFile(path);
 			//
