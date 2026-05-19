@@ -2410,7 +2410,7 @@ class VoiceManagerOjadAccentPanelTest {
 	private static void add(final Container container, final Component component, final Object constraints)
 			throws Throwable {
 		try {
-			METHOD_ADD_3.invoke(null, container, component, constraints);
+			invoke(METHOD_ADD_3, null, container, component, constraints);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -2428,4 +2428,5 @@ class VoiceManagerOjadAccentPanelTest {
 		} // try
 			//
 	}
+
 }
