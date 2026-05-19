@@ -343,8 +343,9 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					final Throwable targetException = e.getTargetException();
 					//
 					errorOrAssertOrShowException(headless,
-							ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-									ExceptionUtils.getRootCause(e), e));
+							Objects.requireNonNullElse(Objects.requireNonNullElse(Objects
+									.requireNonNullElse(ExceptionUtils.getRootCause(targetException), targetException),
+									ExceptionUtils.getRootCause(e)), e));
 					//
 				} // try
 					//

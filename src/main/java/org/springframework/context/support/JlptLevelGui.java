@@ -342,7 +342,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			} catch (final Exception e) {
 				//
 				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(
-						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(e), e));
+						Objects.requireNonNullElse(ExceptionUtils.getRootCause(e), e));
 				//
 			} // try
 				//

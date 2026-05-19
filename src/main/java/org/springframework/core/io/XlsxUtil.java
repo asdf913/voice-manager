@@ -119,8 +119,10 @@ public interface XlsxUtil {
 			//
 			final Throwable targetException = e.getTargetException();
 			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(ObjectUtils.firstNonNull(
-					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(
+					Objects.requireNonNullElse(Objects.requireNonNullElse(
+							Objects.requireNonNullElse(ExceptionUtils.getRootCause(targetException), targetException),
+							ExceptionUtils.getRootCause(e)), e));
 			//
 		} // try
 			//

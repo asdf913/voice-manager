@@ -1415,7 +1415,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 		} catch (final Exception e) {
 			//
-			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(e), e));
+			errorOrAssertOrShowException(headless, Objects.requireNonNullElse(ExceptionUtils.getRootCause(e), e));
 			//
 		} // try
 			//
@@ -1653,8 +1653,9 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				final Throwable targetException = e.getTargetException();
 				//
-				printStackTrace(ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-						ExceptionUtils.getRootCause(e), e));
+				printStackTrace(Objects.requireNonNullElse(Objects.requireNonNullElse(
+						Objects.requireNonNullElse(ExceptionUtils.getRootCause(targetException), targetException),
+						ExceptionUtils.getRootCause(e)), e));
 				//
 			} catch (final ReflectiveOperationException e) {
 				//
@@ -2256,13 +2257,13 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		zipParameters.setEncryptFiles(StringUtils.isNotEmpty(password));
 		//
-		zipParameters
-				.setEncryptionMethod(ObjectUtils.firstNonNull(ObjectMap.getObject(objectMap, EncryptionMethod.class),
-						zipParameters.getEncryptionMethod(), EncryptionMethod.ZIP_STANDARD));
+		zipParameters.setEncryptionMethod(Objects
+				.requireNonNullElse(Objects.requireNonNullElse(ObjectMap.getObject(objectMap, EncryptionMethod.class),
+						zipParameters.getEncryptionMethod()), EncryptionMethod.ZIP_STANDARD));
 		//
-		zipParameters
-				.setCompressionLevel(ObjectUtils.firstNonNull(ObjectMap.getObject(objectMap, CompressionLevel.class),
-						zipParameters.getCompressionLevel(), CompressionLevel.NORMAL));
+		zipParameters.setCompressionLevel(Objects
+				.requireNonNullElse(Objects.requireNonNullElse(ObjectMap.getObject(objectMap, CompressionLevel.class),
+						zipParameters.getCompressionLevel()), CompressionLevel.NORMAL));
 		//
 		try (final net.lingala.zip4j.ZipFile zipFile = testAndApply(Objects::nonNull,
 				ObjectMap.getObject(objectMap, File.class),
@@ -2981,7 +2982,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 		} catch (final Exception e) {
 			//
-			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(e), e));
+			errorOrAssertOrShowException(headless, Objects.requireNonNullElse(ExceptionUtils.getRootCause(e), e));
 			//
 		} // try
 			//
@@ -3769,8 +3770,10 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				final Throwable targetException = e.getTargetException();
 				//
-				final Throwable throwable = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
-						targetException, ExceptionUtils.getRootCause(e));
+
+				final Throwable throwable = Objects.requireNonNullElse(
+						Objects.requireNonNullElse(ExceptionUtils.getRootCause(targetException), targetException),
+						ExceptionUtils.getRootCause(e));
 				//
 				throw ObjectUtils.getIfNull(toRuntimeException(throwable), RuntimeException::new);
 				//
@@ -4459,8 +4462,9 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				final Throwable targetException = e.getTargetException();
 				//
-				throw ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-						ExceptionUtils.getRootCause(e), e);
+				throw Objects.requireNonNullElse(Objects.requireNonNullElse(
+						Objects.requireNonNullElse(ExceptionUtils.getRootCause(targetException), targetException),
+						ExceptionUtils.getRootCause(e)), e);
 				//
 			} // try
 				//

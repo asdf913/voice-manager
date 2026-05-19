@@ -123,8 +123,9 @@ public class LoggerUtil {
 			//
 			final Throwable targetException = e.getTargetException();
 			//
-			printStackTrace(ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-					ExceptionUtils.getRootCause(e), e));
+			printStackTrace(Objects.requireNonNullElse(Objects.requireNonNullElse(
+					Objects.requireNonNullElse(ExceptionUtils.getRootCause(targetException), targetException),
+					ExceptionUtils.getRootCause(e)), e));
 			//
 		} catch (final ReflectiveOperationException e) {
 			//

@@ -2404,8 +2404,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 				final Throwable targetException = e.getTargetException();
 				//
-				printStackTrace(ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-						ExceptionUtils.getRootCause(e), e));
+				printStackTrace(Objects.requireNonNullElse(Objects.requireNonNullElse(
+						Objects.requireNonNullElse(ExceptionUtils.getRootCause(targetException), targetException),
+						ExceptionUtils.getRootCause(e)), e));
 				//
 			} catch (final ReflectiveOperationException e) {
 				//
@@ -2512,8 +2513,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				final Throwable targetException = e.getTargetException();
 				//
 				errorOrAssertOrShowException(headless,
-						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-								ExceptionUtils.getRootCause(e), e));
+						Objects.requireNonNullElse(Objects.requireNonNullElse(Objects
+								.requireNonNullElse(ExceptionUtils.getRootCause(targetException), targetException),
+								ExceptionUtils.getRootCause(e)), e));
 				//
 			} // try
 				//
@@ -3477,8 +3479,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 			final Throwable targetException = e.getTargetException();
 			//
-			final Throwable throwable = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
-					targetException, ExceptionUtils.getRootCause(e));
+			final Throwable throwable = Objects.requireNonNullElse(Objects.requireNonNullElse(
+					Objects.requireNonNullElse(ExceptionUtils.getRootCause(targetException), targetException),
+					ExceptionUtils.getRootCause(e)), e);
 			//
 			throw ObjectUtils.getIfNull(toRuntimeException(throwable), RuntimeException::new);
 			//
@@ -4135,8 +4138,10 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 			final Throwable targetException = e.getTargetException();
 			//
-			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(
-					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
+			errorOrAssertOrShowException(headless,
+					Objects.requireNonNullElse(Objects.requireNonNullElse(
+							Objects.requireNonNullElse(ExceptionUtils.getRootCause(targetException), targetException),
+							ExceptionUtils.getRootCause(e)), e));
 			//
 		} // try
 			//

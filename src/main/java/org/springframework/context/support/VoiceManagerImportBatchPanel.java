@@ -961,8 +961,10 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			final Throwable targetException = e.getTargetException();
 			//
-			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(
-					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
+			errorOrAssertOrShowException(headless,
+					Objects.requireNonNullElse(Objects.requireNonNullElse(
+							Objects.requireNonNullElse(ExceptionUtils.getRootCause(targetException), targetException),
+							ExceptionUtils.getRootCause(e)), e));
 			//
 		} // try
 			//
@@ -1525,8 +1527,10 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			final Throwable targetException = e.getTargetException();
 			//
-			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(
-					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
+			errorOrAssertOrShowException(headless,
+					Objects.requireNonNullElse(Objects.requireNonNullElse(
+							Objects.requireNonNullElse(ExceptionUtils.getRootCause(targetException), targetException),
+							ExceptionUtils.getRootCause(e)), e));
 			//
 		} catch (final Exception e) {
 			//
@@ -3369,8 +3373,9 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			final Throwable targetException = e.getTargetException();
 			//
-			final Throwable throwable = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
-					targetException, ExceptionUtils.getRootCause(e));
+			final Throwable throwable = Objects.requireNonNullElse(
+					Objects.requireNonNullElse(ExceptionUtils.getRootCause(targetException), targetException),
+					ExceptionUtils.getRootCause(e));
 			//
 			throw ObjectUtils.getIfNull(toRuntimeException(throwable), RuntimeException::new);
 			//

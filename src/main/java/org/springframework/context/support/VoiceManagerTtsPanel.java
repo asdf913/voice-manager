@@ -672,8 +672,9 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 					final Throwable targetException = e.getTargetException();
 					//
 					errorOrAssertOrShowException(headless,
-							ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-									ExceptionUtils.getRootCause(e), e));
+							Objects.requireNonNullElse(Objects.requireNonNullElse(Objects
+									.requireNonNullElse(ExceptionUtils.getRootCause(targetException), targetException),
+									ExceptionUtils.getRootCause(e)), e));
 					//
 				} // try
 					//
@@ -1303,8 +1304,10 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 			final Throwable targetException = e.getTargetException();
 			//
-			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(
-					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
+			errorOrAssertOrShowException(headless,
+					Objects.requireNonNullElse(Objects.requireNonNullElse(
+							Objects.requireNonNullElse(ExceptionUtils.getRootCause(targetException), targetException),
+							ExceptionUtils.getRootCause(e)), e));
 			//
 		} // try
 			//
