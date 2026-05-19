@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
@@ -99,7 +100,11 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 			//
 			instance.setText(null);
 			//
-			instance.setLinks(Collections.singleton(null));
+			final Collection<Link> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			instance.setLinks(collection);
 			//
 		} // if
 			//
@@ -109,7 +114,7 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setLinks(Collections.singleton(link));
+			instance.setLinks(Set.of(link));
 			//
 		} // if
 			//
@@ -135,7 +140,7 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setLinks(Collections.singleton(link));
+			instance.setLinks(Set.of(link));
 			//
 		} // if
 			//
