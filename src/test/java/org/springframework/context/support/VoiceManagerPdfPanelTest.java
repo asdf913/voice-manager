@@ -27,9 +27,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -353,7 +355,11 @@ class VoiceManagerPdfPanelTest {
 			//
 		} // if
 			//
-		instance.setImageFormatOrders(Collections.singleton(null));
+		final Set<?> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		instance.setImageFormatOrders(collection);
 		//
 		final Field field = Util.getDeclaredField(VoiceManagerPdfPanel.class, "imageFormatOrders");
 		//
@@ -707,8 +713,12 @@ class VoiceManagerPdfPanelTest {
 		//
 		Util.put(map2, null, null);
 		//
-		final List<Object> values = Arrays.asList(null, "", Boolean.TRUE, Integer.valueOf(0),
-				Collections.singleton(null), map2, new Date(0));
+		final Set<?> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		final List<Object> values = Arrays.asList(null, "", Boolean.TRUE, Integer.valueOf(0), collection, map2,
+				new Date(0));
 		//
 		String name = null;
 		//

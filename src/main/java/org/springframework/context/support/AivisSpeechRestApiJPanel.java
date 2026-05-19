@@ -50,6 +50,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -677,15 +678,10 @@ public class AivisSpeechRestApiJPanel extends JPanel
 									m -> m != null
 											&& Objects.equals(FieldOrMethodUtil.getName(m),
 													"isValidPort")
-											&& CollectionUtils
-													.isEqualCollection(
-															Util.collect(
-																	Util.map(
-																			Arrays.stream(
-																					MethodUtil.getArgumentTypes(m)),
-																			TypeUtil::getClassName),
-																	Collectors.toList()),
-															Collections.singleton("int"))),
+											&& CollectionUtils.isEqualCollection(
+													Util.collect(Util.map(Arrays.stream(MethodUtil.getArgumentTypes(m)),
+															TypeUtil::getClassName), Collectors.toList()),
+													Set.of("int"))),
 							Collectors.toList());
 			//
 			if (IterableUtils.size(ms) > 1) {
@@ -1120,7 +1116,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			//
 		} else if (obj instanceof CharSequence || obj instanceof Number || obj instanceof Boolean) {
 			//
-			return Collections.singleton(obj);
+			return Set.of(obj);
 			//
 		} // if
 			//

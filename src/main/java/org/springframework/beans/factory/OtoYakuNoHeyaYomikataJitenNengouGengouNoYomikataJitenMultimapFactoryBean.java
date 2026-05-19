@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -401,12 +402,12 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 			//
 			for (int j = 1; j <= Util.groupCount(m); j++) {
 				//
-				if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+				if (CollectionUtils.isEqualCollection(Set.of(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 						ubs = getUnicodeBlocks(group = Util.group(m, j)))) {
 					//
 					Util.add(ss1 = ObjectUtils.getIfNull(ss1, ArrayList::new), group);
 					//
-				} else if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.HIRAGANA), ubs)) {
+				} else if (CollectionUtils.isEqualCollection(Set.of(UnicodeBlock.HIRAGANA), ubs)) {
 					//
 					if (hiragana != null) {
 						//

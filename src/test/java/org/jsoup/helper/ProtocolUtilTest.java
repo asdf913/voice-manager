@@ -5,8 +5,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -168,7 +170,11 @@ class ProtocolUtilTest {
 		//
 		Assertions.assertFalse(contains(null, null));
 		//
-		Assertions.assertTrue(contains(Collections.singleton(null), null));
+		final Collection<?> collection = new LinkedHashSet<>();
+		//
+		collection.add(null);
+		//
+		Assertions.assertTrue(contains(collection, null));
 		//
 	}
 

@@ -14,10 +14,12 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.Strings;
@@ -119,7 +121,11 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 			//
 			instance.setText(null);
 			//
-			instance.setLinks(Collections.singleton(null));
+			final Collection<Link> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			instance.setLinks(collection);
 			//
 		} // if
 			//
@@ -129,7 +135,7 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		if (instance != null) {
 			//
-			instance.setLinks(Collections.singleton(link));
+			instance.setLinks(Set.of(link));
 			//
 		} // if
 			//
@@ -149,7 +155,7 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 			//
 			instance.setDescription(null);
 			//
-			instance.setLinks(Collections.singleton(link));
+			instance.setLinks(Set.of(link));
 			//
 		} // if
 			//
@@ -401,21 +407,24 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		final Multimap<String, String> multimap = ImmutableMultimap.of();
 		//
-		Assertions.assertEquals(multimap, toMultimap(Collections.singleton(null)));
+		final Collection<Element> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertEquals(multimap, toMultimap(collection));
 		//
 		Assertions.assertEquals(multimap,
-				toMultimap(Collections.singleton(Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
+				toMultimap(Set.of(Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
 		//
 		Assertions.assertNull(toMultimap(null, (Iterable) null));
 		//
-		Assertions.assertEquals(String.format("{%1$s=[%1$s]}", space),
-				Util.toString(toMultimap(space, Collections.singleton(space))));
+		Assertions.assertEquals(String.format("{%1$s=[%1$s]}", space), Util.toString(toMultimap(space, Set.of(space))));
 		//
 		Assertions.assertEquals(String.format("{%1$s=[%1$s]}", space),
 				Util.toString(toMultimap(space, Collections.nCopies(2, space))));
 		//
 		Assertions.assertEquals(String.format("{%1$s=[%1$s]}", space),
-				Util.toString(toMultimap(String.join("・", space, space), Collections.singleton(space))));
+				Util.toString(toMultimap(String.join("・", space, space), Set.of(space))));
 		//
 	}
 

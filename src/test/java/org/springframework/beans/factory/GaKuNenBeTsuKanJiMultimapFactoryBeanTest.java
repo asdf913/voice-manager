@@ -8,10 +8,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -370,7 +373,11 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 		//
 		if (ih != null) {
 			//
-			ih.iterator = Collections.singleton(null).iterator();
+			final Collection<?> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			ih.iterator = Util.iterator(collection);
 			//
 		} // if
 			//
@@ -380,7 +387,7 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 		//
 		if (ih != null) {
 			//
-			ih.iterator = Collections.singleton(row).iterator();
+			ih.iterator = Util.iterator(Set.of(row));
 			//
 		} // if
 			//

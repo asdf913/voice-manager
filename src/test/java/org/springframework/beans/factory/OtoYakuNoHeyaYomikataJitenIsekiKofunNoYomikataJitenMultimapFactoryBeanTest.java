@@ -8,8 +8,10 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -214,7 +216,11 @@ class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBeanTest
 		//
 		if (!isSystemPropertiesContainsTestGetObject) {
 			//
-			Assertions.assertNull(toMultimap(null, Collections.singleton(null)));
+			final Collection<Element> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			Assertions.assertNull(toMultimap(null, collection));
 			//
 			Element e = new Element("a");
 			//
@@ -224,7 +230,7 @@ class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBeanTest
 				//
 			} // for
 				//
-			Assertions.assertNull(toMultimap(null, Collections.singleton(e)));
+			Assertions.assertNull(toMultimap(null, Set.of(e)));
 			//
 			append(append(append(e = new Element("a"), "<b>青田遺跡</b>"), "<b>あおたいせき</b>"), "<b/>");
 			//
@@ -232,119 +238,119 @@ class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBeanTest
 			//
 			Assertions.assertTrue(
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("青田遺跡", "あおたいせき")),
-							MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+							MultimapUtil.entries(toMultimap(patternMap, Set.of(e)))));
 			//
 			append(append(append(e = new Element("a"), "<b>「禾津頓宮」跡</b>"), "<b>あわづとんぐうあと</b>"), "<b/>");
 			//
 			Assertions.assertTrue(
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("禾津頓宮跡", "あわづとんぐうあと")),
-							MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+							MultimapUtil.entries(toMultimap(patternMap, Set.of(e)))));
 			//
 			append(append(append(e = new Element("a"), "<b>入口遺跡</b>"), "<b>いりぐちいせき）</b>"), "<b/>");
 			//
 			Assertions.assertTrue(
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("入口遺跡", "いりぐちいせき")),
-							MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+							MultimapUtil.entries(toMultimap(patternMap, Set.of(e)))));
 			//
 			append(append(append(e = new Element("a"), "<b>島の山古墳</b>"), "<b>しまのやまこふん</b>"), "<b/>");
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("島", "しま", "山古墳", "やまこふん")),
-					MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+					MultimapUtil.entries(toMultimap(patternMap, Set.of(e)))));
 			//
 			append(append(append(e = new Element("a"), "<b>お亀石古墳</b>"), "<b>おかめいしこふん</b>"), "<b/>");
 			//
 			Assertions.assertTrue(
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("亀石古墳", "かめいしこふん")),
-							MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+							MultimapUtil.entries(toMultimap(patternMap, Set.of(e)))));
 			//
 			append(append(append(e = new Element("a"), "<b>在自西ノ後遺跡</b>"), "<b>あらじにしのうしろいせき</b>"), "<b/>");
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("在自西", "あらじにし", "後遺跡", "うしろいせき")),
-					MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+					MultimapUtil.entries(toMultimap(patternMap, Set.of(e)))));
 			//
 			append(append(append(e = new Element("a"), "<b>オガンジ池瓦窯跡</b>"), "<b>おがんじいけかわらがまあと</b>"), "<b/>");
 			//
 			Assertions.assertTrue(
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("池瓦窯跡", "いけかわらがまあと")),
-							MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+							MultimapUtil.entries(toMultimap(patternMap, Set.of(e)))));
 			//
 			append(append(append(e = new Element("a"), "<b>保渡田八幡塚古墳</b>"), "<b>ほどたはちまんづかこふん ほとだはちまんづかこふん</b>"), "<b/>");
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("保渡田八幡塚古墳", "ほどたはちまんづかこふん", "保渡田八幡塚古墳", "ほとだはちまんづかこふん")),
-					MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+					MultimapUtil.entries(toMultimap(patternMap, Set.of(e)))));
 			//
 			append(append(append(e = new Element("a"), "<b>金山城跡</b>"),
 					"<b>かなやまじょうあと （文化庁文化財政部伝統文化課） かなやまじょうせき （郷土文化財コレクション）</b>"), "<b/>");
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("金山城跡", "かなやまじょうあと", "金山城跡", "かなやまじょうせき")),
-					MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+					MultimapUtil.entries(toMultimap(patternMap, Set.of(e)))));
 			//
 			append(append(append(e = new Element("a"), "<b>鷹島沖海底遺跡 （元寇遺跡）</b>"), "<b>たかしまおきかいていいせき （げんこういせき）</b>"),
 					"<b/>");
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("鷹島沖海底遺跡", "たかしまおきかいていいせき", "元寇遺跡", "げんこういせき")),
-					MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+					MultimapUtil.entries(toMultimap(patternMap, Set.of(e)))));
 			//
 			append(append(append(e = new Element("a"), "<b>黒塚古墳</b>"), "<b>くろづかこふん・くろつかこふん</b>"), "<b/>");
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("黒塚古墳", "くろづかこふん", "黒塚古墳", "くろつかこふん")),
-					MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+					MultimapUtil.entries(toMultimap(patternMap, Set.of(e)))));
 			//
 			append(append(append(e = new Element("a"), "<b>条（條）ウル神古墳</b>"), "<b>じょううるがみこふん</b>"), "<b/>");
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("条", "じょ", "條", "じょ", "神古墳", "がみこふん")),
-					MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+					MultimapUtil.entries(toMultimap(patternMap, Set.of(e)))));
 			//
 			append(append(append(e = new Element("a"), "<b>唐古鍵遺跡</b>"), "<b>からこ・かぎいせき</b>"), "<b/>");
 			//
 			Assertions.assertTrue(
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("唐古鍵遺跡", "からこかぎいせき")),
-							MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+							MultimapUtil.entries(toMultimap(patternMap, Set.of(e)))));
 			//
 			append(append(append(e = new Element("a"), "<b>祢布ヶ森遺跡</b>"), "<b>にょうがもりいせき</b>"), "<b/>");
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("祢布", "にょう", "森遺跡", "もりいせき")),
-					MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+					MultimapUtil.entries(toMultimap(patternMap, Set.of(e)))));
 			//
 			append(append(append(e = new Element("a"), "<b>紅葉山49号遺跡</b>"), "<b>もみじやま49ごういせき</b>"), "<b/>");
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("紅葉山", "もみじやま", "号遺跡", "ごういせき")),
-					MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+					MultimapUtil.entries(toMultimap(patternMap, Set.of(e)))));
 			//
 			append(append(append(e = new Element("a"), "<b/>"), "<b/>"), "<b>沼津市東熊堂（ひがしくまんどう 朝日新聞9/8朝刊）</b>");
 			//
 			Assertions.assertTrue(
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("東熊堂", "ひがしくまんどう")),
-							MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+							MultimapUtil.entries(toMultimap(patternMap, Set.of(e)))));
 			//
 			append(append(append(e = new Element("a"), "<b/>"), "<b/>"),
 					"<b>静岡県牧之原市静岡新聞08/6/14 高知県窪川町 　天の川（そらのかわ）遺跡あり</b>");
 			//
 			Assertions.assertTrue(
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("天", "そら", "川", "かわ")),
-							MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+							MultimapUtil.entries(toMultimap(patternMap, Set.of(e)))));
 			//
 			append(append(append(e = new Element("a"), "<b/>"), "<b/>"),
 					"<b>兵庫県豊岡市 関連用語：健児(こんでい)　 桓武天皇の皇子良岑安世(よしみねのやすよ）</b>");
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("健児", "こんでい", "良岑安世", "よしみねのやすよ")),
-					MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+					MultimapUtil.entries(toMultimap(patternMap, Set.of(e)))));
 			//
 			append(append(append(e = new Element("a"), "<b/>"), "<b/>"), "<b>奈良県明日香村 関連用語：東漢氏（やまとのあやうじ）玄室（げんしつ）</b>");
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("東漢氏", "やまとのあやうじ", "玄室", "げんしつ")),
-					MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+					MultimapUtil.entries(toMultimap(patternMap, Set.of(e)))));
 			//
 		} // if
 			//

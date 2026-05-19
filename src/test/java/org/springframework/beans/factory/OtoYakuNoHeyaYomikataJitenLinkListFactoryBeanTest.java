@@ -17,9 +17,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -647,9 +649,13 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 		//
 		Assertions.assertDoesNotThrow(() -> addLinks(null, null, null, null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> addLinks(null, null, Collections.singleton(null), null, null, null));
+		final Collection<Element> collection = new LinkedHashSet<>();
 		//
-		Assertions.assertDoesNotThrow(() -> addLinks(null, null, Collections.singleton(element), null, null, null));
+		Util.add(collection, null);
+		//
+		Assertions.assertDoesNotThrow(() -> addLinks(null, null, collection, null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> addLinks(null, null, Set.of(element), null, null, null));
 		//
 	}
 
@@ -793,7 +799,11 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 		//
 		Assertions.assertNull(toIntStringMap(null, null));
 		//
-		Assertions.assertNull(toIntStringMap(Collections.singleton(null), null));
+		final Collection<Cell> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(toIntStringMap(collection, null));
 		//
 	}
 
@@ -811,7 +821,11 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 		//
 		Assertions.assertNull(toLink(null, null, null, null));
 		//
-		Assertions.assertNull(toLink(Collections.singleton(null), null, null, null));
+		final Collection<Cell> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(toLink(collection, null, null, null));
 		//
 	}
 

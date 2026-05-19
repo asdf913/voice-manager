@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -382,7 +383,7 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 		Assertions.assertNull(createMultimap(null));
 		//
 		Assertions.assertEquals("[{雨脚=[あまあし], 雨足=[あまあし]}]",
-				Util.toString(createMultimap("雨脚・雨足", new char[] { '・' }, Collections.singleton("あまあし"))));
+				Util.toString(createMultimap("雨脚・雨足", new char[] { '・' }, Set.of("あまあし"))));
 		//
 		Assertions.assertEquals("[{雨脚=[null], 雨足=[null]}]",
 				Util.toString(createMultimap("雨脚・雨足", new char[] { '・' }, null)));
@@ -421,8 +422,7 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testCreateMultimap1() throws Throwable {
 		//
-		Assertions.assertEquals("[{光冠=[こうかん], 光環=[こうかん]}]",
-				Util.toString(createMultimap1("光冠（光環）", Collections.singleton("こうかん"))));
+		Assertions.assertEquals("[{光冠=[こうかん], 光環=[こうかん]}]", Util.toString(createMultimap1("光冠（光環）", Set.of("こうかん"))));
 		//
 		Assertions.assertEquals("[{光冠=[null], 光環=[null]}]", Util.toString(createMultimap1("光冠（光環）", null)));
 		//
@@ -495,8 +495,7 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testCreateMultimap5() throws Throwable {
 		//
-		Assertions.assertEquals("[{青い太陽=[あおいたいよう]}]",
-				Util.toString(createMultimap5("青い太陽", Collections.singleton("あおいたいよう"))));
+		Assertions.assertEquals("[{青い太陽=[あおいたいよう]}]", Util.toString(createMultimap5("青い太陽", Set.of("あおいたいよう"))));
 		//
 		Assertions.assertNull(createMultimap5("青い太陽", null));
 		//
@@ -505,8 +504,7 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertEquals("[{報告書=[null]}]", Util.toString(createMultimap5("IPCC報告書", null)));
 		//
-		Assertions.assertEquals("[{１ヶ月予報=[いっかげつよほう]}]",
-				Util.toString(createMultimap5("１ヶ月予報", Collections.singleton("いっかげつよほう"))));
+		Assertions.assertEquals("[{１ヶ月予報=[いっかげつよほう]}]", Util.toString(createMultimap5("１ヶ月予報", Set.of("いっかげつよほう"))));
 		//
 		Assertions.assertEquals("[{１ヶ月予報=[null]}]", Util.toString(createMultimap5("１ヶ月予報", null)));
 		//

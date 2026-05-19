@@ -226,7 +226,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		} else {
 			//
-			setImageWriterSpiFormats(Collections.singleton(object));
+			setImageWriterSpiFormats(Set.of(object));
 			//
 		} // if
 			//

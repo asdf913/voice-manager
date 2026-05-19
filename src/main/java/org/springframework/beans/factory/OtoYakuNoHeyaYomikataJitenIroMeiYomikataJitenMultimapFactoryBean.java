@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -642,7 +643,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						commonSuffix1 = Strings.commonSuffix(g2, g22 = Util.group(m2, 2)))
 				&& CollectionUtils
 						.isEqualCollection(
-								Collections.singleton(UnicodeBlock.KATAKANA), Util
+								Set.of(UnicodeBlock.KATAKANA), Util
 										.collect(
 												distinct(Util.mapToObj(
 														Util.chars(StringUtils.substring(g22, 0,

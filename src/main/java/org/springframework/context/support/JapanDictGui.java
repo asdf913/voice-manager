@@ -54,12 +54,14 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalDouble;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
@@ -4849,14 +4851,23 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 		//
 		instance.setJcbJlptLevel(getJlptLevelIndices(instance.cbmJlptLevel, entry.jlptLevel));
 		//
-		TriConsumerUtil.accept(triConsumer, instance.tfHiragana, JapanDictEntry.getHiragana(entry),
-				Collections.singleton(instance.btnCopyHiragana));
+		final Collection<Component> cs = new LinkedHashSet<>();
 		//
-		TriConsumerUtil.accept(triConsumer, instance.tfKatakana, JapanDictEntry.getKatakana(entry),
-				Collections.singleton(instance.btnCopyKatakana));
+		Util.add(cs, instance.btnCopyHiragana);
 		//
-		TriConsumerUtil.accept(triConsumer, instance.tfRomaji, JapanDictEntry.getRomaji(entry),
-				Collections.singleton(instance.btnCopyRomaji));
+		TriConsumerUtil.accept(triConsumer, instance.tfHiragana, JapanDictEntry.getHiragana(entry), cs);
+		//
+		Util.clear(cs);
+		//
+		Util.add(cs, instance.btnCopyKatakana);
+		//
+		TriConsumerUtil.accept(triConsumer, instance.tfKatakana, JapanDictEntry.getKatakana(entry), cs);
+		//
+		Util.clear(cs);
+		//
+		Util.add(cs, instance.btnCopyRomaji);
+		//
+		TriConsumerUtil.accept(triConsumer, instance.tfRomaji, JapanDictEntry.getRomaji(entry), cs);
 		//
 		TriConsumerUtil.accept(triConsumer, instance.tfAudioUrl, JapanDictEntry.getAudioUrl(entry),
 				Arrays.asList(instance.btnCopyAudioUrl, instance.btnDownloadAudio, instance.btnPlayAudio));

@@ -15,7 +15,9 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Base64.Decoder;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -135,7 +137,11 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setLinks(Collections.singleton(null));
+			final Collection<Link> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			instance.setLinks(collection);
 			//
 		} // if
 			//
@@ -145,7 +151,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setLinks(Collections.singleton(link));
+			instance.setLinks(Set.of(link));
 			//
 		} // if
 			//
@@ -161,7 +167,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setLinks(Collections.singleton(link));
+			instance.setLinks(Set.of(link));
 			//
 		} // if
 			//
@@ -412,7 +418,11 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 	@Test
 	void testCreateMultimap2() throws Throwable {
 		//
-		Assertions.assertNull(createMultimap2(Collections.singleton(null)));
+		final Collection<Element> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(createMultimap2(collection));
 		//
 	}
 
@@ -487,34 +497,39 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertEquals("{=[]}", Util.toString(toMultimap(Map.of(EMPTY, EMPTY))));
 		//
-		Assertions.assertEquals("{=[]}", Util.toString(toMultimap(Map.of(EMPTY, Collections.singleton(EMPTY)))));
+		Assertions.assertEquals("{=[]}", Util.toString(toMultimap(Map.of(EMPTY, Set.of(EMPTY)))));
 		//
-		Assertions.assertThrows(IllegalStateException.class,
-				() -> toMultimap(Map.of(EMPTY, Collections.singleton(Map.of()))));
+		Assertions.assertThrows(IllegalStateException.class, () -> toMultimap(Map.of(EMPTY, Set.of(Map.of()))));
 		//
 		Assertions.assertThrows(IllegalStateException.class, () -> toMultimap(Map.of(EMPTY, Map.of())));
 		//
 		if (ih != null) {
 			//
-			ih.entrySet = Collections.singleton(null);
+			final Set<Entry<?, ?>> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			ih.entrySet = collection;
 			//
 		} // if
 			//
 		Assertions.assertNull(toMultimap(Reflection.newProxy(Map.class, ih)));
 		//
-		Assertions.assertEquals("{=[]}", Util.toString(toMultimap(Collections.singleton(Map.of(EMPTY, EMPTY)))));
+		Assertions.assertEquals("{=[]}", Util.toString(toMultimap(Set.of(Map.of(EMPTY, EMPTY)))));
 		//
-		Assertions.assertEquals("{=[]}",
-				Util.toString(toMultimap(Collections.singleton(Map.of(EMPTY, Collections.singleton(EMPTY))))));
+		Assertions.assertEquals("{=[]}", Util.toString(toMultimap(Set.of(Map.of(EMPTY, Set.of(EMPTY))))));
 		//
 		if (ih != null) {
 			//
-			ih.entrySet = Collections.singleton(null);
+			final Set<Entry<?, ?>> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			ih.entrySet = collection;
 			//
 		} // if
 			//
-		Assertions.assertEquals(ImmutableMultimap.of(),
-				toMultimap(Collections.singleton(Reflection.newProxy(Map.class, ih))));
+		Assertions.assertEquals(ImmutableMultimap.of(), toMultimap(Set.of(Reflection.newProxy(Map.class, ih))));
 		//
 	}
 

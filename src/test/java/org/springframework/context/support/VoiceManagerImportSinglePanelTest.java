@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.swing.JFileChooser;
 import javax.swing.ListCellRenderer;
@@ -74,7 +75,7 @@ class VoiceManagerImportSinglePanelTest {
 		//
 		Assertions.assertEquals(Narcissus.getField(instance, imageWriterSpiFormats), List.of(string));
 		//
-		instance.setImageWriterSpiFormats(IteratorUtils.asEnumeration(Util.iterator(Collections.singleton(string))));
+		instance.setImageWriterSpiFormats(IteratorUtils.asEnumeration(Util.iterator(Set.of(string))));
 		//
 		Assertions.assertEquals(Narcissus.getField(instance, imageWriterSpiFormats), List.of(string));
 		//
@@ -245,13 +246,13 @@ class VoiceManagerImportSinglePanelTest {
 		//
 		final String empty = "";
 		//
-		Assertions.assertNull(getObjectByFieldNameAndType(Collections.singleton(Pair.of(null, empty)), null, null));
+		Assertions.assertNull(getObjectByFieldNameAndType(Set.of(Pair.of(null, empty)), null, null));
 		//
 		final Entry<String, Object> e1 = Pair.of(empty, empty);
 		//
 		final Entry<String, Class<byte[]>> e2 = Pair.of("value", byte[].class);
 		//
-		Assertions.assertArrayEquals(new byte[] {}, getObjectByFieldNameAndType(Collections.singleton(e1), e2, null));
+		Assertions.assertArrayEquals(new byte[] {}, getObjectByFieldNameAndType(Set.of(e1), e2, null));
 		//
 		Assertions.assertThrows(IllegalStateException.class,
 				() -> getObjectByFieldNameAndType(Collections.nCopies(2, e1), e2, null));

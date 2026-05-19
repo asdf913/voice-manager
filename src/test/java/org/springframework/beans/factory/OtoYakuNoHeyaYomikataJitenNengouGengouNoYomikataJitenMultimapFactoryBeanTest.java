@@ -7,8 +7,10 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
@@ -311,14 +313,17 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 	@Test
 	void testToMultimap2() throws Throwable {
 		//
-		Assertions.assertNull(toMultimap(null, Collections.singleton(null)));
+		final Collection<Element> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(toMultimap(null, collection));
 		//
 		if (!isSystemPropertiesContainsTestGetObject) {
 			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("岡田芳朗", "おかだよしろう")),
-							MultimapUtil.entries(toMultimap(new PatternMapImpl(),
-									Collections.singleton(new Element("p").appendText("岡田芳朗（おかだよしろう）"))))));
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("岡田芳朗", "おかだよしろう")), MultimapUtil.entries(
+							toMultimap(new PatternMapImpl(), Set.of(new Element("p").appendText("岡田芳朗（おかだよしろう）"))))));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					Util.toList(Util.map(Stream.of("しゅちょう", "すちょう", "あかみどり"), x -> Pair.of("朱鳥", x))),

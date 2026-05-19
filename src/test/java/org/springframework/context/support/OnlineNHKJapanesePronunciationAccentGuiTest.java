@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -661,7 +662,11 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		if (ih != null) {
 			//
-			ih.entrySet = Collections.singleton(null);
+			final Set<Entry<?, ?>> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			ih.entrySet = collection;
 			//
 		} // if
 			//
@@ -669,7 +674,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		if (ih != null) {
 			//
-			ih.entrySet = Collections.singleton(entry);
+			ih.entrySet = Set.of(entry);
 			//
 			ih.key = "audio/wav";
 			//
@@ -710,7 +715,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			//
 			ih.size = Integer.valueOf(1);
 			//
-			ih.entrySet = Collections.singleton(entry);
+			ih.entrySet = Set.of(entry);
 			//
 		} // if
 			//

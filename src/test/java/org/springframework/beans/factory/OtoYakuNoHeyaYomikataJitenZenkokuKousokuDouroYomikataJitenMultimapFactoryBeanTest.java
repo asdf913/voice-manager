@@ -9,8 +9,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -238,7 +240,11 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 	@Test
 	void testToMultimap1() throws Throwable {
 		//
-		Assertions.assertNull(toMultimap(Collections.singleton(null), null));
+		final Collection<TextNode> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(toMultimap(collection, null));
 		//
 		final Pattern pattern = Pattern.compile("^（(\\p{InHIRAGANA}+)）$");
 		//
@@ -256,12 +262,12 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 			return;
 			//
 		} // if
-			//
+			// s
 		final Pattern pattern = Pattern.compile("^（(\\p{InHIRAGANA}+)）$");
 		//
 		final TextNode textNode = new TextNode("（さっそんじどうしゃどう）");
 		//
-		Assertions.assertNull(toMultimap(Collections.singleton(textNode), pattern));
+		Assertions.assertNull(toMultimap(Set.of(textNode), pattern));
 		//
 		final Multimap<?, ?> multimap = ImmutableMultimap.of();
 		//

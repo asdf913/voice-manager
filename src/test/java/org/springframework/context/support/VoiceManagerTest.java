@@ -553,7 +553,11 @@ class VoiceManagerTest {
 		//
 		if (ih != null) {
 			//
-			ih.entrySet = Collections.singleton(null);
+			final Set<Entry<?, ?>> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			ih.entrySet = collection;
 			//
 		} // if
 			//
@@ -953,7 +957,11 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> add(new JPanel(), component, null));
 		//
-		Assertions.assertDoesNotThrow(() -> add(Collections.singleton(null), null, null));
+		final Collection<Entry<String, IntFunction>> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertDoesNotThrow(() -> add(collection, null, null));
 		//
 		final Iterable<Entry<String, IntFunction>> entrySet1 = Util.entrySet(Map.of("", x -> null));
 		//
@@ -1508,15 +1516,15 @@ class VoiceManagerTest {
 	@Test
 	void testGetNumber() throws Throwable {
 		//
-		Assertions.assertNull(getNumber(null, Collections.singleton(Boolean.class.getDeclaredField("TRUE"))));
+		Assertions.assertNull(getNumber(null, Set.of(Boolean.class.getDeclaredField("TRUE"))));
 		//
 		final Collection<?> collection = new ArrayList<>();
 		//
 		Assertions.assertEquals(Unit.with(Integer.valueOf(collection.size())),
-				getNumber(collection, Collections.singleton(ArrayList.class.getDeclaredField("size"))));
+				getNumber(collection, Set.of(ArrayList.class.getDeclaredField("size"))));
 		//
 		Assertions.assertEquals(Unit.with(Long.valueOf(Long.MAX_VALUE)),
-				getNumber(null, Collections.singleton(Long.class.getDeclaredField("MAX_VALUE"))));
+				getNumber(null, Set.of(Long.class.getDeclaredField("MAX_VALUE"))));
 		//
 	}
 
@@ -1606,7 +1614,11 @@ class VoiceManagerTest {
 		//
 		if (ih != null) {
 			//
-			ih.entrySet = Collections.singleton(null);
+			final Set<Entry<?, ?>> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			ih.entrySet = collection;
 			//
 		} // if
 			//
@@ -1616,7 +1628,7 @@ class VoiceManagerTest {
 		//
 		if (ih != null) {
 			//
-			ih.entrySet = Collections.singleton(Pair.of(null, null));
+			ih.entrySet = Set.of(Pair.of(null, null));
 			//
 		} // if
 			//
@@ -1626,7 +1638,7 @@ class VoiceManagerTest {
 		//
 		if (ih != null) {
 			//
-			ih.entrySet = Collections.singleton(Pair.of(null, object));
+			ih.entrySet = Set.of(Pair.of(null, object));
 			//
 		} // if
 			//

@@ -3,9 +3,12 @@ package org.springframework.beans.factory;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
@@ -153,7 +156,11 @@ class TsukubaExpressKanjiMapFactoryBeanTest {
 	@Test
 	void testGetString() throws Throwable {
 		//
-		Assertions.assertNull(getString(Collections.singleton(null)));
+		final Collection<Element> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(getString(collection));
 		//
 		Assertions.assertNull(
 				getString(Collections.nCopies(2, cast(Element.class, Narcissus.allocateInstance(Element.class)))));

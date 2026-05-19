@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.OptionalInt;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
@@ -304,7 +305,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		if (MultimapUtil.size(mm1) == size && (mm2 = toMultimap14(s1, s2, Collections.singleton("根山"))) != null) {
+		if (MultimapUtil.size(mm1) == size && (mm2 = toMultimap14(s1, s2, Set.of("根山"))) != null) {
 			//
 			MultimapUtil.putAll(mm1, mm2);
 			//

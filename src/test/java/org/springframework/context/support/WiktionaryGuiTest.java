@@ -21,8 +21,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -663,10 +665,14 @@ class WiktionaryGuiTest {
 				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_GET_WIKTIONARY_ENTRIES1, null,
 						"<html><body><div class=\"mw-heading mw-heading2\"><h2>Japanese</h2></div><div class=\"mw-heading mw-heading4\"><h4>Pronunciation</h4></div><ul><li><span class=\"usage-label-accent\"></span><span lang=\"ja\" class=\"Jpan\">いち</span><span class=\"Latn\">[ìchíꜜ]</span><a title=\"尾高型\"></a></li><li>IPA(key): <span class=\"IPA nowrap\">[it͡ɕi]</span></li></ul></body></html>")));
 		//
-		Assertions.assertNull(invoke(METHOD_GET_WIKTIONARY_ENTRIES3, null, null, null, Collections.singleton(null)));
+		final Collection<?> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(invoke(METHOD_GET_WIKTIONARY_ENTRIES3, null, null, null, collection));
 		//
 		Assertions.assertNull(invoke(METHOD_GET_WIKTIONARY_ENTRIES3, null, null, null,
-				Collections.singleton(Narcissus.allocateInstance(Element.class))));
+				Set.of(Narcissus.allocateInstance(Element.class))));
 		//
 	}
 

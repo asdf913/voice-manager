@@ -6,9 +6,11 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -324,7 +326,11 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		if (ih != null) {
 			//
-			ih.entrySet = Collections.singleton(null);
+			final Set<Entry<?, ?>> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			ih.entrySet = collection;
 			//
 		} // if
 			//

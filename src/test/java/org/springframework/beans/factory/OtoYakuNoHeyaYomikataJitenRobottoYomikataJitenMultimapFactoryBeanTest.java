@@ -8,8 +8,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import org.apache.commons.io.FileUtils;
@@ -94,7 +97,11 @@ class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setLinks(Collections.singleton(null));
+			final Collection<Link> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			instance.setLinks(collection);
 			//
 		} // if
 			//
@@ -120,7 +127,7 @@ class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setLinks(Collections.singleton(link));
+			instance.setLinks(Set.of(link));
 			//
 		} // if
 			//
@@ -148,7 +155,11 @@ class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setLinks(Collections.singleton(null));
+			final Collection<Link> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			instance.setLinks(collection);
 			//
 		} // if
 			//
@@ -156,7 +167,7 @@ class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setLinks(Collections.singleton(link));
+			instance.setLinks(Set.of(link));
 			//
 		} // if
 			//
@@ -232,7 +243,7 @@ class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Collections.singleton(Pair.of("高橋良至", "たかはしよしゆき")),
+		Assertions.assertEquals(Set.of(Pair.of("高橋良至", "たかはしよしゆき")),
 				MultimapUtil.entries(Util.cast(Multimap.class, get(multimap, nodeVisitor))));
 		//
 		if (multimap != null) {
@@ -247,7 +258,7 @@ class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertDoesNotThrow(() -> head(nodeVisitor, new TextNode("（やまずみ）1号＊"), 0));
 		//
-		Assertions.assertEquals(Collections.singleton(Pair.of("山祇", "やまずみ")),
+		Assertions.assertEquals(Set.of(Pair.of("山祇", "やまずみ")),
 				MultimapUtil.entries(Util.cast(Multimap.class, get(multimap, nodeVisitor))));
 		//
 	}

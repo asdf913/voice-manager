@@ -8,9 +8,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Base64;
 import java.util.Base64.Decoder;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -286,7 +289,11 @@ class StringMultiMapFromResourceFactoryBeanTest {
 		//
 		if (ih != null) {
 			//
-			ih.iterator = Collections.singleton(null).iterator();
+			final Collection<?> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			ih.iterator = Util.iterator(collection);
 			//
 		} // if
 			//

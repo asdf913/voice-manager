@@ -9,11 +9,14 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -306,11 +309,15 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 		Assertions
 				.assertDoesNotThrow(() -> setHiraganaKanjiRomaji(null, Reflection.newProxy(Iterable.class, new IH())));
 		//
-		Assertions.assertDoesNotThrow(() -> setHiraganaKanjiRomaji(null, Collections.singleton(null)));
+		final Collection<Node> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertDoesNotThrow(() -> setHiraganaKanjiRomaji(null, collection));
 		//
 		final MH mh = new MH();
 		//
-		final Iterable<Node> nodes = Collections.singleton(ProxyUtil.createProxy(Node.class, mh));
+		final Iterable<Node> nodes = Set.of(ProxyUtil.createProxy(Node.class, mh));
 		//
 		Assertions.assertDoesNotThrow(() -> setHiraganaKanjiRomaji(null, nodes));
 		//

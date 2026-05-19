@@ -21,10 +21,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -537,11 +539,15 @@ class VoiceManagerOnlineTtsPanelTest {
 	@Test
 	void testGetLayoutManager() throws Throwable {
 		//
-		Assertions.assertNull(getLayoutManager(null, Collections.singleton(null)));
+		final Collection<Entry<String, Object>> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(getLayoutManager(null, collection));
 		//
 		final LayoutManager layoutManager = Reflection.newProxy(LayoutManager.class, ih);
 		//
-		Assertions.assertNull(getLayoutManager(layoutManager, Collections.singleton(Pair.of(null, layoutManager))));
+		Assertions.assertNull(getLayoutManager(layoutManager, Set.of(Pair.of(null, layoutManager))));
 		//
 	}
 

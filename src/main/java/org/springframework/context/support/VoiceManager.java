@@ -597,7 +597,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 			} else if (object instanceof String || object instanceof Boolean || object instanceof Number) {
 				//
-				return getObjectList(objectMapper, Collections.singleton(object));
+				return getObjectList(objectMapper, Set.of(object));
 				//
 			} else {
 				//
@@ -606,7 +606,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			} // if
 		} catch (final JsonProcessingException e) {
 			//
-			return getObjectList(objectMapper, Collections.singleton(value));
+			return getObjectList(objectMapper, Set.of(value));
 			//
 		} // try
 			//

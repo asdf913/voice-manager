@@ -298,7 +298,7 @@ public class MapReportGui extends JFrame
 								Util.cast(Map.class, object)))),
 				(a, b) -> IterableUtils.size(MultimapUtil.get((Multimap) a, b)) > 1);
 		//
-		final List<String> columns = new ArrayList<>(Collections.singleton("Key"));
+		final List<String> columns = new ArrayList<>(Set.of("Key"));
 		//
 		Util.addAll(columns,
 				Util.toList(IntStream

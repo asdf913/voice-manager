@@ -11,10 +11,13 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
@@ -117,7 +120,11 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setLinks(Collections.singleton(null));
+			final Collection<Link> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			instance.setLinks(collection);
 			//
 		} // if
 			//
@@ -137,7 +144,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setLinks(Collections.singleton(link));
+			instance.setLinks(Set.of(link));
 			//
 		} // if
 			//
@@ -291,7 +298,11 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testToMap() throws Throwable {
 		//
-		Assertions.assertNull(toMap(Collections.singleton(null)));
+		final Collection<Element> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(toMap(collection));
 		//
 		Assertions.assertNull(toMap(""));
 		//
@@ -301,7 +312,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		//
 		final Map<String, String> map = new LinkedHashMap<>();
 		//
-		Util.put(map,EMPTY, null);
+		Util.put(map, EMPTY, null);
 		//
 		Assertions.assertEquals(map, toMap(null, "（"));
 		//
@@ -311,7 +322,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		//
 		map.clear();
 		//
-		Util.put(map,string, null);
+		Util.put(map, string, null);
 		//
 		Assertions.assertEquals(map, toMap(null, string));
 		//
@@ -319,35 +330,38 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		//
 		map.clear();
 		//
-		Util.put(map,string = "車線", null);
+		Util.put(map, string = "車線", null);
 		//
 		Assertions.assertEquals(map, toMap(null, StringUtils.joinWith("", one, string)));
 		//
 		map.clear();
 		//
-		Util.put(map,string = "以外", null);
+		Util.put(map, string = "以外", null);
 		//
 		Assertions.assertEquals(map, toMap(null, StringUtils.joinWith("", one, string)));
 		//
 		map.clear();
 		//
-		Util.put(map,string = "支庁界", null);
+		Util.put(map, string = "支庁界", null);
 		//
 		Assertions.assertEquals(map, toMap(null, StringUtils.joinWith("", one, string)));
 		//
 		Assertions.assertEquals(Map.of(StringUtils.joinWith("", one, string = "科樹林"), "null"),
 				toMap(null, StringUtils.joinWith("", one, string)));
 		//
-		Assertions.assertNull(
-				toMap(Collections.singleton(Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
+		Assertions.assertNull(toMap(Set.of(Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
 		//
-		Assertions.assertNull(toMap(Collections.singleton(null), null, null));
+		final Collection<String> strings = new LinkedHashSet<>();
+		//
+		Util.add(strings, null);
+		//
+		Assertions.assertNull(toMap(strings, null, null));
 		//
 		map.clear();
 		//
-		Util.put(map,null, null);
+		Util.put(map, null, null);
 		//
-		Assertions.assertEquals(map, toMap(Collections.singleton(null), Collections.singleton(null), null));
+		Assertions.assertEquals(map, toMap(strings, strings, null));
 		//
 	}
 

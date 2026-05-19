@@ -30,11 +30,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
@@ -1909,11 +1911,15 @@ class JapanDictGuiTest {
 	@Test
 	void testGetJwt() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(invoke(METHOD_GET_JWT, null, Collections.singleton(null), null));
+		final Collection<?> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(invoke(METHOD_GET_JWT, null, collection, null));
 		//
 		final String string = "a.b.c";
 		//
-		Assertions.assertEquals(Unit.with(string), invoke(METHOD_GET_JWT, null, Collections.singleton(string), null));
+		Assertions.assertEquals(Unit.with(string), invoke(METHOD_GET_JWT, null, Set.of(string), null));
 		//
 		Assertions.assertThrows(IllegalStateException.class, () -> {
 			//
@@ -1934,9 +1940,13 @@ class JapanDictGuiTest {
 	@Test
 	void testAddRows() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(invoke(METHOD_ADD_ROWS, null, null, Collections.singleton(null), null, null, null));
+		final Collection<?> collection = new LinkedHashSet<>();
 		//
-		final Iterable<?> es = Collections.singleton(Narcissus.allocateInstance(Element.class));
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(invoke(METHOD_ADD_ROWS, null, null, collection, null, null, null));
+		//
+		final Iterable<?> es = Set.of(Narcissus.allocateInstance(Element.class));
 		//
 		Assertions.assertNull(invoke(METHOD_ADD_ROWS, null, null, es, null, null, null));
 		//
@@ -2318,8 +2328,12 @@ class JapanDictGuiTest {
 					//
 				} // if
 					//
-				Assertions.assertEquals("[{\"image\":null,\"type\":null}]", ObjectMapperUtil.writeValueAsString(om,
-						Narcissus.invokeStaticMethod(m, Collections.singleton(null))));
+				Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
+				//
+				Util.add(collection, null);
+				//
+				Assertions.assertEquals("[{\"image\":null,\"type\":null}]",
+						ObjectMapperUtil.writeValueAsString(om, Narcissus.invokeStaticMethod(m, collection)));
 				//
 			} // if
 				//
@@ -2433,10 +2447,14 @@ class JapanDictGuiTest {
 	@Test
 	void testGetLinkMultimap() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertEquals(ImmutableMultimap.of(),
-				invoke(METHOD_GET_LINK_MULTI_MAP_ELEMENT, null, null, Collections.singleton(null)));
+		final Collection<?> collection = new LinkedHashSet<>();
 		//
-		Assertions.assertNull(invoke(METHOD_GET_LINK_MULTI_MAP_STRING, null, null, Collections.singleton(null)));
+		Util.add(collection, null);
+		//
+		Assertions.assertEquals(ImmutableMultimap.of(),
+				invoke(METHOD_GET_LINK_MULTI_MAP_ELEMENT, null, null, collection));
+		//
+		Assertions.assertNull(invoke(METHOD_GET_LINK_MULTI_MAP_STRING, null, null, collection));
 		//
 	}
 

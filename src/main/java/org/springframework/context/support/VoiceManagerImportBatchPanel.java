@@ -2873,7 +2873,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 			} else if (object instanceof String || object instanceof Boolean || object instanceof Number) {
 				//
-				return getObjectList(objectMapper, Collections.singleton(object));
+				return getObjectList(objectMapper, Set.of(object));
 				//
 			} else {
 				//
@@ -2882,7 +2882,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			} // if
 		} catch (final JsonProcessingException e) {
 			//
-			return getObjectList(objectMapper, Collections.singleton(value));
+			return getObjectList(objectMapper, Set.of(value));
 			//
 		} // try
 			//

@@ -9,9 +9,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.ConnectException;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -269,7 +271,11 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		//
 		if (ih != null) {
 			//
-			ih.entrySet = Collections.singleton(null);
+			final Set<Entry<?, ?>> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			ih.entrySet = collection;
 			//
 		} // if
 			//
@@ -280,7 +286,7 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		final Map<String, String> a = new LinkedHashMap<>(singletonMap);
 		//
 		final Map<String, String> b = new LinkedHashMap<>();
-		//s
+		// s
 		Util.put(b, null, "");
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{localizedMessage=null=, message=null=}",

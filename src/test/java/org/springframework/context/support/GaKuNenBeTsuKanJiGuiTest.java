@@ -17,8 +17,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -551,10 +553,14 @@ class GaKuNenBeTsuKanJiGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0, null));
 		//
-		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0, Collections.singleton(null)));
+		final Collection<Component> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0, collection));
 		//
 		Assertions.assertDoesNotThrow(
-				() -> setPreferredWidth(0, Collections.singleton(ProxyUtil.createProxy(Component.class, new MH()))));
+				() -> setPreferredWidth(0, Set.of(ProxyUtil.createProxy(Component.class, new MH()))));
 		//
 	}
 

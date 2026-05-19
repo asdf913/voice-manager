@@ -11,10 +11,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -222,12 +224,16 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 		//
 		final Multimap<?, ?> multimap = ImmutableMultimap.of();
 		//
-		Assertions.assertEquals(multimap, toMultimap(Collections.singleton(null)));
+		final Collection<Node> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertEquals(multimap, toMultimap(collection));
 		//
 		Assertions.assertEquals(multimap,
-				toMultimap(Collections.singleton(Util.cast(Node.class, Narcissus.allocateInstance(TextNode.class)))));
+				toMultimap(Set.of(Util.cast(Node.class, Narcissus.allocateInstance(TextNode.class)))));
 		//
-		Assertions.assertEquals(multimap, toMultimap(Collections.singleton(new TextNode("建設中路線"))));
+		Assertions.assertEquals(multimap, toMultimap(Set.of(new TextNode("建設中路線"))));
 		//
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(
 				MultimapUtil.entries(ImmutableMultimap.of("糟屋郡粕屋町", "かすやぐんかすやまち", "戸原", "とばら", "蒲田", "かまた")),
@@ -473,7 +479,11 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 				.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("江北", "こうほく")),
 						MultimapUtil.entries(toMultimap("（江北・こうほく〜"))));
 		//
-		Assertions.assertNull(toMultimap(null, null, Collections.singleton(null), null));
+		final Collection<String> collection = new LinkedHashSet<>();
+		//
+		Util.addAll(collection, null);
+		//
+		Assertions.assertNull(toMultimap(null, null, collection, null));
 		//
 		e2.append("ひがしかたはジャンクション");
 		//

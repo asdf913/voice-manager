@@ -816,7 +816,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 			} else if (object instanceof String || object instanceof Boolean || object instanceof Number) {
 				//
-				return getObjectList(objectMapper, Collections.singleton(object));
+				return getObjectList(objectMapper, Set.of(object));
 				//
 			} else {
 				//
@@ -825,7 +825,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			} // if
 		} catch (final JsonProcessingException e) {
 			//
-			return getObjectList(objectMapper, Collections.singleton(value));
+			return getObjectList(objectMapper, Set.of(value));
 			//
 		} // try
 			//

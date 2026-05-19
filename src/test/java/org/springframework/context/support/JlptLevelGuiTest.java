@@ -18,12 +18,15 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -544,10 +547,13 @@ class JlptLevelGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0, null));
 		//
-		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0, Collections.singleton(null)));
+		final Collection<Component> collection = new LinkedHashSet<>();
 		//
-		Assertions.assertDoesNotThrow(
-				() -> setPreferredWidth(0, Collections.singleton(ProxyUtil.createProxy(Component.class, mh))));
+		Util.add(collection, null);
+		//
+		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0, collection));
+		//
+		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0, Set.of(ProxyUtil.createProxy(Component.class, mh))));
 		//
 	}
 

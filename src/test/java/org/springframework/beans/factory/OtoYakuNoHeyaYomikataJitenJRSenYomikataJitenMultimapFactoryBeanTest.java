@@ -8,8 +8,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import org.apache.commons.io.FileUtils;
@@ -93,7 +96,11 @@ class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setLinks(Collections.singleton(null));
+			final Collection<Link> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			instance.setLinks(collection);
 			//
 		} // if
 			//
@@ -119,7 +126,7 @@ class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setLinks(Collections.singleton(link));
+			instance.setLinks(Set.of(link));
 			//
 		} // if
 			//
@@ -147,7 +154,11 @@ class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setLinks(Collections.singleton(null));
+			final Collection<Link> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			instance.setLinks(collection);
 			//
 		} // if
 			//
@@ -163,7 +174,7 @@ class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setLinks(Collections.singleton(link));
+			instance.setLinks(Set.of(link));
 			//
 		} // if
 			//
@@ -244,7 +255,7 @@ class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBeanTest {
 			//
 		final Object object = get(multimap, nodeVisitor);
 		//
-		Assertions.assertEquals(Collections.singleton(Pair.of("江差線", "えさしせん")),
+		Assertions.assertEquals(Set.of(Pair.of("江差線", "えさしせん")),
 				MultimapUtil.entries(Util.cast(Multimap.class, object)));
 		//
 		Assertions.assertDoesNotThrow(() -> head(nodeVisitor, new TextNode("江差線（えさしせん）"), 0));

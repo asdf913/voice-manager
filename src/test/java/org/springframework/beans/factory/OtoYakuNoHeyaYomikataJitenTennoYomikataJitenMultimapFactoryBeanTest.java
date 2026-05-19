@@ -7,7 +7,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -212,7 +214,11 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(createMultimap(null, null));
 		//
-		Assertions.assertNull(createMultimap(null, Collections.singleton(null)));
+		final Collection<Element> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(createMultimap(null, collection));
 		//
 		Assertions.assertNull(createMultimap(null, Collections.nCopies(5, null)));
 		//

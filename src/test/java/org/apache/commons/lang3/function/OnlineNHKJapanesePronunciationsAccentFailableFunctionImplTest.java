@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -593,7 +594,11 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		Assertions.assertDoesNotThrow(() -> forEach(List.of(), null));
 		//
-		Assertions.assertDoesNotThrow(() -> forEach(Collections.singleton(null), x -> {
+		final Collection<?> collection = new LinkedHashSet<>();
+		//
+		collection.add(null);
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(collection, x -> {
 		}));
 		//
 		Assertions.assertDoesNotThrow(() -> forEach(Reflection.newProxy(Iterable.class, ih), null));

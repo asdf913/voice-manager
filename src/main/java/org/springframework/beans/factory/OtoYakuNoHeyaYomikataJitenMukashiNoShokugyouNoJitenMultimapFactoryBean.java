@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -182,12 +183,12 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 			for (int i = 1; i <= Util.groupCount(m); i++) {
 				//
-				if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+				if (CollectionUtils.isEqualCollection(Set.of(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 						ubs = getUnicodeBlocks(g = Util.group(m, i)))) {
 					//
 					Util.add(kanjiList = ObjectUtils.getIfNull(kanjiList, ArrayList::new), g);
 					//
-				} else if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.HIRAGANA), ubs)) {
+				} else if (CollectionUtils.isEqualCollection(Set.of(UnicodeBlock.HIRAGANA), ubs)) {
 					//
 					Util.add(hiraganaList = ObjectUtils.getIfNull(hiraganaList, ArrayList::new), g);
 					//
@@ -279,7 +280,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 						"^(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"), s))
 				&& Util.groupCount(m) > 2
 				&& StringsUtil.startsWith(strings, g3 = Util.group(m, 3), g1 = Util.group(m, 1))
-				&& CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+				&& CollectionUtils.isEqualCollection(Set.of(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 						getUnicodeBlocks(g2 = Util.group(m, 2)))) {
 			//
 			return Unit.with(ImmutableMultimap.of(g2, StringUtils.substring(g3, StringUtils.length(g1))));
@@ -552,12 +553,12 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 		//
 		for (int j = 1; Util.matches(matcher) && j <= Util.groupCount(matcher); j++) {
 			//
-			if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+			if (CollectionUtils.isEqualCollection(Set.of(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 					ubs = getUnicodeBlocks(group = Util.group(matcher, j)))) {
 				//
 				Util.add(ss2 = ObjectUtils.getIfNull(ss2, ArrayList::new), group);
 				//
-			} else if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.HIRAGANA), ubs)) {
+			} else if (CollectionUtils.isEqualCollection(Set.of(UnicodeBlock.HIRAGANA), ubs)) {
 				//
 				if (hiragana != null) {
 					//
@@ -597,7 +598,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 		//
 		for (int j = 1; j <= Util.groupCount(matcher); j++) {
 			//
-			if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+			if (CollectionUtils.isEqualCollection(Set.of(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 					ubs = getUnicodeBlocks(g = Util.group(matcher, j)))) {
 				//
 				if (kanji != null) {
@@ -608,7 +609,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 					//
 				kanji = Unit.with(g);
 				//
-			} else if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.HIRAGANA), ubs)) {
+			} else if (CollectionUtils.isEqualCollection(Set.of(UnicodeBlock.HIRAGANA), ubs)) {
 				//
 				Util.add(ss2 = ObjectUtils.getIfNull(ss2, ArrayList::new), g);
 				//

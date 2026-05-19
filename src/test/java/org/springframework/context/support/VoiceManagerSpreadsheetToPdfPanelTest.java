@@ -19,10 +19,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -629,7 +631,11 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	@Test
 	void testGetDataIterable() throws Throwable {
 		//
-		Assertions.assertNull(getDataIterable(Collections.singleton(null), null));
+		final Collection<Row> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(getDataIterable(collection, null));
 		//
 		if (ih != null) {
 			//
@@ -997,7 +1003,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		final Entry<String, Object> entry = Reflection.newProxy(Entry.class, ih);
 		//
-		Assertions.assertNull(getLayoutManager(null, Collections.singleton(entry)));
+		Assertions.assertNull(getLayoutManager(null, Set.of(entry)));
 		//
 		if (ih != null) {
 			//
@@ -1005,7 +1011,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getLayoutManager(null, Collections.singleton(entry)));
+		Assertions.assertNull(getLayoutManager(null, Set.of(entry)));
 		//
 	}
 
@@ -1106,7 +1112,11 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	@Test
 	void testIsAllFieldsNullOrBlank() throws Throwable {
 		//
-		Assertions.assertFalse(isAllFieldsNullOrBlank(null, Collections.singleton(null)));
+		final Collection<Field> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertFalse(isAllFieldsNullOrBlank(null, collection));
 		//
 	}
 

@@ -9,11 +9,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
@@ -1227,7 +1229,11 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testToMultimap17C2() throws Throwable {
 		//
-		Assertions.assertNull(toMultimap17C2(Collections.singleton(null), null));
+		final Collection<Entry<String, String>> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(toMultimap17C2(collection, null));
 		//
 	}
 

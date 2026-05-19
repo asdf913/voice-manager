@@ -56,6 +56,7 @@ import java.util.Enumeration;
 import java.util.HexFormat;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -626,7 +627,11 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} else {
 			//
-			setImageWriterSpiFormats(Collections.singleton(object));
+			final Collection<Object> set = new LinkedHashSet<>();
+			//
+			Util.add(set, object);
+			//
+			setImageWriterSpiFormats(set);
 			//
 		} // if
 			//
@@ -2072,7 +2077,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		if (iValue0 != null && StringUtils.isNotEmpty(Util.toString(IValue0Util.getValue0(iValue0)))
 				&& StringUtils.isNotBlank(romaji)) {
 			//
-			final List<Object> objects = new ArrayList<>(Collections.singleton(IValue0Util.getValue0(iValue0)));
+			final List<Object> objects = new ArrayList<>(Set.of(IValue0Util.getValue0(iValue0)));
 			//
 			if (isAllCharactersAllowed(romaji, allowedRomajiCharacters) && !Util.contains(objects, romaji)) {
 				//
@@ -4377,7 +4382,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 			} else if (object instanceof String || object instanceof Boolean || object instanceof Number) {
 				//
-				return getObjectList(objectMapper, Collections.singleton(object));
+				return getObjectList(objectMapper, Set.of(object));
 				//
 			} else {
 				//
@@ -4386,7 +4391,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			} // if
 		} catch (final JsonProcessingException e) {
 			//
-			return getObjectList(objectMapper, Collections.singleton(value));
+			return getObjectList(objectMapper, Set.of(value));
 			//
 		} // try
 			//

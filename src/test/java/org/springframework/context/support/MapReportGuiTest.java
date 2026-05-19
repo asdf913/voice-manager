@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -442,7 +443,11 @@ class MapReportGuiTest {
 		//
 		if (ih != null) {
 			//
-			ih.entrySet = Collections.singleton(null);
+			final Set<Entry<?, ?>> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			ih.entrySet = collection;
 			//
 		} // if
 			//
@@ -558,7 +563,11 @@ class MapReportGuiTest {
 		//
 		final BeanFactory beanFactory = Reflection.newProxy(BeanFactory.class, ih);
 		//
-		final Iterable<String> strings = Collections.singleton(null);
+		final Collection<String> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		final Iterable<String> strings = collection;
 		//
 		Assertions.assertNull(getValues(beanFactory, null, strings));
 		//
@@ -583,19 +592,23 @@ class MapReportGuiTest {
 	}
 
 	@Test
-	void testcreateMultimap() throws Throwable {
+	void testCreateMultimap1() throws Throwable {
 		//
 		Assertions.assertNull(createMultimap(Reflection.newProxy(Iterable.class, ih)));
 		//
-		Assertions.assertNull(createMultimap(Collections.singleton(null)));
+		final Collection<Map<?, ?>> collection = new LinkedHashSet<>();
 		//
-		Assertions.assertNull(createMultimap(Collections.singleton(Reflection.newProxy(Map.class, ih))));
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(createMultimap(collection));
+		//
+		Assertions.assertNull(createMultimap(Set.of(Reflection.newProxy(Map.class, ih))));
 		//
 		final Map<?, ?> map = new LinkedHashMap<>();
 		//
 		Util.put(map, null, null);
 		//
-		Assertions.assertEquals("{null=[null]}", Util.toString(createMultimap(Collections.singleton(map))));
+		Assertions.assertEquals("{null=[null]}", Util.toString(createMultimap(Set.of(map))));
 		//
 	}
 
@@ -680,7 +693,7 @@ class MapReportGuiTest {
 	}
 
 	@Test
-	void testCreateMultimap() throws Throwable {
+	void testCreateMultimap2() throws Throwable {
 		//
 		final Multimap<?, ?> multimap = ImmutableMultimap.of(EMPTY, EMPTY);
 		//

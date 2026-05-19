@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.EventObject;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -1261,8 +1262,12 @@ class VoiceManagerOjadAccentPanelTest {
 		setDefaultPropertyInclusion(setVisibility(objectMapper, PropertyAccessor.ALL, Visibility.ANY),
 				Include.NON_NULL);
 		//
+		final Collection<?> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
 		Assertions.assertEquals("[{}]", ObjectMapperUtil.writeValueAsString(objectMapper,
-				invoke(METHOD_TO_TEXT_AND_IMAGES, null, Collections.singleton(null), null, null)));
+				invoke(METHOD_TO_TEXT_AND_IMAGES, null, collection, null, null)));
 		//
 		Assertions.assertEquals("[{},{}]",
 				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_TO_TEXT_AND_IMAGES, null,
@@ -1327,7 +1332,7 @@ class VoiceManagerOjadAccentPanelTest {
 						if (ArrayUtils.get(instructions, j) instanceof LDC ldc && ldc != null) {
 							//
 							Assertions.assertNull(invoke(METHOD_TO_TEXT_AND_IMAGES2, null, null, null, words,
-									Collections.singleton(Util.toString(LDCUtil.getValue(ldc, cpg))), null));
+									Set.of(Util.toString(LDCUtil.getValue(ldc, cpg))), null));
 							//
 						} else if (ArrayUtils.get(instructions, j) instanceof ANEWARRAY) {
 							//
@@ -1388,7 +1393,7 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertSame(EMPTY, getIfNull(EMPTY, null));
 		//
-		Assertions.assertSame(EMPTY, getIfNull(null, Collections.singleton(Suppliers.ofInstance(EMPTY))));
+		Assertions.assertSame(EMPTY, getIfNull(null, Set.of(Suppliers.ofInstance(EMPTY))));
 		//
 	}
 
@@ -1578,7 +1583,11 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testGetVoiceUrlImages() throws Throwable {
 		//
-		Assertions.assertNull(getVoiceUrlImages(Collections.singleton(null), page, null));
+		final Collection<ElementHandle> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(getVoiceUrlImages(collection, page, null));
 		//
 		if (ih != null) {
 			//
@@ -1587,7 +1596,7 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 		} // if
 			//
-		final Iterable<ElementHandle> ehs = Collections.singleton(elementHandle);
+		final Iterable<ElementHandle> ehs = Set.of(elementHandle);
 		//
 		final Map<?, ?> map = new LinkedHashMap<>();
 		//
@@ -1860,7 +1869,11 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testCommonPrefix() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(invoke(METHOD_COMMON_PREFIX, null, Collections.singleton(null)));
+		final Collection<?> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(invoke(METHOD_COMMON_PREFIX, null, collection));
 		//
 		Assertions.assertNull(invoke(METHOD_COMMON_PREFIX, null, Collections.nCopies(2, null)));
 		//
@@ -1873,7 +1886,7 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testGetConjugation() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertEquals(EMPTY, invoke(METHOD_GET_CONJUGATION, null, Collections.singleton(EMPTY), 0));
+		Assertions.assertEquals(EMPTY, invoke(METHOD_GET_CONJUGATION, null, Set.of(EMPTY), 0));
 		//
 	}
 
@@ -1900,8 +1913,11 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertNull(invoke(METHOD_ADD_ANNOTATIONS, null, new PDDocument(), new PDPage(), null, null, true));
 		//
-		Assertions
-				.assertNull(invoke(METHOD_ADD_ANNOTATIONS, null, null, null, Collections.singleton(null), null, true));
+		final Collection<?> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(invoke(METHOD_ADD_ANNOTATIONS, null, null, null, collection, null, true));
 		//
 	}
 
@@ -1950,18 +1966,21 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testGetVoiceUrlByX() throws Throwable {
 		//
-		Assertions.assertNull(invoke(METHOD_GET_VOICE_URL_BY_X, null, null, Collections.singleton(null), 0));
+		final Collection<?> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(invoke(METHOD_GET_VOICE_URL_BY_X, null, null, collection, 0));
 		//
 		final Pattern patern = Pattern.compile("^\\d+_(\\d+)_\\d+_(\\w+)\\.\\w+$");
 		//
 		String url = "https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/female/011/1184_1_1_female.mp3";
 		//
-		Assertions.assertEquals(Unit.with(url),
-				invoke(METHOD_GET_VOICE_URL_BY_X, null, patern, Collections.singleton(url), 0));
+		Assertions.assertEquals(Unit.with(url), invoke(METHOD_GET_VOICE_URL_BY_X, null, patern, Set.of(url), 0));
 		//
 		Assertions.assertEquals(
 				Unit.with(url = "https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/male/011/1184_1_1_male.mp3"),
-				invoke(METHOD_GET_VOICE_URL_BY_X, null, patern, Collections.singleton(url), 1));
+				invoke(METHOD_GET_VOICE_URL_BY_X, null, patern, Set.of(url), 1));
 		//
 		Throwable throwable = null;
 		//
@@ -1983,12 +2002,15 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testGetTextAndImageByXY() throws Throwable {
 		//
-		Assertions
-				.assertNull(invoke(METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, null, null, Collections.singleton(null), 0, null));
+		final Collection<?> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(invoke(METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, null, null, collection, 0, null));
 		//
 		final Object tai = Narcissus.allocateInstance(CLASS_TEXT_AND_IMAGE);
 		//
-		final Iterable<?> iterable = Collections.singleton(tai);
+		final Iterable<?> iterable = Set.of(tai);
 		//
 		Assertions.assertNull(invoke(METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, null, null, iterable, 0, null));
 		//
@@ -2024,11 +2046,15 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		final int defaultValue = 10;
 		//
-		Assertions.assertEquals(defaultValue,
-				invoke(METHOD_GET_SIZE, null, Collections.singleton(null), Predicates.alwaysTrue(), defaultValue));
+		final Collection<?> collection = new LinkedHashSet<>();
 		//
-		Assertions.assertEquals(defaultValue, invoke(METHOD_GET_SIZE, null,
-				Collections.singleton(imageDimensionPosition), Predicates.alwaysTrue(), defaultValue));
+		Util.add(collection, null);
+		//
+		Assertions.assertEquals(defaultValue,
+				invoke(METHOD_GET_SIZE, null, collection, Predicates.alwaysTrue(), defaultValue));
+		//
+		Assertions.assertEquals(defaultValue,
+				invoke(METHOD_GET_SIZE, null, Set.of(imageDimensionPosition), Predicates.alwaysTrue(), defaultValue));
 		//
 	}
 
@@ -2038,7 +2064,7 @@ class VoiceManagerOjadAccentPanelTest {
 		final double defaultValue = 10;
 		//
 		Assertions.assertTrue(Objects.deepEquals(new double[] { defaultValue },
-				invoke(METHOD_GET_TRANSLATE_XS, null, Collections.singleton(imageDimensionPosition), defaultValue)));
+				invoke(METHOD_GET_TRANSLATE_XS, null, Set.of(imageDimensionPosition), defaultValue)));
 		//
 	}
 
@@ -2174,9 +2200,13 @@ class VoiceManagerOjadAccentPanelTest {
 										Integer.TYPE, Object.class),
 								Reflection.newProxy(List.class, ih), Integer.valueOf(0), null));
 		//
+		final Collection<?> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
 		Assertions.assertDoesNotThrow(() -> {
 			//
-			set(Collections.singleton(null), 0, null, 0, null, null, null);
+			set(collection, 0, null, 0, null, null, null);
 			//
 		});
 		//
@@ -2184,7 +2214,7 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> {
 			//
-			set(Collections.singleton(textAndImage), 0, null, 310, null, null, null);
+			set(Set.of(textAndImage), 0, null, 310, null, null, null);
 			//
 		});
 		//
@@ -2192,7 +2222,7 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> {
 			//
-			set(Collections.singleton(textAndImage), 0, null, 310, null, null, null);
+			set(Set.of(textAndImage), 0, null, 310, null, null, null);
 			//
 		});
 		//
@@ -2200,7 +2230,7 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> {
 			//
-			set(Collections.singleton(textAndImage), 0, null, 310, null, null, null);
+			set(Set.of(textAndImage), 0, null, 310, null, null, null);
 			//
 		});
 		//
@@ -2212,13 +2242,13 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> {
 			//
-			set(Collections.singleton(textAndImage2), 0, textAndImage, 310, null, null, null);
+			set(Set.of(textAndImage2), 0, textAndImage, 310, null, null, null);
 			//
 		});
 		//
 		Assertions.assertDoesNotThrow(() -> {
 			//
-			set(Collections.singleton(textAndImage2), 0, textAndImage, 338, null, null, null);
+			set(Set.of(textAndImage2), 0, textAndImage, 338, null, null, null);
 			//
 		});
 		//
@@ -2238,7 +2268,7 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> {
 			//
-			set(Collections.singleton(textAndImage2), 0, null, 394, null, null, null);
+			set(Set.of(textAndImage2), 0, null, 394, null, null, null);
 			//
 		});
 		//
@@ -2250,7 +2280,7 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> {
 			//
-			set(Collections.singleton(textAndImage2), 0, null, 394, null, null, null);
+			set(Set.of(textAndImage2), 0, null, 394, null, null, null);
 			//
 		});
 		//

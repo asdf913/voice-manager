@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -3125,7 +3126,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 			} else if (IterableUtils.size(words) == 1) {
 				//
-				textAndImages = Collections.singleton(input);
+				textAndImages = Set.of(input);
 				//
 			} // if
 				//
@@ -3458,7 +3459,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					.trim(ElementHandleUtil.textContent(testAndApply(x -> IterableUtils.size(x) > 2,
 							ElementHandleUtil.querySelectorAll(thead, "th"), x -> IterableUtils.get(x, 2), null)));
 			//
-			return Collections.singleton(textAndImage);
+			return Set.of(textAndImage);
 			//
 		} // if
 			//

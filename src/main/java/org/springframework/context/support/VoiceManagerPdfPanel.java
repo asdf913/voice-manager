@@ -650,7 +650,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} else {
 			//
-			setImageWriterSpiFormats(Collections.singleton(object));
+			final Collection<Object> set = new LinkedHashSet<>();
+			//
+			Util.add(set, object);
+			//
+			setImageWriterSpiFormats(set);
 			//
 		} // if
 			//
@@ -1791,19 +1795,18 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				Util.put((Map) Util.cast(Map.class, Util.get(m1, captionStyleKey)), "visibility", "hidden");
 				//
-				Util.putAll((Map) Util.cast(Map.class, Util.get(m1, descriptionStyleKey)),
-						Util.collect(
-								Util.map(
-										Util.stream(Sets.cartesianProduct(
-												new LinkedHashSet<>(Arrays.asList("border-top", "border-bottom")),
-												Collections.singleton(String.format("solid %1$spx", borderWidth)))),
-										x ->
-										//
-										testAndApply(y -> IterableUtils.size(y) == 2, x,
-												y -> ImmutablePair.of(IterableUtils.get(y, 0), IterableUtils.get(y, 1)),
-												null)
+				Util.putAll(
+						(Map) Util.cast(Map.class,
+								Util.get(m1, descriptionStyleKey)),
+						Util.collect(Util.map(Util.stream(
+								Sets.cartesianProduct(new LinkedHashSet<>(Arrays.asList("border-top", "border-bottom")),
+										Set.of(String.format("solid %1$spx", borderWidth)))),
+								x ->
 								//
-								), Collectors.toMap(Util::getKey, Util::getValue)));
+								testAndApply(y -> IterableUtils.size(y) == 2, x,
+										y -> ImmutablePair.of(IterableUtils.get(y, 0), IterableUtils.get(y, 1)), null)
+						//
+						), Collectors.toMap(Util::getKey, Util::getValue)));
 				//
 				Files.writeString(pathHtml, generatePdfHtml(freeMarkerConfiguration, m1), StandardCharsets.UTF_8);
 				//

@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.DoubleSupplier;
@@ -432,8 +433,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				if (and(map = Util.cast(Map.class,
 						testAndApply((a, b) -> !Util.isStatic(b), ih, ArrayUtils.get(fs, j), Narcissus::getObjectField,
 								null)),
-						Objects::nonNull,
-						x -> CollectionUtils.isEqualCollection(Util.keySet(x), Collections.singleton("value")))) {
+						Objects::nonNull, x -> CollectionUtils.isEqualCollection(Util.keySet(x), Set.of("value")))) {
 					//
 					return Unit.with(Util.get(map, "value"));
 					//

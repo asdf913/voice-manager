@@ -9,10 +9,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -149,7 +152,11 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 			//
 			instance.setText(null);
 			//
-			instance.setLinks(Collections.singleton(null));
+			final Collection<Link> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			instance.setLinks(collection);
 			//
 		} // if
 			//
@@ -159,7 +166,7 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setLinks(Collections.singleton(link));
+			instance.setLinks(Set.of(link));
 			//
 		} // if
 			//
@@ -478,7 +485,7 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Collections.singleton(Pair.of("江差線", "えさしせん")),
+		Assertions.assertEquals(Set.of(Pair.of("江差線", "えさしせん")),
 				MultimapUtil.entries(Util.cast(Multimap.class, get(multimap, nodeVisitor))));
 		//
 	}

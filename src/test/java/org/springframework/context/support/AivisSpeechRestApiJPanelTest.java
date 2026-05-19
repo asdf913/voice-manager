@@ -34,10 +34,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.Vector;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -1496,7 +1498,11 @@ class AivisSpeechRestApiJPanelTest {
 		Assertions.assertNull(
 				invoke(METHOD_SPEAKERS_HOST_AND_PORT, null, null, HostAndPort.fromParts(EMPTY, 1), objectMapper));
 		//
-		Assertions.assertNull(invoke(METHOD_SPEAKERS_ITERABLE, null, Collections.singleton(null)));
+		final Collection<?> collection = new LinkedHashSet<>();
+		//
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(invoke(METHOD_SPEAKERS_ITERABLE, null, collection));
 		//
 		if (objectMapper != null) {
 			//
@@ -1604,10 +1610,13 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testGetStyleInfobyId() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(invoke(METHOD_GET_STYLE_INFO_BY_ID, null, Collections.singleton(null), null));
+		final Collection<?> collection = new LinkedHashSet<>();
 		//
-		Assertions.assertSame(styleInfo,
-				invoke(METHOD_GET_STYLE_INFO_BY_ID, null, Collections.singleton(styleInfo), null));
+		Util.add(collection, null);
+		//
+		Assertions.assertNull(invoke(METHOD_GET_STYLE_INFO_BY_ID, null, collection, null));
+		//
+		Assertions.assertSame(styleInfo, invoke(METHOD_GET_STYLE_INFO_BY_ID, null, Set.of(styleInfo), null));
 		//
 		final Iterable<?> iterable = Collections.nCopies(2, styleInfo);
 		//
@@ -1763,7 +1772,7 @@ class AivisSpeechRestApiJPanelTest {
 											&& CollectionUtils.isEqualCollection(
 													Util.collect(Util.map(Arrays.stream(MethodUtil.getArgumentTypes(m)),
 															TypeUtil::getClassName), Collectors.toList()),
-													Collections.singleton("[B"))),
+													Set.of("[B"))),
 							Collectors.toList());
 			//
 			if (IterableUtils.size(ms) > 1) {
@@ -2625,7 +2634,7 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		final String http = "http";
 		//
-		Assertions.assertEquals(ObjectMapperUtil.writeValueAsString(objectMapper, Collections.singleton(http)),
+		Assertions.assertEquals(ObjectMapperUtil.writeValueAsString(objectMapper, Set.of(http)),
 				ObjectMapperUtil.writeValueAsString(objectMapper,
 						invoke(METHOD_GET_SCHEMES, null, String.format("| %1$s       | H", http))));
 		//

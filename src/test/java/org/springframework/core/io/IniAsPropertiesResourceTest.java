@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -478,10 +479,13 @@ class IniAsPropertiesResourceTest {
 		//
 		Assertions.assertEquals("[null]", toString(getSection(true, map, null, null, Set.of())));
 		//
-		Assertions.assertEquals("[null]", toString(getSection(true, map, null, null, Collections.singleton(null))));
+		final Collection<?> collection = new LinkedHashSet<>();
 		//
-		Assertions.assertEquals("[null]",
-				toString(getSection(true, map, null, null, new ArrayList<>(Collections.singleton("1")))));
+		collection.add(null);
+		//
+		Assertions.assertEquals("[null]", toString(getSection(true, map, null, null, collection)));
+		//
+		Assertions.assertEquals("[null]", toString(getSection(true, map, null, null, new ArrayList<>(Set.of("1")))));
 		//
 	}
 
@@ -844,7 +848,9 @@ class IniAsPropertiesResourceTest {
 		//
 		Assertions.assertFalse(contains(null, null));
 		//
-		final Collection<?> collection = Collections.singleton(EMPTY);
+		final Collection<Object> collection = new LinkedHashSet<>();
+		//
+		collection.add(EMPTY);
 		//
 		Assertions.assertFalse(contains(collection, null));
 		//

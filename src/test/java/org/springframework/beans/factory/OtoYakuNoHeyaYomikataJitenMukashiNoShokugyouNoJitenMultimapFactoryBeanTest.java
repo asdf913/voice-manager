@@ -8,9 +8,11 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
@@ -237,11 +239,15 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 		//
 		if (!isSystemPropertiesContainsTestGetObject) {
 			//
-			Assertions.assertDoesNotThrow(() -> toMultimap(Collections.singleton(null)));
+			final Collection<Node> collection = new LinkedHashSet<>();
+			//
+			Util.add(collection, null);
+			//
+			Assertions.assertDoesNotThrow(() -> toMultimap(collection));
 			//
 			Assertions.assertEquals(ImmutableMultimap.of(), toMultimap(null, new String[] { null }));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("銅細工", "あかがねざいく")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("銅細工", "あかがねざいく")),
 					MultimapUtil.entries(toMultimap(patternMap, "銅細工（あかがねざいく）"))));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
@@ -256,10 +262,10 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 					MultimapUtil.entries(ImmutableMultimap.of("挽物職", "ひきものしょく", "挽物師", "ひきものし")),
 					MultimapUtil.entries(toMultimap(patternMap, "挽物職・挽物師（ひきものしょく・ひきものし）"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("酒麹売", "しゅきくうり")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("酒麹売", "しゅきくうり")),
 					MultimapUtil.entries(toMultimap(patternMap, "酒麹売（しゅきくうり）＊麹の麦は麥"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("馬買", "うまか")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("馬買", "うまか")),
 					MultimapUtil.entries(toMultimap(patternMap, "馬買おう（うまかおう）"))));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
@@ -277,45 +283,45 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 					Util.toList(Util.map(Stream.of("医師", "薬師"), x -> Pair.of(x, "くすし"))),
 					MultimapUtil.entries(toMultimap(patternMap, "医師･薬師（くすし）"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("坊主", "ぼうず")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("坊主", "ぼうず")),
 					MultimapUtil.entries(toMultimap(patternMap, "すたすた坊主（すたすたぼうず）"))));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					Util.toList(Util.map(Stream.of("やきものし", "すえものし"), x -> Pair.of("陶物師", x))),
 					MultimapUtil.entries(toMultimap(patternMap, "陶物師（やきものし）＊（すえものし）とも言う。"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("赤蛙", "あかがえる")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("赤蛙", "あかがえる")),
 					MultimapUtil.entries(toMultimap(patternMap, "赤蛙売り（あかがえるうり）"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("塗師屋", "ぬしや")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("塗師屋", "ぬしや")),
 					MultimapUtil.entries(toMultimap(patternMap, "塗師屋（ぬしや）塗士とも"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("足駄", "あしだ")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("足駄", "あしだ")),
 					MultimapUtil.entries(toMultimap(patternMap, "足駄作り（あしだづくり）"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("綾", "あや")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("綾", "あや")),
 					MultimapUtil.entries(toMultimap(patternMap, "綾取り（あやとり）"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("海", "うみ")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("海", "うみ")),
 					MultimapUtil.entries(toMultimap(patternMap, "海ほうづき売り（うみほうづきうり）"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("雪踏", "せった")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("雪踏", "せった")),
 					MultimapUtil.entries(toMultimap(patternMap, "雪踏直し（せったなおし）"))));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("黒木", "くろき", "黒鍬之者", "くろくわのもの")),
 					MultimapUtil.entries(toMultimap(patternMap, "黒木売り（くろきうり）黒鍬之者（くろくわのもの）"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("印肉", "いんにく")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("印肉", "いんにく")),
 					MultimapUtil.entries(toMultimap(patternMap, "印肉の仕替へ（いんにくのしかえ）"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("鏡", "かがみ")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("鏡", "かがみ")),
 					MultimapUtil.entries(toMultimap(patternMap, "鏡磨き（かがみみがき）"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("葛西", "かさい")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("葛西", "かさい")),
 					MultimapUtil.entries(toMultimap(patternMap, "葛西踊り（かさいおどり）"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("傘", "かさ")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("傘", "かさ")),
 					MultimapUtil.entries(toMultimap(patternMap, "傘張り（かさはり）"))));
 			//
 		} // if
@@ -335,42 +341,42 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("歯", "は", "屋", "や")),
 							MultimapUtil.entries(toMultimap(patternMap, "歯入れ屋（はいれや）＊下駄"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("古鉄", "ふるかね")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("古鉄", "ふるかね")),
 					MultimapUtil.entries(toMultimap(patternMap, "古鉄買い（ふるかねかい）"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("枇杷葉湯", "びわようとう")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("枇杷葉湯", "びわようとう")),
 					MultimapUtil.entries(toMultimap(patternMap, "枇杷葉湯売り（（びわようとううり）"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("行燈仕", "あんどん")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("行燈仕", "あんどん")),
 					MultimapUtil.entries(toMultimap(patternMap, "行燈仕替へ（あんどんしかえ）"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("菜", "な")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("菜", "な")),
 					MultimapUtil.entries(toMultimap(patternMap, "摘み菜売り（つみなうり）"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("人形", "にんぎょう")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("人形", "にんぎょう")),
 					MultimapUtil.entries(toMultimap(patternMap, "人形舞い（にんぎょうまい）"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("職", "しょく")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("職", "しょく")),
 					MultimapUtil.entries(toMultimap(patternMap, "ぬいもの職（ぬいものしょく）＊（ぬいもの）は繍の旧字体か。"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("下駄歯", "げたは")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("下駄歯", "げたは")),
 					MultimapUtil.entries(toMultimap(patternMap, "下駄歯入れ（げたはいれ）"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("油", "あぶら")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("油", "あぶら")),
 					MultimapUtil.entries(toMultimap(patternMap, "油揚げ売り（あぶらあげうり）"))));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					Util.toList(Util.map(Stream.of("こころぶとうり", "ところてんうり"), x -> Pair.of("心太売", x))),
 					MultimapUtil.entries(toMultimap(patternMap, "心太売（こころぶとうり）日本国語大辞典＊（ところてんうり）に同じ"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("歯", "は")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("歯", "は")),
 					MultimapUtil.entries(toMultimap(patternMap, "歯磨き売り（はみがきうり）"))));
 			//
 			Assertions.assertTrue(
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("舞", "まい", "曲", "くせ")),
 							MultimapUtil.entries(toMultimap(patternMap, "曲舞々（くせまいまい）"))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("犬", "いぬ")),
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Set.of(Pair.of("犬", "いぬ")),
 					MultimapUtil.entries(toMultimap(patternMap, "犬拾ひ（いぬひろい）"))));
 			//
 		} // if
