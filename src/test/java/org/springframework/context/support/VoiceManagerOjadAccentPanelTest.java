@@ -1361,22 +1361,6 @@ class VoiceManagerOjadAccentPanelTest {
 		}
 	}
 
-	private static Collection<?> toTextAndImages2X(final Iterable<ElementHandle> ehs, final String textInput,
-			final Iterable<ElementHandle> words, final Iterable<String> partOfSpeeches, final Page page)
-			throws Throwable {
-		try {
-			final Object obj = invoke(METHOD_TO_TEXT_AND_IMAGES2, null, ehs, textInput, words, partOfSpeeches, page);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Collection) {
-				return (Collection) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
 	@Test
 	void testToByteArray() throws Throwable {
 		//
