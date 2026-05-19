@@ -443,8 +443,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					URIBuilderUtil.build(new URIBuilder(Util.toString(tsb)).setPath("ojad/search/index/word:")))),
 					null)) {
 				//
-				html = testAndApply(Objects::nonNull, is,
-						x -> new String(x != null ? x.readAllBytes() : null, StandardCharsets.UTF_8), null);
+				html = testAndApply(Objects::nonNull, is, x -> new String(readAllBytes(x), StandardCharsets.UTF_8),
+						null);
 				//
 			} // try
 				//
@@ -1591,8 +1591,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		try (final InputStream is = testAndGet(!isTestMode(),
 				() -> Util.openStream(Util.toURL(new URI(Util.toString(Util.getKey(entry))))), null)) {
 			//
-			html = testAndApply(Objects::nonNull, is,
-					x -> new String(x != null ? x.readAllBytes() : null, StandardCharsets.UTF_8), null);
+			html = testAndApply(Objects::nonNull, is, x -> new String(readAllBytes(x), StandardCharsets.UTF_8), null);
 			//
 		} // try
 			//
@@ -1767,6 +1766,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		});
 		//
+	}
+
+	private static byte[] readAllBytes(final InputStream instance) throws IOException {
+		return instance != null ? instance.readAllBytes() : null;
 	}
 
 	@Nullable
@@ -2895,7 +2898,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				try (final InputStream is = Util.openStream(Util.toURL(new URI(url)))) {
 					//
-					html = new String(is != null ? is.readAllBytes() : null, StandardCharsets.UTF_8);
+					html = new String(readAllBytes(is), StandardCharsets.UTF_8);
 					//
 				} // try
 					//

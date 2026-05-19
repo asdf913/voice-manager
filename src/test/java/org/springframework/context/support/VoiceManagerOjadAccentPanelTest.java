@@ -920,23 +920,14 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testGetFileExtensions() throws Throwable {
 		//
-		Assertions.assertNull(
-				getFileExtensions(Util.cast(ContentInfo.class, Narcissus.allocateInstance(ContentInfo.class))));
+		Assertions.assertNull(invoke(METHOD_GET_FILE_EXTENSIONS, null,
+				Util.cast(ContentInfo.class, Narcissus.allocateInstance(ContentInfo.class))));
 		//
 	}
 
-	private static String[] getFileExtensions(final ContentInfo instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_FILE_EXTENSIONS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String[]) {
-				return (String[]) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
+	private static Object invoke(final Method method, final Object instance, final Object... args)
+			throws IllegalAccessException, InvocationTargetException {
+		return method != null && method.getDeclaringClass() != null ? method.invoke(instance, args) : null;
 	}
 
 	@Test
@@ -944,60 +935,24 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		final ContentInfoUtil cic = new ContentInfoUtil();
 		//
-		Assertions.assertNull(findMatch(cic, null));
+		Assertions.assertNull(invoke(METHOD_FIND_MATCH, null, cic, null));
 		//
-		Assertions.assertSame(ContentInfo.EMPTY_INFO, findMatch(cic, new byte[] {}));
+		Assertions.assertSame(ContentInfo.EMPTY_INFO, invoke(METHOD_FIND_MATCH, null, cic, new byte[] {}));
 		//
-	}
-
-	private static ContentInfo findMatch(final ContentInfoUtil instance, final byte[] bytes) throws Throwable {
-		try {
-			final Object obj = METHOD_FIND_MATCH.invoke(null, instance, bytes);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof ContentInfo) {
-				return (ContentInfo) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
-	void testPack() {
+	void testPack() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertDoesNotThrow(() -> pack(Util.cast(Window.class, Narcissus.allocateInstance(Window.class))));
+		Assertions.assertNull(invoke(METHOD_PACK, null, Narcissus.allocateInstance(Window.class)));
 		//
-	}
-
-	private static void pack(final Window instance) throws Throwable {
-		try {
-			METHOD_PACK.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
-	void testGetKanji() throws Throwable {
+	void testGetKanji() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(getKanji(textAndImage));
+		Assertions.assertNull(invoke(METHOD_GET_KANJI, null, textAndImage));
 		//
-	}
-
-	private static String getKanji(final Object textAndImage) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_KANJI.invoke(null, textAndImage);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -1007,20 +962,9 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		mh.height = Double.valueOf(height);
 		//
-		Assertions.assertEquals(height, getHeight(ProxyUtil.createProxy(Dimension2D.class, mh)));
+		Assertions.assertEquals(Double.valueOf(height),
+				invoke(METHOD_GET_HEIGHT, null, ProxyUtil.createProxy(Dimension2D.class, mh)));
 		//
-	}
-
-	private static double getHeight(final Dimension2D instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_HEIGHT.invoke(null, instance);
-			if (obj instanceof Double) {
-				return ((Double) obj).doubleValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -1284,24 +1228,10 @@ class VoiceManagerOjadAccentPanelTest {
 	}
 
 	@Test
-	void testGetSystemClipboard() throws Throwable {
+	void testGetSystemClipboard() throws IllegalAccessException, InvocationTargetException, Throwable {
 		//
-		Assertions.assertNull(getSystemClipboard(ProxyUtil.createProxy(Toolkit.class, mh)));
+		Assertions.assertNull(invoke(METHOD_GET_SYSTEM_CLIP_BOARD, null, ProxyUtil.createProxy(Toolkit.class, mh)));
 		//
-	}
-
-	private static Clipboard getSystemClipboard(final Toolkit instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_SYSTEM_CLIP_BOARD.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Clipboard) {
-				return (Clipboard) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -1309,25 +1239,13 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertEquals(0, length(new Object[] {}));
 		//
-		Assertions.assertEquals(0, length(new double[] {}));
+		Assertions.assertEquals(0, invoke(METHOD_LENGTH_DOUBLE_ARRAY, null, new double[] {}));
 		//
 	}
 
 	private static int length(final Object[] instance) throws Throwable {
 		try {
-			final Object obj = METHOD_LENGTH_OBJECT_ARRAY.invoke(null, (Object) instance);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static int length(final double[] instance) throws Throwable {
-		try {
-			final Object obj = METHOD_LENGTH_DOUBLE_ARRAY.invoke(null, (Object) instance);
+			final Object obj = invoke(METHOD_LENGTH_OBJECT_ARRAY, null, (Object) instance);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
 			}
@@ -1344,10 +1262,11 @@ class VoiceManagerOjadAccentPanelTest {
 				Include.NON_NULL);
 		//
 		Assertions.assertEquals("[{}]", ObjectMapperUtil.writeValueAsString(objectMapper,
-				toTextAndImages(Collections.singleton(null), null, null)));
+				invoke(METHOD_TO_TEXT_AND_IMAGES, null, Collections.singleton(null), null, null)));
 		//
-		Assertions.assertEquals("[{},{}]", ObjectMapperUtil.writeValueAsString(objectMapper,
-				toTextAndImages(Collections.nCopies(2, null), Collections.nCopies(2, null), null)));
+		Assertions.assertEquals("[{},{}]",
+				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_TO_TEXT_AND_IMAGES, null,
+						Collections.nCopies(2, null), Collections.nCopies(2, null), null)));
 		//
 	}
 
@@ -1361,45 +1280,16 @@ class VoiceManagerOjadAccentPanelTest {
 		return instance != null ? instance.setVisibility(forMethod, visibility) : instance;
 	}
 
-	private static Collection<?> toTextAndImages(final Iterable<ElementHandle> ehs, final Iterable<ElementHandle> words,
-			final Page page) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_TEXT_AND_IMAGES.invoke(null, ehs, words, page);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Collection) {
-				return (Collection) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
 	@Test
 	void testToTextAndImages1() throws Throwable {
 		//
 		setDefaultPropertyInclusion(setVisibility(objectMapper, PropertyAccessor.ALL, Visibility.ANY),
 				Include.NON_NULL);
 		//
-		Assertions.assertEquals("[{}]", ObjectMapperUtil.writeValueAsString(objectMapper,
-				toTextAndImages1(Collections.nCopies(2, null), null, Collections.nCopies(1, null), null)));
+		Assertions.assertEquals("[{}]",
+				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_TO_TEXT_AND_IMAGES1, null,
+						Collections.nCopies(2, null), null, Collections.nCopies(1, null), null)));
 		//
-	}
-
-	private static Collection<?> toTextAndImages1(final Iterable<ElementHandle> ehs, final String textInput,
-			final Iterable<ElementHandle> words, final Page page) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_TEXT_AND_IMAGES1.invoke(null, ehs, textInput, words, page);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Collection) {
-				return (Collection) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -1407,9 +1297,9 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		final Iterable<ElementHandle> words = Collections.nCopies(1, null);
 		//
-		Assertions.assertNull(toTextAndImages2(null, null, words, null, null));
+		Assertions.assertNull(invoke(METHOD_TO_TEXT_AND_IMAGES2, null, null, null, words, null, null));
 		//
-		Assertions.assertNull(toTextAndImages2(null, null, words, Set.of(), null));
+		Assertions.assertNull(invoke(METHOD_TO_TEXT_AND_IMAGES2, null, null, null, words, Set.of(), null));
 		//
 		final Class<?> clz = Util.getClass(instance);
 		//
@@ -1436,7 +1326,7 @@ class VoiceManagerOjadAccentPanelTest {
 						//
 						if (ArrayUtils.get(instructions, j) instanceof LDC ldc && ldc != null) {
 							//
-							Assertions.assertNull(toTextAndImages2(null, null, words,
+							Assertions.assertNull(invoke(METHOD_TO_TEXT_AND_IMAGES2, null, null, null, words,
 									Collections.singleton(Util.toString(LDCUtil.getValue(ldc, cpg))), null));
 							//
 						} else if (ArrayUtils.get(instructions, j) instanceof ANEWARRAY) {
@@ -1453,7 +1343,8 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 		} // try
 			//
-		Assertions.assertNull(toTextAndImages2(null, null, Collections.nCopies(2, null), null, null));
+		Assertions.assertNull(
+				invoke(METHOD_TO_TEXT_AND_IMAGES2, null, null, null, Collections.nCopies(2, null), null, null));
 		//
 	}
 
@@ -1461,17 +1352,17 @@ class VoiceManagerOjadAccentPanelTest {
 			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
 			throws Throwable {
 		try {
-			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+			return (R) invoke(METHOD_TEST_AND_APPLY, null, predicate, value, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
 	}
 
-	private static Collection<?> toTextAndImages2(final Iterable<ElementHandle> ehs, final String textInput,
+	private static Collection<?> toTextAndImages2X(final Iterable<ElementHandle> ehs, final String textInput,
 			final Iterable<ElementHandle> words, final Iterable<String> partOfSpeeches, final Page page)
 			throws Throwable {
 		try {
-			final Object obj = METHOD_TO_TEXT_AND_IMAGES2.invoke(null, ehs, textInput, words, partOfSpeeches, page);
+			final Object obj = invoke(METHOD_TO_TEXT_AND_IMAGES2, null, ehs, textInput, words, partOfSpeeches, page);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Collection) {
@@ -1915,255 +1806,128 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		final BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
 		//
-		Assertions.assertEquals(image.getRGB(0, 0), getMostOccurenceColor(image));
+		Assertions.assertEquals(image.getRGB(0, 0), invoke(METHOD_GET_MOST_OCCURENCE_COLOR, null, image));
 		//
 	}
 
-	private static Integer getMostOccurenceColor(final BufferedImage image) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_MOST_OCCURENCE_COLOR.invoke(null, image);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Integer) {
-				return (Integer) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
 	@Test
-	void testSetRGB() {
+	void testSetRGB() throws IllegalAccessException, InvocationTargetException {
 		//
 		final BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
 		//
-		Assertions.assertDoesNotThrow(() -> setRGB(image, null, null));
+		Assertions.assertNull(invoke(METHOD_SET_RGB, null, image, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> setRGB(image, 0, null));
+		Assertions.assertNull(invoke(METHOD_SET_RGB, null, image, 0, null));
 		//
 		final int rgb = image.getRGB(0, 0);
 		//
-		Assertions.assertDoesNotThrow(() -> setRGB(image, rgb, rgb));
+		Assertions.assertNull(invoke(METHOD_SET_RGB, null, image, rgb, rgb));
 		//
-	}
-
-	private static void setRGB(final BufferedImage image, final Integer a, final Integer b) throws Throwable {
-		try {
-			METHOD_SET_RGB.invoke(null, image, a, b);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
-	void testSetPartOfSpeech() {
+	void testSetPartOfSpeech() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertDoesNotThrow(() -> setPartOfSpeech(textAndImage, null));
+		Assertions.assertNull(invoke(METHOD_SET_PART_OF_SPEECH, null, textAndImage, null));
 		//
-	}
-
-	private static void setPartOfSpeech(final Object textAndImage, final String partOfSpeech) throws Throwable {
-		try {
-			METHOD_SET_PART_OF_SPEECH.invoke(null, textAndImage, partOfSpeech);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
-	void testAdjustImageColor() throws IllegalAccessException {
+	void testAdjustImageColor() throws IllegalAccessException, InvocationTargetException {
 		//
 		final Object tai = Narcissus.allocateInstance(CLASS_TEXT_AND_IMAGE);
 		//
-		Assertions.assertDoesNotThrow(() -> adjustImageColor(Arrays.asList(null, tai)));
+		Assertions.assertNull(invoke(METHOD_ADJUST_IMAGE_COLOR, null, Arrays.asList(null, tai)));
 		//
 		FieldUtils.writeDeclaredField(tai, "accentImage", Narcissus.allocateInstance(BufferedImage.class), true);
 		//
-		Assertions.assertDoesNotThrow(() -> adjustImageColor(Arrays.asList(null, tai)));
+		Assertions.assertNull(invoke(METHOD_ADJUST_IMAGE_COLOR, null, Arrays.asList(null, tai)));
 		//
 		FieldUtils.writeDeclaredField(tai, "accentImage", new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), true);
 		//
-		Assertions.assertDoesNotThrow(() -> adjustImageColor(Arrays.asList(null, tai, tai)));
+		Assertions.assertNull(invoke(METHOD_ADJUST_IMAGE_COLOR, null, Arrays.asList(null, tai, tai)));
 		//
-	}
-
-	private static void adjustImageColor(final Iterable<?> textAndImages) throws Throwable {
-		try {
-			METHOD_ADJUST_IMAGE_COLOR.invoke(null, textAndImages);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
-	void testClose() {
+	void testClose() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertDoesNotThrow(() -> close(Util.cast(Player.class, Narcissus.allocateInstance(Player.class))));
+		Assertions.assertNull(
+				invoke(METHOD_CLOSE, null, Util.cast(Player.class, Narcissus.allocateInstance(Player.class))));
 		//
-	}
-
-	private static void close(final Player instance) throws Throwable {
-		try {
-			METHOD_CLOSE.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
-	void testGetTextAndImages() throws Throwable {
+	void testGetTextAndImages() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(getTextAndImages(null, textAndImage));
+		Assertions.assertNull(invoke(METHOD_GET_TEXT_AND_IMAGES, null, null, textAndImage));
 		//
-		Assertions.assertNull(getTextAndImages(instance, textAndImage));
+		Assertions.assertNull(invoke(METHOD_GET_TEXT_AND_IMAGES, null, instance, textAndImage));
 		//
 		FieldUtils.writeDeclaredField(instance, "cbmCurve",
 				new DefaultComboBoxModel<>(new Entry<?, ?>[] { Pair.of(null, null) }), true);
 		//
-		Assertions.assertNull(getTextAndImages(instance, textAndImage));
+		Assertions.assertNull(invoke(METHOD_GET_TEXT_AND_IMAGES, null, instance, textAndImage));
 		//
-		Assertions.assertNull(getTextAndImages(instance, null));
+		Assertions.assertNull(invoke(METHOD_GET_TEXT_AND_IMAGES, null, instance, null));
 		//
-	}
-
-	private static Collection<?> getTextAndImages(final VoiceManagerOjadAccentPanel instance, final Object textAndImage)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_GET_TEXT_AND_IMAGES.invoke(null, instance, textAndImage);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Collection) {
-				return (Collection) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
-	void testCommonPrefix() throws Throwable {
+	void testCommonPrefix() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(commonPrefix(Collections.singleton(null)));
+		Assertions.assertNull(invoke(METHOD_COMMON_PREFIX, null, Collections.singleton(null)));
 		//
-		Assertions.assertNull(commonPrefix(Collections.nCopies(2, null)));
+		Assertions.assertNull(invoke(METHOD_COMMON_PREFIX, null, Collections.nCopies(2, null)));
 		//
-		Assertions.assertNull(commonPrefix(Arrays.asList(null, EMPTY)));
+		Assertions.assertNull(invoke(METHOD_COMMON_PREFIX, null, Arrays.asList(null, EMPTY)));
 		//
-		Assertions.assertEquals(EMPTY, commonPrefix(Collections.nCopies(3, EMPTY)));
+		Assertions.assertEquals(EMPTY, invoke(METHOD_COMMON_PREFIX, null, Collections.nCopies(3, EMPTY)));
 		//
-	}
-
-	private static String commonPrefix(final Iterable<String> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_COMMON_PREFIX.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
-	void testGetConjugation() throws Throwable {
+	void testGetConjugation() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertEquals(EMPTY, getConjugation(Collections.singleton(EMPTY), 0));
+		Assertions.assertEquals(EMPTY, invoke(METHOD_GET_CONJUGATION, null, Collections.singleton(EMPTY), 0));
 		//
-	}
-
-	private static String getConjugation(final Iterable<String> ss, final int i) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CONJUGATION.invoke(null, ss, i);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
-	void testProcessPage() {
+	void testProcessPage() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertDoesNotThrow(() -> processPage(pdfGraphicsStreamEngine, null));
+		Assertions.assertNull(invoke(METHOD_PROCESS_PAGE, null, pdfGraphicsStreamEngine, null));
 		//
-		Assertions.assertDoesNotThrow(() -> processPage(pdfGraphicsStreamEngine, new PDPage()));
+		Assertions.assertNull(invoke(METHOD_PROCESS_PAGE, null, pdfGraphicsStreamEngine, new PDPage()));
 		//
-	}
-
-	private static void processPage(final PDFGraphicsStreamEngine instance, final PDPage page) throws Throwable {
-		try {
-			METHOD_PROCESS_PAGE.invoke(null, instance, page);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
-	void testSetHandler() {
+	void testSetHandler() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertDoesNotThrow(() -> setHandler(Reflection.newProxy(Proxy.class, ih), null));
+		Assertions.assertNull(invoke(METHOD_SET_HANDLER, null, Reflection.newProxy(Proxy.class, ih), null));
 		//
-	}
-
-	private static void setHandler(final Proxy instance, final MethodHandler mh) throws Throwable {
-		try {
-			METHOD_SET_HANDLER.invoke(null, instance, mh);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
-	void testAddAnnotations() {
+	void testAddAnnotations() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertDoesNotThrow(() -> addAnnotations(new PDDocument(), null, null, null, true));
+		Assertions.assertNull(invoke(METHOD_ADD_ANNOTATIONS, null, new PDDocument(), null, null, null, true));
 		//
-		Assertions.assertDoesNotThrow(() -> addAnnotations(new PDDocument(), new PDPage(), null, null, true));
+		Assertions.assertNull(invoke(METHOD_ADD_ANNOTATIONS, null, new PDDocument(), new PDPage(), null, null, true));
 		//
-		Assertions.assertDoesNotThrow(() -> addAnnotations(null, null, Collections.singleton(null), null, true));
+		Assertions
+				.assertNull(invoke(METHOD_ADD_ANNOTATIONS, null, null, null, Collections.singleton(null), null, true));
 		//
-	}
-
-	private static void addAnnotations(final PDDocument pdDocument, final PDPage pdPage, final Collection<?> idps,
-			final Iterable<?> textAndImages, final boolean compression) throws Throwable {
-		try {
-			METHOD_ADD_ANNOTATIONS.invoke(null, pdDocument, pdPage, idps, textAndImages, compression);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
 	void testMapToDouble() throws Throwable {
 		//
-		Assertions.assertNull(mapToDouble(Stream.empty(), null));
+		Assertions.assertNull(invoke(METHOD_MAP_TO_DOUBLE, null, Stream.empty(), null));
 		//
-		Assertions.assertNull(mapToDouble(stream, null));
+		Assertions.assertNull(invoke(METHOD_MAP_TO_DOUBLE, null, stream, null));
 		//
-	}
-
-	private static <T> DoubleStream mapToDouble(final Stream<T> instance, final ToDoubleFunction<? super T> function)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_MAP_TO_DOUBLE.invoke(null, instance, function);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof DoubleStream) {
-				return (DoubleStream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -2171,20 +1935,8 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		final int zero = 0;
 		//
-		Assertions.assertEquals(zero, get(new int[] { zero }, zero, zero));
+		Assertions.assertEquals(zero, invoke(METHOD_GET, null, new int[] { zero }, zero, zero));
 		//
-	}
-
-	private static int get(final int[] instance, final int index, final int defaultValue) throws Throwable {
-		try {
-			final Object obj = METHOD_GET.invoke(null, instance, index, defaultValue);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -2193,101 +1945,68 @@ class VoiceManagerOjadAccentPanelTest {
 		try (final PDDocument pdDocument = new PDDocument();
 				final InputStream is = new ByteArrayInputStream(new byte[] {})) {
 			//
-			Assertions.assertNull(createPDEmbeddedFile(pdDocument, null, null, null));
+			Assertions.assertNull(invoke(METHOD_CREATE_PD_EMBEDDED_FILE, null, pdDocument, null, null, null));
 			//
-			Assertions.assertNotNull(createPDEmbeddedFile(pdDocument, is, null, null));
+			Assertions.assertNotNull(invoke(METHOD_CREATE_PD_EMBEDDED_FILE, null, pdDocument, is, null, null));
 			//
-			Assertions.assertNotNull(createPDEmbeddedFile(pdDocument, is, null, new byte[] {}));
+			Assertions.assertNotNull(invoke(METHOD_CREATE_PD_EMBEDDED_FILE, null, pdDocument, is, null, new byte[] {}));
 			//
 		} // try
 			//
 	}
 
-	private static PDEmbeddedFile createPDEmbeddedFile(final PDDocument pdDocument, final InputStream is,
-			final ContentInfoUtil ciu, final byte[] bs) throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_PD_EMBEDDED_FILE.invoke(null, pdDocument, is, ciu, bs);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof PDEmbeddedFile) {
-				return (PDEmbeddedFile) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
 	@Test
-	void testGetMimeType() throws Throwable {
+	void testGetMimeType() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(getMimeType(Util.cast(ContentInfo.class, Narcissus.allocateInstance(ContentInfo.class))));
+		Assertions.assertNull(invoke(METHOD_GET_MIME_TYPE, null,
+				Util.cast(ContentInfo.class, Narcissus.allocateInstance(ContentInfo.class))));
 		//
-	}
-
-	private static String getMimeType(final ContentInfo instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_MIME_TYPE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
 	void testGetVoiceUrlByX() throws Throwable {
 		//
-		Assertions.assertNull(getVoiceUrlByX(null, Collections.singleton(null), 0));
+		Assertions.assertNull(invoke(METHOD_GET_VOICE_URL_BY_X, null, null, Collections.singleton(null), 0));
 		//
 		final Pattern patern = Pattern.compile("^\\d+_(\\d+)_\\d+_(\\w+)\\.\\w+$");
 		//
 		String url = "https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/female/011/1184_1_1_female.mp3";
 		//
-		Assertions.assertEquals(Unit.with(url), getVoiceUrlByX(patern, Collections.singleton(url), 0));
+		Assertions.assertEquals(Unit.with(url),
+				invoke(METHOD_GET_VOICE_URL_BY_X, null, patern, Collections.singleton(url), 0));
 		//
 		Assertions.assertEquals(
 				Unit.with(url = "https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/male/011/1184_1_1_male.mp3"),
-				getVoiceUrlByX(patern, Collections.singleton(url), 1));
+				invoke(METHOD_GET_VOICE_URL_BY_X, null, patern, Collections.singleton(url), 1));
 		//
-		Assertions
-				.assertThrows(IllegalStateException.class,
-						() -> getVoiceUrlByX(patern,
-								Collections.nCopies(2,
-										"https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/male/011/1184_1_1_male.mp3"),
-								1));
+		Throwable throwable = null;
 		//
-	}
-
-	private static IValue0<String> getVoiceUrlByX(final Pattern pattern, final Iterable<String> ss, final int x)
-			throws Throwable {
 		try {
-			final Object obj = METHOD_GET_VOICE_URL_BY_X.invoke(null, pattern, ss, x);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof IValue0) {
-				return (IValue0) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
+			//
+			invoke(METHOD_GET_VOICE_URL_BY_X, null, patern, Collections.nCopies(2,
+					"https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/male/011/1184_1_1_male.mp3"), 1);
+			//
 		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
+			//
+			throwable = e != null ? e.getTargetException() : e;
+			//
+		} // try
+			//
+		Assertions.assertTrue(throwable instanceof IllegalStateException);
+		//
 	}
 
 	@Test
 	void testGetTextAndImageByXY() throws Throwable {
 		//
-		Assertions.assertNull(getTextAndImageByXY(null, Collections.singleton(null), 0, null));
+		Assertions
+				.assertNull(invoke(METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, null, null, Collections.singleton(null), 0, null));
 		//
 		final Object tai = Narcissus.allocateInstance(CLASS_TEXT_AND_IMAGE);
 		//
 		final Iterable<?> iterable = Collections.singleton(tai);
 		//
-		Assertions.assertNull(getTextAndImageByXY(null, iterable, 0, null));
+		Assertions.assertNull(invoke(METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, null, null, iterable, 0, null));
 		//
 		final Map<String, ?> map = new LinkedHashMap<>();
 		//
@@ -2297,11 +2016,11 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		final Pattern patern = Pattern.compile("^\\d+_(\\d+)_\\d+_(\\w+)\\.\\w+$");
 		//
-		Assertions
-				.assertEquals("{\"voiceUrlImages\":{}}",
-						ObjectMapperUtil.writeValueAsString(setDefaultPropertyInclusion(
-								setVisibility(objectMapper, PropertyAccessor.ALL, Visibility.ANY), Include.NON_NULL),
-								getTextAndImageByXY(patern, iterable, 0, Integer.toString(1))));
+		Assertions.assertEquals("{\"voiceUrlImages\":{}}",
+				ObjectMapperUtil.writeValueAsString(
+						setDefaultPropertyInclusion(setVisibility(objectMapper, PropertyAccessor.ALL, Visibility.ANY),
+								Include.NON_NULL),
+						invoke(METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, null, patern, iterable, 0, Integer.toString(1))));
 		//
 		Util.clear(map);
 		//
@@ -2310,19 +2029,10 @@ class VoiceManagerOjadAccentPanelTest {
 		FieldUtils.writeDeclaredField(tai, "voiceUrlImages", map, true);
 		//
 		Assertions.assertEquals("{\"voiceUrlImages\":{}}", ObjectMapperUtil.writeValueAsString(objectMapper,
-				getTextAndImageByXY(patern, iterable, 1, Integer.toString(1))));
+				invoke(METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, null, patern, iterable, 1, Integer.toString(1))));
 		//
-		Assertions.assertNull(getTextAndImageByXY(patern, iterable, 0, null));
+		Assertions.assertNull(invoke(METHOD_GET_TEXT_AND_IMAGE_BY_X_Y, null, patern, iterable, 0, null));
 		//
-	}
-
-	private static Object getTextAndImageByXY(final Pattern pattern, final Iterable<?> textAndImages, final int x,
-			final String y) throws Throwable {
-		try {
-			return METHOD_GET_TEXT_AND_IMAGE_BY_X_Y.invoke(null, pattern, textAndImages, x, y);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -2331,24 +2041,11 @@ class VoiceManagerOjadAccentPanelTest {
 		final int defaultValue = 10;
 		//
 		Assertions.assertEquals(defaultValue,
-				getSize(Collections.singleton(null), Predicates.alwaysTrue(), defaultValue));
+				invoke(METHOD_GET_SIZE, null, Collections.singleton(null), Predicates.alwaysTrue(), defaultValue));
 		//
-		Assertions.assertEquals(defaultValue,
-				getSize(Collections.singleton(imageDimensionPosition), Predicates.alwaysTrue(), defaultValue));
+		Assertions.assertEquals(defaultValue, invoke(METHOD_GET_SIZE, null,
+				Collections.singleton(imageDimensionPosition), Predicates.alwaysTrue(), defaultValue));
 		//
-	}
-
-	private static int getSize(final Collection<?> idps, final Predicate<?> predicate, final int defaultValue)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_GET_SIZE.invoke(null, idps, predicate, defaultValue);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -2356,23 +2053,9 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		final double defaultValue = 10;
 		//
-		Assertions.assertArrayEquals(new double[] { defaultValue },
-				getTranslateXs(Collections.singleton(imageDimensionPosition), defaultValue));
+		Assertions.assertTrue(Objects.deepEquals(new double[] { defaultValue },
+				invoke(METHOD_GET_TRANSLATE_XS, null, Collections.singleton(imageDimensionPosition), defaultValue)));
 		//
-	}
-
-	private static double[] getTranslateXs(final Collection<?> idps, final double defaultValue) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_TRANSLATE_XS.invoke(null, idps, defaultValue);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof double[]) {
-				return (double[]) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -2389,7 +2072,7 @@ class VoiceManagerOjadAccentPanelTest {
 	private static <T, R> Stream<R> flatMap(final Stream<T> instance,
 			final Function<? super T, ? extends Stream<? extends R>> mapper) throws Throwable {
 		try {
-			final Object obj = METHOD_FLAT_MAP.invoke(null, instance, mapper);
+			final Object obj = invoke(METHOD_FLAT_MAP, null, instance, mapper);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Stream) {
@@ -2402,44 +2085,38 @@ class VoiceManagerOjadAccentPanelTest {
 	}
 
 	@Test
-	void testCreateImageDimensionPositionPredicate() throws Throwable {
+	void testCreateImageDimensionPositionPredicate()
+			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		//
 		final Method test = Util.getDeclaredMethod(Predicate.class, "test", Object.class);
 		//
-		Assertions.assertEquals(Boolean.FALSE,
-				Narcissus.invokeMethod(createImageDimensionPositionPredicate(null), test, (Object) null));
+		Assertions.assertEquals(Boolean.FALSE, Narcissus.invokeMethod(
+				invoke(METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE, null, (Object) null), test, (Object) null));
 		//
 		Assertions.assertEquals(Boolean.FALSE,
-				Narcissus.invokeMethod(createImageDimensionPositionPredicate(null), test, imageDimensionPosition));
+				Narcissus.invokeMethod(invoke(METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE, null, (Object) null),
+						test, imageDimensionPosition));
 		//
-		Assertions.assertEquals(Boolean.FALSE, Narcissus
-				.invokeMethod(createImageDimensionPositionPredicate(new double[] {}), test, imageDimensionPosition));
+		Assertions.assertEquals(Boolean.FALSE,
+				Narcissus.invokeMethod(invoke(METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE, null, new double[] {}),
+						test, imageDimensionPosition));
 		//
 		FieldUtils.writeDeclaredField(imageDimensionPosition, "translateX", Float.valueOf(0), true);
 		//
-		Assertions.assertEquals(Boolean.TRUE, Narcissus.invokeMethod(
-				createImageDimensionPositionPredicate(new double[] { 0d }), test, imageDimensionPosition));
-		//
-		Assertions.assertEquals(Boolean.FALSE, Narcissus.invokeMethod(
-				createImageDimensionPositionPredicate(new double[] { 1d }), test, imageDimensionPosition));
+		Assertions.assertEquals(Boolean.TRUE,
+				Narcissus.invokeMethod(
+						invoke(METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE, null, new double[] { 0d }), test,
+						imageDimensionPosition));
 		//
 		Assertions.assertEquals(Boolean.FALSE,
-				Narcissus.invokeMethod(createImageDimensionPositionPredicate(null), test, imageDimensionPosition));
+				Narcissus.invokeMethod(
+						invoke(METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE, null, new double[] { 1d }), test,
+						imageDimensionPosition));
 		//
-	}
-
-	private static Predicate<?> createImageDimensionPositionPredicate(final double[] translateXs) throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE.invoke(null, translateXs);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Predicate) {
-				return (Predicate) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
+		Assertions.assertEquals(Boolean.FALSE,
+				Narcissus.invokeMethod(invoke(METHOD_CREATE_IMAGE_DIMENSION_POSITION_PREDICATE, null, (Object) null),
+						test, imageDimensionPosition));
+		//
 	}
 
 	@Test
@@ -2447,26 +2124,14 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		final Method apply = Util.getDeclaredMethod(Function.class, "apply", Object.class);
 		//
-		Assertions.assertNull(Narcissus.invokeMethod(createFunction(null), apply, (Object) null));
+		Assertions.assertNull(
+				Narcissus.invokeMethod(invoke(METHOD_CREATE_FUNCTION, null, (Object) null), apply, (Object) null));
 		//
 		Assertions.assertEquals("1",
-				Narcissus.invokeMethod(createFunction(Pattern.compile("^\\d+_(\\d+)_\\d+_(\\w+)\\.\\w+$")), apply,
-						"https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/female/012/1216_1_1_female.mp3"));
+				Narcissus.invokeMethod(
+						invoke(METHOD_CREATE_FUNCTION, null, Pattern.compile("^\\d+_(\\d+)_\\d+_(\\w+)\\.\\w+$")),
+						apply, "https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/female/012/1216_1_1_female.mp3"));
 		//
-	}
-
-	private static Function<String, String> createFunction(final Pattern pattern) throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_FUNCTION.invoke(null, pattern);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Function) {
-				return (Function) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -2487,7 +2152,7 @@ class VoiceManagerOjadAccentPanelTest {
 	private static ListCellRenderer<? super Entry<String, String>> createListCellRenderer(
 			final ListCellRenderer<? super Entry<String, String>> lcr) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_LIST_CELL_RENDERER1.invoke(null, lcr);
+			final Object obj = invoke(METHOD_CREATE_LIST_CELL_RENDERER1, null, lcr);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof ListCellRenderer) {
@@ -2633,20 +2298,12 @@ class VoiceManagerOjadAccentPanelTest {
 	}
 
 	@Test
-	void testForEachOrdered() {
+	void testForEachOrdered() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertDoesNotThrow(() -> forEachOrdered(IntStream.empty(), null));
+		Assertions.assertNull(invoke(METHOD_FOR_EACH_ORDERED, null, IntStream.empty(), null));
 		//
-		Assertions.assertDoesNotThrow(() -> forEachOrdered(Reflection.newProxy(IntStream.class, ih), null));
+		Assertions.assertNull(invoke(METHOD_FOR_EACH_ORDERED, null, Reflection.newProxy(IntStream.class, ih), null));
 		//
-	}
-
-	private static void forEachOrdered(final IntStream instance, final IntConsumer consumer) throws Throwable {
-		try {
-			METHOD_FOR_EACH_ORDERED.invoke(null, instance, consumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -2673,7 +2330,7 @@ class VoiceManagerOjadAccentPanelTest {
 	private static DefaultTableModel createDefaultTableModel(final Object[] columnNames, final int rowCount)
 			throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_DEFAULT_TABLE_MODEL.invoke(null, columnNames, rowCount);
+			final Object obj = invoke(METHOD_CREATE_DEFAULT_TABLE_MODEL, null, columnNames, rowCount);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof DefaultTableModel) {
@@ -2686,7 +2343,7 @@ class VoiceManagerOjadAccentPanelTest {
 	}
 
 	@Test
-	void testFindEntryWithLongestValue() throws Throwable {
+	void testFindEntryWithLongestValue() throws IllegalAccessException, InvocationTargetException {
 		//
 		if (ih != null) {
 			//
@@ -2694,43 +2351,17 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(findEntryWithLongestValue(Reflection.newProxy(ListModel.class, ih)));
+		Assertions.assertNull(
+				invoke(METHOD_FIND_ENTRY_WITH_LONGEST_VALUE, null, Reflection.newProxy(ListModel.class, ih)));
 		//
-	}
-
-	private static Entry<?, ?> findEntryWithLongestValue(final ListModel<?> model) throws Throwable {
-		try {
-			final Object obj = METHOD_FIND_ENTRY_WITH_LONGEST_VALUE.invoke(null, model);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Entry) {
-				return (Entry) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
-	void testCreateFont() throws Throwable {
+	void testCreateFont() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNotNull(createFont(Util.cast(Font.class, Narcissus.allocateInstance(Font.class)), null));
+		Assertions.assertNotNull(
+				invoke(METHOD_CREATE_FONT, null, Util.cast(Font.class, Narcissus.allocateInstance(Font.class)), null));
 		//
-	}
-
-	private static Font createFont(final Font instance, final ToIntFunction<Font> function) throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_FONT.invoke(null, instance, function);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Font) {
-				return (Font) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -2744,7 +2375,7 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private static ToIntFunction<Font> createToIntFunction(final int difference) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_TO_INT_FUNCTION.invoke(null, difference);
+			final Object obj = invoke(METHOD_CREATE_TO_INT_FUNCTION, null, difference);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof ToIntFunction) {
@@ -2761,30 +2392,16 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		final Container container = Util.cast(Container.class, Narcissus.allocateInstance(Container.class));
 		//
-		Assertions.assertSame(container, add(container, null));
+		Assertions.assertSame(container, invoke(METHOD_ADD_2, null, container, null));
 		//
 		Assertions.assertDoesNotThrow(() -> add(container, null, null));
 		//
 		final JPanel jPanel = new JPanel();
 		//
-		Assertions.assertSame(jPanel, add(jPanel, null));
+		Assertions.assertSame(jPanel, invoke(METHOD_ADD_2, null, jPanel, null));
 		//
 		Assertions.assertDoesNotThrow(() -> add(jPanel, null, null));
 		//
-	}
-
-	private static Component add(final Container container, final Component component) throws Throwable {
-		try {
-			final Object obj = METHOD_ADD_2.invoke(null, container, component);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Component) {
-				return (Component) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static void add(final Container container, final Component component, final Object constraints)
