@@ -42,6 +42,7 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.google.common.reflect.Reflection;
 
 import domain.Pronunciation;
@@ -842,7 +843,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		Assertions.assertNull(createPronunciations(null, list, null));
 		//
 		Assertions.assertEquals("[{}]",
-				ObjectMapperUtil.writeValueAsString(new ObjectMapper().setSerializationInclusion(Include.NON_NULL),
+				ObjectMapperUtil.writeValueAsString(new ObjectMapper().setDefaultPropertyInclusion(Include.NON_NULL),
 						createPronunciations(null,
 								List.of(cast(Element.class, Narcissus.allocateInstance(Element.class))), null)));
 		//
