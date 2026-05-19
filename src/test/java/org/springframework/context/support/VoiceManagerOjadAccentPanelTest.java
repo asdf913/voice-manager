@@ -1231,7 +1231,7 @@ class VoiceManagerOjadAccentPanelTest {
 	}
 
 	@Test
-	void testGetSystemClipboard() throws IllegalAccessException, InvocationTargetException, Throwable {
+	void testGetSystemClipboard() throws Throwable {
 		//
 		Assertions.assertNull(invoke(METHOD_GET_SYSTEM_CLIP_BOARD, null, ProxyUtil.createProxy(Toolkit.class, mh)));
 		//
