@@ -1723,8 +1723,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				final int borderWidth = 1;
 				//
-				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
-						StandardCharsets.UTF_8, false);
+				Files.writeString(pathHtml, generatePdfHtml(freeMarkerConfiguration, map), StandardCharsets.UTF_8);
 				//
 				final FailableFunction<Playwright, BrowserType, ReflectiveOperationException> function = getPlaywrightBrowserTypeFunction();
 				//
@@ -1741,8 +1740,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				Util.put(map, captionOuterStyle, Map.of("border", String.format("solid %1$spx", borderWidth)));
 				//
-				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
-						StandardCharsets.UTF_8, false);
+				Files.writeString(pathHtml, generatePdfHtml(freeMarkerConfiguration, map), StandardCharsets.UTF_8);
 				//
 				map.remove(captionOuterStyle);
 				//
@@ -1786,8 +1784,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				Util.put(map, descriptionStyleKey, descriptionStyle);
 				//
-				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
-						StandardCharsets.UTF_8, false);
+				Files.writeString(pathHtml, generatePdfHtml(freeMarkerConfiguration, map), StandardCharsets.UTF_8);
 				//
 				Map<?, ?> m1 = Util.cast(Map.class, ObjectMapperUtil.readValue(getObjectMapper(),
 						ObjectMapperUtil.writeValueAsString(getObjectMapper(), map), Object.class));
@@ -1808,8 +1805,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 								//
 								), Collectors.toMap(Util::getKey, Util::getValue)));
 				//
-				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, m1),
-						StandardCharsets.UTF_8, false);
+				Files.writeString(pathHtml, generatePdfHtml(freeMarkerConfiguration, m1), StandardCharsets.UTF_8);
 				//
 				try (final InputStream is = testAndApply(Objects::nonNull, screenshot(pathHtml, function),
 						ByteArrayInputStream::new, null)) {
@@ -1852,8 +1848,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						String.format("rgb(%1$s,%2$s,%3$s)", colorDescription.getRed(), colorDescription.getGreen(),
 								colorDescription.getBlue()));
 				//
-				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, m1),
-						StandardCharsets.UTF_8, false);
+				Files.writeString(pathHtml, generatePdfHtml(freeMarkerConfiguration, m1), StandardCharsets.UTF_8);
 				//
 				try (final InputStream is = testAndApply(Objects::nonNull, screenshot(pathHtml, function),
 						ByteArrayInputStream::new, null)) {
@@ -1881,8 +1876,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				testAndAccept((a, b) -> a != null, top, map, (a, b) -> Util.put(b, captionOuterStyle,
 						Map.of(position, absolute, "top", Util.toString(Util.intValue(a, 0) * -1))));
 				//
-				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
-						StandardCharsets.UTF_8, false);
+				Files.writeString(pathHtml, generatePdfHtml(freeMarkerConfiguration, map), StandardCharsets.UTF_8);
 				//
 				document = Loader.loadPDF(pdf(pathHtml, function));
 				//
@@ -2260,9 +2254,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				final String html = generatePdfHtml(freeMarkerConfiguration, map);
 				//
-				FileUtils.writeStringToFile(
-						file = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null), html,
-						StandardCharsets.UTF_8, false);
+				Files.writeString(
+						Util.toPath(
+								file = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null)),
+						html, StandardCharsets.UTF_8);
 				//
 				final String[] fileExtensions = getFileExtensions(findMatch(new ContentInfoUtil(), file));
 				//
@@ -2273,10 +2268,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					FileUtils.deleteQuietly(file);
 					//
-					FileUtils.writeStringToFile(
-							file = Util.toFile(Path
-									.of(StringUtils.join(Util.group(matcher, 1), ArrayUtils.get(fileExtensions, 0)))),
-							html, StandardCharsets.UTF_8, false);
+					Files.writeString(
+							Util.toPath(file = Util.toFile(Path
+									.of(StringUtils.join(Util.group(matcher, 1), ArrayUtils.get(fileExtensions, 0))))),
+							html, StandardCharsets.UTF_8);
 					//
 				} // if
 					//
