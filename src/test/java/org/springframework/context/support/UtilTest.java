@@ -20,6 +20,7 @@ import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -631,7 +632,11 @@ class UtilTest {
 		//
 		Assertions.assertNull(iterator(null, null, null));
 		//
-		Assertions.assertEquals(Unit.with(null), iterator(null, null, Collections.singletonMap(null, null)));
+		final Map<String, String> map = new LinkedHashMap<>();
+		//
+		Util.put(map, null, null);
+		//
+		Assertions.assertEquals(Unit.with(null), iterator(null, null, map));
 		//
 	}
 

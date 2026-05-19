@@ -63,7 +63,7 @@ class OdakyuKanjiHiraganaMapFactoryBeanTest {
 		//
 		element.appendChild(new Element("b"));
 		//
-		Assertions.assertEquals(Collections.singletonMap("", ""), getObject(elements));
+		Assertions.assertEquals(Map.of("", ""), getObject(elements));
 		//
 	}
 

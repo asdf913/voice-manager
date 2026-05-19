@@ -194,8 +194,9 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 			//
 			try (final Writer writer = new StringWriter()) {
 				//
-				final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("statics",
-						new BeansWrapper(Configuration.getVersion()).getStaticModels()));
+				final Map<Object, Object> map = new LinkedHashMap<>();
+				//
+				Util.put(map, "statics", new BeansWrapper(Configuration.getVersion()).getStaticModels());
 				//
 				ATag aTag = null;
 				//

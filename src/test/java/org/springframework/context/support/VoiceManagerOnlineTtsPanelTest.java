@@ -367,7 +367,11 @@ class VoiceManagerOnlineTtsPanelTest {
 			//
 		if (ih != null) {
 			//
-			ih.beansOfType = Collections.singletonMap(null, null);
+			final Map<String, Object> map = new LinkedHashMap<>();
+			//
+			Util.put(map, null, null);
+			//
+			ih.beansOfType = map;
 			//
 		} // if
 			//
@@ -377,7 +381,11 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		if (ih != null) {
 			//
-			ih.beansOfType = Collections.singletonMap(null, Reflection.newProxy(SpeechApi.class, ih));
+			final Map<String, Object> map = new LinkedHashMap<>();
+			//
+			Util.put(map, null, Reflection.newProxy(SpeechApi.class, ih));
+			//
+			ih.beansOfType = map;
 			//
 		} // if
 			//
@@ -732,7 +740,11 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		final String a = "a";
 		//
-		Assertions.assertNull(getVoice(propertyResolver, null, listModel, Collections.singletonMap(null, a)));
+		final Map<?, Object> map = new LinkedHashMap<>();
+		//
+		Util.put(map, null, a);
+		//
+		Assertions.assertNull(getVoice(propertyResolver, null, listModel, map));
 		//
 		if (ih != null) {
 			//

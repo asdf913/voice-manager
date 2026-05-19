@@ -1318,7 +1318,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		mapRomaji = Util.toList(Util.map(
 				Util.stream(getBeanDefinitionNamesByClassAndAttributes(
 						this.configurableListableBeanFactory = configurableListableBeanFactory, Map.class,
-						Collections.singletonMap(VALUE, "romaji"))),
+						Map.of(VALUE, "romaji"))),
 				x -> Util.cast(Map.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
 		//
 		// Get the "Bean Definition" which class could be assigned as a
@@ -1327,7 +1327,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		multimapHiragana = Util.toList(Util.map(
 				Util.stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Multimap.class,
-						Collections.singletonMap(VALUE, "hiragana"))),
+						Map.of(VALUE, "hiragana"))),
 				x -> Util.cast(Multimap.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
 		//
 		// Get the "Bean Definition" which class could be assigned as a
@@ -1336,7 +1336,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		multimapKatakana = Util.toList(Util.map(
 				Util.stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Multimap.class,
-						Collections.singletonMap(VALUE, "katakana"))),
+						Map.of(VALUE, "katakana"))),
 				x -> Util.cast(Multimap.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
 		//
 		// Get the "Bean Definition" which class could be assigned as a "java.util.Map"
@@ -1345,7 +1345,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		mapHiragana = Util.toList(Util.map(
 				Util.stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
-						Collections.singletonMap(VALUE, "hiragana"))),
+						Map.of(VALUE, "hiragana"))),
 				x -> Util.cast(Map.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
 		//
 	}

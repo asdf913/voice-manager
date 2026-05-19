@@ -552,16 +552,16 @@ class VoiceManagerImageToPdfPanelTest {
 		//
 		final String key = "org.springframework.context.support.VoiceManagerPdfPanel.fontName";
 		//
-		Assertions.assertSame(fontName, getFontName(key, null, Collections.singletonMap(key, Util.name(fontName))));
+		Assertions.assertSame(fontName, getFontName(key, null, Map.of(key, Util.name(fontName))));
 		//
 		Assertions.assertSame(fontName,
-				getFontName(key, null, Collections.singletonMap(key, fontName != null ? fontName.getName() : null)));
+				getFontName(key, null, Map.of(key, fontName != null ? fontName.getName() : null)));
 		//
-		Assertions.assertSame(fontName, getFontName(key, null, Collections.singletonMap(key,
-				fontName != null ? StringUtils.substring(fontName.getName(), 0, 7) : null)));
+		Assertions.assertSame(fontName, getFontName(key, null,
+				Map.of(key, fontName != null ? StringUtils.substring(fontName.getName(), 0, 7) : null)));
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> getFontName(key, null, Collections.singletonMap(key,
-				fontName != null ? StringUtils.substring(fontName.getName(), 0, 6) : null)));
+		Assertions.assertThrows(IllegalStateException.class, () -> getFontName(key, null,
+				Map.of(key, fontName != null ? StringUtils.substring(fontName.getName(), 0, 6) : null)));
 		//
 		if (ih != null && (ih.properties = ObjectUtils.getIfNull(ih.properties, LinkedHashMap::new)) != null) {
 			//

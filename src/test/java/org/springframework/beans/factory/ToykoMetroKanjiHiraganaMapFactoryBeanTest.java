@@ -3,6 +3,7 @@ package org.springframework.beans.factory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -57,7 +58,11 @@ class ToykoMetroKanjiHiraganaMapFactoryBeanTest {
 		//
 		elemnet.appendChild(new Element("b"));
 		//
-		Assertions.assertEquals(Collections.singletonMap(null, ""), getObject(elements));
+		final Map<?, Object> map = new LinkedHashMap<>();
+		//
+		Util.put(map, null, "");
+		//
+		Assertions.assertEquals(map, getObject(elements));
 		//
 	}
 

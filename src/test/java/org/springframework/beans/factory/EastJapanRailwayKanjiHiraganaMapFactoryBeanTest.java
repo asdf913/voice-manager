@@ -249,7 +249,9 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertDoesNotThrow(() -> merge(null, null));
 		//
-		final Map<String, String> singletonMap = Collections.singletonMap(null, null);
+		final Map<String, String> singletonMap = new LinkedHashMap<>();
+		//
+		Util.put(singletonMap, null, null);
 		//
 		Assertions.assertDoesNotThrow(() -> merge(null, singletonMap));
 		//
@@ -276,8 +278,10 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		Assertions.assertDoesNotThrow(() -> merge(new LinkedHashMap<>(singletonMap), singletonMap));
 		//
 		final Map<String, String> a = new LinkedHashMap<>(singletonMap);
-
-		final Map<String, String> b = Collections.singletonMap(null, "");
+		//
+		final Map<String, String> b = new LinkedHashMap<>();
+		//s
+		Util.put(b, null, "");
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{localizedMessage=null=, message=null=}",
 				() -> merge(a, b));

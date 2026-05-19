@@ -1549,14 +1549,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		final Supplier<Clipboard> supplier = () -> getClipboard();
 		//
-		final Map<Object, JTextComponent> objectJTextComponentMap = new LinkedHashMap<>(
-				Collections.singletonMap(btnCopyPartOfSpeech, tfPartOfSpeech));
+		final Map<Object, JTextComponent> objectJTextComponentMap = new LinkedHashMap<>();
 		//
-		objectJTextComponentMap.put(btnCopyConjugation, tfConjugation);
+		Util.put(objectJTextComponentMap, btnCopyPartOfSpeech, tfPartOfSpeech);
 		//
-		objectJTextComponentMap.put(btnCopyKanji, tfKanji);
+		Util.put(objectJTextComponentMap, btnCopyConjugation, tfConjugation);
 		//
-		objectJTextComponentMap.put(btnCopyHiragana, tfHiragana);
+		Util.put(objectJTextComponentMap, btnCopyKanji, tfKanji);
+		//
+		Util.put(objectJTextComponentMap, btnCopyHiragana, tfHiragana);
 		//
 		if (setContents(source, supplier, objectJTextComponentMap)) {
 			//
@@ -1564,10 +1565,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
-		final Map<Object, Function<TextAndImage, Image>> objectFunctionMap = new LinkedHashMap<>(
-				Collections.singletonMap(btnCopyAccentImage, x -> getAccentImage(x)));
+		final Map<Object, Function<TextAndImage, Image>> objectFunctionMap = new LinkedHashMap<>();
 		//
-		objectFunctionMap.put(btnCopyCurveImage, x -> getCurveImage(x));
+		Util.put(objectFunctionMap, btnCopyAccentImage, x -> getAccentImage(x));
+		//
+		Util.put(objectFunctionMap, btnCopyCurveImage, x -> getCurveImage(x));
 		//
 		setContents(source, supplier, Util.cast(TextAndImage.class, Util.getSelectedItem(jcbTextAndImage)),
 				objectFunctionMap);
@@ -1916,8 +1918,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							Util.mapToInt(Util.stream(textAndImages), x -> Util.intValue(getCurveImageWidth(x), 0))),
 							0);
 			//
-			final Map<String, Object> map = new LinkedHashMap<>(
-					Collections.singletonMap("textAndImages", textAndImages));
+			final Map<String, Object> map = new LinkedHashMap<>();
+			//
+			Util.put(map, "textAndImages", textAndImages);
 			//
 			Util.put(map, "static", new BeansWrapper(version).getStaticModels());
 			//
@@ -2680,8 +2683,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.setText(lblCount, null);
 			//
-			final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("word", testAndApply(
-					Objects::nonNull, textInput, x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
+			final Map<Object, Object> map = new LinkedHashMap<>(Map.of("word", testAndApply(Objects::nonNull, textInput,
+					x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
 			//
 			// 品詞
 			//
@@ -2976,8 +2979,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		try {
 			//
-			final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("word", testAndApply(
-					Objects::nonNull, getKanji(input), x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
+			final Map<Object, Object> map = new LinkedHashMap<>();
+			//
+			Util.put(map, "word", testAndApply(Objects::nonNull, getKanji(input),
+					x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null));
 			//
 			final ComboBoxModel<?> cbmCurve = instance != null ? instance.cbmCurve : null;
 			//

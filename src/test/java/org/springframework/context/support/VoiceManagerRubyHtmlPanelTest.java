@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -526,10 +527,17 @@ class VoiceManagerRubyHtmlPanelTest {
 	@Test
 	void testGetLayoutManager() throws Throwable {
 		//
-		Assertions.assertNull(getLayoutManager(null, Util.entrySet(Collections.singletonMap(null, null))));
+		final Map<String, Object> map = new LinkedHashMap<>();
 		//
-		final Iterable<Entry<String, Object>> entrySet = Util
-				.entrySet(Collections.singletonMap(null, Reflection.newProxy(LayoutManager.class, ih)));
+		Util.put(map, null, null);
+		//
+		Assertions.assertNull(getLayoutManager(null, Util.entrySet(map)));
+		//
+		Util.clear(map);
+		//
+		Util.put(map, null, Reflection.newProxy(LayoutManager.class, ih));
+		//
+		final Iterable<Entry<String, Object>> entrySet = Util.entrySet(map);
 		//
 		Assertions.assertNull(getLayoutManager(null, entrySet));
 		//
@@ -677,19 +685,26 @@ class VoiceManagerRubyHtmlPanelTest {
 		final PropertyOrFieldReference pofr = Util.cast(PropertyOrFieldReference.class,
 				Narcissus.allocateInstance(PropertyOrFieldReference.class));
 		//
-		Assertions.assertEquals(Collections.singletonMap(null, null), createMap(null, pofr));
+		final Map<String, Object> map = new LinkedHashMap<>();
+		//
+		Util.put(map, null, null);
+		//
+		Assertions.assertEquals(map, createMap(null, pofr));
 		//
 		String name = "LOG";
 		//
 		FieldUtils.writeDeclaredField(pofr, "name", name, true);
 		//
-		Assertions.assertEquals(Collections.singletonMap(name, FieldUtils.readDeclaredField(instance, name, true)),
+		Assertions.assertEquals(Map.of(name, FieldUtils.readDeclaredField(instance, name, true)),
 				createMap(instance, pofr));
 		//
 		FieldUtils.writeDeclaredField(pofr, "name", name = "table", true);
 		//
-		Assertions.assertEquals(Collections.singletonMap(name, FieldUtils.readDeclaredField(instance, name, true)),
-				createMap(instance, pofr));
+		Util.clear(map);
+		//
+		Util.put(map, name, FieldUtils.readDeclaredField(instance, name, true));
+		//
+		Assertions.assertEquals(map, createMap(instance, pofr));
 		//
 	}
 

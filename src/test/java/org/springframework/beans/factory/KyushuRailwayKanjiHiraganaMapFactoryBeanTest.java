@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -114,7 +115,11 @@ class KyushuRailwayKanjiHiraganaMapFactoryBeanTest {
 				//
 		} // if
 			//
-		Assertions.assertEquals(Collections.singletonMap(null, null), createMap(elements));
+		final Map<?, ?> map = new LinkedHashMap<>();
+		//
+		Util.put(map, null, null);
+		//
+		Assertions.assertEquals(map, createMap(elements));
 		//
 	}
 

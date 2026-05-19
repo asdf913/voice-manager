@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -706,8 +707,12 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 		//
 		Assertions.assertSame(multimap, replaceMultimapEntries(multimap, null));
 		//
+		final Map<Entry<String, String>, Entry<String, String>> map = new LinkedHashMap<>();
+		//
+		Util.put(map, Pair.of("八幡東区枝光", "えだみつ"), null);
+		//
 		Assertions.assertEquals(multimap = ImmutableMultimap.of("八幡東区枝光", "えだみつ"),
-				replaceMultimapEntries(multimap, Collections.singletonMap(Pair.of("八幡東区枝光", "えだみつ"), null)));
+				replaceMultimapEntries(multimap, map));
 		//
 	}
 

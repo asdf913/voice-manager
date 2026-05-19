@@ -149,7 +149,7 @@ class KantetsuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		FieldUtils.writeDeclaredField(kanjiHiraganaRomaji, "hiragana", "いち", true);
 		//
-		Assertions.assertEquals(Collections.singletonMap(kanji, hiragana), getObject(Stream.of(kanjiHiraganaRomaji)));
+		Assertions.assertEquals(Map.of(kanji, hiragana), getObject(Stream.of(kanjiHiraganaRomaji)));
 		//
 	}
 

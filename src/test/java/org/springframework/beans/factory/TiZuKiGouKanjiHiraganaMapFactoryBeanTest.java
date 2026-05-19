@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
@@ -298,26 +299,43 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(toMap(null, "a"));
 		//
-		Assertions.assertEquals(Collections.singletonMap(EMPTY, null), toMap(null, "（"));
+		final Map<String, String> map = new LinkedHashMap<>();
 		//
-		Assertions.assertEquals(Collections.singletonMap(EMPTY, null), toMap(null, "・"));
+		Util.put(map,EMPTY, null);
+		//
+		Assertions.assertEquals(map, toMap(null, "（"));
+		//
+		Assertions.assertEquals(map, toMap(null, "・"));
 		//
 		String string = "中";
 		//
-		Assertions.assertEquals(Collections.singletonMap(string, null), toMap(null, string));
+		map.clear();
+		//
+		Util.put(map,string, null);
+		//
+		Assertions.assertEquals(map, toMap(null, string));
 		//
 		final String one = "1";
 		//
-		Assertions.assertEquals(Collections.singletonMap(string = "車線", null),
-				toMap(null, StringUtils.joinWith("", one, string)));
+		map.clear();
 		//
-		Assertions.assertEquals(Collections.singletonMap(string = "以外", null),
-				toMap(null, StringUtils.joinWith("", one, string)));
+		Util.put(map,string = "車線", null);
 		//
-		Assertions.assertEquals(Collections.singletonMap(string = "支庁界", null),
-				toMap(null, StringUtils.joinWith("", one, string)));
+		Assertions.assertEquals(map, toMap(null, StringUtils.joinWith("", one, string)));
 		//
-		Assertions.assertEquals(Collections.singletonMap(StringUtils.joinWith("", one, string = "科樹林"), "null"),
+		map.clear();
+		//
+		Util.put(map,string = "以外", null);
+		//
+		Assertions.assertEquals(map, toMap(null, StringUtils.joinWith("", one, string)));
+		//
+		map.clear();
+		//
+		Util.put(map,string = "支庁界", null);
+		//
+		Assertions.assertEquals(map, toMap(null, StringUtils.joinWith("", one, string)));
+		//
+		Assertions.assertEquals(Map.of(StringUtils.joinWith("", one, string = "科樹林"), "null"),
 				toMap(null, StringUtils.joinWith("", one, string)));
 		//
 		Assertions.assertNull(
@@ -325,8 +343,11 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(toMap(Collections.singleton(null), null, null));
 		//
-		Assertions.assertEquals(Collections.singletonMap(null, null),
-				toMap(Collections.singleton(null), Collections.singleton(null), null));
+		map.clear();
+		//
+		Util.put(map,null, null);
+		//
+		Assertions.assertEquals(map, toMap(Collections.singleton(null), Collections.singleton(null), null));
 		//
 	}
 

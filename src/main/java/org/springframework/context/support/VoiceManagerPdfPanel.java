@@ -1709,7 +1709,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				final Map<Object, Object> map = new LinkedHashMap<>();
 				//
-				map.put("captionHtml", captionHtml);
+				Util.put(map, "captionHtml", captionHtml);
 				//
 				final Map<String, String> captionStyle = new LinkedHashMap<>(createStyleMap());
 				//
@@ -1719,7 +1719,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				final String captionStyleKey = "captionStyle";
 				//
-				map.put(captionStyleKey, captionStyle);
+				Util.put(map, captionStyleKey, captionStyle);
 				//
 				final int borderWidth = 1;
 				//
@@ -1739,7 +1739,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				final String captionOuterStyle = "captionOuterStyle";
 				//
-				map.put(captionOuterStyle, Map.of("border", String.format("solid %1$spx", borderWidth)));
+				Util.put(map, captionOuterStyle, Map.of("border", String.format("solid %1$spx", borderWidth)));
 				//
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
 						StandardCharsets.UTF_8, false);
@@ -1758,7 +1758,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // try
 					//
-				map.put("descriptionHtml", Util.getText(tfDescription));
+				Util.put(map, "descriptionHtml", Util.getText(tfDescription));
 				//
 				// TODO
 				//
@@ -1784,7 +1784,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				final String descriptionStyleKey = "descriptionStyle";
 				//
-				map.put(descriptionStyleKey, descriptionStyle);
+				Util.put(map, descriptionStyleKey, descriptionStyle);
 				//
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
 						StandardCharsets.UTF_8, false);
@@ -2254,10 +2254,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			try {
 				//
-				final Map<Object, Object> map = new LinkedHashMap<>(
-						Collections.singletonMap("captionStyle", createStyleMap()));
+				final Map<Object, Object> map = new LinkedHashMap<>(Map.of("captionStyle", createStyleMap()));
 				//
-				map.put("captionHtml", Util.getText(taHtml));
+				Util.put(map, "captionHtml", Util.getText(taHtml));
 				//
 				final String html = generatePdfHtml(freeMarkerConfiguration, map);
 				//
@@ -3040,25 +3039,25 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static Map<Integer, String> getDefaultSpeechSpeedMap() {
 		//
-		final Map<Integer, String> map = new LinkedHashMap<>(Collections.singletonMap(0, "100% Speed"));
+		final Map<Integer, String> map = new LinkedHashMap<>(Map.of(Integer.valueOf(0), "100% Speed"));
 		//
-		map.put(-1, "90% Speed");
+		Util.put(map, Integer.valueOf(-1), "90% Speed");
 		//
-		map.put(-2, "80% Speed");
+		Util.put(map, Integer.valueOf(-2), "80% Speed");
 		//
-		map.put(-3, "70% Speed");
+		Util.put(map, Integer.valueOf(-3), "70% Speed");
 		//
-		map.put(-4, "60% Speed");
+		Util.put(map, Integer.valueOf(-4), "60% Speed");
 		//
-		map.put(-5, "50% Speed");
+		Util.put(map, Integer.valueOf(-5), "50% Speed");
 		//
-		map.put(-6, "40% Speed");
+		Util.put(map, Integer.valueOf(-6), "40% Speed");
 		//
-		map.put(-7, "30% Speed");
+		Util.put(map, Integer.valueOf(-7), "30% Speed");
 		//
-		map.put(-8, "20% Speed");
+		Util.put(map, Integer.valueOf(-8), "20% Speed");
 		//
-		map.put(-9, "10% Speed");
+		Util.put(map, Integer.valueOf(-9), "10% Speed");
 		//
 		return map;
 		//

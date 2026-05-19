@@ -167,7 +167,7 @@ public class UrlAnnotationResource implements Resource {
 				//
 			try {
 				//
-				return Collections.singletonMap(StringUtils.joinWith(".", getName(getDeclaringClass(f)), getName(f)),
+				return Map.of(StringUtils.joinWith(".", getName(getDeclaringClass(f)), getName(f)),
 						Narcissus.invokeMethod(a, m));
 				//
 			} catch (final IllegalArgumentException e) {

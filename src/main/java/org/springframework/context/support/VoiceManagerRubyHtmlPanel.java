@@ -339,17 +339,25 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 			if (Util.isStatic(f)) {
 				//
-				return Collections.singletonMap(name, Narcissus.getStaticField(f));
+				return Map.of(name, Narcissus.getStaticField(f));
 				//
 			} else {
 				//
-				return Collections.singletonMap(name, Narcissus.getField(instance, f));
+				final Map<String, Object> map = new LinkedHashMap<>();
+				//
+				Util.put(map, name, Narcissus.getField(instance, f));
+				//
+				return map;
 				//
 			} // if
 				//
 		} // if
 			//
-		return Collections.singletonMap(name, name);
+		final Map<String, Object> map = new LinkedHashMap<>();
+		//
+		Util.put(map, name, name);
+		//
+		return map;
 		//
 	}
 

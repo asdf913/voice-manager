@@ -561,7 +561,11 @@ class VoiceManagerTest {
 		//
 		if (ih != null) {
 			//
-			ih.beansOfType = Collections.singletonMap(null, null);
+			final Map<Object, Object> map = new LinkedHashMap<>();
+			//
+			Util.put(map, null, null);
+			//
+			ih.beansOfType = map;
 			//
 		} // if
 			//
@@ -1592,9 +1596,9 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getTitledComponentMap(null, null));
 		//
-		final Map<String, Component> map = Reflection.newProxy(Map.class, ih);
+		final Map<String, Component> map1 = Reflection.newProxy(Map.class, ih);
 		//
-		Assertions.assertNull(getTitledComponentMap(map, null));
+		Assertions.assertNull(getTitledComponentMap(map1, null));
 		//
 		if (ih != null) {
 			//
@@ -1604,7 +1608,7 @@ class VoiceManagerTest {
 			//
 		final Map<String, Component> emptyMap = Map.of();
 		//
-		Assertions.assertEquals(emptyMap, getTitledComponentMap(map, null));
+		Assertions.assertEquals(emptyMap, getTitledComponentMap(map1, null));
 		//
 		if (ih != null) {
 			//
@@ -1612,7 +1616,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(emptyMap, getTitledComponentMap(map, null));
+		Assertions.assertEquals(emptyMap, getTitledComponentMap(map1, null));
 		//
 		final Object object = new TitledComponent(null);
 		//
@@ -1622,7 +1626,11 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Collections.singletonMap(null, object), getTitledComponentMap(map, null));
+		final Map<?, Object> map2 = new LinkedHashMap<>();
+		//
+		Util.put(map2, null, object);
+		//
+		Assertions.assertEquals(map2, getTitledComponentMap(map1, null));
 		//
 		final String a = "a";
 		//
@@ -1638,9 +1646,9 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Map.of(a, oa, b, ob), getTitledComponentMap(map, a, b));
+		Assertions.assertEquals(Map.of(a, oa, b, ob), getTitledComponentMap(map1, a, b));
 		//
-		Assertions.assertEquals(Map.of(b, ob, a, oa), getTitledComponentMap(map, b, a));
+		Assertions.assertEquals(Map.of(b, ob, a, oa), getTitledComponentMap(map1, b, a));
 		//
 	}
 

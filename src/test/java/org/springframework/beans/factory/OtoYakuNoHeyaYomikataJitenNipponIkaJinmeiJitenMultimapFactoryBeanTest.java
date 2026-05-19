@@ -485,16 +485,14 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(toMultimap((Iterable<?>) null));
 		//
-		Assertions.assertEquals("{=[]}", Util.toString(toMultimap(Collections.singletonMap(EMPTY, EMPTY))));
+		Assertions.assertEquals("{=[]}", Util.toString(toMultimap(Map.of(EMPTY, EMPTY))));
 		//
-		Assertions.assertEquals("{=[]}",
-				Util.toString(toMultimap(Collections.singletonMap(EMPTY, Collections.singleton(EMPTY)))));
-		//
-		Assertions.assertThrows(IllegalStateException.class,
-				() -> toMultimap(Collections.singletonMap(EMPTY, Collections.singleton(Map.of()))));
+		Assertions.assertEquals("{=[]}", Util.toString(toMultimap(Map.of(EMPTY, Collections.singleton(EMPTY)))));
 		//
 		Assertions.assertThrows(IllegalStateException.class,
-				() -> toMultimap(Collections.singletonMap(EMPTY, Map.of())));
+				() -> toMultimap(Map.of(EMPTY, Collections.singleton(Map.of()))));
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> toMultimap(Map.of(EMPTY, Map.of())));
 		//
 		if (ih != null) {
 			//
@@ -504,11 +502,10 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			//
 		Assertions.assertNull(toMultimap(Reflection.newProxy(Map.class, ih)));
 		//
-		Assertions.assertEquals("{=[]}",
-				Util.toString(toMultimap(Collections.singleton(Collections.singletonMap(EMPTY, EMPTY)))));
+		Assertions.assertEquals("{=[]}", Util.toString(toMultimap(Collections.singleton(Map.of(EMPTY, EMPTY)))));
 		//
-		Assertions.assertEquals("{=[]}", Util.toString(
-				toMultimap(Collections.singleton(Collections.singletonMap(EMPTY, Collections.singleton(EMPTY))))));
+		Assertions.assertEquals("{=[]}",
+				Util.toString(toMultimap(Collections.singleton(Map.of(EMPTY, Collections.singleton(EMPTY))))));
 		//
 		if (ih != null) {
 			//

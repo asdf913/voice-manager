@@ -1707,15 +1707,18 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		if (ih != null) {
 			//
-			Util.put(
-					ih.evaluate = new LinkedHashMap<>(Collections.singletonMap("typeof get_pronounce_url", "function")),
+			Util.put(ih.evaluate = new LinkedHashMap<>(Map.of("typeof get_pronounce_url", "function")),
 					"get_pronounce_url(\"null\",\"mp3\")", null);
 			//
 		} // if
 			//
 		final Iterable<ElementHandle> ehs = Collections.singleton(elementHandle);
 		//
-		Assertions.assertEquals(Collections.singletonMap(null, null), getVoiceUrlImages(ehs, page, null));
+		final Map<?, ?> map = new LinkedHashMap<>();
+		//
+		Util.put(map, null, null);
+		//
+		Assertions.assertEquals(map, getVoiceUrlImages(ehs, page, null));
 		//
 		if (ih != null) {
 			//
@@ -1770,7 +1773,9 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		final Method accept = Util.getDeclaredMethod(Consumer.class, "accept", Object.class);
 		//
-		final Map<String, Object> voiceUrlImages = new LinkedHashMap<>(Collections.singletonMap(EMPTY, null));
+		final Map<String, Object> voiceUrlImages = new LinkedHashMap<>();
+		//
+		Util.put(voiceUrlImages, EMPTY, null);
 		//
 		setDefaultPropertyInclusion(setVisibility(objectMapper, PropertyAccessor.ALL, Visibility.ANY),
 				Include.NON_NULL);
@@ -2284,8 +2289,11 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertNull(getTextAndImageByXY(null, iterable, 0, null));
 		//
-		FieldUtils.writeDeclaredField(tai, "voiceUrlImages", Collections.singletonMap(
-				"https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/female/011/1184_1_1_female.mp3", null), true);
+		final Map<String, ?> map = new LinkedHashMap<>();
+		//
+		Util.put(map, "https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/female/011/1184_1_1_female.mp3", null);
+		//
+		FieldUtils.writeDeclaredField(tai, "voiceUrlImages", map, true);
 		//
 		final Pattern patern = Pattern.compile("^\\d+_(\\d+)_\\d+_(\\w+)\\.\\w+$");
 		//
@@ -2295,8 +2303,11 @@ class VoiceManagerOjadAccentPanelTest {
 								setVisibility(objectMapper, PropertyAccessor.ALL, Visibility.ANY), Include.NON_NULL),
 								getTextAndImageByXY(patern, iterable, 0, Integer.toString(1))));
 		//
-		FieldUtils.writeDeclaredField(tai, "voiceUrlImages", Collections.singletonMap(
-				"https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/male/011/1184_1_1_male.mp3", null), true);
+		Util.clear(map);
+		//
+		Util.put(map, "https://www.gavo.t.u-tokyo.ac.jp/ojad/sound4/mp3/male/011/1184_1_1_male.mp3", null);
+		//
+		FieldUtils.writeDeclaredField(tai, "voiceUrlImages", map, true);
 		//
 		Assertions.assertEquals("{\"voiceUrlImages\":{}}", ObjectMapperUtil.writeValueAsString(objectMapper,
 				getTextAndImageByXY(patern, iterable, 1, Integer.toString(1))));

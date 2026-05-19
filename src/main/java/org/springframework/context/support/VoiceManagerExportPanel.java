@@ -2440,7 +2440,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				x -> ConfigurationUtil.setTemplateLoader(x, new ClassTemplateLoader(VoiceManager.class, "/")));
 		//
 		final Map<String, Object> map = new LinkedHashMap<>(
-				Collections.singletonMap("statics", getIfNull(ObjectMap.getObject(objectMap, TemplateHashModel.class),
+				Map.of("statics", getIfNull(ObjectMap.getObject(objectMap, TemplateHashModel.class),
 						() -> new BeansWrapper(version).getStaticModels())));
 		//
 		final Collection<Entry<Object, Object>> entrySet = Util.entrySet(parameters);
@@ -3169,7 +3169,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 					submit(es = getIfNull(es, () -> Executors.newFixedThreadPool(1)),
 							createExportTask(objectMap, size, Integer.valueOf(++coutner), numberOfOrdinalPositionDigit,
-									Collections.singletonMap(Util.getKey(en),
+									Map.of(Util.getKey(en),
 											"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)"),
 									voiceFileNames = getIfNull(voiceFileNames, HashBasedTable::create)));
 					//
@@ -3332,8 +3332,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 			submit(es = getIfNull(es, () -> Executors.newFixedThreadPool(1)),
 					createExportTask(objectMap, size, Integer.valueOf(++coutner), numberOfOrdinalPositionDigit,
-							Collections.singletonMap(Util.toString(folder),
-									"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)"),
+							Map.of(Util.toString(folder), "(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)"),
 							voiceFileNames = getIfNull(voiceFileNames, HashBasedTable::create)));
 			//
 		} // for

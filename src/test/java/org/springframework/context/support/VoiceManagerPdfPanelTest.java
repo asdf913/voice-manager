@@ -282,7 +282,7 @@ class VoiceManagerPdfPanelTest {
 			//
 		instance.setSpeechSpeedMap("{\"1\":2}");
 		//
-		Assertions.assertEquals(Collections.singletonMap(Integer.valueOf(1), "2"),
+		Assertions.assertEquals(Map.of(Integer.valueOf(1), "2"),
 				Narcissus.getField(instance, Util.getDeclaredField(VoiceManagerPdfPanel.class, "speechSpeedMap")));
 		//
 	}
@@ -407,8 +407,7 @@ class VoiceManagerPdfPanelTest {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> instance
 				.setFontSizeAndUnitMap(ObjectMapperUtil.writeValueAsString(objectMapper, Integer.valueOf(1))));
 		//
-		instance.setFontSizeAndUnitMap(
-				ObjectMapperUtil.writeValueAsString(objectMapper, Collections.singletonMap("1", "1px")));
+		instance.setFontSizeAndUnitMap(ObjectMapperUtil.writeValueAsString(objectMapper, Map.of("1", "1px")));
 		//
 		final Field field = Util.getDeclaredField(VoiceManagerPdfPanel.class, "fontSizeAndUnitMap");
 		//
@@ -418,8 +417,7 @@ class VoiceManagerPdfPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Collections.singletonMap(Integer.valueOf(1), "1px"),
-				Narcissus.getField(instance, field));
+		Assertions.assertEquals(Map.of(Integer.valueOf(1), "1px"), Narcissus.getField(instance, field));
 		//
 	}
 
@@ -703,14 +701,18 @@ class VoiceManagerPdfPanelTest {
 					//
 				})), Objects::toString), x -> !Objects.equals("null", x)));
 		//
-		Map<Object, Object> map = new LinkedHashMap<>(Map.of("k1", "v1", "k2", "v2"));
+		Map<Object, Object> map1 = new LinkedHashMap<>(Map.of("k1", "v1", "k2", "v2"));
 		//
-		System.out.println(generatePdfHtml(configuration, Map.of("captionStyle", map)));
+		System.out.println(generatePdfHtml(configuration, Map.of("captionStyle", map1)));
 		//
-		System.out.println(generatePdfHtml(configuration, Map.of("descriptionStyle", map)));
+		System.out.println(generatePdfHtml(configuration, Map.of("descriptionStyle", map1)));
+		//
+		final Map<?, ?> map2 = new LinkedHashMap<>();
+		//
+		Util.put(map2, null, null);
 		//
 		final List<Object> values = Arrays.asList(null, "", Boolean.TRUE, Integer.valueOf(0),
-				Collections.singleton(null), Collections.singletonMap(null, null), new Date(0));
+				Collections.singleton(null), map2, new Date(0));
 		//
 		String name = null;
 		//
@@ -724,15 +726,15 @@ class VoiceManagerPdfPanelTest {
 				//
 				System.out.println(Util.getClass(value = IterableUtils.get(values, j)));
 				//
-				if ((map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) != null) {
+				if ((map1 = ObjectUtils.getIfNull(map1, LinkedHashMap::new)) != null) {
 					//
-					map.clear();
+					map1.clear();
 					//
 				} // if
 					//
-				Util.put(map, name, value);
+				Util.put(map1, name, value);
 				//
-				System.out.println(generatePdfHtml(configuration, map));
+				System.out.println(generatePdfHtml(configuration, map1));
 				//
 			} // for
 				//
@@ -1312,16 +1314,16 @@ class VoiceManagerPdfPanelTest {
 		//
 		final String key = "org.springframework.context.support.VoiceManagerPdfPanel.fontName";
 		//
-		Assertions.assertSame(fontName, getFontName(key, null, Collections.singletonMap(key, Util.name(fontName))));
+		Assertions.assertSame(fontName, getFontName(key, null, Map.of(key, Util.name(fontName))));
 		//
 		Assertions.assertSame(fontName,
-				getFontName(key, null, Collections.singletonMap(key, fontName != null ? fontName.getName() : null)));
+				getFontName(key, null, Map.of(key, fontName != null ? fontName.getName() : null)));
 		//
-		Assertions.assertSame(fontName, getFontName(key, null, Collections.singletonMap(key,
-				fontName != null ? StringUtils.substring(fontName.getName(), 0, 7) : null)));
+		Assertions.assertSame(fontName, getFontName(key, null,
+				Map.of(key, fontName != null ? StringUtils.substring(fontName.getName(), 0, 7) : null)));
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> getFontName(key, null, Collections.singletonMap(key,
-				fontName != null ? StringUtils.substring(fontName.getName(), 0, 6) : null)));
+		Assertions.assertThrows(IllegalStateException.class, () -> getFontName(key, null,
+				Map.of(key, fontName != null ? StringUtils.substring(fontName.getName(), 0, 6) : null)));
 		//
 		if (ih != null && (ih.properties = ObjectUtils.getIfNull(ih.properties, LinkedHashMap::new)) != null) {
 			//

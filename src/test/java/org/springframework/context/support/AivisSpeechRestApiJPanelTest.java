@@ -33,6 +33,7 @@ import java.util.Base64.Decoder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -1577,7 +1578,7 @@ class AivisSpeechRestApiJPanelTest {
 		} // if
 			//
 		Assertions.assertEquals("{\"portrait\":\"\"}", ObjectMapperUtil.writeValueAsString(objectMapper,
-				invoke(METHOD_SPEAKER_INFO_MAP, null, Collections.singletonMap("portrait", EMPTY))));
+				invoke(METHOD_SPEAKER_INFO_MAP, null, Map.of("portrait", EMPTY))));
 		//
 		Assertions.assertEquals("{\"styleInfos\":[{}]}",
 				ObjectMapperUtil.writeValueAsString(objectMapper, invoke(METHOD_SPEAKER_INFO_MAP, null,
@@ -2317,13 +2318,15 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testSet() throws IllegalAccessException, InvocationTargetException {
 		//
-		Assertions.assertNull(
-				invoke(METHOD_SET, null, new MigLayout(), Collections.singletonMap("layoutConstraints", null)));
+		final Map<String, ?> map = new LinkedHashMap<>();
 		//
-		Assertions.assertNull(
-				invoke(METHOD_SET, null, new MigLayout(), Collections.singletonMap("layoutConstraints", "")));
+		Util.put(map, "layoutConstraints", null);
 		//
-		Assertions.assertNull(invoke(METHOD_SET, null, new MigLayout(), Collections.singletonMap("constraintMap", "")));
+		Assertions.assertNull(invoke(METHOD_SET, null, new MigLayout(), map));
+		//
+		Assertions.assertNull(invoke(METHOD_SET, null, new MigLayout(), Map.of("layoutConstraints", "")));
+		//
+		Assertions.assertNull(invoke(METHOD_SET, null, new MigLayout(), Map.of("constraintMap", "")));
 		//
 	}
 
@@ -2562,7 +2565,11 @@ class AivisSpeechRestApiJPanelTest {
 	@Test
 	void testCreateJPanel() throws Throwable {
 		//
-		Assertions.assertNotNull(invoke(METHOD_CREATE_JPANEL, null, null, Collections.singletonMap(null, null)));
+		final Map<?, ?> map = new LinkedHashMap<>();
+		//
+		Util.put(map, null, null);
+		//
+		Assertions.assertNotNull(invoke(METHOD_CREATE_JPANEL, null, null, map));
 		//
 	}
 

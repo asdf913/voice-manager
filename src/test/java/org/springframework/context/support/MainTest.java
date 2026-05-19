@@ -245,7 +245,11 @@ class MainTest {
 		//
 		if (ih != null) {
 			//
-			ih.beansOfType = new LinkedHashMap<>(Collections.singletonMap(null, null));
+			final Map<Object, Object> map = new LinkedHashMap<>();
+			//
+			Util.put(map, null, null);
+			//
+			ih.beansOfType = map;
 			//
 		} // if
 			//

@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -148,7 +149,11 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(getObject(null, Collections.singletonList(null), null));
 		//
-		Assertions.assertNull(getObject(null, Collections.singletonList(Collections.singletonMap("code", null)), null));
+		final Map<Object, ?> map = new LinkedHashMap<>();
+		//
+		Util.put(map, "code", null);
+		//
+		Assertions.assertNull(getObject(null, Collections.singletonList(map), null));
 		//
 		Assertions
 				.assertNull(getObject(null,
@@ -184,9 +189,17 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(createMap(Collections.singletonList(null)));
 		//
-		Assertions.assertNull(createMap(Collections.singletonList(Collections.singletonMap(null, null))));
+		final Map<Object, Object> map = new LinkedHashMap<>();
 		//
-		Assertions.assertNull(createMap(Collections.singletonList(Collections.singletonMap("name", null))));
+		Util.put(map, null, null);
+		//
+		Assertions.assertNull(createMap(Collections.singletonList(map)));
+		//
+		map.clear();
+		//
+		Util.put(map, "name", null);
+		//
+		Assertions.assertNull(createMap(Collections.singletonList(map)));
 		//
 		Assertions.assertNull(createMap(Collections.singletonList(
 				ObjectMapperUtil.readValue(objectMapper, "{\"name\":null,\"ruby\":null}", Object.class))));
@@ -194,7 +207,11 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		Assertions.assertNull(createMap(Collections
 				.singletonList(ObjectMapperUtil.readValue(objectMapper, "{\"name\":1,\"ruby\":null}", Object.class))));
 		//
-		Assertions.assertEquals(Collections.singletonMap("一", null), createMap(Collections.singletonList(
+		map.clear();
+		//
+		Util.put(map, "一", null);
+		//
+		Assertions.assertEquals(map, createMap(Collections.singletonList(
 				ObjectMapperUtil.readValue(objectMapper, "{\"name\":\"一\",\"ruby\":null}", Object.class))));
 		//
 	}
@@ -266,11 +283,17 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		final Entry<?, ?> entry = Reflection.newProxy(Entry.class, ih);
 		//
-		Assertions.assertDoesNotThrow(
-				() -> checkIfKeyExistsAndDifferenceValue(Collections.singletonMap(null, null), entry));
+		final Map<?, Object> map = new LinkedHashMap<>();
 		//
-		Assertions.assertThrows(IllegalStateException.class,
-				() -> checkIfKeyExistsAndDifferenceValue(Collections.singletonMap(null, EMPTY), entry));
+		Util.put(map, null, null);
+		//
+		Assertions.assertDoesNotThrow(() -> checkIfKeyExistsAndDifferenceValue(map, entry));
+		//
+		map.clear();
+		//
+		Util.put(map, null, EMPTY);
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> checkIfKeyExistsAndDifferenceValue(map, entry));
 		//
 	}
 
@@ -286,11 +309,15 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testPerform() {
 		//
-		Assertions.assertDoesNotThrow(() -> perform(null, Collections.singletonMap(null, null)));
+		final Map<?, Object> map1 = new LinkedHashMap<>();
 		//
-		final Map<?, ?> map = Reflection.newProxy(Map.class, ih);
+		Util.put(map1, null, null);
 		//
-		Assertions.assertDoesNotThrow(() -> perform(null, map));
+		Assertions.assertDoesNotThrow(() -> perform(null, map1));
+		//
+		final Map<?, ?> map2 = Reflection.newProxy(Map.class, ih);
+		//
+		Assertions.assertDoesNotThrow(() -> perform(null, map2));
 		//
 		if (ih != null) {
 			//
@@ -298,7 +325,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> perform(null, map));
+		Assertions.assertDoesNotThrow(() -> perform(null, map2));
 		//
 		if (ih != null) {
 			//
@@ -306,7 +333,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> perform(null, map));
+		Assertions.assertDoesNotThrow(() -> perform(null, map2));
 		//
 	}
 

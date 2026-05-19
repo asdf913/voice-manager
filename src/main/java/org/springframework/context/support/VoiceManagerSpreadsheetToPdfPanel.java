@@ -1679,8 +1679,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		} // if
 			//
-		final Map<String, String> map = new LinkedHashMap<>(
-				Collections.singletonMap("org.apache.poi.hssf.usermodel.HSSFSheet", "_book"));
+		final Map<String, String> map = new LinkedHashMap<>(Map.of("org.apache.poi.hssf.usermodel.HSSFSheet", "_book"));
 		//
 		Util.putAll(map,
 				Util.collect(

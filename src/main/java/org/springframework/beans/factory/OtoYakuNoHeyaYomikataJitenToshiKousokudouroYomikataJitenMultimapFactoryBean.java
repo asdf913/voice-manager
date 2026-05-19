@@ -291,7 +291,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		} // for
 			//
 		final Map<Entry<String, String>, Entry<String, String>> map = new LinkedHashMap<>(
-				Collections.singletonMap(Pair.of("川向町", "つづきくかわむこうちょう"), Pair.of("川向町", "かわむこうちょう")));
+				Map.of(Pair.of("川向町", "つづきくかわむこうちょう"), Pair.of("川向町", "かわむこうちょう")));
 		//
 		Util.put(map, Pair.of("生麦", "つるみくなまむぎ"), Pair.of("生麦", "なまむぎ"));
 		//
@@ -436,9 +436,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 				//
 				if (map == null) {
 					//
-					Util.put(
-							map = new LinkedHashMap<>(
-									Collections.singletonMap(Pair.of("八幡東区枝光", "えだみつ"), Pair.of("枝光", "えだみつ"))),
+					Util.put(map = new LinkedHashMap<>(Map.of(Pair.of("八幡東区枝光", "えだみつ"), Pair.of("枝光", "えだみつ"))),
 							Pair.of("台東区北上野", "たいとうくうえの"), Pair.of("台東区上野", "たいとうくうえの"));
 					//
 				} // if

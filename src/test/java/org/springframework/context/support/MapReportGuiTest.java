@@ -421,11 +421,15 @@ class MapReportGuiTest {
 		//
 		Assertions.assertTrue(isAllAttributesMatched(null, null));
 		//
-		Assertions.assertTrue(isAllAttributesMatched(Collections.singletonMap(null, null), null));
+		final Map<?, Object> map1 = new LinkedHashMap<>();
 		//
-		final Map<?, ?> map = Reflection.newProxy(Map.class, ih);
+		Util.put(map1, null, null);
 		//
-		Assertions.assertTrue(isAllAttributesMatched(map, null));
+		Assertions.assertTrue(isAllAttributesMatched(map1, null));
+		//
+		final Map<?, ?> map2 = Reflection.newProxy(Map.class, ih);
+		//
+		Assertions.assertTrue(isAllAttributesMatched(map2, null));
 		//
 		if (ih != null) {
 			//
@@ -433,7 +437,7 @@ class MapReportGuiTest {
 			//
 		} // if
 			//
-		Assertions.assertTrue(isAllAttributesMatched(map, null));
+		Assertions.assertTrue(isAllAttributesMatched(map2, null));
 		//
 		if (ih != null) {
 			//
@@ -441,7 +445,7 @@ class MapReportGuiTest {
 			//
 		} // if
 			//
-		Assertions.assertTrue(isAllAttributesMatched(map, null));
+		Assertions.assertTrue(isAllAttributesMatched(map2, null));
 		//
 		final AttributeAccessor aa = Reflection.newProxy(AttributeAccessor.class, ih);
 		//
@@ -451,7 +455,11 @@ class MapReportGuiTest {
 			//
 		} // if
 			//
-		Assertions.assertFalse(isAllAttributesMatched(Collections.singletonMap(null, null), aa));
+		final Map<?, ?> map = new LinkedHashMap<>();
+		//
+		Util.put(map, null, null);
+		//
+		Assertions.assertFalse(isAllAttributesMatched(map, aa));
 		//
 		if (ih != null) {
 			//
@@ -459,9 +467,13 @@ class MapReportGuiTest {
 			//
 		} // if
 			//
-		Assertions.assertTrue(isAllAttributesMatched(Collections.singletonMap(null, null), aa));
+		Assertions.assertTrue(isAllAttributesMatched(map, aa));
 		//
-		Assertions.assertFalse(isAllAttributesMatched(Collections.singletonMap(null, EMPTY), aa));
+		Util.clear(map1);
+		//
+		Util.put(map1, null, EMPTY);
+		//
+		Assertions.assertFalse(isAllAttributesMatched(map1, aa));
 		//
 	}
 
@@ -578,8 +590,11 @@ class MapReportGuiTest {
 		//
 		Assertions.assertNull(createMultimap(Collections.singleton(Reflection.newProxy(Map.class, ih))));
 		//
-		Assertions.assertEquals("{null=[null]}",
-				Util.toString(createMultimap(Collections.singleton(Collections.singletonMap(null, null)))));
+		final Map<?, ?> map = new LinkedHashMap<>();
+		//
+		Util.put(map, null, null);
+		//
+		Assertions.assertEquals("{null=[null]}", Util.toString(createMultimap(Collections.singleton(map))));
 		//
 	}
 

@@ -219,8 +219,7 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 			//
 			instance.setTitle("音訳の部屋読み方辞典");
 			//
-			instance.setUrlMap(Collections.singletonMap(
-					"http://www.gsi.go.jp/KIDS/map-sign-tizukigou-h14kigou-itiran.htm",
+			instance.setUrlMap(Map.of("http://www.gsi.go.jp/KIDS/map-sign-tizukigou-h14kigou-itiran.htm",
 					"https://web.archive.org/web/20211126172558/http://www.gsi.go.jp/KIDS/map-sign-tizukigou-h14kigou-itiran.htm"));
 			//
 		} // if

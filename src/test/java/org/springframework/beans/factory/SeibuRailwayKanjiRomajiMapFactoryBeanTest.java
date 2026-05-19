@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -118,9 +119,13 @@ class SeibuRailwayKanjiRomajiMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Collections.singletonMap(null, null), createMap(Collections.singletonList(element1)));
+		final Map<?, ?> map = new LinkedHashMap<>();
 		//
-		Assertions.assertEquals(Collections.singletonMap(null, null), createMap(Collections.nCopies(2, element1)));
+		Util.put(map, null, null);
+		//
+		Assertions.assertEquals(map, createMap(Collections.singletonList(element1)));
+		//
+		Assertions.assertEquals(map, createMap(Collections.nCopies(2, element1)));
 		//
 		final MH mh = new MH();
 		//

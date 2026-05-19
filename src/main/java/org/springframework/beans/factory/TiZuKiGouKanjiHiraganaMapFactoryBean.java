@@ -204,20 +204,30 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 			//
 			if (StringUtils.contains(kanji, '（')) {
 				//
-				return Collections.singletonMap(StringUtils.substringAfter(kanji, '（'),
+				final Map<String, String> map = new LinkedHashMap<>();
+				//
+				map.put(StringUtils.substringAfter(kanji, '（'),
 						getStringByUnicodeBlock(ElementUtil.text(e), UnicodeBlock.HIRAGANA));
+				//
+				return map;
 				//
 			} else if (StringUtils.contains(kanji, '・')) {
 				//
-				return Collections.singletonMap(
-						getStringByUnicodeBlock(StringUtils.substringAfter(kanji, '・'),
-								UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+				final Map<String, String> map = new LinkedHashMap<>();
+				//
+				map.put(getStringByUnicodeBlock(StringUtils.substringAfter(kanji, '・'),
+						UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 						getStringByUnicodeBlock(ElementUtil.text(e), UnicodeBlock.HIRAGANA));
+				//
+				return map;
 				//
 			} else if (allMatch(kanji, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
 				//
-				return Collections.singletonMap(kanji,
-						getStringByUnicodeBlock(ElementUtil.text(e), UnicodeBlock.HIRAGANA));
+				final Map<String, String> map = new LinkedHashMap<>();
+				//
+				map.put(kanji, getStringByUnicodeBlock(ElementUtil.text(e), UnicodeBlock.HIRAGANA));
+				//
+				return map;
 				//
 			} else {
 				//
@@ -229,19 +239,31 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 				//
 				if (Objects.equals(string, "車線")) {
 					//
-					return Collections.singletonMap(string, hiragana);
+					final Map<String, String> map = new LinkedHashMap<>();
+					//
+					map.put(string, hiragana);
+					//
+					return map;
 					//
 				} else if (StringsUtil.endsWith(strings, string, "以外")) {
 					//
-					return Collections.singletonMap("以外", hiragana);
+					final Map<String, String> map = new LinkedHashMap<>();
+					//
+					map.put("以外", hiragana);
+					//
+					return map;
 					//
 				} else if (StringsUtil.endsWith(strings, string, "支庁界")) {
 					//
-					return Collections.singletonMap("支庁界", hiragana);
+					final Map<String, String> map = new LinkedHashMap<>();
+					//
+					map.put("支庁界", hiragana);
+					//
+					return map;
 					//
 				} else if (StringsUtil.endsWith(strings, string, "科樹林")) {
 					//
-					return Collections.singletonMap(kanji, getStringByUnicodeBlock(kanji, UnicodeBlock.KATAKANA)
+					return Map.of(kanji, getStringByUnicodeBlock(kanji, UnicodeBlock.KATAKANA)
 							+ getStringByUnicodeBlock(ElementUtil.text(e), UnicodeBlock.HIRAGANA));
 					//
 				} // if
@@ -259,7 +281,7 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 		//
 		if (allMatch(kanji, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
 			//
-			return Collections.singletonMap(kanji, hiragana);
+			return Map.of(kanji, hiragana);
 			//
 		} else if (StringUtils.contains(kanji, '・')) {
 			//

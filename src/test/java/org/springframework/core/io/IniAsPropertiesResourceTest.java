@@ -464,9 +464,15 @@ class IniAsPropertiesResourceTest {
 				//
 		} // if
 			//
-		Assertions.assertNull(getSection(true, Collections.singletonMap(null, null), null, null, null));
+		final Map<Object, ?> map = new LinkedHashMap<>();
 		//
-		final Map<?, ?> map = Collections.singletonMap("profile", null);
+		map.put(null, null);
+		//
+		Assertions.assertNull(getSection(true, map, null, null, null));
+		//
+		map.clear();
+		//
+		map.put("profile", null);
 		//
 		Assertions.assertEquals("[null]", toString(getSection(true, map, null, null, null)));
 		//

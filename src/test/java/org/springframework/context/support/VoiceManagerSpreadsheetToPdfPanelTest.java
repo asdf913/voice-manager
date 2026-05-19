@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -860,7 +861,11 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Collections.singletonMap(Integer.valueOf(ZERO), null), toMap(row, null));
+		final Map<Object, ?> map = new LinkedHashMap<>();
+		//
+		Util.put(map, Integer.valueOf(ZERO), null);
+		//
+		Assertions.assertEquals(map, toMap(row, null));
 		//
 	}
 
@@ -963,7 +968,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		} // if
 			//
 		Assertions.assertEquals("{}", ObjectMapperUtil.writeValueAsString(objectMapper,
-				toData(Collections.singletonMap(Integer.valueOf(0), "text"), row, null)));
+				toData(Map.of(Integer.valueOf(0), "text"), row, null)));
 		//
 		if (ih != null) {
 			//
@@ -974,7 +979,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		} // if
 			//
 		Assertions.assertEquals("{\"text\":\"0\"}", ObjectMapperUtil.writeValueAsString(objectMapper,
-				toData(Collections.singletonMap(Integer.valueOf(0), "text"), row, null)));
+				toData(Map.of(Integer.valueOf(0), "text"), row, null)));
 		//
 	}
 

@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -46,7 +47,11 @@ public class FuriganaKanjikanaFailableFunction implements FailableFunction<Strin
 			//
 		try (final OutputStream os = getOutputStream(httpURLConnection)) {
 			//
-			write(os, ObjectMapperUtil.writeValueAsBytes(objectMapper, Collections.singletonMap("input", string)));
+			final Map<String, String> map = new LinkedHashMap<>();
+			//
+			map.put("input", string);
+			//
+			write(os, ObjectMapperUtil.writeValueAsBytes(objectMapper, map));
 			//
 		} // try
 			//

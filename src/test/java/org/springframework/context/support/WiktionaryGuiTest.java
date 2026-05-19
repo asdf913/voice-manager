@@ -951,17 +951,15 @@ class WiktionaryGuiTest {
 				//
 				final Object value = MethodUtils.invokeMethod(a, "value");
 				//
-				Narcissus.invokeMethod(Util.cast(Consumer.class,
-						invoke(METHOD_CREATE_FIELD_CONSUMER, null, instance, Collections.singletonMap(value, "true"))),
+				Narcissus.invokeMethod(
+						Util.cast(Consumer.class,
+								invoke(METHOD_CREATE_FIELD_CONSUMER, null, instance, Map.of(value, "true"))),
 						method, field);
 				//
-				Narcissus
-						.invokeMethod(
-								Util.cast(Consumer.class,
-										invoke(METHOD_CREATE_FIELD_CONSUMER, null, instance,
-												Collections.singletonMap(StringUtils.joinWith(".",
-														Util.getName(Util.getClass(instance)), value), "true"))),
-								method, field);
+				Narcissus.invokeMethod(
+						Util.cast(Consumer.class, invoke(METHOD_CREATE_FIELD_CONSUMER, null, instance, Map
+								.of(StringUtils.joinWith(".", Util.getName(Util.getClass(instance)), value), "true"))),
+						method, field);
 				//
 			} // if
 				//

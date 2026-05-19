@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -785,9 +786,13 @@ class UtilTest {
 	@Test
 	void testExecuteForEachMethod() throws Throwable {
 		//
-		Assertions.assertTrue(executeForEachMethod(Collections.singletonMap(null, null), null, null, null));
+		final Map<String, String> map = new LinkedHashMap<>();
 		//
-		Assertions.assertTrue(executeForEachMethod(Collections.singletonMap(null, null), null, null, (a, b) -> false));
+		Util.put(map, null, null);
+		//
+		Assertions.assertTrue(executeForEachMethod(map, null, null, null));
+		//
+		Assertions.assertTrue(executeForEachMethod(map, null, null, (a, b) -> false));
 		//
 		final List<Instruction> instructions = new ArrayList<>(
 				Arrays.asList(aLoad, getField, aLoad, invokeInterface, null));

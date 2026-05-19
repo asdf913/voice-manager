@@ -15,6 +15,7 @@ import java.sql.Statement;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -357,8 +358,11 @@ class CustomBeanFactoryPostProcessorTest {
 	@Test
 	void testAddPropertySourceToPropertySourcesToLast() throws IllegalAccessException {
 		//
-		Assertions.assertDoesNotThrow(
-				() -> addPropertySourceToPropertySourcesToLast(null, Collections.singletonMap(null, null)));
+		final Map<?, PropertySourcesPlaceholderConfigurer> map = new LinkedHashMap<>();
+		//
+		map.put(null, null);
+		//
+		Assertions.assertDoesNotThrow(() -> addPropertySourceToPropertySourcesToLast(null, map));
 		//
 		final PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
 		//
@@ -373,8 +377,11 @@ class CustomBeanFactoryPostProcessorTest {
 		FieldUtils.writeDeclaredField(propertySourcesPlaceholderConfigurer, "appliedPropertySources",
 				Reflection.newProxy(PropertySources.class, ih), true);
 		//
-		Assertions.assertDoesNotThrow(() -> addPropertySourceToPropertySourcesToLast(null,
-				Collections.singletonMap(null, propertySourcesPlaceholderConfigurer)));
+		map.clear();
+		//
+		map.put(null, propertySourcesPlaceholderConfigurer);
+		//
+		Assertions.assertDoesNotThrow(() -> addPropertySourceToPropertySourcesToLast(null, map));
 		//
 		Assertions.assertDoesNotThrow(
 				() -> addPropertySourceToPropertySourcesToLast(null, Collections.singletonList(null)));
@@ -680,15 +687,21 @@ class CustomBeanFactoryPostProcessorTest {
 	@Test
 	void testPostProcessDatasources() throws IOException {
 		//
-		Assertions.assertDoesNotThrow(() -> postProcessDatasources(Collections.singletonMap(null, null), null, null));
+		final Map<?, DataSource> map = new LinkedHashMap<>();
+		//
+		map.put(null, null);
+		//
+		Assertions.assertDoesNotThrow(() -> postProcessDatasources(map, null, null));
 		//
 		Assertions.assertDoesNotThrow(() -> postProcessDatasources(Reflection.newProxy(Map.class, ih), null, null));
 		//
 		final DataSource dataSource = Reflection.newProxy(DataSource.class, ih);
 		//
-		final Map<?, DataSource> dataSources = Collections.singletonMap(null, dataSource);
+		map.clear();
 		//
-		Assertions.assertDoesNotThrow(() -> postProcessDatasources(dataSources, null, null));
+		map.put(null, dataSource);
+		//
+		Assertions.assertDoesNotThrow(() -> postProcessDatasources(map, null, null));
 		//
 		if (ih != null) {
 			//
@@ -696,7 +709,7 @@ class CustomBeanFactoryPostProcessorTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> postProcessDatasources(dataSources, null, null));
+		Assertions.assertDoesNotThrow(() -> postProcessDatasources(map, null, null));
 		//
 		if (ih != null) {
 			//
@@ -704,7 +717,7 @@ class CustomBeanFactoryPostProcessorTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> postProcessDatasources(dataSources, null, null));
+		Assertions.assertDoesNotThrow(() -> postProcessDatasources(map, null, null));
 		//
 		final Resource resource = Reflection.newProxy(Resource.class, ih);
 		//
@@ -714,7 +727,7 @@ class CustomBeanFactoryPostProcessorTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> postProcessDatasources(dataSources, resource, null));
+		Assertions.assertDoesNotThrow(() -> postProcessDatasources(map, resource, null));
 		//
 		if (ih != null) {
 			//
@@ -722,7 +735,7 @@ class CustomBeanFactoryPostProcessorTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> postProcessDatasources(dataSources, resource, null));
+		Assertions.assertDoesNotThrow(() -> postProcessDatasources(map, resource, null));
 		//
 		if (ih != null) {
 			//
@@ -734,7 +747,7 @@ class CustomBeanFactoryPostProcessorTest {
 				//
 			ih.execute = Boolean.FALSE;
 			//
-			Assertions.assertDoesNotThrow(() -> postProcessDatasources(dataSources, resource, null));
+			Assertions.assertDoesNotThrow(() -> postProcessDatasources(map, resource, null));
 			//
 		} // if
 			//
