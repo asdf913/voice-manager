@@ -207,8 +207,8 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		Assertions.assertNull(createMap(
 				List.of(ObjectMapperUtil.readValue(objectMapper, "{\"name\":null,\"ruby\":null}", Object.class))));
 		//
-		Assertions.assertNull(createMap(Collections
-				.singletonList(ObjectMapperUtil.readValue(objectMapper, "{\"name\":1,\"ruby\":null}", Object.class))));
+		Assertions.assertNull(createMap(
+				List.of(ObjectMapperUtil.readValue(objectMapper, "{\"name\":1,\"ruby\":null}", Object.class))));
 		//
 		map.clear();
 		//

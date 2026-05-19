@@ -238,8 +238,8 @@ public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean extends StringMa
 			} // if
 				//
 			if ((Objects
-					.equals(unicodeBlocks = getUnicodeBlocks(Util.toCharArray(s = ss.get(i))), Collections
-							.singletonList(UnicodeBlock.BASIC_LATIN))
+					.equals(unicodeBlocks = getUnicodeBlocks(Util.toCharArray(s = ss.get(i))), List
+							.of(UnicodeBlock.BASIC_LATIN))
 					|| Objects.equals(unicodeBlocks,
 							Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.COMBINING_DIACRITICAL_MARKS)))
 					&& !Util.matches(Util.matcher(
