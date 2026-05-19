@@ -2040,8 +2040,8 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 					final Multimap<String, Voice> multimap = getVoiceMultimapByListName(voices);
 					//
-					exportHtml(objectMap, multimap, Pair.of(exportHtmlTemplateFile, x -> "%1$s.html".formatted(x)),
-							null, files = ObjectUtils.getIfNull(files, ArrayList::new));
+					exportHtml(objectMap, multimap, Pair.of(exportHtmlTemplateFile, "%1$s.html"::formatted), null,
+							files = ObjectUtils.getIfNull(files, ArrayList::new));
 					//
 					exportWebSpeechSynthesisHtml(exportWebSpeechSynthesisHtml, objectMap, multimap,
 							files = ObjectUtils.getIfNull(files, ArrayList::new));
@@ -2304,7 +2304,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 			exportHtml(objectMap, multimap,
 					//
-					Pair.of(exportWebSpeechSynthesisHtmlTemplateFile, x -> "%1$s.WebSpeechSynthesis.html".formatted(x)),
+					Pair.of(exportWebSpeechSynthesisHtmlTemplateFile, "%1$s.WebSpeechSynthesis.html"::formatted),
 					//
 					exportWebSpeechSynthesisHtmlTemplateProperties
 					//
