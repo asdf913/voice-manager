@@ -6,7 +6,6 @@ import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
-import java.util.Collections;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
