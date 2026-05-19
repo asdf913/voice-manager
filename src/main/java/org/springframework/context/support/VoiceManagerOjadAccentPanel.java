@@ -1768,7 +1768,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static byte[] readAllBytes(final InputStream instance) throws IOException {
+	private static byte[] readAllBytes(@Nullable final InputStream instance) throws IOException {
 		return instance != null ? instance.readAllBytes() : null;
 	}
 
