@@ -736,6 +736,7 @@ class UtilTest {
 								"it.unimi.dsi.fastutil.shorts.ShortLists$Singleton",
 								"it.unimi.dsi.fastutil.shorts.ShortSets$Singleton",
 								"it.unimi.dsi.fastutil.shorts.ShortSortedSets$Singleton",
+								"org.apache.commons.collections4.list.AbstractLinkedListJava21$LinkedSubList",
 								"org.apache.commons.math3.util.Combinations", "org.apache.jena.atlas.lib.tuple.Tuple1",
 								"org.apache.jena.atlas.lib.tuple.Tuple2", "org.apache.jena.atlas.lib.tuple.Tuple3",
 								"org.apache.jena.atlas.lib.tuple.Tuple4", "org.apache.jena.atlas.lib.tuple.Tuple5",
@@ -754,9 +755,21 @@ class UtilTest {
 								"org.h2.jdbc.JdbcSQLTimeoutException",
 								"org.h2.jdbc.JdbcSQLTransactionRollbackException",
 								"org.h2.jdbc.JdbcSQLTransientException",
-								"org.springframework.jdbc.core.AggregatedBatchUpdateException",
 								"org.htmlunit.corejs.javascript.CompoundOperationMap",
-								"org.apache.commons.collections4.list.AbstractLinkedListJava21$LinkedSubList"), name)) {
+								"org.htmlunit.jetty.http.HttpFields$Mutable$Wrapper",
+								"org.htmlunit.jetty.http.HttpFields$MutableHttpFields",
+								"org.htmlunit.jetty.http.MetaData$ConnectRequest",
+								"org.htmlunit.jetty.http.MetaData$Request", "org.htmlunit.jetty.http.MetaData$Response",
+								"org.htmlunit.jetty.http.QuotedCSV$Compliant",
+								"org.htmlunit.jetty.http.QuotedCSV$Etags", "org.htmlunit.jetty.http.QuotedQualityCSV",
+								"org.htmlunit.jetty.http.QuotedQualityCSV$Compliant",
+								"org.htmlunit.jetty.util.AsciiLowerCaseSet",
+								"org.htmlunit.jetty.util.ClassMatcher$ByLocation",
+								"org.htmlunit.jetty.util.ClassMatcher$ByLocationOrModule",
+								"org.htmlunit.jetty.util.resource.MemoryResource",
+								"org.htmlunit.jetty.util.resource.MountedPathResource",
+								"org.htmlunit.jetty.util.resource.PathResource",
+								"org.springframework.jdbc.core.AggregatedBatchUpdateException"), name)) {
 					//
 					final Iterable<?> iterable = Util.cast(Iterable.class, Narcissus.allocateInstance(clz));
 					//
