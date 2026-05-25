@@ -840,7 +840,7 @@ public abstract class Util {
 					"org.htmlunit.corejs.javascript.CompoundOperationMap");
 			//
 			putAll(predicates, x -> Narcissus.getField(instance, Narcissus.findField(x, "_map")) == null,
-					"org.apache.commons.collections.DefaultMapBag", "org.htmlunit.jetty.http.PathMap$PathSet");
+					"org.apache.commons.collections.DefaultMapBag");
 			//
 			for (final Entry<String, FailablePredicate<Class<?>, ReflectiveOperationException>> entry : predicates
 					.entrySet()) {
@@ -1042,7 +1042,8 @@ public abstract class Util {
 			//
 			put(map, "org.apache.poi.openxml4j.opc.PackageRelationshipCollection", "relationshipsByID");
 			//
-			put(map, "org.apache.poi.poifs.filesystem.DirectoryNode", "_entries");
+			putAll(map, "_entries", "org.apache.poi.poifs.filesystem.DirectoryNode",
+					"org.htmlunit.jetty.util.ClassMatcher", "org.htmlunit.jetty.util.ClassMatcher$ByPackage");
 			//
 			put(map, "org.apache.poi.poifs.filesystem.FilteringDirectoryNode", "directory");
 			//
@@ -1392,6 +1393,14 @@ public abstract class Util {
 			put(map, "org.htmlunit.jetty.websocket.common.extensions.WebSocketExtensionFactory", "availableExtensions");
 			//
 			put(map, "com.helger.base.callback.CallbackList", "m_aRWLock");
+			//
+			put(map, "org.htmlunit.jetty.client.ContentDecoder$Factories", "factories");
+			//
+			put(map, "org.htmlunit.jetty.http.HttpFields$Mutable$Wrapper", "_fields");
+			//
+			put(map, "org.htmlunit.jetty.util.ClassMatcher$ByPackageOrName", "_byPackage");
+			//
+			put(map, "org.htmlunit.jetty.websocket.core.WebSocketExtensionRegistry", "availableExtensions");
 			//
 			if ((iValue0 = iterator(clz, instance, map)) != null) {
 				//

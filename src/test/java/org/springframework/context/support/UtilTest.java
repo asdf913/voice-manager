@@ -586,7 +586,9 @@ class UtilTest {
 							"org.d2ab.collection.longs.ChainingLongIterable",
 							"org.d2ab.collection.longs.LongList$SubList", "org.d2ab.sequence.EquivalentSizeSequence",
 							"org.apache.commons.collections4.list.AbstractLinkedListJava21$LinkedSubList",
-							"org.apache.commons.compress.compressors.gzip.ExtraField"), name)) {
+							"org.apache.commons.compress.compressors.gzip.ExtraField",
+							"org.htmlunit.jetty.http.QuotedQualityCSV$Compliant",
+							"org.htmlunit.jetty.util.ClassMatcher$ByLocationOrModule"), name)) {
 						//
 						Assertions.assertThrows(NullPointerException.class, () -> Util.iterator(it), name);
 						//
