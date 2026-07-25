@@ -271,9 +271,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 	public void writeVoiceToFile(@Nullable final String text, @Nullable final String voiceId, final int rate,
 			@Note("Not usued") final int volume, final Map<String, Object> map, @Nullable final File file) {
 		//
-		URL u = null;
-		//
-		try (final InputStream is = Util.openStream(u = execute(text, voiceId, rate, map))) {
+		try (final InputStream is = Util.openStream(execute(text, voiceId, rate, map))) {
 			//
 			testAndAccept((a, b) -> b != null, file, is, (a, b) -> Files.write(Util.toPath(a), readAllBytes(b)));
 			//
