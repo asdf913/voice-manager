@@ -28,7 +28,6 @@ import javax.sql.DataSource;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import com.google.common.base.Predicates;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,6 +43,7 @@ import org.springframework.core.env.SystemEnvironmentPropertySource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
 
+import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -55,7 +55,7 @@ class CustomBeanFactoryPostProcessorTest {
 			METHOD_GET_MESSAGE, METHOD_GET_CLASS, METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_DECLARED_METHODS,
 			METHOD_FILTER, METHOD_TO_LIST, METHOD_TEST_AND_ACCEPT, METHOD_GET_NAME, METHOD_INVOKE, METHOD_ADD_LAST,
 			METHOD_POST_PROCESS_DATA_SOURCES, METHOD_TEST_AND_APPLY, METHOD_PRINT_LN, METHOD_GET_TYPE, METHOD_GET,
-			METHOD_GET_PARAMETER_TYPES, METHOD_GET_PROPERTY_SOURCES = null;
+			METHOD_GET_PARAMETER_TYPES, METHOD_GET_PROPERTY_SOURCES, METHOD_EXECUTE, METHOD_CREATE_STATEMENT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -208,6 +208,20 @@ class CustomBeanFactoryPostProcessorTest {
 			//
 		} // if
 			//
+		if ((METHOD_EXECUTE = clz != null ? clz.getDeclaredMethod("execute", Statement.class, String.class)
+				: null) != null) {
+			//
+			METHOD_EXECUTE.setAccessible(true);
+			//
+		} // if
+			//
+		if ((METHOD_CREATE_STATEMENT = clz != null ? clz.getDeclaredMethod("createStatement", Connection.class)
+				: null) != null) {
+			//
+			METHOD_CREATE_STATEMENT.setAccessible(true);
+			//
+		} // if
+			//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -315,12 +329,18 @@ class CustomBeanFactoryPostProcessorTest {
 
 	private IH ih = null;
 
+	private Connection connection = null;
+
+	private Statement statement = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new CustomBeanFactoryPostProcessor();
 		//
-		ih = new IH();
+		connection = Reflection.newProxy(Connection.class, ih = new IH());
+		//
+		statement = Reflection.newProxy(Statement.class, ih);
 		//
 	}
 
@@ -713,7 +733,7 @@ class CustomBeanFactoryPostProcessorTest {
 		//
 		if (ih != null) {
 			//
-			ih.connection = Reflection.newProxy(Connection.class, ih);
+			ih.connection = connection;
 			//
 		} // if
 			//
@@ -721,7 +741,7 @@ class CustomBeanFactoryPostProcessorTest {
 		//
 		if (ih != null) {
 			//
-			ih.statement = Reflection.newProxy(Statement.class, ih);
+			ih.statement = statement;
 			//
 		} // if
 			//
@@ -875,6 +895,64 @@ class CustomBeanFactoryPostProcessorTest {
 				return null;
 			} else if (obj instanceof MutablePropertySources) {
 				return (MutablePropertySources) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testExecute() throws Throwable {
+		//
+		Assertions.assertFalse(execute(null, null));
+		//
+		if (ih != null) {
+			//
+			ih.execute = Boolean.FALSE;
+			//
+		} // if
+			//
+		Assertions.assertFalse(execute(statement, null));
+		//
+		if (ih != null) {
+			//
+			ih.execute = Boolean.TRUE;
+			//
+		} // if
+			//
+		Assertions.assertTrue(execute(statement, null));
+		//
+	}
+
+	private static boolean execute(final Statement instance, final String sql) throws Throwable {
+		try {
+			final Object obj = METHOD_EXECUTE.invoke(null, instance, sql);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateStatement() throws Throwable {
+		//
+		Assertions.assertNull(createStatement(null));
+		//
+		Assertions.assertNull(createStatement(connection));
+		//
+	}
+
+	private static Statement createStatement(final Connection instance) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_STATEMENT.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Statement) {
+				return (Statement) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

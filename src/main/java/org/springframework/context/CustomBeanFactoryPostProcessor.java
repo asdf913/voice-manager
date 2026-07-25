@@ -363,25 +363,23 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 				//
 				try (final Connection connection = getConnection(dataSource)) {
 					//
-					final Statement s = createStatement(connection);
+					testAndApply(Objects::nonNull, testAndApply(Objects::nonNull,
+							ResourceUtil.exists(tableSql) ? InputStreamSourceUtil.getInputStream(tableSql) : null,
+							x -> tableSqlEncoding != null
+									? new String(x.readAllBytes(), Charset.forName(tableSqlEncoding))
+									: null,
+							null), x -> execute(createStatement(connection), x), null);
 					//
-					if (s != null) {
-						//
-						testAndApply(Objects::nonNull, testAndApply(Objects::nonNull,
-								ResourceUtil.exists(tableSql) ? InputStreamSourceUtil.getInputStream(tableSql) : null,
-								x -> tableSqlEncoding != null
-										? new String(x.readAllBytes(), Charset.forName(tableSqlEncoding))
-										: null,
-								null), s::execute, null);
-						//
-					} // if
-						//
 				} // try
 					//
 			} // for
 				//
 		} // if
 			//
+	}
+
+	private static boolean execute(final Statement instance, final String sql) throws SQLException {
+		return instance != null && instance.execute(sql);
 	}
 
 	@Nullable
