@@ -17,6 +17,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -919,7 +920,7 @@ class VoiceManagerPdfPanelTest {
 		//
 		Assertions.assertNull(toAudioResource(contentInfoUtil, new File[] { null, Util.toFile(Path.of(".")) }));
 		//
-		final File file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secure(), 3), null);
+		final File file = Util.toFile(Files.createTempFile(nextAlphanumeric(RandomStringUtils.secure(), 3), null));
 		//
 		Util.deleteOnExit(file);
 		//

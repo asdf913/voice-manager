@@ -1139,7 +1139,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			if ((file = u != null
 					? Util.toFile(
 							Path.of(String.join(".", "temp", StringUtils.substringAfterLast(Util.toString(u), "."))))
-					: File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null)) != null) {
+					: Util.toFile(
+							Files.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null))) != null) {
 				//
 				Util.deleteOnExit(file);
 				//

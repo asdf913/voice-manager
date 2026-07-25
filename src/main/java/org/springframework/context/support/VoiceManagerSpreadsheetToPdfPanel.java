@@ -1099,8 +1099,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 				try {
 					//
-					Util.deleteOnExit(
-							tempFile = File.createTempFile(RandomStringUtils.secureStrong().nextAlphabetic(3), null));
+					Util.deleteOnExit(tempFile = Util
+							.toFile(Files.createTempFile(RandomStringUtils.secureStrong().nextAlphabetic(3), null)));
 					//
 				} catch (final IOException e) {
 					//

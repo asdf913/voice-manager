@@ -2142,8 +2142,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			if (Objects.equals(OperatingSystem.LINUX, operatingSystem)) {
 				//
 				testAndAccept((a, b) -> b != null,
-						file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3),
-								StringUtils.join(".", Objects.toString(getFileExtension(bs), "m4a"))),
+						file = Util.toFile(Files.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3),
+								StringUtils.join(".", Objects.toString(getFileExtension(bs), "m4a")))),
 						bs, FileUtils::writeByteArrayToFile);
 				//
 				boolean ffplayExists = false;
@@ -2216,8 +2216,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 			if (Objects.equals(ContentType.WAV, contentType)) {
 				//
 				testAndAccept((a, b) -> b != null,
-						file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3),
-								StringUtils.join(".", Objects.toString(getFileExtension(contentInfo)))),
+						file = Util.toFile(Files.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3),
+								StringUtils.join(".", Objects.toString(getFileExtension(contentInfo))))),
 						bs, FileUtils::writeByteArrayToFile);
 				//
 				final Process process = exec(Runtime.getRuntime(),
@@ -2267,7 +2267,8 @@ public class AivisSpeechRestApiJPanel extends JPanel
 					if (fileExtension == null) {
 						//
 						testAndAccept((a, b) -> b != null,
-								file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3), null),
+								file = Util.toFile(Files
+										.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3), null)),
 								bs, FileUtils::writeByteArrayToFile);
 						//
 						fileExtension = testAndApply(x -> length(x) == 1, getFileExtensions(getContentType(file)),
@@ -2278,8 +2279,9 @@ public class AivisSpeechRestApiJPanel extends JPanel
 					} // if
 						//
 					testAndAccept((a, b) -> b != null,
-							file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3),
-									StringUtils.join(".", fileExtension)),
+							file = Util
+									.toFile(Files.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3),
+											StringUtils.join(".", fileExtension))),
 							bs, FileUtils::writeByteArrayToFile);
 					//
 					final Process process = exec(Runtime.getRuntime(),

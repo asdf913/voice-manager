@@ -2156,7 +2156,8 @@ class AivisSpeechRestApiJPanelTest {
 		//
 		// Windows Navigation Start.wma
 		//
-		final File file3 = File.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3), null);
+		final File file3 = Util
+				.toFile(Files.createTempFile(nextAlphanumeric(RandomStringUtils.secureStrong(), 3), null));
 		//
 		try {
 			//

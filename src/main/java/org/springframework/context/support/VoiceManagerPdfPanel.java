@@ -2252,8 +2252,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				final String html = generatePdfHtml(freeMarkerConfiguration, map);
 				//
 				Files.writeString(
-						Util.toPath(
-								file = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null)),
+						Util.toPath(file = Util.toFile(
+								Files.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null))),
 						html, StandardCharsets.UTF_8);
 				//
 				final String[] fileExtensions = getFileExtensions(findMatch(new ContentInfoUtil(), file));

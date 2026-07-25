@@ -747,7 +747,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				try {
 					//
 					testAndAccept(Objects::nonNull,
-							tempFile = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null),
+							tempFile = Util.toFile(
+									Files.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null)),
 							Util::deleteOnExit);
 					//
 				} catch (final IOException e) {
