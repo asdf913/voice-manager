@@ -378,7 +378,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 	}
 
-	private static boolean execute(final Statement instance, final String sql) throws SQLException {
+	private static boolean execute(@Nullable final Statement instance, final String sql) throws SQLException {
 		return instance != null && instance.execute(sql);
 	}
 
