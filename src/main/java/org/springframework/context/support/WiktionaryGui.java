@@ -26,6 +26,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -623,7 +625,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 			//
 			try {
 				//
-				final URLConnection urlConnection = Util.openConnection(new URL(url));
+				final URLConnection urlConnection = Util.openConnection(new URI(url).toURL());
 				//
 				Util.setRequestProperty(urlConnection, "User-Agent",
 						"Mozilla/5.0 (X11; Linux x86_64) AppleW;ebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36");
@@ -636,7 +638,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 				}, urlConnection, Util::getInputStream, null), x -> new String(x.readAllBytes(), encoding), null);
 				//
-			} catch (final IOException e) {
+			} catch (final IOException | URISyntaxException e) {
 				//
 				throw new RuntimeException(e);
 				//

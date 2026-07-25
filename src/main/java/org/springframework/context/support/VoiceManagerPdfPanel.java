@@ -3663,9 +3663,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			try {
 				//
-				url = new URL(string);
+				url = new URI(string).toURL();
 				//
-			} catch (final MalformedURLException e) {
+			} catch (final MalformedURLException | URISyntaxException e) {
 				//
 				LoggerUtil.error(LOG, e.getMessage(), e);
 				//

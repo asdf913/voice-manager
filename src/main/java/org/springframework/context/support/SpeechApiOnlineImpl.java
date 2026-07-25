@@ -11,6 +11,8 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
@@ -123,13 +125,12 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 	public void speak(@Nullable final String text, @Nullable final String voiceId, final int rate,
 			@Note("Not usued") final int volume, final Map<String, Object> map) {
 		//
-		final URL u = execute(text, voiceId, rate, map);
-		//
 		try {
 			//
-			speak(u, listModel = ObjectUtils.getIfNull(listModel, DefaultListModel::new));
+			speak(execute(text, voiceId, rate, map),
+					listModel = ObjectUtils.getIfNull(listModel, DefaultListModel::new));
 			//
-		} catch (final IOException | UnsupportedAudioFileException | LineUnavailableException e) {
+		} catch (final IOException | UnsupportedAudioFileException | LineUnavailableException | URISyntaxException e) {
 			//
 			throw new RuntimeException(e);
 			//
@@ -269,13 +270,13 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 	public void writeVoiceToFile(@Nullable final String text, @Nullable final String voiceId, final int rate,
 			@Note("Not usued") final int volume, final Map<String, Object> map, @Nullable final File file) {
 		//
-		final URL u = execute(text, voiceId, rate, map);
+		URL u = null;
 		//
-		try (final InputStream is = Util.openStream(u)) {
+		try (final InputStream is = Util.openStream(u = execute(text, voiceId, rate, map))) {
 			//
 			testAndAccept((a, b) -> b != null, file, is, (a, b) -> FileUtils.writeByteArrayToFile(a, readAllBytes(b)));
 			//
-		} catch (final IOException e) {
+		} catch (final IOException | URISyntaxException e) {
 			//
 			throw new RuntimeException(e);
 			//
@@ -295,7 +296,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 	}
 
 	private URL execute(@Nullable final String text, @Nullable final String voiceId, final int rate,
-			final Map<String, Object> map) {
+			final Map<String, Object> map) throws URISyntaxException {
 		//
 		return execute(url, text, getVoices(), voiceId, rate, map);
 		//
@@ -303,7 +304,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 
 	@Nullable
 	private static URL execute(final String url, @Nullable final String text, final Map<String, String> voices,
-			@Nullable final String voiceId, final int rate, final Map<String, Object> map) {
+			@Nullable final String voiceId, final int rate, final Map<String, Object> map) throws URISyntaxException {
 		//
 		try (final WebClient webClient = new WebClient()) {
 			//
@@ -370,8 +371,8 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 			//
 			if (attribute != null) {
 				//
-				return new URL(String.join("/", StringUtils.substringBeforeLast(url, "/"),
-						StringUtils.substringAfter(IValue0Util.getValue0(attribute), '/')));
+				return new URI(String.join("/", StringUtils.substringBeforeLast(url, "/"),
+						StringUtils.substringAfter(IValue0Util.getValue0(attribute), '/'))).toURL();
 				//
 			} else if (hm != null) {
 				//

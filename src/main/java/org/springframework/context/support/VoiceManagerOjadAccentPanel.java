@@ -459,11 +459,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			testAndAccept(Objects::nonNull, Util
 					.toList(FailableStreamUtil.stream(FailableStreamUtil.map(new FailableStream<>(Util.stream(es)), x ->
 					//
-					Pair.of(NodeUtil.absUrl(x, "href"),
-							toBufferedImage(
-									toByteArray(new URL(NodeUtil.absUrl(testAndApply(y -> IterableUtils.size(y) > 0,
-											ElementUtil.select(x, "img"), y -> IterableUtils.get(y, 0), null), "src"))),
-									e -> LoggerUtil.error(LOG, e.getMessage(), e)))
+					Pair.of(NodeUtil.absUrl(x, "href"), toBufferedImage(
+							toByteArray(new URI(NodeUtil.absUrl(testAndApply(y -> IterableUtils.size(y) > 0,
+									ElementUtil.select(x, "img"), y -> IterableUtils.get(y, 0), null), "src")).toURL()),
+							e -> LoggerUtil.error(LOG, e.getMessage(), e)))
 					//
 					))), dcbmUrlImage::addAll);
 			//

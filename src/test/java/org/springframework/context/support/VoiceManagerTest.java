@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.file.Path;
@@ -695,7 +696,7 @@ class VoiceManagerTest {
 						//
 					} // if
 						//
-					try (final InputStream is = new URL(u).openStream()) {
+					try (final InputStream is = Util.openStream(Util.toURL(new URI(u)))) {
 						//
 						if (is != null) {
 							//
@@ -706,6 +707,10 @@ class VoiceManagerTest {
 					} catch (final UnknownHostException e) {
 						//
 						uhe = e;
+						//
+					} catch (final URISyntaxException e) {
+						//
+						throw new RuntimeException(e);
 						//
 					} // try
 						//
