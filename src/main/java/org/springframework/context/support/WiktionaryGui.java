@@ -30,6 +30,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -637,7 +638,8 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					//
 					return httpURLConnection != null && httpURLConnection.getResponseCode() == HttpStatus.SC_OK;
 					//
-				}, urlConnection, Util::getInputStream, null), x -> new String(x.readAllBytes(), encoding), null);
+				}, urlConnection, Util::getInputStream, null),
+						x -> new String(x.readAllBytes(), Charset.forName(encoding)), null);
 				//
 			} catch (final IOException | URISyntaxException e) {
 				//

@@ -10,6 +10,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -369,7 +370,9 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 						//
 						testAndApply(Objects::nonNull, testAndApply(Objects::nonNull,
 								ResourceUtil.exists(tableSql) ? InputStreamSourceUtil.getInputStream(tableSql) : null,
-								x -> tableSqlEncoding != null ? new String(x.readAllBytes(), tableSqlEncoding) : null,
+								x -> tableSqlEncoding != null
+										? new String(x.readAllBytes(), Charset.forName(tableSqlEncoding))
+										: null,
 								null), s::execute, null);
 						//
 					} // if
