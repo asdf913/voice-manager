@@ -30,6 +30,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -990,7 +991,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					if (testAndGetAsBoolean(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 							() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
 						//
-						FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
+						Files.write(Util.toPath(jfc.getSelectedFile()),
 								WiktionaryEntry.getHiraganaImage(Util.cast(WiktionaryEntry.class,
 										Util.getValueAt(instance.tm, get(selectedIndices, 0, 0), 0))));
 						//
@@ -1073,7 +1074,7 @@ public class WiktionaryGui extends JPanel implements InitializingBean, ActionLis
 					if (testAndGetAsBoolean(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 							() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
 						//
-						FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
+						Files.write(Util.toPath(jfc.getSelectedFile()),
 								WiktionaryEntry.getTextImage(Util.cast(WiktionaryEntry.class,
 										Util.getValueAt(instance.tm, get(selectedIndices, 0, 0), 0))));
 						//

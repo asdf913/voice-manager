@@ -1354,7 +1354,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 					//
 					if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 						//
-						FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
+						Files.write(Util.toPath(jfc.getSelectedFile()), bs);
 						//
 					} // if
 						//
@@ -2010,7 +2010,7 @@ public class AivisSpeechRestApiJPanel extends JPanel
 		//
 		if (!GraphicsEnvironment.isHeadless() && jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 			//
-			FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
+			Files.write(Util.toPath(jfc.getSelectedFile()), bs);
 			//
 		} // if
 			//

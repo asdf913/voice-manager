@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -274,7 +275,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		//
 		try (final InputStream is = Util.openStream(u = execute(text, voiceId, rate, map))) {
 			//
-			testAndAccept((a, b) -> b != null, file, is, (a, b) -> FileUtils.writeByteArrayToFile(a, readAllBytes(b)));
+			testAndAccept((a, b) -> b != null, file, is, (a, b) -> Files.write(Util.toPath(a), readAllBytes(b)));
 			//
 		} catch (final IOException | URISyntaxException e) {
 			//

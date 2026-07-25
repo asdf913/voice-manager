@@ -3361,7 +3361,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 					//
 					if (byteConverter != null) {
 						//
-						FileUtils.writeByteArrayToFile(file,
+						Files.write(Util.toPath(file),
 								byteConverter.convert(Files.readAllBytes(Path.of(Util.toURI(file)))));
 						//
 					} // if

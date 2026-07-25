@@ -3345,7 +3345,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				testAndAccept(x -> IValue0Util.getValue0(x) != null,
 						Triplet.with(resource, fileAudio = Util.toFile(pathAudio), key),
-						x -> FileUtils.writeByteArrayToFile(IValue1Util.getValue1(x),
+						x -> Files.write(Util.toPath(IValue1Util.getValue1(x)),
 								ResourceUtil.getContentAsByteArray(IValue0Util.getValue0(x))),
 						x -> writeVoiceToFile(speechApi, text, voiceId, Util.intValue(IValue2Util.getValue2(x), 0),
 								volume, null, IValue1Util.getValue1(x)));

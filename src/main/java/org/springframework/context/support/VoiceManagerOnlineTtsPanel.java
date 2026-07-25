@@ -783,7 +783,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				try (final InputStream is = Util.openStream(u)) {
 					//
 					testAndAccept(Objects::nonNull, testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null),
-							x -> FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), x));
+							x -> Files.write(Util.toPath(jfc.getSelectedFile()), x));
 					//
 				} catch (final IOException e) {
 					//

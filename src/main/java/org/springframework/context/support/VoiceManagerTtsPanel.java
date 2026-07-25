@@ -120,7 +120,7 @@ import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerTtsPanel extends JPanel implements Titled, InitializingBean, EnvironmentAware, ItemListener,
 		ActionListener, ChangeListener, ApplicationContextAware {
- static final long serialVersionUID = 8338161986346369694L;
+	static final long serialVersionUID = 8338161986346369694L;
 
 	private static Logger LOG = LoggerFactory.getLogger(VoiceManagerTtsPanel.class);
 
@@ -726,8 +726,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 			try {
 				//
-				FileUtils.writeByteArrayToFile(file,
-						byteConverter.convert(Files.readAllBytes(Path.of(Util.toURI(file)))));
+				Files.write(Util.toPath(file), byteConverter.convert(Files.readAllBytes(Path.of(Util.toURI(file)))));
 				//
 			} catch (final IOException e) {
 				//

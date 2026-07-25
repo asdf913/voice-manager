@@ -2075,7 +2075,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			testAndAccept(Objects::nonNull,
 					byteConverter != null ? byteConverter.convert(Files.readAllBytes(Path.of(Util.toURI(it.file))))
 							: null,
-					x -> FileUtils.writeByteArrayToFile(it.file, x));
+					x -> Files.write(Util.toPath(it.file), x));
 			//
 			Util.deleteOnExit(it.file);
 			//
@@ -3608,7 +3608,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 		try {
 			//
-			FileUtils.writeByteArrayToFile(getSelectedFile(jfc),
+			Files.write(Util.toPath(getSelectedFile(jfc)),
 					createImportFileTemplateByteArray(Util.isSelected(cbImportFileTemplateGenerateBlankRow),
 							IValue0Util.getValue0(jlptLevels),
 							MultimapUtil.keySet(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))));

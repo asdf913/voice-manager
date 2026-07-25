@@ -12,6 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Objects;
@@ -255,7 +256,7 @@ public class YukumoJapaneseTtsGui extends JPanel implements InitializingBean, Ac
 			//
 			try {
 				//
-				FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
+				Files.write(Util.toPath(jfc.getSelectedFile()), bs);
 				//
 			} catch (final IOException e) {
 				//

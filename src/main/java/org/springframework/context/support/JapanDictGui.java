@@ -3069,7 +3069,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 				if (and(Util.and(!GraphicsEnvironment.isHeadless(), !isTestMode(), bs != null),
 						() -> jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)) {
 					//
-					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), bs);
+					Files.write(Util.toPath(jfc.getSelectedFile()), bs);
 					//
 				} // if
 					//
@@ -3371,7 +3371,7 @@ public class JapanDictGui extends JPanel implements ActionListener, Initializing
 							//
 							, x -> IterableUtils.get(x, 0), null);
 					//
-					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
+					Files.write(Util.toPath(jfc.getSelectedFile()),
 							toPdfByteArray(
 									Util.cast(JapanDictEntry.class,
 											Util.getValueAt(instance.dtm, getSelectedRow(instance.jTable), 0)),
