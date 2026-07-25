@@ -5,6 +5,7 @@ import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
@@ -12,6 +13,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -191,7 +193,8 @@ class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 			final File file = Path.of("OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean.txt")
 					.toFile();
 			//
-			FileUtils.writeLines(file, MultimapUtil.entries(FactoryBeanUtil.getObject(instance)));
+			Files.write(file != null ? file.toPath() : null, Util.toList(Util
+					.map(Util.stream(MultimapUtil.entries(FactoryBeanUtil.getObject(instance))), Objects::toString)));
 			//
 			System.out.println(file.getAbsolutePath());
 			//

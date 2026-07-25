@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
@@ -223,7 +224,8 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 			final File file = Path.of("OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean.txt")
 					.toFile();
 			//
-			FileUtils.writeLines(file, MultimapUtil.entries(FactoryBeanUtil.getObject(instance)));
+			Files.write(file != null ? file.toPath() : null, Util.toList(Util
+					.map(Util.stream(MultimapUtil.entries(FactoryBeanUtil.getObject(instance))), Objects::toString)));
 			//
 			System.out.println(file.getAbsolutePath());
 			//
