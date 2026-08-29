@@ -310,7 +310,7 @@
 		<dependency>
 			<groupId>org.meeuw.util</groupId>
 			<artifactId>mihxil-functional</artifactId>
-			<version>1.17</version>
+			<version>1.18</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.openjdk.nashorn/nashorn-core -->
 		<dependency>
