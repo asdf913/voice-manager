@@ -1403,6 +1403,8 @@ public abstract class Util {
 			//
 			put(map, "org.htmlunit.jetty.websocket.core.WebSocketExtensionRegistry", "availableExtensions");
 			//
+			put(map, "nonapi.io.github.classgraph.utils.LinkedIdentitySet", "elementsInOrder");
+			//
 			if ((iValue0 = iterator(clz, instance, map)) != null) {
 				//
 				return IValue0Util.getValue0(iValue0);
