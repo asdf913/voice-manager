@@ -950,7 +950,8 @@ public abstract class Util {
 					"it.unimi.dsi.fastutil.shorts.ShortLists$SynchronizedList",
 					"it.unimi.dsi.fastutil.shorts.ShortLists$SynchronizedRandomAccessList",
 					"it.unimi.dsi.fastutil.shorts.ShortLists$UnmodifiableList",
-					"it.unimi.dsi.fastutil.shorts.ShortLists$UnmodifiableRandomAccessList");
+					"it.unimi.dsi.fastutil.shorts.ShortLists$UnmodifiableRandomAccessList",
+					"nonapi.io.github.classgraph.utils.LinkedIdentitySet");
 			//
 			put(map, "com.github.andrewoma.dexx.collection.internal.base.MappedIterable", "from");
 			//
