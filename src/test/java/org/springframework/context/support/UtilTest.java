@@ -611,7 +611,8 @@ class UtilTest {
 						//
 						Assertions.assertThrows(UnsupportedOperationException.class, () -> Util.iterator(it), name);
 						//
-					} else if (Objects.equals("com.healthmarketscience.jackcess.impl.QueryNameMapImpl", name)) {
+					} else if (Util.contains(Arrays.asList("com.healthmarketscience.jackcess.impl.QueryNameMapImpl",
+							"com.healthmarketscience.jackcess.impl.TableNameMapImpl"), name)) {
 						//
 						Assertions.assertThrows(NullPointerException.class, () -> Util.iterator(it), name);
 						//
