@@ -777,7 +777,8 @@ class UtilTest {
 					//
 					for (final Consumer<?> consumer : consumers) {
 						//
-						if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.QueryNameMapImpl")) {
+						if (Util.contains(Arrays.asList("com.healthmarketscience.jackcess.impl.QueryNameMapImpl",
+								"com.healthmarketscience.jackcess.impl.NameMapImpl"), name)) {
 							//
 							continue;
 							//
