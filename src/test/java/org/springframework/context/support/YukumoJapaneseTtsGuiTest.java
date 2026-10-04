@@ -9,6 +9,8 @@ import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -457,7 +459,7 @@ class YukumoJapaneseTtsGuiTest {
 	}
 
 	@Test
-	void testActionPerformed() throws IllegalAccessException {
+	void testActionPerformed() throws Throwable {
 		//
 		if (instance == null || (Objects.equals(operatingSystem, OperatingSystem.LINUX)
 				&& Boolean.logicalAnd(!StringsUtil.equals(Strings.CI, connectivity, "full"), nmcliExists))) {
@@ -474,8 +476,32 @@ class YukumoJapaneseTtsGuiTest {
 		//
 		final ActionEvent actionEventBtnPlay = new ActionEvent(btnPlay, 0, null);
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnPlay));
-		//
+		try {
+			//
+			final URLConnection urlConnection = Util
+					.openConnection(testAndApply(Objects::nonNull,
+							Util.toString(testAndApply(Objects::nonNull, testAndApply(x -> IterableUtils.size(x) == 1,
+									Util.toList(Util.filter(
+											Util.stream(FieldUtils.getAllFieldsList(YukumoJapaneseTtsGui.class)),
+											f -> Objects.equals(Util.getName(f), "URL"))),
+									x -> IterableUtils.get(x, 0), null),
+									f -> Util.isStatic(f) ? Narcissus.getStaticField(f)
+											: Narcissus.getField(instance, f),
+									null)),
+							URL::new, null));
+			//
+			if (urlConnection != null) {
+				//
+				urlConnection.connect();
+				//
+			} // if
+				//
+			Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnPlay));
+			//
+		} catch (final IOException e) {
+			//
+		} // try
+			//
 		final Table<String, Integer, byte[]> table = HashBasedTable.create();
 		//
 		FieldUtils.writeDeclaredField(instance, "table", table, true);
