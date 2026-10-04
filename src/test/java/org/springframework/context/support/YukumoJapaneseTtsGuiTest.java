@@ -334,20 +334,30 @@ class YukumoJapaneseTtsGuiTest {
 					//
 			} else {
 				//
-				if (Objects.equals(Util.getName(m), "actionPerformed")
-						&& Arrays.equals(parameterTypes, new Class<?>[] { ActionEvent.class })
-						&& Objects.equals(operatingSystem, OperatingSystem.LINUX)
-						&& !StringsUtil.equals(Strings.CI, connectivity, "full")
-						&& Boolean.logicalAnd(nmcliExists, connect)) {
+				if (Objects.equals(Util.getName(m), "actionPerformed")) {
 					//
-					final Method m1 = m;
-					//
-					final Object[] os1 = os;
-					//
-					Assertions.assertThrows(RuntimeException.class, () -> Narcissus.invokeMethod(instance, m1, os1));
-					//
-					continue;
-					//
+					if (!connect) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (Arrays.equals(parameterTypes, new Class<?>[] { ActionEvent.class })
+							&& Objects.equals(operatingSystem, OperatingSystem.LINUX)
+							&& !StringsUtil.equals(Strings.CI, connectivity, "full")
+							&& Boolean.logicalAnd(nmcliExists, connect)) {
+						//
+						final Method m1 = m;
+						//
+						final Object[] os1 = os;
+						//
+						Assertions.assertThrows(RuntimeException.class,
+								() -> Narcissus.invokeMethod(instance, m1, os1));
+						//
+						continue;
+						//
+					} // if
+						//
 				} // if
 					//
 				Assertions.assertNull(Narcissus.invokeMethod(instance, m, os), toString);
@@ -356,6 +366,7 @@ class YukumoJapaneseTtsGuiTest {
 				//
 		} // for
 			//
+
 	}
 
 	@Test
@@ -456,20 +467,29 @@ class YukumoJapaneseTtsGuiTest {
 					//
 			} else {
 				//
-				if (Objects.equals(Util.getName(m), "actionPerformed")
-						&& Arrays.equals(parameterTypes, new Class<?>[] { ActionEvent.class })
-						&& Objects.equals(operatingSystem, OperatingSystem.LINUX)
-						&& !StringsUtil.equals(Strings.CI, connectivity, "full")
-						&& Boolean.logicalAnd(nmcliExists, connect)) {
+				if (Objects.equals(Util.getName(m), "actionPerformed")) {
 					//
-					final Method m1 = m;
-					//
-					final Object[] os1 = os;
-					//
-					Assertions.assertThrows(RuntimeException.class, () -> Narcissus.invokeMethod(instance, m1, os1));
-					//
-					continue;
-					//
+					if (!connect) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (Arrays.equals(parameterTypes, new Class<?>[] { ActionEvent.class })
+							&& Objects.equals(operatingSystem, OperatingSystem.LINUX)
+							&& !StringsUtil.equals(Strings.CI, connectivity, "full") && nmcliExists) {
+						//
+						final Method m1 = m;
+						//
+						final Object[] os1 = os;
+						//
+						Assertions.assertThrows(RuntimeException.class,
+								() -> Narcissus.invokeMethod(instance, m1, os1));
+						//
+						continue;
+						//
+					} // if
+						//
 				} // if
 					//
 				Assertions.assertNull(Narcissus.invokeMethod(instance, m, os), toString);
