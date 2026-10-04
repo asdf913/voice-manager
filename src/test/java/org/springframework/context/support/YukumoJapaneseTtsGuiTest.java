@@ -560,8 +560,12 @@ class YukumoJapaneseTtsGuiTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnDownload));
-		//
+		if (connect) {
+			//
+			Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnDownload));
+			//
+		} // if
+			//
 	}
 
 	@Test
