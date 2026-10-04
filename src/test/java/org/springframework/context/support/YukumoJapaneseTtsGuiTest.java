@@ -189,7 +189,7 @@ class YukumoJapaneseTtsGuiTest {
 
 	private OperatingSystem operatingSystem = null;
 
-	private boolean nmcliExists = false;
+	private boolean nmcliExists, connect = false;
 
 	private String connectivity = null;
 
@@ -231,6 +231,34 @@ class YukumoJapaneseTtsGuiTest {
 			} // try
 				//
 		} // if
+			//
+		try {
+			//
+			final URLConnection urlConnection = Util
+					.openConnection(testAndApply(Objects::nonNull,
+							Util.toString(testAndApply(Objects::nonNull, testAndApply(x -> IterableUtils.size(x) == 1,
+									Util.toList(Util.filter(
+											Util.stream(FieldUtils.getAllFieldsList(YukumoJapaneseTtsGui.class)),
+											f -> Objects.equals(Util.getName(f), "URL"))),
+									x -> IterableUtils.get(x, 0), null),
+									f -> Util.isStatic(f) ? Narcissus.getStaticField(f)
+											: Narcissus.getField(instance, f),
+									null)),
+							URL::new, null));
+			//
+			if (urlConnection != null) {
+				//
+				urlConnection.connect();
+				//
+			} // if
+				//
+			connect = true;
+			//
+		} catch (final IOException e) {
+			//
+			connect = false;
+			//
+		} // try
 			//
 	}
 
@@ -309,7 +337,8 @@ class YukumoJapaneseTtsGuiTest {
 				if (Objects.equals(Util.getName(m), "actionPerformed")
 						&& Arrays.equals(parameterTypes, new Class<?>[] { ActionEvent.class })
 						&& Objects.equals(operatingSystem, OperatingSystem.LINUX)
-						&& !StringsUtil.equals(Strings.CI, connectivity, "full") && nmcliExists) {
+						&& !StringsUtil.equals(Strings.CI, connectivity, "full")
+						&& Boolean.logicalAnd(nmcliExists, connect)) {
 					//
 					final Method m1 = m;
 					//
@@ -430,7 +459,8 @@ class YukumoJapaneseTtsGuiTest {
 				if (Objects.equals(Util.getName(m), "actionPerformed")
 						&& Arrays.equals(parameterTypes, new Class<?>[] { ActionEvent.class })
 						&& Objects.equals(operatingSystem, OperatingSystem.LINUX)
-						&& !StringsUtil.equals(Strings.CI, connectivity, "full") && nmcliExists) {
+						&& !StringsUtil.equals(Strings.CI, connectivity, "full")
+						&& Boolean.logicalAnd(nmcliExists, connect)) {
 					//
 					final Method m1 = m;
 					//
@@ -476,31 +506,11 @@ class YukumoJapaneseTtsGuiTest {
 		//
 		final ActionEvent actionEventBtnPlay = new ActionEvent(btnPlay, 0, null);
 		//
-		try {
+		if (connect) {
 			//
-			final URLConnection urlConnection = Util
-					.openConnection(testAndApply(Objects::nonNull,
-							Util.toString(testAndApply(Objects::nonNull, testAndApply(x -> IterableUtils.size(x) == 1,
-									Util.toList(Util.filter(
-											Util.stream(FieldUtils.getAllFieldsList(YukumoJapaneseTtsGui.class)),
-											f -> Objects.equals(Util.getName(f), "URL"))),
-									x -> IterableUtils.get(x, 0), null),
-									f -> Util.isStatic(f) ? Narcissus.getStaticField(f)
-											: Narcissus.getField(instance, f),
-									null)),
-							URL::new, null));
-			//
-			if (urlConnection != null) {
-				//
-				urlConnection.connect();
-				//
-			} // if
-				//
 			Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnPlay));
 			//
-		} catch (final IOException e) {
-			//
-		} // try
+		} // if
 			//
 		final Table<String, Integer, byte[]> table = HashBasedTable.create();
 		//
