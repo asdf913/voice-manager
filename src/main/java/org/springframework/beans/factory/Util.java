@@ -910,7 +910,8 @@ abstract class Util {
 		putAll(map,
 				collect(Stream.of("org.apache.commons.collections4.multiset.PredicatedSortedMultiSet",
 						"org.apache.commons.collections4.multiset.TransformedMultiSet",
-						"org.apache.commons.collections4.multiset.TransformedSortedMultiSet"),
+						"org.apache.commons.collections4.multiset.TransformedSortedMultiSet",
+						"org.apache.commons.collections4.multiset.UnmodifiableSortedMultiSet"),
 						Collectors.toMap(Function.identity(), x -> "collection")));
 		//
 		put(map, "org.apache.commons.collections4.multiset.TreeMultiSet", "map");
