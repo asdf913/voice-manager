@@ -913,6 +913,8 @@ abstract class Util {
 						"org.apache.commons.collections4.multiset.TransformedSortedMultiSet"),
 						Collectors.toMap(Function.identity(), x -> "collection")));
 		//
+		put(map, "org.apache.commons.collections4.multiset.TreeMultiSet", "map");
+		//
 		if (Boolean.logicalOr(forEachIsFieldNull(map, clz, instance),
 				contains(Arrays.asList("org.htmlunit.cyberneko.util.SimpleArrayList"), name))) {
 			//
