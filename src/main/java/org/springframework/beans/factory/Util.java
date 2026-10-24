@@ -902,7 +902,10 @@ abstract class Util {
 		//
 		put(map, "org.apache.commons.lang3.util.IterableStringTokenizer", "delimiters");
 		//
-		put(map, "org.apache.commons.collections4.collection.SynchronizedCollection", "lock");
+		putAll(map,
+				collect(Stream.of("org.apache.commons.collections4.collection.SynchronizedCollection",
+						"org.apache.commons.collections4.multiset.SynchronizedSortedMultiSet"),
+						Collectors.toMap(Function.identity(), x -> "lock")));
 		//
 		put(map, "org.apache.commons.collections4.multiset.PredicatedSortedMultiSet", "collection");
 		//
