@@ -903,7 +903,9 @@ abstract class Util {
 		put(map, "org.apache.commons.lang3.util.IterableStringTokenizer", "delimiters");
 		//
 		put(map, "org.apache.commons.collections4.collection.SynchronizedCollection", "lock");
-		// 
+		//
+		put(map, "org.apache.commons.collections4.multiset.PredicatedSortedMultiSet", "collection");
+		//
 		if (Boolean.logicalOr(forEachIsFieldNull(map, clz, instance),
 				contains(Arrays.asList("org.htmlunit.cyberneko.util.SimpleArrayList"), name))) {
 			//
