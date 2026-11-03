@@ -362,7 +362,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 			} // if
 				//
 			final HtmlPage hm = Util.cast(HtmlPage.class, DomElementUtil
-					.click(Util.cast(DomElement.class, querySelector(htmlPage, "input[type=\"submit\"]"))));
+					.click(Util.cast(DomElement.class, querySelector(htmlPage, "input[type=\"submit\"]", htmlPage))));
 			//
 			final IValue0<String> attribute = getAttribute(getElementsByTagName(hm, "source"), "src",
 					x -> StringsUtil.startsWith(Strings.CS, x, "./temp/"));
@@ -534,8 +534,9 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 	}
 
 	@Nullable
-	private static <N extends DomNode> N querySelector(@Nullable final DomNode instance, final String selectors) {
-		return instance != null ? instance.querySelector(selectors) : null;
+	private static <N extends DomNode> N querySelector(@Nullable final DomNode instance, final String selectors,
+			final DomNode scope) {
+		return instance != null ? instance.querySelector(selectors, scope) : null;
 	}
 
 	@Override
