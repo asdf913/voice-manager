@@ -764,14 +764,14 @@ class SpeechApiOnlineImplTest {
 	@Test
 	void testQuerySelector() throws Throwable {
 		//
-		Assertions.assertNull(querySelector(domNode, null));
+		Assertions.assertNull(querySelector(domNode, null, domNode));
 		//
 	}
 
-	private static <N extends DomNode> N querySelector(final DomNode instance, final String selectors)
-			throws Throwable {
+	private static <N extends DomNode> N querySelector(final DomNode instance, final String selectors,
+			final DomNode scope) throws Throwable {
 		try {
-			final Object obj = METHOD_QUERY_SELECTOR.invoke(null, instance, selectors);
+			final Object obj = METHOD_QUERY_SELECTOR.invoke(null, instance, selectors, scope);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof DomNode) {
