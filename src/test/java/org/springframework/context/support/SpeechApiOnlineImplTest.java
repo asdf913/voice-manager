@@ -123,7 +123,7 @@ class SpeechApiOnlineImplTest {
 		(METHOD_GET_ELEMENTS_BY_TAG_NAME = clz.getDeclaredMethod("getElementsByTagName", Document.class, String.class))
 				.setAccessible(true);
 		//
-		(METHOD_QUERY_SELECTOR = clz.getDeclaredMethod("querySelector", DomNode.class, String.class))
+		(METHOD_QUERY_SELECTOR = clz.getDeclaredMethod("querySelector", DomNode.class, String.class, DomNode.class))
 				.setAccessible(true);
 		//
 		(METHOD_EXECUTE = clz.getDeclaredMethod("execute", String.class, String.class, Map.class, String.class,
