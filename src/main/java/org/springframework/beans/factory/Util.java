@@ -916,7 +916,10 @@ abstract class Util {
 		//
 		put(map, "org.apache.commons.collections4.multiset.TreeMultiSet", "map");
 		//
-		put(map, "org.apache.bcel.classfile.RuntimeInvisibleTypeAnnotations", "typeAnnotationTable");
+		putAll(map,
+				collect(Stream.of("org.apache.bcel.classfile.RuntimeInvisibleTypeAnnotations",
+						"org.apache.bcel.classfile.RuntimeVisibleTypeAnnotations"),
+						Collectors.toMap(Function.identity(), x -> "typeAnnotationTable")));
 		//
 		if (Boolean.logicalOr(forEachIsFieldNull(map, clz, instance),
 				contains(Arrays.asList("org.htmlunit.cyberneko.util.SimpleArrayList"), name))) {
