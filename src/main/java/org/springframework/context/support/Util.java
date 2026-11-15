@@ -1376,7 +1376,9 @@ public abstract class Util {
 			//
 			put(map, "org.apache.pdfbox.pdmodel.interactive.form.PDFieldTree", "acroForm");
 			//
-			put(map, "com.google.gson.JsonArray", "elements");
+			putAll(map,
+					collect(Stream.of("com.google.gson.JsonArray", "com.helger.collection.commons.CommonsArrayDeque"),
+							Collectors.toMap(Function.identity(), x -> "elements")));
 			//
 			put(map, "com.google.gson.internal.NonNullElementWrapperList", DELEGATE);
 			//
@@ -1406,8 +1408,6 @@ public abstract class Util {
 			put(map, "org.htmlunit.jetty.websocket.core.WebSocketExtensionRegistry", "availableExtensions");
 			//
 			put(map, "nonapi.io.github.classgraph.utils.LinkedIdentitySet", "elementsInOrder");
-			//
-			put(map, "com.helger.collection.commons.CommonsArrayDeque", "elements");
 			//
 			if ((iValue0 = iterator(clz, instance, map)) != null) {
 				//
