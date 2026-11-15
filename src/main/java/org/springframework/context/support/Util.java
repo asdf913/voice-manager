@@ -1404,6 +1404,8 @@ public abstract class Util {
 			//
 			put(map, "nonapi.io.github.classgraph.utils.LinkedIdentitySet", "elementsInOrder");
 			//
+			put(map, "com.helger.collection.commons.CommonsArrayDeque", "elements");
+			//
 			if ((iValue0 = iterator(clz, instance, map)) != null) {
 				//
 				return IValue0Util.getValue0(iValue0);
