@@ -987,7 +987,10 @@ public abstract class Util {
 			//
 			put(map, "com.helger.collection.commons.CommonsCopyOnWriteArraySet", "al");
 			//
-			put(map, "com.helger.collection.map.LRUSet", "m_aMap");
+			putAll(map,
+					collect(Stream.of("com.helger.collection.map.LRUSet",
+							"com.helger.collection.commons.CommonsIdentityHashSet"),
+							Collectors.toMap(Function.identity(), x -> "m_aMap")));
 			//
 			put(map, "com.helger.commons.http.HttpHeaderMap", "m_aHeaders");
 			//
